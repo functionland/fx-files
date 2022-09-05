@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Shared.Services.Implementations;
+﻿using Functionland.FxFiles.Shared.Services.DateTime.Contracts;
+
+namespace Functionland.FxFiles.Shared.Services.DateTime.Implementations;
 
 public class DateTimeProvider : IDateTimeProvider
 {

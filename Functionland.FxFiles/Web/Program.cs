@@ -24,11 +24,7 @@ public class Program
     {
         var builder = WebAssemblyHostBuilder.CreateDefault();
 
-        builder.Services.AddSingleton(sp => new HttpClient(sp.GetRequiredService<AppHttpClientHandler>()) { BaseAddress = new Uri($"{builder.HostEnvironment.BaseAddress}api/") });
         builder.Services.AddScoped<Microsoft.AspNetCore.Components.WebAssembly.Services.LazyAssemblyLoader>();
-        builder.Services.AddTransient<IAuthTokenProvider, ClientSideAuthTokenProvider>();
-
-        builder.Services.AddSharedServices();
         builder.Services.AddAppServices();
 
         var host = builder.Build();
@@ -51,6 +47,7 @@ public class Program
         // The following line (using the * in the URL), allows the emulators and mobile devices to access the app using the host IP address.
         builder.WebHost.UseUrls("https://localhost:4001", "http://localhost:4000", "https://*:4001", "http://*:4000");
 #endif
+
 
         Startup.Services.Add(builder.Services, builder.Configuration);
 

@@ -1,4 +1,5 @@
-﻿namespace Functionland.FxFiles.App.Components;
+﻿
+namespace Functionland.FxFiles.App.Components;
 
 public partial class Footer
 {

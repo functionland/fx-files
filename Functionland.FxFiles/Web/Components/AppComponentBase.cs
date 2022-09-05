@@ -1,22 +1,18 @@
-﻿namespace Functionland.FxFiles.App.Components;
+﻿
+using Functionland.FxFiles.Shared.Services.DateTime.Contracts;
+
+namespace Functionland.FxFiles.App.Components;
 
 public partial class AppComponentBase : ComponentBase
 {
+    [AutoInject] protected IDateTimeProvider DateTimeProvider { get; set; } = default!;
     [AutoInject] protected IExceptionHandler ExceptionHandler { get; set; } = default!;
 
     [AutoInject] protected IStateService StateService = default!;
 
-    [AutoInject] protected AppAuthenticationStateProvider AuthenticationStateProvider = default!;
-
-    [AutoInject] protected HttpClient HttpClient = default!;
-
-    [AutoInject] protected IAuthTokenProvider AuthTokenProvider = default!;
-
     [AutoInject] protected IConfiguration Configuration = default!;
 
     [AutoInject] protected NavigationManager NavigationManager = default!;
-
-    [AutoInject] protected IAuthenticationService AuthenticationService = default!;
 
     [AutoInject] protected IStringLocalizer<AppStrings> Localizer = default!;
 

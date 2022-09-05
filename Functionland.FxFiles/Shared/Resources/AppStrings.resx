@@ -443,7 +443,7 @@ Please confirm your email by clicking on the link.</value>
     <value>Search some todo...</value>
   </data>
   <data name="HomeMessage" xml:space="preserve">
-    <value>Create your multi-mode (WASM, Server, Hybrid, pre-rendering) Blazor app easily in the shortest time ever!</value>
+    <value>Manage your file in FxFile</value>
   </data>
   <data name="HomeTitle" xml:space="preserve">
     <value>Functionland.FxFiles Home</value>

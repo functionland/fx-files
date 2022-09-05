@@ -8,10 +8,6 @@
         "outputFile": "Shared/AppErrorBoundary.razor.css"
     },
     {
-        "inputFile": "Shared/MessageBox.razor.scss",
-        "outputFile": "Shared/MessageBox.razor.css"
-    },
-    {
         "inputFile": "Components/Header.razor.scss",
         "outputFile": "Components/Header.razor.css"
     },
@@ -20,51 +16,11 @@
         "outputFile": "Components/Footer.razor.css"
     },
     {
-        "inputFile": "Components/NavMenu.razor.scss",
-        "outputFile": "Components/NavMenu.razor.css"
-    },
-    {
-        "inputFile": "Components/SignOutConfirmModal.razor.scss",
-        "outputFile": "Components/SignOutConfirmModal.razor.css"
-    },
-    {
         "inputFile": "Components/PageNotFound.razor.scss",
         "outputFile": "Components/PageNotFound.razor.css"
     },
     {
         "inputFile": "Pages/HomePage.razor.scss",
         "outputFile": "Pages/HomePage.razor.css"
-    },
-    {
-        "inputFile": "Pages/PrivacyPage.razor.scss",
-        "outputFile": "Pages/PrivacyPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/SignUpPage.razor.scss",
-        "outputFile": "Pages/SignUpPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/SignInPage.razor.scss",
-        "outputFile": "Pages/SignInPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/EmailConfirmationPage.razor.scss",
-        "outputFile": "Pages/EmailConfirmationPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/ForgotPasswordPage.razor.scss",
-        "outputFile": "Pages/ForgotPasswordPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/ResetPasswordPage.razor.scss",
-        "outputFile": "Pages/ResetPasswordPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/TodoPage.razor.scss",
-        "outputFile": "Pages/TodoPage.razor.css"
-    },
-    {
-        "inputFile": "Pages/EditProfilePage.razor.scss",
-        "outputFile": "Pages/EditProfilePage.razor.css"
     }
 ]

@@ -1,19 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
-<Header OnToggleMenu=ToggleMenuHandler />
+<Header/>
 
-@if (IsUserAuthenticated)
-{
-    <NavMenu @bind-IsMenuOpen=IsMenuOpen />
-}
-
-<div class="main @(IsUserAuthenticated ? "main--authenticated" : null)">
-    <div class="main-content">
+<div>
+    <div>
         <AppErrorBoundary>
             @Body
         </AppErrorBoundary>
     </div>
     <Footer />
 </div>
-
-<MessageBox />

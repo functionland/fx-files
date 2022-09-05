@@ -638,7 +638,7 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create your multi-mode (WASM, Server, Hybrid, pre-rendering) Blazor app easily in the shortest time ever!.
+        ///   Looks up a localized string similar to Manage your file in FxFile.
         /// </summary>
         public static string HomeMessage {
             get {

@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.Shared.Services.Contracts;
+﻿namespace Functionland.FxFiles.Shared.Services.DateTime.Contracts;
 
 public interface IDateTimeProvider
 {

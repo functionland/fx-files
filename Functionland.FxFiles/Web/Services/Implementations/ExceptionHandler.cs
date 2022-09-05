@@ -1,17 +1,16 @@
 ﻿using System.Diagnostics;
-using Functionland.FxFiles.App.Shared;
 
 namespace Functionland.FxFiles.App.Services.Implementations;
 
 public partial class ExceptionHandler : IExceptionHandler
 {
-    [AutoInject] IStringLocalizer<AppStrings> _localizer = default!;
+    //[AutoInject] IStringLocalizer<AppStrings> _localizer = default!;
 
     public void Handle(Exception exception, IDictionary<string, object?>? parameters = null)
     {
 #if DEBUG
         string exceptionMessage = (exception as KnownException)?.Message ?? exception.ToString();
-        MessageBox.Show(exceptionMessage, _localizer[nameof(AppStrings.Error)]);
+        //TODO: Show as a MessageBox
         Console.WriteLine(exceptionMessage);
         Debugger.Break();
 #else
