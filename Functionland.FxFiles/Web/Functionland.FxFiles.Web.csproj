@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!--If you don't need to use the time zone and your app is in WASM format, you can reduce the output size of the app by disabling the time zone.-->
+        <BlazorEnableTimeZoneSupport>true</BlazorEnableTimeZoneSupport>
+		<BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
+		<RootNamespace>Functionland.FxFiles.App</RootNamespace>
+		<AssemblyName>Functionland.FxFiles.App</AssemblyName>
+                <ServiceWorkerAssetsManifest Condition="'$(WebAppDeploymentType)' == 'PWA'">service-worker-assets.js</ServiceWorkerAssetsManifest>
+        <BlazorCacheBootResources Condition="'$(WebAppDeploymentType)' == 'PWA'">false</BlazorCacheBootResources>
+        <InvariantGlobalization Condition=" '$(MultilingualEnabled)' == 'false' ">true</InvariantGlobalization>
+        <BlazorWebAssemblyLoadAllGlobalizationData Condition=" '$(MultilingualEnabled)' == 'true' ">true</BlazorWebAssemblyLoadAllGlobalizationData>
+        <!-- To change MultilingualEnabled's value, checkout Directory.Build.props -->
+            </PropertyGroup>
+
+    <ItemGroup>
+                <!-- In the Blazor Web Assembly mode, the API project will host the web client app itself -->
+        <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Pages\_Host.cshtml" />
+        <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Pages\_Layout.cshtml" />
+        <Compile Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Services\Implementations\ServerSideAuthTokenProvider.cs" />
+        <Compile Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Extensions\HttpRequestExtensions.cs" />
+        <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="appsettings.json" />
+                <Content Remove="compilerconfig.json" />
+        <None Include="compilerconfig.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Bit.BlazorUI" Version="4.0.0" />
+        <PackageReference Include="Bit.Bswup" Version="4.0.0" />
+        <PackageReference Include="Bit.CodeAnalyzers" Version="4.0.0" />
+        <PackageReference Include="Bit.SourceGenerators" Version="4.0.0" />
+        <PackageReference Include="BuildWebCompiler2022" Version="1.14.8" />
+        <PackageReference Include="jose-jwt" Version="4.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
+                <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+        <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+            </ItemGroup>
+
+    <ItemGroup>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" Condition="'$(WebAppDeploymentType)' == 'PWA'" />
+        <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <ProjectReference Include="..\Shared\Functionland.FxFiles.Shared.csproj" />
+
+        <Using Include="Microsoft.AspNetCore.Components" />
+        <Using Include="Functionland.FxFiles.App.Services.Contracts" />
+        <Using Include="Functionland.FxFiles.App.Services.Implementations" />
+        <Using Include="Microsoft.Extensions.Configuration" />
+        <Using Include="Microsoft.JSInterop" />
+        <Using Include="System.Net.Http.Json" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="Microsoft.AspNetCore.Components.Authorization" />
+        <Using Include="Functionland.FxFiles.App.Components" />
+        <Using Include="Bit.BlazorUI" />
+        <Using Include="Microsoft.AspNetCore.Authorization" />
+    </ItemGroup>
+
+</Project>
