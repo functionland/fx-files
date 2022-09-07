@@ -45,6 +45,8 @@
 		<Using Include="Functionland.FxFiles.Shared.Attributes" />
 		<Using Include="Functionland.FxFiles.Shared.Services.Contracts" />
 		<Using Include="Functionland.FxFiles.Shared.Services.Implementations" />
+		<Using Include="Functionland.FxFiles.Shared.Models" />
+		<Using Include="Functionland.FxFiles.Shared.Enums" />
     </ItemGroup>
 
 </Project>

@@ -35,10 +35,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Enums\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Update="Resources\AppStrings.Designer.cs">
         <DesignTime>True</DesignTime>
       </Compile>
