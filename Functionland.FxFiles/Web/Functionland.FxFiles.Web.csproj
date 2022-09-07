@@ -18,8 +18,6 @@
                 <!-- In the Blazor Web Assembly mode, the API project will host the web client app itself -->
         <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Pages\_Host.cshtml" />
         <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Pages\_Layout.cshtml" />
-        <Compile Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Services\Implementations\ServerSideAuthTokenProvider.cs" />
-        <Compile Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Extensions\HttpRequestExtensions.cs" />
         <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="appsettings.json" />
                 <Content Remove="compilerconfig.json" />
         <None Include="compilerconfig.json" />
@@ -35,6 +33,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
                 <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
         <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
             </ItemGroup>
 
     <ItemGroup>
@@ -46,8 +45,8 @@
         <ProjectReference Include="..\Shared\Functionland.FxFiles.Shared.csproj" />
 
         <Using Include="Microsoft.AspNetCore.Components" />
-        <Using Include="Functionland.FxFiles.App.Services.Contracts" />
-        <Using Include="Functionland.FxFiles.App.Services.Implementations" />
+        <Using Include="Functionland.FxFiles.Shared.Services.Contracts" />
+        <Using Include="Functionland.FxFiles.Shared.Services.Implementations" />
         <Using Include="Microsoft.Extensions.Configuration" />
         <Using Include="Microsoft.JSInterop" />
         <Using Include="System.Net.Http.Json" />

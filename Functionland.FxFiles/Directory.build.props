@@ -43,6 +43,8 @@
         <Using Include="Microsoft.Extensions.Localization" />
 		<Using Include="Functionland.FxFiles.Shared.Infra" />
 		<Using Include="Functionland.FxFiles.Shared.Attributes" />
+		<Using Include="Functionland.FxFiles.Shared.Services.Contracts" />
+		<Using Include="Functionland.FxFiles.Shared.Services.Implementations" />
     </ItemGroup>
 
 </Project>

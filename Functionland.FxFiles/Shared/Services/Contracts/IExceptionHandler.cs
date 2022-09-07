@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.App.Services.Contracts;
+﻿namespace Functionland.FxFiles.Shared.Services.Contracts;
 
 public interface IExceptionHandler
 {

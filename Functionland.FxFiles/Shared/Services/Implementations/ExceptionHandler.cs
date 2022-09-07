@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Functionland.FxFiles.App.Services.Implementations;
+namespace Functionland.FxFiles.Shared.Services.Implementations;
 
 public partial class ExceptionHandler : IExceptionHandler
 {

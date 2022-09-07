@@ -1,4 +1,6 @@
-﻿namespace Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace Microsoft.AspNetCore.Components;
 
 public static class INavigationManagerExtensions
 {

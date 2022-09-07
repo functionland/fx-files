@@ -57,8 +57,8 @@
         <Using Include="Microsoft.Maui.Controls.Hosting" />
 
         <Using Include="Microsoft.AspNetCore.Components" />
-        <Using Include="Functionland.FxFiles.App.Services.Contracts" />
-        <Using Include="Functionland.FxFiles.App.Services.Implementations" />
+        <Using Include="Functionland.FxFiles.Shared.Services.Contracts" />
+        <Using Include="Functionland.FxFiles.Shared.Services.Implementations" />
         <Using Include="Microsoft.Extensions.Configuration" />
         <Using Include="Microsoft.JSInterop" />
         <Using Include="System.Net.Http.Json" />
