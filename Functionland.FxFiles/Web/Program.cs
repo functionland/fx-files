@@ -1,6 +1,7 @@
 ﻿#if BlazorServer
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using File = System.IO.File;
 #elif BlazorWebAssembly
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 #endif
