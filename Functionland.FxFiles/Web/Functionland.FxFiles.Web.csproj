@@ -55,6 +55,8 @@
         <Using Include="Functionland.FxFiles.App.Components" />
         <Using Include="Bit.BlazorUI" />
         <Using Include="Microsoft.AspNetCore.Authorization" />
+
+		<Watch Remove="*.scss" />
     </ItemGroup>
 
 </Project>
