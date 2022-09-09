@@ -17,6 +17,6 @@ namespace Functionland.FxFiles.Shared.Services.Contracts
         Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null);
         Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null);
         Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null);
-        IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+        IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
     }
 }
