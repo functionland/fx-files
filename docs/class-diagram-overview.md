@@ -40,9 +40,10 @@ class FsArtifactType{
 ```mermaid
 classDiagram
 FileService <|-- LocalDeviceFileService
-LocalDeviceFileService <|-- AndroidInternalMemoryFileService
-LocalDeviceFileService <|-- AndroidExternalMemoryFileService
+LocalDeviceFileService <|-- AndroidFileService
+LocalDeviceFileService <|-- IosFileService
 LocalDeviceFileService <|-- WindowsFileService
+FileService <|-- FakeFileService
 FileService <|-- FulaFileService
 FulaFileService <|-- AndroidFulaFileService
 FulaFileService <|-- IosFulaFileService
@@ -54,6 +55,8 @@ class FileService {
   string Title
   FileProviderType ProviderType
   GetFiles(string path, string search = null, bool includeSubfolders = false) FxFsArtifact[]
+  CreateFile(string path, Stream fileStream)
+  GetFile(string path) Stream
   CreateFolder(string path, string folder) FxFsArtifact
   <<event>>
   event ArtifactsCreated()
@@ -73,6 +76,6 @@ class LocalDeviceFileService {
 ```mermaid
 classDiagram
 class FileExplorerComponent {
-  +IFileService[] FileService
+  +IFileService FileService
 }
 ```
