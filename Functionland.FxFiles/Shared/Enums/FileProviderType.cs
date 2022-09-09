@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Shared.Enums
 {
-    public enum FxFileProviderType
+    public enum FsFileProviderType
     {
         InternalMemory,
         ExternalMemory,

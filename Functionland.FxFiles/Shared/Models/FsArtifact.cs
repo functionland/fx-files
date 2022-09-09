@@ -12,8 +12,8 @@ namespace Functionland.FxFiles.Shared.Models
         public string? FullPath { get; set; }
         public string? Name { get; set; }
         public string? FileExtension { get; set; }
-        public FxArtifactType? ArtifactType { get; set; }
-        public FxFileProviderType? ProviderType { get; set; }
+        public FsArtifactType? ArtifactType { get; set; }
+        public FsFileProviderType? ProviderType { get; set; }
         int? Size { get; set; }
         int? Capacity { get; set; }
         public string? ContentHash { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Shared.Enums
 {
-    public enum FxArtifactType
+    public enum FsArtifactType
     {
         File,
         Folder,
