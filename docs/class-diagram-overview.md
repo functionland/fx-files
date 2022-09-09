@@ -1,7 +1,7 @@
 # Basic Models
 ```mermaid
 classDiagram
-class FxFsArtifact{
+class FsArtifact{
   int Id
   string FullPath
   string Name
