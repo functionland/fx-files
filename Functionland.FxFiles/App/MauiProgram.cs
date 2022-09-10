@@ -28,7 +28,9 @@ public static class MauiProgram
 
 #if Android
         services.AddScoped<IFileService, AndroidFileService>();
-#endif 
+#elif Windows
+        services.AddScoped<IFileService, WindowsFileService>();
+#endif
 
         services.AddAppServices();
 
