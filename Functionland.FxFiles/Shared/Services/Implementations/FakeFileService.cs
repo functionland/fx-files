@@ -75,7 +75,20 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            if (path is null) throw new Exception();
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+
+            var fileName = Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar));
+            var artifact = new FsArtifact
+            {
+                Name = fileName,
+                FullPath = path,
+                OriginDevice = originDevice,
+                ProviderType = FsFileProviderType.InternalMemory,
+                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
+            };
+            _files.Add(artifact);
+            return Task.FromResult(artifact);
         }
 
         public Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
