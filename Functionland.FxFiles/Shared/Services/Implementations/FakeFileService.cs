@@ -23,29 +23,43 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
 
-        public Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach(var artifact in artifacts)
+            {
+                var newPath = Path.Combine(destination, artifact.Name);
+
+                StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+                if (_files.Any(f => comparer.Compare(f.FullPath, newPath) != 0 ))
+                {
+                    var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
+                    _files.Add(artifact);
+                }
+            }
         }
 
         public Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
             if (path is null) throw new Exception();
-            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            FsArtifact artifact = CreateArtifact(path, stream.GetHashCode().ToString());
+            _files.Add(artifact);
+            return Task.FromResult(artifact);
+        }
 
-            var artifact = new FsArtifact
+        private static FsArtifact CreateArtifact(string path, string? contentHash)
+        {
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            return new FsArtifact
             {
                 Name = Path.GetFileName(path),
                 FullPath = path,
                 FileExtension = Path.GetExtension(path),
                 OriginDevice = originDevice,
                 ThumbnailPath = path,
-                ContentHash = stream.GetHashCode().ToString(),
+                ContentHash = contentHash,
                 ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
             };
-            _files.Add(artifact);
-            return Task.FromResult(artifact);
         }
 
         public Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
