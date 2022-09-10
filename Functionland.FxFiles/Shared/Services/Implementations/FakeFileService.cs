@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +50,27 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            var addedFiles = new List<FsArtifact>();
+            foreach (var artifact in from file in files
+                                     let artifact = new FsArtifact
+                                     {
+                                         Name = Path.GetFileName(file.path),
+                                         FullPath = file.path,
+                                         FileExtension = Path.GetExtension(file.path),
+                                         OriginDevice = originDevice,
+                                         ThumbnailPath = file.path,
+                                         ContentHash = file.stream.GetHashCode().ToString(),
+                                         ProviderType = FsFileProviderType.InternalMemory,
+                                         LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
+                                     }
+                                     select artifact)
+            {
+                _files.Add(artifact);
+                addedFiles.Add(artifact);
+            }
+
+            return Task.FromResult(addedFiles);
         }
 
         public Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
