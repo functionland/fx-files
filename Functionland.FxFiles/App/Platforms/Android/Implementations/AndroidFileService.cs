@@ -8,9 +8,9 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
     public class AndroidFileService : LocalDeviceFileService
     {
-        public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            await base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
+            return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
         }
 
         public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
