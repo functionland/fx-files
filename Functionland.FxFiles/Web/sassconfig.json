@@ -1,26 +1,114 @@
-﻿[
-    {
-        "inputFile": "Shared/MainLayout.razor.scss",
-        "outputFile": "Shared/MainLayout.razor.css"
-    },
-    {
-        "inputFile": "Shared/AppErrorBoundary.razor.scss",
-        "outputFile": "Shared/AppErrorBoundary.razor.css"
-    },
-    {
-        "inputFile": "Components/Header.razor.scss",
-        "outputFile": "Components/Header.razor.css"
-    },
-    {
-        "inputFile": "Components/Footer.razor.scss",
-        "outputFile": "Components/Footer.razor.css"
-    },
-    {
-        "inputFile": "Components/PageNotFound.razor.scss",
-        "outputFile": "Components/PageNotFound.razor.css"
-    },
-    {
-        "inputFile": "Pages/HomePage.razor.scss",
-        "outputFile": "Pages/HomePage.razor.css"
-    }
+[
+  {
+    "outputFile": "Shared/MainLayout.razor.css",
+    "inputFile": "Shared/MainLayout.razor.scss"
+  },
+  {
+    "outputFile": "Shared/AppErrorBoundary.razor.css",
+    "inputFile": "Shared/AppErrorBoundary.razor.scss"
+  },
+  {
+    "outputFile": "Components/Header.razor.css",
+    "inputFile": "Components/Header.razor.scss"
+  },
+  {
+    "outputFile": "Components/Footer.razor.css",
+    "inputFile": "Components/Footer.razor.scss"
+  },
+  {
+    "outputFile": "Components/PageNotFound.razor.css",
+    "inputFile": "Components/PageNotFound.razor.scss"
+  },
+  {
+    "outputFile": "Pages/HomePage.razor.css",
+    "inputFile": "Pages/HomePage.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxAvatar.razor.css",
+    "inputFile": "Components/DesignSystem/FxAvatar.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxBottomSheet.razor.css",
+    "inputFile": "Components/DesignSystem/FxBottomSheet.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxBreadcrumbs.razor.css",
+    "inputFile": "Components/DesignSystem/FxBreadcrumbs.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxCheckBox.razor.css",
+    "inputFile": "Components/DesignSystem/FxCheckBox.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxDivider.razor.css",
+    "inputFile": "Components/DesignSystem/FxDivider.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxDropDown.razor.css",
+    "inputFile": "Components/DesignSystem/FxDropDown.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxGroupButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxGroupButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxLink.razor.css",
+    "inputFile": "Components/DesignSystem/FxLink.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxNumericalInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxNumericalInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxProgressBar.razor.css",
+    "inputFile": "Components/DesignSystem/FxProgressBar.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxRadioButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxRadioButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSearchBox.razor.css",
+    "inputFile": "Components/DesignSystem/FxSearchBox.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSearchInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxSearchInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSlider.razor.css",
+    "inputFile": "Components/DesignSystem/FxSlider.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSwitchButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxSwitchButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTab.razor.css",
+    "inputFile": "Components/DesignSystem/FxTab.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTable.razor.css",
+    "inputFile": "Components/DesignSystem/FxTable.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTag.razor.css",
+    "inputFile": "Components/DesignSystem/FxTag.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTextareaInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxTextareaInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTextInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxTextInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxToast.razor.css",
+    "inputFile": "Components/DesignSystem/FxToast.razor.scss"
+  }
 ]
