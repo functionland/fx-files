@@ -91,9 +91,34 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return Task.FromResult(artifact);
         }
 
-        public Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+        public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var tempBag = new List<FsArtifact>();
+            var finalBag = new ConcurrentBag<FsArtifact>();
+
+            foreach (var artifact in artifacts)
+            {
+                foreach (var file in _files)
+                {
+                    finalBag.Add(file);
+                }
+                while (!finalBag.IsEmpty)
+                {
+                    _ = finalBag.TryTake(result: out FsArtifact? currentItem);
+                    if (currentItem != null && string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        break;
+                    }
+                    if(currentItem != null)
+                        tempBag.Add(currentItem);
+                }
+                foreach (var item in tempBag)
+                {
+                    finalBag.Add(item);
+                }
+            }
+
+            _files = finalBag;
         }
 
         public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
