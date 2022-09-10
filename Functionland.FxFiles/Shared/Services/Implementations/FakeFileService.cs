@@ -10,6 +10,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public class FakeFileService : IFileService
     {
+
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();
 
         public FakeFileService(IEnumerable<FsArtifact> files)
@@ -20,6 +21,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
+
         public Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             throw new NotImplementedException();
@@ -27,7 +29,22 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            if (path is null) throw new Exception();
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+
+            var artifact = new FsArtifact
+            {
+                Name = Path.GetFileName(path),
+                FullPath = path,
+                FileExtension = Path.GetExtension(path),
+                OriginDevice = originDevice,
+                ThumbnailPath = path,
+                ContentHash = stream.GetHashCode().ToString(),
+                ProviderType = FsFileProviderType.InternalMemory,
+                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
+            };
+            _files.Add(artifact);
+            return Task.FromResult(artifact);
         }
 
         public Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
