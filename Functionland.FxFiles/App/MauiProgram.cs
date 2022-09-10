@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Functionland.FxFiles.App.Platforms.Android.Implementations;
 using Microsoft.Extensions.FileProviders;
 
 namespace Functionland.FxFiles.App;
@@ -24,6 +25,10 @@ public static class MauiProgram
 #if DEBUG
         services.AddBlazorWebViewDeveloperTools();
 #endif
+
+#if Android
+        services.AddScoped<IFileService, AndroidFileService>();
+#endif 
 
         services.AddAppServices();
 
