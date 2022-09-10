@@ -156,9 +156,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             throw new NotImplementedException();
         }
 
-        public Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            await Task.WhenAll(
+                CopyArtifactsAsync(artifacts, destination, cancellationToken),
+                DeleteArtifactsAsync(artifacts, cancellationToken));
         }
 
         public Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
