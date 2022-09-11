@@ -196,9 +196,15 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach (var artifact in artifacts)
+            {
+                if (artifact.FullPath == null) continue;
+
+                CopyAll(new DirectoryInfo(artifact.FullPath), new DirectoryInfo(destination));
+                DeleteArtifactAsync(artifact, cancellationToken);
+            }
         }
 
         public virtual Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
