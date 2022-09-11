@@ -100,9 +100,30 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return newFsArtifact;
         }
 
-        public virtual Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+        public virtual async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach (var artifact in artifacts)
+            {
+                DeleteArtifactAsync(artifact);
+            }
+        }
+
+        private static async Task DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+        {
+            if (artifact.FullPath == null) return; // ToDo : Throw exception
+
+            if (artifact.ArtifactType == FsArtifactType.Folder)
+            {
+                Directory.Delete(artifact.FullPath, true);
+            }
+            else if (artifact.ArtifactType == FsArtifactType.File)
+            {
+                System.IO.File.Delete(artifact.FullPath);
+            }
+            else if (artifact.ArtifactType == FsArtifactType.Drive)
+            {
+                // ToDo : Throw exception
+            }
         }
 
         public virtual IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
