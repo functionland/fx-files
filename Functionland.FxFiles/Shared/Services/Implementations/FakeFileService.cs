@@ -153,7 +153,23 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            string streamPath;
+            if (Path.GetExtension(filePath).ToLower() == ".jpg" || 
+                Path.GetExtension(filePath).ToLower() == ".png" || 
+                Path.GetExtension(filePath).ToLower() == ".jpeg"
+                )
+            {
+                streamPath = "/Files/fake-pic.jpg";
+            }
+            else
+            {
+                streamPath = "/Files/test.txt";
+            }
+            
+
+            using FileStream fs = File.Open(streamPath, FileMode.Open);
+            return fs;
+
         }
 
         public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)

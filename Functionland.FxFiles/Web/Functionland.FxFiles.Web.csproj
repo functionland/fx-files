@@ -20,7 +20,11 @@
         <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Pages\_Layout.cshtml" />
         <Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="appsettings.json" />
             <Content Remove="sassconfig.json" />
+            <Content Remove="wwwroot\images\Files\fake-pic.jpg" />
+            <Content Remove="wwwroot\images\Files\test.txt" />
         <None Include="sassconfig.json" />
+        <None Include="wwwroot\images\Files\fake-pic.jpg" />
+        <None Include="wwwroot\images\Files\test.txt" />
     </ItemGroup>
 
     <ItemGroup>
