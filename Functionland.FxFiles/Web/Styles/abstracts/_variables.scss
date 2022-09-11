@@ -26,22 +26,44 @@ $warning-night: #FCC419;
 $error-night: #FA5252;
 
 //day colors
-$gray-day-content1: $gray-night-app-bg; 
+$gray-day-content1: #343A40; 
 $gray-day-content2: #495057;
 $gray-day-content3: #6F767D;
-$gray-day-border: $gray-night-content3;
-$gray-day-bg-secondary: $gray-night-content2;
 $gray-day-bg-primary: #F8F9FA;
 $gray-day-app-bg: $pure-white;
-$green-day-pressed: $green-night-pressed;
 $green-day-base: $green-night-base;
 $green-day-hover: $green-night-hover;
+$gray-day-border: $gray-night-content3;
+$green-day-pressed: $green-night-pressed;
+$gray-day-bg-secondary: $gray-night-content2;
 $green-day-border: #97F7CC;
 $green-day-bg: #CAFBE0;
-$success-day: $success-night;
-$info-day: $info-night;
 $warning-day: #FAB005;
 $error-day: #FA4343;
+$info-day: $info-night;
+$success-day: $success-night;
+
+$colors-light: (
+  "error": $error-day,
+  "warning": $warning-day,
+  "green-bg": $green-day-bg,
+  "green-border": $green-day-border,
+  "gray-content1": $gray-day-content1,
+  "gray-content2": $gray-day-content2,
+  "gray-content3": $gray-day-content3,
+  "gray-bg-primary": $gray-day-bg-primary,
+);
+
+$colors-dark: (
+  "error": $error-night,
+  "warning": $warning-night,
+  "green-bg": $green-night-bg,
+  "green-border": $green-night-border,
+  "gray-content1": $gray-night-content1,
+  "gray-content2": $gray-night-content2,
+  "gray-content3": $gray-night-content3,
+  "gray-bg-primary": $gray-night-bg-primary,
+);
 
 // base variable
 $base-unit: px;
@@ -59,7 +81,6 @@ $spacing-56: 56 + $base-unit;
 $spacing-64: 64 + $base-unit;
 $spacing-72: 72 + $base-unit;
 $spacing-80: 80 + $base-unit;
-
 
 //icon sizes
 $icon-32: 32 + $base-unit;
