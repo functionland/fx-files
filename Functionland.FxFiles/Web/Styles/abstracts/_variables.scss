@@ -134,3 +134,15 @@ $letter-spacing-2: 2 + $base-unit;
 $letter-spacing-0: 1 + $base-unit;
 $letter-spacing-02: 0.2 + $base-unit;
 $letter-spacing-0: 0 + $base-unit;
+
+//night box shadows
+$box-shadow-night-xs: 0px 1px 1px rgba(0, 0, 0, 0.12);
+$box-shadow-night-s: 0px 1px 1px rgba(0, 0, 0, 0.16), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+$box-shadow-night-m: 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+$box-shadow-night-l: 0px 24px 38px rgba(0, 0, 0, 0.08), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+
+//day box shadows
+$box-shadow-day-xs: 0px 1px 1px rgba(0, 0, 0, 0.06);
+$box-shadow-day-s: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 2px 1px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1);
+$box-shadow-day-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 0.06), 0px 6px 10px rgba(0, 0, 0, 0.08);
+$box-shadow-day-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
