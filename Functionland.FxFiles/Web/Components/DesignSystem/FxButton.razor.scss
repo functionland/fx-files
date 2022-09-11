@@ -15,7 +15,7 @@
     border-radius: $spacing-4;
     padding: $spacing-8 $spacing-16;
     font-family: $open-sans-semi-bold;
-    background-color: $green-night-base;
+    background-color: $green-dark-base;
 }
 
 .fxbutton-content {
@@ -54,28 +54,28 @@
 
 .fxbutton-normal {
     color: $pure-white;
-    background-color: $green-night-base !important;
+    background-color: $green-dark-base !important;
 }
 
 .fxbutton-normal:hover {
-    background: $green-night-hover !important;
+    background: $green-dark-hover !important;
 }
 
 .fxbutton-normal:active {
-    background: $green-night-pressed !important;
+    background: $green-dark-pressed !important;
 }
 
 
 .fxbutton-outline {
-    color: $green-night-base !important;
-    border: 1px solid $green-night-base !important;
+    color: $green-dark-base !important;
+    border: 1px solid $green-dark-base !important;
     background-color: transparent !important;
 }
 
 .fxbutton-disabled {
-    color: $gray-night-border !important;
+    color: $gray-dark-border !important;
     border: none !important;
-    background-color: $gray-night-bg-secondary !important;
+    background-color: $gray-dark-bg-secondary !important;
 }
 
 .fxbutton-menuline {
