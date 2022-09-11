@@ -8,6 +8,48 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
     public class AndroidFileService : LocalDeviceFileService
     {
+        private async Task<List<FsArtifact>> GetDrivesAsync()
+        {
+            // ToDo: Get the right drives
+            var drives = new List<FsArtifact>
+            {
+                new FsArtifact()
+                {
+                    Name = "internal",
+                    ArtifactType = FsArtifactType.Drive,
+                    ProviderType = FsFileProviderType.InternalMemory
+                }
+            };
+
+            if (true)
+            {
+                drives.Add(
+                new FsArtifact()
+                {
+                    Name = "sdcard01",
+                    ArtifactType = FsArtifactType.Drive,
+                    ProviderType = FsFileProviderType.ExternalMemory
+                });
+            }
+
+            return drives;
+        }
+        private FsFileProviderType GetProviderTypeFromPath(string path)
+        {
+            // ToDo: How to get it from the path
+            if (path.StartsWith("intenal"))
+            {
+                return FsFileProviderType.InternalMemory;
+            }
+            else if (path.StartsWith("sdcard"))
+            {
+                return FsFileProviderType.ExternalMemory;
+            }
+            else
+                throw new Exception($"Unknown file provider for path: {path}");
+            
+        }
+
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
@@ -33,9 +75,31 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return base.DeleteArtifactsAsync(artifacts, cancellationToken);
         }
 
-        public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+        public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
-            return base.GetArtifactsAsync(path, searchText, cancellationToken);
+            if (path is null)
+            {
+                var drives = await GetDrivesAsync();
+                foreach (var drive in drives)
+                {
+                    yield return drive;
+                }
+                yield break;
+            }
+
+            var provider = GetProviderTypeFromPath(path);
+            if (provider == FsFileProviderType.InternalMemory)
+            {
+                // ToDo: Get from internal memory properly.
+                await foreach(var item in base.GetArtifactsAsync(path, searchText, cancellationToken))
+                {
+                    yield return item;
+                }
+            }
+            else if (provider == FsFileProviderType.ExternalMemory)
+            {
+
+            }
         }
 
         public override Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
