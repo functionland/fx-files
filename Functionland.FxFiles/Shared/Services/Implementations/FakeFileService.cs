@@ -26,6 +26,18 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 var newPath = Path.Combine(destination, artifact.Name);
                 CheckIfArtifactExist(newPath);
 
+                var artifactType = GetFsArtifactType(artifact.FullPath);
+                if (artifactType != FsArtifactType.File)
+                {
+                    foreach (var file in _files)
+                    {
+                        if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
+                        {
+                            var insideNewArtifact = CreateArtifact(file.FullPath.Replace(artifact.FullPath, newPath), artifact.ContentHash);
+                            _files.Add(insideNewArtifact);
+                        }
+                    }
+                }
                 var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
                 _files.Add(newArtifact);
 
