@@ -10,13 +10,15 @@ using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public partial class PlatformTestService : IPlatformTestService
+    public abstract partial class PlatformTestService : IPlatformTestService
     {
+        //[AutoInject] IPinServiceTest PinServiceTest { get; set; }
+
         protected virtual List<IPlatformTest> OnGetTests()
         {
             return new List<IPlatformTest>()
             {
-
+                //PinServiceTest,
             };
         }
 
