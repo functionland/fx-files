@@ -67,9 +67,37 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return fsArtifacts;
         }
 
-        public virtual Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
+        public virtual async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            FsArtifact newFsArtifact = new();
+
+            if (!string.IsNullOrWhiteSpace(folderName))
+            {
+                var newPath = Path.Combine(path, folderName);                
+
+                try
+                {
+                    Directory.CreateDirectory(newPath);
+                    newFsArtifact = new FsArtifact()
+                    {
+                        Name = folderName,
+                        FullPath = newPath,
+                        ArtifactType = FsArtifactType.Folder,
+                        ProviderType = GetFsFileProviderType(newPath) 
+                    };
+                }
+                catch (Exception)
+                {
+                    throw;
+                    // ToDo : Handle exception
+                };
+            }
+            else
+            {
+                // ToDo : Throw exception
+            }
+
+            return newFsArtifact;
         }
 
         public virtual Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
