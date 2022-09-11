@@ -8,9 +8,14 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public abstract class LocalDeviceFileService : IFileService
     {
-        public virtual Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach (var artifact in artifacts)
+            {
+                if (artifact.FullPath == null) continue;
+
+                CopyAll(new DirectoryInfo(artifact.FullPath), new DirectoryInfo(destination));
+            }
         }
 
         public virtual Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -56,6 +61,22 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         public virtual Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
             throw new NotImplementedException();
+        }
+
+        private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        {
+            Directory.CreateDirectory(target.FullName);
+
+            foreach (FileInfo file in source.GetFiles())
+            {
+                file.CopyTo(Path.Combine(target.FullName, file.Name), true);
+            }
+
+            foreach (DirectoryInfo subDirectory in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDirectory = target.CreateSubdirectory(subDirectory.Name);
+                CopyAll(subDirectory, nextTargetSubDirectory);
+            }
         }
     }
 }
