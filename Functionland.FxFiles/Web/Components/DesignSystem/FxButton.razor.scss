@@ -1,16 +1,19 @@
-﻿.fxbutton {
-    width: 80px;
-    height: 40px;
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fxbutton {
+    width: $spacing-80;
+    height: $spacing-40;
     color: white;
     display: grid;
     cursor: pointer;
     overflow: hidden;
-    padding: 8px 16px;
+    padding: $spacing-8 $spacing-16;
     user-select: none;
     text-align: center;
-    border-radius: 4px;
+    border-radius: $spacing-4;
     text-decoration: none;
-    background-color: #049B8F;
+    background-color: $green-night-base;
 }
 
 .fxbutton-content {
@@ -26,7 +29,7 @@
 
 .fxbutton-content img {
     width: auto;
-    height: 20px;
+    height: $icon-20;
     background-color: transparent;
 }
 
@@ -36,46 +39,47 @@
 }
 
 .fxbutton-metadata {
-    font-size: 10px;
-    margin: 0 7px;
+    font-size: $font-size-10;
+    margin: 0 $spacing-8;
 }
 
 .fxbutton-normal {
-    color: white;
-    background-color: #049B8F !important;
+    color: $pure-white;
+    background-color: $green-night-base !important;
 }
 
 .fxbutton-normal:hover {
-    background: #06B597 !important;
+    background: $green-night-hover !important;
 }
 
 .fxbutton-normal:active {
-    background: #038082 !important;
+    background: $green-night-pressed !important;
 }
 
 
 .fxbutton-outline {
-    color: #049B8F !important;
-    border: 1px solid #049B8F !important;
+    color: $green-night-base !important;
+    border: 1px solid $green-night-base !important;
     background-color: transparent !important;
 }
 
 .fxbutton-disabled {
-    color: #868E96 !important;
+    color: $gray-night-border !important;
     border: none !important;
-    background-color: #495057 !important;
+    background-color: $gray-night-bg-secondary !important;
 }
 
 .fxbutton-menuline {
-    width: 333px;
+    width: auto;
+    margin: 4px 21px;
     height: 60px;
-    color: #343A40 !important;
+    color: color(gray-content1) !important;
     border: none !important;
-    background-color: #F8F9FA !important;
+    background-color: color(gray-bg-primary) !important;
 }
 
 .fxbutton-menuline:active {
-    background-color: #E9ECEF !important;
+    background-color: color(gray-bg-secondary) !important;
 }
 
 .fxbutton-menuline .fxbutton-content {
@@ -83,16 +87,16 @@
 }
 
 .fxbutton-small {
-    height: 40px !important;
-    width: 80px !important;
+    height: $spacing-40 !important;
+    width: $spacing-80 !important;
 }
 
 .fxbutton-large {
     height: 60px !important;
-    width: 80px !important;
+    width: $spacing-80 !important;
 }
 
 .fxbutton-stretch {
-    height: 40px !important;
+    height: $spacing-40 !important;
     width: 100% !important;
 }

@@ -19,15 +19,26 @@
     @(string.Format(" fxbutton-{0}", ButtonSize).ToLower())">
     <div class="fxbutton-content">
         <div>
-            <img class="fxbutton-lefticon" src="@LeftIcon" />
+            @if (!string.IsNullOrEmpty(LeftIcon) || !string.IsNullOrWhiteSpace(LeftIcon))
+            {
+                <img class="fxbutton-lefticon" src="@LeftIcon" />
+            }
             @if (!string.IsNullOrEmpty(Text) || !string.IsNullOrWhiteSpace(Text))
             {
                 <span class="fxbutton-text" style="margin-inline-@HorizontalTextAlignment: auto">@Text</span>
             }
         </div>
         <div>
-            <span class="fxbutton-metadata">@MetaDataText</span>
-            <img class="fxbutton-righticon" src="@RightIcon" />
+            @if (!string.IsNullOrEmpty(RightIcon) || !string.IsNullOrWhiteSpace(RightIcon))
+            {
+                <img class="fxbutton-righticon" src="@RightIcon" />
+            }
+
+            @if (!string.IsNullOrEmpty(MetaDataText) || !string.IsNullOrWhiteSpace(MetaDataText))
+            {
+
+                <span class="fxbutton-metadata">@MetaDataText</span>
+            }
         </div>
     </div>
 </a>
