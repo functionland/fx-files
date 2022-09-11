@@ -1,2 +1,111 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fxbutton {
+    width: min-content;
+    height: $spacing-40;
+    color: white;
+    display: grid;
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+    text-align: center;
+    text-decoration: none;
+    font-size: $font-size-14;
+    border-radius: $spacing-4;
+    padding: $spacing-8 $spacing-16;
+    font-family: $open-sans-semi-bold;
+    background-color: $green-night-base;
+}
+
+.fxbutton-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fxbutton-content div {
+    display: flex;
+    align-items: center;
+}
+
+.fxbutton-content img {
+    width: auto;
+    height: $icon-20;
+    background-color: transparent;
+}
+
+.fxbutton-lefticon {
+    margin-right: 10px;
+}
+
+.fxbutton-righticon {
+    margin-left: 10px;
+}
+
+.fxbutton-text {
+    align-self: center;
+}
+
+.fxbutton-metadata {
+    font-size: $font-size-10;
+    margin-left: 10px;
+}
+
+.fxbutton-normal {
+    color: $pure-white;
+    background-color: $green-night-base !important;
+}
+
+.fxbutton-normal:hover {
+    background: $green-night-hover !important;
+}
+
+.fxbutton-normal:active {
+    background: $green-night-pressed !important;
+}
+
+
+.fxbutton-outline {
+    color: $green-night-base !important;
+    border: 1px solid $green-night-base !important;
+    background-color: transparent !important;
+}
+
+.fxbutton-disabled {
+    color: $gray-night-border !important;
+    border: none !important;
+    background-color: $gray-night-bg-secondary !important;
+}
+
+.fxbutton-menuline {
+    width: auto;
+    margin: 4px 21px;
+    height: 60px;
+    color: color(gray-content1) !important;
+    border: none !important;
+    background-color: color(gray-bg-primary) !important;
+}
+
+.fxbutton-menuline:active {
+    background-color: color(gray-bg-secondary) !important;
+}
+
+.fxbutton-menuline .fxbutton-content {
+    justify-content: space-between;
+}
+
+.fxbutton-small {
+    height: $spacing-40 !important;
+    width: $spacing-80 !important;
+}
+
+.fxbutton-large {
+    height: 60px !important;
+    width: $spacing-80 !important;
+}
+
+.fxbutton-stretch {
+    height: $spacing-40 !important;
+    width: 100% !important;
 }
