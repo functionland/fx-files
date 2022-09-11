@@ -114,5 +114,9 @@
   {
     "outputFile": "Components/DesignSystem/FxToast.razor.css",
     "inputFile": "Components/DesignSystem/FxToast.razor.scss"
+  },
+  {
+    "outputFile": "Pages/MyDevice.razor.css",
+    "inputFile": "Pages/MyDevice.razor.scss"
   }
 ]
