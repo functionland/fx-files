@@ -15,6 +15,15 @@ $gray-night-border: #868E96;
 $gray-night-bg-secondary: #495057;
 $gray-night-bg-primary: #343A40;
 $gray-night-app-bg: #343A40;
+$green-night-pressed: #038082;
+$green-night-base: #049B8F;
+$green-night-hover: #06B597;
+$green-night-border: #035B4C;
+$green-night-bg: #02362D;
+$success-night: #37B24D;
+$info-night: #1C7ED6;
+$warning-night: #FCC419;
+$error-night: #FA5252;
 
 //day colors
 $gray-day-content1: $gray-night-app-bg; 
@@ -24,6 +33,15 @@ $gray-day-border: $gray-night-content3;
 $gray-day-bg-secondary: $gray-night-content2;
 $gray-day-bg-primary: #F8F9FA;
 $gray-day-app-bg: $pure-white;
+$green-day-pressed: $green-night-pressed;
+$green-day-base: $green-night-base;
+$green-day-hover: $green-night-hover;
+$green-day-border: #97F7CC;
+$green-day-bg: #CAFBE0;
+$success-day: $success-night;
+$info-day: $info-night;
+$warning-day: #FAB005;
+$error-day: #FA4343;
 
 // base variable
 $base-unit: px;
