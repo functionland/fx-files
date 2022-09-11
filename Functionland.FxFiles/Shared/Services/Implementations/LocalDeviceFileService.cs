@@ -214,9 +214,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             System.IO.File.Move(filePath, newPath);
         }
 
-        public virtual Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
+        public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var oldName = Path.GetFileName(folderPath);
+            var newPath = folderPath.Replace(oldName, newName);
+            Directory.Move(folderPath, newPath);
         }
 
         private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
