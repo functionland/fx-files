@@ -43,7 +43,26 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             }
         }
+        private static FsArtifactType GetFsArtifactType(string path)
+        {
+            string[] drives = Directory.GetLogicalDrives();
 
+            if (drives.Contains(path))
+            {
+                return FsArtifactType.Drive;
+            }
+
+            FileAttributes attr = System.IO.File.GetAttributes(path);
+
+            if (attr.HasFlag(FileAttributes.Directory))
+            {
+                return FsArtifactType.Folder;
+            }
+            else
+            {
+                return FsArtifactType.File;
+            }
+        }
         private void CheckIfArtifactExist(string newPath)
         {
             if (ArtifacrExist(newPath))
@@ -145,16 +164,19 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 while (!finalBag.IsEmpty)
                 {
                     _ = finalBag.TryTake(result: out FsArtifact? currentItem);
-                    if (currentItem != null && string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        break;
-                    }
+                    if (currentItem != null && string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)) break;
                     if (currentItem != null)
+                    {
                         tempBag.Add(currentItem);
+                    }
                 }
                 foreach (var item in tempBag)
                 {
-                    finalBag.Add(item);
+                    if (!item.FullPath.StartsWith(artifact.FullPath))
+                    {
+                        finalBag.Add(item);
+                    }
+
                 }
             }
 
@@ -199,7 +221,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
         public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
-        {
+        { 
             await Task.WhenAll(
                 CopyArtifactsAsync(artifacts, destination, cancellationToken),
                 DeleteArtifactsAsync(artifacts, cancellationToken));
