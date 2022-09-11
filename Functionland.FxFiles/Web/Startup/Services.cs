@@ -11,6 +11,7 @@ public static class Services
         services.AddHttpContextAccessor();
         services.AddRazorPages();
         services.AddServerSideBlazor();
+        services.AddScoped<ThemeInterop>();
         services.AddResponseCompression(opts =>
         {
             opts.EnableForHttps = true;
