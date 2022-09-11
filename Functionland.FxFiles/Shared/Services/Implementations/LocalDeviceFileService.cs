@@ -190,9 +190,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public virtual Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
+        public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var streamReader = new StreamReader(filePath);
+            return streamReader.BaseStream;
         }
 
         public virtual Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
