@@ -126,9 +126,68 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public virtual IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+        public virtual async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            if (path == null) 
+            {
+                var drives = GetDrives();
+
+                foreach (var drive in drives)
+                    yield return drive;
+                yield break;
+            }
+
+            if (GetFsArtifactType(path) is FsArtifactType.Folder or FsArtifactType.Drive)
+            {
+                var artifacts = new List<FsArtifact>();
+                var subArtifacts = new List<FsArtifact>();
+                string[] directoryFiles = Directory.GetFiles(path);
+                string[] subDirectories = Directory.GetDirectories(path);
+
+                foreach (var subDirectory in subDirectories)
+                {
+                    subArtifacts.Add(
+                        new FsArtifact()
+                        {
+                            ArtifactType = FsArtifactType.Folder,
+                            FullPath = subDirectory,
+                            ProviderType = GetFsFileProviderType(subDirectory),
+                            Name = Path.GetFileName(subDirectory)
+                        });
+                }
+
+                subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
+
+                foreach (var file in directoryFiles)
+                {
+                    artifacts.Add(
+                        new FsArtifact()
+                        {
+                            ArtifactType = FsArtifactType.File,
+                            FullPath = file,
+                            ProviderType = GetFsFileProviderType(file),
+                            Name = Path.GetFileName(file)
+                        });
+                }
+
+                artifacts = artifacts.OrderBy(i => i.Name).ToList();
+
+                var result = subArtifacts.Concat(artifacts);
+
+                if (searchText != null)
+                {
+                    result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
+                }
+
+                foreach (var item in result)
+                {
+                    yield return item;
+                }
+            }
+            else
+            {
+                // ToDo : throw exception             
+            }
         }
 
         public virtual Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
@@ -165,6 +224,45 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 DirectoryInfo nextTargetSubDirectory = target.CreateSubdirectory(subDirectory.Name);
                 CopyAll(subDirectory, nextTargetSubDirectory);
             }
+        }
+
+        private static FsArtifactType GetFsArtifactType(string path)
+        {
+            string[] drives = Directory.GetLogicalDrives();
+
+            if (drives.Contains(path))
+            {
+                return FsArtifactType.Drive;
+            }
+
+            FileAttributes attr = System.IO.File.GetAttributes(path);
+
+            if (attr.HasFlag(FileAttributes.Directory))
+            {
+                return FsArtifactType.Folder;
+            }
+            else
+            {
+                return FsArtifactType.File;
+            }
+        }
+
+        private List<FsArtifact> GetDrives()
+        {
+            var drives = Directory.GetLogicalDrives();
+            var artifacts = new List<FsArtifact>();
+
+            foreach (var drive in drives)
+            {
+                artifacts.Add(new FsArtifact()
+                {
+                    ArtifactType = FsArtifactType.Drive,
+                    FullPath = drive,
+                    ProviderType = GetFsFileProviderType(drive)
+                });
+            }
+
+            return artifacts;
         }
     }
 }
