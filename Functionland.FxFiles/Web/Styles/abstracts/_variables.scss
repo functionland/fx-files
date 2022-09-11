@@ -67,7 +67,7 @@ $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
 
-//font face decleration
+//font faces
 $font-path: "/fonts/";
 $montserrat-medium: "Montserrat-Medium";
 $montserrat-semi-bold: "Montserrat-SemiBold";
@@ -105,7 +105,7 @@ $open-sans-semi-bold: "OpenSans-SemiBold";
     src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
 }
 
-//font-size variables
+//font-sizes 
 $font-size-36: 36 + $base-unit;
 $font-size-32: 32 + $base-unit;
 $font-size-28: 28 + $base-unit;
@@ -118,7 +118,7 @@ $font-size-12: 12 + $base-unit;
 $font-size-10: 10 + $base-unit;
 $font-size-8: 8 + $base-unit;
 
-//line-height variables
+//line-heights
 $line-height-48: 48 + $base-unit;
 $line-height-40: 40 + $base-unit;
 $line-height-36: 36 + $base-unit;
@@ -129,7 +129,7 @@ $line-height-20: 20 + $base-unit;
 $line-height-16: 16 + $base-unit;
 $line-height-10: 10 + $base-unit;
 
-//letter-spacing variables
+//letter-spacings
 $letter-spacing-2: 2 + $base-unit;
 $letter-spacing-0: 1 + $base-unit;
 $letter-spacing-02: 0.2 + $base-unit;
