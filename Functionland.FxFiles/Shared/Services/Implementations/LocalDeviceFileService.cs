@@ -55,9 +55,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return newFsArtifact;
         }
 
-        public virtual Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            List<FsArtifact> fsArtifacts = new();
+
+            foreach (var (path, stream) in files)
+            {
+                fsArtifacts.Add(await CreateFileAsync(path, stream, cancellationToken));
+            }
+
+            return fsArtifacts;
         }
 
         public virtual Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
