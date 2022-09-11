@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public class FakeFileService : IFileService
@@ -151,7 +152,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         }
 
-        public Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
+        public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
             string streamPath;
             if (Path.GetExtension(filePath).ToLower() == ".jpg" || 
@@ -179,9 +180,18 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 DeleteArtifactsAsync(artifacts, cancellationToken));
         }
 
-        public Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
+        public  async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach(var articat in _files)
+            {
+                if(string.Equals(articat.FullPath, filePath, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var directoryName = Path.GetDirectoryName(articat.FullPath);
+                    articat.FullPath = Path.Combine(directoryName, newName);
+                    articat.Name = newName;
+                    break;
+                }
+            }
         }
 
         public Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
