@@ -7,64 +7,64 @@ $viridian-green: #099393;
 $granite-gray: #676767;
 $silver-gray: #B2B2B2;
 
-//night colors
-$gray-night-content1: #F8F9FA;
-$gray-night-content2: #E9ECEF;
-$gray-night-content3: #CED4DA;
-$gray-night-border: #868E96;
-$gray-night-bg-secondary: #495057;
-$gray-night-bg-primary: #343A40;
-$gray-night-app-bg: #343A40;
-$green-night-pressed: #038082;
-$green-night-base: #049B8F;
-$green-night-hover: #06B597;
-$green-night-border: #035B4C;
-$green-night-bg: #02362D;
-$success-night: #37B24D;
-$info-night: #1C7ED6;
-$warning-night: #FCC419;
-$error-night: #FA5252;
+//dark colors
+$gray-dark-content1: #F8F9FA;
+$gray-dark-content2: #E9ECEF;
+$gray-dark-content3: #CED4DA;
+$gray-dark-border: #868E96;
+$gray-dark-bg-secondary: #495057;
+$gray-dark-bg-primary: #343A40;
+$gray-dark-app-bg: #343A40;
+$green-dark-pressed: #038082;
+$green-dark-base: #049B8F;
+$green-dark-hover: #06B597;
+$green-dark-border: #035B4C;
+$green-dark-bg: #02362D;
+$success-dark: #37B24D;
+$info-dark: #1C7ED6;
+$warning-dark: #FCC419;
+$error-dark: #FA5252;
 
-//day colors
-$gray-day-content1: #343A40; 
-$gray-day-content2: #495057;
-$gray-day-content3: #6F767D;
-$gray-day-bg-primary: #F8F9FA;
-$gray-day-app-bg: $pure-white;
-$green-day-base: $green-night-base;
-$green-day-hover: $green-night-hover;
-$gray-day-border: $gray-night-content3;
-$green-day-pressed: $green-night-pressed;
-$gray-day-bg-secondary: $gray-night-content2;
-$green-day-border: #97F7CC;
-$green-day-bg: #CAFBE0;
-$warning-day: #FAB005;
-$error-day: #FA4343;
-$info-day: $info-night;
-$success-day: $success-night;
+//light colors
+$gray-light-content1: #343A40;
+$gray-light-content2: #495057;
+$gray-light-content3: #6F767D;
+$gray-light-bg-primary: #F8F9FA;
+$gray-light-app-bg: $pure-white;
+$green-light-base: $green-dark-base;
+$green-light-hover: $green-dark-hover;
+$gray-light-border: $gray-dark-content3;
+$green-light-pressed: $green-dark-pressed;
+$gray-light-bg-secondary: $gray-dark-content2;
+$green-light-border: #97F7CC;
+$green-light-bg: #CAFBE0;
+$warning-light: #FAB005;
+$error-light: #FA4343;
+$info-light: $info-dark;
+$success-light: $success-dark;
 
 $colors-light: (
-  "error": $error-day,
-  "warning": $warning-day,
-  "green-bg": $green-day-bg,
-  "green-border": $green-day-border,
-  "gray-content1": $gray-day-content1,
-  "gray-content2": $gray-day-content2,
-  "gray-content3": $gray-day-content3,
-  "gray-bg-primary": $gray-day-bg-primary,
-  "gray-bg-secondary": $gray-day-bg-secondary,
+  "error": $error-light,
+  "warning": $warning-light,
+  "green-bg": $green-light-bg,
+  "green-border": $green-light-border,
+  "gray-content1": $gray-light-content1,
+  "gray-content2": $gray-light-content2,
+  "gray-content3": $gray-light-content3,
+  "gray-bg-primary": $gray-light-bg-primary,
+  "gray-bg-secondary": $gray-light-bg-secondary,
 );
 
 $colors-dark: (
-  "error": $error-night,
-  "warning": $warning-night,
-  "green-bg": $green-night-bg,
-  "green-border": $green-night-border,
-  "gray-content1": $gray-night-content1,
-  "gray-content2": $gray-night-content2,
-  "gray-content3": $gray-night-content3,
-  "gray-bg-primary": $gray-night-bg-primary,
-  "gray-bg-secondary": $gray-night-bg-secondary,
+  "error": $error-dark,
+  "warning": $warning-dark,
+  "green-bg": $green-dark-bg,
+  "green-border": $green-dark-border,
+  "gray-content1": $gray-dark-content1,
+  "gray-content2": $gray-dark-content2,
+  "gray-content3": $gray-dark-content3,
+  "gray-bg-primary": $gray-dark-bg-primary,
+  "gray-bg-secondary": $gray-dark-bg-secondary,
 );
 
 // base variable
@@ -150,6 +150,7 @@ $line-height-28: 28 + $base-unit;
 $line-height-24: 24 + $base-unit;
 $line-height-20: 20 + $base-unit;
 $line-height-16: 16 + $base-unit;
+$line-height-14: 14 + $base-unit;
 $line-height-10: 10 + $base-unit;
 
 //letter-spacings
@@ -158,14 +159,19 @@ $letter-spacing-0: 1 + $base-unit;
 $letter-spacing-02: 0.2 + $base-unit;
 $letter-spacing-0: 0 + $base-unit;
 
-//night box shadows
-$box-shadow-night-xs: 0px 1px 1px rgba(0, 0, 0, 0.12);
-$box-shadow-night-s: 0px 1px 1px rgba(0, 0, 0, 0.16), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
-$box-shadow-night-m: 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
-$box-shadow-night-l: 0px 24px 38px rgba(0, 0, 0, 0.08), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+//dark box shadows
+$box-shadow-dark-xs: 0px 1px 1px rgba(0, 0, 0, 0.12);
+$box-shadow-dark-s: 0px 1px 1px rgba(0, 0, 0, 0.16), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+$box-shadow-dark-m: 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+$box-shadow-dark-l: 0px 24px 38px rgba(0, 0, 0, 0.08), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
 
-//day box shadows
-$box-shadow-day-xs: 0px 1px 1px rgba(0, 0, 0, 0.06);
-$box-shadow-day-s: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 2px 1px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1);
-$box-shadow-day-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 0.06), 0px 6px 10px rgba(0, 0, 0, 0.08);
-$box-shadow-day-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
+//light box shadows
+$box-shadow-light-xs: 0px 1px 1px rgba(0, 0, 0, 0.06);
+$box-shadow-light-s: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 2px 1px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1);
+$box-shadow-light-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 0.06), 0px 6px 10px rgba(0, 0, 0, 0.08);
+$box-shadow-light-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
+
+//border-raduis
+$border-radius-4: 4 + $base-unit;
+$border-radius-6: 6 + $base-unit;
+$border-radius-20: 20 + $base-unit;
