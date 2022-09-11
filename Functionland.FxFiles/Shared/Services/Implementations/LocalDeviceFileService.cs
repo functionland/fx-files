@@ -207,9 +207,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public virtual Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
+        public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var oldName = Path.GetFileNameWithoutExtension(filePath);
+            var newPath = filePath.Replace(oldName, newName);
+            System.IO.File.Move(filePath, newPath);
         }
 
         public virtual Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
