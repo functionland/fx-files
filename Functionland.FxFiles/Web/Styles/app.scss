@@ -15,4 +15,14 @@
 
 body {
     margin: 0;
+
+    @each $key, $value in $colors-light {
+        --#{$key}: #{$value};
+    }
+}
+
+body [data-theme="dark"] {
+    @each $key, $value in $colors-dark {
+        --#{$key}: #{$value};
+    }
 }
