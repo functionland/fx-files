@@ -1,0 +1,148 @@
+﻿//main brand colors
+$primary-color: #06B597;
+$pure-white: #FFFFFF;
+$main-dark: #212529;
+$blue-crayola: #187AF9;
+$viridian-green: #099393;
+$granite-gray: #676767;
+$silver-gray: #B2B2B2;
+
+//night colors
+$gray-night-content1: #F8F9FA;
+$gray-night-content2: #E9ECEF;
+$gray-night-content3: #CED4DA;
+$gray-night-border: #868E96;
+$gray-night-bg-secondary: #495057;
+$gray-night-bg-primary: #343A40;
+$gray-night-app-bg: #343A40;
+$green-night-pressed: #038082;
+$green-night-base: #049B8F;
+$green-night-hover: #06B597;
+$green-night-border: #035B4C;
+$green-night-bg: #02362D;
+$success-night: #37B24D;
+$info-night: #1C7ED6;
+$warning-night: #FCC419;
+$error-night: #FA5252;
+
+//day colors
+$gray-day-content1: $gray-night-app-bg; 
+$gray-day-content2: #495057;
+$gray-day-content3: #6F767D;
+$gray-day-border: $gray-night-content3;
+$gray-day-bg-secondary: $gray-night-content2;
+$gray-day-bg-primary: #F8F9FA;
+$gray-day-app-bg: $pure-white;
+$green-day-pressed: $green-night-pressed;
+$green-day-base: $green-night-base;
+$green-day-hover: $green-night-hover;
+$green-day-border: #97F7CC;
+$green-day-bg: #CAFBE0;
+$success-day: $success-night;
+$info-day: $info-night;
+$warning-day: #FAB005;
+$error-day: #FA4343;
+
+// base variable
+$base-unit: px;
+
+//spacing
+$spacing-4: 4 + $base-unit;
+$spacing-8: 8 + $base-unit;
+$spacing-12: 12 + $base-unit;
+$spacing-16: 16 + $base-unit;
+$spacing-24: 24 + $base-unit;
+$spacing-32: 32 + $base-unit;
+$spacing-40: 40 + $base-unit;
+$spacing-48: 48 + $base-unit;
+$spacing-56: 56 + $base-unit;
+$spacing-64: 64 + $base-unit;
+$spacing-72: 72 + $base-unit;
+$spacing-80: 80 + $base-unit;
+
+
+//icon sizes
+$icon-32: 32 + $base-unit;
+$icon-24: 24 + $base-unit;
+$icon-20: 20 + $base-unit;
+$icon-16: 16 + $base-unit;
+
+//font faces
+$font-path: "/fonts/";
+$montserrat-medium: "Montserrat-Medium";
+$montserrat-semi-bold: "Montserrat-SemiBold";
+$open-sans-light: "OpenSans-Light";
+$open-sans-regular: "OpenSans-Regular";
+$open-sans-semi-bold: "OpenSans-SemiBold";
+
+@font-face {
+    font-family: $montserrat-semi-bold;
+    font-weight: 600;
+    src: url("#{$font-path}/Montserrat-SemiBold.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $montserrat-medium;
+    font-weight: 500;
+    src: url("#{$font-path}/Montserrat-Medium.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $open-sans-light;
+    font-weight: 300;
+    src: url("#{$font-path}/OpenSans-Light.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $open-sans-regular;
+    font-weight: 400;
+    src: url("#{$font-path}/OpenSans-Regular.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $open-sans-semi-bold;
+    font-weight: 600;
+    src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
+}
+
+//font-sizes 
+$font-size-36: 36 + $base-unit;
+$font-size-32: 32 + $base-unit;
+$font-size-28: 28 + $base-unit;
+$font-size-24: 24 + $base-unit;
+$font-size-20: 20 + $base-unit;
+$font-size-18: 18 + $base-unit;
+$font-size-16: 16 + $base-unit;
+$font-size-14: 14 + $base-unit;
+$font-size-12: 12 + $base-unit;
+$font-size-10: 10 + $base-unit;
+$font-size-8: 8 + $base-unit;
+
+//line-heights
+$line-height-48: 48 + $base-unit;
+$line-height-40: 40 + $base-unit;
+$line-height-36: 36 + $base-unit;
+$line-height-30: 30 + $base-unit;
+$line-height-28: 28 + $base-unit;
+$line-height-24: 24 + $base-unit;
+$line-height-20: 20 + $base-unit;
+$line-height-16: 16 + $base-unit;
+$line-height-10: 10 + $base-unit;
+
+//letter-spacings
+$letter-spacing-2: 2 + $base-unit;
+$letter-spacing-0: 1 + $base-unit;
+$letter-spacing-02: 0.2 + $base-unit;
+$letter-spacing-0: 0 + $base-unit;
+
+//night box shadows
+$box-shadow-night-xs: 0px 1px 1px rgba(0, 0, 0, 0.12);
+$box-shadow-night-s: 0px 1px 1px rgba(0, 0, 0, 0.16), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+$box-shadow-night-m: 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+$box-shadow-night-l: 0px 24px 38px rgba(0, 0, 0, 0.08), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+
+//day box shadows
+$box-shadow-day-xs: 0px 1px 1px rgba(0, 0, 0, 0.06);
+$box-shadow-day-s: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 2px 1px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1);
+$box-shadow-day-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 0.06), 0px 6px 10px rgba(0, 0, 0, 0.08);
+$box-shadow-day-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
