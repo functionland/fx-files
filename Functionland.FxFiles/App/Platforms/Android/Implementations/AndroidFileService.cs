@@ -1,13 +1,28 @@
-﻿using System;
+﻿using Android.Content;
+using Android.OS;
+using Android.Provider;
+using android = Android;
+
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Android.App;
+using AndroidX.DocumentFile.Provider;
+using Android.OS.Storage;
+using Android.Media;
+using Stream = System.IO.Stream;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
     public class AndroidFileService : LocalDeviceFileService
     {
+        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+        public Activity MainActivity { get; set; }
+
+        private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()
         {
             // ToDo: Get the right drives
@@ -50,20 +65,72 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             
         }
 
+        private async IAsyncEnumerable<FsArtifact> GetFilesAsync(Bundle queryArge)
+        {
+            string[] projection = {
+                    MediaStore.IMediaColumns.BucketId,
+                    MediaStore.IMediaColumns.MimeType,
+                    MediaStore.IMediaColumns.DisplayName,
+                    MediaStore.IMediaColumns.Size,
+                    IBaseColumns.Id,
+                    MediaStore.IMediaColumns.Data,
+                    MediaStore.IMediaColumns.DateAdded,
+                    MediaStore.IMediaColumns.DateModified
+            };
+
+
+            using var cursor = MainActivity.ContentResolver?.Query(
+                contentUri,
+                projection,
+                queryArge,
+                null
+                );
+
+            if (cursor is not null && cursor.MoveToFirst())
+            {
+                do
+                {
+                    var parentId = cursor.GetInt(0);
+                    var mimeType = cursor.GetString(1);
+                    var name = cursor.GetString(2);
+                    var size = cursor.GetLong(3);
+                    var id = cursor.GetLong(4);
+                    var data = cursor.GetString(5);
+                    var dateAdded = DateTimeOffset.FromUnixTimeSeconds(cursor.GetLong(6));
+                    var dateModifiedUnixFormat = cursor.GetLong(7);
+                    DateTimeOffset dateModified = dateModifiedUnixFormat == 0 ? dateAdded : DateTimeOffset.FromUnixTimeSeconds(dateModifiedUnixFormat);
+
+                    yield return new FsArtifact
+                    {
+                        ParentId = parentId,
+                        MimeType = mimeType,
+                        Name = name,
+                        Size = size,
+                        Id = id,
+                        FullPath = data,
+                        FileExtension = Path.GetExtension(data),
+                        LastModifiedDateTime = dateModified
+                    };
+                }
+                while (cursor.MoveToNext());
+            }
+        }
+
+        
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
         }
 
         public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
-        {
+                {
             return base.CreateFileAsync(path, stream, cancellationToken);
-        }
+                }
 
         public override Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
-        {
+                {
             return base.CreateFilesAsync(files, cancellationToken);
-        }
+                }
 
         public override Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
@@ -91,20 +158,27 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             if (provider == FsFileProviderType.InternalMemory)
             {
                 // ToDo: Get from internal memory properly.
-                await foreach(var item in base.GetArtifactsAsync(path, searchText, cancellationToken))
+                await foreach(var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
                 {
-                    yield return item;
+                    yield return artifact;
                 }
             }
             else if (provider == FsFileProviderType.ExternalMemory)
             {
+                string selection = $@"(({MediaStore.IMediaColumns.Data} == {path}));";
 
+                if (searchText is not null)
+                {
+                    selection = selection + $@"AND ( {MediaStore.IMediaColumns.DisplayName} like '%{searchText}%' );";
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.PutString(ContentResolver.QueryArgSqlSelection, selection);
+                await foreach(var artifact in GetFilesAsync(bundle))
+                {
+                    yield return artifact;
+                };
             }
-        }
-
-        public override Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
-        {
-            return base.GetFileContentAsync(filePath, cancellationToken);
         }
 
         public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
