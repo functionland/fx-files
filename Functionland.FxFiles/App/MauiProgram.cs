@@ -1,6 +1,13 @@
 ﻿using System.Reflection;
-using Functionland.FxFiles.App.Platforms.Android.Implementations;
 using Microsoft.Extensions.FileProviders;
+
+#if Android
+using Functionland.FxFiles.App.Platforms.Android.Implementations;
+#elif Windows
+using Functionland.FxFiles.App.Platforms.Windows.Implementations;
+#elif iOS
+//TODO:using Functionland.FxFiles.App.Platforms.iOS.Implementations;
+#endif
 
 namespace Functionland.FxFiles.App;
 
@@ -30,6 +37,8 @@ public static class MauiProgram
         services.AddScoped<IFileService, AndroidFileService>();
 #elif Windows
         services.AddScoped<IFileService, WindowsFileService>();
+#elif iOS
+        //TODO: services.AddScoped<IFileService, IosFileService>();
 #endif
 
         services.AddAppServices();
