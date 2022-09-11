@@ -2,17 +2,19 @@
 @import "../../Styles/abstracts/_functions.scss";
 
 .fxbutton {
-    width: $spacing-80;
+    width: min-content;
     height: $spacing-40;
     color: white;
     display: grid;
     cursor: pointer;
     overflow: hidden;
-    padding: $spacing-8 $spacing-16;
     user-select: none;
     text-align: center;
-    border-radius: $spacing-4;
     text-decoration: none;
+    font-size: $font-size-14;
+    border-radius: $spacing-4;
+    padding: $spacing-8 $spacing-16;
+    font-family: $open-sans-semi-bold;
     background-color: $green-night-base;
 }
 
@@ -33,14 +35,21 @@
     background-color: transparent;
 }
 
+.fxbutton-lefticon {
+    margin-right: 10px;
+}
+
+.fxbutton-righticon {
+    margin-left: 10px;
+}
+
 .fxbutton-text {
-    margin: 0 10px;
     align-self: center;
 }
 
 .fxbutton-metadata {
     font-size: $font-size-10;
-    margin: 0 $spacing-8;
+    margin-left: 10px;
 }
 
 .fxbutton-normal {
