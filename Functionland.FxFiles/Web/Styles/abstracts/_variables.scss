@@ -25,7 +25,7 @@ $gray-day-bg-secondary: $gray-night-content2;
 $gray-day-bg-primary: #F8F9FA;
 $gray-day-app-bg: $pure-white;
 
-// base unit variable for sizes
+// base variable
 $base-unit: px;
 
 //spacing
@@ -43,3 +43,8 @@ $spacing-72: 72 + $base-unit;
 $spacing-80: 80 + $base-unit;
 
 
+//icon sizes
+$icon-32: 32 + $base-unit;
+$icon-24: 24 + $base-unit;
+$icon-20: 20 + $base-unit;
+$icon-16: 16 + $base-unit;
