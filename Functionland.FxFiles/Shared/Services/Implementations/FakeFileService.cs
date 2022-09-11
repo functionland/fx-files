@@ -20,17 +20,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            foreach(var artifact in artifacts)
+            foreach (var artifact in artifacts)
             {
                 var newPath = Path.Combine(destination, artifact.Name);
+                CheckFileExist(newPath);
 
-                StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-                if (_files.Any(f => comparer.Compare(f.FullPath, newPath) != 0 ))
-                {
-                    var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
-                    _files.Add(artifact);
-                }
+                var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
+                _files.Add(newArtifact);
+
             }
+        }
 
         private void CheckFileExist(string newPath)
         {
@@ -133,7 +132,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     {
                         break;
                     }
-                    if(currentItem != null)
+                    if (currentItem != null)
                         tempBag.Add(currentItem);
                 }
                 foreach (var item in tempBag)
@@ -154,7 +153,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (searchText is not null)
                 files = files.Where(f => f.Name.Contains(searchText));
 
-            foreach(var file in files)
+            foreach (var file in files)
             {
                 yield return file;
             }
@@ -164,8 +163,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
             string streamPath;
-            if (Path.GetExtension(filePath).ToLower() == ".jpg" || 
-                Path.GetExtension(filePath).ToLower() == ".png" || 
+            if (Path.GetExtension(filePath).ToLower() == ".jpg" ||
+                Path.GetExtension(filePath).ToLower() == ".png" ||
                 Path.GetExtension(filePath).ToLower() == ".jpeg"
                 )
             {
@@ -175,7 +174,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
                 streamPath = "/Files/test.txt";
             }
-            
+
 
             using FileStream fs = File.Open(streamPath, FileMode.Open);
             return fs;
@@ -189,11 +188,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 DeleteArtifactsAsync(artifacts, cancellationToken));
         }
 
-        public  async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
+        public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
-            foreach(var articat in _files)
+            foreach (var articat in _files)
             {
-                if(string.Equals(articat.FullPath, filePath, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(articat.FullPath, filePath, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var directoryName = Path.GetDirectoryName(articat.FullPath);
                     articat.FullPath = Path.Combine(directoryName, newName);
