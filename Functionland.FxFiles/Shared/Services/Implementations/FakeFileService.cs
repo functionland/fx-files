@@ -6,7 +6,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public class FakeFileService : IFileService
     {
-
+        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();
 
         public FakeFileService(IEnumerable<FsArtifact> files)
@@ -31,14 +31,29 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     _files.Add(artifact);
                 }
             }
+
+        private void CheckFileExist(string newPath)
+        {
+            if (FileExist(newPath))
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
         }
 
-        public Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
+        private bool FileExist(string newPath)
+        {
+            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+            return _files.Any(f => comparer.Compare(f.FullPath, newPath) == 0);
+        }
+
+        public async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
             if (path is null) throw new Exception();
+
+            CheckFileExist(path);
+
             FsArtifact artifact = CreateArtifact(path, stream.GetHashCode().ToString());
             _files.Add(artifact);
-            return Task.FromResult(artifact);
+            return artifact;
+
         }
 
         private static FsArtifact CreateArtifact(string path, string? contentHash)

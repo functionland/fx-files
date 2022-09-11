@@ -88,6 +88,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FileAlreadyExistsException.
+        /// </summary>
+        public static string FileAlreadyExistsException {
+            get {
+                return ResourceManager.GetString("FileAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while removing file.
         /// </summary>
         public static string FileRemoveFailed {
