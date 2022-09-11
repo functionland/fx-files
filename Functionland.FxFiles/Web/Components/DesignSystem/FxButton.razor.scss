@@ -1,2 +1,98 @@
-﻿body {
+﻿.fxbutton {
+    width: 80px;
+    height: 40px;
+    color: white;
+    display: grid;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 8px 16px;
+    user-select: none;
+    text-align: center;
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: #049B8F;
+}
+
+.fxbutton-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fxbutton-content div {
+    display: flex;
+    align-items: center;
+}
+
+.fxbutton-content img {
+    width: auto;
+    height: 20px;
+    background-color: transparent;
+}
+
+.fxbutton-text {
+    margin: 0 10px;
+    align-self: center;
+}
+
+.fxbutton-metadata {
+    font-size: 10px;
+    margin: 0 7px;
+}
+
+.fxbutton-normal {
+    color: white;
+    background-color: #049B8F !important;
+}
+
+.fxbutton-normal:hover {
+    background: #06B597 !important;
+}
+
+.fxbutton-normal:active {
+    background: #038082 !important;
+}
+
+
+.fxbutton-outline {
+    color: #049B8F !important;
+    border: 1px solid #049B8F !important;
+    background-color: transparent !important;
+}
+
+.fxbutton-disabled {
+    color: #868E96 !important;
+    border: none !important;
+    background-color: #495057 !important;
+}
+
+.fxbutton-menuline {
+    width: 333px;
+    height: 60px;
+    color: #343A40 !important;
+    border: none !important;
+    background-color: #F8F9FA !important;
+}
+
+.fxbutton-menuline:active {
+    background-color: #E9ECEF !important;
+}
+
+.fxbutton-menuline .fxbutton-content {
+    justify-content: space-between;
+}
+
+.fxbutton-small {
+    height: 40px !important;
+    width: 80px !important;
+}
+
+.fxbutton-large {
+    height: 60px !important;
+    width: 80px !important;
+}
+
+.fxbutton-stretch {
+    height: 40px !important;
+    width: 100% !important;
 }
