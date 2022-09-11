@@ -1,1 +1,27 @@
-﻿
+﻿//main brand colors
+$primary-color: #06B597;
+$pure-white: #FFFFFF;
+$main-dark: #212529;
+$blue-crayola: #187AF9;
+$viridian-green: #099393;
+$granite-gray: #676767;
+$silver-gray: #B2B2B2;
+
+//night colors
+$gray-night-content1: #F8F9FA;
+$gray-night-content2: #E9ECEF;
+$gray-night-content3: #CED4DA;
+$gray-night-border: #868E96;
+$gray-night-bg-secondary: #495057;
+$gray-night-bg-primary: #343A40;
+$gray-night-app-bg: #343A40;
+
+//day colors
+$gray-day-content1: $gray-night-app-bg; 
+$gray-day-content2: #495057;
+$gray-day-content3: #6F767D;
+$gray-day-border: $gray-night-content3;
+$gray-day-bg-secondary: $gray-night-content2;
+$gray-day-bg-primary: #F8F9FA;
+$gray-day-app-bg: $pure-white;
+
