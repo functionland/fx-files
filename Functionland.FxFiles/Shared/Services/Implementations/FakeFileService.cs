@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Functionland.FxFiles.Shared.Models;
+using System.Collections.Concurrent;
 using System.IO;
 
 
@@ -89,10 +90,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                                      }
                                      select artifact)
             {
-                _files.Add(artifact);
+                CheckFileExist(artifact.FullPath);
                 addedFiles.Add(artifact);
             }
-
+            foreach(var file in addedFiles)
+            {
+                _files.Add(file);
+            }
             return Task.FromResult(addedFiles);
         }
 
