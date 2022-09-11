@@ -57,5 +57,10 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
         {
             return base.RenameFileAsync(filePath, newName, cancellationToken);
         }
+
+        public override FsFileProviderType GetFsFileProviderType(string filePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -8,6 +8,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public abstract class LocalDeviceFileService : IFileService
     {
+        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+
+        public abstract FsFileProviderType GetFsFileProviderType(string filePath);
+
         public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
@@ -18,9 +22,37 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public virtual Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
+        public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            FsArtifact newFsArtifact = new();
+            var fileName = Path.GetFileNameWithoutExtension(path);
+
+            try
+            {
+                if (System.IO.File.Exists(path))
+                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.CreateFileFailed)]);
+
+                using FileStream outPutFileStream = new(path, FileMode.Create);
+                await stream.CopyToAsync(outPutFileStream);
+
+                newFsArtifact = new FsArtifact
+                {
+                    Name = fileName,
+                    FullPath = path,
+                    ArtifactType = FsArtifactType.File,
+                    FileExtension = Path.GetExtension(path),
+                    Size = (int)outPutFileStream.Length,
+                    ProviderType = GetFsFileProviderType(path),
+                    LastModifiedDateTime = DateTimeOffset.Now
+                };
+            }
+            catch
+            {
+                // ToDo : Handle exceptions
+                throw;
+            }
+
+            return newFsArtifact;
         }
 
         public virtual Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)

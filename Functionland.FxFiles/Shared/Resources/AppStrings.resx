@@ -117,46 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-	<data name="BadRequestException" xml:space="preserve">
+  <data name="BadRequestException" xml:space="preserve">
     <value>Invalid request</value>
   </data>
-	<data name="ConflicException" xml:space="preserve">
+  <data name="ConflicException" xml:space="preserve">
     <value>Request could not be processed because of conflict in the request</value>
   </data>
-	<data name="FileRemoveFailed" xml:space="preserve">
+  <data name="FileRemoveFailed" xml:space="preserve">
     <value>An error occurred while removing file</value>
   </data>
-	<data name="FileUploadFailed" xml:space="preserve">
+  <data name="FileUploadFailed" xml:space="preserve">
     <value>An error occurred while uploading file</value>
   </data>
-	<data name="ForbiddenException" xml:space="preserve">
+  <data name="ForbiddenException" xml:space="preserve">
     <value>Access to the requested resource is forbidden</value>
   </data>
-	<data name="ResourceValidationException" xml:space="preserve">
+  <data name="ResourceValidationException" xml:space="preserve">
     <value>Request data is not valid</value>
   </data>
-	<data name="RestException" xml:space="preserve">
+  <data name="RestException" xml:space="preserve">
     <value>An error occurred while communicating with server</value>
   </data>
-	<data name="UnknownException" xml:space="preserve">
+  <data name="UnknownException" xml:space="preserve">
     <value>Unknown error has occurred</value>
   </data>
-	<data name="UnauthorizedException" xml:space="preserve">
+  <data name="UnauthorizedException" xml:space="preserve">
     <value>Your request lacks valid authentication credentials</value>
   </data>
-	<data name="UpdateConcurrencyException" xml:space="preserve">
+  <data name="UpdateConcurrencyException" xml:space="preserve">
     <value>The record was modified by another user after you got the original data. the operation was canceled.</value>
   </data>
-	<data name="KnownException" xml:space="preserve">
+  <data name="KnownException" xml:space="preserve">
     <value>Known error</value>
   </data>
-	<data name="ResourceNotFoundException" xml:space="preserve">
+  <data name="ResourceNotFoundException" xml:space="preserve">
     <value>Resource not found</value>
   </data>
-	<data name="TooManyRequestsExceptions" xml:space="preserve">
+  <data name="TooManyRequestsExceptions" xml:space="preserve">
     <value>Too many requests</value>
   </data>
-	<data name="Error" xml:space="preserve">
+  <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
   <data name="HomeMessage" xml:space="preserve">
@@ -164,5 +164,8 @@
   </data>
   <data name="HomeTitle" xml:space="preserve">
     <value>The title of home</value>
+  </data>
+  <data name="CreateFileFailed" xml:space="preserve">
+    <value>The file is already exist</value>
   </data>
 </root>
