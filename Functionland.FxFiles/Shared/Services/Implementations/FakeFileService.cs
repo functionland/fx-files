@@ -24,7 +24,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             foreach (var artifact in artifacts)
             {
                 var newPath = Path.Combine(destination, artifact.Name);
-                CheckFileExist(newPath);
+                CheckIfArtifactExist(newPath);
 
                 var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
                 _files.Add(newArtifact);
@@ -32,13 +32,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        private void CheckFileExist(string newPath)
+        private void CheckIfArtifactExist(string newPath)
         {
-            if (FileExist(newPath))
+            if (ArtifacrExist(newPath))
                 throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
         }
 
-        private bool FileExist(string newPath)
+        private bool ArtifacrExist(string newPath)
         {
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
             return _files.Any(f => comparer.Compare(f.FullPath, newPath) == 0);
@@ -48,7 +48,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             if (path is null) throw new Exception();
 
-            CheckFileExist(path);
+            CheckIfArtifactExist(path);
 
             FsArtifact artifact = CreateArtifact(path, stream.GetHashCode().ToString());
             _files.Add(artifact);
@@ -90,32 +90,33 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                                      }
                                      select artifact)
             {
-                CheckFileExist(artifact.FullPath);
+                CheckIfArtifactExist(artifact.FullPath);
                 addedFiles.Add(artifact);
             }
-            foreach(var file in addedFiles)
+            foreach (var file in addedFiles)
             {
                 _files.Add(file);
             }
             return Task.FromResult(addedFiles);
         }
 
-        public Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
+        public async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
             if (path is null) throw new Exception();
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            var finalPath = Path.Combine(path, folderName);
+            CheckIfArtifactExist(finalPath);
 
-            var fileName = Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar));
             var artifact = new FsArtifact
             {
-                Name = fileName,
-                FullPath = path,
+                Name = folderName,
+                FullPath = finalPath,
                 OriginDevice = originDevice,
                 ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
             };
             _files.Add(artifact);
-            return Task.FromResult(artifact);
+            return artifact;
         }
 
         public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
