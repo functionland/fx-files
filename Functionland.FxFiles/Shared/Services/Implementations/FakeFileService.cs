@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
@@ -194,9 +188,23 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
+        public async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var oldFolderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
+            foreach (var articat in _files)
+            {
+                if (string.Equals(articat.FullPath, folderPath, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    DirectoryInfo parentDir = Directory.GetParent(folderPath.EndsWith("\\") ? folderPath : string.Concat(folderPath, "\\"));
+                    articat.FullPath = Path.Combine(parentDir.Parent.FullName, newName);
+                    articat.Name = newName;
+                }
+                else
+                {
+                    articat.FullPath = articat.FullPath.Replace($"{Path.PathSeparator}{oldFolderName}{Path.PathSeparator}", $"{Path.PathSeparator}{newName}{Path.PathSeparator}");
+                }
+
+            }
         }
     }
 }
