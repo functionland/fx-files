@@ -24,7 +24,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
         private async Task<List<FsArtifact>> GetDrivesAsync()
         {
             var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
-            if(storageManager is null)
+            if (storageManager is null)
             {
                 throw new DomainLogicException(StringLocalizer[nameof(AppStrings.UnableToLoadStorageManager)]);
             }
@@ -206,38 +206,54 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
         public override async Task<FsFileProviderType> GetFsFileProviderType(string filePath)
         {
-            var drives = await GetDrivesAsync();       
+            var drives = await GetDrivesAsync();
 
             // ToDo: How to get it from the path
-            if (IsFsFileProviderInternal(filePath))
+            if (IsFsFileProviderInternal(filePath, drives))
             {
                 return FsFileProviderType.InternalMemory;
             }
-            else if (IsFsFileProviderExternal(filePath))
+            else if (IsFsFileProviderExternal(filePath, drives))
             {
                 return FsFileProviderType.ExternalMemory;
-            }
-            else if (IsFsFileProviderBlox(filePath))
-            {
-                return FsFileProviderType.Blox;
             }
             else
                 throw new Exception($"Unknown file provider for path: {filePath}");
         }
 
-        private bool IsFsFileProviderBlox(string filePath)
+        private bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
         {
-            throw new NotImplementedException();
+            var internalDrive = drives?.FirstOrDefault(d => d.ProviderType == FsFileProviderType.InternalMemory);
+            if (string.IsNullOrWhiteSpace(filePath) || internalDrive?.FullPath == null)
+            {
+                return false;
+            }
+            else if (filePath.StartsWith(internalDrive.FullPath))
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        private bool IsFsFileProviderExternal(string filePath)
+        private bool IsFsFileProviderExternal(string filePath, List<FsArtifact> drives)
         {
-            throw new NotImplementedException();
+            var externalDrives = drives?.Where(d => d.ProviderType == FsFileProviderType.ExternalMemory).ToList();
+            if (string.IsNullOrWhiteSpace(filePath) || externalDrives is null || !externalDrives.Any())
+            {
+                return false;
+            }
+
+            foreach (var externalDrive in externalDrives)
+            {
+                if (externalDrive?.FullPath != null && filePath.StartsWith(externalDrive.FullPath))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        private bool IsFsFileProviderInternal(string filePath)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
