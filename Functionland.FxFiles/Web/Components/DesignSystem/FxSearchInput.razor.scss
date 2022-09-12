@@ -1,2 +1,21 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.input-box {
+    background-color: color(gray-content2);
+    background-repeat: no-repeat;
+    background-position: center left 22.69px;
+    background-size: $icon-16;
+    height: 40px;
+    padding: $spacing-8 $spacing-12 $spacing-8 $spacing-48;
+    border-radius: 5px;
+    border: none;
+    outline-color: color(gray-content2);
+    caret-color: $blue-crayola;
+    line-height: $line-height-24;
+    font-family: $open-sans-regular;
+    font-size: $font-size-14;
+    font-style: normal;
+    color: color(gray-bg-primary);
 }
+
