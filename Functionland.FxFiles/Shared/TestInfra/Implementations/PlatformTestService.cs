@@ -12,13 +12,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public abstract partial class PlatformTestService : IPlatformTestService
     {
-        //[AutoInject] IPinServiceTest PinServiceTest { get; set; }
-
+        
         protected virtual List<IPlatformTest> OnGetTests()
         {
             return new List<IPlatformTest>()
             {
-                //PinServiceTest,
             };
         }
 
