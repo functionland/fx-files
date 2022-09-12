@@ -52,6 +52,8 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                         Capacity = storage.Directory.FreeSpace
                     });
                 }
+
+                //ToDo: Hanlde when drive is Blox
             }
 
             return drives;
@@ -189,17 +191,38 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
         public override FsFileProviderType GetFsFileProviderType(string filePath)
         {
+            //var drives = await GetDrivesAsync();       
+
             // ToDo: How to get it from the path
-            if (filePath.StartsWith("intenal"))
+            if (IsFsFileProviderInternal(filePath))
             {
                 return FsFileProviderType.InternalMemory;
             }
-            else if (filePath.StartsWith("sdcard"))
+            else if (IsFsFileProviderExternal(filePath))
             {
                 return FsFileProviderType.ExternalMemory;
             }
+            else if (IsFsFileProviderBlox(filePath))
+            {
+                return FsFileProviderType.Blox;
+            }
             else
                 throw new Exception($"Unknown file provider for path: {filePath}");
+        }
+
+        private bool IsFsFileProviderBlox(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsFsFileProviderExternal(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsFsFileProviderInternal(string filePath)
+        {
+            throw new NotImplementedException();
         }
     }
 }
