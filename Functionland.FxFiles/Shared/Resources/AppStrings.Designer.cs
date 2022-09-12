@@ -61,6 +61,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} name is null.
+        /// </summary>
+        public static string ArtifactNameIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactNameIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} path is null.
         /// </summary>
         public static string ArtifactPathIsNull {

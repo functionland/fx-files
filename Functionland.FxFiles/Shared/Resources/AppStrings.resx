@@ -177,4 +177,7 @@
   <data name="ArtifactTypeIsNull" xml:space="preserve">
     <value>The artifact type is null</value>
   </data>
+  <data name="ArtifactNameIsNull" xml:space="preserve">
+    <value>The {0} name is null</value>
+  </data>
 </root>
