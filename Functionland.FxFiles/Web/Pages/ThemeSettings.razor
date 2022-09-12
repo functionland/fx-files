@@ -1,0 +1,8 @@
+﻿@page "/theme"
+
+<div class="theme-content">
+    @($"Use System Theme ({SystemTheme})")
+    <BitToggle @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemTheme" />
+    Dark Theme
+    <BitToggle @bind-Value="@IsDarkMode" OnChange="@OnDarkThemeChanged" />
+</div>
