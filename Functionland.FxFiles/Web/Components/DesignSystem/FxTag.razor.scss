@@ -23,3 +23,14 @@
         position: left 9.33px center;
     }
 }
+
+.right-icon-tag {
+    width: 84px;
+    padding-right: $spacing-30;
+
+    background: {
+        repeat: no-repeat;
+        size: $icon-16;
+        position: right 9.33px center;
+    }
+}
