@@ -1,10 +1,3 @@
 ﻿@inherits AppComponentBase;
 
-<div class="dvider-thin divider-vertical divider-dashed"></div>
-
-<!--<hr class="divider" />
-<hr class="divider" />
-
-<hr class="divider">
-<hr class="divider">
-<hr class="divider">-->
+<div class="divider-@(FxDividerSize.ToString().ToLower()) divider-@(FxDividerType.ToString().ToLower()) divider-@(FxDividerMode.ToString().ToLower())"></div>

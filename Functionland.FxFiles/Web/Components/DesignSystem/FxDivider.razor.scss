@@ -1,36 +1,35 @@
 ﻿@import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
 
-hr {
-    border-color: $gray-dark-bg-primary;
+div {
+    border-color: color(gray-bg-secondary);
 }
 
-.dvider-thin {
-    border-width: 1px;
+.divider-thin {
+    border-top-width: $border-size-1;
 }
 
 .divider-regular {
-    border-width: 2px;
+    border-top-width: $border-size-2;
 }
 
 .divider-bold {
-    border-width: 4px;
+    border-top-width: $border-size-4;
 }
 
 .divider-solid {
-    border-style: solid; 
+    border-top-style: solid; 
 }
 
-.divider-dashed {
-    border-style: dashed;
-    border-radius: 50%;
+.divider-dotted {
+    border-top-style: dotted;
 }
 
 .divider-vertical {
-    width: 333px;
+    width: 100%;
+    transform: rotate(90deg);
 }
 
 .divider-horizontal {
-    width: 106px;
-    transform: rotate(90deg);
+    width: 100%;
 }
