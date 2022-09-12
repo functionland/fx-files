@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace Functionland.FxFiles.Shared.TestInfra.Implementations
+﻿namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 {
     public abstract class PlatformTest : IPlatformTest
     {
@@ -48,7 +40,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             Action<string, string?, TestProgressType> onAssert { get; set; }
             public void IsTrue(bool? actual, string title, string? description = null)
             {
-                if (actual == true) 
+                if (actual == true)
                 {
                     onAssert(title, description, TestProgressType.Success);
                 }
@@ -70,8 +62,33 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 }
             }
 
+            public void IsNull<T>(T actual, string title, string? description = null)
+            {
+                if (actual is null)
+                {
+                    onAssert(title, description, TestProgressType.Success);
+                }
+                else
+                {
+                    onAssert(title, description, TestProgressType.Fail);
+                }
+            }
+
+            public void IsNotNull<T>(T actual, string title, string? description = null)
+            {
+                if (actual is not null)
+                {
+                    onAssert(title, description, TestProgressType.Success);
+                }
+                else
+                {
+                    onAssert(title, description, TestProgressType.Fail);
+                }
+            }
+
+
             public void AreEqual<T>(T expected, T actual, string title, string? description = null)
-                where T : notnull, IEquatable<T>
+                where T : notnull
             {
                 if (actual.Equals(expected))
                 {
@@ -107,7 +124,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 }
                 catch (Exception exception)
                 {
-                    onAssert(title, 
+                    onAssert(title,
                         $"Wrong ExceptionType. Exptected: '{typeof(TException).Name}', Actual: {exception.GetType().Name}",
                         TestProgressType.Fail);
                 }
