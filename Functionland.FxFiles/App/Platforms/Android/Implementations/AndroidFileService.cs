@@ -177,31 +177,38 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                 yield break;
             }
 
-            var provider = await GetFsFileProviderType(path);
-            if (provider == FsFileProviderType.InternalMemory)
+            await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
             {
-                // ToDo: Get from internal memory properly.
-                await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
-                {
-                    yield return artifact;
-                }
+                yield return artifact;
             }
-            else if (provider == FsFileProviderType.ExternalMemory)
-            {
-                string selection = $@"({MediaStore.IMediaColumns.Data} = '{path}')"; //TODO: use relative path ,volume_name and display name
 
-                if (String.IsNullOrWhiteSpace(searchText))
-                {
-                    selection = selection + $@"AND ( {MediaStore.IMediaColumns.DisplayName} like '%{searchText}%' )";
-                }
+            #region Check for Android 12
+            //var provider = await GetFsFileProviderType(path);
+            //if (provider == FsFileProviderType.InternalMemory)
+            //{
+            //    // ToDo: Get from internal memory properly.
+            //    await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
+            //    {
+            //        yield return artifact;
+            //    }
+            //}
+            //else if (provider == FsFileProviderType.ExternalMemory)
+            //{
+            //    string selection = $@"({MediaStore.IMediaColumns.Data} = '{path}')"; //TODO: use relative path ,volume_name and display name
 
-                Bundle bundle = new Bundle();
-                bundle.PutString(ContentResolver.QueryArgSqlSelection, selection);
-                await foreach (var artifact in GetFilesAsync(bundle))
-                {
-                    yield return artifact;
-                };
-            }
+            //    if (!String.IsNullOrWhiteSpace(searchText))
+            //    {
+            //        selection = selection + $@"AND ( {MediaStore.IMediaColumns.DisplayName} like '%{searchText}%' )";
+            //    }
+
+            //    Bundle bundle = new Bundle();
+            //    bundle.PutString(ContentResolver.QueryArgSqlSelection, selection);
+            //    await foreach (var artifact in GetFilesAsync(bundle))
+            //    {
+            //        yield return artifact;
+            //    };
+            //} 
+            #endregion
         }
 
         public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
