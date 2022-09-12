@@ -1,0 +1,179 @@
+﻿//main brand colors
+$primary-color: #06B597;
+$pure-white: #FFFFFF;
+$main-dark: #212529;
+$blue-crayola: #187AF9;
+$viridian-green: #099393;
+$granite-gray: #676767;
+$silver-gray: #B2B2B2;
+
+//dark colors
+$gray-dark-content1: #F8F9FA;
+$gray-dark-content2: #E9ECEF;
+$gray-dark-content3: #CED4DA;
+$gray-dark-border: #868E96;
+$gray-dark-bg-secondary: #495057;
+$gray-dark-bg-primary: #343A40;
+$gray-dark-app-bg: #343A40;
+$green-dark-pressed: #038082;
+$green-dark-base: #049B8F;
+$green-dark-hover: #06B597;
+$green-dark-border: #035B4C;
+$green-dark-bg: #02362D;
+$success-dark: #37B24D;
+$info-dark: #1C7ED6;
+$warning-dark: #FCC419;
+$error-dark: #FA5252;
+
+//light colors
+$gray-light-content1: #343A40;
+$gray-light-content2: #495057;
+$gray-light-content3: #6F767D;
+$gray-light-bg-primary: #F8F9FA;
+$gray-light-app-bg: $pure-white;
+$green-light-base: $green-dark-base;
+$green-light-hover: $green-dark-hover;
+$gray-light-border: $gray-dark-content3;
+$green-light-pressed: $green-dark-pressed;
+$gray-light-bg-secondary: $gray-dark-content2;
+$green-light-border: #97F7CC;
+$green-light-bg: #CAFBE0;
+$warning-light: #FAB005;
+$error-light: #FA4343;
+$info-light: $info-dark;
+$success-light: $success-dark;
+
+$colors-light: (
+  "error": $error-light,
+  "warning": $warning-light,
+  "green-bg": $green-light-bg,
+  "green-border": $green-light-border,
+  "gray-content1": $gray-light-content1,
+  "gray-content2": $gray-light-content2,
+  "gray-content3": $gray-light-content3,
+  "gray-bg-primary": $gray-light-bg-primary,
+  "gray-bg-secondary": $gray-light-bg-secondary,
+);
+
+$colors-dark: (
+  "error": $error-dark,
+  "warning": $warning-dark,
+  "green-bg": $green-dark-bg,
+  "green-border": $green-dark-border,
+  "gray-content1": $gray-dark-content1,
+  "gray-content2": $gray-dark-content2,
+  "gray-content3": $gray-dark-content3,
+  "gray-bg-primary": $gray-dark-bg-primary,
+  "gray-bg-secondary": $gray-dark-bg-secondary,
+);
+
+// base variable
+$base-unit: px;
+
+//spacing
+$spacing-4: 4 + $base-unit;
+$spacing-6: 6 + $base-unit;
+$spacing-8: 8 + $base-unit;
+$spacing-12: 12 + $base-unit;
+$spacing-16: 16 + $base-unit;
+$spacing-24: 24 + $base-unit;
+$spacing-32: 32 + $base-unit;
+$spacing-30: 30 + $base-unit;
+$spacing-40: 40 + $base-unit;
+$spacing-48: 48 + $base-unit;
+$spacing-56: 56 + $base-unit;
+$spacing-64: 64 + $base-unit;
+$spacing-72: 72 + $base-unit;
+$spacing-80: 80 + $base-unit;
+
+//icon sizes
+$icon-32: 32 + $base-unit;
+$icon-24: 24 + $base-unit;
+$icon-20: 20 + $base-unit;
+$icon-16: 16 + $base-unit;
+
+//font faces
+$font-path: "/fonts/";
+$montserrat-medium: "Montserrat-Medium";
+$montserrat-semi-bold: "Montserrat-SemiBold";
+$open-sans-light: "OpenSans-Light";
+$open-sans-regular: "OpenSans-Regular";
+$open-sans-semi-bold: "OpenSans-SemiBold";
+
+@font-face {
+    font-family: $montserrat-semi-bold;
+    font-weight: 600;
+    src: url("#{$font-path}/Montserrat-SemiBold.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $montserrat-medium;
+    font-weight: 500;
+    src: url("#{$font-path}/Montserrat-Medium.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $open-sans-light;
+    font-weight: 300;
+    src: url("#{$font-path}/OpenSans-Light.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $open-sans-regular;
+    font-weight: 400;
+    src: url("#{$font-path}/OpenSans-Regular.ttf") format("truetype"),
+}
+
+@font-face {
+    font-family: $open-sans-semi-bold;
+    font-weight: 600;
+    src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
+}
+
+//font-sizes 
+$font-size-36: 36 + $base-unit;
+$font-size-32: 32 + $base-unit;
+$font-size-28: 28 + $base-unit;
+$font-size-24: 24 + $base-unit;
+$font-size-20: 20 + $base-unit;
+$font-size-18: 18 + $base-unit;
+$font-size-16: 16 + $base-unit;
+$font-size-14: 14 + $base-unit;
+$font-size-12: 12 + $base-unit;
+$font-size-10: 10 + $base-unit;
+$font-size-8: 8 + $base-unit;
+
+//line-heights
+$line-height-48: 48 + $base-unit;
+$line-height-40: 40 + $base-unit;
+$line-height-36: 36 + $base-unit;
+$line-height-30: 30 + $base-unit;
+$line-height-28: 28 + $base-unit;
+$line-height-24: 24 + $base-unit;
+$line-height-20: 20 + $base-unit;
+$line-height-16: 16 + $base-unit;
+$line-height-14: 14 + $base-unit;
+$line-height-10: 10 + $base-unit;
+
+//letter-spacings
+$letter-spacing-2: 2 + $base-unit;
+$letter-spacing-0: 1 + $base-unit;
+$letter-spacing-02: 0.2 + $base-unit;
+$letter-spacing-0: 0 + $base-unit;
+
+//dark box shadows
+$box-shadow-dark-xs: 0px 1px 1px rgba(0, 0, 0, 0.12);
+$box-shadow-dark-s: 0px 1px 1px rgba(0, 0, 0, 0.16), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+$box-shadow-dark-m: 0px 1px 18px rgba(0, 0, 0, 0.12), 0px 3px 5px rgba(0, 0, 0, 0.2);
+$box-shadow-dark-l: 0px 24px 38px rgba(0, 0, 0, 0.08), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 11px 15px rgba(0, 0, 0, 0.2);
+
+//light box shadows
+$box-shadow-light-xs: 0px 1px 1px rgba(0, 0, 0, 0.06);
+$box-shadow-light-s: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 2px 1px rgba(0, 0, 0, 0.06), 0px 1px 3px rgba(0, 0, 0, 0.1);
+$box-shadow-light-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 0.06), 0px 6px 10px rgba(0, 0, 0, 0.08);
+$box-shadow-light-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
+
+//border-raduis
+$border-radius-4: 4 + $base-unit;
+$border-radius-6: 6 + $base-unit;
+$border-radius-20: 20 + $base-unit;
