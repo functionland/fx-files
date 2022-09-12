@@ -8,7 +8,7 @@ namespace Functionland.FxFiles.App.Pages
         private ThemeInterop ThemeInterop = default!;
 
         [AutoInject]
-        private ProtectedLocalStorage? _protectedLocalStorage { get; set; }
+        private ProtectedLocalStorage _protectedLocalStorage { get; set; } = default!;
 
         private bool IsSystemTheme { get; set; }
         private bool IsDarkMode { get; set; }
@@ -59,13 +59,13 @@ namespace Functionland.FxFiles.App.Pages
 
         public async Task<bool> IsSystemThemeActiveAsync()
         {
-            var systemTheme = await ProtectedLocalStorage.GetAsync<bool>("systemTheme");
+            var systemTheme = await _protectedLocalStorage.GetAsync<bool>("systemTheme");
             return systemTheme.Success ? systemTheme.Value : false;
         }
 
         public async Task SetSystemThemeAsync(bool isSystemTheme)
         {
-            await ProtectedLocalStorage.SetAsync("systemTheme", isSystemTheme);
+            await _protectedLocalStorage.SetAsync("systemTheme", isSystemTheme);
         }
     }
 }
