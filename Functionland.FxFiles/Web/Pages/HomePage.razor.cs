@@ -2,5 +2,9 @@
 
 public partial class HomePage
 {
+    private void NavigateToTestExplorerComponent()
+    {
+        NavigationManager.NavigateTo("/TestExplorer");
+    }
 }
 
