@@ -19,9 +19,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
     public class AndroidFileService : LocalDeviceFileService
     {
-        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
-        public Activity MainActivity { get; set; }
-
         private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()
         {
@@ -78,13 +75,12 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                     MediaStore.IMediaColumns.DateModified
             };
 
-
-            using var cursor = MainActivity.ContentResolver?.Query(
-                contentUri,
-                projection,
-                queryArge,
-                null
-                );
+            using var cursor = MauiApplication.Current.ContentResolver?.Query(
+                        contentUri,
+                        projection,
+                        queryArge,
+                        null
+                        );
 
             if (cursor is not null && cursor.MoveToFirst())
             {
@@ -158,7 +154,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             if (provider == FsFileProviderType.InternalMemory)
             {
                 // ToDo: Get from internal memory properly.
-                await foreach(var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
+                await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
                 {
                     yield return artifact;
                 }
@@ -174,7 +170,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
                 Bundle bundle = new Bundle();
                 bundle.PutString(ContentResolver.QueryArgSqlSelection, selection);
-                await foreach(var artifact in GetFilesAsync(bundle))
+                await foreach (var artifact in GetFilesAsync(bundle))
                 {
                     yield return artifact;
                 };
