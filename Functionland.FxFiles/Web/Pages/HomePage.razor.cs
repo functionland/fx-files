@@ -11,14 +11,34 @@ public partial class HomePage
     {
         NavigationManager.NavigateTo("/TestExplorer");
     }
-    public async Task Test()
+    public async Task AndroidFileServiceTest()
     {
-        var list = FileService.GetArtifactsAsync();
-        await foreach (var item in list)
-        {
-            Console.WriteLine("Test");
+        //  sample paths:
+        var sDPath = "/storage/1EED-3A0B/Alarms";
+        var sDfilePath = "/storage/1EED-3A0B/Alarms/IMG_20220912_050004-Copy01.jpg";
+        var internalPath = "/storage/emulated/0/Pictures";
+        var internalfilePath = "/storage/emulated/0/Pictures/IMG_20220912_050004.jpg";
 
+        //############################################
+        //GetArtifactsAsync
+        var list = FileService.GetArtifactsAsync();
+        //var list = FileService.GetArtifactsAsync(internalPath);
+        //var list = FileService.GetArtifactsAsync(sDPath); 
+        var results = new List<FsArtifact>();
+
+        await foreach (var element in list)
+        {
+            Console.WriteLine("Test: " + element);
+            results.Add(element);
         }
+        _ = results;
+
+        //############################################
+        //GetFileContentAsync
+        //var FileContentStream = await FileService.GetFileContentAsync(internalfilePath);
+        var FileContentStream = await FileService.GetFileContentAsync(sDfilePath);
+
+        //############################################
     }
 }
 
