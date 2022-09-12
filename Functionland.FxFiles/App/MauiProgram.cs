@@ -5,6 +5,10 @@ using Microsoft.Extensions.FileProviders;
 
 #if Windows
 using Functionland.FxFiles.App.Platforms.Windows.Implementations;
+#elif iOS
+using Functionland.FxFiles.App.Platforms.iOS.Implementations;
+#elif Android
+using Functionland.FxFiles.App.Platforms.Android.Implementations;
 #endif
 
 namespace Functionland.FxFiles.App;
@@ -35,6 +39,10 @@ public static class MauiProgram
 
 #if Windows
         services.AddScoped<IPlatformTestService, WindowsPlatformTestService>();
+#elif Android
+        services.AddScoped<IPlatformTestService, AndroidPlatformTestService>();
+#elif iOS
+        services.AddScoped<IPlatformTestService, IosPlatformTestService>();
 #endif
         services.AddTransient<FakeFileServicePlatformTest>();
 
