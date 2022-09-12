@@ -169,8 +169,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 while (!finalBag.IsEmpty)
                 {
                     _ = finalBag.TryTake(result: out FsArtifact? currentItem);
-                    if (currentItem != null && string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)) break;
-                    if (currentItem != null)
+
+                    if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
                     {
                         tempBag.Add(currentItem);
                     }
