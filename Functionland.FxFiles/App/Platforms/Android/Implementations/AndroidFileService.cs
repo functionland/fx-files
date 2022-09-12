@@ -55,7 +55,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                     MediaStore.IMediaColumns.DisplayName,
                     MediaStore.IMediaColumns.Size,
                     IBaseColumns.Id,
-                    MediaStore.IMediaColumns.Data,
+                    MediaStore.IMediaColumns.Data,//TODO: use relative path ,volume_name and display name
                     MediaStore.IMediaColumns.DateAdded,
                     MediaStore.IMediaColumns.DateModified
             };
@@ -97,21 +97,21 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
         }
 
-        
+
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
         }
 
         public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
-                {
+        {
             return base.CreateFileAsync(path, stream, cancellationToken);
-                }
+        }
 
         public override Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
-                {
+        {
             return base.CreateFilesAsync(files, cancellationToken);
-                }
+        }
 
         public override Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
@@ -146,11 +146,11 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
             else if (provider == FsFileProviderType.ExternalMemory)
             {
-                string selection = $@"(({MediaStore.IMediaColumns.Data} == {path}));";
+                string selection = $@"({MediaStore.IMediaColumns.Data} = '{path}')"; //TODO: use relative path ,volume_name and display name
 
-                if (searchText is not null)
+                if (String.IsNullOrWhiteSpace(searchText))
                 {
-                    selection = selection + $@"AND ( {MediaStore.IMediaColumns.DisplayName} like '%{searchText}%' );";
+                    selection = selection + $@"AND ( {MediaStore.IMediaColumns.DisplayName} like '%{searchText}%' )";
                 }
 
                 Bundle bundle = new Bundle();
