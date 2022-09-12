@@ -10,9 +10,20 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
         protected async Task OnRunFileServiceTestAsync(IFileService fileService, string rootPath)
         {
             Progress("Foldre Creation", "", TestProgressType.Success);
-            Progress("Foldre Creation", "", TestProgressType.Success);
-            Progress("Foldre Creation", "", TestProgressType.Success);
-            Progress("Foldre Creation", "", TestProgressType.Success);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            Progress("File Creation", "", TestProgressType.Success);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            Progress("Foldre Cope", "", TestProgressType.Success);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            Progress("File Remove", "", TestProgressType.Success);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            Progress("File Rename", "File not found", TestProgressType.Fail);
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
 
             return;
             try

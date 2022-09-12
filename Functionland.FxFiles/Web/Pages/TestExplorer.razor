@@ -29,7 +29,7 @@
         {
             <tr>
                 <td>@testProgressChangedEventArg.Title</td>
-                <td>@testProgressChangedEventArg.ProgressType</td>
+                <td style="@(testProgressChangedEventArg.ProgressType==TestProgressType.Success?"color:green":"color:red")">@testProgressChangedEventArg.ProgressType</td>
                 <td>@testProgressChangedEventArg.Description</td>
             </tr>
         }
