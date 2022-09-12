@@ -122,5 +122,13 @@
   {
     "outputFile": "Pages/MyDevice.razor.css",
     "inputFile": "Pages/MyDevice.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Settings.razor.css",
+    "inputFile": "Pages/Settings.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ThemeSettings.razor.css",
+    "inputFile": "Pages/ThemeSettings.razor.scss"
   }
 ]

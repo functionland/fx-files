@@ -44,9 +44,11 @@ $info-light: $info-dark;
 $success-light: $success-dark;
 
 $colors-light: (
+  "app-bg": $pure-white,
   "error": $error-light,
   "warning": $warning-light,
   "green-bg": $green-light-bg,
+  "gray-border": $gray-light-border,
   "green-border": $green-light-border,
   "gray-content1": $gray-light-content1,
   "gray-content2": $gray-light-content2,
@@ -56,9 +58,11 @@ $colors-light: (
 );
 
 $colors-dark: (
+  "app-bg": $main-dark,
   "error": $error-dark,
   "warning": $warning-dark,
   "green-bg": $green-dark-bg,
+  "gray-border": $gray-dark-border,
   "green-border": $green-dark-border,
   "gray-content1": $gray-dark-content1,
   "gray-content2": $gray-dark-content2,

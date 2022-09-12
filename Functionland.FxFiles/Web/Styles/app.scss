@@ -15,13 +15,14 @@
 
 body {
     margin: 0;
+    overscroll-behavior: none;
 
     @each $key, $value in $colors-light {
         --#{$key}: #{$value};
     }
 }
 
-body [data-theme="dark"] {
+body[data-theme="Dark"] {
     @each $key, $value in $colors-dark {
         --#{$key}: #{$value};
     }

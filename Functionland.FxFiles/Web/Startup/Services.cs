@@ -1,7 +1,9 @@
 ﻿#if BlazorServer
 using System.IO.Compression;
+
 using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
+
 using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Functionland.FxFiles.App.Startup;
@@ -25,6 +27,7 @@ public static class Services
         services.AddAppServices();
         services.AddScoped<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest>();
+        services.AddScoped<ThemeInterop>();
     }
 }
 #endif
