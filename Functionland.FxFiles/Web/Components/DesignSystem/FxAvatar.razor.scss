@@ -12,3 +12,10 @@
     background-image: url(/images/x-small-avatar-icon.svg);
     background-size: $icon-16;
 }
+
+.small-avatar {
+    width: $icon-32;
+    height: $icon-32;
+    background-image: url(/images/x-small-avatar-icon.svg);
+    background-size: $icon-32;
+}
