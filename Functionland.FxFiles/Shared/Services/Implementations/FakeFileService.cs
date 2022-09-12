@@ -249,17 +249,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         public async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
             var oldFolderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
-            foreach (var articat in _files)
+            foreach (var artifact in _files)
             {
-                if (string.Equals(articat.FullPath, folderPath, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(artifact.FullPath, folderPath, StringComparison.CurrentCultureIgnoreCase))
                 {
                     DirectoryInfo parentDir = Directory.GetParent(folderPath.EndsWith("\\") ? folderPath : string.Concat(folderPath, "\\"));
-                    articat.FullPath = Path.Combine(parentDir.Parent.FullName, newName);
-                    articat.Name = newName;
+                    artifact.FullPath = Path.Combine(parentDir.Parent.FullName, newName);
+                    artifact.Name = newName;
                 }
-                else
+                else if(artifact.FullPath.ToLower().StartsWith(folderPath.ToLower()))
                 {
-                    articat.FullPath = articat.FullPath.Replace($"{Path.PathSeparator}{oldFolderName}{Path.PathSeparator}", $"{Path.PathSeparator}{newName}{Path.PathSeparator}");
+                    artifact.FullPath = artifact.FullPath.Replace($"{Path.DirectorySeparatorChar}{oldFolderName}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}{newName}{Path.DirectorySeparatorChar}");
                 }
 
             }
