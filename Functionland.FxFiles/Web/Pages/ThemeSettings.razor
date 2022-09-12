@@ -4,5 +4,5 @@
     @($"Use System Theme ({SystemTheme})")
     <BitToggle @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemTheme" />
     Dark Theme
-    <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnDarkThemeChanged" />
+    <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChanged" />
 </div>

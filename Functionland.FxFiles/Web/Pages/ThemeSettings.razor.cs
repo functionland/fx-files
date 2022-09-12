@@ -23,7 +23,7 @@
                     SystemTheme = theme;
                     if (IsSystemTheme)
                     {
-                        await OnDarkThemeChanged(SystemTheme is FxTheme.Dark);
+                        await OnThemeChanged();
                     }
                     StateHasChanged();
                 };
@@ -38,9 +38,9 @@
             await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
         }
 
-        private async Task OnDarkThemeChanged(bool value)
+        private async Task OnThemeChanged()
         {
-            IsDarkMode = value;
+            IsDarkMode = !IsDarkMode;
             await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
         }
     }
