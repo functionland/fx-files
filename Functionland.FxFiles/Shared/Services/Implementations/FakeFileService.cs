@@ -29,6 +29,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 var artifactType = GetFsArtifactType(artifact.FullPath);
                 if (artifactType != FsArtifactType.File)
                 {
+                    await CreateFolderAsync(newPath, artifact.Name, cancellationToken);
                     foreach (var file in _files)
                     {
                         if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
@@ -37,9 +38,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                             _files.Add(insideNewArtifact);
                         }
                     }
+                   
                 }
-                var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
-                _files.Add(newArtifact);
+                else
+                {
+                    var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
+                    _files.Add(newArtifact);
+                }
 
             }
         }
