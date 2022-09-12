@@ -1,5 +1,11 @@
 ﻿using System.Reflection;
+using Functionland.FxFiles.Shared.TestInfra.Contracts;
+using Functionland.FxFiles.Shared.TestInfra.Implementations;
 using Microsoft.Extensions.FileProviders;
+
+#if Windows
+using Functionland.FxFiles.App.Platforms.Windows.Implementations;
+#endif
 
 namespace Functionland.FxFiles.App;
 
@@ -26,6 +32,11 @@ public static class MauiProgram
 #endif
 
         services.AddAppServices();
+
+#if Windows
+        services.AddScoped<IPlatformTestService, WindowsPlatformTestService>();
+#endif
+        services.AddTransient<FakeFileServicePlatformTest>();
 
         return builder;
     }
