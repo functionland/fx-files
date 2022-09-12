@@ -9,31 +9,24 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
         protected async Task OnRunFileServiceTestAsync(IFileService fileService, string rootPath)
         {
-            Progress("Foldre Creation", "", TestProgressType.Success);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            Assert.Success("File Creation");
-            Progress("File Creation", "", TestProgressType.Success);
-            
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            Progress("Foldre Cope", "", TestProgressType.Success);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            Progress("File Remove", "", TestProgressType.Success);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-            Progress("File Rename", "File not found", TestProgressType.Fail);
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
-
-            return;
             try
             {
-                var testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTests");
-                var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now.ToString("yyyyMMddHH-mmssFFF")}");
+                var testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTestsFolder");
+                var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
 
                 var testRoot = testRootArtifact.FullPath!;
+
+                List<FsArtifact> emptyRootFolderArtifacts = new();
+                await foreach (var item in fileService.GetArtifactsAsync(testRoot))
+                {
+                    emptyRootFolderArtifacts.Add(item);
+                }
+               
+                //Assert.AreEqual(new List<FsArtifact>(), emptyRootFolderArtifacts, "root folder must be empty");
+                //Assert.IsEmpty(emptyRootFolderArtifacts, "First root must be empty");
+                Assert.AreEqual(2, 3, "test");
+                Assert.AreEqual(2, 2, "test");
+                
 
                 await fileService.CreateFolderAsync(testRoot, "Folder 1");
                 await fileService.CreateFolderAsync(testRoot, "Folder 2");
@@ -49,11 +42,11 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 2/file23.txt"), GetSampleFileStream());
                 await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 2/file24.txt"), GetSampleFileStream());
 
-                Progress("Foldre Creation", "", TestProgressType.Success);
+                Assert.Success("Test passed!");
             }
             catch (Exception ex)
             {
-                Progress("Foldre Creation", ex.ToString(), TestProgressType.Fail);
+                Assert.Fail("Test failed", ex.Message);
             }
             
         }
