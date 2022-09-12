@@ -46,21 +46,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
             return drives;
         }
-        private FsFileProviderType GetProviderTypeFromPath(string path)
-        {
-            // ToDo: How to get it from the path
-            if (path.StartsWith("intenal"))
-            {
-                return FsFileProviderType.InternalMemory;
-            }
-            else if (path.StartsWith("sdcard"))
-            {
-                return FsFileProviderType.ExternalMemory;
-            }
-            else
-                throw new Exception($"Unknown file provider for path: {path}");
-            
-        }
 
         private async IAsyncEnumerable<FsArtifact> GetFilesAsync(Bundle queryArge)
         {
@@ -150,7 +135,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                 yield break;
             }
 
-            var provider = GetProviderTypeFromPath(path);
+            var provider = GetFsFileProviderType(path);
             if (provider == FsFileProviderType.InternalMemory)
             {
                 // ToDo: Get from internal memory properly.
@@ -194,7 +179,17 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
         public override FsFileProviderType GetFsFileProviderType(string filePath)
         {
-            throw new NotImplementedException();
+            // ToDo: How to get it from the path
+            if (filePath.StartsWith("intenal"))
+            {
+                return FsFileProviderType.InternalMemory;
+            }
+            else if (filePath.StartsWith("sdcard"))
+            {
+                return FsFileProviderType.ExternalMemory;
+            }
+            else
+                throw new Exception($"Unknown file provider for path: {filePath}");
         }
     }
 }
