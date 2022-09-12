@@ -2,7 +2,7 @@
 @import "../../Styles/abstracts/_functions.scss";
 
 .tag-label {
-    background-color: $gray-night-bg-secondary;
+    background-color: $gray-dark-bg-secondary;
     border-radius: $border-radius-6;
     padding: 6px $spacing-8;
     width: 62px;
@@ -10,5 +10,16 @@
     font-size: $font-size-10;
     line-height: $line-height-14;
     letter-spacing: $letter-spacing-02;
-    color: $gray-night-content1;
+    color: $gray-dark-content1;
+}
+
+.left-icon-tag {
+    width: 84px;
+    padding-left: $spacing-30;
+
+    background: {
+        repeat: no-repeat;
+        size: $icon-16;
+        position: left 9.33px center;
+    }
 }
