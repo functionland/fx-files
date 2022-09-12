@@ -52,9 +52,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 return FsArtifactType.Drive;
             }
 
-            FileAttributes attr = System.IO.File.GetAttributes(path);
-
-            if (attr.HasFlag(FileAttributes.Directory))
+            if (Path.GetExtension("c:\\Folder") == "")
             {
                 return FsArtifactType.Folder;
             }
@@ -65,11 +63,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
         private void CheckIfArtifactExist(string newPath)
         {
-            if (ArtifacrExist(newPath))
+            if (ArtifacExist(newPath))
                 throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
         }
 
-        private bool ArtifacrExist(string newPath)
+        private bool ArtifacExist(string newPath)
         {
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
             return _files.Any(f => comparer.Compare(f.FullPath, newPath) == 0);
@@ -99,7 +97,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 ThumbnailPath = path,
                 ContentHash = contentHash,
                 ProviderType = FsFileProviderType.InternalMemory,
-                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
+                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
+                ArtifactType = GetFsArtifactType(path)
             };
         }
 
@@ -144,7 +143,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 FullPath = finalPath,
                 OriginDevice = originDevice,
                 ProviderType = FsFileProviderType.InternalMemory,
-                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
+                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
+                ArtifactType = GetFsArtifactType(finalPath)
             };
             _files.Add(artifact);
             return artifact;
@@ -221,7 +221,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
         public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
-        { 
+        {
             await Task.WhenAll(
                 CopyArtifactsAsync(artifacts, destination, cancellationToken),
                 DeleteArtifactsAsync(artifacts, cancellationToken));
