@@ -120,9 +120,24 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
         }
 
-        private Task<FsArtifactType> GetFsArtifactTypeAsync(string? fullPath)
+        private async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+            }
+            else if (Directory.Exists(path))
+            {
+                return FsArtifactType.Folder;
+            }
+            else if (File.Exists(path))
+            {
+                return FsArtifactType.File;
+            }
+            else
+            {
+                return FsArtifactType.Drive;
+            }
         }
 
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)

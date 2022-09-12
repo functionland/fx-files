@@ -180,4 +180,7 @@
   <data name="UnableToLoadStorageManager" xml:space="preserve">
     <value>Can't load storge manager.</value>
   </data>
+  <data name="PathIsNull" xml:space="preserve">
+    <value>the path is null</value>
+  </data>
 </root>
