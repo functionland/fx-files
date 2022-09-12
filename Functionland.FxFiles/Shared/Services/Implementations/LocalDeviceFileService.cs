@@ -199,6 +199,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+
             var streamReader = new StreamReader(filePath);
             return streamReader.BaseStream;
         }
