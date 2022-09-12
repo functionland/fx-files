@@ -1,7 +1,9 @@
 ﻿#if BlazorServer
 using System.IO.Compression;
+
 using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
+
 using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Functionland.FxFiles.App.Startup;
