@@ -19,3 +19,17 @@
     background-image: url(/images/x-small-avatar-icon.svg);
     background-size: $icon-32;
 }
+
+.medium-avatar {
+    width: $icon-48;
+    height: $icon-48;
+    background-image: url(/images/x-small-avatar-icon.svg);
+    background-size: $icon-48;
+}
+
+.large-avatar {
+    width: $icon-64;
+    height: $icon-64;
+    background-image: url(/images/x-small-avatar-icon.svg);
+    background-size: $icon-64;
+}
