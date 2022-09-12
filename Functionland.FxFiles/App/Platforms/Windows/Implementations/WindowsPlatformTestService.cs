@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Functionland.FxFiles.Shared.TestInfra.Implementations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,16 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
 {
     public partial class WindowsPlatformTestService : PlatformTestService
     {
-        //[AutoInject] IWindowsTrayTest WindowsTrayTest { get; set; }
-        //protected override List<IPlatformTest> OnGetTests()
-        //{
-        //    var tests = base.OnGetTests();
-        //    tests.Add(WindowsTrayTest);
-        //}
+        [AutoInject] FakeFileServicePlatformTest FakeFileServicePlatformTest { get; set; }
+
+        
+        protected override List<IPlatformTest> OnGetTests()
+        {
+            return new List<IPlatformTest>()
+            {
+                FakeFileServicePlatformTest
+            };
+        }
+      
     }
 }
