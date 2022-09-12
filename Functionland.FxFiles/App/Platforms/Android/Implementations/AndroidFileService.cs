@@ -14,6 +14,7 @@ using AndroidX.DocumentFile.Provider;
 using Android.OS.Storage;
 using Android.Media;
 using Stream = System.IO.Stream;
+using Java.Interop;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
@@ -22,26 +23,35 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
         private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()
         {
-            // ToDo: Get the right drives
-            var drives = new List<FsArtifact>
-            {
-                new FsArtifact()
-                {
-                    Name = "internal",
-                    ArtifactType = FsArtifactType.Drive,
-                    ProviderType = FsFileProviderType.InternalMemory
-                }
-            };
+            var storageManager = (StorageManager)MauiApplication.Current.GetSystemService(Context.StorageService);
+            var storageVolumes = storageManager.StorageVolumes.ToList();
 
-            if (true)
+            var drives = new List<FsArtifact>();
+            foreach (var storage in storageVolumes)
             {
-                drives.Add(
-                new FsArtifact()
+                if (storage.IsPrimary)
                 {
-                    Name = "sdcard01",
-                    ArtifactType = FsArtifactType.Drive,
-                    ProviderType = FsFileProviderType.ExternalMemory
-                });
+                    //ToDo: Fill FsArtifact extral fields 
+                    drives.Add(new FsArtifact()
+                    {
+                        Name = "internal",
+                        ArtifactType = FsArtifactType.Drive,
+                        ProviderType = FsFileProviderType.InternalMemory,
+                        FullPath = storage.Directory.Path,
+                        Capacity = storage.Directory.FreeSpace
+                    });
+                }
+                else
+                {
+                    drives.Add(new FsArtifact()
+                    {
+                        Name = storage.MediaStoreVolumeName,
+                        ArtifactType = FsArtifactType.Drive,
+                        ProviderType = FsFileProviderType.ExternalMemory,
+                        FullPath = storage.Directory.Path,
+                        Capacity = storage.Directory.FreeSpace
+                    });
+                }
             }
 
             return drives;
