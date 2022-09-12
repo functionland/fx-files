@@ -1,2 +1,36 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+hr {
+    border-color: $gray-dark-bg-primary;
+}
+
+.dvider-thin {
+    border-width: 1px;
+}
+
+.divider-regular {
+    border-width: 2px;
+}
+
+.divider-bold {
+    border-width: 4px;
+}
+
+.divider-solid {
+    border-style: solid; 
+}
+
+.divider-dashed {
+    border-style: dashed;
+    border-radius: 50%;
+}
+
+.divider-vertical {
+    width: 333px;
+}
+
+.divider-horizontal {
+    width: 106px;
+    transform: rotate(90deg);
 }
