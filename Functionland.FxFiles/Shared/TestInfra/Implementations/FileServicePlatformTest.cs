@@ -12,7 +12,9 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             Progress("Foldre Creation", "", TestProgressType.Success);
             await Task.Delay(TimeSpan.FromSeconds(1));
 
+            Assert.Success("File Creation");
             Progress("File Creation", "", TestProgressType.Success);
+            
             await Task.Delay(TimeSpan.FromSeconds(1));
 
             Progress("Foldre Cope", "", TestProgressType.Success);
