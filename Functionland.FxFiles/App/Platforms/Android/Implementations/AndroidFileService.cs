@@ -18,7 +18,7 @@ using Java.Interop;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
-    public class AndroidFileService : LocalDeviceFileService
+    public partial class AndroidFileService : LocalDeviceFileService
     {
         private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()
@@ -189,7 +189,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return base.RenameFolderAsync(folderPath, newName, cancellationToken);
         }
 
-        public override FsFileProviderType GetFsFileProviderType(string filePath)
+        public override Task<FsFileProviderType> GetFsFileProviderType(string filePath)
         {
             //var drives = await GetDrivesAsync();       
 

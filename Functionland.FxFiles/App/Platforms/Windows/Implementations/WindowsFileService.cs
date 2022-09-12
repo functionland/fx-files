@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
 {
-    public class WindowsFileService : LocalDeviceFileService
+    public partial class WindowsFileService : LocalDeviceFileService
     {
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
@@ -58,7 +58,7 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
             return base.RenameFileAsync(filePath, newName, cancellationToken);
         }
 
-        public override FsFileProviderType GetFsFileProviderType(string filePath)
+        public override Task<FsFileProviderType> GetFsFileProviderType(string filePath)
         {
             throw new NotImplementedException();
         }

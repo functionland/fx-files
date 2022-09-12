@@ -61,6 +61,24 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} path is null.
+        /// </summary>
+        public static string ArtifactPathIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactPathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The artifact type is null.
+        /// </summary>
+        public static string ArtifactTypeIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactTypeIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid request.
         /// </summary>
         public static string BadRequestException {
@@ -79,11 +97,11 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The file is already exist.
+        ///   Looks up a localized string similar to You can not delete drive.
         /// </summary>
-        public static string CreateFileFailed {
+        public static string DriveRemoveFailed {
             get {
-                return ResourceManager.GetString("CreateFileFailed", resourceCulture);
+                return ResourceManager.GetString("DriveRemoveFailed", resourceCulture);
             }
         }
         

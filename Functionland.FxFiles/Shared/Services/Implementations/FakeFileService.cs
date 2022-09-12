@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public class FakeFileService : IFileService
+    public partial class FakeFileService : IFileService
     {
-        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+        [AutoInject]public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();
 
         public FakeFileService(IEnumerable<FsArtifact> files)
