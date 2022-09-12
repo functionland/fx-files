@@ -1,2 +1,10 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+
+.content {
+    position: relative;
+    padding-bottom: 60px;
+    color: color(gray-content1);
+    min-height: calc(100vh - 120px);
+    background-color: color(gray-bg-primary);
+}
