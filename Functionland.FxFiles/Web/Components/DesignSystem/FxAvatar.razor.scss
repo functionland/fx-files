@@ -33,3 +33,10 @@
     background-image: url(/images/x-small-avatar-icon.svg);
     background-size: $icon-64;
 }
+
+.x-large-avatar {
+    width: $icon-96;
+    height: $icon-96;
+    background-image: url(/images/x-small-avatar-icon.svg);
+    background-size: $icon-96;
+}
