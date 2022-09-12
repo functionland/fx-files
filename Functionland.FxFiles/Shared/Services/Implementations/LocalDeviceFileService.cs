@@ -234,8 +234,19 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(folderPath))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+
+            var artifactType = GetFsArtifactType(folderPath);
+
+            if (string.IsNullOrWhiteSpace(newName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, artifactType.ToString() ?? ""));
+
+            if (cancellationToken?.IsCancellationRequested == true) return;
+
             var oldName = Path.GetFileName(folderPath);
             var newPath = folderPath.Replace(oldName, newName);
+
             Directory.Move(folderPath, newPath);
         }
 
