@@ -36,6 +36,14 @@ public static class MauiProgram
         services.AddBlazorWebViewDeveloperTools();
 #endif
 
+#if Android
+        services.AddScoped<IFileService, AndroidFileService>();
+#elif Windows
+        services.AddScoped<IFileService, WindowsFileService>();
+#elif iOS
+        //TODO: services.AddScoped<IFileService, IosFileService>();
+#endif
+
         services.AddAppServices();
 
 #if Windows

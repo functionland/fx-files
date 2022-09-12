@@ -115,7 +115,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Platforms\MacCatalyst\Implementations\" />
+		<Folder Include="Platforms\iOS\Implementations\" />
+		<Folder Include="Platforms\MacCatalyst\Implementations\" />
+		<Folder Include="Platforms\Windows\Implementations\" />
     </ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
