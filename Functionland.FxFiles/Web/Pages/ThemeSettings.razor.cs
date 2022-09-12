@@ -3,7 +3,7 @@
     public partial class ThemeSettings
     {
         [AutoInject]
-        private ThemeInterop ThemeInterop;
+        private ThemeInterop ThemeInterop = default!;
 
         private bool IsSystemTheme = true;
         private bool IsDarkMode = false;
@@ -21,7 +21,7 @@
                 ThemeInterop.SystemThemeChanged = async theme =>
                 {
                     SystemTheme = theme;
-                    if (!IsSystemTheme)
+                    if (IsSystemTheme)
                     {
                         await OnDarkThemeChanged(SystemTheme is FxTheme.Dark);
                     }

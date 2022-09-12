@@ -13,7 +13,6 @@ public static class Services
         services.AddHttpContextAccessor();
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        services.AddScoped<ThemeInterop>();
         services.AddResponseCompression(opts =>
         {
             opts.EnableForHttps = true;
@@ -26,6 +25,7 @@ public static class Services
         services.AddAppServices();
         services.AddScoped<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest>();
+        services.AddScoped<ThemeInterop>();
     }
 }
 #endif
