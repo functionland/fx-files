@@ -7,8 +7,8 @@ namespace Functionland.FxFiles.App.Pages
         [AutoInject]
         private ThemeInterop ThemeInterop = default!;
 
-        [AutoInject]
-        private ProtectedLocalStorage _protectedLocalStorage { get; set; } = default!;
+        //[AutoInject]
+        //private ProtectedLocalStorage _protectedLocalStorage { get; set; } = default!;
 
         private bool IsSystemTheme { get; set; }
         private bool IsDarkMode { get; set; }
@@ -24,7 +24,7 @@ namespace Functionland.FxFiles.App.Pages
                 SystemTheme = await ThemeInterop.GetSystemThemeAsync();
                 IsDarkMode = DesiredTheme is FxTheme.Dark;
                 await OnThemeChangedAsync(IsDarkMode);
-                IsSystemTheme = await IsSystemThemeActiveAsync();
+                //IsSystemTheme = await IsSystemThemeActiveAsync();
                 await OnUseSystemThemeAsync(IsSystemTheme);
                 await ThemeInterop.RegisterForSystemThemeChangedAsync();
                 StateHasChanged();
@@ -45,7 +45,7 @@ namespace Functionland.FxFiles.App.Pages
             {
                 IsDarkMode = false;
             }
-            await SetSystemThemeAsync(isSystemTheme);
+            //await SetSystemThemeAsync(isSystemTheme);
 
             StateHasChanged();
         }
@@ -57,15 +57,15 @@ namespace Functionland.FxFiles.App.Pages
             StateHasChanged();
         }
 
-        public async Task<bool> IsSystemThemeActiveAsync()
-        {
-            var systemTheme = await _protectedLocalStorage.GetAsync<bool>("systemTheme");
-            return systemTheme.Success ? systemTheme.Value : false;
-        }
+        //public async Task<bool> IsSystemThemeActiveAsync()
+        //{
+        //    var systemTheme = await _protectedLocalStorage.GetAsync<bool>("systemTheme");
+        //    return systemTheme.Success ? systemTheme.Value : false;
+        //}
 
-        public async Task SetSystemThemeAsync(bool isSystemTheme)
-        {
-            await _protectedLocalStorage.SetAsync("systemTheme", isSystemTheme);
-        }
+        //public async Task SetSystemThemeAsync(bool isSystemTheme)
+        //{
+        //    await _protectedLocalStorage.SetAsync("systemTheme", isSystemTheme);
+        //}
     }
 }
