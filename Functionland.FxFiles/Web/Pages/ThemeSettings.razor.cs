@@ -5,8 +5,8 @@
         [AutoInject]
         private ThemeInterop ThemeInterop = default!;
 
-        private bool IsSystemTheme = true;
-        private bool IsDarkMode = false;
+        private bool IsSystemTheme;
+        private bool IsDarkMode;
 
         private FxTheme DesiredTheme;
         private FxTheme SystemTheme;
@@ -18,15 +18,8 @@
                 DesiredTheme = await ThemeInterop.GetThemeAsync();
                 SystemTheme = await ThemeInterop.GetSystemThemeAsync();
                 IsDarkMode = DesiredTheme is FxTheme.Dark;
-                ThemeInterop.SystemThemeChanged = async theme =>
-                {
-                    SystemTheme = theme;
-                    if (IsSystemTheme)
-                    {
-                        await OnThemeChanged();
-                    }
-                    StateHasChanged();
-                };
+                await OnThemeChanged(IsDarkMode);
+                await OnUseSystemTheme(IsDarkMode);
                 await ThemeInterop.RegisterForSystemThemeChangedAsync();
                 StateHasChanged();
             }
@@ -38,9 +31,9 @@
             await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
         }
 
-        private async Task OnThemeChanged()
+        private async Task OnThemeChanged(bool value)
         {
-            IsDarkMode = !IsDarkMode;
+            IsDarkMode = value;
             await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
         }
     }
