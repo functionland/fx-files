@@ -62,11 +62,8 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
         private async IAsyncEnumerable<FsArtifact> GetFilesAsync(Bundle queryArge)
         {
             string[] projection = {
-                    MediaStore.IMediaColumns.BucketId,
-                    MediaStore.IMediaColumns.MimeType,
                     MediaStore.IMediaColumns.DisplayName,
                     MediaStore.IMediaColumns.Size,
-                    IBaseColumns.Id,
                     MediaStore.IMediaColumns.Data,//TODO: use relative path ,volume_name and display name
                     MediaStore.IMediaColumns.DateAdded,
                     MediaStore.IMediaColumns.DateModified
@@ -83,25 +80,29 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             {
                 do
                 {
-                    var parentId = cursor.GetInt(0);
-                    var mimeType = cursor.GetString(1);
-                    var name = cursor.GetString(2);
-                    var size = cursor.GetLong(3);
-                    var id = cursor.GetLong(4);
-                    var data = cursor.GetString(5);
-                    var dateAdded = DateTimeOffset.FromUnixTimeSeconds(cursor.GetLong(6));
-                    var dateModifiedUnixFormat = cursor.GetLong(7);
+                    var fullName = cursor.GetString(0);
+                    var name = Path.GetFileNameWithoutExtension(fullName);
+                    var fileExtension = Path.GetExtension(fullName);
+                    var size = cursor.GetLong(1);
+                    var capacity = cursor.GetLong(1); //TODO: find capcity properly
+                    var fullPath = cursor.GetString(2);
+                    var artifactType = await GetFsArtifactTypeAsync(fullPath);
+                    var providerType = await GetFsFileProviderType(fullPath);
+                    var parentFullPath = Path.GetDirectoryName(cursor.GetString(2));
+                    var dateAdded = DateTimeOffset.FromUnixTimeSeconds(cursor.GetLong(3));
+                    var dateModifiedUnixFormat = cursor.GetLong(4);
                     DateTimeOffset dateModified = dateModifiedUnixFormat == 0 ? dateAdded : DateTimeOffset.FromUnixTimeSeconds(dateModifiedUnixFormat);
 
                     yield return new FsArtifact
                     {
-                        ParentId = parentId,
-                        MimeType = mimeType,
                         Name = name,
+                        FileExtension = fileExtension,
+                        ArtifactType = artifactType,
+                        ProviderType = providerType,
                         Size = size,
-                        Id = id,
-                        FullPath = data,
-                        FileExtension = Path.GetExtension(data),
+                        Capacity = capacity,
+                        FullPath = fullPath,
+                        ParentFullPath = parentFullPath,
                         LastModifiedDateTime = dateModified
                     };
                 }
@@ -109,6 +110,10 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
         }
 
+        private Task<FsArtifactType> GetFsArtifactTypeAsync(string? fullPath)
+        {
+            throw new NotImplementedException();
+        }
 
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
