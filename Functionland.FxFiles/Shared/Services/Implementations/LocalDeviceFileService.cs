@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
     {
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        public abstract FsFileProviderType GetFsFileProviderType(string filePath);
+        public abstract Task<FsFileProviderType> GetFsFileProviderType(string filePath);
 
         public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
@@ -42,7 +42,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     ArtifactType = FsArtifactType.File,
                     FileExtension = Path.GetExtension(path),
                     Size = (int)outPutFileStream.Length,
-                    ProviderType = GetFsFileProviderType(path),
+                    ProviderType = await GetFsFileProviderType(path),
                     LastModifiedDateTime = DateTimeOffset.Now
                 };
             }
@@ -83,7 +83,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         Name = folderName,
                         FullPath = newPath,
                         ArtifactType = FsArtifactType.Folder,
-                        ProviderType = GetFsFileProviderType(newPath) 
+                        ProviderType = await GetFsFileProviderType(newPath) 
                     };
                 }
                 catch (Exception)
@@ -137,7 +137,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             if (path == null) 
             {
-                var drives = GetDrives();
+                var drives = await GetDrives();
 
                 foreach (var drive in drives)
                     yield return drive;
@@ -158,7 +158,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             ArtifactType = FsArtifactType.Folder,
                             FullPath = subDirectory,
-                            ProviderType = GetFsFileProviderType(subDirectory),
+                            ProviderType = await GetFsFileProviderType(subDirectory),
                             Name = Path.GetFileName(subDirectory)
                         });
                 }
@@ -172,7 +172,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             ArtifactType = FsArtifactType.File,
                             FullPath = file,
-                            ProviderType = GetFsFileProviderType(file),
+                            ProviderType = await GetFsFileProviderType(file),
                             Name = Path.GetFileName(file)
                         });
                 }
@@ -276,7 +276,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        private List<FsArtifact> GetDrives()
+        private async Task<List<FsArtifact>> GetDrives()
         {
             var drives = Directory.GetLogicalDrives();
             var artifacts = new List<FsArtifact>();
@@ -287,7 +287,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     ArtifactType = FsArtifactType.Drive,
                     FullPath = drive,
-                    ProviderType = GetFsFileProviderType(drive)
+                    ProviderType = await GetFsFileProviderType(drive)
                 });
             }
 
