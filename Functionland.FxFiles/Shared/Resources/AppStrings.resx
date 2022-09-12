@@ -168,4 +168,13 @@
   <data name="FileAlreadyExistsException" xml:space="preserve">
     <value>FileAlreadyExistsException</value>
   </data>
+  <data name="ArtifactPathIsNull" xml:space="preserve">
+    <value>The {0} path is null</value>
+  </data>
+  <data name="DriveRemoveFailed" xml:space="preserve">
+    <value>You can not delete drive</value>
+  </data>
+  <data name="ArtifactTypeIsNull" xml:space="preserve">
+    <value>The artifact type is null</value>
+  </data>
 </root>

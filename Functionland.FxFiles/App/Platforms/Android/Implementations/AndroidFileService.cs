@@ -17,7 +17,7 @@ using Stream = System.IO.Stream;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
-    public class AndroidFileService : LocalDeviceFileService
+    public partial class AndroidFileService : LocalDeviceFileService
     {
         private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()

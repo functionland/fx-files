@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public abstract class LocalDeviceFileService : IFileService
+    public abstract partial class LocalDeviceFileService : IFileService
     {
-        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+        [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
@@ -30,7 +30,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             try
             {
                 if (System.IO.File.Exists(path))
-                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.CreateFileFailed)]);
+                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
 
                 using FileStream outPutFileStream = new(path, FileMode.Create);
                 await stream.CopyToAsync(outPutFileStream);
@@ -104,13 +104,20 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             foreach (var artifact in artifacts)
             {
+                if (cancellationToken?.IsCancellationRequested == true)
+                    break;
+
                 DeleteArtifactAsync(artifact);
             }
         }
 
-        private static async Task DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+        private void DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
-            if (artifact.FullPath == null) return; // ToDo : Throw exception
+            if (string.IsNullOrWhiteSpace(artifact.FullPath))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType?.ToString() ?? ""));
+
+            if (artifact.ArtifactType == null)
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
@@ -118,11 +125,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else if (artifact.ArtifactType == FsArtifactType.File)
             {
-                System.IO.File.Delete(artifact.FullPath);
+                File.Delete(artifact.FullPath);
             }
             else if (artifact.ArtifactType == FsArtifactType.Drive)
             {
-                // ToDo : Throw exception
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.DriveRemoveFailed)]);
             }
         }
 
