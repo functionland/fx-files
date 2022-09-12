@@ -147,7 +147,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                 yield break;
             }
 
-            var provider = GetFsFileProviderType(path);
+            var provider = await GetFsFileProviderType(path);
             if (provider == FsFileProviderType.InternalMemory)
             {
                 // ToDo: Get from internal memory properly.
@@ -189,9 +189,9 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return base.RenameFolderAsync(folderPath, newName, cancellationToken);
         }
 
-        public override Task<FsFileProviderType> GetFsFileProviderType(string filePath)
+        public override async Task<FsFileProviderType> GetFsFileProviderType(string filePath)
         {
-            //var drives = await GetDrivesAsync();       
+            var drives = await GetDrivesAsync();       
 
             // ToDo: How to get it from the path
             if (IsFsFileProviderInternal(filePath))
