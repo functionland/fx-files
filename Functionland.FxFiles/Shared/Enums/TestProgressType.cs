@@ -2,5 +2,7 @@
 {
     public enum TestProgressType
     {
+        Success,
+        Fail
     }
 }

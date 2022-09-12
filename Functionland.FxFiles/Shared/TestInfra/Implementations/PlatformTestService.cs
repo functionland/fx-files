@@ -10,13 +10,13 @@ using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public partial class PlatformTestService : IPlatformTestService
+    public abstract partial class PlatformTestService : IPlatformTestService
     {
+        
         protected virtual List<IPlatformTest> OnGetTests()
         {
             return new List<IPlatformTest>()
             {
-
             };
         }
 
