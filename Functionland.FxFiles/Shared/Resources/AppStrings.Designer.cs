@@ -214,6 +214,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t load storge manager..
+        /// </summary>
+        public static string UnableToLoadStorageManager {
+            get {
+                return ResourceManager.GetString("UnableToLoadStorageManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your request lacks valid authentication credentials.
         /// </summary>
         public static string UnauthorizedException {

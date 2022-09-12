@@ -23,14 +23,20 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
         private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()
         {
-            var storageManager = (StorageManager)MauiApplication.Current.GetSystemService(Context.StorageService);
+            var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
+            if(storageManager is null)
+            {
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.UnableToLoadStorageManager)]);
+            }
+
             var storageVolumes = storageManager.StorageVolumes.ToList();
 
             var drives = new List<FsArtifact>();
             foreach (var storage in storageVolumes)
             {
-                if (storage.IsPrimary)
+                if (storage.IsPrimary) //TODO: investigate to use IsPrimary or IsRemoveable
                 {
+                    var time = storage.Directory.LastModified();
                     //ToDo: Fill FsArtifact extral fields 
                     drives.Add(new FsArtifact()
                     {
@@ -38,18 +44,22 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                         ArtifactType = FsArtifactType.Drive,
                         ProviderType = FsFileProviderType.InternalMemory,
                         FullPath = storage.Directory.Path,
-                        Capacity = storage.Directory.FreeSpace
+                        Capacity = storage.Directory.UsableSpace, //TODO : investigate to use UsableSpace or freeSpace
+                        Size = storage.Directory.TotalSpace,
+                        //LastModifiedDateTime = storage.Directory.LastModified() //TODO: convert long to dateTime
                     });
                 }
                 else
                 {
                     drives.Add(new FsArtifact()
                     {
-                        Name = storage.MediaStoreVolumeName,
+                        Name = $"SD Card ({storage.MediaStoreVolumeName})",
                         ArtifactType = FsArtifactType.Drive,
                         ProviderType = FsFileProviderType.ExternalMemory,
                         FullPath = storage.Directory.Path,
-                        Capacity = storage.Directory.FreeSpace
+                        Capacity = storage.Directory.UsableSpace,//TODO : investigate to use UsableSpace or freeSpace
+                        Size = storage.Directory.TotalSpace,
+                        //LastModifiedDateTime = storage.Directory.LastModified() //TODO: convert long to dateTime
                     });
                 }
 

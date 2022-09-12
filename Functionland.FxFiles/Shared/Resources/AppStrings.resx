@@ -177,4 +177,7 @@
   <data name="ArtifactTypeIsNull" xml:space="preserve">
     <value>The artifact type is null</value>
   </data>
+  <data name="UnableToLoadStorageManager" xml:space="preserve">
+    <value>Can't load storge manager.</value>
+  </data>
 </root>
