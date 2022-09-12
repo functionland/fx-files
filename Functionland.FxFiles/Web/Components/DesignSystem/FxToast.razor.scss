@@ -12,6 +12,14 @@
     padding: $spacing-16 $spacing-18;
     width: 100%;
 
+    .icons-action {
+        width: $icon-24;
+        height: $icon-24;
+        background-size: $icon-24;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
     .toast-icon {
         background-image: url(/images/succes-icon.svg);
     }
