@@ -28,6 +28,10 @@
     "inputFile": "Pages/HomePage.razor.scss"
   },
   {
+    "outputFile": "Pages/TestExplorer.razor.css",
+    "inputFile": "Pages/TestExplorer.razor.scss"
+  },
+  {
     "outputFile": "Components/DesignSystem/FxAvatar.razor.css",
     "inputFile": "Components/DesignSystem/FxAvatar.razor.scss"
   },
