@@ -1,0 +1,38 @@
+﻿@page "/TestExplorer"
+
+@inherits AppComponentBase;
+<EditForm Model="TestsName" OnValidSubmit="HandleValidSubmit">
+    <div>
+        <BitDropDown Label="Select tests"
+                     Items="GetDropdownItems()"
+                     IsMultiSelect="true"
+                     @bind-Values="TestsName"
+                     Placeholder="Select tests"
+                     Style="width: 290px; margin: 20px 0 20px 0" />
+    </div>
+
+    <br />
+
+    <BitButton ButtonType="BitButtonType.Submit">
+        Submit
+    </BitButton>
+</EditForm>
+<div>
+
+    <table id="tests">
+        <tr>
+            <th>Title</th>
+            <th>ProgressType</th>
+            <th>Description</th>
+        </tr>
+        @foreach (var testProgressChangedEventArg in testProgressChangedEventArgs)
+        {
+            <tr>
+                <td>@testProgressChangedEventArg.Title</td>
+                <td>@testProgressChangedEventArg.ProgressType</td>
+                <td>@testProgressChangedEventArg.Description</td>
+            </tr>
+        }
+
+    </table>
+</div>
