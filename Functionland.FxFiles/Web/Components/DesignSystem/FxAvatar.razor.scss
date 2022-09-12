@@ -1,2 +1,14 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fx-avatart {
+    position: relative;
+    background-repeat: no-repeat;
+}
+
+.x-small-avatar {
+    width: $icon-16;
+    height: $icon-16;
+    background-image: url(/images/x-small-avatar-icon.svg);
+    background-size: $icon-16;
 }
