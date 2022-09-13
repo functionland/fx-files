@@ -40,21 +40,18 @@ class FsArtifactType{
 # FileService Architecture
 ```mermaid
 classDiagram
-FileService <|-- LocalDeviceFileService
+IFileService <|-- LocalDeviceFileService
 LocalDeviceFileService <|-- AndroidFileService
 LocalDeviceFileService <|-- IosFileService
 LocalDeviceFileService <|-- WindowsFileService
-FileService <|-- FakeFileService
-FileService <|-- FulaFileService
+IFileService <|-- FakeFileService
+IFileService <|-- FulaFileService
 FulaFileService <|-- AndroidFulaFileService
 FulaFileService <|-- IosFulaFileService
 FulaFileService <|-- WindowsFulaFileService
 
-class FileService {
-  <<abstract>>
-  ctor(string dId)
-  string Title
-  FileProviderType ProviderType
+class IFileService {
+  <<interface>>
   GetFiles(string path, string search = null, bool includeSubfolders = false) FxFsArtifact[]
   CreateFile(string path, Stream fileStream)
   GetFile(string path) Stream
