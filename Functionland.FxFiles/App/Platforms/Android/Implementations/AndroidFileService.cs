@@ -192,7 +192,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return base.RenameFolderAsync(folderPath, newName, cancellationToken);
         }
 
-        public override Task<FsFileProviderType> GetFsFileProviderType(string filePath)
+        public override Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
         {
             throw new NotImplementedException();
         }

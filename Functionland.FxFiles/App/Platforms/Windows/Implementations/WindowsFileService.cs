@@ -58,9 +58,9 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
             return base.RenameFileAsync(filePath, newName, cancellationToken);
         }
 
-        public override async Task<FsFileProviderType> GetFsFileProviderType(string filePath)
+        public override Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
         {
-            return FsFileProviderType.InternalMemory;
+            throw new NotImplementedException();
         }
     }
 }
