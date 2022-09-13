@@ -69,14 +69,21 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+
             FsArtifact newFsArtifact = new();
 
-            if (!string.IsNullOrWhiteSpace(folderName))
-            {
+            if (string.IsNullOrWhiteSpace(folderName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
+
                 var newPath = Path.Combine(path, folderName);                
 
                 try
                 {
+                if (Directory.Exists(newPath))
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
+
                     Directory.CreateDirectory(newPath);
                     newFsArtifact = new FsArtifact()
                     {
@@ -91,11 +98,6 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     throw;
                     // ToDo : Handle exception
                 };
-            }
-            else
-            {
-                // ToDo : Throw exception
-            }
 
             return newFsArtifact;
         }
