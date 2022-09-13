@@ -54,6 +54,8 @@ public static class MauiProgram
 #endif
         services.AddTransient<FakeFileServicePlatformTest>();
 
+        services.AddScoped<ThemeInterop>();
+
         return builder;
     }
 }
