@@ -9,7 +9,7 @@
         public ThemeInterop(IJSRuntime jsRuntime)
         {
             _moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-               "import", "../scripts/themeJsInterop.js").AsTask());
+               "import", "../js/themeJsInterop.js").AsTask());
         }
 
         public ValueTask<FxTheme> GetThemeAsync() =>

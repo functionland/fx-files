@@ -16,6 +16,8 @@ if not exist Main.razor mklink "Main.razor" "%cd%/../Web/App.razor"
 
 cd wwwroot
 
+if not exist "js/." mklink /j "js" "../../Web/wwwroot/js"
+if not exist "fonts/." mklink /j "fonts" "../../Web/wwwroot/fonts"
 if not exist "images/." mklink /j "images" "../../Web/wwwroot/images"
 
 if not exist service-worker.js mklink "service-worker.js" "%cd%/../../Web/wwwroot/service-worker.js"
