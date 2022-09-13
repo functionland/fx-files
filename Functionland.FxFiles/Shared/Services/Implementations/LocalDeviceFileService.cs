@@ -77,27 +77,27 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
 
-                var newPath = Path.Combine(path, folderName);                
+            var newPath = Path.Combine(path, folderName);
 
-                try
-                {
+            try
+            {
                 if (Directory.Exists(newPath))
                     throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
 
-                    Directory.CreateDirectory(newPath);
-                    newFsArtifact = new FsArtifact()
-                    {
-                        Name = folderName,
-                        FullPath = newPath,
-                        ArtifactType = FsArtifactType.Folder,
-                        ProviderType = await GetFsFileProviderTypeAsync(newPath) 
-                    };
-                }
-                catch (Exception)
+                Directory.CreateDirectory(newPath);
+                newFsArtifact = new FsArtifact()
                 {
-                    throw;
-                    // ToDo : Handle exception
+                    Name = folderName,
+                    FullPath = newPath,
+                    ArtifactType = FsArtifactType.Folder,
+                    ProviderType = await GetFsFileProviderTypeAsync(newPath)
                 };
+            }
+            catch (Exception)
+            {
+                throw;
+                // ToDo : Handle exception
+            };
 
             return newFsArtifact;
         }
@@ -137,65 +137,62 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public virtual async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
-            if (path == null) 
+            if (string.IsNullOrWhiteSpace(path))
             {
                 var drives = await GetDrivesAsync();
 
                 foreach (var drive in drives)
                     yield return drive;
                 yield break;
+            }    
+
+            var artifacts = new List<FsArtifact>();
+            var subArtifacts = new List<FsArtifact>();
+            string[] directoryFiles = Directory.GetFiles(path);
+            string[] subDirectories = Directory.GetDirectories(path);
+
+            foreach (var subDirectory in subDirectories)
+            {
+                subArtifacts.Add(
+                    new FsArtifact()
+                    {
+                        ArtifactType = FsArtifactType.Folder,
+                        FullPath = subDirectory,
+                        ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
+                        Name = Path.GetFileName(subDirectory),
+                        ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
+                        LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
+                    });
             }
 
-            if (await GetFsArtifactTypeAsync(path) is FsArtifactType.Folder or FsArtifactType.Drive)
+            subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
+
+            foreach (var file in directoryFiles)
             {
-                var artifacts = new List<FsArtifact>();
-                var subArtifacts = new List<FsArtifact>();
-                string[] directoryFiles = Directory.GetFiles(path);
-                string[] subDirectories = Directory.GetDirectories(path);
-
-                foreach (var subDirectory in subDirectories)
-                {
-                    subArtifacts.Add(
-                        new FsArtifact()
-                        {
-                            ArtifactType = FsArtifactType.Folder,
-                            FullPath = subDirectory,
-                            ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
-                            Name = Path.GetFileName(subDirectory)
-                        });
-                }
-
-                subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
-
-                foreach (var file in directoryFiles)
-                {
-                    artifacts.Add(
-                        new FsArtifact()
-                        {
-                            ArtifactType = FsArtifactType.File,
-                            FullPath = file,
-                            ProviderType = await GetFsFileProviderTypeAsync(file),
-                            Name = Path.GetFileName(file)
-                        });
-                }
-
-                artifacts = artifacts.OrderBy(i => i.Name).ToList();
-
-                var result = subArtifacts.Concat(artifacts);
-
-                if (searchText != null)
-                {
-                    result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
-                }
-
-                foreach (var item in result)
-                {
-                    yield return item;
-                }
+                artifacts.Add(
+                    new FsArtifact()
+                    {
+                        ArtifactType = FsArtifactType.File,
+                        FullPath = file,
+                        ProviderType = await GetFsFileProviderTypeAsync(file),
+                        Name = Path.GetFileName(file),
+                        ParentFullPath = Directory.GetParent(file)?.FullName,
+                        LastModifiedDateTime = File.GetLastWriteTime(file)
+                    });
             }
-            else
+
+            artifacts = artifacts.OrderBy(i => i.Name).ToList();
+
+            var result = subArtifacts.Concat(artifacts);
+
+            if (!string.IsNullOrWhiteSpace(searchText))
             {
-                // ToDo : throw exception             
+                result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
+            }
+
+            foreach (var item in result)
+            {
+                yield return item;
             }
         }
 
