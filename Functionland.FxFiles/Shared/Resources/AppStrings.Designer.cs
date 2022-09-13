@@ -61,6 +61,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} already exists exception.
+        /// </summary>
+        public static string ArtifactAlreadyExistsException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} name is null.
         /// </summary>
         public static string ArtifactNameIsNull {

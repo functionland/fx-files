@@ -180,4 +180,7 @@
   <data name="ArtifactNameIsNull" xml:space="preserve">
     <value>The {0} name is null</value>
   </data>
+  <data name="ArtifactAlreadyExistsException" xml:space="preserve">
+    <value>The {0} already exists exception</value>
+  </data>
 </root>
