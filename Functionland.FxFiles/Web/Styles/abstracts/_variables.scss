@@ -80,6 +80,7 @@ $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
 $spacing-12: 12 + $base-unit;
 $spacing-16: 16 + $base-unit;
+$spacing-18: 18 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
@@ -91,10 +92,14 @@ $spacing-72: 72 + $base-unit;
 $spacing-80: 80 + $base-unit;
 
 //icon sizes
+$icon-96: 96 + $base-unit;
+$icon-64: 64 + $base-unit;
+$icon-48: 48 + $base-unit;
 $icon-32: 32 + $base-unit;
 $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
+
 
 //font faces
 $font-path: "/fonts/";
@@ -161,7 +166,7 @@ $line-height-10: 10 + $base-unit;
 
 //letter-spacings
 $letter-spacing-2: 2 + $base-unit;
-$letter-spacing-0: 1 + $base-unit;
+$letter-spacing-1: 1 + $base-unit;
 $letter-spacing-02: 0.2 + $base-unit;
 $letter-spacing-0: 0 + $base-unit;
 
