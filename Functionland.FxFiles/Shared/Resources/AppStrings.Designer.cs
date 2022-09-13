@@ -142,6 +142,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string Files {
+            get {
+                return ResourceManager.GetString("Files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files &amp; Blox hardware.
         /// </summary>
         public static string FilesAndBloxHardware {
@@ -210,6 +219,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Mode {
             get {
                 return ResourceManager.GetString("Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Device.
+        /// </summary>
+        public static string MyDevice {
+            get {
+                return ResourceManager.GetString("MyDevice", resourceCulture);
             }
         }
         
@@ -300,6 +318,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string UpdateConcurrencyException {
             get {
                 return ResourceManager.GetString("UpdateConcurrencyException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zones.
+        /// </summary>
+        public static string Zones {
+            get {
+                return ResourceManager.GetString("Zones", resourceCulture);
             }
         }
     }

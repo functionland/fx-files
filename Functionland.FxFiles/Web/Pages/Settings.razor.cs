@@ -6,7 +6,7 @@
         private ThemeInterop ThemeInterop = default!;
 
         private FxTheme DesiredTheme { get; set; }
-        private string CurrentTheme { get; set; }
+        private string? CurrentTheme { get; set; }
 
         protected override async Task OnInitAsync()
         {
