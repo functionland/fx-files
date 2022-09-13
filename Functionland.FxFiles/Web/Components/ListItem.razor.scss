@@ -1,7 +1,77 @@
-﻿.item-container {
-    padding: 16px 21px;
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
 
-    .item-content {
-        background-image: url($ver)
+.item-container {
+    padding: 16px 21px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-content {
+    background-repeat: no-repeat;
+    background-size: $icon-24;
+    background-position: center left;
+    padding-left: 40px;
+
+    .item-title {
+
+        .pin-badge {
+            background-image: url($pin-filled);
+            background-repeat: no-repeat;
+            background-size: $icon-16;
+            background-position: center;
+        }
+
+        .title-text {
+            color: $gray-light-content1;
+            font-family: $open-sans-regular;
+            font-style: normal;
+            font-weight: 400;
+            font-size: $font-size-16;
+            line-height: $line-height-28;
+            letter-spacing: $letter-spacing-02;
+        }
+    }
+
+    .item-sub-text {
+        color: $gray-light-content3;
+        font-family: $open-sans-regular;
+        font-style: normal;
+        font-weight: 400;
+        font-size: $font-size-10;
+        line-height: $line-height-14;
+        letter-spacing: $letter-spacing-02;
     }
 }
+
+.options-btn {
+    background-image: url($option-vertical);
+    background-size: 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+}
+
+.folder-icon {
+    background-image: url($folder);
+}
+
+.text-file-icon {
+    background-image: url($text-file);
+}
+
+.photo-file-icon {
+    background-image: url($photo-file);
+}
+
+.pdf-file-icon {
+    background-image: url($pdf-file);
+}
+
+.audio-file-icon {
+    background-image: url($audio-file);
+}
+

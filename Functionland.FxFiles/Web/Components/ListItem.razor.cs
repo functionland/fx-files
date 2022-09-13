@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.App.Components
 {
-    public partial class ListItem: AppComponentBase
+    public partial class ListItem
     {
     }
 }
