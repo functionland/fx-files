@@ -214,6 +214,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to access SD card..
+        /// </summary>
+        public static string SDCardAccessFailed {
+            get {
+                return ResourceManager.GetString("SDCardAccessFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many requests.
         /// </summary>
         public static string TooManyRequestsExceptions {

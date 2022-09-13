@@ -183,4 +183,7 @@
   <data name="PathIsNull" xml:space="preserve">
     <value>the path is null</value>
   </data>
+  <data name="SDCardAccessFailed" xml:space="preserve">
+    <value>Failed to access SD card.</value>
+  </data>
 </root>

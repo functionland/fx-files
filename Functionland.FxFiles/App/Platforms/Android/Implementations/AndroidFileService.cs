@@ -267,9 +267,52 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             public string Pathsegment { get; set; }
         }
 
-        public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
+            foreach(var artifact in artifacts)
+            {
+                await CopyArtifactAsync(artifact, destination, cancellationToken);  
+            }
+        }
+
+        private async Task CopyArtifactAsync(FsArtifact artifact, string destination, CancellationToken? cancellationToken = null)
+        {
+            if (!await TryGetPermissionAsync(destination))
+            {
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.SDCardAccessFailed)]);
+            }
+
+            DocumentFile destinationDirectory;
+            android.Net.Uri destinationFileUri;
+            var filePathWithoutExtention = destination + Path.GetFileNameWithoutExtension(artifact.FullPath);
+            var memeType = GetMimeTypeForFileExtension(artifact.FullPath);
+
+            var provider = await GetFsFileProviderType(destination);
+            if (provider == FsFileProviderType.InternalMemory)
+            {
+                var file = new Java.IO.File(destination);
+                destinationDirectory = DocumentFile.FromFile(file);
+                DocumentFile destinationFile = destinationDirectory.CreateFile(memeType, filePathWithoutExtention);
+                //if (destinationFile is null)
+                //{
+                //    throw new IOException(string.Format(PopupsStrings.CopyFailed), 405);
+                //}
+                destinationFileUri = destinationFile.Uri;
+            }
+            else
+            {
+                if (!Directory.Exists(destination))
+                {
+                    Directory.CreateDirectory(destination);
+                }
+                destinationDirectory = GetDocumentFileIfAllowedToWrite(new Java.IO.File(destination), MauiApplication.Context);
+                destinationFileUri = DocumentsContract.CreateDocument(MauiApplication.Current.ContentResolver, destinationDirectory.Uri, memeType, filePathWithoutExtention);
+            }
+
+            using var outStream = MauiApplication.Current.ContentResolver.OpenOutputStream(destinationFileUri);
+            using var inStream = System.IO.File.OpenRead(artifact.FullPath);
+
+            await inStream.CopyToAsync(outStream);
         }
 
         public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -281,7 +324,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
             if (!await TryGetPermissionAsync(path))
             {
-                throw new NotImplementedException();
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.SDCardAccessFailed)]);
             }
 
             DocumentFile destinationDirectory = null;
@@ -294,7 +337,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                 var file = new Java.IO.File(fileDirectry);
                 destinationDirectory = DocumentFile.FromFile(file);
             }
-            else if(provider == FsFileProviderType.ExternalMemory)
+            else if (provider == FsFileProviderType.ExternalMemory)
             {
                 var filePath = Path.GetDirectoryName(path);
                 destinationDirectory = GetDocumentFileIfAllowedToWrite(new Java.IO.File(filePath), MauiApplication.Context);

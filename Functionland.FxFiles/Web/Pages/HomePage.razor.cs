@@ -38,12 +38,12 @@ public partial class HomePage
 
         //############################################
         //GetFileContentAsync
-        var InternalFileContentStream = await FileService.GetFileContentAsync(internalfilePath);
+        //var InternalFileContentStream = await FileService.GetFileContentAsync(internalfilePath);
         //var sDFileContentStream = await FileService.GetFileContentAsync(sDfilePath);
 
         //############################################ ((((test failed))))
         //CreateFileAsync 
-        var fileArtifact = await FileService.CreateFileAsync(internalfilePath2, InternalFileContentStream);
+        //var fileArtifact = await FileService.CreateFileAsync(internalfilePath2, InternalFileContentStream);
 
         //############################################
         //CreateFolderAsync
@@ -53,6 +53,11 @@ public partial class HomePage
         //###########################################((((test failed))))
         //DeleteArtifactsAsync
         //await FileService.DeleteArtifactsAsync(results.ToArray());
+
+        //###########################################((((test failed))))
+        //
+        var des = "/storage/emulated/0/Pictures/";
+        await FileService.CopyArtifactsAsync(results.ToArray(), des);
     }
 }
 
