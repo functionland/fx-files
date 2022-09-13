@@ -3,6 +3,7 @@ using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
 using Microsoft.Extensions.FileProviders;
 using Functionland.FxFiles.Shared.Services.Implementations.Db;
+using Functionland.FxFiles.Shared.Services;
 
 #if Windows
 using Functionland.FxFiles.App.Platforms.Windows.Implementations;
@@ -57,7 +58,7 @@ public static class MauiProgram
 
         string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
 
-        services.AddSingleton<IFxLocalDbService>(new FxLocalDbService( connectionString));
+        services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
         return builder;
     }
 }
