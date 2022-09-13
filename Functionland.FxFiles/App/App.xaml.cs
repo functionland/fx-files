@@ -1,18 +1,18 @@
-﻿using Functionland.FxFiles.Shared.TestInfra.Implementations;
-using System.ComponentModel;
-
-[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+﻿[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
 namespace Functionland.FxFiles.App;
 
 public partial class App
 {
-    [AutoInject] IFxLocalDbService FxLocalDbService { get; set; }
-    [AutoInject] IExceptionHandler ExceptionHandler { get; set; }
-    public App()
+    private IFxLocalDbService FxLocalDbService { get; }
+    private IExceptionHandler ExceptionHandler { get; }
+    public App(IFxLocalDbService fxLocalDbService, IExceptionHandler exceptionHandler)
     {
+        FxLocalDbService = fxLocalDbService;
+        ExceptionHandler = exceptionHandler;
         InitializeComponent();
     }
+
     protected override void OnStart()
     {
         base.OnStart();
