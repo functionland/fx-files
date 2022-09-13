@@ -130,5 +130,9 @@
   {
     "outputFile": "Pages/ThemeSettings.razor.css",
     "inputFile": "Pages/ThemeSettings.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
   }
 ]
