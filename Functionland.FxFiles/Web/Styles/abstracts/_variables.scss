@@ -96,6 +96,33 @@ $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
 
+//icons
+$icon-base-url: "";
+
+$avatar-grey: $icon-base-url + "avatar-grey.svg";
+$delete: $icon-base-url + "delete.svg";
+$copy: $icon-base-url + "copy.svg";
+$rename: $icon-base-url + "rename.svg";
+$details: $icon-base-url + "details.svg";
+$option-vertical: $icon-base-url + "option-vertical.svg";
+$pin-outline: $icon-base-url + "pin-outline.svg";
+$move: $icon-base-url + "move.svg";
+$download: $icon-base-url + "download.svg";
+$select-check-filled: $icon-base-url + "select-check-filled.svg";
+$select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
+$list-view-selected: $icon-base-url + "list-view-selected.svg";
+$list-view-grey: $icon-base-url + "list-view-grey.svg";
+$gird-view-selected: $icon-base-url + "grid-view-selected.svg";
+$grid-view-grey: $icon-base-url + "grid-view-grey.svg";
+$filter: $icon-base-url + "filter.svg";
+$folder: $icon-base-url + "folder.svg";
+$audio-file: $icon-base-url + "audio-file.svg";
+$pdf-file: $icon-base-url + "pdf-file.svg";
+$text-file: $icon-base-url + "text-file.svg";
+$photo-file: $icon-base-url + "photo-file.svg";
+$close-btn: $icon-base-url + "close-btn.svg";
+
+
 //font faces
 $font-path: "/fonts/";
 $montserrat-medium: "Montserrat-Medium";
