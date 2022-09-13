@@ -137,14 +137,14 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             if (path == null) 
             {
-                var drives = await GetDrives();
+                var drives = await GetDrivesAsync();
 
                 foreach (var drive in drives)
                     yield return drive;
                 yield break;
             }
 
-            if (GetFsArtifactType(path) is FsArtifactType.Folder or FsArtifactType.Drive)
+            if (await GetFsArtifactTypeAsync(path) is FsArtifactType.Folder or FsArtifactType.Drive)
             {
                 var artifacts = new List<FsArtifact>();
                 var subArtifacts = new List<FsArtifact>();
@@ -222,7 +222,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull,""));
 
-            var artifactType = GetFsArtifactType(filePath);
+            var artifactType = GetFsArtifactTypeAsync(filePath);
 
             if (string.IsNullOrWhiteSpace(newName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, artifactType.ToString() ?? ""));
@@ -240,7 +240,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
-            var artifactType = GetFsArtifactType(folderPath);
+            var artifactType = GetFsArtifactTypeAsync(folderPath);
 
             if (string.IsNullOrWhiteSpace(newName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, artifactType.ToString() ?? ""));
@@ -269,7 +269,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        private static FsArtifactType GetFsArtifactType(string path)
+        public virtual async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
         {
             string[] drives = Directory.GetLogicalDrives();
 
@@ -278,7 +278,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 return FsArtifactType.Drive;
             }
 
-            FileAttributes attr = System.IO.File.GetAttributes(path);
+            FileAttributes attr = File.GetAttributes(path);
 
             if (attr.HasFlag(FileAttributes.Directory))
             {
@@ -290,7 +290,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        private async Task<List<FsArtifact>> GetDrives()
+        public virtual async Task<List<FsArtifact>> GetDrivesAsync()
         {
             var drives = Directory.GetLogicalDrives();
             var artifacts = new List<FsArtifact>();
