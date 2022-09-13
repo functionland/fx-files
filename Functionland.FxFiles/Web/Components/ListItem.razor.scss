@@ -16,12 +16,18 @@
     padding-left: 40px;
 
     .item-title {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
 
         .pin-badge {
             background-image: url($pin-filled);
             background-repeat: no-repeat;
             background-size: $icon-16;
             background-position: center;
+            width: 16px;
+            height: 16px;
         }
 
         .title-text {
