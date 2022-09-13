@@ -100,7 +100,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     Name = folderName,
                     FullPath = newPath,
                     ArtifactType = FsArtifactType.Folder,
-                    ProviderType = await GetFsFileProviderTypeAsync(newPath)
+                    ProviderType = await GetFsFileProviderTypeAsync(newPath),
+                    ParentFullPath = Directory.GetParent(newPath)?.FullName,
+                    LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
                 };
             }
             catch (Exception)
