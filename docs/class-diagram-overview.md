@@ -58,15 +58,10 @@ class FileService {
   CreateFile(string path, Stream fileStream)
   GetFile(string path) Stream
   CreateFolder(string path, string folder) FxFsArtifact
-  <<event>>
-  event ArtifactsCreated()
-  event ArtifactsDeleted()
-  event ArtifactsModified()
 }
 
 class LocalDeviceFileService {
   <<abstract>>
-  
 }
 ```
 
