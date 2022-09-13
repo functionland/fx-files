@@ -1,2 +1,35 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+div {
+    border-color: color(gray-bg-secondary);
+}
+
+.divider-thin {
+    border-top-width: $border-size-1;
+}
+
+.divider-regular {
+    border-top-width: $border-size-2;
+}
+
+.divider-bold {
+    border-top-width: $border-size-4;
+}
+
+.divider-solid {
+    border-top-style: solid; 
+}
+
+.divider-dotted {
+    border-top-style: dotted;
+}
+
+.divider-vertical {
+    width: 100%;
+    transform: rotate(90deg);
+}
+
+.divider-horizontal {
+    width: 100%;
 }
