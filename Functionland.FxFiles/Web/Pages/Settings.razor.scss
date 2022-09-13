@@ -13,6 +13,11 @@
 
 ::deep .fxbutton-menuline {
     margin: 4px 0;
+
+    .fxbutton-righticon {
+        padding: 5px 7.5px;
+        margin-left: 0;
+    }
 }
 
 .divider {

@@ -64,6 +64,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="wwwroot\images\icons\darkDesignSystem\" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="Components\Common\" />
     </ItemGroup>
 
