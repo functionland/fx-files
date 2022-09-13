@@ -183,7 +183,13 @@
   <data name="PathIsNull" xml:space="preserve">
     <value>the path is null</value>
   </data>
-  <data name="SDCardAccessFailed" xml:space="preserve">
-    <value>Failed to access SD card.</value>
+  <data name="ArtifactNameIsNull" xml:space="preserve">
+    <value>The {0} name is null</value>
+  </data>
+  <data name="ArtifactAlreadyExistsException" xml:space="preserve">
+    <value>The {0} already exists exception</value>
+  </data>
+  <data name="StreamFileIsNull" xml:space="preserve">
+    <value>The stream file is null</value>
   </data>
 </root>

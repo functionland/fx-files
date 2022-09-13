@@ -7,22 +7,39 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 {
     public partial class FakeFileService : IFileService
     {
-        [AutoInject]public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+        [AutoInject]
+        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();
+        public TimeSpan? ActionLatency { get; set; }
+        public TimeSpan? EnumerationLatency { get; set; }
 
-        public FakeFileService(IEnumerable<FsArtifact> files)
+        public FakeFileService(IEnumerable<FsArtifact> files, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
+            ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
+            EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
             foreach (var file in files)
             {
                 _files.Add(file);
             }
         }
 
+        public async Task LatencyActionAsync()
+        {
+            if (ActionLatency is not null)
+                await Task.Delay(ActionLatency.Value);
+        }
+
+        public async Task LatencyEnumerationAsync()
+        {
+            if (EnumerationLatency is not null)
+                await Task.Delay(EnumerationLatency.Value);
+        }
 
         public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
+                await LatencyEnumerationAsync();
                 var newPath = Path.Combine(destination, artifact.Name);
                 CheckIfArtifactExist(newPath);
 
@@ -38,7 +55,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                             _files.Add(insideNewArtifact);
                         }
                     }
-                   
+
                 }
                 else
                 {
@@ -48,6 +65,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             }
         }
+
         private static FsArtifactType GetFsArtifactType(string path)
         {
             string[] drives = Directory.GetLogicalDrives();
@@ -80,6 +98,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
+            await LatencyActionAsync();
             if (path is null) throw new Exception();
 
             CheckIfArtifactExist(path);
@@ -107,7 +126,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             };
         }
 
-        public Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
+        public async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
         {
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
@@ -130,13 +149,15 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             foreach (var file in addedFiles)
             {
+                await LatencyEnumerationAsync();
                 _files.Add(file);
             }
-            return Task.FromResult(addedFiles);
+            return addedFiles;
         }
 
         public async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
+            await LatencyActionAsync();
             if (path is null) throw new Exception();
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var finalPath = Path.Combine(path, folderName);
@@ -162,6 +183,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var artifact in artifacts)
             {
+                await LatencyEnumerationAsync();
                 foreach (var file in _files)
                 {
                     finalBag.Add(file);
@@ -199,6 +221,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var file in files)
             {
+                await LatencyEnumerationAsync();
                 yield return file;
             }
 
@@ -206,6 +229,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
+            await LatencyActionAsync();
             string streamPath;
             if (Path.GetExtension(filePath).ToLower() == ".jpg" ||
                 Path.GetExtension(filePath).ToLower() == ".png" ||
@@ -236,6 +260,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             foreach (var articat in _files)
             {
+                await LatencyEnumerationAsync();
                 if (string.Equals(articat.FullPath, filePath, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var directoryName = Path.GetDirectoryName(articat.FullPath);
@@ -251,13 +276,14 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var oldFolderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
             foreach (var artifact in _files)
             {
+                await LatencyEnumerationAsync();
                 if (string.Equals(artifact.FullPath, folderPath, StringComparison.CurrentCultureIgnoreCase))
                 {
                     DirectoryInfo parentDir = Directory.GetParent(folderPath.EndsWith("\\") ? folderPath : string.Concat(folderPath, "\\"));
                     artifact.FullPath = Path.Combine(parentDir.Parent.FullName, newName);
                     artifact.Name = newName;
                 }
-                else if(artifact.FullPath.ToLower().StartsWith(folderPath.ToLower()))
+                else if (artifact.FullPath.ToLower().StartsWith(folderPath.ToLower()))
                 {
                     artifact.FullPath = artifact.FullPath.Replace($"{Path.DirectorySeparatorChar}{oldFolderName}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}{newName}{Path.DirectorySeparatorChar}");
                 }

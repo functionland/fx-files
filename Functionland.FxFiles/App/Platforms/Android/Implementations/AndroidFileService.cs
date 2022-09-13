@@ -141,7 +141,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return base.RenameFolderAsync(folderPath, newName, cancellationToken);
         }
 
-        public override async Task<FsFileProviderType> GetFsFileProviderType(string filePath)
+        public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
         {
             var drives = await GetDrivesAsync();
 
@@ -191,6 +191,5 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 
             return false;
         }
-
     }
 }

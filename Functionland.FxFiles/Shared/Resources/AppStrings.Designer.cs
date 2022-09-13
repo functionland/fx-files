@@ -61,6 +61,24 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} already exists exception.
+        /// </summary>
+        public static string ArtifactAlreadyExistsException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} name is null.
+        /// </summary>
+        public static string ArtifactNameIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactNameIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} path is null.
         /// </summary>
         public static string ArtifactPathIsNull {
@@ -214,11 +232,11 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to access SD card..
+        ///   Looks up a localized string similar to The stream file is null.
         /// </summary>
-        public static string SDCardAccessFailed {
+        public static string StreamFileIsNull {
             get {
-                return ResourceManager.GetString("SDCardAccessFailed", resourceCulture);
+                return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
             }
         }
         
