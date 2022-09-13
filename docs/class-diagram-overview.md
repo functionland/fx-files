@@ -38,6 +38,10 @@ class FsArtifactType{
 ```
 
 # FileService Architecture
+To unify the development experience of facing with different file systems (Android, iOS, Widnows, Blox and ...) we use an abstraction called `IFileService`. This abstraction represents all the requirements that a typical file system should expose.
+
+As you see, there are different implementations of `IFileService` for different platforms leveraging specialized API(s) of each specific platform.
+Amongst these implementations `FakeFileService` is the interesting one for developers, as they can use it to easily test their application, removing all the barriers to setup a proper file system for testing purposes.
 ```mermaid
 classDiagram
 IFileService <|-- LocalDeviceFileService
@@ -64,7 +68,6 @@ class LocalDeviceFileService {
 ```
 
 # UI Components
-
 
 ```mermaid
 classDiagram
