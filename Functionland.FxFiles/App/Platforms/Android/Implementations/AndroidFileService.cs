@@ -20,7 +20,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
     public partial class AndroidFileService : LocalDeviceFileService
     {
-        private static android.Net.Uri contentUri = MediaStore.Files.GetContentUri("external");
         private async Task<List<FsArtifact>> GetDrivesAsync()
         {
             var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
@@ -69,57 +68,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return drives;
         }
 
-        private async IAsyncEnumerable<FsArtifact> GetFilesAsync(Bundle queryArge)
-        {
-            string[] projection = {
-                    MediaStore.IMediaColumns.DisplayName,
-                    MediaStore.IMediaColumns.Size,
-                    MediaStore.IMediaColumns.Data,//TODO: use relative path ,volume_name and display name
-                    MediaStore.IMediaColumns.DateAdded,
-                    MediaStore.IMediaColumns.DateModified
-            };
-
-            using var cursor = MauiApplication.Current.ContentResolver?.Query(
-                        contentUri,
-                        projection,
-                        queryArge,
-                        null
-                        );
-
-            if (cursor is not null && cursor.MoveToFirst())
-            {
-                do
-                {
-                    var fullName = cursor.GetString(0);
-                    var name = Path.GetFileNameWithoutExtension(fullName);
-                    var fileExtension = Path.GetExtension(fullName);
-                    var size = cursor.GetLong(1);
-                    var capacity = cursor.GetLong(1); //TODO: find capcity properly
-                    var fullPath = cursor.GetString(2);
-                    var artifactType = await GetFsArtifactTypeAsync(fullPath);
-                    var providerType = await GetFsFileProviderType(fullPath);
-                    var parentFullPath = Path.GetDirectoryName(cursor.GetString(2));
-                    var dateAdded = DateTimeOffset.FromUnixTimeSeconds(cursor.GetLong(3));
-                    var dateModifiedUnixFormat = cursor.GetLong(4);
-                    DateTimeOffset dateModified = dateModifiedUnixFormat == 0 ? dateAdded : DateTimeOffset.FromUnixTimeSeconds(dateModifiedUnixFormat);
-
-                    yield return new FsArtifact
-                    {
-                        Name = name,
-                        FileExtension = fileExtension,
-                        ArtifactType = artifactType,
-                        ProviderType = providerType,
-                        Size = size,
-                        Capacity = capacity,
-                        FullPath = fullPath,
-                        ParentFullPath = parentFullPath,
-                        LastModifiedDateTime = dateModified
-                    };
-                }
-                while (cursor.MoveToNext());
-            }
-        }
-
         private async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -140,24 +88,241 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
         }
 
+        private async Task<bool> TryGetPermissionAsync(string filePath)
+        {
+            if (!await HasPermissionAsync(filePath))
+            {
+                //MauiApplication.Current.ApplicationContext.
+                //await ((MainActivity)MauiAppCompatActivity).GetSDcardStoragePermission();
+                //return await HasPermissionAsync(filePath);
+            }
+
+            return true;
+        }
+
+        private async Task<bool> HasPermissionAsync(string path)
+        {
+            var provider = await GetFsFileProviderType(path);
+            if (provider != FsFileProviderType.ExternalMemory)
+            {
+                return true;
+            }
+
+            var permission = MauiApplication.Current.ContentResolver.PersistedUriPermissions.ToList();
+            var permissionList = new List<SDpermission>();
+            foreach (var p in permission)
+            {
+                var result = System.IO.Path.Combine(p.Uri.PathSegments.Skip(1).Select(r => r.TrimEnd(':')).ToArray());
+                if (result.Contains('/'))
+                {
+                    result = ReverseString(result);
+                    var index = result.IndexOf('/');
+                    result = ReverseString(result);
+                    result = result.Substring(result.Length - index);
+                }
+                else if (result.Contains(':'))
+                {
+                    var index = result.IndexOf(":");
+                    result = result.Substring(index + 1);
+                }
+                permissionList.Add(new SDpermission()
+                {
+                    Permission = p,
+                    Pathsegment = result
+                });
+            };
+            var check = permissionList.Any(r => r.Permission.IsWritePermission && path.Contains(r.Pathsegment));
+            return check;
+        }
+
+        private static string ReverseString(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+        private DocumentFile GetDocumentFileIfAllowedToWrite(Java.IO.File file, Context context)
+        {
+            List<UriPermission> permissionUris = context.ContentResolver.PersistedUriPermissions.ToList();
+
+            foreach (UriPermission permissionUri in permissionUris)
+            {
+                android.Net.Uri treeUri = permissionUri.Uri;
+                DocumentFile rootDocFile = DocumentFile.FromTreeUri(context, treeUri);
+
+                string rootDocFilePath = GetFullPathFromTreeUri(treeUri, GetSDCardPath());
+
+                if (file.AbsolutePath.StartsWith(rootDocFilePath))
+                {
+
+                    var pathInRootDocParts = new List<string>();
+                    while (file != null && !rootDocFilePath.Equals(file.AbsolutePath))
+                    {
+                        pathInRootDocParts.Add(file.Name);
+                        file = file.ParentFile;
+                    }
+
+                    DocumentFile docFile = null;
+
+                    if (pathInRootDocParts.Count == 0)
+                    {
+                        docFile = DocumentFile.FromTreeUri(context, rootDocFile.Uri);
+                    }
+                    else
+                    {
+                        for (int i = pathInRootDocParts.Count - 1; i >= 0; i--)
+                        {
+                            if (docFile == null)
+                            {
+                                docFile = rootDocFile.FindFile(pathInRootDocParts[i]);
+                            }
+                            else
+                            {
+                                docFile = docFile.FindFile(pathInRootDocParts[i]);
+                            }
+                        }
+                    }
+                    if (docFile != null && docFile.CanWrite())
+                    {
+                        return docFile;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+            }
+            return null;
+        }
+
+        private string GetSDCardPath()
+        {
+            var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
+
+            var volume = storageManager.StorageVolumes.ToList().FirstOrDefault(r => !r.IsPrimary);
+
+            if (volume != null) return $@"/storage/{volume.Uuid}/";
+
+            return string.Empty;
+        }
+
+        private string GetFullPathFromTreeUri(android.Net.Uri treeUri, string volumeBasePath)
+        {
+            if (treeUri == null)
+            {
+                return null;
+            }
+            if (volumeBasePath == null)
+            {
+                return Java.IO.File.Separator;
+            }
+            String volumePath = volumeBasePath;
+            if (volumePath.EndsWith(Java.IO.File.Separator))
+            {
+                volumePath = volumePath.Substring(0, volumePath.Length - 1);
+            }
+
+            String documentPath = GetDocumentPathFromTreeUri(treeUri);
+            if (documentPath.EndsWith(Java.IO.File.Separator))
+            {
+                documentPath = documentPath.Substring(0, documentPath.Length - 1);
+            }
+
+            if (documentPath.Length > 0)
+            {
+                if (documentPath.StartsWith(Java.IO.File.Separator))
+                {
+                    return volumePath + documentPath;
+                }
+                else
+                {
+                    return volumePath + Java.IO.File.Separator + documentPath;
+                }
+            }
+            else
+            {
+                return volumePath;
+            }
+        }
+
+        private String GetDocumentPathFromTreeUri(android.Net.Uri treeUri)
+        {
+            string docId = DocumentsContract.GetTreeDocumentId(treeUri);
+            String[] split = docId.Split(":");
+            if ((split.Length >= 2) && (split[1] != null))
+            {
+                return split[1];
+            }
+            else
+            {
+                return Java.IO.File.Separator;
+            }
+        }
+
+        private class SDpermission
+        {
+            public UriPermission Permission { get; set; }
+            public string Pathsegment { get; set; }
+        }
+
         public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
             return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
         }
 
-        public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
+        public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
-            return base.CreateFileAsync(path, stream, cancellationToken);
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+            }
+
+            if (!await TryGetPermissionAsync(path))
+            {
+                throw new NotImplementedException();
+            }
+
+            DocumentFile destinationDirectory = null;
+            var fileDirectry = Path.GetDirectoryName(path);
+            var fileName = Path.GetFileNameWithoutExtension(path);
+
+            var provider = await GetFsFileProviderType(path);
+            if (provider == FsFileProviderType.InternalMemory)
+            {
+                var file = new Java.IO.File(fileDirectry);
+                destinationDirectory = DocumentFile.FromFile(file);
+            }
+            else if(provider == FsFileProviderType.ExternalMemory)
+            {
+                var filePath = Path.GetDirectoryName(path);
+                destinationDirectory = GetDocumentFileIfAllowedToWrite(new Java.IO.File(filePath), MauiApplication.Context);
+            }
+
+            var mimeType = GetMimeTypeForFileExtension(path);
+            DocumentFile destinationFile = destinationDirectory.CreateFile(mimeType, fileName);
+
+            using var outStream = MauiApplication.Current.ContentResolver?.OpenOutputStream(destinationFile.Uri);
+            await stream.CopyToAsync(outStream);
+
+            var newFsArtifact = new FsArtifact
+            {
+                Name = fileName,
+                FullPath = path,
+                ArtifactType = FsArtifactType.File,
+                FileExtension = Path.GetExtension(path),
+                Size = (int)outStream.Length,
+                ProviderType = await GetFsFileProviderType(path),
+                LastModifiedDateTime = DateTimeOffset.Now
+            };
+
+            return newFsArtifact;
         }
 
         public override Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
         {
             return base.CreateFilesAsync(files, cancellationToken);
-        }
-
-        public override Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
-        {
-            return base.CreateFolderAsync(path, folderName, cancellationToken);
         }
 
         public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
@@ -181,34 +346,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             {
                 yield return artifact;
             }
-
-            #region Check for Android 12
-            //var provider = await GetFsFileProviderType(path);
-            //if (provider == FsFileProviderType.InternalMemory)
-            //{
-            //    // ToDo: Get from internal memory properly.
-            //    await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
-            //    {
-            //        yield return artifact;
-            //    }
-            //}
-            //else if (provider == FsFileProviderType.ExternalMemory)
-            //{
-            //    string selection = $@"({MediaStore.IMediaColumns.Data} = '{path}')"; //TODO: use relative path ,volume_name and display name
-
-            //    if (!String.IsNullOrWhiteSpace(searchText))
-            //    {
-            //        selection = selection + $@"AND ( {MediaStore.IMediaColumns.DisplayName} like '%{searchText}%' )";
-            //    }
-
-            //    Bundle bundle = new Bundle();
-            //    bundle.PutString(ContentResolver.QueryArgSqlSelection, selection);
-            //    await foreach (var artifact in GetFilesAsync(bundle))
-            //    {
-            //        yield return artifact;
-            //    };
-            //} 
-            #endregion
         }
 
         public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
