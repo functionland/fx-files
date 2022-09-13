@@ -63,4 +63,8 @@
 		<Watch Remove="*.scss" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\images\icons\darkDesignSystem\" />
+    </ItemGroup>
+
 </Project>
