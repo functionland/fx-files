@@ -1,14 +1,9 @@
-﻿//using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-
-namespace Functionland.FxFiles.App.Pages
+﻿namespace Functionland.FxFiles.App.Pages
 {
     public partial class ThemeSettings
     {
         [AutoInject]
         private ThemeInterop ThemeInterop = default!;
-
-        //[AutoInject]
-        //private ProtectedLocalStorage _protectedLocalStorage { get; set; } = default!;
 
         private bool IsSystemTheme { get; set; }
         private bool IsDarkMode { get; set; }
@@ -24,7 +19,6 @@ namespace Functionland.FxFiles.App.Pages
                 SystemTheme = await ThemeInterop.GetSystemThemeAsync();
                 IsDarkMode = DesiredTheme is FxTheme.Dark;
                 await OnThemeChangedAsync(IsDarkMode);
-                //IsSystemTheme = await IsSystemThemeActiveAsync();
                 await OnUseSystemThemeAsync(IsSystemTheme);
                 await ThemeInterop.RegisterForSystemThemeChangedAsync();
                 StateHasChanged();
@@ -45,7 +39,6 @@ namespace Functionland.FxFiles.App.Pages
             {
                 IsDarkMode = false;
             }
-            //await SetSystemThemeAsync(isSystemTheme);
 
             StateHasChanged();
         }
@@ -56,16 +49,5 @@ namespace Functionland.FxFiles.App.Pages
             await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
             StateHasChanged();
         }
-
-        //public async Task<bool> IsSystemThemeActiveAsync()
-        //{
-        //    var systemTheme = await _protectedLocalStorage.GetAsync<bool>("systemTheme");
-        //    return systemTheme.Success ? systemTheme.Value : false;
-        //}
-
-        //public async Task SetSystemThemeAsync(bool isSystemTheme)
-        //{
-        //    await _protectedLocalStorage.SetAsync("systemTheme", isSystemTheme);
-        //}
     }
 }
