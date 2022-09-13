@@ -1,31 +1,32 @@
 ﻿@page "/Settings"
 
+@inherits AppComponentBase;
+
 <div class="settings-content">
-    <h1 class="title">Settings</h1>
+    <h1 class="title">@Localizer[nameof(AppStrings.Settings)]</h1>
     <FxButton 
-        Text="Files & Blox hardware"
+        Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
         ButtonStyle="FxButtonStyle.MenuLine"
         RightIcon="images/icons/chevron-right.svg" />
     <FxButton 
-        Text="Mode"
+        Text="@Localizer[nameof(AppStrings.Mode)]"
         Link="settings/theme"
-        MetaDataText="Current: Night mode"
+        MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + @Localizer[nameof(AppStrings.Mode).ToLower()])"
         ButtonStyle="FxButtonStyle.MenuLine"
         RightIcon="images/icons/chevron-right.svg" />
     <FxButton
-        Text="Pools"
+        Text="@Localizer[nameof(AppStrings.Pools)]"
         ButtonStyle="FxButtonStyle.MenuLine" />
     <FxButton
-        Text="About"
+        Text="@Localizer[nameof(AppStrings.About)]"
         ButtonStyle="FxButtonStyle.MenuLine" />
 
     <div class="divider"></div>
 
-    <FxButton 
-        RightIcon=""
-        Text="Log out"
+    <FxButton
+        Text="@Localizer[nameof(AppStrings.LogOut)]"
         ButtonStyle="FxButtonStyle.Normal"
         ButtonSize="FxButtonSize.Stretch" />
 
-    <p>Functionland File Sync App version 00.01.05</p>
+    <p>@Localizer[nameof(AppStrings.FilesAndBloxHardware)] 00.01.05</p>
 </div>
