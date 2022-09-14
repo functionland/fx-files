@@ -30,4 +30,11 @@
             </div>
         </ContentTemplate>
     </BitAccordion>
+
+    <div class="list-container @ViewMode-view">
+        @foreach (var item in ListItems)
+        {
+            <ListItem Config="item"></ListItem>
+        }
+    </div>
 </div>

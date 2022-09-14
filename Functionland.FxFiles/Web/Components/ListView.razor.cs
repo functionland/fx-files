@@ -1,6 +1,8 @@
 ﻿namespace Functionland.FxFiles.App.Components
 {
-    public class ListView
+    public partial class ListView
     {
+        [Parameter]
+        public string? Title { get; set; }
     }
 }
