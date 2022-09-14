@@ -3,10 +3,6 @@
 
 .item-container {
     padding: 16px 21px;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .item-content {
@@ -28,6 +24,7 @@
             background-position: center;
             width: 16px;
             height: 16px;
+            margin-right: 8px;
         }
 
         .title-text {
@@ -53,12 +50,28 @@
 }
 
 .options-btn {
-    background-image: url($option-vertical);
     background-size: 24px;
     background-position: center;
     background-repeat: no-repeat;
     width: 24px;
     height: 24px;
+}
+
+.list-view {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    .options-btn {
+        background-image: url($options-vertical);
+    }
+}
+
+.grid-view {
+    .options-btn {
+        background-image: url($options-hotizontal);
+    }
 }
 
 .folder-icon {
