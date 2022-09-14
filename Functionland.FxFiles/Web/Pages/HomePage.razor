@@ -4,14 +4,10 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.Files)]</PageTitle>
 
-<PageTitle>@Localizer[nameof(AppStrings.HomeTitle)]</PageTitle>
-<div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
-
-<button @onclick="(()=>NavigateToTestExplorerComponent())">Test</button>
-<ListItem Config="Config"></ListItem>
 <FxToolBar IsMainToolBar="true" />
 
  <div class="files-content">
     <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
     <button @onclick="(()=>NavigateToTestExplorerComponent())">Test</button>
+    <ListItem Config="Config"></ListItem>
  </div>
