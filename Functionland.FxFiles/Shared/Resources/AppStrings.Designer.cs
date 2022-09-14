@@ -122,7 +122,18 @@ namespace Functionland.FxFiles.Shared.Resources {
                 return ResourceManager.GetString("ConflicException", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Day
+        {
+            get
+            {
+                return ResourceManager.GetString("Day", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to You can not delete drive.
         /// </summary>
@@ -131,7 +142,18 @@ namespace Functionland.FxFiles.Shared.Resources {
                 return ResourceManager.GetString("DriveRemoveFailed", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string Current
+        {
+            get
+            {
+                return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
