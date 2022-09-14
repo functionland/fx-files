@@ -3,13 +3,13 @@
 
 .item-container {
     padding: 16px 21px;
+    position: relative;
 }
 
 .item-content {
     background-repeat: no-repeat;
     background-size: $icon-24;
-    background-position: center left;
-    padding-left: 40px;
+
 
     .item-title {
         display: flex;
@@ -35,17 +35,10 @@
             font-size: $font-size-16;
             line-height: $line-height-28;
             letter-spacing: $letter-spacing-02;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-    }
-
-    .item-sub-text {
-        color: $gray-light-content3;
-        font-family: $open-sans-regular;
-        font-style: normal;
-        font-weight: 400;
-        font-size: $font-size-10;
-        line-height: $line-height-14;
-        letter-spacing: $letter-spacing-02;
     }
 }
 
@@ -62,15 +55,53 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
+    height: 74px;
 
     .options-btn {
         background-image: url($options-vertical);
     }
+
+    .item-content {
+        background-position: center left;
+        padding-left: 40px;
+
+        
+
+        .item-sub-text {
+            color: $gray-light-content3;
+            font-family: $open-sans-regular;
+            font-style: normal;
+            font-weight: 400;
+            font-size: $font-size-10;
+            line-height: $line-height-14;
+            letter-spacing: $letter-spacing-02;
+        }
+    }
 }
 
 .grid-view {
+    height: 120px;
+
     .options-btn {
         background-image: url($options-horizontal);
+        margin: 0 auto;
+    }
+
+    .item-content {
+        background-position: center top;
+        padding-top: 32px;
+
+        .item-title {
+            .pin-badge {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+            }
+        }
+
+        .item-sub-text {
+            display: none;
+        }
     }
 }
 
