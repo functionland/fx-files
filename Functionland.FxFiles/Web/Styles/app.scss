@@ -29,6 +29,7 @@
 
 body {
     margin: 0;
+    user-select: none;
     overscroll-behavior: none;
     font-family: $open-sans-regular;
     -webkit-tap-highlight-color: transparent;
