@@ -12,8 +12,8 @@
     "inputFile": "Shared/AppErrorBoundary.razor.scss"
   },
   {
-    "outputFile": "Components/Header.razor.css",
-    "inputFile": "Components/Header.razor.scss"
+    "outputFile": "Components/FxToolBar.razor.css",
+    "inputFile": "Components/FxToolBar.razor.scss"
   },
   {
     "outputFile": "Components/Footer.razor.css",

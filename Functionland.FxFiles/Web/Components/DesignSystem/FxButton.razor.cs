@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.App.Components.DesignSystem
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace Functionland.FxFiles.App.Components.DesignSystem
 {
     public partial class FxButton
     {
@@ -51,12 +53,15 @@
         public string? HorizontalAlignment { get; set; }
 
         [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+        [Parameter]
         public FxButtonTextAlignment? HorizontalTextAlignment { get; set; }
 
         [Parameter]
         public FxButtonSize? ButtonSize { get; set; }
 
-        [Parameter]
+        [Parameter, EditorRequired]
         public FxButtonStyle? ButtonStyle { get; set; }
     }
 
@@ -73,6 +78,8 @@
         Outline,
         Disabled,
         MenuLine,
+        IconOnly,
+        None
     }
 
     public enum FxButtonTextAlignment
