@@ -1,10 +1,12 @@
 ﻿@inherits AppComponentBase;
 
-<div class="fx-taost">
-    <div class="icons-action toast-icon"></div>
-    <div class="toast-message-container">
-        <div class="taost-message-title">@Localizer[nameof(AppStrings.ToastErrorMessage)]</div>
-        <div class="taost-message-desc">@Localizer[nameof(AppStrings.ToastDescMessage)]</div>
+<div class="fx-taost success-message">
+    <div class="toast-container">
+        <div class="toast-icon"></div>
+        <div class="toast-messages">
+            <div class="taost-message-title">@Localizer[nameof(AppStrings.ToastErrorMessage)]</div>
+            <div class="taost-message-desc">@Localizer[nameof(AppStrings.ToastDescMessage)]</div>
+        </div>
     </div>
-    <div class="icons-action close-icon"></div>
+    <div class="close-icon"></div>
 </div>

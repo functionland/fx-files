@@ -3,43 +3,54 @@
 
 .fx-taost {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: space-between;
     flex-flow: row nowrap;
     background-color: color(app-bg);
     border: 1px solid color(gray-bg-secondary);
     border-radius: $border-radius-4;
     padding: $spacing-16 $spacing-18;
-    width: 100%;
+    max-width: 350px;
 
-    .icons-action {
-        width: $icon-20;
-        height: $icon-20;
-        background-size: $icon-20;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
 
-    .toast-message-container {
-        margin: 0px $spacing-18;
+    .toast-container {
+        display: flex;
+        align-items: center;
 
-        .taost-message-title {
-            font-family: $open-sans-semi-bold;
-            font-size: $font-size-14;
-            line-height: $line-height-24;
-            letter-spacing: $letter-spacing-02;
+        .toast-icon {
+            width: $icon-20;
+            height: $icon-20;
+            background-size: $icon-20;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
-        .taost-message-desc {
-            font-family: $open-sans-semi-bold;
-            font-size: $font-size-12;
-            line-height: $line-height-16;
-            letter-spacing: $letter-spacing-02;
-            color: color(gray-content2);
+        .toast-messages {
+            margin: 0px $spacing-18;
+
+            .taost-message-title {
+                font-family: $open-sans-semi-bold;
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                letter-spacing: $letter-spacing-02;
+            }
+
+            .taost-message-desc {
+                font-family: $open-sans-semi-bold;
+                font-size: $font-size-12;
+                line-height: $line-height-16;
+                letter-spacing: $letter-spacing-02;
+                color: color(gray-content2);
+                max-width: 242px;
+                overflow-wrap: break-word;
+            }
         }
     }
 
     .close-icon {
+        width: $icon-16;
+        height: $icon-16;
+        background-size: $icon-16;
         background-image: url($close-btn);
     }
 }
