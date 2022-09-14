@@ -6,7 +6,7 @@
     background-repeat: no-repeat;
     background-position: center left 22.69px;
     background-size: $icon-20;
-    height: 40px;
+    height: $font-size-40;
     padding: $spacing-8 $spacing-12 $spacing-8 $spacing-48;
     border: none;
     outline: none;
@@ -38,7 +38,7 @@
         background-color: inherit;
         margin-right: $spacing-8;
         padding: 0 $spacing-8;
-        height: 40px;
+        height: $font-size-40;
         color: $green-dark-base;
         font-family: $montserrat-semi-bold;
         font-size: $font-size-12;
