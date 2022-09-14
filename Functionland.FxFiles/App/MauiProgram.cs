@@ -37,28 +37,8 @@ public static class MauiProgram
         services.AddBlazorWebViewDeveloperTools();
 #endif
 
-#if Android
-        services.AddScoped<IFileService, AndroidFileService>();
-#elif Windows
-        services.AddScoped<IFileService, WindowsFileService>();
-#elif iOS
-        //TODO: services.AddScoped<IFileService, IosFileService>();
-#endif
-
         services.AddAppServices();
 
-#if Windows
-        services.AddScoped<IPlatformTestService, WindowsPlatformTestService>();
-#elif Android
-        services.AddScoped<IPlatformTestService, AndroidPlatformTestService>();
-#elif iOS
-        services.AddScoped<IPlatformTestService, IosPlatformTestService>();
-#endif
-        services.AddTransient<FakeFileServicePlatformTest>();
-
-        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FX\\FxDB.db")};";
-
-        services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
         return builder;
     }
 }
