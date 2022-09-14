@@ -17,6 +17,10 @@
     font-style: normal;
     color: color(gray-bg-primary);
     letter-spacing: $letter-spacing-02;
+
+    &::placeholder {
+        color: color(gray-bg-primary);
+    }
 }
 
 .input-partial {
@@ -34,7 +38,7 @@
         background-color: inherit;
         margin-right: $spacing-8;
         padding: 0 $spacing-8;
-        height: 100%;
+        height: 40px;
         color: $green-dark-base;
         font-family: $montserrat-semi-bold;
         font-size: $font-size-12;
@@ -48,26 +52,25 @@
     }
 }
 
-
-
-
-.input-box::placeholder {
-    color: color(gray-bg-primary);
-}
-
 .search-icon {
     background-image: url($search);
 }
 
-
-
 .search-input-active {
     background-image: url($search-active);
+    color: color(gray-bg-primary);
+
+    &::placeholder {
+        color: color(gray-bg-primary);
+    }
 }
 
 .search-input-disable {
     background-image: url($search-disabled);
-    color: color(gray-border);
+
+    &::placeholder { 
+        color: color(gray-border);
+    }
 }
 
 
