@@ -70,11 +70,58 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} already exists exception.
+        /// </summary>
+        public static string ArtifactAlreadyExistsException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} name is null.
+        /// </summary>
+        public static string ArtifactNameIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactNameIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} path is null.
+        /// </summary>
+        public static string ArtifactPathIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactPathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The artifact type is null.
+        /// </summary>
+        public static string ArtifactTypeIsNull {
+            get {
+                return ResourceManager.GetString("ArtifactTypeIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid request.
+        
         /// </summary>
         public static string BadRequestException {
             get {
                 return ResourceManager.GetString("BadRequestException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done.
+        
+        /// </summary>
+        public static string ButtonSearchFullWidth {
+            get {
+                return ResourceManager.GetString("ButtonSearchFullWidth", resourceCulture);
             }
         }
         
@@ -84,15 +131,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string ConflicException {
             get {
                 return ResourceManager.GetString("ConflicException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Create File Failed.
-        /// </summary>
-        public static string CreateFileFailed {
-            get {
-                return ResourceManager.GetString("CreateFileFailed", resourceCulture);
             }
         }
         
@@ -111,6 +149,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Day {
             get {
                 return ResourceManager.GetString("Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can not delete drive.
+        /// </summary>
+        public static string DriveRemoveFailed {
+            get {
+                return ResourceManager.GetString("DriveRemoveFailed", resourceCulture);
             }
         }
         
@@ -196,6 +243,25 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search in “folder name”.
+        /// </summary>
+        public static string InputSearchFullWidth {
+            get {
+                return ResourceManager.GetString("InputSearchFullWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+
+        ///   Looks up a localized string similar to Search your files.
+        /// </summary>
+        public static string InputSearchParial {
+            get {
+                return ResourceManager.GetString("InputSearchParial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Known error.
         /// </summary>
         public static string KnownException {
@@ -205,6 +271,7 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        
         ///   Looks up a localized string similar to Log out.
         /// </summary>
         public static string LogOut {
@@ -237,6 +304,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Night {
             get {
                 return ResourceManager.GetString("Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the path is null.
+        /// </summary>
+        public static string PathIsNull {
+            get {
+                return ResourceManager.GetString("PathIsNull", resourceCulture);
             }
         }
         
@@ -278,10 +354,73 @@ namespace Functionland.FxFiles.Shared.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to Settings.
+
         /// </summary>
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The stream file is null.
+
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+
+        ///   Looks up a localized string similar to A new version of the app is available for download..
+        /// </summary>
+        public static string ToastDescMessage {
+            get {
+                return ResourceManager.GetString("ToastDescMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your error message.
+        /// </summary>
+        public static string ToastErrorMessage {
+            get {
+                return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your info message.
+        /// </summary>
+        public static string ToastInfoMessage {
+            get {
+                return ResourceManager.GetString("ToastInfoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your success message.
+        /// </summary>
+        public static string ToastSuccessMessage {
+            get {
+                return ResourceManager.GetString("ToastSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your warning message.
+        /// </summary>
+        public static string ToastWarningMessage {
+            get {
+                return ResourceManager.GetString("ToastWarningMessage", resourceCulture);
+=======
+        ///   Looks up a localized string similar to The stream file is null.
+        /// </summary>
+        public static string StreamFileIsNull {
+            get {
+                return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
             }
         }
         
@@ -291,6 +430,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string TooManyRequestsExceptions {
             get {
                 return ResourceManager.GetString("TooManyRequestsExceptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t load storge manager..
+        /// </summary>
+        public static string UnableToLoadStorageManager {
+            get {
+                return ResourceManager.GetString("UnableToLoadStorageManager", resourceCulture);
             }
         }
         

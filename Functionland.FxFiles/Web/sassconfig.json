@@ -12,8 +12,8 @@
     "inputFile": "Shared/AppErrorBoundary.razor.scss"
   },
   {
-    "outputFile": "Components/Header.razor.css",
-    "inputFile": "Components/Header.razor.scss"
+    "outputFile": "Components/FxToolBar.razor.css",
+    "inputFile": "Components/FxToolBar.razor.scss"
   },
   {
     "outputFile": "Components/Footer.razor.css",
@@ -132,7 +132,47 @@
     "inputFile": "Pages/ThemeSettings.razor.scss"
   },
   {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
     "outputFile": "Pages/Zones.razor.css",
     "inputFile": "Pages/Zones.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
   }
 ]

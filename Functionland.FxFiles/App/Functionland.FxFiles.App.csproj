@@ -110,12 +110,6 @@
         <ProjectReference Include="..\Shared\Functionland.FxFiles.Shared.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-		<Folder Include="Platforms\iOS\Implementations\" />
-		<Folder Include="Platforms\MacCatalyst\Implementations\" />
-		<Folder Include="Platforms\Windows\Implementations\" />
-    </ItemGroup>
-
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
         <Exec Command="call $(ProjectDir)mklink.bat" />
     </Target>
