@@ -1,2 +1,78 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.input-box {
+    background-color: color(gray-content2);
+    background-repeat: no-repeat;
+    background-position: center left 22.69px;
+    background-size: $icon-20;
+    height: $font-size-40;
+    padding: $spacing-8 $spacing-12 $spacing-8 $spacing-48;
+    border: none;
+    outline: none;
+    caret-color: $blue-crayola;
+    line-height: $line-height-24;
+    font-family: $open-sans-regular;
+    font-size: $font-size-14;
+    font-style: normal;
+    color: color(gray-bg-primary);
+    letter-spacing: $letter-spacing-02;
+
+    &::placeholder {
+        color: color(gray-bg-primary);
+    }
 }
+
+.input-partial {
+    border-radius: $border-size-4;
+}
+
+.input-full-width {
+    width: 100%;
+    background-color: color(gray-content2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .button-search-input {
+        background-color: inherit;
+        margin-right: $spacing-8;
+        padding: 0 $spacing-8;
+        height: $font-size-40;
+        color: $green-dark-base;
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-12;
+        line-height: $line-height-16;
+        font-style: normal;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .input-box {
+        flex: 1;
+    }
+}
+
+.search-icon {
+    background-image: url($search);
+}
+
+.search-input-active {
+    background-image: url($search-active);
+    color: color(gray-bg-primary);
+
+    &::placeholder {
+        color: color(gray-bg-primary);
+    }
+}
+
+.search-input-disable {
+    background-image: url($search-disabled);
+
+    &::placeholder { 
+        color: color(gray-border);
+    }
+}
+
+
+
+
