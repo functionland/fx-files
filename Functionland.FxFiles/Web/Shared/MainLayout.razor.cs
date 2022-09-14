@@ -1,52 +1,33 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-
-namespace Functionland.FxFiles.App.Shared;
+﻿namespace Functionland.FxFiles.App.Shared;
 
 public partial class MainLayout
 {
-    //[AutoInject]
-    //private ThemeInterop ThemeInterop = default!;
+    [AutoInject]
+    private ThemeInterop ThemeInterop = default!;
 
-    //private bool IsSystemTheme;
-    //private bool IsDarkMode;
+    private bool IsSystemTheme;
+    private bool IsDarkMode;
 
-    //private FxTheme DesiredTheme;
-    //private FxTheme SystemTheme;
+    private FxTheme DesiredTheme;
+    private FxTheme SystemTheme;
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (firstRender)
-    //    {
-    //        DesiredTheme = await ThemeInterop.GetThemeAsync();
-    //        SystemTheme = await ThemeInterop.GetSystemThemeAsync();
-    //        IsDarkMode = DesiredTheme is FxTheme.Dark;
-    //        IsSystemTheme = DesiredTheme is FxTheme.System;
-    //        await OnThemeChanged(IsDarkMode);
-    //        await OnUseSystemTheme(IsSystemTheme);
-    //        await ThemeInterop.RegisterForSystemThemeChangedAsync();
-    //        StateHasChanged();
-    //    }
-    //}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            DesiredTheme = await ThemeInterop.GetThemeAsync();
+            SystemTheme = await ThemeInterop.GetSystemThemeAsync();
 
-    //private async Task OnUseSystemTheme(bool value)
-    //{
-    //    IsSystemTheme = value;
-    //    await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
-    //    if (DesiredTheme is FxTheme.Dark)
-    //    {
-    //        IsDarkMode = true;
-    //    }
-    //    else
-    //    {
-    //        IsDarkMode = false;
-    //    }
-    //    StateHasChanged();
-    //}
+            IsDarkMode = DesiredTheme is FxTheme.Dark;
+            IsSystemTheme = DesiredTheme is FxTheme.System;
 
-    //private async Task OnThemeChanged(bool value)
-    //{
-    //    IsDarkMode = value;
-    //    await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
-    //    StateHasChanged();
-    //}
+            if (IsSystemTheme)
+                await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
+            else
+                await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
+
+            await ThemeInterop.RegisterForSystemThemeChangedAsync();
+            StateHasChanged();
+        }
+    }
 }

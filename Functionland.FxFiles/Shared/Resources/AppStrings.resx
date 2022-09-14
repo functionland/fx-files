@@ -168,4 +168,43 @@
   <data name="FileAlreadyExistsException" xml:space="preserve">
     <value>FileAlreadyExistsException</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="CreateFileFailed" xml:space="preserve">
+    <value>Create File Failed</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="FilesAndBloxHardware" xml:space="preserve">
+    <value>Files &amp; Blox hardware</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Night" xml:space="preserve">
+    <value>Night</value>
+  </data>
+  <data name="Pools" xml:space="preserve">
+    <value>Pools</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="MyDevice" xml:space="preserve">
+    <value>My Device</value>
+  </data>
+  <data name="Zones" xml:space="preserve">
+    <value>Zones</value>
+  </data>
 </root>

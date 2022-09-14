@@ -16,6 +16,7 @@
 body {
     margin: 0;
     overscroll-behavior: none;
+    font-family: $open-sans-regular;
 
     @each $key, $value in $colors-light {
         --#{$key}: #{$value};

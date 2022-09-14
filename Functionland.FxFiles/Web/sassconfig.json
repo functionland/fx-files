@@ -130,5 +130,9 @@
   {
     "outputFile": "Pages/ThemeSettings.razor.css",
     "inputFile": "Pages/ThemeSettings.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Zones.razor.css",
+    "inputFile": "Pages/Zones.razor.scss"
   }
 ]
