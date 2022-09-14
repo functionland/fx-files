@@ -183,6 +183,15 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var artifact in artifacts)
             {
+
+                if (string.IsNullOrWhiteSpace(artifact.FullPath))
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType?.ToString() ?? ""));
+
+                if (artifact.ArtifactType == null)
+                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+
+                if(artifact.ArtifactType != FsArtifactType.Drive)
+                {
                 await LatencyEnumerationAsync();
                 foreach (var file in _files)
                 {
@@ -204,6 +213,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         finalBag.Add(item);
                     }
 
+                }
+            }
+                else if (artifact.ArtifactType == FsArtifactType.Drive)
+                {
+                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.DriveRemoveFailed)]);
                 }
             }
 
