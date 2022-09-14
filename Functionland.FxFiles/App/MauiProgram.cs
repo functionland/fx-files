@@ -56,7 +56,7 @@ public static class MauiProgram
 #endif
         services.AddTransient<FakeFileServicePlatformTest>();
 
-        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
+        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FX\\FxDB.db")};";
 
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
         return builder;

@@ -1,14 +1,18 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using DbUp;
 using DbUp.SQLite.Helpers;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace Functionland.FxFiles.Shared.Services.Implementations.Db
@@ -45,6 +49,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations.Db
             var upgrader =
                 DeployChanges.To
                     .SQLiteDatabase(connection)
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                    .LogToConsole()
                     .Build();
 
             var result = upgrader.PerformUpgrade();

@@ -14,5 +14,6 @@ namespace Functionland.FxFiles.Shared.Models
         public string? ArtifactLocalPath { get; set; }
         public string? ArtifactPath { get; set; }
         public FsFileProviderType? ProviderType { get; set; }
+        public long? PinDateTime { get; set; }
     }
 }
