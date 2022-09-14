@@ -228,6 +228,7 @@
   <data name="Zones" xml:space="preserve">
     <value>Zones</value>
   </data>
+
   <data name="ToastDescMessage" xml:space="preserve">
     <value>A new version of the app is available for download.</value>
   </data>
@@ -242,5 +243,14 @@
   </data>
   <data name="ToastWarningMessage" xml:space="preserve">
     <value>Your warning message</value>
+  <data name="ButtonSearchFullWidth" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="InputSearchFullWidth" xml:space="preserve">
+    <value>Search in “folder name”</value>
+  </data>
+  <data name="InputSearchParial" xml:space="preserve">
+    <value>Search your files</value>
+
   </data>
 </root>

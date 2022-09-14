@@ -32,6 +32,7 @@
 .fxbutton-content img {
     width: auto;
     height: $icon-20;
+    pointer-events: none;
     background-color: transparent;
 }
 
@@ -93,6 +94,23 @@
 
 .fxbutton-menuline .fxbutton-content {
     justify-content: space-between;
+}
+
+.fxbutton-icononly {
+    padding: 8px;
+    width: 40px;
+
+    .fxbutton-lefticon, .fxbutton-righticon {
+        margin: 0;
+    }
+}
+
+.fxbutton-icononly:hover {
+    background: $green-dark-hover !important;
+}
+
+.fxbutton-icononly:active {
+    background: $green-dark-pressed !important;
 }
 
 .fxbutton-small {
