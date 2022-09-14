@@ -79,6 +79,7 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
         Disabled,
         MenuLine,
         IconOnly,
+        None
     }
 
     public enum FxButtonTextAlignment

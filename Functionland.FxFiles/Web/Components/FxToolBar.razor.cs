@@ -5,6 +5,9 @@ public partial class FxToolBar
     [Parameter]
     public string? Title { get; set; }
 
+    [Parameter]
+    public string? SubTitle { get; set; }
+
     [Parameter, EditorRequired]
     public bool IsMainToolBar { get; set; }
 

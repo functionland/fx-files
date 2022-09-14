@@ -6,10 +6,23 @@
         {
             <FxButton
                 Padding="0"
-                OnClick="@(()=> GoBack())"
+                OnClick="@GoBack"
                 BackgroundColor="transparent"
-                LeftIcon="images/icons/back.svg"/>
+                LeftIcon="images/icons/back.svg"
+                ButtonStyle="FxButtonStyle.None"/>
         }
+
+        <div>
+            @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrWhiteSpace(Title))
+            {
+                <h1 class="title">@Title</h1>
+            }
+
+            @if (!string.IsNullOrEmpty(SubTitle) || !string.IsNullOrWhiteSpace(SubTitle))
+            {
+                <h6 class="subtitle">@SubTitle</h6>
+            }
+        </div>
 
         @if (IsMainToolBar)
         {
