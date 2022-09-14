@@ -2,7 +2,7 @@
 @import '../Styles/abstracts/_functions.scss';
 
 .item-container {
-    padding: 16px 21px;
+    padding: $spacing-16 21px;
     position: relative;
 }
 
@@ -24,11 +24,11 @@
             background-position: center;
             width: 16px;
             height: 16px;
-            margin-right: 8px;
+            margin-right: $spacing-8;
         }
 
         .title-text {
-            color: $gray-light-content1;
+            color: color(gray-content1);
             font-family: $open-sans-regular;
             font-style: normal;
             font-weight: 400;
@@ -43,7 +43,7 @@
 }
 
 .options-btn {
-    background-size: 24px;
+    background-size: $icon-24;
     background-position: center;
     background-repeat: no-repeat;
     width: 24px;
@@ -68,7 +68,7 @@
         
 
         .item-sub-text {
-            color: $gray-light-content3;
+            color: color(gray-content3);
             font-family: $open-sans-regular;
             font-style: normal;
             font-weight: 400;

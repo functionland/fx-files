@@ -166,5 +166,13 @@
   {
     "outputFile": "Components/ListItem.razor.css",
     "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListItem.razor.css",
+    "inputFile": "Components/ListItem.razor.scss"
   }
 ]
