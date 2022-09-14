@@ -3,6 +3,7 @@
 @import 'abstracts/_functions.scss';
 
 // components
+@import 'components/_bit-accordion.scss';
 
 // utilities
 
@@ -20,6 +21,7 @@
 
 *::-webkit-scrollbar-track {
     background-color: color(gray-bg-primary);
+    border-radius: 6px;
 }
 
 *::-webkit-scrollbar-thumb {

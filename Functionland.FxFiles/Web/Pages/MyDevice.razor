@@ -3,8 +3,31 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
-<FxToolBar IsMainToolBar="true"/>
+<FxToolBar IsMainToolBar="true" />
 
 <div class="mydevice-content">
-    My Device
+    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+        <ContentTemplate>
+            <div class="items">
+                <FxButton 
+                    Text="Card"
+                    Width="252px"
+                    Height="216px"
+                    BorderRadius="4px"
+                    ButtonStyle="FxButtonStyle.None" />
+                <FxButton
+                    Text="Card"
+                    Width="252px"
+                    Height="216px"
+                    BorderRadius="4px"
+                    ButtonStyle="FxButtonStyle.None" />
+                <FxButton
+                    Text="Card"
+                    Width="252px"
+                    Height="216px"
+                    BorderRadius="4px"
+                    ButtonStyle="FxButtonStyle.None" />
+            </div>
+        </ContentTemplate>
+    </BitAccordion>
 </div>
