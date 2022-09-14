@@ -36,8 +36,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             {
                 if (storage.IsPrimary) //TODO: investigate to use IsPrimary or IsRemoveable
                 {
-                    var time = storage.Directory.LastModified();
-                    //ToDo: Fill FsArtifact extral fields 
                     drives.Add(new FsArtifact()
                     {
                         Name = "internal",
@@ -62,8 +60,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                         //LastModifiedDateTime = storage.Directory.LastModified() //TODO: convert long to dateTime
                     });
                 }
-
-                //ToDo: Hanlde when drive is Blox
             }
 
             return drives;
@@ -146,7 +142,6 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
         {
             var drives = await GetDrivesAsync();
 
-            // ToDo: How to get it from the path
             if (IsFsFileProviderInternal(filePath, drives))
             {
                 return FsFileProviderType.InternalMemory;
@@ -159,7 +154,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
                 throw new Exception($"Unknown file provider for path: {filePath}");
         }
 
-        private bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
+        private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
         {
             var internalDrive = drives?.FirstOrDefault(d => d.ProviderType == FsFileProviderType.InternalMemory);
             if (string.IsNullOrWhiteSpace(filePath) || internalDrive?.FullPath == null)
@@ -174,7 +169,7 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return false;
         }
 
-        private bool IsFsFileProviderExternal(string filePath, List<FsArtifact> drives)
+        private static bool IsFsFileProviderExternal(string filePath, List<FsArtifact> drives)
         {
             var externalDrives = drives?.Where(d => d.ProviderType == FsFileProviderType.ExternalMemory).ToList();
             if (string.IsNullOrWhiteSpace(filePath) || externalDrives is null || !externalDrives.Any())
