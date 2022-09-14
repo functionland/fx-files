@@ -1,2 +1,78 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fx-avatart {
+    position: relative;
+    background-image: url($avatar-grey);
+    background-repeat: no-repeat;
+
+    .avatar-status {
+        position: absolute;
+        width: $icon-16;
+        height: $icon-16;
+        background-repeat: no-repeat;
+        background-size: $icon-16;
+    }
+}
+
+.x-small-avatar {
+    width: $icon-16;
+    height: $icon-16;
+    background-size: $icon-16;
+}
+
+.small-avatar {
+    width: $icon-32;
+    height: $icon-32;
+    background-size: $icon-32;
+
+    .avatar-status {
+        right: -8px;
+        bottom: 0px;
+    }
+}
+
+.medium-avatar {
+    width: $icon-48;
+    height: $icon-48;
+    background-size: $icon-48;
+
+    .avatar-status {
+        right: -5px;
+        bottom: 0px;
+    }
+}
+
+.large-avatar {
+    width: $icon-64;
+    height: $icon-64;
+    background-size: $icon-64;
+
+    .avatar-status {
+        right: -2px;
+        bottom: 2px;
+    }
+}
+
+.x-large-avatar {
+    width: $icon-96;
+    height: $icon-96;
+    background-size: $icon-96;
+
+    .avatar-status {
+        right: 2px;
+        bottom: 8px;
+    }
+}
+
+.selected-status {
+    background-image: url($selected-status);
+}
+
+.deselected-status {
+    background-image: url($deselected-status);
+}
+
+.edit-status {
+    background-image: url($edit-status);
 }
