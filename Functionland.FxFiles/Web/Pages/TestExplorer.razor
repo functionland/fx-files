@@ -1,12 +1,11 @@
 ﻿@page "/TestExplorer"
 
 @inherits AppComponentBase;
-<EditForm Model="TestsName" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="TestName" OnValidSubmit="HandleValidSubmit">
     <div>
         <BitDropDown Label="Select tests"
                      Items="GetDropdownItems()"
-                     IsMultiSelect="true"
-                     @bind-Values="TestsName"
+                     @bind-Value="TestName"
                      Placeholder="Select tests"
                      Style="width: 290px; margin: 20px 0 20px 0" />
     </div>

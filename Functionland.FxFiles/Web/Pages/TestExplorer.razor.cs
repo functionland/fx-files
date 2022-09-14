@@ -6,10 +6,10 @@ namespace Functionland.FxFiles.App.Pages;
 
 public partial class TestExplorer
 {
-   [AutoInject] protected IPlatformTestService PlatformTestService { get; set; } = default!;
+    [AutoInject] protected IPlatformTestService PlatformTestService { get; set; } = default!;
 
     private List<IPlatformTest> PlatformTests { get; set; } = new();
-    public List<string> TestsName = new();
+    public string TestName = "";
     private List<TestProgressChangedEventArgs> testProgressChangedEventArgs = new();
     protected override Task OnInitAsync()
     {
@@ -19,18 +19,16 @@ public partial class TestExplorer
 
     private async Task HandleValidSubmit()
     {
-        var selectedTests = PlatformTests.Where(c => TestsName.Contains(c.Title));
-        foreach (var selectedTest in selectedTests)
+        var selectedTest = PlatformTests.Where(c => TestName.Equals(c.Title)).FirstOrDefault();
+        if (selectedTest == null) return;
+        try
         {
-            try
-            {
-                selectedTest.ProgressChanged += OnTestProgressChanged;
-                await PlatformTestService.RunTestAsync(selectedTest);
-            }
-            finally
-            {
-                selectedTest.ProgressChanged -= OnTestProgressChanged;
-            }
+            selectedTest.ProgressChanged += OnTestProgressChanged;
+            await PlatformTestService.RunTestAsync(selectedTest);
+        }
+        finally
+        {
+            selectedTest.ProgressChanged -= OnTestProgressChanged;
         }
     }
 

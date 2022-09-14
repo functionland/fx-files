@@ -63,8 +63,6 @@
         <Using Include="Microsoft.JSInterop" />
         <Using Include="System.Net.Http.Json" />
         <Using Include="System.Collections.Concurrent" />
-
-        <Using Include="Microsoft.AspNetCore.Components.Authorization" />
         <Using Include="Functionland.FxFiles.App.Components" />
         <Using Include="Bit.BlazorUI" />
         <Using Include="Microsoft.AspNetCore.Authorization" />
@@ -97,8 +95,6 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="jose-jwt" Version="4.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
         <Content Remove="wwwroot\appsettings.json" />
         <EmbeddedResource Include="wwwroot\appsettings.json" />
         <Content Remove="Pages\_Host.cshtml" />
@@ -115,7 +111,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Platforms\MacCatalyst\Implementations\" />
+		<Folder Include="Platforms\iOS\Implementations\" />
+		<Folder Include="Platforms\MacCatalyst\Implementations\" />
+		<Folder Include="Platforms\Windows\Implementations\" />
     </ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

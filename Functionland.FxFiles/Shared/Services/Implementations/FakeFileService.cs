@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using Functionland.FxFiles.Shared.Models;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public class FakeFileService : IFileService
+    public partial class FakeFileService : IFileService
     {
+        [AutoInject]public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();
 
         public FakeFileService(IEnumerable<FsArtifact> files)
@@ -20,29 +18,174 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+
+        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach (var artifact in artifacts)
+            {
+                var newPath = Path.Combine(destination, artifact.Name);
+                CheckIfArtifactExist(newPath);
+
+                var artifactType = GetFsArtifactType(artifact.FullPath);
+                if (artifactType != FsArtifactType.File)
+                {
+                    await CreateFolderAsync(newPath, artifact.Name, cancellationToken);
+                    foreach (var file in _files)
+                    {
+                        if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
+                        {
+                            var insideNewArtifact = CreateArtifact(file.FullPath.Replace(artifact.FullPath, newPath), artifact.ContentHash);
+                            _files.Add(insideNewArtifact);
+                        }
+                    }
+                   
+                }
+                else
+                {
+                    var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
+                    _files.Add(newArtifact);
+                }
+
+            }
+        }
+        private static FsArtifactType GetFsArtifactType(string path)
+        {
+            string[] drives = Directory.GetLogicalDrives();
+
+            if (drives.Contains(path))
+            {
+                return FsArtifactType.Drive;
+            }
+
+            if (Path.GetExtension("c:\\Folder") == "")
+            {
+                return FsArtifactType.Folder;
+            }
+            else
+            {
+                return FsArtifactType.File;
+            }
+        }
+        private void CheckIfArtifactExist(string newPath)
+        {
+            if (ArtifacExist(newPath))
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
         }
 
-        public Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
+        private bool ArtifacExist(string newPath)
         {
-            throw new NotImplementedException();
+            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+            return _files.Any(f => comparer.Compare(f.FullPath, newPath) == 0);
+        }
+
+        public async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
+        {
+            if (path is null) throw new Exception();
+
+            CheckIfArtifactExist(path);
+
+            FsArtifact artifact = CreateArtifact(path, stream.GetHashCode().ToString());
+            _files.Add(artifact);
+            return artifact;
+
+        }
+
+        private static FsArtifact CreateArtifact(string path, string? contentHash)
+        {
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            return new FsArtifact
+            {
+                Name = Path.GetFileName(path),
+                FullPath = path,
+                FileExtension = Path.GetExtension(path),
+                OriginDevice = originDevice,
+                ThumbnailPath = path,
+                ContentHash = contentHash,
+                ProviderType = FsFileProviderType.InternalMemory,
+                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
+                ArtifactType = GetFsArtifactType(path)
+            };
         }
 
         public Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            var addedFiles = new List<FsArtifact>();
+            foreach (var artifact in from file in files
+                                     let artifact = new FsArtifact
+                                     {
+                                         Name = Path.GetFileName(file.path),
+                                         FullPath = file.path,
+                                         FileExtension = Path.GetExtension(file.path),
+                                         OriginDevice = originDevice,
+                                         ThumbnailPath = file.path,
+                                         ContentHash = file.stream.GetHashCode().ToString(),
+                                         ProviderType = FsFileProviderType.InternalMemory,
+                                         LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
+                                     }
+                                     select artifact)
+            {
+                CheckIfArtifactExist(artifact.FullPath);
+                addedFiles.Add(artifact);
+            }
+            foreach (var file in addedFiles)
+            {
+                _files.Add(file);
+            }
+            return Task.FromResult(addedFiles);
         }
 
-        public Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
+        public async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            if (path is null) throw new Exception();
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            var finalPath = Path.Combine(path, folderName);
+            CheckIfArtifactExist(finalPath);
+
+            var artifact = new FsArtifact
+            {
+                Name = folderName,
+                FullPath = finalPath,
+                OriginDevice = originDevice,
+                ProviderType = FsFileProviderType.InternalMemory,
+                LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
+                ArtifactType = GetFsArtifactType(finalPath)
+            };
+            _files.Add(artifact);
+            return artifact;
         }
 
-        public Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+        public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var tempBag = new List<FsArtifact>();
+            var finalBag = new ConcurrentBag<FsArtifact>();
+
+            foreach (var artifact in artifacts)
+            {
+                foreach (var file in _files)
+                {
+                    finalBag.Add(file);
+                }
+                while (!finalBag.IsEmpty)
+                {
+                    _ = finalBag.TryTake(result: out FsArtifact? currentItem);
+
+                    if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        tempBag.Add(currentItem);
+                    }
+                }
+                foreach (var item in tempBag)
+                {
+                    if (!item.FullPath.StartsWith(artifact.FullPath))
+                    {
+                        finalBag.Add(item);
+                    }
+
+                }
+            }
+
+            _files = finalBag;
         }
 
         public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
@@ -54,31 +197,72 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (searchText is not null)
                 files = files.Where(f => f.Name.Contains(searchText));
 
-            foreach(var file in files)
+            foreach (var file in files)
             {
                 yield return file;
             }
 
         }
 
-        public Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
+        public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            string streamPath;
+            if (Path.GetExtension(filePath).ToLower() == ".jpg" ||
+                Path.GetExtension(filePath).ToLower() == ".png" ||
+                Path.GetExtension(filePath).ToLower() == ".jpeg"
+                )
+            {
+                streamPath = "/Files/fake-pic.jpg";
+            }
+            else
+            {
+                streamPath = "/Files/test.txt";
+            }
+
+
+            using FileStream fs = File.Open(streamPath, FileMode.Open);
+            return fs;
+
         }
 
-        public Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            await Task.WhenAll(
+                CopyArtifactsAsync(artifacts, destination, cancellationToken),
+                DeleteArtifactsAsync(artifacts, cancellationToken));
         }
 
-        public Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
+        public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            foreach (var articat in _files)
+            {
+                if (string.Equals(articat.FullPath, filePath, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var directoryName = Path.GetDirectoryName(articat.FullPath);
+                    articat.FullPath = Path.Combine(directoryName, newName);
+                    articat.Name = newName;
+                    break;
+                }
+            }
         }
 
-        public Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
+        public async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var oldFolderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
+            foreach (var artifact in _files)
+            {
+                if (string.Equals(artifact.FullPath, folderPath, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    DirectoryInfo parentDir = Directory.GetParent(folderPath.EndsWith("\\") ? folderPath : string.Concat(folderPath, "\\"));
+                    artifact.FullPath = Path.Combine(parentDir.Parent.FullName, newName);
+                    artifact.Name = newName;
+                }
+                else if(artifact.FullPath.ToLower().StartsWith(folderPath.ToLower()))
+                {
+                    artifact.FullPath = artifact.FullPath.Replace($"{Path.DirectorySeparatorChar}{oldFolderName}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}{newName}{Path.DirectorySeparatorChar}");
+                }
+
+            }
         }
     }
 }
