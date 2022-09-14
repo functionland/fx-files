@@ -11,17 +11,18 @@
 }
 
 ::deep .bit-acd .header {
+    font-family: $montserrat-medium;
     flex-direction: row-reverse;
     justify-content: flex-end;
-    font-family: $montserrat-medium;
 }
 
 ::deep .bit-acd .header.expanded .header-icon {
-    transform: rotate(0);
     font-weight: bold;
+    transform: rotate(0);
 }
 
 ::deep .bit-acd .header.collapsed .header-icon {
+    font-weight: bold;
     transform: rotate(270deg);
 }
 

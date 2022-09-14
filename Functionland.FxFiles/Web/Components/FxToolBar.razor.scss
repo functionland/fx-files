@@ -44,10 +44,7 @@ header {
     display: flex;
     align-items: center;
 
-    .fxinput {
+    ::deep .input-box {
         flex-grow: 1;
-        height: 40px;
-        border-radius: 4px;
-        background-color: color(gray-bg-secondary);
     }
 }
