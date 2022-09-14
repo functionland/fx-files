@@ -6,22 +6,18 @@
     justify-content: center;
     align-items: center;
     flex-flow: row nowrap;
-    background-color: $main-dark;
+    background-color: color(app-bg);
     border: 1px solid color(gray-bg-secondary);
     border-radius: $border-radius-4;
     padding: $spacing-16 $spacing-18;
     width: 100%;
 
     .icons-action {
-        width: $icon-24;
-        height: $icon-24;
-        background-size: $icon-24;
+        width: $icon-20;
+        height: $icon-20;
+        background-size: $icon-20;
         background-repeat: no-repeat;
         background-position: center;
-    }
-
-    .toast-icon {
-        background-image: url(/images/succes-icon.svg);
     }
 
     .toast-message-container {
@@ -32,7 +28,6 @@
             font-size: $font-size-14;
             line-height: $line-height-24;
             letter-spacing: $letter-spacing-02;
-            color: $success-light;
         }
 
         .taost-message-desc {
@@ -40,12 +35,51 @@
             font-size: $font-size-12;
             line-height: $line-height-16;
             letter-spacing: $letter-spacing-02;
-            color: #E9ECEF;
+            color: color(gray-content2);
         }
-
     }
 
     .close-icon {
-        background-image: url(/images/close-icon.svg);
+        background-image: url($close-btn);
+    }
+}
+
+.success-message {
+    .toast-icon {
+        //background-image: url($success-mode);
+    }
+
+    .taost-message-title {
+        color: $success-light;
+    }
+}
+
+.info-message {
+    .toast-icon {
+        //background-image: url($info-mode);
+    }
+
+    .taost-message-title {
+        color: $info-dark;
+    }
+}
+
+.warning-message {
+    .toast-icon {
+        //background-image: url($warning-mode);
+    }
+
+    .taost-message-title {
+        color: color(warning);
+    }
+}
+
+.error-message {
+    .toast-icon {
+        //background-image: url($error-mode);
+    }
+
+    .taost-message-title {
+        color: color(error);
     }
 }
