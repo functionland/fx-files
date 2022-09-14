@@ -73,6 +73,7 @@
         Outline,
         Disabled,
         MenuLine,
+        IconOnly,
     }
 
     public enum FxButtonTextAlignment
