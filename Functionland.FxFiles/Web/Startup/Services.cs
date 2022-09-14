@@ -27,7 +27,6 @@ public static class Services
         services.AddAppServices();
         services.AddScoped<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest>();
-        services.AddScoped<ThemeInterop>();
     }
 }
 #endif

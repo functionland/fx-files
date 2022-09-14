@@ -1,5 +1,6 @@
 ﻿// variables & functions
 @import 'abstracts/_variables.scss';
+@import 'abstracts/_functions.scss';
 
 // components
 
@@ -13,9 +14,25 @@
     box-sizing: border-box;
 }
 
+*::-webkit-scrollbar {
+    width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: color(gray-bg-primary);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: color(gray-bg-secondary);
+    border-radius: 6px;
+}
+
 body {
     margin: 0;
+    user-select: none;
     overscroll-behavior: none;
+    font-family: $open-sans-regular;
+    -webkit-tap-highlight-color: transparent;
 
     @each $key, $value in $colors-light {
         --#{$key}: #{$value};

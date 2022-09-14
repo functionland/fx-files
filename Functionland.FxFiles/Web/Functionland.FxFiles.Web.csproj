@@ -33,11 +33,8 @@
 		<PackageReference Include="Bit.CodeAnalyzers" Version="4.1.0-pre-01" />
 		<PackageReference Include="Bit.SourceGenerators" Version="4.1.0-pre-01" />
 		<PackageReference Include="Abstractions.Sass.CIBuild" Version="1.1.52" />
-        <PackageReference Include="jose-jwt" Version="4.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
                 <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
         <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.8" />
             </ItemGroup>
 
     <ItemGroup>
@@ -55,12 +52,15 @@
         <Using Include="Microsoft.JSInterop" />
         <Using Include="System.Net.Http.Json" />
         <Using Include="System.Collections.Concurrent" />
-        <Using Include="Microsoft.AspNetCore.Components.Authorization" />
         <Using Include="Functionland.FxFiles.App.Components" />
         <Using Include="Bit.BlazorUI" />
         <Using Include="Microsoft.AspNetCore.Authorization" />
 
 		<Watch Remove="*.scss" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\images\icons\darkDesignSystem\" />
     </ItemGroup>
 
 </Project>
