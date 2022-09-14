@@ -146,5 +146,9 @@
   {
     "outputFile": "Components/FileDetailViewBottomActionItem.razor.css",
     "inputFile": "Components/FileDetailViewBottomActionItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailViewBottomActionBar.razor.css",
+    "inputFile": "Components/FileDetailViewBottomActionBar.razor.scss"
   }
 ]
