@@ -1,4 +1,10 @@
 ﻿@page "/MyDevice"
-@inherits AppComponentBase;
 
-<h3>MyDevice</h3>
+@inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
+
+<FxToolBar IsMainToolBar="true"/>
+
+<div class="mydevice-content">
+    My Device
+</div>

@@ -3,12 +3,8 @@
 
 .settings-content {
     padding: 21px;
+    padding-top: 10px;
     font-family: $montserrat-medium;
-}
-
-.title {
-    margin: 0;
-    margin-bottom: 21px;
 }
 
 ::deep .fxbutton-menuline {
@@ -20,7 +16,7 @@
     }
 }
 
-.divider {
+::deep .divider-thin {
     height: 1px;
     margin: 16px 0;
     background-color: color(gray-bg-primary);
