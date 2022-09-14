@@ -44,9 +44,11 @@ $info-light: $info-dark;
 $success-light: $success-dark;
 
 $colors-light: (
+  "app-bg": $pure-white,
   "error": $error-light,
   "warning": $warning-light,
   "green-bg": $green-light-bg,
+  "gray-border": $gray-light-border,
   "green-border": $green-light-border,
   "gray-content1": $gray-light-content1,
   "gray-content2": $gray-light-content2,
@@ -56,9 +58,11 @@ $colors-light: (
 );
 
 $colors-dark: (
+  "app-bg": $main-dark,
   "error": $error-dark,
   "warning": $warning-dark,
   "green-bg": $green-dark-bg,
+  "gray-border": $gray-dark-border,
   "green-border": $green-dark-border,
   "gray-content1": $gray-dark-content1,
   "gray-content2": $gray-dark-content2,
@@ -76,6 +80,7 @@ $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
 $spacing-12: 12 + $base-unit;
 $spacing-16: 16 + $base-unit;
+$spacing-18: 18 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
@@ -87,13 +92,43 @@ $spacing-72: 72 + $base-unit;
 $spacing-80: 80 + $base-unit;
 
 //icon sizes
+$icon-96: 96 + $base-unit;
+$icon-64: 64 + $base-unit;
+$icon-48: 48 + $base-unit;
 $icon-32: 32 + $base-unit;
 $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
 
+//icons
+$icon-base-url: "/images/icons/lightDesignSystem/";
+
+$avatar-grey: $icon-base-url + "avatar-grey.svg";
+$delete: $icon-base-url + "delete.svg";
+$copy: $icon-base-url + "copy.svg";
+$rename: $icon-base-url + "rename.svg";
+$details: $icon-base-url + "details.svg";
+$option-vertical: $icon-base-url + "option-vertical.svg";
+$pin-outline: $icon-base-url + "pin-outline.svg";
+$move: $icon-base-url + "move.svg";
+$download: $icon-base-url + "download.svg";
+$select-check-filled: $icon-base-url + "select-check-filled.svg";
+$select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
+$list-view-selected: $icon-base-url + "list-view-selected.svg";
+$list-view: $icon-base-url + "list-view.svg";
+$gird-view-selected: $icon-base-url + "grid-view-selected.svg";
+$grid-view: $icon-base-url + "grid-view.svg";
+$filter: $icon-base-url + "filter.svg";
+$folder: $icon-base-url + "folder.svg";
+$audio-file: $icon-base-url + "audio-file.svg";
+$pdf-file: $icon-base-url + "pdf-file.svg";
+$text-file: $icon-base-url + "text-file.svg";
+$photo-file: $icon-base-url + "photo-file.svg";
+$close-btn: $icon-base-url + "close-btn.svg";
+$search: $icon-base-url + "search.svg";
+
 //font faces
-$font-path: "/fonts/";
+$font-path: "/fonts";
 $montserrat-medium: "Montserrat-Medium";
 $montserrat-semi-bold: "Montserrat-SemiBold";
 $open-sans-light: "OpenSans-Light";
@@ -157,7 +192,7 @@ $line-height-10: 10 + $base-unit;
 
 //letter-spacings
 $letter-spacing-2: 2 + $base-unit;
-$letter-spacing-0: 1 + $base-unit;
+$letter-spacing-1: 1 + $base-unit;
 $letter-spacing-02: 0.2 + $base-unit;
 $letter-spacing-0: 0 + $base-unit;
 
@@ -173,7 +208,12 @@ $box-shadow-light-s: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 2px 1px rgba(0, 0, 0, 
 $box-shadow-light-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 0.06), 0px 6px 10px rgba(0, 0, 0, 0.08);
 $box-shadow-light-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
 
-//border-raduis
+//border-radius
 $border-radius-4: 4 + $base-unit;
 $border-radius-6: 6 + $base-unit;
 $border-radius-20: 20 + $base-unit;
+
+//border-sizes
+$border-size-1: 1 + $base-unit;
+$border-size-2: 2 + $base-unit;
+$border-size-4: 4 + $base-unit;
