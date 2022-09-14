@@ -14,21 +14,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public abstract Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath);
 
-        public string GetMimeTypeForFileExtension(string filePath)
-        {
-            const string DefaultContentType = "application/octet-stream";
-
-            var provider = new FileExtensionContentTypeProvider();
-
-            if (!provider.TryGetContentType(filePath, out string contentType))
-            {
-                contentType = DefaultContentType;
-            }
-
-            return contentType;
-        }
-
-        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
@@ -205,7 +191,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         ProviderType = await GetFsFileProviderTypeAsync(file),
                         Name = Path.GetFileName(file),
                         ParentFullPath = Directory.GetParent(file)?.FullName,
-                        LastModifiedDateTime = File.GetLastWriteTime(file)
+                        LastModifiedDateTime = File.GetLastWriteTime(file),
+                        FileExtension = Path.GetExtension(file)
                     });
             }
 
@@ -233,7 +220,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {

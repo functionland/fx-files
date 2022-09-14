@@ -15,6 +15,7 @@ using Android.OS.Storage;
 using Android.Media;
 using Stream = System.IO.Stream;
 using Java.Interop;
+using System.Threading;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations
 {
@@ -88,9 +89,9 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
         }
 
-        public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
-            await base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
+            await base.CopyArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
         }
 
         public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -126,9 +127,9 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             }
         }
 
-        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken ? cancellationToken = null)
         {
-            return base.MoveArtifactsAsync(artifacts, destination, cancellationToken);
+            return base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
         }
 
         public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
