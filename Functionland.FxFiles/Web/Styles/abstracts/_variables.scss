@@ -181,7 +181,8 @@ $open-sans-semi-bold: "OpenSans-SemiBold";
     src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
 }
 
-//font-sizes 
+//font-sizes
+$font-size-40: 40 + $base-unit;
 $font-size-36: 36 + $base-unit;
 $font-size-32: 32 + $base-unit;
 $font-size-28: 28 + $base-unit;
