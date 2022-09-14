@@ -24,13 +24,22 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(stream?.ToString()))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
+
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+
             FsArtifact newFsArtifact = new();
             var fileName = Path.GetFileNameWithoutExtension(path);
 
+            if (string.IsNullOrWhiteSpace(fileName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
+
             try
             {
-                if (System.IO.File.Exists(path))
-                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
+                if (File.Exists(path))
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
                 using FileStream outPutFileStream = new(path, FileMode.Create);
                 await stream.CopyToAsync(outPutFileStream);
@@ -43,7 +52,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     FileExtension = Path.GetExtension(path),
                     Size = (int)outPutFileStream.Length,
                     ProviderType = await GetFsFileProviderTypeAsync(path),
-                    LastModifiedDateTime = DateTimeOffset.Now
+                    LastModifiedDateTime = File.GetLastWriteTime(path),
+                    ParentFullPath = Directory.GetParent(path)?.FullName,
                 };
             }
             catch
@@ -146,7 +156,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 foreach (var drive in drives)
                     yield return drive;
                 yield break;
-            }    
+            }
 
             var artifacts = new List<FsArtifact>();
             var subArtifacts = new List<FsArtifact>();
@@ -222,7 +232,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull,""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
             var artifactType = GetFsArtifactTypeAsync(filePath);
 

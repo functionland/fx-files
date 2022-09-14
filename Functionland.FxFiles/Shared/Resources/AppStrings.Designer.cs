@@ -223,6 +223,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The stream file is null.
+        /// </summary>
+        public static string StreamFileIsNull {
+            get {
+                return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many requests.
         /// </summary>
         public static string TooManyRequestsExceptions {

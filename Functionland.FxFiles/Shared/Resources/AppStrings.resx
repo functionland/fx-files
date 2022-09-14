@@ -183,4 +183,7 @@
   <data name="ArtifactAlreadyExistsException" xml:space="preserve">
     <value>The {0} already exists exception</value>
   </data>
+  <data name="StreamFileIsNull" xml:space="preserve">
+    <value>The stream file is null</value>
+  </data>
 </root>
