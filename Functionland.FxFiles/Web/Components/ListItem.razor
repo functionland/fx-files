@@ -1,12 +1,12 @@
 ﻿@inherits AppComponentBase
 
-<div class="item-container row-view grid-view">
-    <div class="item-content text-file-icon">
+<div class="item-container @Config.ViewMode-view">
+    <div class="item-content @Config.IconStr-icon">
         <div class="item-title">
             <div class="pin-badge"></div>
-            <div class="title-text">***Content</div>
+            <div class="title-text">@Config.Title</div>
         </div>
-        <div class="item-sub-text">***Modified 09/30/22 | 1.22 MB</div>
+        <div class="item-sub-text">@Config.SubTitle</div>
     </div>
     <div class="options-btn"></div>
 </div>
