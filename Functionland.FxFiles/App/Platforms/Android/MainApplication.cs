@@ -3,6 +3,10 @@ using Android.Runtime;
 
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
 [assembly: UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
+[assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.ReadExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.ManageExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.MediaContentControl)]
 
 namespace Functionland.FxFiles.App.Platforms.Android;
 
