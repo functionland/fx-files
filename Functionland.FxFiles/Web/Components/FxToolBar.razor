@@ -2,6 +2,15 @@
 
 <header>
     <div class="toolbarApp">
+        @if(IsBackButtonVisible)
+        {
+            <FxButton
+                Padding="0"
+                OnClick="@(()=> GoBack())"
+                BackgroundColor="transparent"
+                LeftIcon="images/icons/back.svg"/>
+        }
+
         @if (IsMainToolBar)
         {
             <div class="main-toolbar">
