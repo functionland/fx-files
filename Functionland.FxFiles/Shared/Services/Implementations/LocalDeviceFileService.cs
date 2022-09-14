@@ -12,7 +12,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public abstract Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {

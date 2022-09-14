@@ -35,7 +35,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 await Task.Delay(EnumerationLatency.Value);
         }
 
-        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
