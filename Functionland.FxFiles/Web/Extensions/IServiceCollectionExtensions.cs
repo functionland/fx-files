@@ -26,7 +26,7 @@ public static class IServiceCollectionExtensions
 
         services.AddTransient<FakeFileServicePlatformTest>();
 
-        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FX\\FxDB.db")};";
+        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
 
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
 
