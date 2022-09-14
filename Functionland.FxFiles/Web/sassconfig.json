@@ -134,5 +134,9 @@
   {
     "outputFile": "Pages/Zones.razor.css",
     "inputFile": "Pages/Zones.razor.scss"
+  },
+  {
+    "outputFile": "Components/DetailViewItem.razor.css",
+    "inputFile": "Components/DetailViewItem.razor.scss"
   }
 ]
