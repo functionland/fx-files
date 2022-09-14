@@ -228,4 +228,19 @@
   <data name="Zones" xml:space="preserve">
     <value>Zones</value>
   </data>
+  <data name="ToastDescMessage" xml:space="preserve">
+    <value>A new version of the app is available for download.</value>
+  </data>
+  <data name="ToastErrorMessage" xml:space="preserve">
+    <value>Your error message</value>
+  </data>
+  <data name="ToastInfoMessage" xml:space="preserve">
+    <value>Your info message</value>
+  </data>
+  <data name="ToastSuccessMessage" xml:space="preserve">
+    <value>Your success message</value>
+  </data>
+  <data name="ToastWarningMessage" xml:space="preserve">
+    <value>Your warning message</value>
+  </data>
 </root>
