@@ -48,9 +48,9 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
             return base.GetFileContentAsync(filePath, cancellationToken);
         }
 
-        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
-            return base.MoveArtifactsAsync(artifacts, destination, cancellationToken);
+            return base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
         }
 
         public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)

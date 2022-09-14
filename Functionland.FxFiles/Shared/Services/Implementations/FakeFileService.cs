@@ -268,10 +268,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         }
 
-        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             await Task.WhenAll(
-                CopyArtifactsAsync(artifacts, destination, cancellationToken),
+                CopyArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken),
                 DeleteArtifactsAsync(artifacts, cancellationToken));
         }
 
