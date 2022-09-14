@@ -1,11 +1,11 @@
 ﻿@inherits AppComponentBase;
 
-<div class="fx-taost success-message">
+<div class="fx-taost  @(string.Format(" {0}-message", ToastType).ToLower())">
     <div class="toast-container">
         <div class="toast-icon"></div>
         <div class="toast-messages">
-            <div class="taost-message-title">@Localizer[nameof(AppStrings.ToastErrorMessage)]</div>
-            <div class="taost-message-desc">@Localizer[nameof(AppStrings.ToastDescMessage)]</div>
+            <div class="taost-message-title">@Title</div>
+            <div class="taost-message-desc">@Description</div>
         </div>
     </div>
     <div class="close-icon"></div>
