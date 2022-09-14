@@ -179,7 +179,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         ProviderType = await GetFsFileProviderTypeAsync(file),
                         Name = Path.GetFileName(file),
                         ParentFullPath = Directory.GetParent(file)?.FullName,
-                        LastModifiedDateTime = File.GetLastWriteTime(file)
+                        LastModifiedDateTime = File.GetLastWriteTime(file),
+                        FileExtension = Path.GetExtension(file)
                     });
             }
 
