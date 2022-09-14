@@ -8,13 +8,9 @@ public partial class App
     private IExceptionHandler ExceptionHandler { get; }
     public App(IFxLocalDbService fxLocalDbService, IExceptionHandler exceptionHandler)
     {
+        InitializeComponent();
         FxLocalDbService = fxLocalDbService;
         ExceptionHandler = exceptionHandler;
-        AppDomain.CurrentDomain.FirstChanceException += (sender, error) =>
-        {
-            System.Diagnostics.Debug.WriteLine($"********************************** UNHANDLED EXCEPTION! Details: {error}");
-        };
-        InitializeComponent();
     }
 
     protected override void OnStart()

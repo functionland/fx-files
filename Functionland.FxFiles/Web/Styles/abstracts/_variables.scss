@@ -1,4 +1,4 @@
-﻿//main brand colors
+//main brand colors
 $primary-color: #06B597;
 $pure-white: #FFFFFF;
 $main-dark: #212529;
@@ -108,8 +108,10 @@ $delete: $icon-base-url + "delete.svg";
 $copy: $icon-base-url + "copy.svg";
 $rename: $icon-base-url + "rename.svg";
 $details: $icon-base-url + "details.svg";
-$option-vertical: $icon-base-url + "option-vertical.svg";
+$options-vertical: $icon-base-url + "options-vertical.svg";
+$options-horizontal: $icon-base-url + "options-horizontal.svg";
 $pin-outline: $icon-base-url + "pin-outline.svg";
+$pin-filled: $icon-base-url + "pin-filled.svg";
 $move: $icon-base-url + "move.svg";
 $download: $icon-base-url + "download.svg";
 $select-check-filled: $icon-base-url + "select-check-filled.svg";
@@ -126,6 +128,22 @@ $text-file: $icon-base-url + "text-file.svg";
 $photo-file: $icon-base-url + "photo-file.svg";
 $close-btn: $icon-base-url + "close-btn.svg";
 $search: $icon-base-url + "search.svg";
+$search-active: $icon-base-url + "search-active.svg";
+$search-disabled: $icon-base-url + "search-disabled.svg";
+$deselected-status: $icon-base-url + "deselected-status.svg";
+$selected-status: $icon-base-url + "selected-status.svg";
+$edit-status: $icon-base-url + "edit-status.svg";
+$red-tab-label: $icon-base-url + "red-tab-label.svg";
+$success-mode: $icon-base-url + "success-mode.svg";
+$info-mode: $icon-base-url + "info-mode.svg";
+$warning-mode: $icon-base-url + "warning-mode.svg";
+$error-mode: $icon-base-url + "error-mode.svg";
+$output-error-message: $icon-base-url + "output-error-message.svg";
+$down-arrow: $icon-base-url + "down-arrow.svg";
+$down-arrow-disable: $icon-base-url + "down-arrow-disable.svg";
+$disabled-checkbox: $icon-base-url + "disabled-checkbox.svg";
+$disabled-checked-checkbox: $icon-base-url + "disabled-checked-checkbox.svg";
+$indeterminate-checkbox: $icon-base-url + "indeterminate-checkbox.svg";
 
 //font faces
 $font-path: "/fonts";
@@ -165,7 +183,8 @@ $open-sans-semi-bold: "OpenSans-SemiBold";
     src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
 }
 
-//font-sizes 
+//font-sizes
+$font-size-40: 40 + $base-unit;
 $font-size-36: 36 + $base-unit;
 $font-size-32: 32 + $base-unit;
 $font-size-28: 28 + $base-unit;

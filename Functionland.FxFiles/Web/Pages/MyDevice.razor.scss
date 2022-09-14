@@ -1,2 +1,7 @@
-﻿body {
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+@import '../Styles/components/_bit-accordion.scss';
+
+.mydevice-content {
+    padding: 0 21px;
 }

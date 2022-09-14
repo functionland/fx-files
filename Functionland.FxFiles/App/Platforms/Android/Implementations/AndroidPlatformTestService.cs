@@ -1,19 +1,16 @@
 ﻿using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
-namespace Functionland.FxFiles.App.Platforms.Android.Implementations
+namespace Functionland.FxFiles.App.Platforms.Android.Implementations;
+
+public partial class AndroidPlatformTestService : PlatformTestService
 {
-    public partial class AndroidPlatformTestService : PlatformTestService
+    [AutoInject] FakeFileServicePlatformTest FakeFileServicePlatformTest { get; set; }
+
+    protected override List<IPlatformTest> OnGetTests()
     {
-        [AutoInject] FakeFileServicePlatformTest FakeFileServicePlatformTest { get; set; }
-
-
-        protected override List<IPlatformTest> OnGetTests()
+        return new List<IPlatformTest>()
         {
-            return new List<IPlatformTest>()
-            {
-                FakeFileServicePlatformTest
-            };
-        }
-
+            FakeFileServicePlatformTest
+        };
     }
 }

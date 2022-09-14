@@ -7,6 +7,7 @@ using Android.Runtime;
 [assembly: UsesPermission(Android.Manifest.Permission.ReadExternalStorage)]
 [assembly: UsesPermission(Android.Manifest.Permission.ManageExternalStorage)]
 [assembly: UsesPermission(Android.Manifest.Permission.MediaContentControl)]
+[assembly: UsesPermission(Android.Manifest.Permission.ManageDocuments)]
 
 namespace Functionland.FxFiles.App.Platforms.Android;
 
