@@ -1,5 +1,17 @@
 ﻿@inherits AppComponentBase;
 
 <header>
-   Header
+    <div class="toolbarApp">
+        @if (IsMainToolBar)
+        {
+            <div class="main-toolbar">
+                <div class="fxinput"></div>
+                <FxButton
+                    Margin="0 8px"
+                    ButtonStyle="FxButtonStyle.IconOnly"
+                    LeftIcon="images/icons/plus.svg" />
+                <FxAvatar />
+            </div>
+        }
+    </div>
 </header>
