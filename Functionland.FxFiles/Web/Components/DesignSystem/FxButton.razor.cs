@@ -56,7 +56,7 @@
         [Parameter]
         public FxButtonSize? ButtonSize { get; set; }
 
-        [Parameter]
+        [Parameter, EditorRequired]
         public FxButtonStyle? ButtonStyle { get; set; }
     }
 
