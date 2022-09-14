@@ -107,7 +107,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to Invalid request.
-        
         /// </summary>
         public static string BadRequestException {
             get {
@@ -117,7 +116,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to Done.
-        
         /// </summary>
         public static string ButtonSearchFullWidth {
             get {
@@ -252,7 +250,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-
         ///   Looks up a localized string similar to Search your files.
         /// </summary>
         public static string InputSearchParial {
@@ -271,7 +268,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        
         ///   Looks up a localized string similar to Log out.
         /// </summary>
         public static string LogOut {
@@ -354,7 +350,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to Settings.
-
         /// </summary>
         public static string Settings {
             get {
@@ -364,16 +359,14 @@ namespace Functionland.FxFiles.Shared.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to The stream file is null.
-
         /// </summary>
-        public static string Settings {
+        public static string StreamFileIsNull {
             get {
-                return ResourceManager.GetString("Settings", resourceCulture);
+                return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
             }
         }
         
         /// <summary>
-
         ///   Looks up a localized string similar to A new version of the app is available for download..
         /// </summary>
         public static string ToastDescMessage {
@@ -415,12 +408,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string ToastWarningMessage {
             get {
                 return ResourceManager.GetString("ToastWarningMessage", resourceCulture);
-=======
-        ///   Looks up a localized string similar to The stream file is null.
-        /// </summary>
-        public static string StreamFileIsNull {
-            get {
-                return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
             }
         }
         
