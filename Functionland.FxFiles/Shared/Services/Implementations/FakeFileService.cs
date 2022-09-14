@@ -49,10 +49,15 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     await CreateFolderAsync(newPath, artifact.Name, cancellationToken);
                     foreach (var file in _files)
                     {
-                        if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
+                        if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath) &&  Path.GetExtension(artifact.FullPath) != "")
                         {
                             var insideNewArtifact = CreateArtifact(file.FullPath.Replace(artifact.FullPath, newPath), artifact.ContentHash);
                             _files.Add(insideNewArtifact);
+                        }
+                        else if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
+                        {
+                            var insideNewFolder = await CreateFolderAsync(file.FullPath.Replace(artifact.FullPath, newPath), artifact.Name, cancellationToken);
+                            _files.Add(insideNewFolder);
                         }
                     }
 
@@ -192,29 +197,29 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 if(artifact.ArtifactType != FsArtifactType.Drive)
                 {
-                await LatencyEnumerationAsync();
-                foreach (var file in _files)
-                {
-                    finalBag.Add(file);
-                }
-                while (!finalBag.IsEmpty)
-                {
-                    _ = finalBag.TryTake(result: out FsArtifact? currentItem);
-
-                    if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
+                    await LatencyEnumerationAsync();
+                    foreach (var file in _files)
                     {
-                        tempBag.Add(currentItem);
+                        finalBag.Add(file);
+                    }
+                    while (!finalBag.IsEmpty)
+                    {
+                        _ = finalBag.TryTake(result: out FsArtifact? currentItem);
+
+                        if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            tempBag.Add(currentItem);
+                        }
+                    }
+                    foreach (var item in tempBag)
+                    {
+                        if (!item.FullPath.StartsWith(artifact.FullPath))
+                        {
+                            finalBag.Add(item);
+                        }
+
                     }
                 }
-                foreach (var item in tempBag)
-                {
-                    if (!item.FullPath.StartsWith(artifact.FullPath))
-                    {
-                        finalBag.Add(item);
-                    }
-
-                }
-            }
                 else if (artifact.ArtifactType == FsArtifactType.Drive)
                 {
                     throw new DomainLogicException(StringLocalizer[nameof(AppStrings.DriveRemoveFailed)]);
