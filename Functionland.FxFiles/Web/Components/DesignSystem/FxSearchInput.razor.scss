@@ -62,11 +62,11 @@
 
 
 .search-input-active {
-    background-image: url(/images/icons/search-icon-active.svg);
+    background-image: url($search-active);
 }
 
 .search-input-disable {
-    background-image: url(/images/icons/search-icon-disable.svg);
+    background-image: url($search-disabled);
     color: color(gray-border);
 }
 
