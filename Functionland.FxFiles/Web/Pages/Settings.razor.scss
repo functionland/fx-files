@@ -1,0 +1,32 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+.settings-content {
+    padding: 21px;
+    font-family: $montserrat-medium;
+}
+
+.title {
+    margin: 0;
+    margin-bottom: 21px;
+}
+
+::deep .fxbutton-menuline {
+    margin: 4px 0;
+
+    .fxbutton-righticon {
+        padding: 5px 7.5px;
+        margin-left: 0;
+    }
+}
+
+.divider {
+    height: 1px;
+    margin: 16px 0;
+    background-color: color(gray-bg-primary);
+}
+
+p {
+    font-size: 10px;
+    text-align: center;
+}

@@ -10,13 +10,13 @@ using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public partial class PlatformTestService : IPlatformTestService
+    public abstract partial class PlatformTestService : IPlatformTestService
     {
+
         protected virtual List<IPlatformTest> OnGetTests()
         {
             return new List<IPlatformTest>()
             {
-
             };
         }
 
@@ -31,6 +31,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
                 platformTest.ProgressChanged += OnTestProgressChanged;
                 await platformTest.RunAsync();
+            }
+            catch (Exception ex)
+            {
+                OnTestProgressChanged(this, new TestProgressChangedEventArgs("Test failed.", ex.ToString(), TestProgressType.Fail));
             }
             finally
             {

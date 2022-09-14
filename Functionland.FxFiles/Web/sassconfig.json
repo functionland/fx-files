@@ -28,6 +28,10 @@
     "inputFile": "Pages/HomePage.razor.scss"
   },
   {
+    "outputFile": "Pages/TestExplorer.razor.css",
+    "inputFile": "Pages/TestExplorer.razor.scss"
+  },
+  {
     "outputFile": "Components/DesignSystem/FxAvatar.razor.css",
     "inputFile": "Components/DesignSystem/FxAvatar.razor.scss"
   },
@@ -118,5 +122,17 @@
   {
     "outputFile": "Pages/MyDevice.razor.css",
     "inputFile": "Pages/MyDevice.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Settings.razor.css",
+    "inputFile": "Pages/Settings.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ThemeSettings.razor.css",
+    "inputFile": "Pages/ThemeSettings.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Zones.razor.css",
+    "inputFile": "Pages/Zones.razor.scss"
   }
 ]
