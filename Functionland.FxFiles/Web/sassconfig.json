@@ -178,5 +178,9 @@
   {
     "outputFile": "Components/ListView.razor.css",
     "inputFile": "Components/ListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListView.razor.css",
+    "inputFile": "Components/ListView.razor.scss"
   }
 ]

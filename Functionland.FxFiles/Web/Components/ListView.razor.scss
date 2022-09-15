@@ -1,2 +1,100 @@
-﻿body {
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+.list-title {
+    font-family: $montserrat-medium;
+    font-style: normal;
+    font-weight: 600;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
+    margin-bottom: $spacing-16;
+    padding-left: $spacing-21;
+    color: color(gray-content1);
+}
+
+.action-bar {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 0 $spacing-21;
+    background-color: color(gray-bg-primary);
+
+    .left-actions {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+
+        .selected-sort {
+            font-family: $open-sans-regular;
+            font-style: normal;
+            font-weight: 400;
+            font-size: $font-size-14;
+            line-height: $line-height-24;
+            letter-spacing: $letter-spacing-02;
+            margin-right: $spacing-4;
+            color: color(gray-content1);
+        }
+
+        .sort-order {
+            background-image: url($chevron-up);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: $icon-16;
+            width: 16px;
+            height: 40px;
+        }
+
+        .desc-order {
+            background-image: url($chevron-up);
+            transform: rotate(180deg);
+        }
+
+        .asc-order {
+            background-image: url($chevron-up);
+        }
+    }
+
+    .right-actions {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+
+        .action-btn {
+            background-size: $icon-24;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 40px;
+            width: 24px;
+        }
+
+        .select-all-btn {
+            background-image: url($select-all-check-empty);
+            margin-right: $spacing-8;
+        }
+
+        .list-view-btn {
+            background-image: url($list-view);
+            margin-right: $spacing-8;
+        }
+
+        .grid-view-btn {
+            background-image: url($grid-view);
+            margin-right: $spacing-8;
+        }
+
+        .filter-btn {
+            background-image: url($filter);
+        }
+    }
+}
+
+.grid-view {
+    display: grid;
+    grid-gap: 1px;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
 }

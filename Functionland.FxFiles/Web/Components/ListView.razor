@@ -1,1 +1,21 @@
-﻿
+﻿<div class="list-title">@ListTitle</div>
+
+<div class="action-bar">
+    <div class="left-actions">
+        <div class="selected-sort" @onclick="OnSortChange">Name</div>
+        <div class="sort-order @SortOrder-order" @onclick="ToggleSortOrder"></div>
+    </div>
+    <div class="right-actions">
+        <div class="select-all-btn"></div>
+        <div class="list-view-btn"></div>
+        <div class="grid-view-btn"></div>
+        <div class="filter-btn"></div>
+    </div>
+</div>
+
+<div class="list-container @ViewMode-view">
+    @foreach (var item in ListItems)
+    {
+        <ListItem ViewMode="ViewMode" ItemConfig="item"></ListItem>
+    }
+</div>
