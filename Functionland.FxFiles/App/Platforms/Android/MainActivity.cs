@@ -4,8 +4,6 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
 
-using android = Android;
-
 namespace Functionland.FxFiles.App.Platforms.Android;
 
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
@@ -15,38 +13,31 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
 
-        if (!CheckStoragePermission())
+        if (!PermissionUtils.CheckStoragePermission())
         {
-            RequestStoragePermission();
+            PermissionUtils.RequestStoragePermission();
         }
     }
-
+    
     protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
     {
         base.OnActivityResult(requestCode, resultCode, data);
         if (requestCode == 2296)
         {
-            if (!CheckStoragePermission())
+            if (!PermissionUtils.CheckStoragePermission())
             {
-                Toast.MakeText(this, "Allow permission for storage access!", ToastLength.Long).Show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.SetCancelable(false);
+                builder.SetMessage("The app does not have critical permissions needed to run. Please check your permissions settings.");
+                builder.SetNeutralButton("QUIT", (sent, args) =>
+                {
+                    MoveTaskToBack(true);
+                });
+                AlertDialog? dialog = builder.Create();
+                dialog?.Show();
             }
         }
-    }
-    private void RequestStoragePermission()
-    {
-        Intent intent = new Intent(android.Provider.Settings.ActionManageAppAllFilesAccessPermission);
-        intent.AddCategory("android.intent.category.DEFAULT");
-        intent.SetData(android.Net.Uri.Parse($"package:{MauiApplication.Current.OpPackageName}"));
-        StartActivityForResult(intent, 2296);
-    }
-
-    public bool CheckStoragePermission()
-    {
-        if (android.OS.Environment.IsExternalStorageManager)
-        {
-            return true;
-        }
-        return false;
     }
 }
 
