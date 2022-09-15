@@ -5,6 +5,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Migrations\Script0001 - CreatePinnedArtifactTable.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Migrations\Script0001 - CreatePinnedArtifactTable.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
 		<PackageReference Include="Bit.CodeAnalyzers" Version="4.1.0-pre-01" />
 		<PackageReference Include="Bit.SourceGenerators" Version="4.1.0-pre-01" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.8" />
