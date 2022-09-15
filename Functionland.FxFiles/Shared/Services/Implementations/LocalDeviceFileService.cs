@@ -447,17 +447,24 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
             var fileInfo = new FileInfo(path);
+            var directoryInfo = new DirectoryInfo(path);
 
-            var fsType = await GetFsArtifactTypeAsync(path);
+            var fsArtifactType = await GetFsArtifactTypeAsync(path);
 
             var fsArtifact = new FsArtifactChanges()
             {
                 ArtifactFullPath = path,
             };
 
-            if (fileInfo.Exists)
+            if (fsArtifactType == FsArtifactType.File && fileInfo.Exists)
             {
                 fsArtifact.IsPathExist = true;
+            }
+            else if ((fsArtifactType == FsArtifactType.Folder || 
+                        fsArtifactType == FsArtifactType.Drive) 
+                            && directoryInfo.Exists)
+            {
+                fsArtifact.IsPathExist = true;                
             }
             else
             {
@@ -465,20 +472,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
             }
 
-            if (fsType == FsArtifactType.File)
+            if (fsArtifactType == FsArtifactType.File)
             {
                 fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
             }
-            else if (fsType == FsArtifactType.Folder)
+            else if (fsArtifactType == FsArtifactType.Folder || 
+                        fsArtifactType == FsArtifactType.Drive)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-            }
-            else if (fsType == FsArtifactType.Drive)
-            {
-                // ToDo
-            }          
+            }        
 
-            return new FsArtifactChanges();
+            return fsArtifact;
         }
     }
 }
