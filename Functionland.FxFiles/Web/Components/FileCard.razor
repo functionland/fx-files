@@ -1,6 +1,6 @@
 ﻿@inherits AppComponentBase;
 
-<div class="file-card-container">
+<div class="file-card-container @(IsFavorite ? "favorite" : "") @(IsPressed ? "pressed-card" : "") @(IsDisable ? "disabled-card" : "")">
     <div class="file-card-media">
         <div class="tag-wrapper">
             <FxTag Title="@Localizer[nameof(AppStrings.SharedFileCardTag)]" TagType="FxTagType.Regular" Width="51px" />
@@ -13,12 +13,12 @@
             <div class="file-icon"></div>
 
             <div class="file-name-container">
-                <span class="file-name">@Localizer[nameof(AppStrings.CardFileName)]</span>.<span class="file-format">@Localizer[nameof(AppStrings.CardFileFormat)]</span>
+                <span class="file-name">@FileName</span>.<span class="file-format">@FileFormat</span>
             </div>
         </div>
 
         <div class="file-info">
-            <div class="modified-date">@Localizer[nameof(AppStrings.ModifiedDate)]</div> | <span class="file-size">@Localizer[nameof(AppStrings.CardFileSize)]</span>
+            <div class="modified-date">@ModifiedDate</div> | <span class="file-size">@FileSize</span>
         </div>
     </div>
 </div>
