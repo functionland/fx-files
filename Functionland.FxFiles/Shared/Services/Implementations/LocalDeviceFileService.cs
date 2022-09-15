@@ -169,7 +169,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var artifacts = new List<FsArtifact>();
             var subArtifacts = new List<FsArtifact>();
 
-            if (await GetFsArtifactTypeAsync(path) is FsArtifactType.Folder or FsArtifactType.Drive)
+            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+
+            if (fsArtifactType is null)
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+
+            if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
                 string[] directoryFiles = Directory.GetFiles(path);
                 string[] subDirectories = Directory.GetDirectories(path);
@@ -372,25 +377,27 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return ignoredList;
         }
 
-        public virtual async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
+        public virtual async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
         {
-            string[] drives = Directory.GetLogicalDrives();
+            var artifactIsFile = File.Exists(path);
+            if (artifactIsFile)
+            {
+                return FsArtifactType.File;
+            }
 
+            var artifactIsDirectory = Directory.Exists(path);
+            if (artifactIsDirectory)
+            {
+                return FsArtifactType.Folder;
+            }
+
+            string[] drives = Directory.GetLogicalDrives();
             if (drives.Contains(path))
             {
                 return FsArtifactType.Drive;
             }
 
-            FileAttributes attr = File.GetAttributes(path);
-
-            if (attr.HasFlag(FileAttributes.Directory))
-            {
-                return FsArtifactType.Folder;
-            }
-            else
-            {
-                return FsArtifactType.File;
-            }
+            return null;
         }
 
         public virtual async Task<List<FsArtifact>> GetDrivesAsync()
@@ -419,20 +426,19 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var fileInfo = new FileInfo(path);
             var directoryInfo = new DirectoryInfo(path);
 
-            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+            var artifactIsFile = File.Exists(path);
+            var artifactIsDirectory = Directory.Exists(path);
 
             var fsArtifact = new FsArtifactChanges()
             {
                 ArtifactFullPath = path,
             };
 
-            if (fsArtifactType == FsArtifactType.File && fileInfo.Exists)
+            if (artifactIsFile && fileInfo.Exists)
             {
                 fsArtifact.IsPathExist = true;
             }
-            else if ((fsArtifactType == FsArtifactType.Folder || 
-                        fsArtifactType == FsArtifactType.Drive) 
-                            && directoryInfo.Exists)
+            else if (artifactIsDirectory && directoryInfo.Exists)
             {
                 fsArtifact.IsPathExist = true;                
             }
@@ -442,12 +448,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
             }
 
-            if (fsArtifactType == FsArtifactType.File)
+            if (artifactIsFile)
             {
                 fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
             }
-            else if (fsArtifactType == FsArtifactType.Folder || 
-                        fsArtifactType == FsArtifactType.Drive)
+            else if (artifactIsDirectory)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
             }        
