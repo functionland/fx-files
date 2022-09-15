@@ -124,6 +124,33 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to pdf.
+        /// </summary>
+        public static string CardFileFormat {
+            get {
+                return ResourceManager.GetString("CardFileFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Presentation_document.
+        /// </summary>
+        public static string CardFileName {
+            get {
+                return ResourceManager.GetString("CardFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1.22 mb.
+        /// </summary>
+        public static string CardFileSize {
+            get {
+                return ResourceManager.GetString("CardFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Request could not be processed because of conflict in the request.
         /// </summary>
         public static string ConflicException {
@@ -282,6 +309,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Mode {
             get {
                 return ResourceManager.GetString("Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified 09/30/22.
+        /// </summary>
+        public static string ModifiedDate {
+            get {
+                return ResourceManager.GetString("ModifiedDate", resourceCulture);
             }
         }
         
