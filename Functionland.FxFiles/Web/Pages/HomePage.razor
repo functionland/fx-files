@@ -7,3 +7,16 @@
 <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
 
 <button @onclick="(()=>NavigateToTestExplorerComponent())">Test</button>
+
+@*<FxBottomSheet IsCloseAble="true">
+
+</FxBottomSheet>*@
+@*<DetailViewItem></DetailViewItem>*@
+
+@*<FileDetailViewBottomActionItem ActionIcon="ActionIcon.More" />*@
+
+<FxBottomSheet IsCloseAble="true">
+    <ContentRenderFragment>
+        <FileDetailView FileName="Sample.docx" IsImageFile="false" />
+    </ContentRenderFragment>
+</FxBottomSheet>

@@ -7,5 +7,20 @@
 
         [Parameter, EditorRequired]
         public RenderFragment? ContentRenderFragment { get; set; }
+
+
+        public bool IsClose { get; set; } = false;
+
+        public void ChangeCloseState()
+        {
+            if (IsClose)
+            {
+                IsClose = false;
+            }
+            else
+            {
+                IsClose = true;
+            }
+        }
     }
 }

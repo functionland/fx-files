@@ -4,7 +4,7 @@
 <button type="button" aria-controls="sheet">Open Sheet</button>
 
 <!-- The sheet component -->
-<div class="sheet column items-center justify-end">
+<div class="sheet column items-center justify-end @(IsClose ? "show-bottom-sheet-animation" : "")">
     <!-- Dark background for the sheet -->
     <div class="overlay"></div>
 
@@ -15,7 +15,7 @@
         {
             <div class="controls">
                 <!-- Button to close the sheet -->
-                <button class="close-sheet close-button" type="button" title="Close the sheet"><img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" /></button>
+                <button class="close-sheet close-button" type="button" title="Close the sheet"><img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" @onclick="ChangeCloseState" /></button>
             </div>
         }
 
