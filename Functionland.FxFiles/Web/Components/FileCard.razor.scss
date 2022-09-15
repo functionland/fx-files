@@ -1,2 +1,36 @@
-﻿body {
+﻿@import "../Styles/abstracts/_variables.scss";
+@import "../Styles/abstracts/_functions.scss";
+
+.file-card-container {
+    background-color: color(gray-bg-primary);
+    border-radius: $border-radius-4;
+    width: 252px;
+    height: 216px;
+
+    .file-card-media {
+        height: 146px;
+        border-radius: inherit;
+        position: relative;
+        background-color: color(gray-border);
+        //background-image: url("/images/CardMedia.svg");
+        background-position: center;
+        
+        .tag-wrapper {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+        }
+
+        .pin-outline-icon {
+            width: $icon-20;
+            height: $icon-20;
+            background-image: url($pin-outline);
+            background-repeat: no-repeat;
+            background-size: $icon-20;
+            background-position: center;
+            position: absolute;
+            top: 10.28px;
+            right: 10.28px;
+        }
+    }
 }
