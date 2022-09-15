@@ -168,52 +168,69 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             var artifacts = new List<FsArtifact>();
             var subArtifacts = new List<FsArtifact>();
-            string[] directoryFiles = Directory.GetFiles(path);
-            string[] subDirectories = Directory.GetDirectories(path);
 
-            foreach (var subDirectory in subDirectories)
+            if (await GetFsArtifactTypeAsync(path) is FsArtifactType.Folder or FsArtifactType.Drive)
             {
-                subArtifacts.Add(
-                    new FsArtifact()
-                    {
-                        ArtifactType = FsArtifactType.Folder,
-                        FullPath = subDirectory,
-                        ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
-                        Name = Path.GetFileName(subDirectory),
-                        ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
-                        LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
-                    });
+                string[] directoryFiles = Directory.GetFiles(path);
+                string[] subDirectories = Directory.GetDirectories(path);
+
+                foreach (var subDirectory in subDirectories)
+                {
+                    subArtifacts.Add(
+                        new FsArtifact()
+                        {
+                            ArtifactType = FsArtifactType.Folder,
+                            FullPath = subDirectory,
+                            ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
+                            Name = Path.GetFileName(subDirectory),
+                            ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
+                            LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
+                        });
+                }
+
+                subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
+
+                foreach (var file in directoryFiles)
+                {
+                    artifacts.Add(
+                        new FsArtifact()
+                        {
+                            ArtifactType = FsArtifactType.File,
+                            FullPath = file,
+                            ProviderType = await GetFsFileProviderTypeAsync(file),
+                            Name = Path.GetFileName(file),
+                            ParentFullPath = Directory.GetParent(file)?.FullName,
+                            LastModifiedDateTime = File.GetLastWriteTime(file),
+                            FileExtension = Path.GetExtension(file)
+                        });
+                }
+
+                artifacts = artifacts.OrderBy(i => i.Name).ToList();
+
+                var result = subArtifacts.Concat(artifacts);
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
+                }
+
+                foreach (var item in result)
+                {
+                    yield return item;
+                }
             }
-
-            subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
-
-            foreach (var file in directoryFiles)
+            else
             {
-                artifacts.Add(
-                    new FsArtifact()
-                    {
-                        ArtifactType = FsArtifactType.File,
-                        FullPath = file,
-                        ProviderType = await GetFsFileProviderTypeAsync(file),
-                        Name = Path.GetFileName(file),
-                        ParentFullPath = Directory.GetParent(file)?.FullName,
-                        LastModifiedDateTime = File.GetLastWriteTime(file),
-                        FileExtension = Path.GetExtension(file)
-                    });
-            }
-
-            artifacts = artifacts.OrderBy(i => i.Name).ToList();
-
-            var result = subArtifacts.Concat(artifacts);
-
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
-            }
-
-            foreach (var item in result)
-            {
-                yield return item;
+                yield return new FsArtifact() 
+                {
+                    ArtifactType = FsArtifactType.File,
+                    FullPath = path,
+                    ProviderType = await GetFsFileProviderTypeAsync(path),
+                    Name = Path.GetFileName(path),
+                    ParentFullPath = Directory.GetParent(path)?.FullName,
+                    LastModifiedDateTime = File.GetLastWriteTime(path),
+                    FileExtension = Path.GetExtension(path)
+                };
             }
         }
 
