@@ -54,10 +54,10 @@
         <link rel="manifest" href="manifest.json">
     }
     
-    @if (isDefaultDeploymentType || isPwa)
+    @*@if (isDefaultDeploymentType || isPwa)
     {
         <component type="typeof(App.Components.LoadingComponent)" param-Color="@("#FFF")" render-mode="@RenderMode.Static" />
-    }
+    }*@
     <link rel="stylesheet" href="_content/Bit.BlazorUI/styles/bit.blazorui.min.css" asp-append-version="@shoudAddAspAppendVersion" />
     <link rel="stylesheet" href="styles/app.css" asp-append-version="@shoudAddAspAppendVersion" />
     <link rel="stylesheet" href="Functionland.FxFiles.App.styles.css" asp-append-version="@shoudAddAspAppendVersion" />
