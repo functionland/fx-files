@@ -252,7 +252,7 @@
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>
   </data>
-  <data name="TagLabel" xml:space="preserve">
-    <value>Tag Label</value>
+  <data name="SharedFileCardTag" xml:space="preserve">
+    <value>Shared</value>
   </data>
 </root>
