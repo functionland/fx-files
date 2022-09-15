@@ -382,12 +382,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var drive in drives)
             {
-                artifacts.Add(new FsArtifact()
-                {
-                    ArtifactType = FsArtifactType.Drive,
-                    FullPath = drive,
-                    ProviderType = await GetFsFileProviderTypeAsync(drive)
-                });
+                artifacts.Add(
+                    new FsArtifact(drive, drive, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
             }
 
             return artifacts;
