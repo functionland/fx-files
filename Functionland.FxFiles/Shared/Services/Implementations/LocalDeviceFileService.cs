@@ -227,12 +227,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
-            foreach (var artifact in artifacts)
-            {
-                if (artifact.FullPath == null) continue;
+            List<FsArtifact> ignoredList = new();
 
-                CopyAll(new DirectoryInfo(artifact.FullPath), new DirectoryInfo(destination));
-                DeleteArtifactAsync(artifact, cancellationToken);
+            await Task.Run(async () =>
+            {
+                ignoredList = CopyAll(artifacts, destination, beOverWritten, cancellationToken);
+                await DeleteArtifactsAsync(artifacts, cancellationToken);
+            });
+
+            if (ignoredList.Any())
+            {
+                throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
             }
         }
 
