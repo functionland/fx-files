@@ -100,33 +100,35 @@ public partial class AndroidFileService : LocalDeviceFileService
             if (storage is null)
                 continue;
 
+            if (storage.Directory is null)
+                continue;
+
             var lastModifiedUnixFormat = storage.Directory?.LastModified() ?? 0;
-            var lastModifiedDateTime = lastModifiedUnixFormat == 0 ? DateTimeOffset.Now : DateTimeOffset.FromUnixTimeMilliseconds(lastModifiedUnixFormat);
-            if (storage.IsPrimary) 
+            var lastModifiedDateTime = lastModifiedUnixFormat == 0
+                                                        ? DateTimeOffset.Now
+                                                        : DateTimeOffset.FromUnixTimeMilliseconds(lastModifiedUnixFormat);
+            var fullPath = storage.Directory?.Path;
+            var capacity = storage.Directory?.FreeSpace;
+            var size = storage.Directory?.TotalSpace;
+
+            if (storage.IsPrimary)
             {
-                drives.Add(new FsArtifact()
+                var internalFileName = StringLocalizer.GetString(AppStrings.internalStorageName);
+                drives.Add(new FsArtifact(fullPath, internalFileName, FsArtifactType.Drive, FsFileProviderType.InternalMemory)
                 {
-                    Name = StringLocalizer.GetString(AppStrings.internalStorageName),
-                    ArtifactType = FsArtifactType.Drive,
-                    ProviderType = FsFileProviderType.InternalMemory,
-                    FullPath = storage.Directory?.Path,
-                    Capacity = storage.Directory?.FreeSpace, 
-                    Size = storage.Directory?.TotalSpace,
+                    Capacity = capacity,
+                    Size = size,
                     LastModifiedDateTime = lastModifiedDateTime,
                 });
             }
             else
             {
                 var sDCardName = storage.MediaStoreVolumeName ?? string.Empty;
-
-                drives.Add(new FsArtifact()
+                var externalFileName = StringLocalizer.GetString(AppStrings.SDCardName, sDCardName);
+                drives.Add(new FsArtifact(fullPath, externalFileName, FsArtifactType.Drive, FsFileProviderType.ExternalMemory)
                 {
-                    Name = StringLocalizer.GetString(AppStrings.SDCardName, sDCardName),
-                    ArtifactType = FsArtifactType.Drive,
-                    ProviderType = FsFileProviderType.ExternalMemory,
-                    FullPath = storage.Directory?.Path,
-                    Capacity = storage.Directory?.FreeSpace,
-                    Size = storage.Directory?.TotalSpace,
+                    Capacity = capacity,
+                    Size = size,
                     LastModifiedDateTime = lastModifiedDateTime,
                 });
             }
