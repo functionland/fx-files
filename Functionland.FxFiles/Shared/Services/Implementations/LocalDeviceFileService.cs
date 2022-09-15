@@ -289,10 +289,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
-            var oldName = Path.GetFileName(folderPath);
-            var newPath = folderPath.Replace(oldName, newName);
+            await Task.Run(() =>
+            {
+                var oldName = Path.GetFileName(folderPath);
+                var newPath = folderPath.Replace(oldName, newName);
 
-            Directory.Move(folderPath, newPath);
+                Directory.Move(folderPath, newPath);
+            });
         }
 
         private static List<FsArtifact> CopyAll(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
