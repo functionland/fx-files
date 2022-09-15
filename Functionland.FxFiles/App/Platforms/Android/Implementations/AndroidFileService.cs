@@ -151,11 +151,6 @@ public partial class AndroidFileService : LocalDeviceFileService
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
 
-    public override async Task<FsArtifact> GetFsArtifactAsync(string? filePath, CancellationToken? cancellationToken = null)
-    {
-        return await base.GetFsArtifactAsync(filePath, cancellationToken);
-    }
-
     public override async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
     {
         return await base.CheckPathExistsAsync(path, cancellationToken);
