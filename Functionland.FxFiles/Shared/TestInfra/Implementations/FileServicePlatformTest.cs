@@ -11,7 +11,8 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
         {
             try
             {
-                var testsRootArtifact = new FsArtifact { FullPath = Path.Combine(rootPath, "FileServiceTestsFolder") };
+                FsArtifact? testsRootArtifact = null;
+
                 var rootArtifact = await GetArtifactsAsync(fileService, Path.Combine(rootPath, "FileServiceTestsFolder"));
                 if (rootArtifact is null || rootArtifact.Count == 0)
                 {
