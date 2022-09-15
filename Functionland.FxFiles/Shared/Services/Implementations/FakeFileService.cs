@@ -121,17 +121,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         private static FsArtifact CreateArtifact(string path, string? contentHash)
         {
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            return new FsArtifact
+            return new FsArtifact(path, Path.GetFileName(path), GetFsArtifactType(path), FsFileProviderType.InternalMemory)
             {
-                Name = Path.GetFileName(path),
-                FullPath = path,
                 FileExtension = Path.GetExtension(path),
                 OriginDevice = originDevice,
                 ThumbnailPath = path,
                 ContentHash = contentHash,
-                ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                ArtifactType = GetFsArtifactType(path)
             };
         }
 
