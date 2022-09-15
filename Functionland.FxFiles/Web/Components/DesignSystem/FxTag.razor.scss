@@ -2,33 +2,33 @@
 @import "../../Styles/abstracts/_functions.scss";
 
 .tag-label {
-    background-color: $gray-dark-bg-secondary;
+    background-color: color(gray-bg-secondary);
     border-radius: $border-radius-6;
-    padding: 6px $spacing-8;
-    width: 62px;
+    padding: $spacing-6 $spacing-8;
     font-family: $open-sans-regular;
     font-size: $font-size-10;
     line-height: $line-height-14;
     letter-spacing: $letter-spacing-02;
-    color: $gray-dark-content1;
+    color: color(gray-content1);
+    text-align: center;
 }
 
 .left-icon-tag {
-    width: 84px;
     padding-left: $spacing-30;
 
     background: {
+        image: url($tag-label);
         repeat: no-repeat;
-        size: $icon-16;
+        size: 14px;
         position: left 9.33px center;
     }
 }
 
 .right-icon-tag {
-    width: 84px;
     padding-right: $spacing-30;
 
     background: {
+        image: url($tag-label);
         repeat: no-repeat;
         size: $icon-16;
         position: right 9.33px center;
