@@ -81,8 +81,6 @@
 		transition: transform 0.5s, border-radius 0.5s;
 		transform: translateY(0);
 		max-height: 100vh;
-		//TODO:is it right for now?
-		padding-bottom: $spacing-34;
 		max-width: $screen-lg-min;
 		width: 100%;
 		box-sizing: border-box;
@@ -180,7 +178,7 @@
 
 		.bottom-body {
 			// TODO: use value from the sass variables
-			padding: $spacing-10 $spacing-21 $spacing-0;
+			padding: $spacing-10 $spacing-21;
 
 			.bottom-navigations {
 				display: flex;
