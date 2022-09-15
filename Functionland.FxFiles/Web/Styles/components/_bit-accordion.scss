@@ -43,6 +43,8 @@
 ::deep .bit-acd .content.expanded .items {
     gap: 16px;
     display: flex;
+    overflow-y: unset;
+    max-height: 237px;
     flex-direction: row;
     white-space: nowrap;
     scroll-behavior: smooth;
