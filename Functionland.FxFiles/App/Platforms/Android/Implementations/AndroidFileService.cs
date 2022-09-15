@@ -156,6 +156,11 @@ public partial class AndroidFileService : LocalDeviceFileService
         return await base.GetFsArtifactAsync(filePath, cancellationToken);
     }
 
+    public override async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
+    {
+        return await base.CheckPathExistsAsync(path, cancellationToken);
+    }
+
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
         var internalDrive = drives?.FirstOrDefault(d => d.ProviderType == FsFileProviderType.InternalMemory);
