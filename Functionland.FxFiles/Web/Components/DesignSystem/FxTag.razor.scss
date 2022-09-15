@@ -1,2 +1,36 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.tag-label {
+    background-color: color(gray-bg-secondary);
+    border-radius: $border-radius-6;
+    padding: $spacing-6 $spacing-8;
+    font-family: $open-sans-regular;
+    font-size: $font-size-10;
+    line-height: $line-height-14;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content1);
+    text-align: center;
+}
+
+.left-icon-tag {
+    padding-left: $spacing-30;
+
+    background: {
+        image: url($tag-label);
+        repeat: no-repeat;
+        size: $icon-16;
+        position: left 9.33px center;
+    }
+}
+
+.right-icon-tag {
+    padding-right: $spacing-30;
+
+    background: {
+        image: url($tag-label);
+        repeat: no-repeat;
+        size: $icon-16;
+        position: right 9.33px center;
+    }
 }

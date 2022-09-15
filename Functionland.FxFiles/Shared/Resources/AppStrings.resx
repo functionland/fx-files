@@ -228,7 +228,6 @@
   <data name="Zones" xml:space="preserve">
     <value>Zones</value>
   </data>
-
   <data name="ToastDescMessage" xml:space="preserve">
     <value>A new version of the app is available for download.</value>
   </data>
@@ -252,6 +251,8 @@
   </data>
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>
-
+  </data>
+  <data name="TagLabel" xml:space="preserve">
+    <value>Tag Label</value>
   </data>
 </root>
