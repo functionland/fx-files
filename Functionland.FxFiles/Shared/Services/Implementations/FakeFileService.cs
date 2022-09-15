@@ -172,14 +172,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
 
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            var artifact = new FsArtifact
+            var artifact = new FsArtifact(path, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
             {
-                Name = folderName,
-                FullPath = path,
                 OriginDevice = originDevice,
-                ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                ArtifactType = FsArtifactType.Folder
             };
             if (beOverWritten)
                 await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
