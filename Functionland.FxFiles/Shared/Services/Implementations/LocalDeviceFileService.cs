@@ -225,13 +225,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
             await Task.Run(async () =>
             {
-                ignoredList = CopyAll(artifacts, destination, beOverWritten, cancellationToken);
+                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);
                 await DeleteArtifactsAsync(artifacts, cancellationToken);
             });
 
