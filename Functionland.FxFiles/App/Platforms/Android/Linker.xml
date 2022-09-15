@@ -59,5 +59,24 @@
     <assembly fullname="Microsoft.Maui">
         <type fullname="*" />
     </assembly>
+	<assembly fullname="Microsoft.Data.Sqlite">
+		<type fullname="*" />
+	</assembly>
+
+	<assembly fullname="dbup-sqlite">
+		<type fullname="*" />
+	</assembly>
+
+	<assembly fullname="Dapper.Contrib">
+		<type fullname="*" />
+	</assembly>
+
+	<assembly fullname="Dapper">
+		<type fullname="*" />
+	</assembly>
+
+	<assembly fullname="SQLitePCLRaw.batteries_v2">
+		<type fullname="*" />
+	</assembly>
 
 </linker>
