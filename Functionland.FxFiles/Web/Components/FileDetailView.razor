@@ -1,3 +1,33 @@
 ﻿@inherits AppComponentBase;
 
-<h3>FileDetailView</h3>
+<!-- Body of the sheet -->
+<main class="content-body fill column">
+    @if (IsImageFile)
+    {
+        <div class="file-icon-row">
+            <div>
+            <img class="file-image-preview" src="https://cdn.shopify.com/s/files/1/0285/1316/products/w0290_1s_Banana-Tree-Leaves-Wallpaper-for-Walls-Banana-Leaf_Repeating-Pattern-Sample-1_1200x1200.jpg?v=1604083224">
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="file-icon-row">
+            <div class="file-icon"></div>
+        </div>
+    }
+    <div class="file-name-row">
+        <p class="file-name-text open-sans-regular">@FileName</p>
+    </div>
+    <div class="file-details-area">
+        <FileDetailViewItem FileDetailFieldName="Last modified" FileDetailFieldValue="07/01/22"></FileDetailViewItem>
+        <FileDetailViewItem FileDetailFieldName="File size" FileDetailFieldValue="1.23 MB"></FileDetailViewItem>
+        <FileDetailViewItem FileDetailFieldName="Source" FileDetailFieldValue="Pixel 6"></FileDetailViewItem>
+    </div>
+    <div class="bottom-body">
+            <FileDetailViewBottomActionBar />
+        <div class="close-btn-bottom-action">
+            <FxButton Text="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+        </div>
+    </div>
+</main>
