@@ -136,15 +136,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact = new FsArtifact
+                                     let artifact = 
+                                     new FsArtifact(file.path, Path.GetFileName(file.path), FsArtifactType.File, FsFileProviderType.InternalMemory)
                                      {
-                                         Name = Path.GetFileName(file.path),
-                                         FullPath = file.path,
                                          FileExtension = Path.GetExtension(file.path),
                                          OriginDevice = originDevice,
                                          ThumbnailPath = file.path,
                                          ContentHash = file.stream.GetHashCode().ToString(),
-                                         ProviderType = FsFileProviderType.InternalMemory,
                                          LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
                                      }
                                      select artifact)
