@@ -1,6 +1,7 @@
 ﻿@import "../abstracts/_variables.scss";
 
 ::deep .bit-acd.bit-acd-fluent {
+    padding: 0;
     border: none;
     color: color(gray-content1);
     background-color: transparent;
@@ -42,6 +43,8 @@
 ::deep .bit-acd .content.expanded .items {
     gap: 16px;
     display: flex;
+    overflow-y: unset;
+    max-height: 237px;
     flex-direction: row;
     white-space: nowrap;
     scroll-behavior: smooth;
