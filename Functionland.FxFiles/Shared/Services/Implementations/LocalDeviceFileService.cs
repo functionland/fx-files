@@ -441,7 +441,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return fsArtifact;
         }
 
-        public virtual async Task<FsArtifactChanges> CheckPathExistsAsync(string? path)
+        public virtual async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
