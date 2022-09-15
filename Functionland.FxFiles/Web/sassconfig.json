@@ -174,5 +174,9 @@
   {
     "outputFile": "Components/ListItem.razor.css",
     "inputFile": "Components/ListItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileCard.razor.css",
+    "inputFile": "Components/FileCard.razor.scss"
   }
 ]
