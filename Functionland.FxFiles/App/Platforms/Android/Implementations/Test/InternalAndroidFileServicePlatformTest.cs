@@ -3,17 +3,17 @@ using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations.Test;
 
-public partial class AndroidFileServicePlatformTest : FileServicePlatformTest
+public partial class InternalAndroidFileServicePlatformTest : FileServicePlatformTest
 {
     public IFileService FileService { get; set; }
 
-    public AndroidFileServicePlatformTest(IFileService fileService)
+    public InternalAndroidFileServicePlatformTest(IFileService fileService)
     {
         FileService = fileService;
     }
-    public override string Title => "AndroidFileService Test";
+    public override string Title => "Internal AndroidFileService Test";
 
-    public override string Description => "Tests the common features of this FileService";
+    public override string Description => "Tests the common features of this FileService internal storage of Android.";
 
     protected override IFileService OnGetFileService()
     {
