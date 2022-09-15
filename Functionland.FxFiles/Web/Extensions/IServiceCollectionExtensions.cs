@@ -28,7 +28,7 @@ public static class IServiceCollectionExtensions
 #if Android
         services.AddSingleton<IFileService, AndroidFileService>();
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
-        services.AddTransient<AndroidPlatformTestService>();
+        services.AddTransient<AndroidFileServicePlatformTest>();
 #elif Windows
         services.AddSingleton<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
