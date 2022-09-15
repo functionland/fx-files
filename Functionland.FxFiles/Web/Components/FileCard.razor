@@ -5,7 +5,7 @@
         <div class="tag-wrapper">
             <FxTag Title="@Localizer[nameof(AppStrings.SharedFileCardTag)]" TagType="FxTagType.Regular" Width="51px" />
         </div>
-        <div class="pin-outline-icon"></div>
+        <div class="pin-defualt-icon"></div>
     </div>
 
     <div class="file-card-content">
@@ -13,8 +13,12 @@
             <div class="file-icon"></div>
 
             <div class="file-name-container">
-                <span class="file-name">Presentation_document</span>.<span class="file-format">pdf</span>
+                <span class="file-name">@Localizer[nameof(AppStrings.CardFileName)]</span>.<span class="file-format">@Localizer[nameof(AppStrings.CardFileFormat)]</span>
             </div>
+        </div>
+
+        <div class="file-info">
+            <div class="modified-date">@Localizer[nameof(AppStrings.ModifiedDate)]</div> | <span class="file-size">@Localizer[nameof(AppStrings.CardFileSize)]</span>
         </div>
     </div>
 </div>
