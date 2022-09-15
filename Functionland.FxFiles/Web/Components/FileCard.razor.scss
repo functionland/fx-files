@@ -14,7 +14,7 @@
         background-color: color(gray-border);
         //background-image: url("/images/CardMedia.svg");
         background-position: center;
-        
+
         .tag-wrapper {
             position: absolute;
             bottom: 8px;
@@ -31,6 +31,45 @@
             position: absolute;
             top: 10.28px;
             right: 10.28px;
+        }
+    }
+
+    .file-card-content {
+        padding: $spacing-16;
+
+        .card-file-name {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            .file-icon {
+                width: $icon-16;
+                height: $icon-16;
+                background-image: url($folder);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: $icon-16;
+            }
+
+            .file-name-container {
+                margin-left: $spacing-6;
+                display: flex;
+
+                span {
+                    display: inline-block;
+                    font-family: $open-sans-regular;
+                    font-size: $font-size-14;
+                    line-height: $line-height-24;
+                    letter-spacing: $letter-spacing-02;
+                    color: color(gray-content1);
+                }
+
+                .file-name {
+                    max-width: 162px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
         }
     }
 }
