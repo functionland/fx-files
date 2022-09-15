@@ -17,3 +17,11 @@
         color: $green-dark-pressed;
     }
 }
+
+.fx-link-disabled,
+.fx-link-disabled:hover,
+.fx-link-disabled:active
+{
+    color: color(gray-border);
+    pointer-events: none;
+}
