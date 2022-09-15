@@ -62,9 +62,4 @@ public partial class WindowsFileService : LocalDeviceFileService
     {
         return FsFileProviderType.InternalMemory;
     }
-
-    public override async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
-    {
-        return await base.GetFsArtifactAsync(path, cancellationToken);
-    }
 }
