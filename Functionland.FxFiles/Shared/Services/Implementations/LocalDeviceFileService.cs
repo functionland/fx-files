@@ -38,37 +38,24 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
 
-            FsArtifact newFsArtifact = new();
             var fileName = Path.GetFileNameWithoutExtension(path);
 
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
 
-            try
-            {
                 if (File.Exists(path))
                     throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
                 using FileStream outPutFileStream = new(path, FileMode.Create);
                 await stream.CopyToAsync(outPutFileStream);
 
-                newFsArtifact = new FsArtifact
+            var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
                 {
-                    Name = fileName,
-                    FullPath = path,
-                    ArtifactType = FsArtifactType.File,
                     FileExtension = Path.GetExtension(path),
                     Size = (int)outPutFileStream.Length,
-                    ProviderType = await GetFsFileProviderTypeAsync(path),
                     LastModifiedDateTime = File.GetLastWriteTime(path),
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                 };
-            }
-            catch
-            {
-                // ToDo : Handle exceptions
-                throw;
-            }
 
             return newFsArtifact;
         }
