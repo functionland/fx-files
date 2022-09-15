@@ -243,6 +243,7 @@
   </data>
   <data name="ToastWarningMessage" xml:space="preserve">
     <value>Your warning message</value>
+  </data>
   <data name="ButtonSearchFullWidth" xml:space="preserve">
     <value>Done</value>
   </data>
