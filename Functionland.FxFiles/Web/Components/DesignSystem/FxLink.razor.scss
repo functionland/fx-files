@@ -23,20 +23,20 @@
     font-size: $font-size-14;
 }
 
-.fx-link-disabled,
-.fx-link-disabled:hover,
-.fx-link-disabled:active
-{
-    color: color(gray-border);
-    pointer-events: none;
-}
-
 .fx-link-left-icon {
     padding-left: $spacing-16;
     background-image: url($left-arrow);
     background-repeat: no-repeat;
     background-position: left center;
     background-size: 6.06px 11.97px;
+
+    &:hover {
+        background-image: url($left-arrow-hover);
+    }
+
+    &:active {
+        background-image: url($left-arrow-pressed);
+    }
 }
 
 .fx-link-right-icon {
@@ -45,6 +45,33 @@
     background-repeat: no-repeat;
     background-position: right center;
     background-size: 6.06px 11.97px;
+
+    &:hover {
+        background-image: url($right-arrow-hover);
+    }
+
+    &:active {
+        background-image: url($right-arrow-pressed);
+    }
+}
+
+.fx-link-disabled,
+.fx-link-disabled:hover,
+.fx-link-disabled:active {
+    color: color(gray-border);
+    pointer-events: none;
+}
+
+.fx-link-disabled-left {
+    color: color(gray-border);
+    pointer-events: none;
+    background-image: url($left-arrow-disabled);
+}
+
+.fx-link-disabled-right {
+    color: color(gray-border);
+    pointer-events: none;
+    background-image: url($right-arrow-disabled);
 }
 
 
