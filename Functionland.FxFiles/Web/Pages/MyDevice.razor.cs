@@ -4,7 +4,6 @@ namespace Functionland.FxFiles.App.Pages
 {
     public partial class MyDevice
     {
-        public string ListTitle = "My Device";
         public List<ListItemConfig> ListItems = new List<ListItemConfig>()
         {
             new ListItemConfig("CsInternship", "subtext1", true, "folder"),
