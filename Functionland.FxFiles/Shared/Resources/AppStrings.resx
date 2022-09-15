@@ -267,4 +267,7 @@
   <data name="TagLabel" xml:space="preserve">
     <value>Tag Label</value>
   </data>
+  <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
+    <value>The {0} name has invalid chars.</value>
+  </data>
 </root>

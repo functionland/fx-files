@@ -283,24 +283,35 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 File.Move(filePath, newPath);
             });
-        }
+        }        
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(folderPath))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
 
             var artifactType = GetFsArtifactTypeAsync(folderPath);
 
+            if (artifactType is null)
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+
             if (string.IsNullOrWhiteSpace(newName))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, artifactType.ToString() ?? ""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
 
             if (cancellationToken?.IsCancellationRequested == true) return;
+
+            if (CheckIfNameHasInvalidChars(newName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
 
             await Task.Run(() =>
             {
                 var oldName = Path.GetFileName(folderPath);
                 var newPath = folderPath.Replace(oldName, newName);
+
+                var isExist = Directory.Exists(newPath);
+
+                if (isExist)
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
 
                 Directory.Move(folderPath, newPath);
             });
@@ -378,7 +389,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
         public virtual async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
-        {
+        {        
             var artifactIsFile = File.Exists(path);
             if (artifactIsFile)
             {
@@ -458,6 +469,15 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }        
 
             return fsArtifact;
+        }
+
+        private bool CheckIfNameHasInvalidChars(string name)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+
+            foreach (var invalid in invalidChars)
+                if (name.Contains(invalid)) return true;
+            return false;
         }
     }
 }
