@@ -419,20 +419,19 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var fileInfo = new FileInfo(path);
             var directoryInfo = new DirectoryInfo(path);
 
-            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+            var artifactIsFile = File.Exists(path);
+            var artifactIsDirectory = Directory.Exists(path);
 
             var fsArtifact = new FsArtifactChanges()
             {
                 ArtifactFullPath = path,
             };
 
-            if (fsArtifactType == FsArtifactType.File && fileInfo.Exists)
+            if (artifactIsFile && fileInfo.Exists)
             {
                 fsArtifact.IsPathExist = true;
             }
-            else if ((fsArtifactType == FsArtifactType.Folder || 
-                        fsArtifactType == FsArtifactType.Drive) 
-                            && directoryInfo.Exists)
+            else if (artifactIsDirectory && directoryInfo.Exists)
             {
                 fsArtifact.IsPathExist = true;                
             }
@@ -442,12 +441,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
             }
 
-            if (fsArtifactType == FsArtifactType.File)
+            if (artifactIsFile)
             {
                 fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
             }
-            else if (fsArtifactType == FsArtifactType.Folder || 
-                        fsArtifactType == FsArtifactType.Drive)
+            else if (artifactIsDirectory)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
             }        
