@@ -153,13 +153,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 foreach (var subDirectory in subDirectories)
                 {
+                    var providerType = await GetFsFileProviderTypeAsync(subDirectory);
+
                     subArtifacts.Add(
-                        new FsArtifact()
+                        new FsArtifact(subDirectory, Path.GetFileName(subDirectory), FsArtifactType.Folder, providerType)
                         {
-                            ArtifactType = FsArtifactType.Folder,
-                            FullPath = subDirectory,
-                            ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
-                            Name = Path.GetFileName(subDirectory),
                             ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
                             LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
                         });
@@ -169,13 +167,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 foreach (var file in directoryFiles)
                 {
+                    var providerType = await GetFsFileProviderTypeAsync(file);
+
                     artifacts.Add(
-                        new FsArtifact()
+                        new FsArtifact(file, Path.GetFileName(file), FsArtifactType.File, providerType)
                         {
-                            ArtifactType = FsArtifactType.File,
-                            FullPath = file,
-                            ProviderType = await GetFsFileProviderTypeAsync(file),
-                            Name = Path.GetFileName(file),
                             ParentFullPath = Directory.GetParent(file)?.FullName,
                             LastModifiedDateTime = File.GetLastWriteTime(file),
                             FileExtension = Path.GetExtension(file)
@@ -198,12 +194,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else
             {
-                yield return new FsArtifact()
+                yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
                 {
-                    ArtifactType = FsArtifactType.File,
-                    FullPath = path,
-                    ProviderType = await GetFsFileProviderTypeAsync(path),
-                    Name = Path.GetFileName(path),
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                     LastModifiedDateTime = File.GetLastWriteTime(path),
                     FileExtension = Path.GetExtension(path)
