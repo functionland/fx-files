@@ -1,2 +1,17 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fx-link {
+    color: $green-dark-base;
+    text-decoration: none;
+    font-family: $open-sans-semi-bold;
+    font-size: $font-size-12;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+
+    &:hover {
+        color: $green-dark-hover;
+    }
+
+
 }
