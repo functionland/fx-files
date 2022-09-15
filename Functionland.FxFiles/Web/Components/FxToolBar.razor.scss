@@ -1,0 +1,50 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+header {
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    padding: 0 21px;
+    position: sticky;
+    align-items: center;
+    background-color: #f5f5f5;
+    color: color(gray-content1);
+    background-color: color(app-bg);
+}
+
+.title {
+    margin: 0;
+    font-size: $font-size-28;
+    line-height: $line-height-36;
+    font-family: $montserrat-medium;
+}
+
+.subtitle {
+    margin: 0;
+    font-size: $font-size-14;
+    color: color(gray-content3);
+    line-height: $line-height-24;
+    font-family: $open-sans-light;
+}
+
+.toolbarApp {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;    
+}
+
+.main-toolbar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    ::deep .input-box {
+        flex-grow: 1;
+    }
+}

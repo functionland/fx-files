@@ -376,6 +376,51 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A new version of the app is available for download..
+        /// </summary>
+        public static string ToastDescMessage {
+            get {
+                return ResourceManager.GetString("ToastDescMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your error message.
+        /// </summary>
+        public static string ToastErrorMessage {
+            get {
+                return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your info message.
+        /// </summary>
+        public static string ToastInfoMessage {
+            get {
+                return ResourceManager.GetString("ToastInfoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your success message.
+        /// </summary>
+        public static string ToastSuccessMessage {
+            get {
+                return ResourceManager.GetString("ToastSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your warning message.
+        /// </summary>
+        public static string ToastWarningMessage {
+            get {
+                return ResourceManager.GetString("ToastWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many requests.
         /// </summary>
         public static string TooManyRequestsExceptions {
