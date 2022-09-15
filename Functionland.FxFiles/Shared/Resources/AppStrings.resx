@@ -237,4 +237,7 @@
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>
   </data>
+  <data name="CanNotOperateOnFilesException" xml:space="preserve">
+    <value>Can not operate on files exception</value>
+  </data>
 </root>

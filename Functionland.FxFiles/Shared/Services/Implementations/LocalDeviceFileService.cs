@@ -14,13 +14,18 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public abstract Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
-            foreach (var artifact in artifacts)
-            {
-                if (artifact.FullPath == null) continue;
+            List<FsArtifact> ignoredList = new();
 
-                CopyAll(new DirectoryInfo(artifact.FullPath), new DirectoryInfo(destination));
+            await Task.Run(() =>
+            {
+                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);              
+            });
+
+            if (ignoredList.Any())
+            {
+                throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
             }
         }
 
@@ -243,10 +248,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
-            var oldName = Path.GetFileNameWithoutExtension(filePath);
-            var newPath = filePath.Replace(oldName, newName);
+                var oldName = Path.GetFileNameWithoutExtension(filePath);
+                var newPath = filePath.Replace(oldName, newName);
 
-            File.Move(filePath, newPath);
+                File.Move(filePath, newPath);
         }
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
@@ -261,26 +266,81 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
-            var oldName = Path.GetFileName(folderPath);
-            var newPath = folderPath.Replace(oldName, newName);
+                var oldName = Path.GetFileName(folderPath);
+                var newPath = folderPath.Replace(oldName, newName);
 
-            Directory.Move(folderPath, newPath);
+                Directory.Move(folderPath, newPath);
         }
 
-        private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        private static List<FsArtifact> CopyAll(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
-            Directory.CreateDirectory(target.FullName);
+            var ignoredList = new List<FsArtifact>();
 
-            foreach (FileInfo file in source.GetFiles())
+            foreach (var artifact in artifacts)
             {
-                file.CopyTo(Path.Combine(target.FullName, file.Name), true);
+                if (cancellationToken?.IsCancellationRequested == true) break;
+
+                if (artifact.ArtifactType == FsArtifactType.File)
+                {
+                    var fileInfo = new FileInfo(artifact.FullPath);
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
+
+                    if (!overwrite && destinationInfo.Exists)
+                    {
+                        ignoredList.Add(artifact);
+                    }
+                    else
+                    {
+                        var destinationDirectory = new DirectoryInfo(Path.GetFullPath(destination));
+
+                        if (!destinationDirectory.Exists)
+                        {                           
+                            destinationDirectory.Create();
+                        }
+
+                        fileInfo.CopyTo(destinationInfo.FullName, true);
+                    }
+                }
+                else if (artifact.ArtifactType == FsArtifactType.Folder)
+                {
+                    var directoryInfo = new DirectoryInfo(artifact.FullPath);
+                    var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
+
+                    if (!destinationInfo.Exists)
+                    {
+                        destinationInfo.Create();
+                    }
+
+                    var children = new List<FsArtifact>();
+                    children.AddRange(
+                        from file in directoryInfo.GetFiles()
+                        select new FsArtifact()
+                        {
+                            FullPath = file.FullName,
+                            ArtifactType = FsArtifactType.File,
+                            Name = file.Name,
+                            FileExtension = file.Extension,
+                            LastModifiedDateTime = file.LastWriteTime,
+                            ParentFullPath = Directory.GetParent(file.FullName)?.FullName
+                        });
+
+                    children.AddRange(
+                        from subDirectory in directoryInfo.GetDirectories()
+                        select new FsArtifact()
+                        {
+                            FullPath = subDirectory.FullName,
+                            ArtifactType = FsArtifactType.Folder,
+                            Name = subDirectory.Name,
+                            LastModifiedDateTime = subDirectory.LastWriteTime,
+                            ParentFullPath = Directory.GetParent(subDirectory.FullName)?.FullName
+                        });
+
+                    var childIgnoredList = CopyAll(children, destinationInfo.FullName, overwrite, cancellationToken);
+                    ignoredList.AddRange(childIgnoredList);
+                }
             }
 
-            foreach (DirectoryInfo subDirectory in source.GetDirectories())
-            {
-                DirectoryInfo nextTargetSubDirectory = target.CreateSubdirectory(subDirectory.Name);
-                CopyAll(subDirectory, nextTargetSubDirectory);
-            }
+            return ignoredList;
         }
 
         public virtual async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)

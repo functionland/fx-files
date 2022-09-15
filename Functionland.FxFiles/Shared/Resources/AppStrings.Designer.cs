@@ -124,6 +124,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can not operate on files exception.
+        /// </summary>
+        public static string CanNotOperateOnFilesException {
+            get {
+                return ResourceManager.GetString("CanNotOperateOnFilesException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Request could not be processed because of conflict in the request.
         /// </summary>
         public static string ConflicException {
