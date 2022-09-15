@@ -1,23 +1,19 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
+
+using Java.Nio.FileNio;
+
 using Stream = System.IO.Stream;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations;
 
 public partial class AndroidFileService : LocalDeviceFileService
 {
-
-
-
-
-
     public override async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
     {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.PathIsNull));
-        }
-        else if (Directory.Exists(path))
+        var isDrive = await FsArtifactIsDriveAsync(path);
+
+        if (Directory.Exists(path))
         {
             return FsArtifactType.Folder;
         }
@@ -25,9 +21,13 @@ public partial class AndroidFileService : LocalDeviceFileService
         {
             return FsArtifactType.File;
         }
-        else
+        else if (isDrive)
         {
             return FsArtifactType.Drive;
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -186,6 +186,24 @@ public partial class AndroidFileService : LocalDeviceFileService
                 return true;
             }
         }
+
+        return false;
+    }
+
+    private async Task<bool> FsArtifactIsDriveAsync(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return false;
+
+        var drives = await GetDrivesAsync();
+        var drivesPath = drives
+                                    .Where(drive => String.IsNullOrWhiteSpace(drive.FullPath) is false)
+                                    .Select(drive => drive.FullPath)
+                                    .ToList();
+
+        var IsDrive = drivesPath.Any(drivePath => drivePath!.Equals(path));
+        if (IsDrive)
+            return true;
 
         return false;
     }
