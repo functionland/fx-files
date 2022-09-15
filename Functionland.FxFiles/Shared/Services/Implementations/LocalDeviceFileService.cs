@@ -1,6 +1,5 @@
 ﻿using Functionland.FxFiles.Shared.Models;
 using Microsoft.AspNetCore.StaticFiles;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,19 +42,19 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
 
-                if (File.Exists(path))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+            if (File.Exists(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
-                using FileStream outPutFileStream = new(path, FileMode.Create);
-                await stream.CopyToAsync(outPutFileStream);
+            using FileStream outPutFileStream = new(path, FileMode.Create);
+            await stream.CopyToAsync(outPutFileStream);
 
             var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
-                {
-                    FileExtension = Path.GetExtension(path),
-                    Size = (int)outPutFileStream.Length,
-                    LastModifiedDateTime = File.GetLastWriteTime(path),
-                    ParentFullPath = Directory.GetParent(path)?.FullName,
-                };
+            {
+                FileExtension = Path.GetExtension(path),
+                Size = (int)outPutFileStream.Length,
+                LastModifiedDateTime = File.GetLastWriteTime(path),
+                ParentFullPath = Directory.GetParent(path)?.FullName,
+            };
 
             return newFsArtifact;
         }
@@ -83,16 +82,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             var newPath = Path.Combine(path, folderName);
 
-                if (Directory.Exists(newPath))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
+            if (Directory.Exists(newPath))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
 
-                Directory.CreateDirectory(newPath);
+            Directory.CreateDirectory(newPath);
 
             var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, await GetFsFileProviderTypeAsync(newPath))
-                {
-                    ParentFullPath = Directory.GetParent(newPath)?.FullName,
-                    LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
-                };
+            {
+                ParentFullPath = Directory.GetParent(newPath)?.FullName,
+                LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
+            };
 
             return newFsArtifact;
         }
@@ -218,7 +217,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
                 await DeleteArtifactsAsync(artifacts, cancellationToken);
             });
 
@@ -247,7 +246,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 File.Move(filePath, newPath);
             });
-        }        
+        }
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
@@ -358,7 +357,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
         public virtual async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
-        {        
+        {
             var artifactIsFile = File.Exists(path);
             if (artifactIsFile)
             {
@@ -416,7 +415,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else if (artifactIsDirectory && directoryInfo.Exists)
             {
-                fsArtifact.IsPathExist = true;                
+                fsArtifact.IsPathExist = true;
             }
             else
             {
@@ -431,7 +430,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             else if (artifactIsDirectory)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-            }        
+            }
 
             return fsArtifact;
         }
