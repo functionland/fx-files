@@ -77,34 +77,22 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
 
-            FsArtifact newFsArtifact = new();
 
             if (string.IsNullOrWhiteSpace(folderName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
 
             var newPath = Path.Combine(path, folderName);
 
-            try
-            {
                 if (Directory.Exists(newPath))
                     throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
 
                 Directory.CreateDirectory(newPath);
-                newFsArtifact = new FsArtifact()
+
+            var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, await GetFsFileProviderTypeAsync(newPath))
                 {
-                    Name = folderName,
-                    FullPath = newPath,
-                    ArtifactType = FsArtifactType.Folder,
-                    ProviderType = await GetFsFileProviderTypeAsync(newPath),
                     ParentFullPath = Directory.GetParent(newPath)?.FullName,
                     LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
                 };
-            }
-            catch (Exception)
-            {
-                throw;
-                // ToDo : Handle exception
-            };
 
             return newFsArtifact;
         }
