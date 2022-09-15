@@ -405,42 +405,6 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return artifacts;
         }
 
-        public virtual async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
-
-            var artifactFullPath = Path.GetFullPath(path);
-
-            var fsArtifact = new FsArtifact()
-            {
-                FullPath = artifactFullPath,
-                ProviderType = await GetFsFileProviderTypeAsync(artifactFullPath),
-                FileExtension = Path.GetExtension(artifactFullPath),
-                Name = Path.GetFileName(artifactFullPath),
-                ParentFullPath = Directory.GetParent(artifactFullPath)?.FullName
-            };
-
-            var fsType = await GetFsArtifactTypeAsync(artifactFullPath);
-
-            if (fsType == FsArtifactType.File)
-            {
-                fsArtifact.ArtifactType = FsArtifactType.File;
-                fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(artifactFullPath);
-            }
-            else if (fsType == FsArtifactType.Folder)
-            {
-                fsArtifact.ArtifactType = FsArtifactType.Folder;
-                fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(artifactFullPath);
-            }
-            else if (fsType == FsArtifactType.Drive)
-            {
-                fsArtifact.ArtifactType = FsArtifactType.Drive;
-            }
-
-            return fsArtifact;
-        }
-
         public virtual async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(path))
