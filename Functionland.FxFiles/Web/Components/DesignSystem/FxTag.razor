@@ -1,7 +1,3 @@
 ﻿@inherits AppComponentBase;
 
-<div class="tag-label">Tag Label</div>
-
-<div class="tag-label left-icon-tag">Tag Label</div>
-
-<div class="tag-label right-icon-tag">Tag Label</div>
+<div style="width: @Width;" class="tag-label @(string.Format(" {0}-icon-tag", TagType).ToLower())">@Title</div>
