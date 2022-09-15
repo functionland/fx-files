@@ -386,5 +386,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             return artifacts;
         }
+
+        public virtual Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
