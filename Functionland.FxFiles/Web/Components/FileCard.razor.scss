@@ -74,5 +74,46 @@
                 }
             }
         }
+
+        .file-info {
+            font-family: $open-sans-regular;
+            font-size: $font-size-10;
+            line-height: $line-height-14;
+            letter-spacing: $letter-spacing-02;
+            color: color(gray-content3);
+
+            .modified-date {
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.favorite {
+    //pin filled mode
+    .pin-defualt-icon {
+        background-image: url($pin-filled) !important;
+    }
+}
+
+.pressed-card {
+    .file-card-content {
+        background-color: color(gray-bg-secondary);
+    }
+}
+
+.disabled-card {
+    .file-card-content {
+        background-color: color(gray-bg-primary);
+
+        .file-name-container,
+        .file-name-container span,
+        .file-info {
+            color: color(gray-border) !important;
+        }
+
+        .file-icon {
+            background-image: url($disabled-folder) !important;
+        }
     }
 }
