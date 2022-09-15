@@ -23,7 +23,7 @@
     font-size: $font-size-14;
 }
 
-.fx-link-left-icon {
+.fx-link-left {
     padding-left: $spacing-16;
     background-image: url($left-arrow);
     background-repeat: no-repeat;
@@ -39,7 +39,7 @@
     }
 }
 
-.fx-link-right-icon {
+.fx-link-right {
     padding-right: $spacing-16;
     background-image: url($right-arrow);
     background-repeat: no-repeat;

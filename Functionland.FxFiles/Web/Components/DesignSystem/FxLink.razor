@@ -1,3 +1,31 @@
 ﻿@inherits AppComponentBase;
 
-<a href="#" class="fx-link fx-link-right-icon fx-link-disabled-right fx-link-large">Links</a>
+@if (IsDisabled)
+{
+    @if (IsLeftIcon)
+    {
+        <a href="#" class="fx-link fx-link-left fx-link-disabled-left @(IsLarge ? "fx-link-large" : "")">Links</a>
+    }
+    else if (IsRightIcon)
+    {
+        <a href="#" class="fx-link fx-link-right fx-link-disabled-right @(IsLarge ? "fx-link-large" : "")">Links</a>
+    }
+    else
+    {
+        <a href="#" class="fx-link fx-link-disabled @(IsLarge ? "fx-link-large" : "")">Links</a>
+    }
+}
+else {
+    @if (IsLeftIcon)
+    {
+        <a href="#" class="fx-link fx-link-left @(IsLarge ? "fx-link-large" : "")">Links</a>
+    }
+    else if (IsRightIcon)
+    {
+        <a href="#" class="fx-link fx-link-right @(IsLarge ? "fx-link-large" : "")">Links</a>
+    }
+    else
+    {
+        <a href="#" class="fx-link @(IsLarge ? "fx-link-large" : "")">Links</a>
+    }
+}
