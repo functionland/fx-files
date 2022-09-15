@@ -1,10 +1,10 @@
 ﻿@inherits AppComponentBase;
 
 <!-- Button to open a sheet -->
-<button type="button" aria-controls="sheet">Open Sheet</button>
+<button type="button" @onclick="ChangeCloseState" aria-controls="sheet">Open Sheet</button>
 
 <!-- The sheet component -->
-<div class="sheet column items-center justify-end @(IsClose ? "show-bottom-sheet-animation" : "")">
+<div class="sheet column items-center justify-end @(IsClose ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
     <!-- Dark background for the sheet -->
     <div class="overlay"></div>
 

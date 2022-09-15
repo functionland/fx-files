@@ -9,7 +9,7 @@
         public RenderFragment? ContentRenderFragment { get; set; }
 
 
-        public bool IsClose { get; set; } = false;
+        public bool IsClose { get; set; } = true;
 
         public void ChangeCloseState()
         {

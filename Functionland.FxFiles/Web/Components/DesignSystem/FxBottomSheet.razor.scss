@@ -3,25 +3,53 @@
 @import '../../Styles/abstracts/_media-queries.scss';
 
 .sheet {
+    height: 0;
 }
 
-.show-bottom-sheet-animation {
-    animation-name: firstTime;
+.close-bottom-sheet-animation {
+    animation-name: closeBottomSheet;
     animation-duration: 1000ms;
     animation-fill-mode: forwards;
     animation-timing-function: ease-in-out;
 }
 
-@keyframes firstTime {
+@keyframes closeBottomSheet {
     0% {
-        transform: translateY(0px)
+        transform: translateY(0px);
+       
+        
     }
 
 
 
     100% {
         transform: translateY(100%);
+        
+        
     }
+}
+
+.show-bottom-sheet-animation {
+    animation-name: showBottomSheet;
+    animation-duration: 1000ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes showBottomSheet {
+
+    0% {
+        
+        transform: translateY(100%);
+    }
+
+
+
+    100% {
+        transform: translateY(0px);
+        height: unset;
+    }
+
 }
 
 
