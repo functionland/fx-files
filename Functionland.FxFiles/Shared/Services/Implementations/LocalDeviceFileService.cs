@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.StaticFiles;
+﻿using Functionland.FxFiles.Shared.Models;
+using Microsoft.AspNetCore.StaticFiles;
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             await Task.Run(() =>
             {
-                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);              
+                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -167,52 +168,69 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             var artifacts = new List<FsArtifact>();
             var subArtifacts = new List<FsArtifact>();
-            string[] directoryFiles = Directory.GetFiles(path);
-            string[] subDirectories = Directory.GetDirectories(path);
 
-            foreach (var subDirectory in subDirectories)
+            if (await GetFsArtifactTypeAsync(path) is FsArtifactType.Folder or FsArtifactType.Drive)
             {
-                subArtifacts.Add(
-                    new FsArtifact()
-                    {
-                        ArtifactType = FsArtifactType.Folder,
-                        FullPath = subDirectory,
-                        ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
-                        Name = Path.GetFileName(subDirectory),
-                        ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
-                        LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
-                    });
+                string[] directoryFiles = Directory.GetFiles(path);
+                string[] subDirectories = Directory.GetDirectories(path);
+
+                foreach (var subDirectory in subDirectories)
+                {
+                    subArtifacts.Add(
+                        new FsArtifact()
+                        {
+                            ArtifactType = FsArtifactType.Folder,
+                            FullPath = subDirectory,
+                            ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
+                            Name = Path.GetFileName(subDirectory),
+                            ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
+                            LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
+                        });
+                }
+
+                subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
+
+                foreach (var file in directoryFiles)
+                {
+                    artifacts.Add(
+                        new FsArtifact()
+                        {
+                            ArtifactType = FsArtifactType.File,
+                            FullPath = file,
+                            ProviderType = await GetFsFileProviderTypeAsync(file),
+                            Name = Path.GetFileName(file),
+                            ParentFullPath = Directory.GetParent(file)?.FullName,
+                            LastModifiedDateTime = File.GetLastWriteTime(file),
+                            FileExtension = Path.GetExtension(file)
+                        });
+                }
+
+                artifacts = artifacts.OrderBy(i => i.Name).ToList();
+
+                var result = subArtifacts.Concat(artifacts);
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
+                }
+
+                foreach (var item in result)
+                {
+                    yield return item;
+                }
             }
-
-            subArtifacts = subArtifacts.OrderBy(i => i.Name).ToList();
-
-            foreach (var file in directoryFiles)
+            else
             {
-                artifacts.Add(
-                    new FsArtifact()
-                    {
-                        ArtifactType = FsArtifactType.File,
-                        FullPath = file,
-                        ProviderType = await GetFsFileProviderTypeAsync(file),
-                        Name = Path.GetFileName(file),
-                        ParentFullPath = Directory.GetParent(file)?.FullName,
-                        LastModifiedDateTime = File.GetLastWriteTime(file),
-                        FileExtension = Path.GetExtension(file)
-                    });
-            }
-
-            artifacts = artifacts.OrderBy(i => i.Name).ToList();
-
-            var result = subArtifacts.Concat(artifacts);
-
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                result = result.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList();
-            }
-
-            foreach (var item in result)
-            {
-                yield return item;
+                yield return new FsArtifact()
+                {
+                    ArtifactType = FsArtifactType.File,
+                    FullPath = path,
+                    ProviderType = await GetFsFileProviderTypeAsync(path),
+                    Name = Path.GetFileName(path),
+                    ParentFullPath = Directory.GetParent(path)?.FullName,
+                    LastModifiedDateTime = File.GetLastWriteTime(path),
+                    FileExtension = Path.GetExtension(path)
+                };
             }
         }
 
@@ -253,10 +271,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
-                var oldName = Path.GetFileNameWithoutExtension(filePath);
-                var newPath = filePath.Replace(oldName, newName);
+            var oldName = Path.GetFileNameWithoutExtension(filePath);
+            var newPath = filePath.Replace(oldName, newName);
 
-                File.Move(filePath, newPath);
+            File.Move(filePath, newPath);
         }
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
@@ -271,10 +289,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
+            await Task.Run(() =>
+            {
                 var oldName = Path.GetFileName(folderPath);
                 var newPath = folderPath.Replace(oldName, newName);
 
                 Directory.Move(folderPath, newPath);
+            });
         }
 
         private static List<FsArtifact> CopyAll(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
@@ -299,7 +320,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         var destinationDirectory = new DirectoryInfo(Path.GetFullPath(destination));
 
                         if (!destinationDirectory.Exists)
-                        {                           
+                        {
                             destinationDirectory.Create();
                         }
 
@@ -387,9 +408,48 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return artifacts;
         }
 
-        public virtual Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        public virtual async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+
+            var fileInfo = new FileInfo(path);
+            var directoryInfo = new DirectoryInfo(path);
+
+            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+
+            var fsArtifact = new FsArtifactChanges()
+            {
+                ArtifactFullPath = path,
+            };
+
+            if (fsArtifactType == FsArtifactType.File && fileInfo.Exists)
+            {
+                fsArtifact.IsPathExist = true;
+            }
+            else if ((fsArtifactType == FsArtifactType.Folder || 
+                        fsArtifactType == FsArtifactType.Drive) 
+                            && directoryInfo.Exists)
+            {
+                fsArtifact.IsPathExist = true;                
+            }
+            else
+            {
+                fsArtifact.IsPathExist = false;
+                fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+            }
+
+            if (fsArtifactType == FsArtifactType.File)
+            {
+                fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
+            }
+            else if (fsArtifactType == FsArtifactType.Folder || 
+                        fsArtifactType == FsArtifactType.Drive)
+            {
+                fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
+            }        
+
+            return fsArtifact;
         }
     }
 }

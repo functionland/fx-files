@@ -6,55 +6,16 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations;
 
 public partial class AndroidFileService : LocalDeviceFileService
 {
-    private async Task<List<FsArtifact>> GetDrivesAsync()
-    {
-        var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
-        if (storageManager is null)
-        {
-            throw new DomainLogicException(StringLocalizer[nameof(AppStrings.UnableToLoadStorageManager)]);
-        }
 
-        var storageVolumes = storageManager.StorageVolumes.ToList();
 
-        var drives = new List<FsArtifact>();
-        foreach (var storage in storageVolumes)
-        {
-            if (storage.IsPrimary) //TODO: investigate to use IsPrimary or IsRemoveable
-            {
-                drives.Add(new FsArtifact()
-                {
-                    Name = "internal",
-                    ArtifactType = FsArtifactType.Drive,
-                    ProviderType = FsFileProviderType.InternalMemory,
-                    FullPath = storage.Directory.Path,
-                    Capacity = storage.Directory.UsableSpace, //TODO : investigate to use UsableSpace or freeSpace
-                    Size = storage.Directory.TotalSpace,
-                    //LastModifiedDateTime = storage.Directory.LastModified() //TODO: convert long to dateTime
-                });
-            }
-            else
-            {
-                drives.Add(new FsArtifact()
-                {
-                    Name = $"SD Card ({storage.MediaStoreVolumeName})",
-                    ArtifactType = FsArtifactType.Drive,
-                    ProviderType = FsFileProviderType.ExternalMemory,
-                    FullPath = storage.Directory.Path,
-                    Capacity = storage.Directory.UsableSpace,//TODO : investigate to use UsableSpace or freeSpace
-                    Size = storage.Directory.TotalSpace,
-                    //LastModifiedDateTime = storage.Directory.LastModified() //TODO: convert long to dateTime
-                });
-            }
-        }
 
-        return drives;
-    }
 
-    private async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
+
+    public override async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.PathIsNull));
         }
         else if (Directory.Exists(path))
         {
@@ -108,7 +69,7 @@ public partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken ? cancellationToken = null)
+    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
     {
         return base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
     }
@@ -121,6 +82,57 @@ public partial class AndroidFileService : LocalDeviceFileService
     public override Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
     {
         return base.RenameFolderAsync(folderPath, newName, cancellationToken);
+    }
+
+    public override async Task<List<FsArtifact>> GetDrivesAsync()
+    {
+        var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
+        if (storageManager is null)
+        {
+            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToLoadStorageManager));
+        }
+
+        var storageVolumes = storageManager.StorageVolumes.ToList();
+
+        var drives = new List<FsArtifact>();
+        foreach (var storage in storageVolumes)
+        {
+            if (storage is null)
+                continue;
+
+            var lastModifiedUnixFormat = storage.Directory?.LastModified() ?? 0;
+            var lastModifiedDateTime = lastModifiedUnixFormat == 0 ? DateTimeOffset.Now : DateTimeOffset.FromUnixTimeMilliseconds(lastModifiedUnixFormat);
+            if (storage.IsPrimary) 
+            {
+                drives.Add(new FsArtifact()
+                {
+                    Name = StringLocalizer.GetString(AppStrings.internalStorageName),
+                    ArtifactType = FsArtifactType.Drive,
+                    ProviderType = FsFileProviderType.InternalMemory,
+                    FullPath = storage.Directory?.Path,
+                    Capacity = storage.Directory?.FreeSpace, 
+                    Size = storage.Directory?.TotalSpace,
+                    LastModifiedDateTime = lastModifiedDateTime,
+                });
+            }
+            else
+            {
+                var sDCardName = storage.MediaStoreVolumeName ?? string.Empty;
+
+                drives.Add(new FsArtifact()
+                {
+                    Name = StringLocalizer.GetString(AppStrings.SDCardName, sDCardName),
+                    ArtifactType = FsArtifactType.Drive,
+                    ProviderType = FsFileProviderType.ExternalMemory,
+                    FullPath = storage.Directory?.Path,
+                    Capacity = storage.Directory?.FreeSpace,
+                    Size = storage.Directory?.TotalSpace,
+                    LastModifiedDateTime = lastModifiedDateTime,
+                });
+            }
+        }
+
+        return drives;
     }
 
     public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
@@ -136,7 +148,12 @@ public partial class AndroidFileService : LocalDeviceFileService
             return FsFileProviderType.ExternalMemory;
         }
         else
-            throw new Exception($"Unknown file provider for path: {filePath}");
+            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
+    }
+
+    public override async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
+    {
+        return await base.CheckPathExistsAsync(path, cancellationToken);
     }
 
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)

@@ -268,6 +268,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to internal.
+        /// </summary>
+        public static string internalStorageName {
+            get {
+                return ResourceManager.GetString("internalStorageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Known error.
         /// </summary>
         public static string KnownException {
@@ -354,6 +363,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string RestException {
             get {
                 return ResourceManager.GetString("RestException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SD Card ({0}).
+        /// </summary>
+        public static string SDCardName {
+            get {
+                return ResourceManager.GetString("SDCardName", resourceCulture);
             }
         }
         
@@ -453,6 +471,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string UnknownException {
             get {
                 return ResourceManager.GetString("UnknownException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown file provider for path: {0}.
+        /// </summary>
+        public static string UnknownFsFileProviderException {
+            get {
+                return ResourceManager.GetString("UnknownFsFileProviderException", resourceCulture);
             }
         }
         
