@@ -30,3 +30,21 @@
     color: color(gray-border);
     pointer-events: none;
 }
+
+.fx-link-left-icon {
+    padding-left: $spacing-16;
+    background-image: url($left-arrow);
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 6.06px 11.97px;
+}
+
+.fx-link-right-icon {
+    padding-right: $spacing-16;
+    background-image: url($right-arrow);
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 6.06px 11.97px;
+}
+
+
