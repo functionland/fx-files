@@ -13,5 +13,7 @@
         color: $green-dark-hover;
     }
 
-
+    &:active {
+        color: $green-dark-pressed;
+    }
 }
