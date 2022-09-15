@@ -1,4 +1,27 @@
 ﻿@inherits AppComponentBase;
 
-<h3>FxBottomSheet</h3>
+<!-- Button to open a sheet -->
+<button type="button" aria-controls="sheet">Open Sheet</button>
 
+<!-- The sheet component -->
+<div class="sheet column items-center justify-end">
+    <!-- Dark background for the sheet -->
+    <div class="overlay"></div>
+
+    <!-- The sheet itself -->
+    <div class="contents column">
+        <!-- Sheet controls -->
+        @if (IsCloseAble)
+        {
+            <div class="controls">
+                <!-- Button to close the sheet -->
+                <button class="close-sheet close-button" type="button" title="Close the sheet"><img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" /></button>
+            </div>
+        }
+
+        @if (ContentRenderFragment !=null)
+        {
+            @ContentRenderFragment
+        }
+    </div>
+</div>
