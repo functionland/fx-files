@@ -81,9 +81,17 @@
             margin-right: $spacing-8;
         }
 
+        .list-view-selected {
+            background-image: url($list-view-selected) !important;
+        }
+
         .grid-view-btn {
             background-image: url($grid-view);
             margin-right: $spacing-8;
+        }
+
+        .grid-view-selected {
+            background-image: url($grid-view-selected) !important;
         }
 
         .filter-btn {

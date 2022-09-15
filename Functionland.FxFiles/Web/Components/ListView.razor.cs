@@ -32,5 +32,10 @@ namespace Functionland.FxFiles.App.Components
         {
             //todo: Open sort bottom sheet
         }
+
+        public void ChangeViewMode(ViewModeEnum mode)
+        {
+            ViewMode = mode;
+        }
     }
 }
