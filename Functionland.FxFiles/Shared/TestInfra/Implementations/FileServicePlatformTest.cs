@@ -13,17 +13,18 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             {
                 var testsRootArtifact = new FsArtifact { FullPath = Path.Combine(rootPath, "FileServiceTestsFolder") };
                 var rootArtifact = await GetArtifactsAsync(fileService, Path.Combine(rootPath, "FileServiceTestsFolder"));
-                if (rootArtifact is null || rootArtifact.Count() == 0)
+                if (rootArtifact is null || rootArtifact.Count == 0)
                 {
                     testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTestsFolder");
                 }
+               
                 var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
-
                 var testRoot = testRootArtifact.FullPath!;
+
+
                 var artifacts = await GetArtifactsAsync(fileService, testRoot);
 
                 Assert.AreEqual(0, artifacts.Count, "new folder must be empty");
-                artifacts.Clear();
 
                 await fileService.CreateFolderAsync(testRoot, "Folder 1");
                 await fileService.CreateFolderAsync(testRoot, "Folder 1/Folder 11");
@@ -32,19 +33,24 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Create folder and file in root");
-                artifacts.Clear();
 
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 1"));
                 Assert.AreEqual(2, artifacts.Count, "Create folder and file in sub directory");
-                artifacts.Clear();
 
                 #region Moving files 1
 
                 var movingFiles = new[] { file1 };
                 await fileService.CreateFolderAsync(testRoot, "Folder 2");
+
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Before moveing operation.");
+
                 await fileService.MoveArtifactsAsync(movingFiles, Path.Combine(testRoot, "Folder 2"));
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
-                Assert.AreEqual(1, artifacts.Count, "Move a file to a folder");
+                Assert.AreEqual(1, artifacts.Count, "Move a file to a folder. Created on destination");
+
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(2, artifacts.Count, "Move a file to a folder. Removed from source");
                 artifacts.Clear();
 
                 #endregion
