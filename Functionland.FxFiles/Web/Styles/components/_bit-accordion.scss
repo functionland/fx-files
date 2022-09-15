@@ -1,6 +1,7 @@
 ﻿@import "../abstracts/_variables.scss";
 
 ::deep .bit-acd.bit-acd-fluent {
+    padding: 0;
     border: none;
     color: color(gray-content1);
     background-color: transparent;

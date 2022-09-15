@@ -48,3 +48,17 @@ header {
         flex-grow: 1;
     }
 }
+
+@media only screen and (max-width: 280px) {
+    ::deep .input-box {
+        max-width: 158px;
+    }
+
+    ::deep .search-icon {
+        background-position: center left 8px;
+    }
+
+    ::deep .input-partial {
+        padding: 8px 12px 8px 35px;
+    }
+}
