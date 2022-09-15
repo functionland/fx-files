@@ -79,6 +79,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} name has invalid chars..
+        /// </summary>
+        public static string ArtifactNameHasInvalidChars {
+            get {
+                return ResourceManager.GetString("ArtifactNameHasInvalidChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} name is null.
         /// </summary>
         public static string ArtifactNameIsNull {
