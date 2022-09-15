@@ -19,9 +19,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             List<FsArtifact> ignoredList = new();
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -281,7 +281,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             });
         }
 
-        private static List<FsArtifact> CopyAll(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             var ignoredList = new List<FsArtifact>();
 
@@ -321,30 +321,35 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     }
 
                     var children = new List<FsArtifact>();
-                    children.AddRange(
-                        from file in directoryInfo.GetFiles()
-                        select new FsArtifact()
+
+                    var directoryFiles = directoryInfo.GetFiles();
+
+                    foreach (var file in directoryFiles)
+                    {
+                        var providerType = await GetFsFileProviderTypeAsync(file.FullName);
+
+                        children.Add(new FsArtifact(file.FullName, file.Name, FsArtifactType.File, providerType)
                         {
-                            FullPath = file.FullName,
-                            ArtifactType = FsArtifactType.File,
-                            Name = file.Name,
                             FileExtension = file.Extension,
                             LastModifiedDateTime = file.LastWriteTime,
                             ParentFullPath = Directory.GetParent(file.FullName)?.FullName
                         });
+                    }
 
-                    children.AddRange(
-                        from subDirectory in directoryInfo.GetDirectories()
-                        select new FsArtifact()
+                    var directorySubDirectories = directoryInfo.GetDirectories();
+
+                    foreach (var subDirectory in directorySubDirectories)
+                    {
+                        var providerType = await GetFsFileProviderTypeAsync(subDirectory.FullName);
+
+                        children.Add(new FsArtifact(subDirectory.FullName, subDirectory.Name, FsArtifactType.Folder, providerType)
                         {
-                            FullPath = subDirectory.FullName,
-                            ArtifactType = FsArtifactType.Folder,
-                            Name = subDirectory.Name,
                             LastModifiedDateTime = subDirectory.LastWriteTime,
-                            ParentFullPath = Directory.GetParent(subDirectory.FullName)?.FullName
+                            ParentFullPath = Directory.GetParent(subDirectory.FullName)?.FullName,
                         });
+                    }
 
-                    var childIgnoredList = CopyAll(children, destinationInfo.FullName, overwrite, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, overwrite, cancellationToken);
                     ignoredList.AddRange(childIgnoredList);
                 }
             }
