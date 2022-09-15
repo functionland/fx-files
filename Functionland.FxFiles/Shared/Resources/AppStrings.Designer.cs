@@ -367,6 +367,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag Label.
+        /// </summary>
+        public static string TagLabel {
+            get {
+                return ResourceManager.GetString("TagLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A new version of the app is available for download..
         /// </summary>
         public static string ToastDescMessage {
