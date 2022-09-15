@@ -169,7 +169,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var artifacts = new List<FsArtifact>();
             var subArtifacts = new List<FsArtifact>();
 
-            if (await GetFsArtifactTypeAsync(path) is FsArtifactType.Folder or FsArtifactType.Drive)
+            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+
+            if (fsArtifactType is null)
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+
+            if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
                 string[] directoryFiles = Directory.GetFiles(path);
                 string[] subDirectories = Directory.GetDirectories(path);
@@ -372,25 +377,27 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return ignoredList;
         }
 
-        public virtual async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
+        public virtual async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
         {
-            string[] drives = Directory.GetLogicalDrives();
+            var artifactIsFile = File.Exists(path);
+            if (artifactIsFile)
+            {
+                return FsArtifactType.File;
+            }
 
+            var artifactIsDirectory = Directory.Exists(path);
+            if (artifactIsDirectory)
+            {
+                return FsArtifactType.Folder;
+            }
+
+            string[] drives = Directory.GetLogicalDrives();
             if (drives.Contains(path))
             {
                 return FsArtifactType.Drive;
             }
 
-            FileAttributes attr = File.GetAttributes(path);
-
-            if (attr.HasFlag(FileAttributes.Directory))
-            {
-                return FsArtifactType.Folder;
-            }
-            else
-            {
-                return FsArtifactType.File;
-            }
+            return null;
         }
 
         public virtual async Task<List<FsArtifact>> GetDrivesAsync()

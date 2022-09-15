@@ -11,7 +11,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
 
 
-    public override async Task<FsArtifactType> GetFsArtifactTypeAsync(string path)
+    public override async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
