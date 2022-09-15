@@ -76,6 +76,10 @@
             margin-right: $spacing-8;
         }
 
+        .select-all-filled {
+            background-image: url($select-all-check-filled) !important;
+        }
+
         .list-view-btn {
             background-image: url($list-view);
             margin-right: $spacing-8;
