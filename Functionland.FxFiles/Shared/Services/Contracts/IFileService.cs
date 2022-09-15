@@ -19,5 +19,6 @@ namespace Functionland.FxFiles.Shared.Services.Contracts
         Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null);
         IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
         Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null);
+        Task<FsArtifactChanges> CheckPathExistsAsync(string? path);
     }
 }

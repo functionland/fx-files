@@ -326,5 +326,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public Task<FsArtifactChanges> CheckPathExistsAsync(string? path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
