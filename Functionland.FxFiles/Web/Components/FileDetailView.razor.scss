@@ -2,114 +2,52 @@
 @import '../Styles/abstracts/_functions.scss';
 @import '../Styles/abstracts/_media-queries.scss';
 
-.sheet {
-    // TODO: use the icon size from the sass variables
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+
+
+.content-body {
+    height: 100%;
+    overflow-y: scroll;
     // TODO: use value from the sass variables
-    visibility: visible;
-    transition: opacity 0.5s, visibility 0.5s;
-    z-index: 999;
-    /*background-color: black;*/
+    .file-icon-row {
+        padding: $spacing-8 $spacing-21;
 
-    &[aria-hidden="true"] {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-    }
-
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -1;
-        background: #888888;
-        opacity: 0.5;
-    }
-
-    .contents {
-        width: 100%;
-        position: relative;
-        overflow-y: hidden;
-        padding: 40px 0 0 0;
-        transform: translateY(0);
-        background-color: color(app-bg);
-        transition: transform 0.5s, border-radius 0.5s;
-        //TODO:is it right for now?
-        max-width: $screen-lg-min;
-        border-radius: $border-radius-20 $border-radius-20 $letter-spacing-0 $letter-spacing-0;
-
-        &:not(.not-selectable) {
-            transition: transform 0.5s, border-radius 0.5s, height 0.5s;
+        .file-icon {
+            background-image: url($text-file);
+            background-position: center;
+            background-repeat: no-repeat;
+            width: $icon-32;
+            height: $icon-32;
+            background-size: $icon-32;
         }
 
-        &.fullscreen {
-            border-radius: $spacing-0;
-        }
-
-        .controls {
-            // TODO: use value from the sass variables
-            padding: $spacing-8 $spacing-21;
-            margin-top: $spacing-24;
-            display: flex;
+        .file-image-preview {
+            width: 100%;
+            height: 254px;
         }
     }
 
-    &[aria-hidden="true"] .contents {
-        transform: translateY(100%);
+    .file-name-row {
+        padding: $letter-spacing-0 $spacing-21;
+
+        .file-name-text {
+            margin: $letter-spacing-0;
+            font-size: $font-size-20;
+            font-family: $open-sans-regular;
+            line-height: $line-height-30;
+            color: color(gray-content1);
+        }
+    }
+    // TODO: use value from the sass variables
+    .file-details-area {
+        padding: $spacing-21;
     }
 
-    .content-body {
-        height: 100%;
-        overflow-y: scroll;
-        padding-bottom: 40px;
+    .bottom-body {
         // TODO: use value from the sass variables
-        .file-icon-row {
-            padding: $spacing-8 $spacing-21;
+        padding: $spacing-10 $spacing-21;
 
-            .file-icon {
-                background-image: url($text-file);
-                background-position: center;
-                background-repeat: no-repeat;
-                width: $icon-32;
-                height: $icon-32;
-                background-size: $icon-32;
-            }
-
-            .file-image-preview {
-                width: 100%;
-                height: 254px;
-            }
-        }
-
-        .file-name-row {
-            padding: $letter-spacing-0 $spacing-21;
-
-            .file-name-text {
-                margin: $letter-spacing-0;
-                font-size: $font-size-20;
-                font-family: $open-sans-regular;
-                line-height: $line-height-30;
-                color: color(gray-content1);
-            }
-        }
-        // TODO: use value from the sass variables
-        .file-details-area {
-            padding: $spacing-21;
-        }
-
-        .bottom-body {
-            // TODO: use value from the sass variables
-            padding: $spacing-10 $spacing-21;
-
-            .close-btn-bottom-action {
-                margin-top: $spacing-16;
-            }
+        .close-btn-bottom-action {
+            margin-top: $spacing-16;
         }
     }
 }
