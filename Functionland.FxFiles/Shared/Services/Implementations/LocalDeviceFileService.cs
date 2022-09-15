@@ -1,6 +1,5 @@
 ﻿using Functionland.FxFiles.Shared.Models;
 using Microsoft.AspNetCore.StaticFiles;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +18,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             List<FsArtifact> ignoredList = new();
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -38,37 +37,24 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
 
-            FsArtifact newFsArtifact = new();
             var fileName = Path.GetFileNameWithoutExtension(path);
 
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
 
-            try
-            {
-                if (File.Exists(path))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+            if (File.Exists(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
-                using FileStream outPutFileStream = new(path, FileMode.Create);
-                await stream.CopyToAsync(outPutFileStream);
+            using FileStream outPutFileStream = new(path, FileMode.Create);
+            await stream.CopyToAsync(outPutFileStream);
 
-                newFsArtifact = new FsArtifact
-                {
-                    Name = fileName,
-                    FullPath = path,
-                    ArtifactType = FsArtifactType.File,
-                    FileExtension = Path.GetExtension(path),
-                    Size = (int)outPutFileStream.Length,
-                    ProviderType = await GetFsFileProviderTypeAsync(path),
-                    LastModifiedDateTime = File.GetLastWriteTime(path),
-                    ParentFullPath = Directory.GetParent(path)?.FullName,
-                };
-            }
-            catch
+            var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
             {
-                // ToDo : Handle exceptions
-                throw;
-            }
+                FileExtension = Path.GetExtension(path),
+                Size = (int)outPutFileStream.Length,
+                LastModifiedDateTime = File.GetLastWriteTime(path),
+                ParentFullPath = Directory.GetParent(path)?.FullName,
+            };
 
             return newFsArtifact;
         }
@@ -90,33 +76,21 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
 
-            FsArtifact newFsArtifact = new();
 
             if (string.IsNullOrWhiteSpace(folderName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
 
             var newPath = Path.Combine(path, folderName);
 
-            try
-            {
-                if (Directory.Exists(newPath))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
+            if (Directory.Exists(newPath))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
 
-                Directory.CreateDirectory(newPath);
-                newFsArtifact = new FsArtifact()
-                {
-                    Name = folderName,
-                    FullPath = newPath,
-                    ArtifactType = FsArtifactType.Folder,
-                    ProviderType = await GetFsFileProviderTypeAsync(newPath),
-                    ParentFullPath = Directory.GetParent(newPath)?.FullName,
-                    LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
-                };
-            }
-            catch (Exception)
+            Directory.CreateDirectory(newPath);
+
+            var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, await GetFsFileProviderTypeAsync(newPath))
             {
-                throw;
-                // ToDo : Handle exception
+                ParentFullPath = Directory.GetParent(newPath)?.FullName,
+                LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
             };
 
             return newFsArtifact;
@@ -136,10 +110,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         private void DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(artifact.FullPath))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType?.ToString() ?? ""));
-
-            if (artifact.ArtifactType == null)
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
@@ -181,13 +152,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 foreach (var subDirectory in subDirectories)
                 {
+                    var providerType = await GetFsFileProviderTypeAsync(subDirectory);
+
                     subArtifacts.Add(
-                        new FsArtifact()
+                        new FsArtifact(subDirectory, Path.GetFileName(subDirectory), FsArtifactType.Folder, providerType)
                         {
-                            ArtifactType = FsArtifactType.Folder,
-                            FullPath = subDirectory,
-                            ProviderType = await GetFsFileProviderTypeAsync(subDirectory),
-                            Name = Path.GetFileName(subDirectory),
                             ParentFullPath = Directory.GetParent(subDirectory)?.FullName,
                             LastModifiedDateTime = Directory.GetLastWriteTime(subDirectory)
                         });
@@ -197,13 +166,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 foreach (var file in directoryFiles)
                 {
+                    var providerType = await GetFsFileProviderTypeAsync(file);
+
                     artifacts.Add(
-                        new FsArtifact()
+                        new FsArtifact(file, Path.GetFileName(file), FsArtifactType.File, providerType)
                         {
-                            ArtifactType = FsArtifactType.File,
-                            FullPath = file,
-                            ProviderType = await GetFsFileProviderTypeAsync(file),
-                            Name = Path.GetFileName(file),
                             ParentFullPath = Directory.GetParent(file)?.FullName,
                             LastModifiedDateTime = File.GetLastWriteTime(file),
                             FileExtension = Path.GetExtension(file)
@@ -226,12 +193,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else
             {
-                yield return new FsArtifact()
+                yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
                 {
-                    ArtifactType = FsArtifactType.File,
-                    FullPath = path,
-                    ProviderType = await GetFsFileProviderTypeAsync(path),
-                    Name = Path.GetFileName(path),
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                     LastModifiedDateTime = File.GetLastWriteTime(path),
                     FileExtension = Path.GetExtension(path)
@@ -254,7 +217,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = CopyAll(artifacts, destination, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
                 await DeleteArtifactsAsync(artifacts, cancellationToken);
             });
 
@@ -283,7 +246,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 File.Move(filePath, newPath);
             });
-        }        
+        }
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
@@ -317,7 +280,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             });
         }
 
-        private static List<FsArtifact> CopyAll(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             var ignoredList = new List<FsArtifact>();
 
@@ -357,30 +320,35 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     }
 
                     var children = new List<FsArtifact>();
-                    children.AddRange(
-                        from file in directoryInfo.GetFiles()
-                        select new FsArtifact()
+
+                    var directoryFiles = directoryInfo.GetFiles();
+
+                    foreach (var file in directoryFiles)
+                    {
+                        var providerType = await GetFsFileProviderTypeAsync(file.FullName);
+
+                        children.Add(new FsArtifact(file.FullName, file.Name, FsArtifactType.File, providerType)
                         {
-                            FullPath = file.FullName,
-                            ArtifactType = FsArtifactType.File,
-                            Name = file.Name,
                             FileExtension = file.Extension,
                             LastModifiedDateTime = file.LastWriteTime,
                             ParentFullPath = Directory.GetParent(file.FullName)?.FullName
                         });
+                    }
 
-                    children.AddRange(
-                        from subDirectory in directoryInfo.GetDirectories()
-                        select new FsArtifact()
+                    var directorySubDirectories = directoryInfo.GetDirectories();
+
+                    foreach (var subDirectory in directorySubDirectories)
+                    {
+                        var providerType = await GetFsFileProviderTypeAsync(subDirectory.FullName);
+
+                        children.Add(new FsArtifact(subDirectory.FullName, subDirectory.Name, FsArtifactType.Folder, providerType)
                         {
-                            FullPath = subDirectory.FullName,
-                            ArtifactType = FsArtifactType.Folder,
-                            Name = subDirectory.Name,
                             LastModifiedDateTime = subDirectory.LastWriteTime,
-                            ParentFullPath = Directory.GetParent(subDirectory.FullName)?.FullName
+                            ParentFullPath = Directory.GetParent(subDirectory.FullName)?.FullName,
                         });
+                    }
 
-                    var childIgnoredList = CopyAll(children, destinationInfo.FullName, overwrite, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, overwrite, cancellationToken);
                     ignoredList.AddRange(childIgnoredList);
                 }
             }
@@ -389,7 +357,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
         public virtual async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
-        {        
+        {
             var artifactIsFile = File.Exists(path);
             if (artifactIsFile)
             {
@@ -418,12 +386,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var drive in drives)
             {
-                artifacts.Add(new FsArtifact()
-                {
-                    ArtifactType = FsArtifactType.Drive,
-                    FullPath = drive,
-                    ProviderType = await GetFsFileProviderTypeAsync(drive)
-                });
+                artifacts.Add(
+                    new FsArtifact(drive, drive, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
             }
 
             return artifacts;
@@ -451,7 +415,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else if (artifactIsDirectory && directoryInfo.Exists)
             {
-                fsArtifact.IsPathExist = true;                
+                fsArtifact.IsPathExist = true;
             }
             else
             {
@@ -466,7 +430,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             else if (artifactIsDirectory)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-            }        
+            }
 
             return fsArtifact;
         }
