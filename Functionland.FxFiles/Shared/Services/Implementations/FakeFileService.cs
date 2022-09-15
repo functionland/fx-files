@@ -192,10 +192,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
 
                 if (string.IsNullOrWhiteSpace(artifact.FullPath))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType?.ToString() ?? ""));
-
-                if (artifact.ArtifactType == null)
-                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
 
                 if (artifact.ArtifactType != FsArtifactType.Drive)
                 {
