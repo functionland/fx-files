@@ -2,18 +2,16 @@
 @import "../Styles/abstracts/_functions.scss";
 
 .file-card-container {
-    background-color: color(gray-bg-primary);
-    border-radius: $border-radius-4;
     width: 252px;
     height: 216px;
+    margin-left: 100px;
 
     .file-card-media {
         height: 146px;
-        border-radius: inherit;
         position: relative;
         background-color: color(gray-border);
-        //background-image: url("/images/CardMedia.svg");
         background-position: center;
+        border-radius: $border-radius-4 $border-radius-4 0px 0px;
 
         .tag-wrapper {
             position: absolute;
@@ -21,7 +19,7 @@
             left: 8px;
         }
 
-        .pin-outline-icon {
+        .pin-defualt-icon {
             width: $icon-20;
             height: $icon-20;
             background-image: url($pin-outline);
@@ -31,11 +29,14 @@
             position: absolute;
             top: 10.28px;
             right: 10.28px;
+            cursor: pointer;
         }
     }
 
     .file-card-content {
+        background-color: color(gray-bg-primary);
         padding: $spacing-16;
+        border-radius: 0px 0px $border-radius-4 $border-radius-4;
 
         .card-file-name {
             display: flex;
@@ -54,8 +55,10 @@
             .file-name-container {
                 margin-left: $spacing-6;
                 display: flex;
+                color: color(gray-content1);
 
-                span {
+                .file-format,
+                .file-name {
                     display: inline-block;
                     font-family: $open-sans-regular;
                     font-size: $font-size-14;
