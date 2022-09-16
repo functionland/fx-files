@@ -252,6 +252,20 @@
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>
   </data>
+  <data name="SharedFileCardTag" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="CardFileFormat" xml:space="preserve">
+    <value>pdf</value>
+  </data>
+  <data name="CardFileName" xml:space="preserve">
+    <value>Presentation_document</value>
+  </data>
+  <data name="CardFileSize" xml:space="preserve">
+    <value>1.22 mb</value>
+  </data>
+  <data name="ModifiedDate" xml:space="preserve">
+    <value>Modified 09/30/22</value>
   <data name="internalStorageName" xml:space="preserve">
     <value>internal</value>
   </data>

@@ -82,6 +82,7 @@ $base-unit: px;
 $spacing-4: 4 + $base-unit;
 $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
+$spacing-10-28: 10.28 + $base-unit;
 $spacing-12: 12 + $base-unit;
 $spacing-14: 14 + $base-unit;
 $spacing-16: 16 + $base-unit;
@@ -165,6 +166,7 @@ $right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
 $right-arrow-pressed: $icon-base-url + "right-arrow-pressed.svg";
 $right-arrow-hover: $icon-base-url + "right-arrow-hover.svg";
 $error-message: $icon-base-url + "error-message-icon.svg";
+$disabled-folder: $icon-base-url + "disabled-folder.svg";
 
 //font faces
 $font-path: "/fonts";
