@@ -32,7 +32,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 Assert.AreEqual(0, artifacts.Count, "new folder must be empty");
 
                 await fileService.CreateFolderAsync(testRoot, "Folder 1");
-                await fileService.CreateFolderAsync(testRoot, "Folder 1/Folder 11");
+                await fileService.CreateFolderAsync(Path.Combine(testRoot, "Folder 1"), "Folder 11");
                 var file1 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file1.txt"), GetSampleFileStream());
                 var file11 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/file11.txt"), GetSampleFileStream());
 
@@ -65,7 +65,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 var file2 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file2.txt"), GetSampleFileStream());
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(3, artifacts.Count, "Create file in root");
-                
+
                 #endregion
 
                 #region Copying files 1
@@ -75,7 +75,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 await fileService.CopyArtifactsAsync(copyingFiles, Path.Combine(testRoot, "Folder 2"));
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(2, artifacts.Count, "Copy a file to a folder. Created on destination");
-                
+
                 #endregion
 
                 #region Deleting files 1
@@ -88,7 +88,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 await fileService.DeleteArtifactsAsync(deletingFiles);
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Delete a file.");
-                
+
                 #endregion
 
                 #region Check folder path exist
@@ -97,16 +97,18 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 artifacts = artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(3, artifacts.Count, "Create a folder in root");
 
-                var fsArtifactChanges = await fileService.CheckPathExistsAsync(folder3.FullPath);
+                var fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { folder3.FullPath });
+                var fsArtifactChanges = fsArtifactsChanges.FirstOrDefault();
                 var isExist = fsArtifactChanges?.IsPathExist ?? false;
                 Assert.AreEqual<bool>(true, isExist, "Check folder exist");
 
                 #endregion
 
                 #region Renaming folders 1
-                
+
                 await fileService.RenameFolderAsync(folder3.FullPath, "Folder 4");
-                fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 4"));
+                fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 4") });
+                fsArtifactChanges = fsArtifactsChanges.FirstOrDefault();
                 var isRenamed = fsArtifactChanges?.IsPathExist ?? false;
                 Assert.AreEqual<bool>(true, isExist, "Rename a folder");
 
@@ -115,7 +117,8 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 #region Renameing files 1
 
                 await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file1.txt"), "file22");
-                fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 2/file22.txt"));
+                fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/file22.txt") });
+                fsArtifactChanges = fsArtifactsChanges.FirstOrDefault();
                 isRenamed = fsArtifactChanges?.IsPathExist ?? false;
                 Assert.AreEqual<bool>(true, isExist, "Rename a file");
 
