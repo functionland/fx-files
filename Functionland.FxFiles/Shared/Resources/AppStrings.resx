@@ -276,4 +276,10 @@
   <data name="PlaceHolderFilledTextInput" xml:space="preserve">
     <value>Example Description</value>
   </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Error message</value>
+  </data>
+  <data name="FieldQuestionInput" xml:space="preserve">
+    <value>Perferendis blanditiis modi amet architecto voluptatem animi saepe non?</value>
+  </data>
 </root>
