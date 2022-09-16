@@ -411,11 +411,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return artifacts;
         }
 
-        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> pathList, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
         {
             var fsArtifactList = new List<FsArtifactChanges>();
 
-            foreach(var path in pathList)
+            foreach(var path in paths)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
