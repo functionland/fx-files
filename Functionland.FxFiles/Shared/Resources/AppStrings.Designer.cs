@@ -151,6 +151,33 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to pdf.
+        /// </summary>
+        public static string CardFileFormat {
+            get {
+                return ResourceManager.GetString("CardFileFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Presentation_document.
+        /// </summary>
+        public static string CardFileName {
+            get {
+                return ResourceManager.GetString("CardFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1.22 mb.
+        /// </summary>
+        public static string CardFileSize {
+            get {
+                return ResourceManager.GetString("CardFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Request could not be processed because of conflict in the request.
         /// </summary>
         public static string ConflicException {
@@ -192,6 +219,24 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error message.
+        /// </summary>
+        public static string ErrorMessage {
+            get {
+                return ResourceManager.GetString("ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Perferendis blanditiis modi amet architecto voluptatem animi saepe non?.
+        /// </summary>
+        public static string FieldQuestionInput {
+            get {
+                return ResourceManager.GetString("FieldQuestionInput", resourceCulture);
             }
         }
         
@@ -268,6 +313,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string InputLabel {
+            get {
+                return ResourceManager.GetString("InputLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search in “folder name”.
         /// </summary>
         public static string InputSearchFullWidth {
@@ -322,6 +376,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modified 09/30/22.
+        /// </summary>
+        public static string ModifiedDate {
+            get {
+                return ResourceManager.GetString("ModifiedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Device.
         /// </summary>
         public static string MyDevice {
@@ -345,6 +408,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string PathIsNull {
             get {
                 return ResourceManager.GetString("PathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Example Description.
+        /// </summary>
+        public static string PlaceHolderFilledTextInput {
+            get {
+                return ResourceManager.GetString("PlaceHolderFilledTextInput", resourceCulture);
             }
         }
         
@@ -403,6 +475,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shared.
+        /// </summary>
+        public static string SharedFileCardTag {
+            get {
+                return ResourceManager.GetString("SharedFileCardTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The stream file is null.
         /// </summary>
         public static string StreamFileIsNull {
@@ -417,6 +498,24 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string TagLabel {
             get {
                 return ResourceManager.GetString("TagLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string TextAreaLabel {
+            get {
+                return ResourceManager.GetString("TextAreaLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type message here....
+        /// </summary>
+        public static string TextAreaPlaceholder {
+            get {
+                return ResourceManager.GetString("TextAreaPlaceholder", resourceCulture);
             }
         }
         
