@@ -243,19 +243,35 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
 
             var artifactType = GetFsArtifactTypeAsync(filePath);
 
             if (string.IsNullOrWhiteSpace(newName))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, artifactType.ToString() ?? ""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
+            if (CheckIfNameHasInvalidChars(newName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
+
+            var isExistOld = File.Exists(filePath);
+
+            if (!isExistOld)
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, "file"));
+
             await Task.Run(() =>
             {
-                var oldName = Path.GetFileNameWithoutExtension(filePath);
-                var newPath = filePath.Replace(oldName, newName);
+
+                var directory = Path.GetDirectoryName(filePath);
+                var isExtentionExsit = Path.HasExtension(newName);
+                var newFileName = isExtentionExsit ? newName : Path.ChangeExtension(newName, Path.GetExtension(filePath));
+                var newPath = Path.Combine(directory, newFileName);
+
+                var isFileExist = File.Exists(newPath);
+
+                if (isFileExist)
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
                 File.Move(filePath, newPath);
             });
