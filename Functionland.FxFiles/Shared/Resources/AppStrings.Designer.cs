@@ -466,6 +466,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow permission for storage access!.
+        /// </summary>
+        public static string UnableToAccessToStorage {
+            get {
+                return ResourceManager.GetString("UnableToAccessToStorage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t load storge manager..
         /// </summary>
         public static string UnableToLoadStorageManager {
