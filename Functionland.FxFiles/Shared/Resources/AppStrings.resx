@@ -270,4 +270,7 @@
   <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
     <value>The {0} name has invalid chars.</value>
   </data>
+  <data name="UnableToAccessToStorage" xml:space="preserve">
+    <value>Allow permission for storage access!</value>
+  </data>
 </root>
