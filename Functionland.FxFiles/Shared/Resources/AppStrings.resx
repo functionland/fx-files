@@ -252,7 +252,22 @@
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>
   </data>
+  <data name="internalStorageName" xml:space="preserve">
+    <value>internal</value>
+  </data>
+  <data name="SDCardName" xml:space="preserve">
+    <value>SD Card ({0})</value>
+  </data>
+  <data name="UnknownFsFileProviderException" xml:space="preserve">
+    <value>Unknown file provider for path: {0}</value>
+  </data>
+  <data name="CanNotOperateOnFilesException" xml:space="preserve">
+    <value>Can not operate on files exception</value>
+  </data>
   <data name="TagLabel" xml:space="preserve">
     <value>Tag Label</value>
+  </data>
+  <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
+    <value>The {0} name has invalid chars.</value>
   </data>
 </root>

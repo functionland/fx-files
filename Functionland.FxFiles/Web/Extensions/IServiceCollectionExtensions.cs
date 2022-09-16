@@ -1,7 +1,19 @@
 ﻿
+using Functionland.FxFiles.Shared.Services;
 using Functionland.FxFiles.Shared.Services.Implementations.Db;
 using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
+
+#if Android
+using Functionland.FxFiles.App.Platforms.Android.Implementations;
+using Functionland.FxFiles.App.Platforms.Android.Implementations.Test;
+#elif Windows
+using Functionland.FxFiles.App.Platforms.Windows.Implementations;
+using Functionland.FxFiles.App.Platforms.Windows.Implementations.Test;
+#elif iOS
+using Functionland.FxFiles.App.Platforms.iOS.Implementations;
+using Functionland.FxFiles.App.Platforms.iOS.Implementations.Test;
+#endif
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -14,17 +26,26 @@ public static class IServiceCollectionExtensions
         services.AddScoped<IExceptionHandler, ExceptionHandler>();
 
 #if Android
-        services.AddScoped<IFileService, Functionland.FxFiles.App.Platforms.Android.Implementations.AndroidFileService>();
-        services.AddScoped<IPlatformTestService, Functionland.FxFiles.App.Platforms.Android.Implementations.AndroidPlatformTestService>();
+        services.AddSingleton<IFileService, AndroidFileService>();
+        services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
+        services.AddTransient<InternalAndroidFileServicePlatformTest>();
+        services.AddTransient<ExternalAndroidFileServicePlatformTest>();
 #elif Windows
-        services.AddScoped<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
-        services.AddScoped<IPlatformTestService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsPlatformTestService>();
+        services.AddSingleton<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
+        services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
+        services.AddTransient<WindowsFileServicePlatformTest>();
 #elif iOS
-        //TODO: services.AddScoped<IFileService, IosFileService>();
-        services.AddScoped<IPlatformTestService, Functionland.FxFiles.App.Platforms.iOS.Implementations.IosPlatformTestService>();
+        //TODO: services.AddSingleton<IFileService, IosFileService>();
+        //services.AddTransient<IPlatformTestService, IosPlatformTestService>();
+        //services.AddTransient<IosFileServicePlatformTest>();
+#else
+        var fakeFileService = FakeFileServiceFactory.CreateSimpleFileListOnRoot();
+
+        services.AddSingleton<IFileService>((_) => fakeFileService);
+        services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
+        services.AddTransient<FakeFileServicePlatformTest>();
 #endif
 
-        services.AddTransient<FakeFileServicePlatformTest>();
 
         string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
 
