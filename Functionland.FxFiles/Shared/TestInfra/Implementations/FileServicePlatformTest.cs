@@ -60,6 +60,28 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
                 #endregion
 
+                #region Create files 1
+                //testRoot: Folder1, Folder2
+                //Folder1: Folder11, file11.txt
+                //Folder2: file1.txt
+
+                var file2 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file2.txt"), GetSampleFileStream());
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Create file in root");
+                #endregion
+
+                #region Copying files 1
+                //testRoot: Folder1, Folder2, file2.txt
+                //Folder1: Folder11, file11.txt
+                //Folder2: file1.txt
+
+                var copyingFiles = new[] { file2 };
+
+                await fileService.CopyArtifactsAsync(copyingFiles, Path.Combine(testRoot, "Folder 2"));
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
+                Assert.AreEqual(2, artifacts.Count, "Copy a file to a folder. Created on destination");
+                #endregion
+
                 Assert.Success("Test passed!");
             }
             catch (Exception ex)
