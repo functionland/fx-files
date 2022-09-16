@@ -31,7 +31,7 @@
     line-height: $line-height-24;
     letter-spacing: $letter-spacing-02;
     outline: none;
-    border: solid 2px;
+    border: solid $border-size-1;
     border-color: color(gray-border);
     border-radius: $border-size-4;
     padding: $spacing-14 $spacing-21;
@@ -65,7 +65,8 @@
     border-color: color(error);
 
     &::placeholder {
-        color: color(gray-content3)
+        color: color(gray-content3);
+  
     }
 }
 
