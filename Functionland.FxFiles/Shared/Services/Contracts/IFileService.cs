@@ -18,6 +18,6 @@ namespace Functionland.FxFiles.Shared.Services.Contracts
         Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null);
         Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null);
         IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
-        Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null);
+        Task<FsArtifactChanges> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null);
     }
 }

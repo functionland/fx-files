@@ -404,7 +404,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             return artifacts;
         }
 
-        public virtual async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> pathList, CancellationToken? cancellationToken = null)
+        {
+            var fsArtifactList = new List<FsArtifactChanges>();
+
+            foreach(var path in pathList)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
@@ -443,7 +447,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
             }
 
-            return fsArtifact;
+                fsArtifactList.Add(fsArtifact);
+            }           
+
+            return fsArtifactList;
         }
 
         private bool CheckIfNameHasInvalidChars(string name)
