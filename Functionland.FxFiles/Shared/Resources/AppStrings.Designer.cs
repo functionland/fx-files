@@ -133,6 +133,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can not operate on files exception.
+        /// </summary>
+        public static string CanNotOperateOnFilesException {
+            get {
+                return ResourceManager.GetString("CanNotOperateOnFilesException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to pdf.
         /// </summary>
         public static string CardFileFormat {
@@ -156,15 +165,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string CardFileSize {
             get {
                 return ResourceManager.GetString("CardFileSize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Can not operate on files exception.
-        /// </summary>
-        public static string CanNotOperateOnFilesException {
-            get {
-                return ResourceManager.GetString("CanNotOperateOnFilesException", resourceCulture);
             }
         }
         
@@ -480,6 +480,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tag Label.
+        /// </summary>
+        public static string TagLabel {
+            get {
+                return ResourceManager.GetString("TagLabel", resourceCulture);
             }
         }
         
