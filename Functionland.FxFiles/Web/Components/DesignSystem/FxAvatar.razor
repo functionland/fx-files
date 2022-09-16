@@ -1,5 +1,5 @@
 ﻿@inherits AppComponentBase;
 
-<div class="fx-avatart small-avatar">
-    <div class="avatar-status"></div>
+<div class="fx-avatart @(string.Format(" {0}-avatar", FxAvatarSizeType).ToLower())">
+    <div class="avatar-status @(string.Format(" {0}-status", FxAvatarStatusType).ToLower())"></div>
 </div>
