@@ -1,2 +1,47 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.label-text-area {
+    color: color(gray-content1);
+    font-family: $open-sans-regular;
+    font-style: normal;
+    font-size: $font-size-14;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    display: block;
 }
+
+.text-area-input {
+    height: 191px;
+    color: color(gray-content1);
+    font-family: $open-sans-regular;
+    font-style: normal;
+    font-size: $font-size-14;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    outline: none;
+    border: solid $border-size-1;
+    border-color: color(gray-border);
+    border-radius: $border-size-4;
+    padding: 14px $spacing-21;
+    margin: $spacing-8 $letter-spacing-0;
+    resize: none;
+
+    &::placeholder {
+        color: color(gray-content1)
+    }
+
+}
+
+.text-area-active {
+    color: color(gray-content3);
+    background-color: color(gray-bg-primary);
+    border-color: $green-light-pressed;
+
+    &::placeholder {
+        color: color(gray-content3)
+    }
+}
+
+
+
