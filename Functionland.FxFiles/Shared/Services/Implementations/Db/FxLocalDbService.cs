@@ -52,8 +52,8 @@ public class FxLocalDbService : IFxLocalDbService
         var upgrader =
             DeployChanges.To
                 .SQLiteDatabase(connection)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .LogToConsole()
+                .WithScriptsEmbeddedInAssembly(typeof(PinnedArtifact).Assembly)
+                .LogToNowhere()
                 .Build();
 
         var result = upgrader.PerformUpgrade();

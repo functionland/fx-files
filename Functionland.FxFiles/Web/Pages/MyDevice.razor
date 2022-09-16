@@ -9,25 +9,35 @@
     <BitAccordion Title="Pinned" DefaultIsExpanded="true">
         <ContentTemplate>
             <div class="items">
-                <FxButton 
-                    Text="Card"
-                    Width="252px"
-                    Height="216px"
-                    BorderRadius="4px"
-                    ButtonStyle="FxButtonStyle.None" />
-                <FxButton
-                    Text="Card"
-                    Width="252px"
-                    Height="216px"
-                    BorderRadius="4px"
-                    ButtonStyle="FxButtonStyle.None" />
-                <FxButton
-                    Text="Card"
-                    Width="252px"
-                    Height="216px"
-                    BorderRadius="4px"
-                    ButtonStyle="FxButtonStyle.None" />
+                @foreach (var cardConfig in PinnedCards)
+               {
+                    <FileCard CardConfig="cardConfig"></FileCard>
+                }
+                @*<FileCard 
+                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
+                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
+                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
+                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
+                <FileCard 
+                    IsFavorite="true"
+                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
+                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
+                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
+                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
+                <FileCard 
+                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
+                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
+                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
+                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
+                <FileCard 
+                    IsDisable="true"
+                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
+                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
+                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
+                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>*@
             </div>
         </ContentTemplate>
     </BitAccordion>
+
+    <ListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems"></ListView>
 </div>

@@ -4,6 +4,8 @@
 
 // components
 @import 'components/_bit-accordion.scss';
+@import 'components/_bit-checkbox.scss';
+@import 'components/_bit-toggle.scss';
 
 // utilities
 
@@ -29,9 +31,11 @@
     border-radius: 6px;
 }
 
-body {
+html, body {
     margin: 0;
+    padding: 0;
     user-select: none;
+    -webkit-user-select: none;
     overscroll-behavior: none;
     font-family: $open-sans-regular;
     -webkit-tap-highlight-color: transparent;
@@ -39,10 +43,14 @@ body {
     @each $key, $value in $colors-light {
         --#{$key}: #{$value};
     }
+
+    background-color: color(app-bg);
 }
 
-body[data-theme="Dark"] {
+html, body[data-theme="Dark"] {
     @each $key, $value in $colors-dark {
         --#{$key}: #{$value};
     }
+
+    background-color: color(app-bg);
 }

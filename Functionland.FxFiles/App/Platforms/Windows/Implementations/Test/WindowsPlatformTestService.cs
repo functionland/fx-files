@@ -1,16 +1,16 @@
 ﻿using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
-namespace Functionland.FxFiles.App.Platforms.Windows.Implementations;
+namespace Functionland.FxFiles.App.Platforms.Windows.Implementations.Test;
 
 public partial class WindowsPlatformTestService : PlatformTestService
 {
-    [AutoInject] FakeFileServicePlatformTest FakeFileServicePlatformTest { get; set; }
+    [AutoInject] WindowsFileServicePlatformTest WindowsFileServicePlatformTest { get; set; }
     
     protected override List<IPlatformTest> OnGetTests()
     {
         return new List<IPlatformTest>()
         {
-            FakeFileServicePlatformTest
+            WindowsFileServicePlatformTest
         };
     }  
 }
