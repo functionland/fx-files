@@ -1,3 +1,8 @@
 ﻿@inherits AppComponentBase;
+<div class="input-box">
 
-<h3>FxTextInput</h3>
+    <label class="label-input">@Localizer[nameof(AppStrings.InputLabel)]</label>
+    <div class="field-question-input">@Localizer[nameof(AppStrings.FieldQuestionInput)]</div>
+    <input placeholder="@Localizer[nameof(AppStrings.PlaceHolderFilledTextInput)]" type="text" class="text-input text-input-active" />
+    <div class="error-message">@Localizer[nameof(AppStrings.ErrorMessage)]</div>
+</div>
