@@ -22,7 +22,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                     var rootArtifacts = await GetArtifactsAsync(fileService, rootPath);
                     testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "FileServiceTestsFolder"));
                 }
-               
+
                 var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
                 var testRoot = testRootArtifact.FullPath!;
 
@@ -61,9 +61,6 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 #endregion
 
                 #region Create files 1
-                //testRoot: Folder1, Folder2
-                //Folder1: Folder11, file11.txt
-                //Folder2: file1.txt
 
                 var file2 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file2.txt"), GetSampleFileStream());
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
@@ -71,9 +68,6 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 #endregion
 
                 #region Copying files 1
-                //testRoot: Folder1, Folder2, file2.txt
-                //Folder1: Folder11, file11.txt
-                //Folder2: file1.txt
 
                 var copyingFiles = new[] { file2 };
 
@@ -83,9 +77,6 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 #endregion
 
                 #region Deleting files 1
-                //testRoot: Folder1, Folder2, file2.txt
-                //Folder1: Folder11, file11.txt
-                //Folder2: file1.txt, file2.txt
 
                 var deletingFiles = new[] { file2 };
 
@@ -97,7 +88,18 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 Assert.AreEqual(2, artifacts.Count, "Delete a file.");
                 #endregion
 
-                
+                #region Check folder path exist
+
+                var folder3 = await fileService.CreateFolderAsync(testRoot, "Folder 3");
+                artifacts = artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Create a folder in root");
+
+                var fsArtifactChanges = await fileService.CheckPathExistsAsync(folder3.FullPath);
+                var isExist = fsArtifactChanges?.IsPathExist ?? false;
+                Assert.AreEqual<bool>(true, isExist, "Check folder exist");
+
+                #endregion
+
                 Assert.Success("Test passed!");
             }
             catch (Exception ex)
