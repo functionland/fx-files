@@ -109,7 +109,16 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 4"));
                 var isRenamed = fsArtifactChanges?.IsPathExist ?? false;
                 Assert.AreEqual<bool>(true, isExist, "Rename a folder");
-                
+
+                #endregion
+
+                #region Renameing files 1
+
+                await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file1.txt"), "file22");
+                fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 2/file22.txt"));
+                isRenamed = fsArtifactChanges?.IsPathExist ?? false;
+                Assert.AreEqual<bool>(true, isExist, "Rename a file");
+
                 #endregion
 
                 Assert.Success("Test passed!");
