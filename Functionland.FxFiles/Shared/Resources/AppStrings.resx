@@ -270,4 +270,10 @@
   <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
     <value>The {0} name has invalid chars.</value>
   </data>
+  <data name="TextAreaLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="TextAreaPlaceholder" xml:space="preserve">
+    <value>Type message here...</value>
+  </data>
 </root>
