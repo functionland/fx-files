@@ -3,16 +3,27 @@
     public partial class FxLink
     {
         [Parameter]
-        public bool IsLarge { get; set; }
-
+        public FxLinkSize FxLinkSize { get; set; }
         [Parameter]
-        public bool IsLeftIcon { get; set; }
+        public bool IsEnabel { get; set; } = true;
 
-        [Parameter]
-        public bool IsRightIcon { get; set; }
+        [Parameter, EditorRequired]
+        public FxLinkIconSide FxLinkIconSide { get; set; }
 
-        [Parameter]
-        public bool IsDisabled { get; set; }
+        [Parameter, EditorRequired]
+        public string? Link { get; set; }
 
+    }
+
+    public enum FxLinkIconSide
+    {
+        Left,
+        Right,
+        Regular
+    }
+
+    public enum FxLinkSize
+    {
+        Large
     }
 }
