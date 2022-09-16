@@ -82,6 +82,22 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 Assert.AreEqual(2, artifacts.Count, "Copy a file to a folder. Created on destination");
                 #endregion
 
+                #region Deleting files 1
+                //testRoot: Folder1, Folder2, file2.txt
+                //Folder1: Folder11, file11.txt
+                //Folder2: file1.txt, file2.txt
+
+                var deletingFiles = new[] { file2 };
+
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Before deleting operation.");
+
+                await fileService.DeleteArtifactsAsync(deletingFiles);
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(2, artifacts.Count, "Delete a file.");
+                #endregion
+
+                
                 Assert.Success("Test passed!");
             }
             catch (Exception ex)
