@@ -13,10 +13,14 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             {
                 FsArtifact? testsRootArtifact = null;
 
-                var rootArtifact = await GetArtifactsAsync(fileService, Path.Combine(rootPath, "FileServiceTestsFolder"));
-                if (rootArtifact is null || rootArtifact.Count == 0)
+                try
                 {
                     testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTestsFolder");
+                }
+                catch (DomainLogicException ex) when (ex.Message == "The folder already exists exception") //TODO: use AppStrings for exception
+                {
+                    var rootArtifacts = await GetArtifactsAsync(fileService, rootPath);
+                    testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "FileServiceTestsFolder"));
                 }
                
                 var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
