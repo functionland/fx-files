@@ -309,4 +309,7 @@
   <data name="TextAreaPlaceholder" xml:space="preserve">
     <value>Type message here...</value>
   </data>
+  <data name="DriveRenameFailed" xml:space="preserve">
+    <value>You can not rename drive</value>
+  </data>
 </root>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -239,7 +240,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
             }
         }
-
+      
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -299,6 +300,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (!isExistOld)
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, "folder"));
+
+            var fsArtifactType = await GetFsArtifactTypeAsync(folderPath);
+
+            if (fsArtifactType is FsArtifactType.Drive)
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.DriveRenameFailed));
 
             await Task.Run(() =>
             {
@@ -398,16 +404,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 return FsArtifactType.File;
             }
 
-            var artifactIsDirectory = Directory.Exists(path);
-            if (artifactIsDirectory)
-            {
-                return FsArtifactType.Folder;
-            }
-
             string[] drives = Directory.GetLogicalDrives();
             if (drives.Contains(path))
             {
                 return FsArtifactType.Drive;
+            }
+
+            var artifactIsDirectory = Directory.Exists(path);
+            if (artifactIsDirectory)
+            {
+                return FsArtifactType.Folder;
             }
 
             return null;
@@ -431,44 +437,41 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             var fsArtifactList = new List<FsArtifactChanges>();
 
-            foreach(var path in paths)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+            foreach (var path in paths)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
-            var fileInfo = new FileInfo(path);
-            var directoryInfo = new DirectoryInfo(path);
+                var artifactIsFile = File.Exists(path);
+                var artifactIsDirectory = Directory.Exists(path);
 
-            var artifactIsFile = File.Exists(path);
-            var artifactIsDirectory = Directory.Exists(path);
+                var fsArtifact = new FsArtifactChanges()
+                {
+                    ArtifactFullPath = path,
+                };
 
-            var fsArtifact = new FsArtifactChanges()
-            {
-                ArtifactFullPath = path,
-            };
+                if (artifactIsFile)
+                {
+                    fsArtifact.IsPathExist = true;
+                }
+                else if (artifactIsDirectory)
+                {
+                    fsArtifact.IsPathExist = true;
+                }
+                else
+                {
+                    fsArtifact.IsPathExist = false;
+                    fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+                }
 
-            if (artifactIsFile && fileInfo.Exists)
-            {
-                fsArtifact.IsPathExist = true;
-            }
-            else if (artifactIsDirectory && directoryInfo.Exists)
-            {
-                fsArtifact.IsPathExist = true;
-            }
-            else
-            {
-                fsArtifact.IsPathExist = false;
-                fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
-            }
-
-            if (artifactIsFile)
-            {
-                fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
-            }
-            else if (artifactIsDirectory)
-            {
-                fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-            }
+                if (artifactIsFile)
+                {
+                    fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
+                }
+                else if (artifactIsDirectory)
+                {
+                    fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
+                }
 
                 fsArtifactList.Add(fsArtifact);
             }           
