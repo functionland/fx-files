@@ -42,6 +42,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
 
+            if (CheckIfNameHasInvalidChars(fileName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
+
             if (File.Exists(path))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
