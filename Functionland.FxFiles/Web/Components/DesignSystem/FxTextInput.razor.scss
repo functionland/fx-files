@@ -24,6 +24,7 @@
 
 .text-input {
     height: $font-size-52;
+    background-color: inherit;
     color: color(gray-content1);
     font-family: $open-sans-regular;
     font-style: normal;
@@ -64,6 +65,7 @@
 
 .text-input-error {
     border-color: color(error);
+    background-color: inherit;
 
     &::placeholder {
         color: color(gray-content3);
