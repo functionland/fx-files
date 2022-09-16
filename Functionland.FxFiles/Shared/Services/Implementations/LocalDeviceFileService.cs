@@ -269,7 +269,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             await Task.Run(() =>
             {
                 var oldName = Path.GetFileName(folderPath);
-                var newPath = folderPath.Replace(oldName, newName);
+                var newPath = Path.Combine(Path.GetDirectoryName(folderPath), newName);
 
                 var isExist = Directory.Exists(newPath);
 
