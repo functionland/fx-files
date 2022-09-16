@@ -79,6 +79,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} dose not exists exception.
+        /// </summary>
+        public static string ArtifactDoseNotExistsException {
+            get {
+                return ResourceManager.GetString("ArtifactDoseNotExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} name has invalid chars..
         /// </summary>
         public static string ArtifactNameHasInvalidChars {

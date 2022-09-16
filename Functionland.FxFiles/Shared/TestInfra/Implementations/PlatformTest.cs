@@ -110,12 +110,12 @@
                 onAssert(title, description, TestProgressType.Fail);
             }
 
-            public void ShouldThrow<TException>(Action action, string title, string? description = null)
+            public async Task ShouldThrowAsync<TException>(Func<Task> action, string title, string? description = null)
                 where TException : Exception
             {
                 try
                 {
-                    action();
+                    await action();
                     onAssert(title, "Unexpectedly no exception occured.", TestProgressType.Fail);
                 }
                 catch (TException exception)
