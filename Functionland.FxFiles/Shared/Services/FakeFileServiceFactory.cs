@@ -72,12 +72,9 @@ namespace Functionland.FxFiles.Shared.Services
             var fileName = Path.GetFileName(filePath);
             var extension = Path.GetExtension(filePath);
 
-            return new FsArtifact()
+            return new FsArtifact(filePath, fileName, FsArtifactType.File, FsFileProviderType.InternalMemory)
             {
-                FullPath = filePath,
-                Name = fileName,
-                FileExtension = extension,
-                ArtifactType = FsArtifactType.File,
+                FileExtension = extension
             };
         }
 
@@ -85,24 +82,14 @@ namespace Functionland.FxFiles.Shared.Services
         {
             var folderName = Path.GetDirectoryName(folderPath);
 
-            return new FsArtifact()
-            {
-                FullPath = folderPath,
-                Name = folderName,
-                ArtifactType = FsArtifactType.Folder,
-            };
+            return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
         }
 
         public static FsArtifact CreateDrive(string drivePath)
         {
             var driveName = drivePath;
 
-            return new FsArtifact()
-            {
-                FullPath = drivePath,
-                Name = driveName,
-                ArtifactType = FsArtifactType.Drive,
-            };
+            return new FsArtifact(drivePath, driveName, FsArtifactType.Drive, FsFileProviderType.InternalMemory);
         }
     }
 }

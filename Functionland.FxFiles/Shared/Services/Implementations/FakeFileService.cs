@@ -121,17 +121,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         private static FsArtifact CreateArtifact(string path, string? contentHash)
         {
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            return new FsArtifact
+            return new FsArtifact(path, Path.GetFileName(path), GetFsArtifactType(path), FsFileProviderType.InternalMemory)
             {
-                Name = Path.GetFileName(path),
-                FullPath = path,
                 FileExtension = Path.GetExtension(path),
                 OriginDevice = originDevice,
                 ThumbnailPath = path,
                 ContentHash = contentHash,
-                ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                ArtifactType = GetFsArtifactType(path)
             };
         }
 
@@ -140,15 +136,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact = new FsArtifact
+                                     let artifact = 
+                                     new FsArtifact(file.path, Path.GetFileName(file.path), FsArtifactType.File, FsFileProviderType.InternalMemory)
                                      {
-                                         Name = Path.GetFileName(file.path),
-                                         FullPath = file.path,
                                          FileExtension = Path.GetExtension(file.path),
                                          OriginDevice = originDevice,
                                          ThumbnailPath = file.path,
                                          ContentHash = file.stream.GetHashCode().ToString(),
-                                         ProviderType = FsFileProviderType.InternalMemory,
                                          LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
                                      }
                                      select artifact)
@@ -178,14 +172,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
 
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            var artifact = new FsArtifact
+            var artifact = new FsArtifact(path, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
             {
-                Name = folderName,
-                FullPath = path,
                 OriginDevice = originDevice,
-                ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                ArtifactType = FsArtifactType.Folder
             };
             if (beOverWritten)
                 await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
@@ -202,10 +192,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
 
                 if (string.IsNullOrWhiteSpace(artifact.FullPath))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType?.ToString() ?? ""));
-
-                if (artifact.ArtifactType == null)
-                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
 
                 if (artifact.ArtifactType != FsArtifactType.Drive)
                 {
@@ -320,6 +307,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 }
 
             }
+        }
+
+        public Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

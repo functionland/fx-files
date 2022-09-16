@@ -10,7 +10,6 @@ public partial class HomePage
     private string internalfilePath2;
 
     [AutoInject] public IFileService FileService { get; set; }
-    public ListItemConfig Config { get; set; } = new ListItemConfig(ViewMode.grid, "this is title of item.txt", "bla bla", true, "text-file");
     private void NavigateToTestExplorerComponent()
     {
         NavigationManager.NavigateTo("/TestExplorer");

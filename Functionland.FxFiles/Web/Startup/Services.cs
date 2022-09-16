@@ -25,12 +25,6 @@ public static class Services
             .Configure<BrotliCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest)
             .Configure<GzipCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest);
         services.AddAppServices();
-
-        var fakeFileService = FakeFileServiceFactory.CreateTypical();
-
-        services.AddSingleton<IFileService>((_) => fakeFileService);
-        services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
-        services.AddTransient<FakeFileServicePlatformTest>();
     }
 }
 #endif
