@@ -79,8 +79,10 @@ $spacing-4: 4 + $base-unit;
 $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
 $spacing-12: 12 + $base-unit;
+$spacing-14: 14 + $base-unit;
 $spacing-16: 16 + $base-unit;
 $spacing-18: 18 + $base-unit;
+$spacing-21: 20 + $base-unit;
 $spacing-21: 21 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
@@ -91,6 +93,7 @@ $spacing-56: 56 + $base-unit;
 $spacing-64: 64 + $base-unit;
 $spacing-72: 72 + $base-unit;
 $spacing-80: 80 + $base-unit;
+$spacing-333: 333 + $base-unit;
 
 //icon sizes
 $icon-96: 96 + $base-unit;
@@ -100,6 +103,7 @@ $icon-32: 32 + $base-unit;
 $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
+$icon-12: 12 + $base-unit;
 
 //icons
 $icon-base-url: "/images/icons/lightDesignSystem/";
@@ -148,7 +152,7 @@ $disabled-checkbox: $icon-base-url + "disabled-checkbox.svg";
 $disabled-checked-checkbox: $icon-base-url + "disabled-checked-checkbox.svg";
 $indeterminate-checkbox: $icon-base-url + "indeterminate-checkbox.svg";
 $tag-label: $icon-base-url + "tag-label.svg";
-
+$error-message: $icon-base-url + "error-message-icon.svg";
 //font faces
 $font-path: "/fonts";
 $montserrat-medium: "Montserrat-Medium";
@@ -188,6 +192,7 @@ $open-sans-semi-bold: "OpenSans-SemiBold";
 }
 
 //font-sizes
+$font-size-52: 52 + $base-unit;
 $font-size-40: 40 + $base-unit;
 $font-size-36: 36 + $base-unit;
 $font-size-32: 32 + $base-unit;
