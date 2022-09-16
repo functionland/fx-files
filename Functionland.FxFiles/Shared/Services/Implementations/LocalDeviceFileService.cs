@@ -269,6 +269,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (CheckIfNameHasInvalidChars(newName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
 
+            var isExistOld = Directory.Exists(folderPath);
+
+            if (!isExistOld)
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, "folder"));
+
             await Task.Run(() =>
             {
                 var oldName = Path.GetFileName(folderPath);
