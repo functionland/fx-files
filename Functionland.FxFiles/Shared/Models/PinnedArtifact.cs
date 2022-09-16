@@ -19,7 +19,7 @@ namespace Functionland.FxFiles.Shared.Models
 
         // ToDo: Implment this.
         [NotMapped]
-        public DateTimeOffset PinDateTeime
+        public DateTimeOffset PinDateTime
         {
             get
             {
