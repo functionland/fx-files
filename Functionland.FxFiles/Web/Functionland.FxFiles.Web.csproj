@@ -21,7 +21,9 @@
 		<Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="Pages\_Layout.cshtml" />
 		<Content Condition=" '$(BlazorMode)' != 'BlazorServer' " Remove="appsettings.json" />
 		<Content Remove="compilerconfig.json" />
+		<Content Remove="sassconfig.json" />
 		<None Include="compilerconfig.json" />
+		<None Include="sassconfig.json" />
 	</ItemGroup>
 
 	<ItemGroup>
