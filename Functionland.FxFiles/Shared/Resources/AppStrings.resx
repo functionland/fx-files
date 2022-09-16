@@ -276,4 +276,7 @@
   <data name="ArtifactDoseNotExistsException" xml:space="preserve">
     <value>The {0} dose not exists exception</value>
   </data>
+  <data name="DriveRenameFailed" xml:space="preserve">
+    <value>You can not rename drive</value>
+  </data>
 </root>

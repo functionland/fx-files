@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -300,6 +301,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (!isExistOld)
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, "folder"));
 
+            var fsArtifactType = await GetFsArtifactTypeAsync(folderPath);
+
+            if (fsArtifactType is FsArtifactType.Drive)
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.DriveRenameFailed));
+
             await Task.Run(() =>
             {
                 var oldName = Path.GetFileName(folderPath);
@@ -398,16 +404,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 return FsArtifactType.File;
             }
 
-            var artifactIsDirectory = Directory.Exists(path);
-            if (artifactIsDirectory)
-            {
-                return FsArtifactType.Folder;
-            }
-
             string[] drives = Directory.GetLogicalDrives();
             if (drives.Contains(path))
             {
                 return FsArtifactType.Drive;
+            }
+
+            var artifactIsDirectory = Directory.Exists(path);
+            if (artifactIsDirectory)
+            {
+                return FsArtifactType.Folder;
             }
 
             return null;
