@@ -92,6 +92,11 @@
         padding-top: 32px;
 
         .item-title {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
+
             .pin-badge {
                 position: absolute;
                 top: 8px;

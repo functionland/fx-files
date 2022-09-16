@@ -81,6 +81,7 @@ $spacing-8: 8 + $base-unit;
 $spacing-12: 12 + $base-unit;
 $spacing-16: 16 + $base-unit;
 $spacing-18: 18 + $base-unit;
+$spacing-21: 21 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
@@ -103,6 +104,7 @@ $icon-16: 16 + $base-unit;
 //icons
 $icon-base-url: "/images/icons/lightDesignSystem/";
 
+$chevron-up: $icon-base-url + "chevron-up.svg";
 $avatar-grey: $icon-base-url + "avatar-grey.svg";
 $delete: $icon-base-url + "delete.svg";
 $copy: $icon-base-url + "copy.svg";
@@ -116,9 +118,10 @@ $move: $icon-base-url + "move.svg";
 $download: $icon-base-url + "download.svg";
 $select-check-filled: $icon-base-url + "select-check-filled.svg";
 $select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
+$select-all-check-filled: $icon-base-url + "select-all-check-filled.svg";
 $list-view-selected: $icon-base-url + "list-view-selected.svg";
 $list-view: $icon-base-url + "list-view.svg";
-$gird-view-selected: $icon-base-url + "grid-view-selected.svg";
+$grid-view-selected: $icon-base-url + "grid-view-selected.svg";
 $grid-view: $icon-base-url + "grid-view.svg";
 $filter: $icon-base-url + "filter.svg";
 $folder: $icon-base-url + "folder.svg";
