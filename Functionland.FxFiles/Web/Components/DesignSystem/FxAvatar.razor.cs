@@ -20,6 +20,7 @@
 
     public enum FxAvatarStatusEnum
     {
+        NoStatus,
         Selected,
         DeSelected,
         Edit
