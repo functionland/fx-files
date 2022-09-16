@@ -2,16 +2,28 @@
 @import "../../Styles/abstracts/_functions.scss";
 
 
-.input-label {
+.label-input {
     color: color(gray-content1);
     font-family: $open-sans-regular;
     font-style: normal;
     font-size: $font-size-14;
     line-height: $line-height-24;
     letter-spacing: $letter-spacing-02;
+    display:block;
+}
+
+.field-question-input {
+    color: color(gray-content2);
+    font-family: $open-sans-light;
+    font-style: normal;
+    font-size: $font-size-12;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+    max-width: $spacing-333;
 }
 
 .text-input {
+    height: $font-size-52;
     color: color(gray-content1);
     font-family: $open-sans-regular;
     font-style: normal;
@@ -20,5 +32,54 @@
     letter-spacing: $letter-spacing-02;
     outline: none;
     border: solid 2px;
-    border-color: color(gray-border)
+    border-color: color(gray-border);
+    border-radius: $border-size-4;
+    padding: $spacing-14 $spacing-21;
+    margin: $spacing-8 $letter-spacing-0;
+
+    &::placeholder {
+        color: color(gray-content1)
+    }
 }
+
+.text-input-active {
+    color: color(gray-content3);
+    background-color: color(gray-bg-primary);
+    border-color: $green-light-pressed;
+
+    &::placeholder {
+        color: color(gray-content3)
+    }
+}
+
+.text-input-disable {
+    background-color: color(gray-bg-primary);
+    border-color: color(gray-border);
+
+    &::placeholder {
+        color: color(gray-content3)
+    }
+}
+
+.text-input-error {
+    border-color: color(error);
+
+    &::placeholder {
+        color: color(gray-content3)
+    }
+}
+
+.error-message {
+    color: color(error);
+    font-family: $open-sans-regular;
+    font-style: normal;
+    font-size: $font-size-12;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+    padding-left: $spacing-16;
+    background-image: url($error-message);
+    background-size: $icon-12;
+    background-position: center left;
+    background-repeat: no-repeat;
+}
+
