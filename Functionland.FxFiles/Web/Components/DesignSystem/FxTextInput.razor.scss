@@ -55,9 +55,10 @@
 .text-input-disable {
     background-color: color(gray-bg-primary);
     border-color: color(gray-border);
+    color: color(input-disable);
 
     &::placeholder {
-        color: color(gray-content3)
+        color: color(input-disable);
     }
 }
 
