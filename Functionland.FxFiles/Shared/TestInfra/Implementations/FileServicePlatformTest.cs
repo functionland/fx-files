@@ -65,6 +65,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 var file2 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file2.txt"), GetSampleFileStream());
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(3, artifacts.Count, "Create file in root");
+                
                 #endregion
 
                 #region Copying files 1
@@ -74,6 +75,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 await fileService.CopyArtifactsAsync(copyingFiles, Path.Combine(testRoot, "Folder 2"));
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(2, artifacts.Count, "Copy a file to a folder. Created on destination");
+                
                 #endregion
 
                 #region Deleting files 1
@@ -86,6 +88,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 await fileService.DeleteArtifactsAsync(deletingFiles);
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Delete a file.");
+                
                 #endregion
 
                 #region Check folder path exist
@@ -98,6 +101,15 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 var isExist = fsArtifactChanges?.IsPathExist ?? false;
                 Assert.AreEqual<bool>(true, isExist, "Check folder exist");
 
+                #endregion
+
+                #region Renaming folders 1
+                
+                await fileService.RenameFolderAsync(folder3.FullPath, "Folder 4");
+                fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 4"));
+                var isRenamed = fsArtifactChanges?.IsPathExist ?? false;
+                Assert.AreEqual<bool>(true, isExist, "Rename a folder");
+                
                 #endregion
 
                 Assert.Success("Test passed!");
