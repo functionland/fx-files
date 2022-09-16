@@ -24,6 +24,7 @@ $success-dark: #37B24D;
 $info-dark: #1C7ED6;
 $warning-dark: #FCC419;
 $error-dark: #FA5252;
+$input-dark-disable: $gray-dark-border; 
 
 //light colors
 $gray-light-content1: #343A40;
@@ -42,6 +43,7 @@ $warning-light: #FAB005;
 $error-light: #FA4343;
 $info-light: $info-dark;
 $success-light: $success-dark;
+$input-light-disable: $gray-dark-content3;
 
 $colors-light: (
   "app-bg": $pure-white,
@@ -55,6 +57,7 @@ $colors-light: (
   "gray-content3": $gray-light-content3,
   "gray-bg-primary": $gray-light-bg-primary,
   "gray-bg-secondary": $gray-light-bg-secondary,
+  "input-disable": $input-light-disable
 );
 
 $colors-dark: (
@@ -69,6 +72,7 @@ $colors-dark: (
   "gray-content3": $gray-dark-content3,
   "gray-bg-primary": $gray-dark-bg-primary,
   "gray-bg-secondary": $gray-dark-bg-secondary,
+  "input-disable": $input-dark-disable
 );
 
 // base variable
