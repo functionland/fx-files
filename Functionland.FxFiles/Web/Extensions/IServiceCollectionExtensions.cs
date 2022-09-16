@@ -43,7 +43,8 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<IFileService>((_) => fakeFileService);
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
-        services.AddTransient<FakeFileServicePlatformTest>();
+        services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
+        services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();
 #endif
 
 
