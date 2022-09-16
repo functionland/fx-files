@@ -19,3 +19,12 @@
     color: color(gray-content1);
     margin-bottom: $spacing-24;
 }
+
+.buttons-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: $spacing-16;
+}
