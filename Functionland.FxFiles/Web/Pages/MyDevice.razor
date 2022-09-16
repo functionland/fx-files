@@ -9,7 +9,11 @@
     <BitAccordion Title="Pinned" DefaultIsExpanded="true">
         <ContentTemplate>
             <div class="items">
-                <FileCard 
+                @foreach (var cardConfig in PinnedCards)
+               {
+                  <FileCard CardConfig="cardConfig"></FileCard> 
+               }
+                @*<FileCard 
                     FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
                     ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
                     FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
@@ -30,7 +34,7 @@
                     FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
                     ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
                     FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
-                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
+                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>*@
             </div>
         </ContentTemplate>
     </BitAccordion>
