@@ -118,6 +118,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(artifact.FullPath))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
 
+            var isDirectoryExist = Directory.Exists(artifact.FullPath);
+            var isFileExist = File.Exists(artifact.FullPath);
+
+            if ((artifact.ArtifactType == FsArtifactType.Folder && !isDirectoryExist) || 
+                (artifact.ArtifactType == FsArtifactType.File && !isFileExist))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? ""));
+
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
                 Directory.Delete(artifact.FullPath, true);
