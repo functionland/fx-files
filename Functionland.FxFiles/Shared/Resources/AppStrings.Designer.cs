@@ -259,6 +259,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string InputLabel {
+            get {
+                return ResourceManager.GetString("InputLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search in “folder name”.
         /// </summary>
         public static string InputSearchFullWidth {
@@ -336,6 +345,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string PathIsNull {
             get {
                 return ResourceManager.GetString("PathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Example Description.
+        /// </summary>
+        public static string PlaceHolderFilledTextInput {
+            get {
+                return ResourceManager.GetString("PlaceHolderFilledTextInput", resourceCulture);
             }
         }
         

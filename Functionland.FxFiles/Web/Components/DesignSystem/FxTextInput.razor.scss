@@ -1,2 +1,24 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+
+.input-label {
+    color: color(gray-content1);
+    font-family: $open-sans-regular;
+    font-style: normal;
+    font-size: $font-size-14;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+}
+
+.text-input {
+    color: color(gray-content1);
+    font-family: $open-sans-regular;
+    font-style: normal;
+    font-size: $font-size-14;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    outline: none;
+    border: solid 2px;
+    border-color: color(gray-border)
 }
