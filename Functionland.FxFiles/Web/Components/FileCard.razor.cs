@@ -5,6 +5,6 @@ namespace Functionland.FxFiles.App.Components
     public partial class FileCard
     {
         [Parameter]
-        public FileCardConfig CartConfig { get; set; }
+        public FileCardConfig? CardConfig { get; set; }
     }
 }
