@@ -270,4 +270,16 @@
   <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
     <value>The {0} name has invalid chars.</value>
   </data>
+  <data name="ButtonAddFile" xml:space="preserve">
+    <value>Add files</value>
+  </data>
+  <data name="ButtonAddNewFolder" xml:space="preserve">
+    <value>Add new folder</value>
+  </data>
+  <data name="ButtonUploadFiles" xml:space="preserve">
+    <value>Upload files</value>
+  </data>
+  <data name="EmptyListTitle" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
 </root>
