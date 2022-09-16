@@ -484,6 +484,24 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string TextAreaLabel {
+            get {
+                return ResourceManager.GetString("TextAreaLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type message here....
+        /// </summary>
+        public static string TextAreaPlaceholder {
+            get {
+                return ResourceManager.GetString("TextAreaPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A new version of the app is available for download..
         /// </summary>
         public static string ToastDescMessage {

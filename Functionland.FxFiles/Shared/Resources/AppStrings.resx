@@ -296,4 +296,10 @@
   <data name="FieldQuestionInput" xml:space="preserve">
     <value>Perferendis blanditiis modi amet architecto voluptatem animi saepe non?</value>
   </data>
+  <data name="TextAreaLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="TextAreaPlaceholder" xml:space="preserve">
+    <value>Type message here...</value>
+  </data>
 </root>
