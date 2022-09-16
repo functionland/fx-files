@@ -32,10 +32,6 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 platformTest.ProgressChanged += OnTestProgressChanged;
                 await platformTest.RunAsync();
             }
-            catch (Exception ex)
-            {
-                OnTestProgressChanged(this, new TestProgressChangedEventArgs("Test failed.", ex.ToString(), TestProgressType.Fail));
-            }
             finally
             {
                 platformTest.ProgressChanged -= OnTestProgressChanged;
@@ -44,7 +40,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public void OnTestProgressChanged(object? sender, TestProgressChangedEventArgs eventArgs)
         {
-            TestProgressChanged?.Invoke(this, eventArgs);
+            TestProgressChanged?.Invoke(sender, eventArgs);
         }
 
         public event EventHandler<TestProgressChangedEventArgs>? TestProgressChanged;

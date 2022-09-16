@@ -9,10 +9,10 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
         protected async Task OnRunFileServiceTestAsync(IFileService fileService, string rootPath)
         {
+
+            FsArtifact? testsRootArtifact = null;
             try
             {
-                FsArtifact? testsRootArtifact = null;
-
                 try
                 {
                     testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTestsFolder");
@@ -130,32 +130,31 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             {
                 Assert.Fail("Test failed", ex.Message);
             }
-
         }
 
-        private static async Task<List<FsArtifact>> GetArtifactsAsync(IFileService fileService, string testRoot)
+    private static async Task<List<FsArtifact>> GetArtifactsAsync(IFileService fileService, string testRoot)
+    {
+        List<FsArtifact> emptyRootFolderArtifacts = new();
+        await foreach (var item in fileService.GetArtifactsAsync(testRoot))
         {
-            List<FsArtifact> emptyRootFolderArtifacts = new();
-            await foreach (var item in fileService.GetArtifactsAsync(testRoot))
-            {
-                emptyRootFolderArtifacts.Add(item);
-            }
-
-            return emptyRootFolderArtifacts;
-        }
-        private Stream GetSampleFileStream()
-        {
-            var sampleText = "Hello streamer!";
-            byte[] byteArray = Encoding.ASCII.GetBytes(sampleText);
-            MemoryStream stream = new MemoryStream(byteArray);
-            return stream;
+            emptyRootFolderArtifacts.Add(item);
         }
 
-        protected override async Task OnRunAsync()
-        {
-            var root = OnGetTestsRootPath();
-            var fileService = OnGetFileService();
-            await OnRunFileServiceTestAsync(fileService, root);
-        }
+        return emptyRootFolderArtifacts;
     }
+    private Stream GetSampleFileStream()
+    {
+        var sampleText = "Hello streamer!";
+        byte[] byteArray = Encoding.ASCII.GetBytes(sampleText);
+        MemoryStream stream = new MemoryStream(byteArray);
+        return stream;
+    }
+
+    protected override async Task OnRunAsync()
+    {
+        var root = OnGetTestsRootPath();
+        var fileService = OnGetFileService();
+        await OnRunFileServiceTestAsync(fileService, root);
+    }
+}
 }

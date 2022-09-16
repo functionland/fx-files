@@ -15,14 +15,17 @@
     font-family: $montserrat-medium;
     flex-direction: row-reverse;
     justify-content: flex-end;
+    padding: 0 21px;
 }
 
 ::deep .bit-acd .header.expanded .header-icon {
+    transition: .2s;
     font-weight: bold;
-    transform: rotate(0);
+    transform: rotate(360deg);
 }
 
 ::deep .bit-acd .header.collapsed .header-icon {
+    transition: .2s;
     font-weight: bold;
     transform: rotate(270deg);
 }
