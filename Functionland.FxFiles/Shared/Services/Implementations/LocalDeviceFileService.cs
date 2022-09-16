@@ -80,6 +80,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderName))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
 
+            if (CheckIfNameHasInvalidChars(folderName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
+
             var newPath = Path.Combine(path, folderName);
 
             if (Directory.Exists(newPath))
