@@ -13,12 +13,16 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             {
                 FsArtifact? testsRootArtifact = null;
 
-                var rootArtifact = await GetArtifactsAsync(fileService, Path.Combine(rootPath, "FileServiceTestsFolder"));
-                if (rootArtifact is null || rootArtifact.Count == 0)
+                try
                 {
                     testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTestsFolder");
                 }
-               
+                catch (DomainLogicException ex) when (ex.Message == "The folder already exists exception") //TODO: use AppStrings for exception
+                {
+                    var rootArtifacts = await GetArtifactsAsync(fileService, rootPath);
+                    testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "FileServiceTestsFolder"));
+                }
+
                 var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
                 var testRoot = testRootArtifact.FullPath!;
 
@@ -53,6 +57,67 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Move a file to a folder. Removed from source");
                 artifacts.Clear();
+
+                #endregion
+
+                #region Create files 1
+
+                var file2 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file2.txt"), GetSampleFileStream());
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Create file in root");
+                
+                #endregion
+
+                #region Copying files 1
+
+                var copyingFiles = new[] { file2 };
+
+                await fileService.CopyArtifactsAsync(copyingFiles, Path.Combine(testRoot, "Folder 2"));
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
+                Assert.AreEqual(2, artifacts.Count, "Copy a file to a folder. Created on destination");
+                
+                #endregion
+
+                #region Deleting files 1
+
+                var deletingFiles = new[] { file2 };
+
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Before deleting operation.");
+
+                await fileService.DeleteArtifactsAsync(deletingFiles);
+                artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(2, artifacts.Count, "Delete a file.");
+                
+                #endregion
+
+                #region Check folder path exist
+
+                var folder3 = await fileService.CreateFolderAsync(testRoot, "Folder 3");
+                artifacts = artifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(3, artifacts.Count, "Create a folder in root");
+
+                var fsArtifactChanges = await fileService.CheckPathExistsAsync(folder3.FullPath);
+                var isExist = fsArtifactChanges?.IsPathExist ?? false;
+                Assert.AreEqual<bool>(true, isExist, "Check folder exist");
+
+                #endregion
+
+                #region Renaming folders 1
+                
+                await fileService.RenameFolderAsync(folder3.FullPath, "Folder 4");
+                fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 4"));
+                var isRenamed = fsArtifactChanges?.IsPathExist ?? false;
+                Assert.AreEqual<bool>(true, isExist, "Rename a folder");
+
+                #endregion
+
+                #region Renameing files 1
+
+                await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file1.txt"), "file22");
+                fsArtifactChanges = await fileService.CheckPathExistsAsync(Path.Combine(testRoot, "Folder 2/file22.txt"));
+                isRenamed = fsArtifactChanges?.IsPathExist ?? false;
+                Assert.AreEqual<bool>(true, isExist, "Rename a file");
 
                 #endregion
 

@@ -65,6 +65,6 @@ public partial class WindowsFileService : LocalDeviceFileService
 
     public override async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
     {
-        return await base.CheckPathExistsAsync(paths);
+        return await base.CheckPathExistsAsync(paths, cancellationToken);
     }
 }

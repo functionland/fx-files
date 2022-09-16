@@ -9,7 +9,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 {
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
     {
-        if (PermissionUtils.CheckStoragePermission())
+        if (!PermissionUtils.CheckStoragePermission())
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
         }
@@ -19,7 +19,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
     {
-        if (PermissionUtils.CheckStoragePermission())
+        if (!PermissionUtils.CheckStoragePermission())
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
         }
@@ -29,7 +29,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
     {
-        if (PermissionUtils.CheckStoragePermission())
+        if (!PermissionUtils.CheckStoragePermission())
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
         }
@@ -39,7 +39,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
     {
-        if (PermissionUtils.CheckStoragePermission())
+        if (!PermissionUtils.CheckStoragePermission())
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
         }
@@ -107,7 +107,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     
     public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
     {
-        if (PermissionUtils.CheckStoragePermission())
+        if (!PermissionUtils.CheckStoragePermission())
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
         }
