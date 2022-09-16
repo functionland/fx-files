@@ -187,6 +187,24 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error message.
+        /// </summary>
+        public static string ErrorMessage {
+            get {
+                return ResourceManager.GetString("ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Perferendis blanditiis modi amet architecto voluptatem animi saepe non?.
+        /// </summary>
+        public static string FieldQuestionInput {
+            get {
+                return ResourceManager.GetString("FieldQuestionInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FileAlreadyExistsException.
         /// </summary>
         public static string FileAlreadyExistsException {
@@ -255,6 +273,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string HomeTitle {
             get {
                 return ResourceManager.GetString("HomeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label.
+        /// </summary>
+        public static string InputLabel {
+            get {
+                return ResourceManager.GetString("InputLabel", resourceCulture);
             }
         }
         
@@ -336,6 +363,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string PathIsNull {
             get {
                 return ResourceManager.GetString("PathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Example Description.
+        /// </summary>
+        public static string PlaceHolderFilledTextInput {
+            get {
+                return ResourceManager.GetString("PlaceHolderFilledTextInput", resourceCulture);
             }
         }
         
