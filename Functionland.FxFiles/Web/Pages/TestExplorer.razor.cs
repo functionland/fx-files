@@ -19,6 +19,7 @@ public partial class TestExplorer
 
     private async Task HandleValidSubmit()
     {
+        testProgressChangedEventArgs.Clear();
         var selectedTest = PlatformTests.Where(c => TestName.Equals(c.Title)).FirstOrDefault();
         if (selectedTest == null) return;
         try

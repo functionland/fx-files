@@ -176,6 +176,14 @@
     "inputFile": "Components/ListItem.razor.scss"
   },
   {
+    "outputFile": "Components/ListView.razor.css",
+    "inputFile": "Components/ListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/ListView.razor.css",
+    "inputFile": "Components/ListView.razor.scss"
+  },
+  {
     "outputFile": "Components/FileCard.razor.css",
     "inputFile": "Components/FileCard.razor.scss"
   }

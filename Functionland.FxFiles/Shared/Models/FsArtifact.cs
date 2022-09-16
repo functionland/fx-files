@@ -8,12 +8,20 @@ namespace Functionland.FxFiles.Shared.Models
 {
     public class FsArtifact
     {
+        public FsArtifact(string fullPath, string name, FsArtifactType artifactType, FsFileProviderType providerType)
+        {
+            FullPath = fullPath;
+            Name = name;
+            ArtifactType = artifactType;
+            ProviderType = providerType;
+        }
+
         public long? Id { get; set; }
-        public string? FullPath { get; set; }
-        public string? Name { get; set; }
+        public string FullPath { get; set; }
+        public string Name { get; set; }
         public string? FileExtension { get; set; }
-        public FsArtifactType? ArtifactType { get; set; }
-        public FsFileProviderType? ProviderType { get; set; }
+        public FsArtifactType ArtifactType { get; set; }
+        public FsFileProviderType ProviderType { get; set; }
         public long? Size { get; set; }
         public long? Capacity { get; set; }
         public string? ContentHash { get; set; }

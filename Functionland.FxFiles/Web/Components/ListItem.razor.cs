@@ -5,6 +5,9 @@ namespace Functionland.FxFiles.App.Components
     public partial class ListItem
     {
         [Parameter, EditorRequired]
-        public ListItemConfig Config { get; set; } = new ListItemConfig(ViewMode.list, "", "", false, "");
+        public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
+
+        [Parameter, EditorRequired]
+        public ListItemConfig ItemConfig { get; set; } = new ListItemConfig("", "", false, "");
     }
 }
