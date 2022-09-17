@@ -35,19 +35,19 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 await Task.Delay(EnumerationLatency.Value);
         }
 
-        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
                 await LatencyEnumerationAsync();
                 var newPath = Path.Combine(destination, artifact.Name);
-                if (!beOverWritten)
+                if (!overwrite)
                     CheckIfArtifactExist(newPath);
 
                 var artifactType = GetFsArtifactType(artifact.FullPath);
                 if (artifactType != FsArtifactType.File)
                 {
-                    await CreateFolder(newPath, artifact.Name, cancellationToken, beOverWritten);
+                    await CreateFolder(newPath, artifact.Name, cancellationToken, overwrite);
                     foreach (var file in _files)
                     {
                         if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath) && Path.GetExtension(artifact.FullPath) != "")
@@ -65,7 +65,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 }
                 else
                 {
-                    if(beOverWritten)
+                    if(overwrite)
                         await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
 
                     var newArtifact = CreateArtifact(newPath, artifact.ContentHash);

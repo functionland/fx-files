@@ -8,9 +8,9 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations;
 
 public partial class WindowsFileService : LocalDeviceFileService
 {
-    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
-        return base.CopyArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
+        return base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
     public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
