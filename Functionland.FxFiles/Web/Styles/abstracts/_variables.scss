@@ -92,6 +92,7 @@ $spacing-21: 21 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
+$spacing-31: 31 + $base-unit;
 $spacing-40: 40 + $base-unit;
 $spacing-48: 48 + $base-unit;
 $spacing-56: 56 + $base-unit;
@@ -189,6 +190,13 @@ $disabled-folder: $icon-base-url + "disabled-folder.svg";
 $create-file: $icon-base-url + "create-file.svg";
 $upload-file: $icon-base-url + "upload-file.svg";
 $add-file: $icon-base-url + "add-file.svg";
+//these icon variables are not create and will change
+$white-create-folder: "/images/icons/white-create-folder.svg";
+$white-close-btn: "/images/icons/white-close-btn.svg";
+$white-move: "/images/icons/white-move.svg";
+$white-option-vertical: "/images/icons/white-option-vertical.svg";
+// becarefull to do not use these!!
+
 
 //font faces
 $font-path: "/fonts";
