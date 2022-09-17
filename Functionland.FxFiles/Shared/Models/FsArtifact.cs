@@ -36,7 +36,7 @@ namespace Functionland.FxFiles.Shared.Models
         public string? OwnerDid { get; set; }
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
+        public FileCategoryType FileCategory => FileCategory.GetCategoryType(FileExtension != null ? FileExtension : "");
     }
-
 
 }
