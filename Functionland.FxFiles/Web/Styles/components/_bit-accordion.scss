@@ -11,17 +11,28 @@
     flex-grow: 0;
 }
 
+.bit-acd .intro .title {
+    font-size: $font-size-18;
+}
+
 ::deep .bit-acd .header {
     font-family: $montserrat-medium;
     flex-direction: row-reverse;
     justify-content: flex-end;
-    padding: 0 21px;
+    padding: 0 20px;
+    margin: 10px 0;
 }
 
 ::deep .bit-acd .header.expanded .header-icon {
     transition: .2s;
     font-weight: bold;
+    font-size: $font-size-18;
     transform: rotate(360deg);
+}
+
+::deep .bit-acd .header.collapsed {
+    margin-bottom: 48px;
+    font-size: $font-size-18;
 }
 
 ::deep .bit-acd .header.collapsed .header-icon {
@@ -53,5 +64,5 @@
     scroll-behavior: smooth;
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    padding: 0 21px 21px 21px;
+    padding: 0 21px 16px 21px;
 }
