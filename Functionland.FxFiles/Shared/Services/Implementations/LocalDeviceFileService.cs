@@ -426,8 +426,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var drive in drives)
             {
+                var info = new DriveInfo(drive);
+                string driveName = drive;
+
+                if (info.DriveType != DriveType.CDRom)
+                {
+                    var lable = info.VolumeLabel;
+                    driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
+                }
+
                 artifacts.Add(
-                    new FsArtifact(drive, drive, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
+                    new FsArtifact(drive, driveName, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
             }
 
             return artifacts;
