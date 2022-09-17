@@ -65,7 +65,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 }
                 else
                 {
-                    if(overwrite)
+                    if (overwrite)
                         await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
 
                     var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
@@ -182,6 +182,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+
+
+            if (string.IsNullOrWhiteSpace(folderName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
+
+            if (CheckIfNameHasInvalidChars(folderName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
+
+
             await LatencyActionAsync();
             if (path is null) throw new Exception();
             
