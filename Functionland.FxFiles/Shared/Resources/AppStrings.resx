@@ -296,6 +296,7 @@
   </data>
   <data name="EmptyListTitle" xml:space="preserve">
     <value>Nothing here</value>
+  </data>
   <data name="UnableToAccessToStorage" xml:space="preserve">
     <value>Allow permission for storage access!</value>
   </data>

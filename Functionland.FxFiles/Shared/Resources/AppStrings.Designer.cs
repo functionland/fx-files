@@ -241,16 +241,20 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nothing here.
-        /// </summary>
-        public static string EmptyListTitle {
-            get {
-                return ResourceManager.GetString("EmptyListTitle", resourceCulture);
         ///   Looks up a localized string similar to You can not rename drive.
         /// </summary>
         public static string DriveRenameFailed {
             get {
                 return ResourceManager.GetString("DriveRenameFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing here.
+        /// </summary>
+        public static string EmptyListTitle {
+            get {
+                return ResourceManager.GetString("EmptyListTitle", resourceCulture);
             }
         }
         
