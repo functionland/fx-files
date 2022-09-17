@@ -1,7 +1,7 @@
 ﻿
 namespace Functionland.FxFiles.App.Components;
 
-public partial class Footer
+public partial class BottomNavigation
 {
 #if MultilingualEnabled
     protected async override Task OnAfterFirstRenderAsync()

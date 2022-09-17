@@ -16,8 +16,8 @@
     "inputFile": "Components/FxToolBar.razor.scss"
   },
   {
-    "outputFile": "Components/Footer.razor.css",
-    "inputFile": "Components/Footer.razor.scss"
+    "outputFile": "Components/BottomNavigation.razor.css",
+    "inputFile": "Components/BottomNavigation.razor.scss"
   },
   {
     "outputFile": "Components/PageNotFound.razor.css",
