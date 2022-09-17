@@ -3,7 +3,10 @@
 <div class="item-container @ViewMode-view">
     <div class="item-content @ItemConfig.IconStr-icon">
         <div class="item-title">
-            <div class="pin-badge"></div>
+            @if (ItemConfig.IsPinned == true)
+            {
+                <div class="pin-badge"></div>
+            }
             <div class="title-text">@ItemConfig.Title</div>
         </div>
         <div class="item-sub-text">@ItemConfig.SubTitle</div>
