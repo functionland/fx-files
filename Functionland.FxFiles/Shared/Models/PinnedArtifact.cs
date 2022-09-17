@@ -16,19 +16,5 @@ namespace Functionland.FxFiles.Shared.Models
         public string? ContentHash { get; set; }
         public FsFileProviderType? ProviderType { get; set; }
         public long? PinEpochTime { get; set; }
-
-        // ToDo: Implment this.
-        [NotMapped]
-        public DateTimeOffset PinDateTime
-        {
-            get
-            {
-                return default;
-            }
-            set
-            {
-
-            }
-        }
     }
 }
