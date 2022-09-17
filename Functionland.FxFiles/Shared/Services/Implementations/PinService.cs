@@ -13,8 +13,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
     {
         [AutoInject] IFxLocalDbService FxLocalDbService { get; set; } = default!;
         [AutoInject] IFileService FileService { get; set; } = default!;
-        [AutoInject] IFileWatchService FileWatchService { get; set; } = default!;
         public SubscriptionToken ArtifactChangeSubscription { get; set; }
+
+        public IEventAggregator EventAggregator { get; set; }
 
         public List<string> PinnedPathsCatche { get; set; }
 
