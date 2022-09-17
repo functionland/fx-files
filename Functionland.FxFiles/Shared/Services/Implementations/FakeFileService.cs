@@ -96,7 +96,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         private void CheckIfArtifactExist(string newPath)
         {
             if (ArtifacExist(newPath))
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.FileAlreadyExistsException)]);
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactAlreadyExistsException)]);
         }
 
         private bool ArtifacExist(string newPath)
@@ -104,9 +104,31 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
             return _files.Any(f => comparer.Compare(f.FullPath, newPath) == 0);
         }
+        private bool CheckIfNameHasInvalidChars(string name)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+
+            foreach (var invalid in invalidChars)
+                if (name.Contains(invalid)) return true;
+            return false;
+        }
 
         public async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(stream?.ToString()))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
+
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+
+            var fileName = Path.GetFileNameWithoutExtension(path);
+
+            if (string.IsNullOrWhiteSpace(fileName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
+
+            if (CheckIfNameHasInvalidChars(fileName))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
+
             await LatencyActionAsync();
             if (path is null) throw new Exception();
 
