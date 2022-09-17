@@ -6,14 +6,14 @@
 <FxToolBar IsMainToolBar="true" />
 
 <div class="mydevice-content">
-    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+@*    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
         <ContentTemplate>
             <div class="items">
                 @foreach (var cardConfig in PinnedCards)
                {
                     <FileCard CardConfig="cardConfig"></FileCard>
                 }
-                @*<FileCard 
+                <FileCard 
                     FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
                     ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
                     FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
@@ -34,10 +34,10 @@
                     FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
                     ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
                     FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
-                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>*@
+                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
             </div>
         </ContentTemplate>
-    </BitAccordion>
+    </BitAccordion>*@
 
     <ListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems"></ListView>
 </div>

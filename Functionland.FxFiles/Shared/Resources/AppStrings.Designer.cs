@@ -133,11 +133,38 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add files.
+        /// </summary>
+        public static string ButtonAddFile {
+            get {
+                return ResourceManager.GetString("ButtonAddFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add new folder.
+        /// </summary>
+        public static string ButtonAddNewFolder {
+            get {
+                return ResourceManager.GetString("ButtonAddNewFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done.
         /// </summary>
         public static string ButtonSearchFullWidth {
             get {
                 return ResourceManager.GetString("ButtonSearchFullWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload files.
+        /// </summary>
+        public static string ButtonUploadFiles {
+            get {
+                return ResourceManager.GetString("ButtonUploadFiles", resourceCulture);
             }
         }
         
@@ -214,6 +241,11 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nothing here.
+        /// </summary>
+        public static string EmptyListTitle {
+            get {
+                return ResourceManager.GetString("EmptyListTitle", resourceCulture);
         ///   Looks up a localized string similar to You can not rename drive.
         /// </summary>
         public static string DriveRenameFailed {
