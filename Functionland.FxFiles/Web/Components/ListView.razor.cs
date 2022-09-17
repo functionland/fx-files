@@ -1,5 +1,6 @@
-﻿using Functionland.FxFiles.App.Components.Common;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+
+using Functionland.FxFiles.App.Components.Common;
 
 namespace Functionland.FxFiles.App.Components
 {
@@ -9,19 +10,19 @@ namespace Functionland.FxFiles.App.Components
         public string ListTitle { get; set; } = String.Empty;
 
         [Parameter, EditorRequired]
-        public List<ListItemConfig> ListItems { get; set; } = new List<ListItemConfig>() { };
+        public List<ListItemConfig>? ListItems { get; set; }
 
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public SortOrderEnum SortOrder = SortOrderEnum.asc;
         public bool IsSelectedAll = false;
-
 
         public void ToggleSortOrder()
         {
             if (SortOrder == SortOrderEnum.asc)
             {
                 SortOrder = SortOrderEnum.desc;
-            } else
+            }
+            else
             {
                 SortOrder = SortOrderEnum.asc;
             }

@@ -1,24 +1,22 @@
 ﻿using Android.Content;
-using android = Android;
-using Microsoft.Maui.Controls.PlatformConfiguration;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Maui.ApplicationModel;
+using AndroidX.Activity.Result;
+
+using android = Android;
 
 namespace Functionland.FxFiles.App.Platforms.Android
 {
     public static class PermissionUtils
     {
+        public static TaskCompletionSource<bool>? GetPermissionTask { get; set; }
+        public static int StoragePermissionRequestCode { get; set; } = 2296;
         public static void RequestStoragePermission()
         {
+            GetPermissionTask = new TaskCompletionSource<bool>();
             Intent intent = new Intent(android.Provider.Settings.ActionManageAppAllFilesAccessPermission);
             intent.AddCategory("android.intent.category.DEFAULT");
             intent.SetData(android.Net.Uri.Parse($"package:{MauiApplication.Current.OpPackageName}"));
-            Platform.CurrentActivity?.StartActivityForResult(intent, 2296);
+            Platform.CurrentActivity?.StartActivityForResult(intent, StoragePermissionRequestCode);
         }
 
         public static bool CheckStoragePermission()

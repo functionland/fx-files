@@ -8,9 +8,9 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations;
 
 public partial class WindowsFileService : LocalDeviceFileService
 {
-    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
-        return base.CopyArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
+        return base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
     public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -48,9 +48,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
-        return base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
+        return base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
     public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
@@ -63,8 +63,8 @@ public partial class WindowsFileService : LocalDeviceFileService
         return FsFileProviderType.InternalMemory;
     }
 
-    public override async Task<FsArtifactChanges> CheckPathExistsAsync(string? path, CancellationToken? cancellationToken = null)
+    public override async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
     {
-        return await base.CheckPathExistsAsync(path);
+        return await base.CheckPathExistsAsync(paths, cancellationToken);
     }
 }

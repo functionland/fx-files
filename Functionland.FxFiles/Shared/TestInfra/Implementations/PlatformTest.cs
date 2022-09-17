@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Shared.TestInfra.Implementations
+﻿using Microsoft.Extensions.Primitives;
+
+namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 {
     public abstract class PlatformTest : IPlatformTest
     {
@@ -37,16 +39,25 @@
                 this.onAssert = onAssert;
             }
 
+            private void Assert(string title, string? description, TestProgressType progressType)
+            {
+                onAssert(title, description, progressType);
+                if (progressType == TestProgressType.Fail)
+                {
+                    throw new Exception(title + description);
+                }
+            }
+
             Action<string, string?, TestProgressType> onAssert { get; set; }
             public void IsTrue(bool? actual, string title, string? description = null)
             {
                 if (actual == true)
                 {
-                    onAssert(title, description, TestProgressType.Success);
+                    Assert(title, description, TestProgressType.Success);
                 }
                 else
                 {
-                    onAssert(title, description, TestProgressType.Fail);
+                    Assert(title, description, TestProgressType.Fail);
                 }
             }
 
@@ -54,11 +65,11 @@
             {
                 if (actual == false)
                 {
-                    onAssert(title, description, TestProgressType.Success);
+                    Assert(title, description, TestProgressType.Success);
                 }
                 else
                 {
-                    onAssert(title, description, TestProgressType.Fail);
+                    Assert(title, description, TestProgressType.Fail);
                 }
             }
 
@@ -66,11 +77,11 @@
             {
                 if (actual is null)
                 {
-                    onAssert(title, description, TestProgressType.Success);
+                    Assert(title, description, TestProgressType.Success);
                 }
                 else
                 {
-                    onAssert(title, description, TestProgressType.Fail);
+                    Assert(title, description, TestProgressType.Fail);
                 }
             }
 
@@ -78,11 +89,11 @@
             {
                 if (actual is not null)
                 {
-                    onAssert(title, description, TestProgressType.Success);
+                    Assert(title, description, TestProgressType.Success);
                 }
                 else
                 {
-                    onAssert(title, description, TestProgressType.Fail);
+                    Assert(title, description, TestProgressType.Fail);
                 }
             }
 
@@ -92,39 +103,39 @@
             {
                 if (actual.Equals(expected))
                 {
-                    onAssert(title, description, TestProgressType.Success);
+                    Assert(title, description, TestProgressType.Success);
                 }
                 else
                 {
-                    onAssert(title, $"Expected: {expected}, Actual: {actual}", TestProgressType.Fail);
+                    Assert(title, $"Expected: {expected}, Actual: {actual}", TestProgressType.Fail);
                 }
             }
 
             public void Success(string title, string? description = null)
             {
-                onAssert(title, description, TestProgressType.Success);
+                Assert(title, description, TestProgressType.Success);
             }
 
             public void Fail(string title, string? description = null)
             {
-                onAssert(title, description, TestProgressType.Fail);
+                Assert(title, description, TestProgressType.Fail);
             }
 
-            public void ShouldThrow<TException>(Action action, string title, string? description = null)
+            public async Task ShouldThrowAsync<TException>(Func<Task> action, string title, string? description = null)
                 where TException : Exception
             {
                 try
                 {
-                    action();
+                    await action();
                     onAssert(title, "Unexpectedly no exception occured.", TestProgressType.Fail);
                 }
                 catch (TException exception)
                 {
-                    onAssert(title, exception.ToString(), TestProgressType.Success);
+                    Assert(title, exception.ToString(), TestProgressType.Success);
                 }
                 catch (Exception exception)
                 {
-                    onAssert(title,
+                    Assert(title,
                         $"Wrong ExceptionType. Exptected: '{typeof(TException).Name}', Actual: {exception.GetType().Name}",
                         TestProgressType.Fail);
                 }
