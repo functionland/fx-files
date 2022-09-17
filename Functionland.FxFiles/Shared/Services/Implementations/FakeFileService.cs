@@ -158,7 +158,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact = 
+                                     let artifact =
                                      new FsArtifact(file.path, Path.GetFileName(file.path), FsArtifactType.File, FsFileProviderType.InternalMemory)
                                      {
                                          FileExtension = Path.GetExtension(file.path),
@@ -195,7 +195,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             await LatencyActionAsync();
             if (path is null) throw new Exception();
-            
+
             var finalPath = Path.Combine(path, folderName);
             CheckIfArtifactExist(finalPath);
             return await CreateFolder(finalPath, folderName, cancellationToken);
@@ -380,9 +380,41 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
         }
 
-        public Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            var fsArtifactList = new List<FsArtifactChanges>();
+
+            foreach (var path in paths)
+            {
+                if (string.IsNullOrWhiteSpace(path))
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+
+                var artifactIsExist = ArtifacExist(path);
+
+                var fsArtifact = new FsArtifactChanges()
+                {
+                    ArtifactFullPath = path,
+                };
+
+                if (artifactIsExist)
+                {
+                    fsArtifact.IsPathExist = true;
+                }
+                else
+                {
+                    fsArtifact.IsPathExist = false;
+                    fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+                }
+
+                if (artifactIsExist)
+                {
+                    fsArtifact.LastModifiedDateTime = DateTimeOffset.Now;
+                }
+                
+                fsArtifactList.Add(fsArtifact);
+            }
+
+            return fsArtifactList;
         }
     }
 }
