@@ -124,7 +124,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if ((artifact.ArtifactType == FsArtifactType.Folder && !isDirectoryExist) || 
                 (artifact.ArtifactType == FsArtifactType.File && !isFileExist))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? ""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? "artifact"));
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
