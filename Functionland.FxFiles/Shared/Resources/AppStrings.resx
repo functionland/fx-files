@@ -285,6 +285,12 @@
   <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
     <value>The {0} name has invalid chars.</value>
   </data>
+  <data name="UnableToAccessToStorage" xml:space="preserve">
+    <value>Allow permission for storage access!</value>
+  </data>
+  <data name="ArtifactDoseNotExistsException" xml:space="preserve">
+    <value>The {0} dose not exists exception</value>
+  </data>
   <data name="InputLabel" xml:space="preserve">
     <value>Label</value>
   </data>
@@ -302,5 +308,8 @@
   </data>
   <data name="TextAreaPlaceholder" xml:space="preserve">
     <value>Type message here...</value>
+  </data>
+  <data name="DriveRenameFailed" xml:space="preserve">
+    <value>You can not rename drive</value>
   </data>
 </root>

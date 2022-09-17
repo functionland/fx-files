@@ -2,7 +2,7 @@
 
 namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 {
-    public partial class FakeFileServicePlatformTest : FileServicePlatformTest
+    public partial class FakeFileServicePlatformTest_CreateSimpleFileListOnRoot : FileServicePlatformTest
     {
         public override string Title => "FakeFileService Test";
 
@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
         protected override IFileService OnGetFileService()
         {
-            return FakeFileServiceFactory.CreateTypical();
+            return FakeFileServiceFactory.CreateSimpleFileListOnRoot();
         }
 
         protected override string OnGetTestsRootPath() => "fakeroot";
