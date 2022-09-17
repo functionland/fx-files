@@ -88,7 +88,7 @@ public class FxLocalDbService : IFxLocalDbService
     {
         using var LocalDb = CreateConnection();
 
-        await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = {FullPath};"));
+        await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';"));
     }
     public async Task<List<PinnedArtifact>> GetPinnedArticatInfos()
     {

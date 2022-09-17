@@ -37,6 +37,27 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             //Assert.IsNotNull(fileService);
 
         }
+        [TestMethod]
+        public async Task RemovePinDbServiceUnitTest_MustWork()
+        {
+            var testHost = Host.CreateDefaultBuilder()
+               .ConfigureServices((_, services) =>
+               {
+                   string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
+
+                   services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+               }
+            ).Build();
+
+            var serviceScope = testHost.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+
+            var dbService = serviceProvider.GetService<IFxLocalDbService>();
+
+            await dbService.RemovePinAsync("c:\\txt.txt");
+            //Assert.IsNotNull(fileService);
+
+        }
 
         private void Test_ProgressChanged(object? sender, TestProgressChangedEventArgs e)
         {
