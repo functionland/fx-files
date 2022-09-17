@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.App.Components;
 
-public partial class FxToolBar
+public partial class ToolBar
 {
     [Parameter]
     public string? Title { get; set; }
@@ -12,7 +12,13 @@ public partial class FxToolBar
     public bool IsMainToolBar { get; set; }
 
     [Parameter]
+    public bool IsAddButtonVisible { get; set; }
+
+    [Parameter]
     public bool IsBackButtonVisible { get; set; }
+
+    [Parameter]
+    public bool IsOverflowButtonVisible { get; set; }
 
     public async Task GoBack()
     {
