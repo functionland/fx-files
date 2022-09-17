@@ -79,6 +79,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The {0} dose not exists exception.
+        /// </summary>
+        public static string ArtifactDoseNotExistsException {
+            get {
+                return ResourceManager.GetString("ArtifactDoseNotExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} name has invalid chars..
         /// </summary>
         public static string ArtifactNameHasInvalidChars {
@@ -201,6 +210,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string DriveRemoveFailed {
             get {
                 return ResourceManager.GetString("DriveRemoveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can not rename drive.
+        /// </summary>
+        public static string DriveRenameFailed {
+            get {
+                return ResourceManager.GetString("DriveRenameFailed", resourceCulture);
             }
         }
         
@@ -561,6 +579,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string TooManyRequestsExceptions {
             get {
                 return ResourceManager.GetString("TooManyRequestsExceptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow permission for storage access!.
+        /// </summary>
+        public static string UnableToAccessToStorage {
+            get {
+                return ResourceManager.GetString("UnableToAccessToStorage", resourceCulture);
             }
         }
         

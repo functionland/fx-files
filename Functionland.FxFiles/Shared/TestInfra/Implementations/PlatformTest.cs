@@ -121,13 +121,13 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 Assert(title, description, TestProgressType.Fail);
             }
 
-            public void ShouldThrow<TException>(Action action, string title, string? description = null)
+            public async Task ShouldThrowAsync<TException>(Func<Task> action, string title, string? description = null)
                 where TException : Exception
             {
                 try
                 {
-                    action();
-                    Assert(title, "Unexpectedly no exception occured.", TestProgressType.Fail);
+                    await action();
+                    onAssert(title, "Unexpectedly no exception occured.", TestProgressType.Fail);
                 }
                 catch (TException exception)
                 {
