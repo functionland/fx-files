@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.App.Components;
 
-public partial class FxToolBar
+public partial class ToolBar
 {
     [Parameter]
     public string? Title { get; set; }
