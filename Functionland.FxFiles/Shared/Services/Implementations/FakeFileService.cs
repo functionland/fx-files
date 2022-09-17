@@ -271,11 +271,42 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
             IEnumerable<FsArtifact> files = _files;
-            if (path is not null)
-                files = files.Where(f => f.FullPath.StartsWith(path));
+            if (!string.IsNullOrWhiteSpace(path))
+                files = files.Where(
+                    f => string.Equals(Path.GetDirectoryName(f.FullPath), path, StringComparison.CurrentCultureIgnoreCase)
+                    && !string.Equals(f.FullPath, path, StringComparison.CurrentCultureIgnoreCase));
 
             if (searchText is not null)
                 files = files.Where(f => f.Name.Contains(searchText));
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                string[] drives = Directory.GetLogicalDrives();
+                var artifacts = new List<FsArtifact>();
+
+                foreach (var drive in drives)
+                {
+                    var info = new DriveInfo(drive);
+                    string driveName = drive;
+
+                    if (info.DriveType != DriveType.CDRom)
+                    {
+                        var lable = info.VolumeLabel;
+                        driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
+                    }
+
+                    artifacts.Add(
+                        new FsArtifact(drive, driveName, FsArtifactType.Drive, FsFileProviderType.InternalMemory));
+                }
+
+                foreach (var drive in artifacts)
+                {
+                    drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
+                    yield return drive;
+                }
+                yield break;
+            }
+
 
             foreach (var file in files)
             {
