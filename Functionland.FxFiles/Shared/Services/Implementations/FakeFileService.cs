@@ -35,30 +35,39 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 await Task.Delay(EnumerationLatency.Value);
         }
 
-        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
                 await LatencyEnumerationAsync();
                 var newPath = Path.Combine(destination, artifact.Name);
-                CheckIfArtifactExist(newPath);
+                if (!beOverWritten)
+                    CheckIfArtifactExist(newPath);
 
                 var artifactType = GetFsArtifactType(artifact.FullPath);
                 if (artifactType != FsArtifactType.File)
                 {
-                    await CreateFolderAsync(newPath, artifact.Name, cancellationToken);
+                    await CreateFolder(newPath, artifact.Name, cancellationToken, beOverWritten);
                     foreach (var file in _files)
                     {
-                        if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
+                        if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath) && Path.GetExtension(artifact.FullPath) != "")
                         {
                             var insideNewArtifact = CreateArtifact(file.FullPath.Replace(artifact.FullPath, newPath), artifact.ContentHash);
                             _files.Add(insideNewArtifact);
+                        }
+                        else if (file.FullPath != artifact.FullPath && file.FullPath.StartsWith(artifact.FullPath))
+                        {
+                            var insideNewFolder = await CreateFolderAsync(file.FullPath.Replace(artifact.FullPath, newPath), artifact.Name, cancellationToken);
+                            _files.Add(insideNewFolder);
                         }
                     }
 
                 }
                 else
                 {
+                    if(beOverWritten)
+                        await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
+
                     var newArtifact = CreateArtifact(newPath, artifact.ContentHash);
                     _files.Add(newArtifact);
                 }
@@ -112,17 +121,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         private static FsArtifact CreateArtifact(string path, string? contentHash)
         {
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            return new FsArtifact
+            return new FsArtifact(path, Path.GetFileName(path), GetFsArtifactType(path), FsFileProviderType.InternalMemory)
             {
-                Name = Path.GetFileName(path),
-                FullPath = path,
                 FileExtension = Path.GetExtension(path),
                 OriginDevice = originDevice,
                 ThumbnailPath = path,
                 ContentHash = contentHash,
-                ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                ArtifactType = GetFsArtifactType(path)
             };
         }
 
@@ -131,15 +136,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact = new FsArtifact
+                                     let artifact = 
+                                     new FsArtifact(file.path, Path.GetFileName(file.path), FsArtifactType.File, FsFileProviderType.InternalMemory)
                                      {
-                                         Name = Path.GetFileName(file.path),
-                                         FullPath = file.path,
                                          FileExtension = Path.GetExtension(file.path),
                                          OriginDevice = originDevice,
                                          ThumbnailPath = file.path,
                                          ContentHash = file.stream.GetHashCode().ToString(),
-                                         ProviderType = FsFileProviderType.InternalMemory,
                                          LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
                                      }
                                      select artifact)
@@ -159,19 +162,23 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             await LatencyActionAsync();
             if (path is null) throw new Exception();
-            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            
             var finalPath = Path.Combine(path, folderName);
             CheckIfArtifactExist(finalPath);
+            return await CreateFolder(finalPath, folderName, cancellationToken);
+        }
 
-            var artifact = new FsArtifact
+        private async Task<FsArtifact> CreateFolder(string path, string folderName, CancellationToken? cancellationToken, bool beOverWritten = false)
+        {
+
+            var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
+            var artifact = new FsArtifact(path, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
             {
-                Name = folderName,
-                FullPath = finalPath,
                 OriginDevice = originDevice,
-                ProviderType = FsFileProviderType.InternalMemory,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                ArtifactType = GetFsArtifactType(finalPath)
             };
+            if (beOverWritten)
+                await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
             _files.Add(artifact);
             return artifact;
         }
@@ -183,27 +190,38 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var artifact in artifacts)
             {
-                await LatencyEnumerationAsync();
-                foreach (var file in _files)
-                {
-                    finalBag.Add(file);
-                }
-                while (!finalBag.IsEmpty)
-                {
-                    _ = finalBag.TryTake(result: out FsArtifact? currentItem);
 
-                    if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
+                if (string.IsNullOrWhiteSpace(artifact.FullPath))
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
+
+                if (artifact.ArtifactType != FsArtifactType.Drive)
+                {
+                    await LatencyEnumerationAsync();
+                    foreach (var file in _files)
                     {
-                        tempBag.Add(currentItem);
+                        finalBag.Add(file);
+                    }
+                    while (!finalBag.IsEmpty)
+                    {
+                        _ = finalBag.TryTake(result: out FsArtifact? currentItem);
+
+                        if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            tempBag.Add(currentItem);
+                        }
+                    }
+                    foreach (var item in tempBag)
+                    {
+                        if (!item.FullPath.StartsWith(artifact.FullPath))
+                        {
+                            finalBag.Add(item);
+                        }
+
                     }
                 }
-                foreach (var item in tempBag)
+                else if (artifact.ArtifactType == FsArtifactType.Drive)
                 {
-                    if (!item.FullPath.StartsWith(artifact.FullPath))
-                    {
-                        finalBag.Add(item);
-                    }
-
+                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.DriveRemoveFailed)]);
                 }
             }
 
@@ -249,10 +267,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         }
 
-        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
         {
             await Task.WhenAll(
-                CopyArtifactsAsync(artifacts, destination, cancellationToken),
+                CopyArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken),
                 DeleteArtifactsAsync(artifacts, cancellationToken));
         }
 
@@ -289,6 +307,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 }
 
             }
+        }
+
+        public Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -2,5 +2,7 @@
 {
     public partial class FxSearchInput
     {
+        [Parameter, EditorRequired]
+        public bool IsPartial { get; set; }
     }
 }

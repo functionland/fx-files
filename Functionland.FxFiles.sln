@@ -9,11 +9,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".SolutionItems", ".Solution
 		Functionland.FxFiles\.gitignore = Functionland.FxFiles\.gitignore
 		Functionland.FxFiles\commands.json = Functionland.FxFiles\commands.json
 		Functionland.FxFiles\Directory.build.props = Functionland.FxFiles\Directory.build.props
+		Functionland.FxFiles\global.json = Functionland.FxFiles\global.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functionland.FxFiles.App", "Functionland.FxFiles\App\Functionland.FxFiles.App.csproj", "{EAC40D2D-3959-4557-9DB2-7DD60E2A6063}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functionland.FxFiles.Web", "Functionland.FxFiles\Web\Functionland.FxFiles.Web.csproj", "{7C27083E-F333-4034-AC4C-C86DE1D4874E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Functionland.FxFiles.Shared.Test", "Functionland.FxFiles\Test\Functionland.FxFiles.Shared.Test.csproj", "{61D2E84E-B74C-4438-A844-ED3FEB1C7364}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +38,10 @@ Global
 		{7C27083E-F333-4034-AC4C-C86DE1D4874E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C27083E-F333-4034-AC4C-C86DE1D4874E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C27083E-F333-4034-AC4C-C86DE1D4874E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D2E84E-B74C-4438-A844-ED3FEB1C7364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D2E84E-B74C-4438-A844-ED3FEB1C7364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D2E84E-B74C-4438-A844-ED3FEB1C7364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D2E84E-B74C-4438-A844-ED3FEB1C7364}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

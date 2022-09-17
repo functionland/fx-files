@@ -1,2 +1,97 @@
-﻿body {
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fx-taost {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: row nowrap;
+    background-color: color(app-bg);
+    border: 1px solid color(gray-bg-secondary);
+    border-radius: $border-radius-4;
+    padding: $spacing-16 $spacing-18;
+    max-width: 350px;
+
+
+    .toast-container {
+        display: flex;
+        align-items: center;
+
+        .toast-icon {
+            width: $icon-20;
+            height: $icon-20;
+            background-size: $icon-20;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .toast-messages {
+            margin: 0px $spacing-18;
+
+            .taost-message-title {
+                font-family: $open-sans-semi-bold;
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                letter-spacing: $letter-spacing-02;
+            }
+
+            .taost-message-desc {
+                font-family: $open-sans-semi-bold;
+                font-size: $font-size-12;
+                line-height: $line-height-16;
+                letter-spacing: $letter-spacing-02;
+                color: color(gray-content2);
+                max-width: 242px;
+                overflow-wrap: break-word;
+            }
+        }
+    }
+
+    .close-icon {
+        width: $icon-16;
+        height: $icon-16;
+        background-size: $icon-16;
+        background-image: url($close-btn);
+        cursor: pointer;
+    }
+}
+
+.success-message {
+    .toast-icon {
+        background-image: url($success-mode);
+    }
+
+    .taost-message-title {
+        color: $success-light;
+    }
+}
+
+.info-message {
+    .toast-icon {
+        background-image: url($info-mode);
+    }
+
+    .taost-message-title {
+        color: $info-dark;
+    }
+}
+
+.warning-message {
+    .toast-icon {
+        background-image: url($warning-mode);
+    }
+
+    .taost-message-title {
+        color: color(warning);
+    }
+}
+
+.error-message {
+    .toast-icon {
+        background-image: url($error-mode);
+    }
+
+    .taost-message-title {
+        color: color(error);
+    }
 }

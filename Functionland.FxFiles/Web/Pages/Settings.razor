@@ -1,0 +1,37 @@
+﻿@page "/Settings"
+
+@inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.Settings)]</PageTitle>
+
+<FxToolBar IsBackButtonVisible="false" Title="@Localizer[nameof(AppStrings.Settings)]" IsMainToolBar="false" /> 
+
+<div class="settings-content">
+    <FxButton 
+        Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
+        ButtonStyle="FxButtonStyle.MenuLine"
+        RightIcon="images/icons/chevron-right.svg" />
+    <FxButton 
+        Text="@Localizer[nameof(AppStrings.Mode)]"
+        Link="settings/theme"
+        MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + @Localizer[nameof(AppStrings.Mode).ToLower()])"
+        ButtonStyle="FxButtonStyle.MenuLine"
+        RightIcon="images/icons/chevron-right.svg" />
+    <FxButton
+        Text="@Localizer[nameof(AppStrings.Pools)]"
+        ButtonStyle="FxButtonStyle.MenuLine" />
+    <FxButton
+        Text="@Localizer[nameof(AppStrings.About)]"
+        ButtonStyle="FxButtonStyle.MenuLine" />
+
+    <FxDivider
+        FxDividerSize="FxDividerSize.Thin"
+        FxDividerMode="FxDividerMode.Solid" 
+        FxDividerType="FxDividerType.Horizontal" />
+
+    <FxButton
+        Text="@Localizer[nameof(AppStrings.LogOut)]"
+        ButtonStyle="FxButtonStyle.Normal"
+        ButtonSize="FxButtonSize.Stretch" />
+
+    <p>@Localizer[nameof(AppStrings.FilesAndBloxHardware)] 00.01.05</p>
+</div>

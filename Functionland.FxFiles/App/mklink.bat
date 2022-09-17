@@ -3,12 +3,12 @@ if not exist "Shared/." mklink /j "Shared" "../Web/Shared"
 if not exist "Styles/." mklink /j "Styles" "../Web/Styles"
 if not exist "Scripts/." mklink /j "Scripts" "../Web/Scripts"
 if not exist "Components/." mklink /j "Components" "../Web/Components"
+if not exist "Extensions/." mklink /j "Extensions" "../Web/Extensions"
 
 if not exist tsconfig.json mklink "tsconfig.json" "%cd%/../Web/tsconfig.json"
 if not exist _Imports.razor mklink "_Imports.razor" "%cd%/../Web/_Imports.razor"
-
-if not exist sassconfig.json mklink "sassconfig.json" "%cd%/../Web/sassconfig.json"
-if not exist sassconfig.json.defaults mklink "sassconfig.json.defaults" "%cd%/../Web/sassconfig.json.defaults"
+if not exist compilerconfig.json mklink "compilerconfig.json" "%cd%/../Web/compilerconfig.json"
+if not exist compilerconfig.json.defaults mklink "compilerconfig.json.defaults" "%cd%/../Web/compilerconfig.json.defaults"
 
 powershell.exe "& Get-ChildItem | Where-Object { $_.Attributes -match 'ReparsePoint' -and ((Test-Path -Path ('../Web/' + $_.Name)) -eq $false -and $_.Name -ne 'Main.razor') } | Remove-Item -Confirm:$false -Force -Recurse "
 
@@ -16,6 +16,8 @@ if not exist Main.razor mklink "Main.razor" "%cd%/../Web/App.razor"
 
 cd wwwroot
 
+if not exist "js/." mklink /j "js" "../../Web/wwwroot/js"
+if not exist "fonts/." mklink /j "fonts" "../../Web/wwwroot/fonts"
 if not exist "images/." mklink /j "images" "../../Web/wwwroot/images"
 
 if not exist service-worker.js mklink "service-worker.js" "%cd%/../../Web/wwwroot/service-worker.js"
