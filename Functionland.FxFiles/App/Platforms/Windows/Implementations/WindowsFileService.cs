@@ -48,9 +48,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
-        return base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
+        return base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
     public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)

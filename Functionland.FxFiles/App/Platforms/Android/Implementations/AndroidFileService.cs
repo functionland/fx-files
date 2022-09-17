@@ -90,7 +90,7 @@ public partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -103,7 +103,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
+        await base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
     public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
