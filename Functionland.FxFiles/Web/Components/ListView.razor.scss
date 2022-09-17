@@ -104,6 +104,92 @@
     }
 }
 
+.select-action {
+    padding: 0px $spacing-31 0px $spacing-21;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $green-dark-base;
+    height: 40px;
+
+    .info-selection {
+        display: flex;
+        align-items: center;
+
+        .close-btn {
+            height: $icon-16;
+            width: $icon-16;
+            background-image: url($white-close-btn);
+            background-repeat: no-repeat;
+            background-size: $icon-16;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .item-selected {
+            margin-left: $spacing-6;
+
+            .move-selected-items-text,
+            .item-selected-count,
+            .item-selected-text {
+                font-family: $open-sans-regular;
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                letter-spacing: $letter-spacing-02;
+                color: color(app-bg);
+            }
+
+            .move-selected-items-text {
+                display: none;
+            }
+        }
+    }
+
+    .right-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icons-action {
+            height: 18.19px;
+            width: 20.04px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: $icon-24;
+            cursor: pointer;
+        }
+
+        .move-icon {
+            background-image: url($move);
+        }
+
+        .vertical-option-icon {
+            background-image: url($white-option-vertical);
+            margin-left: $spacing-16;
+        }
+
+        .add-folder {
+            background-image: url($white-create-folder);
+            display: none;
+        }
+    }
+}
+
+.move-files-action {
+    padding-right: $spacing-24;
+
+    .item-selected-text,
+    .move-icon,
+    .vertical-option-icon {
+        display: none;
+    }
+
+    .move-selected-items-text,
+    .add-folder {
+        display: inline-block !important;
+    }
+}
+
 .grid-view {
     display: grid;
     grid-gap: 1px;
