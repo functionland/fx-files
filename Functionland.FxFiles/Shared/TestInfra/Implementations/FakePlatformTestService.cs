@@ -2,14 +2,15 @@
 {
     public partial class FakePlatformTestService : PlatformTestService
     {
-        [AutoInject] FakeFileServicePlatformTest FakeFileServicePlatformTest { get; set; }
-
+        [AutoInject] FakeFileServicePlatformTest_CreateTypical FakeFileServicePlatformTest_CreateTypical { get; set; }
+        [AutoInject] FakeFileServicePlatformTest_CreateSimpleFileListOnRoot FakeFileServicePlatformTest_CreateSimpleFileListOnRoot { get; set; }
 
         protected override List<IPlatformTest> OnGetTests()
         {
             return new List<IPlatformTest>()
             {
-                FakeFileServicePlatformTest
+                FakeFileServicePlatformTest_CreateTypical,
+                FakeFileServicePlatformTest_CreateSimpleFileListOnRoot
             };
         }
     }
