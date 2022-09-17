@@ -147,7 +147,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 var drives = await GetDrivesAsync();
 
                 foreach (var drive in drives)
+                {
+                    drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
                     yield return drive;
+                }   
                 yield break;
             }
 
@@ -157,7 +160,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var fsArtifactType = await GetFsArtifactTypeAsync(path);
 
             if (fsArtifactType is null)
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? "artifact"));
 
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
