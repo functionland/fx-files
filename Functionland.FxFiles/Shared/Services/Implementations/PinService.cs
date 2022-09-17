@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Functionland.FxFiles.Shared.Models;
+using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,21 +13,56 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
     {
         [AutoInject] IFxLocalDbService FxLocalDbService { get; set; } = default!;
         [AutoInject] IFileService FileService { get; set; } = default!;
-        public List<string> PinnedPaths { get; set; }
+        [AutoInject] IFileWatchService FileWatchService { get; set; } = default!;
+        public SubscriptionToken ArtifactChangeSubscription { get; set; }
 
-        public PinService(List<string> pinnedPaths)
+        public List<string> PinnedPathsCatche { get; set; }
+
+        public PinService(List<string> pinnedPathsCache)
         {
-            PinnedPaths = pinnedPaths;
+            PinnedPathsCatche = pinnedPathsCache;
 
         }
 
         public async Task InitializeAsync()
         {
-            var pinnedArrtifact = await FxLocalDbService.GetPinnedArticatInfos();
+            var pinnedArtifact = await FxLocalDbService.GetPinnedArticatInfos();
+
             //todo: check All pinned data changes
             //todo:register on changed event
+
+            ArtifactChangeSubscription = EventAggregator
+                    .GetEvent<ArtifactChangeEventArgs>()
+                    .SubscribeAsync(
+                        HandleChangedArtifacts,
+                        ThreadOption.UIThread, keepSubscriberReferenceAlive: true);
+        }
+        private async Task HandleChangedArtifacts(ArtifactChangeEventArgs a)
+        {
+            if (a.ChangeType == FsArtifactChangesType.Delete)
+            {
+                await FxLocalDbService.RemovePinAsync(a.FsArtifact.FullPath);
+                DeteteFromPinCache(a.FsArtifact.FullPath);
+            }
+            else if (a.ChangeType == FsArtifactChangesType.Modify)
+            {
+                if (ImageExtensions.Contains(a.FsArtifact.FileExtension.ToUpperInvariant()))
+                {
+                    //todo://store thumbnail photo
+                    //update pin cache
+                }
+            }
         }
 
+        private void DeteteFromPinCache(string fullPath)
+        {
+            if (PinnedPathsCatche.Any(p => string.Equals(p, fullPath, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                PinnedPathsCatche.Remove(fullPath);
+            }
+        }
+
+        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
         public async Task SetArtifactPinAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
             //todo://store thumbnail photo
@@ -38,9 +75,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
         public async IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string fullPath)
         {
-            var pinnedArrtifact = PinnedPaths;
-            var artifacts =  FileService.GetArtifactsAsync(fullPath);
-           await foreach (var artifact in artifacts)
+            var pinnedArrtifact = PinnedPathsCatche;
+            var artifacts = FileService.GetArtifactsAsync(fullPath);
+            await foreach (var artifact in artifacts)
             {
                 var isPinned = pinnedArrtifact.Any(p => string.Equals(p, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase));
                 if (isPinned)
@@ -48,7 +85,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     artifact.IsPinned = true;
                     yield return artifact;
                 }
-                
+
             }
 
         }

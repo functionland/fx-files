@@ -10,8 +10,7 @@ namespace Functionland.FxFiles.Shared.Services.Contracts
     public interface IFileWatchService
     {
         Task InitialyzeAsync();
-        delegate Task AsyncEventHandler<TEventArgs>(object? sender, TEventArgs e);
-        public event AsyncEventHandler<ArtifactChangeEventArgs> ArtifactChangeEvent;
+ 
     }
 
 }
