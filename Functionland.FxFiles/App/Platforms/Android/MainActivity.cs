@@ -15,12 +15,12 @@ public class MainActivity : MauiAppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {
+        base.OnCreate(savedInstanceState);
+
         if (!PermissionUtils.CheckStoragePermission())
         {
             PermissionUtils.RequestStoragePermission();
         }
-
-        base.OnCreate(savedInstanceState);
     }
     
     protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
@@ -29,11 +29,18 @@ public class MainActivity : MauiAppCompatActivity
         {
             if (!PermissionUtils.CheckStoragePermission())
             {
+                PermissionUtils.GetPermissionTask?.SetResult(false);
                 Toast.MakeText(this, "Allow permission for storage access!", ToastLength.Long)?.Show();
+            }
+            else
+            {
+                PermissionUtils.GetPermissionTask?.SetResult(true);
             }
         }
 
         base.OnActivityResult(requestCode, resultCode, data);
     }
+
+    
 }
 

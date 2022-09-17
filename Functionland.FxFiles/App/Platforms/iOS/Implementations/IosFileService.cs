@@ -8,11 +8,10 @@ namespace Functionland.FxFiles.App.Platforms.iOS.Implementations
 {
     public partial class IosFileService : LocalDeviceFileService
     {
-        public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
-            return base.CopyArtifactsAsync(artifacts, destination, cancellationToken);
+            return base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
         }
-
         public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
             return base.CreateFileAsync(path, stream, cancellationToken);
@@ -48,17 +47,16 @@ namespace Functionland.FxFiles.App.Platforms.iOS.Implementations
             return base.GetFileContentAsync(filePath, cancellationToken);
         }
 
-        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, CancellationToken? cancellationToken = null)
+        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
-            return base.MoveArtifactsAsync(artifacts, destination, cancellationToken);
+            return base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
         }
-
         public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
             return base.RenameFileAsync(filePath, newName, cancellationToken);
         }
 
-        public override async Task<FsFileProviderType> GetFsFileProviderType(string filePath)
+        public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
         {
             return FsFileProviderType.InternalMemory;
         }
