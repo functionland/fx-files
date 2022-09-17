@@ -227,6 +227,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 if (string.IsNullOrWhiteSpace(artifact.FullPath))
                     throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
 
+
+                var artifactExist = ArtifacExist(artifact.FullPath);
+
+                if (!artifactExist)
+                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? "artifact"));
+
+
                 if (artifact.ArtifactType != FsArtifactType.Drive)
                 {
                     await LatencyEnumerationAsync();
