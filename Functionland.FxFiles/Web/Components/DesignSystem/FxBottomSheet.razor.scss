@@ -7,58 +7,44 @@
 }
 
 .close-bottom-sheet-animation {
-    animation-name: closeBottomSheet;
-    animation-duration: 1000ms;
+    animation-duration: 500ms;
     animation-fill-mode: forwards;
+    animation-name: closeBottomSheet;
     animation-timing-function: ease-in-out;
 }
 
 @keyframes closeBottomSheet {
     0% {
         transform: translateY(0px);
-       
-        
     }
 
-
-
     100% {
-        transform: translateY(100%);
-        
-        
+        transform: translateY(100%);   
     }
 }
 
 .show-bottom-sheet-animation {
-    animation-name: showBottomSheet;
-    animation-duration: 1000ms;
+    animation-duration: 500ms;
     animation-fill-mode: forwards;
+    animation-name: showBottomSheet;
     animation-timing-function: ease-in-out;
 }
 
 @keyframes showBottomSheet {
-
-    0% {
-        
+    0% {    
         transform: translateY(100%);
     }
-
-
 
     100% {
         transform: translateY(0px);
         height: unset;
     }
-
 }
 
-
-
-
 .close-button {
-    background-color: transparent;
+    padding: 0;
     cursor: pointer;
-    padding: $spacing-0;
+    background-color: transparent;
 
     .close-button-icon {
         width: $icon-24;
@@ -67,14 +53,14 @@
 }
 
 .sheet {
-    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 999;
+    position: fixed;
     visibility: visible;
     transition: opacity 0.5s, visibility 0.5s;
-    z-index: 999;
 
     &[aria-hidden="true"] {
         opacity: 0;
@@ -83,28 +69,28 @@
     }
 
     .overlay {
-        position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         z-index: -1;
-        background: #888888; // varible
         opacity: 0.5;
+        position: absolute;
+        background: #888888;
     }
 
     .contents {
-        background-color: color(app-bg);
+        width: 100%;
+        max-height: 100vh;
         position: relative;
         overflow-y: hidden;
-        transition: transform 0.5s, border-radius 0.5s;
-        transform: translateY(0);
-        max-height: 100vh;
-        max-width: $screen-lg-min;
-        width: 100%;
-        box-sizing: border-box;
-        border-radius: $border-radius-20 $border-radius-20 $letter-spacing-0 $letter-spacing-0;
         padding-bottom: 34px;
+        box-sizing: border-box;
+        transform: translateY(0);
+        max-width: $screen-lg-min;
+        background-color: color(app-bg);
+        transition: transform 0.5s, border-radius 0.5s;
+        border-radius: $border-radius-20 $border-radius-20 $letter-spacing-0 $letter-spacing-0;
 
         &:not(.not-selectable) {
             transition: transform 0.5s, border-radius 0.5s, height 0.5s;
@@ -115,9 +101,9 @@
         }
 
         .controls {
-            padding: $spacing-8 $spacing-21;
+            display: flex;
             margin-top: $spacing-24;
-            display: flex; // add propery
+            padding: $spacing-8 $spacing-21;
         }
     }
 
@@ -126,18 +112,17 @@
     }
 
     .close-sheet {
-        padding: $spacing-0;
-        width: $spacing-24;
         height: $spacing-24;
-        right: $spacing-0;
-        top: $spacing-0;
-        border: none;
+        width: $spacing-24;
         margin-left: auto;
+        border: none;
+        padding: 0;
+        right: 0;
+        top: 0;
     }
 }
 
 /* core css */
-/* -------------- */
 
 .row {
     display: flex;
@@ -232,46 +217,6 @@
 .fill {
     flex-grow: 1;
     flex-shrink: 0;
-}
-
-.font-system {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-.font-thin {
-    font-weight: 100;
-}
-
-.font-extra-light {
-    font-weight: 200;
-}
-
-.font-light {
-    font-weight: 300;
-}
-
-.font-regular {
-    font-weight: 400;
-}
-
-.font-medium {
-    font-weight: 500;
-}
-
-.font-semibold {
-    font-weight: 600;
-}
-
-.font-bold {
-    font-weight: 700;
-}
-
-.font-extra-bold {
-    font-weight: 800;
-}
-
-.font-black {
-    font-weight: 900;
 }
 
 .cursor-pointer {

@@ -115,89 +115,108 @@ $icon-12: 12 + $base-unit;
 //icons
 $icon-base-url: "/images/icons/lightDesignSystem/";
 
-$chevron-up: $icon-base-url + "chevron-up.svg";
-$avatar-grey: $icon-base-url + "avatar-grey.svg";
-$delete: $icon-base-url + "delete.svg";
+$back: $icon-base-url + "back.svg";
+$move: $icon-base-url + "move.svg";
 $copy: $icon-base-url + "copy.svg";
+$delete: $icon-base-url + "delete.svg";
 $rename: $icon-base-url + "rename.svg";
 $details: $icon-base-url + "details.svg";
+$close-btn: $icon-base-url + "close-btn.svg";
+$tag-label: $icon-base-url + "tag-label.svg";
+$chevron-up: $icon-base-url + "chevron-up.svg";
+
 $options-vertical: $icon-base-url + "options-vertical.svg";
-$options-vertical-disabled: $icon-base-url + "options-vertical-disabled.svg";
 $options-horizontal: $icon-base-url + "options-horizontal.svg";
+$options-vertical-disabled: $icon-base-url + "options-vertical-disabled.svg";
 $options-horizontal-disabled: $icon-base-url + "options-horizontal-disabled.svg";
-$pin-outline: $icon-base-url + "pin-outline.svg";
+
 $pin-filled: $icon-base-url + "pin-filled.svg";
-$move: $icon-base-url + "move.svg";
-$download: $icon-base-url + "download.svg";
+$pin-outline: $icon-base-url + "pin-outline.svg";
+$pin-outline-black: $icon-base-url + "pin-outline-black.svg";
+
+$avatar-grey: $icon-base-url + "avatar-grey.svg";
+$edit-status: $icon-base-url + "edit-status.svg";
+$selected-status: $icon-base-url + "selected-status.svg";
+$deselected-status: $icon-base-url + "deselected-status.svg";
+
 $select-check-filled: $icon-base-url + "select-check-filled.svg";
 $select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
 $select-all-check-filled: $icon-base-url + "select-all-check-filled.svg";
-$list-view-selected: $icon-base-url + "list-view-selected.svg";
-$list-view: $icon-base-url + "list-view.svg";
-$grid-view-selected: $icon-base-url + "grid-view-selected.svg";
-$grid-view: $icon-base-url + "grid-view.svg";
+
 $filter: $icon-base-url + "filter.svg";
 $folder: $icon-base-url + "folder.svg";
-$audio-file: $icon-base-url + "audio-file.svg";
+$add-file: $icon-base-url + "add-file.svg";
 $pdf-file: $icon-base-url + "pdf-file.svg";
 $text-file: $icon-base-url + "text-file.svg";
 $photo-file: $icon-base-url + "photo-file.svg";
-$close-btn: $icon-base-url + "close-btn.svg";
+$audio-file: $icon-base-url + "audio-file.svg";
+$create-file: $icon-base-url + "create-file.svg";
+$upload-file: $icon-base-url + "upload-file.svg";
+$disabled-folder: $icon-base-url + "disabled-folder.svg";
+
+$list-view: $icon-base-url + "list-view.svg";
+$grid-view: $icon-base-url + "grid-view.svg";
+$list-view-selected: $icon-base-url + "list-view-selected.svg";
+$grid-view-selected: $icon-base-url + "grid-view-selected.svg";
+
 $search: $icon-base-url + "search.svg";
 $search-active: $icon-base-url + "search-active.svg";
 $search-disabled: $icon-base-url + "search-disabled.svg";
-$deselected-status: $icon-base-url + "deselected-status.svg";
-$selected-status: $icon-base-url + "selected-status.svg";
-$edit-status: $icon-base-url + "edit-status.svg";
-$red-tab-label: $icon-base-url + "red-tab-label.svg";
-$success-mode: $icon-base-url + "success-mode.svg";
+
 $info-mode: $icon-base-url + "info-mode.svg";
-$warning-mode: $icon-base-url + "warning-mode.svg";
 $error-mode: $icon-base-url + "error-mode.svg";
+$success-mode: $icon-base-url + "success-mode.svg";
+$warning-mode: $icon-base-url + "warning-mode.svg";
+$red-tab-label: $icon-base-url + "red-tab-label.svg";
 $output-error-message: $icon-base-url + "output-error-message.svg";
-$down-arrow: $icon-base-url + "down-arrow.svg";
-$down-arrow-disable: $icon-base-url + "down-arrow-disable.svg"; 
-$down-arrow-pressed: $icon-base-url + "down-arrow-pressed.svg";
+
 $checkbox: $icon-base-url + "checkbox.svg";
 $disabled-checkbox: $icon-base-url + "disabled-checkbox.svg";
-$disabled-checked-checkbox: $icon-base-url + "disabled-checked-checkbox.svg";
 $indeterminate-checkbox: $icon-base-url + "indeterminate-checkbox.svg";
-$tag-label: $icon-base-url + "tag-label.svg";
+$disabled-checked-checkbox: $icon-base-url + "disabled-checked-checkbox.svg";
+
 $radio-btn: $icon-base-url + "radio-btn.svg";
 $radio-btn-selected: $icon-base-url + "radio-btn-selected.svg";
 $radio-btn-disabled: $icon-base-url + "radio-btn-disabled.svg";
 $radio-btn-disabled-selected: $icon-base-url + "radio-btn-disabled-selected.svg";
+
 $user-person: $icon-base-url + "user-person.svg";
 $user-person-selected: $icon-base-url + "user-person-selected.svg";
 $user-person-disabled: $icon-base-url + "user-person-disabled.svg";
+
+$green-circle: $icon-base-url + "green-circle.svg";
+$error-message: $icon-base-url + "error-message-icon.svg";
 $green-notification: $icon-base-url + "green-notification.svg";
 $brand-green-circle: $icon-base-url + "brand-green-circle.svg";
-$green-circle: $icon-base-url + "green-circle.svg";
-$crumbs-right-arrow: $icon-base-url + "crumbs-right-arrow.svg";
+
+$download: $icon-base-url + "download.svg";
 $progress-download: $icon-base-url + "progress-download.svg";
 $progress-download-disabled: $icon-base-url + "progress-download-disabled.svg";
-$back: $icon-base-url + "back.svg";
+
+$down-arrow: $icon-base-url + "down-arrow.svg";
+$down-arrow-disable: $icon-base-url + "down-arrow-disable.svg"; 
+$down-arrow-pressed: $icon-base-url + "down-arrow-pressed.svg";
+$crumbs-right-arrow: $icon-base-url + "crumbs-right-arrow.svg";
+
 $left-arrow: $icon-base-url + "left-arrow.svg";
-$left-arrow-disabled: $icon-base-url + "lef-arrow-disabled.svg";
-$left-arrow-pressed: $icon-base-url + "left-arrow-pressed.svg";
 $left-arrow-hover: $icon-base-url + "left-arrow-hover.svg";
+$left-arrow-pressed: $icon-base-url + "left-arrow-pressed.svg";
+$left-arrow-disabled: $icon-base-url + "lef-arrow-disabled.svg";
+
 $right-arrow: $icon-base-url + "right-arrow.svg";
-$right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
-$right-arrow-pressed: $icon-base-url + "right-arrow-pressed.svg";
 $right-arrow-hover: $icon-base-url + "right-arrow-hover.svg";
-$error-message: $icon-base-url + "error-message-icon.svg";
-$disabled-folder: $icon-base-url + "disabled-folder.svg";
-$create-file: $icon-base-url + "create-file.svg";
-$upload-file: $icon-base-url + "upload-file.svg";
-$add-file: $icon-base-url + "add-file.svg";
+$right-arrow-pressed: $icon-base-url + "right-arrow-pressed.svg";
+$right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
 
 //font faces
 $font-path: "/fonts";
-$montserrat-medium: "Montserrat-Medium";
-$montserrat-semi-bold: "Montserrat-SemiBold";
+
 $open-sans-light: "OpenSans-Light";
 $open-sans-regular: "OpenSans-Regular";
 $open-sans-semi-bold: "OpenSans-SemiBold";
+
+$montserrat-medium: "Montserrat-Medium";
+$montserrat-semi-bold: "Montserrat-SemiBold";
 
 @font-face {
     font-family: $montserrat-semi-bold;
