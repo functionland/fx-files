@@ -15,22 +15,41 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         [AutoInject] IFileService FileService { get; set; } = default!;
         public SubscriptionToken ArtifactChangeSubscription { get; set; }
 
-        public IEventAggregator EventAggregator { get; set; }
+        public IEventAggregator EventAggregator { get; set; } = default!;
 
-        public List<string> PinnedPathsCatche { get; set; }
-
-        public PinService(List<string> pinnedPathsCache)
-        {
-            PinnedPathsCatche = pinnedPathsCache;
-
-        }
+        public List<PinnedArtifact> PinnedPathsCatche { get; set; } = new List<PinnedArtifact>();
 
         public async Task InitializeAsync()
         {
-            var pinnedArtifact = await FxLocalDbService.GetPinnedArticatInfos();
+            var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
+            if (pinnedArtifacts.Count > 0)
+            {
+                var pinnedArtifactPaths = pinnedArtifacts.Select(p => p.FullPath).ToList();
+                var existPins = await FileService.CheckPathExistsAsync(pinnedArtifactPaths);
+                foreach (var pin in existPins)
+                {
+                    if (pin.FsArtifactChangesType == FsArtifactChangesType.Delete)
+                    {
+                        await SetArtifactUnPinAsync(pin.ArtifactFullPath);
+                    }
+                    else
+                    {
+                        var pinnedArticat = pinnedArtifacts.Where(p => string.Equals(p.FullPath, pin.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
 
-            //todo: check All pinned data changes
-            //todo:register on changed event
+                        if (DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
+                        {
+                            var fileExtention = Path.GetExtension(pin.ArtifactFullPath);
+                            if (!string.IsNullOrWhiteSpace(fileExtention) &&
+                                LastModyDatetime != pin.LastModifiedDateTime &
+                                ImageExtensions.Contains(fileExtention.ToUpperInvariant()))
+                            {
+                                //todo getThumbnail photo address
+                                //update db
+                            }
+                        }
+                    }
+                }
+            }
 
             ArtifactChangeSubscription = EventAggregator
                     .GetEvent<ArtifactChangeEventArgs>()
@@ -38,12 +57,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         HandleChangedArtifacts,
                         ThreadOption.UIThread, keepSubscriberReferenceAlive: true);
         }
+
+     
         private async Task HandleChangedArtifacts(ArtifactChangeEventArgs a)
         {
             if (a.ChangeType == FsArtifactChangesType.Delete)
             {
-                await FxLocalDbService.RemovePinAsync(a.FsArtifact.FullPath);
-                DeteteFromPinCache(a.FsArtifact.FullPath);
+                await SetArtifactUnPinAsync(a.FsArtifact.FullPath);
             }
             else if (a.ChangeType == FsArtifactChangesType.Modify)
             {
@@ -57,22 +77,31 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         private void DeteteFromPinCache(string fullPath)
         {
-            if (PinnedPathsCatche.Any(p => string.Equals(p, fullPath, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                PinnedPathsCatche.Remove(fullPath);
-            }
+            var item = PinnedPathsCatche.FirstOrDefault(p => string.Equals(p.FullPath, fullPath, StringComparison.CurrentCultureIgnoreCase));
+            if (item != null)
+                PinnedPathsCatche.Remove(item);
+
         }
 
-        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
+
         public async Task SetArtifactPinAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
             //todo://store thumbnail photo
             await FxLocalDbService.AddPinAsync(artifact);
+            PinnedPathsCatche.Add(new PinnedArtifact
+            {
+                FullPath = artifact.FullPath,
+                ContentHash = artifact.LastModifiedDateTime.ToString(),
+                PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
+                ProviderType = artifact.ProviderType,
+                //ThumbnailPath
+            });
         }
 
         public async Task SetArtifactUnPinAsync(string path, CancellationToken? cancellationToken = null)
         {
             await FxLocalDbService.RemovePinAsync(path);
+            DeteteFromPinCache(path);
         }
         public async IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string fullPath)
         {
@@ -80,15 +109,18 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var artifacts = FileService.GetArtifactsAsync(fullPath);
             await foreach (var artifact in artifacts)
             {
-                var isPinned = pinnedArrtifact.Any(p => string.Equals(p, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase));
-                if (isPinned)
+                var pinnedArtifact = pinnedArrtifact.Where(p => string.Equals(p.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                if (pinnedArtifact is not null)
                 {
                     artifact.IsPinned = true;
+                    artifact.ThumbnailPath = pinnedArtifact.ThumbnailPath;
                     yield return artifact;
                 }
 
             }
 
         }
+
+        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
     }
 }

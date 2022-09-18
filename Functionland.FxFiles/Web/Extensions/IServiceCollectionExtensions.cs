@@ -52,6 +52,8 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
 
+        services.AddSingleton<IPinService, PinService>() ;
+
         return services;
     }
 }
