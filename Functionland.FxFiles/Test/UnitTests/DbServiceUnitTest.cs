@@ -37,6 +37,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             //Assert.IsNotNull(fileService);
 
         }
+
         [TestMethod]
         public async Task RemovePinDbServiceUnitTest_MustWork()
         {
@@ -58,6 +59,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             //Assert.IsNotNull(fileService);
 
         }
+
         [TestMethod]
         public async Task UpdatePinDbServiceUnitTest_MustWork()
         {
@@ -84,6 +86,29 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             //Assert.IsNotNull(fileService);
 
         }
+
+        [TestMethod]
+        public async Task GetPinnedArtifacsDbServiceUnitTest_MustWork()
+        {
+            var testHost = Host.CreateDefaultBuilder()
+               .ConfigureServices((_, services) =>
+               {
+                   string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
+
+                   services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+               }
+            ).Build();
+
+            var serviceScope = testHost.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+
+            var dbService = serviceProvider.GetService<IFxLocalDbService>();
+
+            var pinnedArtifacts = await dbService.GetPinnedArticatInfos();
+            Assert.IsNotNull(pinnedArtifacts);
+
+        }
+
         private void Test_ProgressChanged(object? sender, TestProgressChangedEventArgs e)
         {
             if (e.ProgressType == TestProgressType.Fail)
