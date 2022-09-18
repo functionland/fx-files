@@ -4,7 +4,7 @@ using Functionland.FxFiles.App.Components.Common;
 
 namespace Functionland.FxFiles.App.Components
 {
-    public partial class ListView
+    public partial class FxListView
     {
         [Parameter, EditorRequired]
         public string ListTitle { get; set; } = String.Empty;
