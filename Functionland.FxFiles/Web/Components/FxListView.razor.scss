@@ -120,6 +120,7 @@ list-view {
 .item-container {
     padding: $spacing-16 21px;
     position: relative;
+    cursor: pointer;
 }
 
 .item-content {
@@ -164,6 +165,7 @@ list-view {
     background-repeat: no-repeat;
     width: 24px;
     height: 24px;
+    cursor: pointer;
 }
 
 .list-view-item {

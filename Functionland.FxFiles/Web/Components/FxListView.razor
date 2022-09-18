@@ -1,4 +1,7 @@
-﻿<div class="list-title">@ListTitle</div>
+﻿@if (!string.IsNullOrEmpty(ListTitle))
+{
+    <div class="list-title">@ListTitle</div>
+}
 
 <div class="action-bar">
     <div class="left-actions">
@@ -13,10 +16,15 @@
     </div>
 </div>
 
+@if(HasSearchInput)
+{
+    <FxSearchInput IsPartial="false" />
+}
+
 <div class="list-container @ViewMode-view">
     @foreach (var item in ListItems)
     {
-        <div class="item-container @ViewMode-view-item">
+        <div class="item-container @ViewMode-view-item" @onclick="GoIntoItem">
             <div class="item-content @item.IconStr-icon">
                 <div class="item-title">
                     @if (item.IsPinned == true)
@@ -27,7 +35,9 @@
                 </div>
                 <div class="item-sub-text">@item.SubTitle</div>
             </div>
-            <div class="options-btn"></div>
+            <div class="options-btn"
+             @onclick="OpenItemOverFlow"
+             @onclick:stopPropagation="true"></div>
         </div>
     }
 </div>

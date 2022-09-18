@@ -1,6 +1,7 @@
 ﻿@page "/folder"
 
 @inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.Folder)]</PageTitle>
 
 <div class="folder-page-container">
     <ToolBar Title="Folder name"
@@ -8,6 +9,7 @@
              IsAddButtonVisible="true"
              IsBackButtonVisible="true"
              IsOverflowButtonVisible="true"
-             IsMainToolBar="false"></ToolBar>
+             IsMainToolBar="false" />
+    <FxListView HasSearchInput="true" ListItems="ListItems"/>
 </div>
 
