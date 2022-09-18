@@ -150,6 +150,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 ThumbnailPath = path,
                 ContentHash = contentHash,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
+                Size = 20
             };
         }
 
@@ -158,15 +159,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact =
-                                     new FsArtifact(file.path, Path.GetFileName(file.path), FsArtifactType.File, FsFileProviderType.InternalMemory)
-                                     {
-                                         FileExtension = Path.GetExtension(file.path),
-                                         OriginDevice = originDevice,
-                                         ThumbnailPath = file.path,
-                                         ContentHash = file.stream.GetHashCode().ToString(),
-                                         LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
-                                     }
+                                     let artifact = CreateArtifact(file.path,file.stream.GetHashCode().ToString())
                                      select artifact)
             {
                 CheckIfArtifactExist(artifact.FullPath);
