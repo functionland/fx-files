@@ -66,6 +66,31 @@ class LocalDeviceFileService {
   <<abstract>>
 }
 ```
+# ZoneService Architecture
+```mermaid
+classDiagram
+IZoneService <|-- LocalZoneService
+IZoneService <|-- FulaZoneService
+LocalZoneService <|-- AndroidLocalZoneService
+LocalZoneService <|-- WindowsLocalZoneService
+LocalZoneService <|-- IosLocalZoneService
+FulaZoneService <|-- AndroidFulaZoneService
+FulaZoneService <|-- IosFulaZoneService
+FulaZoneService <|-- WindowsFulaZoneService
+
+class IZoneService {
+  <<interface>>
+  GetZones(searchText: string) FsZone[]
+}
+
+class LocalZoneService {
+  <<abstract>>
+}
+
+class FulaZoneService {
+  <<abstract>>
+}
+```
 
 # UI Components
 
