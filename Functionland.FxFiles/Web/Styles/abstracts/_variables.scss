@@ -116,7 +116,6 @@ $icon-12: 12 + $base-unit;
 $icon-base-url: "/images/icons/lightDesignSystem/";
 
 $back: $icon-base-url + "back.svg";
-$move: $icon-base-url + "move.svg";
 $copy: $icon-base-url + "copy.svg";
 $delete: $icon-base-url + "delete.svg";
 $rename: $icon-base-url + "rename.svg";
@@ -143,11 +142,13 @@ $select-check-filled: $icon-base-url + "select-check-filled.svg";
 $select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
 $select-all-check-filled: $icon-base-url + "select-all-check-filled.svg";
 
+$move: $icon-base-url + "move.svg";
 $filter: $icon-base-url + "filter.svg";
 $folder: $icon-base-url + "folder.svg";
 $add-file: $icon-base-url + "add-file.svg";
 $pdf-file: $icon-base-url + "pdf-file.svg";
 $text-file: $icon-base-url + "text-file.svg";
+$move-white: $icon-base-url + "move-white.svg";
 $photo-file: $icon-base-url + "photo-file.svg";
 $audio-file: $icon-base-url + "audio-file.svg";
 $create-file: $icon-base-url + "create-file.svg";
