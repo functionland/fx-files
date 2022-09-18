@@ -37,13 +37,11 @@
             color: color(gray-content1);
         }
     }
-    // TODO: use value from the sass variables
     .file-details-area {
         padding: $spacing-21;
     }
 
     .bottom-body {
-        // TODO: use value from the sass variables
         padding: $spacing-10 $spacing-21;
 
         .close-btn-bottom-action {

@@ -1,57 +1,59 @@
-﻿
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
 .bottom-action {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0px;
-    gap: 6px;
+    padding: $spacing-0;
+    gap: $spacing-6;
     flex: none;
     order: 0;
     flex-grow: 1;
 
     .action-button {
         background: transparent;
-        padding: 0px;
+        padding: $spacing-0;
         border: none
     }
 
     .download-action-icon {
-        background-image: url("/images/icons/lightDesignSystem/download.svg");
+        background-image: url($download);
         background-position: center;
         background-repeat: no-repeat;
-        height: 24px;
-        background-size: 24px
+        height: $icon-24;
+        background-size: $icon-24;
     }
 
     .move-action-icon {
-        background-image: url("/images/icons/lightDesignSystem/move.svg");
+        background-image: url($move);
         background-position: center;
         background-repeat: no-repeat;
-        height: 24px;
-        background-size: 24px
+        height: $icon-24;
+        background-size: $icon-24;
     }
 
     .pin-action-icon {
-        background-image: url("/images/icons/lightDesignSystem/pin-outline-black.svg");
+        background-image: url($pin-outline-black);
         background-position: center;
         background-repeat: no-repeat;
-        height: 24px;
-        background-size: 24px
+        height: $icon-24;
+        background-size: $icon-24;
     }
 
     .more-action-icon {
-        background-image: url("/images/icons/lightDesignSystem/options-vertical.svg");
+        background-image: url($options-vertical);
         background-position: center;
         background-repeat: no-repeat;
-        height: 24px;
-        background-size: 24px
+        height: $icon-24;
+        background-size: $icon-24;
     }
 
     .action-text p {
-        margin: 0px;
-        font-size: 12px;
-        font-family: "OpenSans-Regular";
-        line-height: 16px;
+        margin: $spacing-0;
+        margin-top:$spacing-6;
+        font-size: $open-sans-regular;
+        line-height: $line-height-16;
         color: var(--gray-content1)
     }
 }
