@@ -1,4 +1,23 @@
 ﻿@inherits AppComponentBase;
 
-<h3>FxBottomSheet</h3>
 
+<div class="sheet column items-center justify-end @(IsClose ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
+    
+    <div class="overlay"></div>
+
+    <div class="contents column">
+        @if (IsCloseAble)
+        {
+            <div class="controls">
+                <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">
+                    <img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" />
+                </button>
+            </div>
+        }
+
+        @if (ContentRenderFragment != null)
+        {
+            @ContentRenderFragment
+        }
+    </div>
+</div>

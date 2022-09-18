@@ -3,41 +3,19 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
-<FxToolBar IsMainToolBar="true" />
+<ToolBar IsMainToolBar="true" />
 
 <div class="mydevice-content">
-@*    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
         <ContentTemplate>
             <div class="items">
                 @foreach (var cardConfig in PinnedCards)
-               {
-                    <FileCard CardConfig="cardConfig"></FileCard>
+                {
+                    <FileCard CardConfig="cardConfig" />
                 }
-                <FileCard 
-                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
-                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
-                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
-                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
-                <FileCard 
-                    IsFavorite="true"
-                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
-                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
-                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
-                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
-                <FileCard 
-                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
-                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
-                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
-                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
-                <FileCard 
-                    IsDisable="true"
-                    FileName="@Localizer[nameof(AppStrings.CardFileName)]" 
-                    ModifiedDate="@Localizer[nameof(AppStrings.ModifiedDate)]" 
-                    FileSize="@Localizer[nameof(AppStrings.CardFileSize)]"
-                    FileFormat="@Localizer[nameof(AppStrings.CardFileFormat)]"/>
             </div>
         </ContentTemplate>
-    </BitAccordion>*@
+    </BitAccordion>
 
-    <ListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems"></ListView>
+    <ListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems" />
 </div>

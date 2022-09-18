@@ -40,7 +40,8 @@ header {
     height: 100%;
     flex-grow: 1;
     display: flex;
-    align-items: center;    
+    align-items: center;
+    justify-content: space-between;
 }
 
 .main-toolbar {
@@ -52,6 +53,10 @@ header {
     ::deep .input-box {
         flex-grow: 1;
     }
+}
+
+.toolbar-items {
+    display: flex;
 }
 
 @media only screen and (max-width: 280px) {
