@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.App.Components;
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace Functionland.FxFiles.App.Components;
 
 public partial class ToolBar
 {
@@ -19,6 +21,12 @@ public partial class ToolBar
 
     [Parameter]
     public bool IsOverflowButtonVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnAddButtonClick { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnOverflowButtonClick { get; set; }
 
     public async Task GoBack()
     {
