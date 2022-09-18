@@ -1,0 +1,11 @@
+﻿@inherits AppComponentBase;
+
+<!-- Sheet bottom item -->
+<div class="bottom-action">
+    <button class="action-button">
+        <div class="@(ActionIcon.ToString().ToLower())-action-icon"></div>
+        <div class="action-text">
+            <p>@Localizer[ActionIcon.ToString()]</p>
+        </div>
+    </button>
+</div>

@@ -79,19 +79,20 @@ $colors-dark: (
 $base-unit: px;
 
 //spacing
+$spacing-0: 0 + $base-unit;
 $spacing-4: 4 + $base-unit;
 $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
-$spacing-10-28: 10.28 + $base-unit;
+$spacing-10: 10 + $base-unit;
 $spacing-12: 12 + $base-unit;
 $spacing-14: 14 + $base-unit;
 $spacing-16: 16 + $base-unit;
 $spacing-18: 18 + $base-unit;
-$spacing-21: 20 + $base-unit;
 $spacing-21: 21 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
+$spacing-34: 34 + $base-unit;
 $spacing-40: 40 + $base-unit;
 $spacing-48: 48 + $base-unit;
 $spacing-56: 56 + $base-unit;
@@ -279,6 +280,7 @@ $border-radius-6: 6 + $base-unit;
 $border-radius-20: 20 + $base-unit;
 
 //border-sizes
+$border-size-0: 0 + $base-unit;
 $border-size-1: 1 + $base-unit;
 $border-size-2: 2 + $base-unit;
 $border-size-4: 4 + $base-unit;
