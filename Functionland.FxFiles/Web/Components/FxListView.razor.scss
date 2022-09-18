@@ -36,6 +36,7 @@
             letter-spacing: $letter-spacing-02;
             margin-right: $spacing-4;
             color: color(gray-content1);
+            cursor: pointer;
         }
 
         .sort-order {
@@ -45,6 +46,7 @@
             background-size: $icon-16;
             width: 16px;
             height: 40px;
+            cursor: pointer;
         }
 
         .desc-order {
@@ -69,6 +71,7 @@
             background-position: center;
             height: 40px;
             width: 24px;
+            cursor: pointer;
         }
 
         .select-all-btn {
