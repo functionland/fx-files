@@ -58,18 +58,18 @@
 .fx-link-disabled,
 .fx-link-disabled:hover,
 .fx-link-disabled:active {
-    color: color(gray-border);
+    color: color(input-disable);
     pointer-events: none;
 }
 
 .fx-link-disabled-left {
-    color: color(gray-border);
+    color: color(input-disable);
     pointer-events: none;
     background-image: url($left-arrow-disabled);
 }
 
 .fx-link-disabled-right {
-    color: color(gray-border);
+    color: color(input-disable);
     pointer-events: none;
     background-image: url($right-arrow-disabled);
 }
