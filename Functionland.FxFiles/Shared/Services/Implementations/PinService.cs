@@ -15,7 +15,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         [AutoInject] IFileService FileService { get; set; } = default!;
         public SubscriptionToken ArtifactChangeSubscription { get; set; }
 
-        public IEventAggregator EventAggregator { get; set; } = default!;
+        [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
 
         public List<PinnedArtifact> PinnedPathsCatche { get; set; } = new List<PinnedArtifact>();
 
