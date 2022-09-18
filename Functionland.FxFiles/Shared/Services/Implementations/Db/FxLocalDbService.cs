@@ -67,8 +67,6 @@ public class FxLocalDbService : IFxLocalDbService
         return new SqliteConnection(ConnectionString);
     }
 
-
-
     public async Task AddPinAsync(FsArtifact artifact)
     {
         using var LocalDb = CreateConnection();
@@ -84,12 +82,26 @@ public class FxLocalDbService : IFxLocalDbService
         await Task.Run(() => LocalDb.Insert(pinnedArtifact));
     }
 
+    public async Task UpdatePinAsync(PinnedArtifact pinnedArtifact)
+    {
+        var localDb = CreateConnection();
+        await Task.Run(() => localDb.Execute(
+            $"UPDATE PinnedArtifact SET ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @FullPath ",
+            new
+            {
+                ThumbnailPath = pinnedArtifact.ThumbnailPath,
+                ContentHash = pinnedArtifact.ContentHash,
+                FullPath = pinnedArtifact.FullPath
+            }));
+    }
+
     public async Task RemovePinAsync(String FullPath)
     {
         using var LocalDb = CreateConnection();
 
         await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';"));
     }
+
     public async Task<List<PinnedArtifact>> GetPinnedArticatInfos()
     {
         using var LocalDb = CreateConnection();

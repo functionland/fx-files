@@ -6,5 +6,6 @@
         Task<List<PinnedArtifact>> GetPinnedArticatInfos();
         Task InitAsync();
         Task RemovePinAsync(string FullPath);
+        Task UpdatePinAsync(PinnedArtifact pinnedArtifact);
     }
 }
