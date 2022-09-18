@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Android.OS;
 using Android.OS.Storage;
 
 using Stream = System.IO.Stream;
@@ -11,40 +12,64 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
         return await base.CreateFileAsync(path, stream, cancellationToken);
     }
 
-    public override Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
+    public override async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.CreateFilesAsync(files, cancellationToken);
+        return await base.CreateFilesAsync(files, cancellationToken);
     }
 
-    public override Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
+    public override async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.CreateFolderAsync(path, folderName, cancellationToken);
+        return await base.CreateFolderAsync(path, folderName, cancellationToken);
     }
 
-    public override Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
+    public override async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.GetFileContentAsync(filePath, cancellationToken);
+        return await base.GetFileContentAsync(filePath, cancellationToken);
     }
 
     public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
@@ -65,61 +90,91 @@ public partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.MoveArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
-    }
-    
-    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool beOverWritten = false, CancellationToken? cancellationToken = null)
-    {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-        }
-
-        await base.CopyArtifactsAsync(artifacts, destination, beOverWritten, cancellationToken);
+        await base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
-    public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.RenameFileAsync(filePath, newName, cancellationToken);
+        await base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
     }
 
-    public override Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
+    public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.RenameFolderAsync(folderPath, newName, cancellationToken);
+        await base.RenameFileAsync(filePath, newName, cancellationToken);
     }
-    
-    public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+
+    public override async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
         }
 
-        return base.DeleteArtifactsAsync(artifacts, cancellationToken);
+        await base.RenameFolderAsync(folderPath, newName, cancellationToken);
+    }
+
+    public override async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+    {
+        if (!PermissionUtils.CheckStoragePermission())
+        {
+            PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult)
+            {
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
+        }
+
+        await base.DeleteArtifactsAsync(artifacts, cancellationToken);
     }
 
     public override async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
     {
         return await base.CheckPathExistsAsync(paths, cancellationToken);
     }
-    
+
     public override async Task<List<FsArtifact>> GetDrivesAsync()
     {
         var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;

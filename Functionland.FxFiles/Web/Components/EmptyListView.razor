@@ -1,0 +1,31 @@
+﻿@inherits AppComponentBase;
+
+
+<div class="empty-list-view">
+
+    <div class="empty-list-title">@Localizer[nameof(AppStrings.EmptyListTitle)]</div>
+    <div class="buttons-box">
+
+        <FxButton 
+            LeftIcon="images/icons/lightDesignSystem/add-file.svg"
+            Text="@Localizer[nameof(AppStrings.ButtonAddFile)]"
+            ButtonStyle="FxButtonStyle.Outline"
+            Width="100%" />
+
+        <FxButton 
+            LeftIcon="images/icons/lightDesignSystem/upload-file.svg"
+            Text="@Localizer[nameof(AppStrings.ButtonUploadFiles)]" 
+            ButtonStyle="FxButtonStyle.Outline" 
+            Width="100%" />
+
+        <FxButton 
+            LeftIcon="images/icons/lightDesignSystem/create-folder.svg"
+            Text="@Localizer[nameof(AppStrings.ButtonAddNewFolder)]" 
+            ButtonStyle="FxButtonStyle.Outline" 
+            Width="100%" 
+            />
+    </div>
+
+  
+
+</div>

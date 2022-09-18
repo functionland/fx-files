@@ -5,16 +5,17 @@ footer {
     bottom: 0;
     z-index: 99;
     width: 100%;
-    height: 80px;
+    height: 81px;
     position: sticky;
     color: color(gray-content3);
-    background-color: color(gray-bg-primary);
+    background-color: color(app-bg);
 }
 
 .navbarApp {
     height: 100%;
     display: flex;
     flex-direction: column;
+    border-top: 1px solid color(gray-bg-secondary);
 }
 
 .navbarApp__wrapper {

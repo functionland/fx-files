@@ -124,7 +124,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if ((artifact.ArtifactType == FsArtifactType.Folder && !isDirectoryExist) || 
                 (artifact.ArtifactType == FsArtifactType.File && !isFileExist))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? ""));
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? "artifact"));
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
@@ -147,7 +147,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 var drives = await GetDrivesAsync();
 
                 foreach (var drive in drives)
+                {
+                    drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
                     yield return drive;
+                }   
                 yield break;
             }
 
@@ -157,7 +160,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var fsArtifactType = await GetFsArtifactTypeAsync(path);
 
             if (fsArtifactType is null)
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? "artifact"));
 
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
@@ -426,8 +429,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var drive in drives)
             {
+                var info = new DriveInfo(drive);
+                string driveName = drive;
+
+                if (info.DriveType != DriveType.CDRom)
+                {
+                    var lable = info.VolumeLabel;
+                    driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
+                }
+
                 artifacts.Add(
-                    new FsArtifact(drive, drive, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
+                    new FsArtifact(drive, driveName, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
             }
 
             return artifacts;
