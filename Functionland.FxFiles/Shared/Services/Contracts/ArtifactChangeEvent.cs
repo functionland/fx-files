@@ -2,7 +2,7 @@
 
 namespace Functionland.FxFiles.Shared.Services.Contracts
 {
-    public class ArtifactChangeEventArgs: PubSubEvent<ArtifactChangeEventArgs>
+    public class ArtifactChangeEvent: PubSubEvent<ArtifactChangeEvent>
     {
         public FsArtifact? FsArtifact { get; set; }
         public FsArtifactChangesType? ChangeType { get; set; }

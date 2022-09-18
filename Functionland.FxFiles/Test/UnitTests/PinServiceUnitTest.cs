@@ -26,6 +26,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
                    string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
 
                    services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+                   services.AddSingleton<IStringLocalizer<AppStrings>>();
                }
             ).Build();
 
@@ -75,7 +76,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             var aggrigator = serviceProvider.GetService<IEventAggregator>();
 
             await pinService.InitializeAsync();
-            aggrigator.GetEvent<ArtifactChangeEventArgs>().Publish(new ArtifactChangeEventArgs()
+            aggrigator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
                 ChangeType = FsArtifactChangesType.Delete,
                 FsArtifact = new FsArtifact("C:\\Program Files", "Program Files", FsArtifactType.Folder, FsFileProviderType.InternalMemory)
