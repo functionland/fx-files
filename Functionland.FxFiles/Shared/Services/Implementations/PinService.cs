@@ -30,7 +30,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     if (pin.FsArtifactChangesType == FsArtifactChangesType.Delete)
                     {
-                        await SetArtifactUnPinAsync(pin.ArtifactFullPath);
+                        await SetArtifactsUnPinAsync(new String[] { pin.ArtifactFullPath });
                     }
                     else
                     {
@@ -71,7 +71,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             if (a.ChangeType == FsArtifactChangesType.Delete)
             {
-                await SetArtifactUnPinAsync(a.FsArtifact.FullPath);
+                await SetArtifactsUnPinAsync(new String[] { a.FsArtifact.FullPath });
             }
             else if (a.ChangeType == FsArtifactChangesType.Modify)
             {
@@ -92,24 +92,30 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         }
 
 
-        public async Task SetArtifactPinAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+        public async Task SetArtifactsPinAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
         {
-            //todo://store thumbnail photo
-            await FxLocalDbService.AddPinAsync(artifact);
-            PinnedPathsCatche.Add(new PinnedArtifact
+            foreach(var artifact in artifacts)
             {
-                FullPath = artifact.FullPath,
-                ContentHash = artifact.LastModifiedDateTime.ToString(),
-                PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
-                ProviderType = artifact.ProviderType,
-                //ThumbnailPath
-            });
+                //todo://store thumbnail photo
+                await FxLocalDbService.AddPinAsync(artifact);
+                PinnedPathsCatche.Add(new PinnedArtifact
+                {
+                    FullPath = artifact.FullPath,
+                    ContentHash = artifact.LastModifiedDateTime.ToString(),
+                    PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
+                    ProviderType = artifact.ProviderType,
+                    //ThumbnailPath
+                });
+            }
         }
 
-        public async Task SetArtifactUnPinAsync(string path, CancellationToken? cancellationToken = null)
+        public async Task SetArtifactsUnPinAsync(string[] paths, CancellationToken? cancellationToken = null)
         {
-            await FxLocalDbService.RemovePinAsync(path);
-            DeteteFromPinCache(path);
+            foreach(var path in paths)
+            {
+                await FxLocalDbService.RemovePinAsync(path);
+                DeteteFromPinCache(path);
+            }
         }
         public async IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string? fullPath)
         {

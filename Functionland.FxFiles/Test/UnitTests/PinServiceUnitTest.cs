@@ -34,15 +34,15 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
 
             var pinService = serviceProvider.GetService<IPinService>();
 
-            await pinService.SetArtifactPinAsync(
-                new FsArtifact("C:\\Program Files", "Program Files",FsArtifactType.Folder, FsFileProviderType.InternalMemory));
+            await pinService.SetArtifactsPinAsync(
+                new FsArtifact[] {new FsArtifact("C:\\Program Files", "Program Files", FsArtifactType.Folder, FsFileProviderType.InternalMemory) });
 
             var pinnedFiles = pinService.GetPinnedArtifactsAsync(null);
             await foreach(var file in pinnedFiles)
             {
                 Console.WriteLine(file.FullPath);
             }
-            await pinService.SetArtifactUnPinAsync("C:\\Program Files");
+            await pinService.SetArtifactsUnPinAsync(new string[] {"C:\\Program Files"});
             pinnedFiles = pinService.GetPinnedArtifactsAsync(null);
             await foreach (var file in pinnedFiles)
             {
