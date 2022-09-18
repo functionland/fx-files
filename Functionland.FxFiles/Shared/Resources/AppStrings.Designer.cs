@@ -349,6 +349,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder.
+        /// </summary>
+        public static string Folder {
+            get {
+                return ResourceManager.GetString("Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access to the requested resource is forbidden.
         /// </summary>
         public static string ForbiddenException {
@@ -448,6 +457,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modified 09/30/22.
+        /// </summary>
+        public static string ModifiedDate {
+            get {
+                return ResourceManager.GetString("ModifiedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to More.
         /// </summary>
         public static string More {
@@ -462,15 +480,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Move {
             get {
                 return ResourceManager.GetString("Move", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Modified 09/30/22.
-        /// </summary>
-        public static string ModifiedDate {
-            get {
-                return ResourceManager.GetString("ModifiedDate", resourceCulture);
             }
         }
         
@@ -493,20 +502,20 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pin.
-        /// </summary>
-        public static string Pin {
-            get {
-                return ResourceManager.GetString("Pin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to the path is null.
         /// </summary>
         public static string PathIsNull {
             get {
                 return ResourceManager.GetString("PathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pin.
+        /// </summary>
+        public static string Pin {
+            get {
+                return ResourceManager.GetString("Pin", resourceCulture);
             }
         }
         
@@ -579,6 +588,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string SharedFileCardTag {
             get {
                 return ResourceManager.GetString("SharedFileCardTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        public static string Source {
+            get {
+                return ResourceManager.GetString("Source", resourceCulture);
             }
         }
         
@@ -660,15 +678,6 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string ToastWarningMessage {
             get {
                 return ResourceManager.GetString("ToastWarningMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Source.
-        /// </summary>
-        public static string Source {
-            get {
-                return ResourceManager.GetString("Source", resourceCulture);
             }
         }
         
