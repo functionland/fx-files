@@ -3,7 +3,7 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
-<ToolBar IsMainToolBar="true" />
+<ToolBar IsMainToolBar="true" OnAddButtonClick="(() => OpenSheet())" />
 
 <div class="mydevice-content">
     <BitAccordion Title="Pinned" DefaultIsExpanded="true">
@@ -18,4 +18,16 @@
     </BitAccordion>
 
     <ListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems" />
+
+    <FxBottomSheet 
+        IsCloseAble="true"
+        IsClose="IsBottomSheetClose" 
+        IsCloseChanged="SyncCloseState">
+        <ContentRenderFragment>
+            <div class="newfolder-sheet">
+                <h3>New Folder</h3>
+                <FxTextInput Label="Name" />
+            </div>
+        </ContentRenderFragment>
+    </FxBottomSheet>
 </div>

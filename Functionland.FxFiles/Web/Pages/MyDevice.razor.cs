@@ -4,9 +4,10 @@ namespace Functionland.FxFiles.App.Pages
 {
     public partial class MyDevice
     {
-
         [AutoInject]
         private IFileService _fileService { get; set; } = default!;
+
+        public bool IsBottomSheetClose { get; set; } = true;
         public List<ListItemConfig> ListItems { get; set; } = new List<ListItemConfig>();
 
         public List<FileCardConfig> PinnedCards = new List<FileCardConfig>
@@ -20,6 +21,16 @@ namespace Functionland.FxFiles.App.Pages
         protected override async Task OnInitAsync()
         {
             await GetAllFilesAsync();
+        }
+
+        public void SyncCloseState(bool isClose)
+        {
+            IsBottomSheetClose = isClose;
+        }
+
+        public void OpenSheet()
+        {
+            IsBottomSheetClose = false;
         }
 
         #region File service methods
