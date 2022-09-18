@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
         protected override IFileService OnGetFileService()
         {
-            return FakeFileServiceFactory.CreateSimpleFileListOnRoot();
+            return FakeFileServiceFactory.CreateSimpleFileListOnRoot(TimeSpan.Zero, TimeSpan.Zero);
         }
 
         protected override string OnGetTestsRootPath() => "fakeroot";
