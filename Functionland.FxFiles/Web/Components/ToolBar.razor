@@ -1,0 +1,62 @@
+﻿@inherits AppComponentBase;
+
+<header>
+    <div class="toolbarApp">
+        @if(IsBackButtonVisible)
+        {
+            <FxButton
+                Padding="0"
+                OnClick="@GoBack"
+                BackgroundColor="transparent"
+                LeftIcon="images/icons/back.svg"
+                ButtonStyle="FxButtonStyle.None"/>
+        }
+
+        <div>
+            @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrWhiteSpace(Title))
+            {
+                <h1 class="title">@Title</h1>
+            }
+
+            @if (!string.IsNullOrEmpty(SubTitle) || !string.IsNullOrWhiteSpace(SubTitle))
+            {
+                <h6 class="subtitle">@SubTitle</h6>
+            }
+        </div>
+
+        @if (IsMainToolBar)
+        {
+            <div class="main-toolbar">
+                <FxSearchInput IsPartial="true"/>
+
+                <FxButton
+                    Margin="0 8px"
+                    ButtonStyle="FxButtonStyle.IconOnly"
+                    LeftIcon="images/icons/plus.svg" />
+
+                <FxAvatar
+                    FxAvatarSizeType="FxAvatarSizeEnum.Small"
+                    FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
+            </div>
+        }
+
+        <div class="toolbar-items">
+            @if (!IsMainToolBar && IsAddButtonVisible)
+            {
+                <FxButton
+                    Margin="0 8px"
+                    ButtonStyle="FxButtonStyle.IconOnly"
+                    LeftIcon="images/icons/plus.svg" />
+            }
+
+            @if (IsOverflowButtonVisible)
+            {
+                <FxButton
+                    Padding="0 0 0 10px"
+                    BackgroundColor="transparent"
+                    ButtonStyle="FxButtonStyle.None"
+                    LeftIcon="images/icons/lightDesignSystem/options-vertical.svg" />
+            }
+        </div>
+    </div>
+</header>

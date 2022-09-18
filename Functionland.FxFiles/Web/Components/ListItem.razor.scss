@@ -1,0 +1,132 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+.item-container {
+    padding: $spacing-16 21px;
+    position: relative;
+}
+
+.item-content {
+    background-repeat: no-repeat;
+    background-size: $icon-24;
+
+
+    .item-title {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+
+        .pin-badge {
+            background-image: url($pin-filled);
+            background-repeat: no-repeat;
+            background-size: $icon-16;
+            background-position: center;
+            width: 16px;
+            height: 16px;
+            margin-right: $spacing-8;
+        }
+
+        .title-text {
+            color: color(gray-content1);
+            font-family: $open-sans-regular;
+            font-style: normal;
+            font-weight: 400;
+            font-size: $font-size-16;
+            line-height: $line-height-28;
+            letter-spacing: $letter-spacing-02;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
+
+.options-btn {
+    background-size: $icon-24;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+}
+
+.list-view {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 74px;
+
+    .options-btn {
+        background-image: url($options-vertical);
+    }
+
+    .item-content {
+        background-position: center left;
+        padding-left: 40px;
+
+        
+
+        .item-sub-text {
+            color: color(gray-content3);
+            font-family: $open-sans-regular;
+            font-style: normal;
+            font-weight: 400;
+            font-size: $font-size-10;
+            line-height: $line-height-14;
+            letter-spacing: $letter-spacing-02;
+        }
+    }
+}
+
+.grid-view {
+    height: 120px;
+
+    .options-btn {
+        background-image: url($options-horizontal);
+        margin: 0 auto;
+    }
+
+    .item-content {
+        background-position: center top;
+        padding-top: 32px;
+
+        .item-title {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
+
+            .pin-badge {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+            }
+        }
+
+        .item-sub-text {
+            display: none;
+        }
+    }
+}
+
+.folder-icon {
+    background-image: url($folder);
+}
+
+.text-file-icon {
+    background-image: url($text-file);
+}
+
+.photo-file-icon {
+    background-image: url($photo-file);
+}
+
+.pdf-file-icon {
+    background-image: url($pdf-file);
+}
+
+.audio-file-icon {
+    background-image: url($audio-file);
+}
+

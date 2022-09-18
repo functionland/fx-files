@@ -1,7 +1,11 @@
 ﻿// variables & functions
 @import 'abstracts/_variables.scss';
+@import 'abstracts/_functions.scss';
 
 // components
+@import 'components/_bit-accordion.scss';
+@import 'components/_bit-checkbox.scss';
+@import 'components/_bit-toggle.scss';
 
 // utilities
 
@@ -13,18 +17,40 @@
     box-sizing: border-box;
 }
 
-body {
+*::-webkit-scrollbar {
+    width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: color(gray-bg-primary);
+    border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: color(gray-bg-secondary);
+    border-radius: 6px;
+}
+
+html, body {
     margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
     overscroll-behavior: none;
     font-family: $open-sans-regular;
+    -webkit-tap-highlight-color: transparent;
 
     @each $key, $value in $colors-light {
         --#{$key}: #{$value};
     }
+
+    background-color: color(app-bg);
 }
 
-body[data-theme="Dark"] {
+html, body[data-theme="Dark"] {
     @each $key, $value in $colors-dark {
         --#{$key}: #{$value};
     }
+
+    background-color: color(app-bg);
 }

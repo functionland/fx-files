@@ -1,0 +1,34 @@
+﻿@import "../abstracts/_variables.scss";
+@import "../abstracts/_functions.scss";
+
+::deep .bit-tgl-enabled-checked-fluent div button {
+    background: $green-dark-base;
+    border: none;
+
+}
+::deep .bit-tgl-enabled-unchecked-fluent div button {
+    background: $gray-dark-border;
+    border: none;
+}
+
+::deep .bit-tgl-disabled-unchecked-fluent div button {
+    background: color(gray-bg-secondary);
+    border: none;
+}
+
+::deep .bit-tgl-disabled-checked-fluent div button {
+    background: $green-dark-border;
+    border: none;
+}
+
+::deep .bit-tgl-disabled-checked-fluent div button span {
+    background-color: $gray-dark-border;
+}
+
+::deep .bit-tgl-enabled-unchecked-fluent div button span {
+    background-color: $gray-dark-content1;
+}
+
+::deep .bit-tgl-disabled-unchecked-fluent div button span {
+    background-color: $gray-dark-border;
+}

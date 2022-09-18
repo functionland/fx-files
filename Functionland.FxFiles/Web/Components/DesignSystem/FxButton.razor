@@ -13,7 +13,9 @@
     align-self: @VerticalAlignment;
     background-color: @BackgroundColor;"
     href="@Link"
+    ontouchstart
     draggable="false"
+    @onclick="@OnClick"
     class="fxbutton
     @(string.Format(" fxbutton-{0}", ButtonStyle).ToLower())
     @(string.Format(" fxbutton-{0}", ButtonSize).ToLower())">

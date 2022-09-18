@@ -168,11 +168,32 @@
   <data name="FileAlreadyExistsException" xml:space="preserve">
     <value>FileAlreadyExistsException</value>
   </data>
+  <data name="ArtifactPathIsNull" xml:space="preserve">
+    <value>The {0} path is null</value>
+  </data>
+  <data name="DriveRemoveFailed" xml:space="preserve">
+    <value>You can not delete drive</value>
+  </data>
+  <data name="ArtifactTypeIsNull" xml:space="preserve">
+    <value>The artifact type is null</value>
+  </data>
+  <data name="UnableToLoadStorageManager" xml:space="preserve">
+    <value>Can't load storge manager.</value>
+  </data>
+  <data name="PathIsNull" xml:space="preserve">
+    <value>the path is null</value>
+  </data>
+  <data name="ArtifactNameIsNull" xml:space="preserve">
+    <value>The {0} name is null</value>
+  </data>
+  <data name="ArtifactAlreadyExistsException" xml:space="preserve">
+    <value>The {0} already exists exception</value>
+  </data>
+  <data name="StreamFileIsNull" xml:space="preserve">
+    <value>The stream file is null</value>
+  </data>
   <data name="About" xml:space="preserve">
     <value>About</value>
-  </data>
-  <data name="CreateFileFailed" xml:space="preserve">
-    <value>Create File Failed</value>
   </data>
   <data name="Current" xml:space="preserve">
     <value>Current</value>
@@ -227,5 +248,101 @@
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
+  </data>
+  <data name="ToastDescMessage" xml:space="preserve">
+    <value>A new version of the app is available for download.</value>
+  </data>
+  <data name="ToastErrorMessage" xml:space="preserve">
+    <value>Your error message</value>
+  </data>
+  <data name="ToastInfoMessage" xml:space="preserve">
+    <value>Your info message</value>
+  </data>
+  <data name="ToastSuccessMessage" xml:space="preserve">
+    <value>Your success message</value>
+  </data>
+  <data name="ToastWarningMessage" xml:space="preserve">
+    <value>Your warning message</value>
+  </data>
+  <data name="ButtonSearchFullWidth" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="InputSearchFullWidth" xml:space="preserve">
+    <value>Search in “folder name”</value>
+  </data>
+  <data name="InputSearchParial" xml:space="preserve">
+    <value>Search your files</value>
+  </data>
+  <data name="SharedFileCardTag" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="CardFileFormat" xml:space="preserve">
+    <value>pdf</value>
+  </data>
+  <data name="CardFileName" xml:space="preserve">
+    <value>Presentation_document</value>
+  </data>
+  <data name="CardFileSize" xml:space="preserve">
+    <value>1.22 mb</value>
+  </data>
+  <data name="ModifiedDate" xml:space="preserve">
+    <value>Modified 09/30/22</value>
+  </data>
+  <data name="internalStorageName" xml:space="preserve">
+    <value>internal</value>
+  </data>
+  <data name="SDCardName" xml:space="preserve">
+    <value>SD Card ({0})</value>
+  </data>
+  <data name="UnknownFsFileProviderException" xml:space="preserve">
+    <value>Unknown file provider for path: {0}</value>
+  </data>
+  <data name="CanNotOperateOnFilesException" xml:space="preserve">
+    <value>Can not operate on files exception</value>
+  </data>
+  <data name="TagLabel" xml:space="preserve">
+    <value>Tag Label</value>
+  </data>
+  <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
+    <value>The {0} name has invalid chars.</value>
+  </data>
+  <data name="ButtonAddFile" xml:space="preserve">
+    <value>Add files</value>
+  </data>
+  <data name="ButtonAddNewFolder" xml:space="preserve">
+    <value>Add new folder</value>
+  </data>
+  <data name="ButtonUploadFiles" xml:space="preserve">
+    <value>Upload files</value>
+  </data>
+  <data name="EmptyListTitle" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
+  <data name="UnableToAccessToStorage" xml:space="preserve">
+    <value>Allow permission for storage access!</value>
+  </data>
+  <data name="ArtifactDoseNotExistsException" xml:space="preserve">
+    <value>The {0} dose not exists exception</value>
+  </data>
+  <data name="InputLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="PlaceHolderFilledTextInput" xml:space="preserve">
+    <value>Example Description</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Error message</value>
+  </data>
+  <data name="FieldQuestionInput" xml:space="preserve">
+    <value>Perferendis blanditiis modi amet architecto voluptatem animi saepe non?</value>
+  </data>
+  <data name="TextAreaLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="TextAreaPlaceholder" xml:space="preserve">
+    <value>Type message here...</value>
+  </data>
+  <data name="DriveRenameFailed" xml:space="preserve">
+    <value>You can not rename drive</value>
   </data>
 </root>

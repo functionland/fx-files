@@ -1,3 +1,12 @@
 ﻿@inherits AppComponentBase;
 
-<h3>FxToast</h3>
+<div class="fx-taost  @(string.Format(" {0}-message", ToastType).ToLower())">
+    <div class="toast-container">
+        <div class="toast-icon"></div>
+        <div class="toast-messages">
+            <div class="taost-message-title">@Title</div>
+            <div class="taost-message-desc">@Description</div>
+        </div>
+    </div>
+    <div class="close-icon"></div>
+</div>

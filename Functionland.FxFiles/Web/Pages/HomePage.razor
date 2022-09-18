@@ -2,21 +2,18 @@
 @page "/Home"
 
 @inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.Files)]</PageTitle>
 
-<PageTitle>@Localizer[nameof(AppStrings.HomeTitle)]</PageTitle>
-<div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
+<ToolBar IsMainToolBar="true" />
 
-<button @onclick="(()=>NavigateToTestExplorerComponent())">Test</button>
-
-@*<FxBottomSheet IsCloseAble="true">
-
-</FxBottomSheet>*@
-@*<DetailViewItem></DetailViewItem>*@
-
-@*<FileDetailViewBottomActionItem ActionIcon="ActionIcon.More" />*@
-
-<FxBottomSheet IsCloseAble="true">
-    <ContentRenderFragment>
-        <FileDetailView FileName="Sample.docx" IsImageFile="false" />
-    </ContentRenderFragment>
-</FxBottomSheet>
+<div class="files-content">
+    <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
+    <button @onclick="(()=>NavigateToTestExplorerComponent())">Test</button>
+    <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
+    <FxBottomSheet IsCloseAble="true" IsClose="IsBottomSheetClose" IsCloseChanged="SyncCloseState">
+        <ContentRenderFragment>
+            <FileDetailView FileName="Sample.docx" IsImageFile="false" />
+        </ContentRenderFragment>
+    </FxBottomSheet>
+</div>
+<EmptyListView></EmptyListView>

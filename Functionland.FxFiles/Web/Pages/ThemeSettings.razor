@@ -1,9 +1,16 @@
 ﻿@page "/Settings/Theme"
 @inherits AppComponentBase;
 
-<div class="theme-content">
-    @($"Use System Theme ({SystemTheme})")
-    <BitToggle @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
-    Dark Theme
-    <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
-</div>
+<ToolBar
+    IsMainToolBar="false"
+    IsBackButtonVisible="true" />
+
+@if(_isLoaded)
+{
+    <div class="theme-content">
+        @($"Use System Theme ({SystemTheme})")
+        <BitCheckbox @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
+        Dark Theme
+        <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
+    </div>
+}

@@ -1,4 +1,4 @@
-﻿//main brand colors
+//main brand colors
 $primary-color: #06B597;
 $pure-white: #FFFFFF;
 $main-dark: #212529;
@@ -24,6 +24,7 @@ $success-dark: #37B24D;
 $info-dark: #1C7ED6;
 $warning-dark: #FCC419;
 $error-dark: #FA5252;
+$input-dark-disable: $gray-dark-border; 
 
 //light colors
 $gray-light-content1: #343A40;
@@ -42,6 +43,7 @@ $warning-light: #FAB005;
 $error-light: #FA4343;
 $info-light: $info-dark;
 $success-light: $success-dark;
+$input-light-disable: $gray-dark-content3;
 
 $colors-light: (
   "app-bg": $pure-white,
@@ -55,6 +57,7 @@ $colors-light: (
   "gray-content3": $gray-light-content3,
   "gray-bg-primary": $gray-light-bg-primary,
   "gray-bg-secondary": $gray-light-bg-secondary,
+  "input-disable": $input-light-disable
 );
 
 $colors-dark: (
@@ -69,6 +72,7 @@ $colors-dark: (
   "gray-content3": $gray-dark-content3,
   "gray-bg-primary": $gray-dark-bg-primary,
   "gray-bg-secondary": $gray-dark-bg-secondary,
+  "input-disable": $input-dark-disable
 );
 
 // base variable
@@ -81,6 +85,7 @@ $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
 $spacing-10: 10 + $base-unit;
 $spacing-12: 12 + $base-unit;
+$spacing-14: 14 + $base-unit;
 $spacing-16: 16 + $base-unit;
 $spacing-18: 18 + $base-unit;
 $spacing-21: 21 + $base-unit;
@@ -94,6 +99,8 @@ $spacing-56: 56 + $base-unit;
 $spacing-64: 64 + $base-unit;
 $spacing-72: 72 + $base-unit;
 $spacing-80: 80 + $base-unit;
+$spacing-120: 120 + $base-unit;
+$spacing-333: 333 + $base-unit;
 
 //icon sizes
 $icon-96: 96 + $base-unit;
@@ -103,24 +110,31 @@ $icon-32: 32 + $base-unit;
 $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
+$icon-12: 12 + $base-unit;
 
 //icons
 $icon-base-url: "/images/icons/lightDesignSystem/";
 
+$chevron-up: $icon-base-url + "chevron-up.svg";
 $avatar-grey: $icon-base-url + "avatar-grey.svg";
 $delete: $icon-base-url + "delete.svg";
 $copy: $icon-base-url + "copy.svg";
 $rename: $icon-base-url + "rename.svg";
 $details: $icon-base-url + "details.svg";
-$option-vertical: $icon-base-url + "options-vertical.svg";
+$options-vertical: $icon-base-url + "options-vertical.svg";
+$options-vertical-disabled: $icon-base-url + "options-vertical-disabled.svg";
+$options-horizontal: $icon-base-url + "options-horizontal.svg";
+$options-horizontal-disabled: $icon-base-url + "options-horizontal-disabled.svg";
 $pin-outline: $icon-base-url + "pin-outline.svg";
+$pin-filled: $icon-base-url + "pin-filled.svg";
 $move: $icon-base-url + "move.svg";
 $download: $icon-base-url + "download.svg";
 $select-check-filled: $icon-base-url + "select-check-filled.svg";
 $select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
+$select-all-check-filled: $icon-base-url + "select-all-check-filled.svg";
 $list-view-selected: $icon-base-url + "list-view-selected.svg";
 $list-view: $icon-base-url + "list-view.svg";
-$gird-view-selected: $icon-base-url + "grid-view-selected.svg";
+$grid-view-selected: $icon-base-url + "grid-view-selected.svg";
 $grid-view: $icon-base-url + "grid-view.svg";
 $filter: $icon-base-url + "filter.svg";
 $folder: $icon-base-url + "folder.svg";
@@ -129,9 +143,56 @@ $pdf-file: $icon-base-url + "pdf-file.svg";
 $text-file: $icon-base-url + "text-file.svg";
 $photo-file: $icon-base-url + "photo-file.svg";
 $close-btn: $icon-base-url + "close-btn.svg";
+$search: $icon-base-url + "search.svg";
+$search-active: $icon-base-url + "search-active.svg";
+$search-disabled: $icon-base-url + "search-disabled.svg";
+$deselected-status: $icon-base-url + "deselected-status.svg";
+$selected-status: $icon-base-url + "selected-status.svg";
+$edit-status: $icon-base-url + "edit-status.svg";
+$red-tab-label: $icon-base-url + "red-tab-label.svg";
+$success-mode: $icon-base-url + "success-mode.svg";
+$info-mode: $icon-base-url + "info-mode.svg";
+$warning-mode: $icon-base-url + "warning-mode.svg";
+$error-mode: $icon-base-url + "error-mode.svg";
+$output-error-message: $icon-base-url + "output-error-message.svg";
+$down-arrow: $icon-base-url + "down-arrow.svg";
+$down-arrow-disable: $icon-base-url + "down-arrow-disable.svg"; 
+$down-arrow-pressed: $icon-base-url + "down-arrow-pressed.svg";
+$checkbox: $icon-base-url + "checkbox.svg";
+$disabled-checkbox: $icon-base-url + "disabled-checkbox.svg";
+$disabled-checked-checkbox: $icon-base-url + "disabled-checked-checkbox.svg";
+$indeterminate-checkbox: $icon-base-url + "indeterminate-checkbox.svg";
+$tag-label: $icon-base-url + "tag-label.svg";
+$radio-btn: $icon-base-url + "radio-btn.svg";
+$radio-btn-selected: $icon-base-url + "radio-btn-selected.svg";
+$radio-btn-disabled: $icon-base-url + "radio-btn-disabled.svg";
+$radio-btn-disabled-selected: $icon-base-url + "radio-btn-disabled-selected.svg";
+$user-person: $icon-base-url + "user-person.svg";
+$user-person-selected: $icon-base-url + "user-person-selected.svg";
+$user-person-disabled: $icon-base-url + "user-person-disabled.svg";
+$green-notification: $icon-base-url + "green-notification.svg";
+$brand-green-circle: $icon-base-url + "brand-green-circle.svg";
+$green-circle: $icon-base-url + "green-circle.svg";
+$crumbs-right-arrow: $icon-base-url + "crumbs-right-arrow.svg";
+$progress-download: $icon-base-url + "progress-download.svg";
+$progress-download-disabled: $icon-base-url + "progress-download-disabled.svg";
+$back: $icon-base-url + "back.svg";
+$left-arrow: $icon-base-url + "left-arrow.svg";
+$left-arrow-disabled: $icon-base-url + "lef-arrow-disabled.svg";
+$left-arrow-pressed: $icon-base-url + "left-arrow-pressed.svg";
+$left-arrow-hover: $icon-base-url + "left-arrow-hover.svg";
+$right-arrow: $icon-base-url + "right-arrow.svg";
+$right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
+$right-arrow-pressed: $icon-base-url + "right-arrow-pressed.svg";
+$right-arrow-hover: $icon-base-url + "right-arrow-hover.svg";
+$error-message: $icon-base-url + "error-message-icon.svg";
+$disabled-folder: $icon-base-url + "disabled-folder.svg";
+$create-file: $icon-base-url + "create-file.svg";
+$upload-file: $icon-base-url + "upload-file.svg";
+$add-file: $icon-base-url + "add-file.svg";
 
 //font faces
-$font-path: "/fonts/";
+$font-path: "/fonts";
 $montserrat-medium: "Montserrat-Medium";
 $montserrat-semi-bold: "Montserrat-SemiBold";
 $open-sans-light: "OpenSans-Light";
@@ -168,7 +229,9 @@ $open-sans-semi-bold: "OpenSans-SemiBold";
     src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
 }
 
-//font-sizes 
+//font-sizes
+$font-size-52: 52 + $base-unit;
+$font-size-40: 40 + $base-unit;
 $font-size-36: 36 + $base-unit;
 $font-size-32: 32 + $base-unit;
 $font-size-28: 28 + $base-unit;

@@ -1,4 +1,19 @@
 ﻿@page "/Zones"
-@inherits AppComponentBase;
 
-<h3>Zones</h3>
+@inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.Zones)]</PageTitle>
+
+<ToolBar
+    IsMainToolBar="false"
+    IsAddButtonVisible="true"
+    Title="@Localizer[nameof(AppStrings.Zones)]"
+    SubTitle="Add, edit and sync files in zones" />
+
+<div class="zones-content">
+    Nothing here
+
+    <FxButton 
+        Text="Create zone"
+        ButtonSize="FxButtonSize.Stretch"
+        ButtonStyle="FxButtonStyle.Outline" />
+</div>

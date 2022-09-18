@@ -1,9 +1,11 @@
 ﻿@page "/Settings"
 
 @inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.Settings)]</PageTitle>
+
+<ToolBar IsBackButtonVisible="false" Title="@Localizer[nameof(AppStrings.Settings)]" IsMainToolBar="false" /> 
 
 <div class="settings-content">
-    <h1 class="title">@Localizer[nameof(AppStrings.Settings)]</h1>
     <FxButton 
         Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
         ButtonStyle="FxButtonStyle.MenuLine"
@@ -21,7 +23,10 @@
         Text="@Localizer[nameof(AppStrings.About)]"
         ButtonStyle="FxButtonStyle.MenuLine" />
 
-    <div class="divider"></div>
+    <FxDivider
+        FxDividerSize="FxDividerSize.Thin"
+        FxDividerMode="FxDividerMode.Solid" 
+        FxDividerType="FxDividerType.Horizontal" />
 
     <FxButton
         Text="@Localizer[nameof(AppStrings.LogOut)]"

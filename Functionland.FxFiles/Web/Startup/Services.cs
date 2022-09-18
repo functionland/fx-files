@@ -1,6 +1,6 @@
 ﻿#if BlazorServer
 using System.IO.Compression;
-
+using Functionland.FxFiles.Shared.Services;
 using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
 
@@ -25,9 +25,6 @@ public static class Services
             .Configure<BrotliCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest)
             .Configure<GzipCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest);
         services.AddAppServices();
-        services.AddScoped<IPlatformTestService, FakePlatformTestService>();
-        services.AddTransient<FakeFileServicePlatformTest>();
-        services.AddScoped<ThemeInterop>();
     }
 }
 #endif
