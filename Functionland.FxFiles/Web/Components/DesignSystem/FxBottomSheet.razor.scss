@@ -67,17 +67,14 @@
 }
 
 .sheet {
-    // TODO: use the icon size from the sass variables
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    // TODO: use value from the sass variables
     visibility: visible;
     transition: opacity 0.5s, visibility 0.5s;
     z-index: 999;
-    /*background-color: black;*/
 
     &[aria-hidden="true"] {
         opacity: 0;
@@ -118,7 +115,6 @@
         }
 
         .controls {
-            // TODO: use value from the sass variables
             padding: $spacing-8 $spacing-21;
             margin-top: $spacing-24;
             display: flex; // add propery
