@@ -1,2 +1,287 @@
-﻿body{
+﻿@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+@import '../../Styles/abstracts/_media-queries.scss';
+
+.sheet {
+    height: 0;
+}
+
+.close-bottom-sheet-animation {
+    animation-name: closeBottomSheet;
+    animation-duration: 1000ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes closeBottomSheet {
+    0% {
+        transform: translateY(0px);
+       
+        
+    }
+
+
+
+    100% {
+        transform: translateY(100%);
+        
+        
+    }
+}
+
+.show-bottom-sheet-animation {
+    animation-name: showBottomSheet;
+    animation-duration: 1000ms;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes showBottomSheet {
+
+    0% {
+        
+        transform: translateY(100%);
+    }
+
+
+
+    100% {
+        transform: translateY(0px);
+        height: unset;
+    }
+
+}
+
+
+
+
+.close-button {
+    background-color: transparent;
+    cursor: pointer;
+    padding: $spacing-0;
+
+    .close-button-icon {
+        width: $icon-24;
+        height: $icon-24;
+    }
+}
+
+.sheet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    visibility: visible;
+    transition: opacity 0.5s, visibility 0.5s;
+    z-index: 999;
+
+    &[aria-hidden="true"] {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        background: #888888; // varible
+        opacity: 0.5;
+    }
+
+    .contents {
+        background-color: color(app-bg);
+        position: relative;
+        overflow-y: hidden;
+        transition: transform 0.5s, border-radius 0.5s;
+        transform: translateY(0);
+        max-height: 100vh;
+        max-width: $screen-lg-min;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: $border-radius-20 $border-radius-20 $letter-spacing-0 $letter-spacing-0;
+        padding-bottom: 34px;
+
+        &:not(.not-selectable) {
+            transition: transform 0.5s, border-radius 0.5s, height 0.5s;
+        }
+
+        &.fullscreen {
+            border-radius: $border-size-0;
+        }
+
+        .controls {
+            padding: $spacing-8 $spacing-21;
+            margin-top: $spacing-24;
+            display: flex; // add propery
+        }
+    }
+
+    &[aria-hidden="true"] .contents {
+        transform: translateY(100%);
+    }
+
+    .close-sheet {
+        padding: $spacing-0;
+        width: $spacing-24;
+        height: $spacing-24;
+        right: $spacing-0;
+        top: $spacing-0;
+        border: none;
+        margin-left: auto;
+    }
+}
+
+/* core css */
+/* -------------- */
+
+.row {
+    display: flex;
+    flex-direction: row;
+
+    &.reversed-order {
+        flex-direction: row-reverse;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+    &.reversed-order {
+        flex-direction: column-reverse;
+    }
+}
+
+.row.items-start, .column.items-start {
+    align-items: flex-start;
+}
+
+.row.justify-start, .column.justify-start {
+    justify-content: flex-start;
+}
+
+.row.content-start, .column.content-start {
+    align-content: flex-start;
+}
+
+.row.items-center, .column.items-center {
+    align-items: center;
+}
+
+.row.justify-center, .column.justify-center {
+    justify-content: center;
+}
+
+.row.content-center, .column.content-center {
+    align-content: center;
+}
+
+.row.items-end, .column.items-end {
+    align-items: flex-end;
+}
+
+.row.justify-end, .column.justify-end {
+    justify-content: flex-end;
+}
+
+.row.content-end, .column.content-end {
+    align-content: flex-end;
+}
+
+.row.items-stretch, .column.items-stretch {
+    align-items: stretch;
+}
+
+.row.justify-stretch, .column.justify-stretch {
+    justify-content: stretch;
+}
+
+.row.content-stretch, .column.content-stretch {
+    align-content: stretch;
+}
+
+.row.items-baseline, .column.items-baseline {
+    align-items: baseline;
+}
+
+.row.justify-baseline, .column.justify-baseline {
+    justify-content: baseline;
+}
+
+.row.content-baseline, .column.content-baseline {
+    align-content: baseline;
+}
+
+.row .wrap, .column .wrap {
+    flex-wrap: wrap;
+}
+
+.row .reversed-wrap, .column .reversed-wrap {
+    flex-wrap: wrap-reverse;
+}
+
+.row .no-wrap, .column .no-wrap {
+    flex-wrap: nowrap;
+}
+
+.fill {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.font-system {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.font-thin {
+    font-weight: 100;
+}
+
+.font-extra-light {
+    font-weight: 200;
+}
+
+.font-light {
+    font-weight: 300;
+}
+
+.font-regular {
+    font-weight: 400;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-extra-bold {
+    font-weight: 800;
+}
+
+.font-black {
+    font-weight: 900;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.not-selectable {
+    user-select: none;
+}
+
+.selectable {
+    user-select: auto;
 }

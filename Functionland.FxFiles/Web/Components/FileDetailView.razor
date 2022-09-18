@@ -1,0 +1,34 @@
+﻿@inherits AppComponentBase;
+
+<!-- Body of the sheet -->
+<main class="content-body fill column">
+    @if (IsImageFile)
+    {
+        <div class="file-icon-row">
+            @*TODO:// image file icon here*@
+            <div>
+            <img class="file-image-preview" src="sample.jpg">
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="file-icon-row">
+            <div class="file-icon"></div>
+        </div>
+    }
+    <div class="file-name-row">
+        <p class="file-name-text open-sans-regular">@FileName</p>
+    </div>
+    <div class="file-details-area">
+        <FileDetailViewItem FileDetailFieldName="Last modified" FileDetailFieldValue="07/01/22"></FileDetailViewItem>
+        <FileDetailViewItem FileDetailFieldName="File size" FileDetailFieldValue="1.23 MB"></FileDetailViewItem>
+        <FileDetailViewItem FileDetailFieldName="Source" FileDetailFieldValue="Pixel 6"></FileDetailViewItem>
+    </div>
+    <div class="bottom-body">
+            <FileDetailViewBottomActionBar />
+        <div class="close-btn-bottom-action">
+            <FxButton Text="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+        </div>
+    </div>
+</main>

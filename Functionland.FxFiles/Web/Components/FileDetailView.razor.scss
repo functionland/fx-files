@@ -1,0 +1,155 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_media-queries.scss';
+
+
+
+.content-body {
+    height: 100%;
+    overflow-y: auto;
+    // TODO: use value from the sass variables
+    .file-icon-row {
+        padding: $spacing-8 $spacing-21;
+
+        .file-icon {
+            background-image: url($text-file);
+            background-position: center;
+            background-repeat: no-repeat;
+            width: $icon-32;
+            height: $icon-32;
+            background-size: $icon-32;
+        }
+
+        .file-image-preview {
+            width: 100%;
+            height: 254px;
+        }
+    }
+
+    .file-name-row {
+        padding: $letter-spacing-0 $spacing-21;
+
+        .file-name-text {
+            margin: $letter-spacing-0;
+            font-size: $font-size-20;
+            font-family: $open-sans-regular;
+            line-height: $line-height-30;
+            color: color(gray-content1);
+        }
+    }
+    // TODO: use value from the sass variables
+    .file-details-area {
+        padding: $spacing-21;
+    }
+
+    .bottom-body {
+        // TODO: use value from the sass variables
+        padding: $spacing-10 $spacing-21;
+
+        .close-btn-bottom-action {
+            margin-top: $spacing-16;
+        }
+    }
+}
+
+/* core css */
+/* -------------- */
+
+.row {
+    display: flex;
+    flex-direction: row;
+
+    &.reversed-order {
+        flex-direction: row-reverse;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+    &.reversed-order {
+        flex-direction: column-reverse;
+    }
+}
+
+.row.items-start, .column.items-start {
+    align-items: flex-start;
+}
+
+.row.justify-start, .column.justify-start {
+    justify-content: flex-start;
+}
+
+.row.content-start, .column.content-start {
+    align-content: flex-start;
+}
+
+.row.items-center, .column.items-center {
+    align-items: center;
+}
+
+.row.justify-center, .column.justify-center {
+    justify-content: center;
+}
+
+.row.content-center, .column.content-center {
+    align-content: center;
+}
+
+.row.items-end, .column.items-end {
+    align-items: flex-end;
+}
+
+.row.justify-end, .column.justify-end {
+    justify-content: flex-end;
+}
+
+.row.content-end, .column.content-end {
+    align-content: flex-end;
+}
+
+.row.items-stretch, .column.items-stretch {
+    align-items: stretch;
+}
+
+.row.justify-stretch, .column.justify-stretch {
+    justify-content: stretch;
+}
+
+.row.content-stretch, .column.content-stretch {
+    align-content: stretch;
+}
+
+.row.items-baseline, .column.items-baseline {
+    align-items: baseline;
+}
+
+.row.justify-baseline, .column.justify-baseline {
+    justify-content: baseline;
+}
+
+.row.content-baseline, .column.content-baseline {
+    align-content: baseline;
+}
+
+.row .wrap, .column .wrap {
+    flex-wrap: wrap;
+}
+
+.row .reversed-wrap, .column .reversed-wrap {
+    flex-wrap: wrap-reverse;
+}
+
+.row .no-wrap, .column .no-wrap {
+    flex-wrap: nowrap;
+}
+
+.fill {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
