@@ -44,7 +44,15 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                                 ImageExtensions.Contains(fileExtention.ToUpperInvariant()))
                             {
                                 //todo getThumbnail photo address
-                                //update db
+                                var edditedPinArtfact = new PinnedArtifact
+                                {
+                                    FullPath = pin.ArtifactFullPath,
+                                    ContentHash = LastModyDatetime.ToString(),
+                                    PinEpochTime = pinnedArticat.PinEpochTime,
+                                    ProviderType = pinnedArticat.ProviderType,
+                                    //ThumbnailPath todo: tofill
+                                };
+                                await FxLocalDbService.UpdatePinAsync(edditedPinArtfact);
                             }
                         }
                     }
@@ -58,7 +66,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         ThreadOption.UIThread, keepSubscriberReferenceAlive: true);
         }
 
-     
+
         private async Task HandleChangedArtifacts(ArtifactChangeEventArgs a)
         {
             if (a.ChangeType == FsArtifactChangesType.Delete)
@@ -103,7 +111,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             await FxLocalDbService.RemovePinAsync(path);
             DeteteFromPinCache(path);
         }
-        public async IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string fullPath)
+        public async IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string? fullPath)
         {
             var pinnedArrtifact = PinnedPathsCatche;
             var artifacts = FileService.GetArtifactsAsync(fullPath);
