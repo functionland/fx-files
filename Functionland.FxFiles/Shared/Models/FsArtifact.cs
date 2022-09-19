@@ -27,7 +27,6 @@
         public List<FsZone>? Zones { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
-        public bool? IsSelected { get; set; }
         public string? OwnerDid { get; set; }
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }

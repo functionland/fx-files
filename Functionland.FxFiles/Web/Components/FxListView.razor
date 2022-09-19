@@ -24,7 +24,7 @@ else
         <div class="info-selection">
             <div class="close-btn" @onclick="(() => CancelSelection())"></div>
             <div class="item-selected">
-                <span class="item-selected-count">@SelectedItems</span>
+                <span class="item-selected-count">@SelectedListItems.Count</span>
                 <span class="move-selected-items-text">items ready to move</span>
                 <span class="item-selected-text">items selected</span>
             </div>
@@ -52,10 +52,14 @@ else
          class="item-container @ViewMode-view-item" @onclick="GoIntoItem">
             @if (IsSelectionMode)
             {
-                <BitCheckbox @bind-value="@item.IsSelected" OnChange="OnSelectionChanged"/>
+                <BitCheckbox OnChange="(() => OnSelectionChanged(item))" />
             }
 
-            <div class="item-content @item.IconStr-icon">
+            <div class="item-content">
+                @if(!IsSelectionMode)
+                {
+                    <div class="@item.IconStr-icon"></div>
+                }
                 <div class="item-title">
                     @if (item.IsPinned == true)
                     {

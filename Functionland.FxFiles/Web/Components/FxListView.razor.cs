@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-
 using Functionland.FxFiles.App.Components.Common;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -16,10 +15,11 @@ namespace Functionland.FxFiles.App.Components
         [Parameter, EditorRequired]
         public List<ListItemConfig>? ListItems { get; set; }
 
+        public List<ListItemConfig>? SelectedListItems { get; set; } = new List<ListItemConfig>();
+
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public SortOrderEnum SortOrder = SortOrderEnum.asc;
 
-        public int SelectedItems { get; set; }
         public bool IsSelected;
         public bool IsSelectionMode;
         public bool IsSelectedAll = false;
@@ -68,7 +68,7 @@ namespace Functionland.FxFiles.App.Components
         public void CancelSelection()
         {
             IsSelectionMode = false;
-            SelectedItems = 0;
+            SelectedListItems = new List<ListItemConfig>();
         }
 
         public void PointerDown()
@@ -85,14 +85,16 @@ namespace Functionland.FxFiles.App.Components
             }
         }
 
-        public void OnSelectionChanged(bool isSelected)
+        public void OnSelectionChanged(ListItemConfig selectedItem)
         {
-            IsSelected = isSelected;
-
-            if (isSelected)
-                SelectedItems++;
+            if (SelectedListItems.Any(item => item.Title == selectedItem.Title))
+            {
+                SelectedListItems.Remove(selectedItem);
+            }
             else
-                SelectedItems--;
+            {
+                SelectedListItems.Add(selectedItem);
+            }
         }
     }
 }
