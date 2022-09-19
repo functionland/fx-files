@@ -119,7 +119,7 @@
         .close-btn {
             height: $icon-16;
             width: $icon-16;
-            background-image: url($white-close-btn);
+            background-image: url(images/icons/white-close-btn.svg);
             background-repeat: no-repeat;
             background-size: $icon-16;
             background-position: center;
@@ -160,17 +160,17 @@
         }
 
         .move-icon {
-            background-image: url($move);
+            background-image: url(images/icons/white-move.svg);
         }
 
         .vertical-option-icon {
-            background-image: url($white-option-vertical);
+            background-image: url(images/icons/white-option-vertical.svg);
             background-size: $icon-4;
             margin-left: $spacing-16;
         }
 
         .add-folder {
-            background-image: url($white-create-folder);
+            background-image: url(images/icons/white-create-folder.svg);
             display: none;
         }
     }

@@ -14,7 +14,10 @@ namespace Functionland.FxFiles.App.Components
 
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public SortOrderEnum SortOrder = SortOrderEnum.asc;
+
+        private bool IsSelectionMode;
         public bool IsSelectedAll = false;
+        public DateTimeOffset PointerDownTime;
 
         public void ToggleSortOrder()
         {
@@ -44,6 +47,21 @@ namespace Functionland.FxFiles.App.Components
         public void ChangeViewMode(ViewModeEnum mode)
         {
             ViewMode = mode;
+        }
+
+        public void PointerDown()
+        {
+            PointerDownTime = DateTimeOffset.UtcNow;
+        }
+
+        public void PointerUp()
+        {
+            if (!IsSelectionMode)
+            {
+                var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
+
+                IsSelectionMode = downTime > 400;
+            }
         }
     }
 }

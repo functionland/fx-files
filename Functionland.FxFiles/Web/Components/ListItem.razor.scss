@@ -1,5 +1,6 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+@import '../Styles/components/_bit-checkbox.scss';
 
 .item-container {
     padding: $spacing-16 21px;
@@ -51,21 +52,20 @@
 }
 
 .list-view {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
     height: 74px;
+    display: flex;
+    align-items: center;
+    flex-flow: row nowrap;
 
     .options-btn {
         background-image: url($options-vertical);
     }
 
     .item-content {
+        flex-grow: 1;
+        padding-left: 16px;
         background-position: center left;
-        padding-left: 40px;
-
-        
 
         .item-sub-text {
             color: color(gray-content3);

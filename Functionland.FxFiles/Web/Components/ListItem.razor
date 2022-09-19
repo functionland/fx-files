@@ -1,7 +1,15 @@
 ﻿@inherits AppComponentBase
 
 <div class="item-container @ViewMode-view">
-    <div class="item-content @ItemConfig.IconStr-icon">
+    @if (IsSelectionMode)
+    {
+        <BitCheckbox @bind-value="IsSelected" />
+    }
+    <div 
+    @onpointerup="OnPointerUp"
+    @onpointerdown="OnPointerDown"
+    @onclick="(() => IsSelected = true)"
+    class="item-content @(IsSelectionMode ? null : @ItemConfig.IconStr + "-icon")">
         <div class="item-title">
             @if (ItemConfig.IsPinned == true)
             {
@@ -11,5 +19,8 @@
         </div>
         <div class="item-sub-text">@ItemConfig.SubTitle</div>
     </div>
-    <div class="options-btn"></div>
+    @if (!IsSelectionMode)
+    {
+        <div class="options-btn"></div>
+    }
 </div>
