@@ -80,10 +80,6 @@
     "inputFile": "Components/DesignSystem/FxRadioButton.razor.scss"
   },
   {
-    "outputFile": "Components/DesignSystem/FxSearchBox.razor.css",
-    "inputFile": "Components/DesignSystem/FxSearchBox.razor.scss"
-  },
-  {
     "outputFile": "Components/DesignSystem/FxSearchInput.razor.css",
     "inputFile": "Components/DesignSystem/FxSearchInput.razor.scss"
   },

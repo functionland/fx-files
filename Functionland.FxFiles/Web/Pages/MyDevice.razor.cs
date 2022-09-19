@@ -58,8 +58,7 @@ namespace Functionland.FxFiles.App.Pages
                         break;
                 }
             }
-
-            #endregion
         }
+        #endregion
     }
 }

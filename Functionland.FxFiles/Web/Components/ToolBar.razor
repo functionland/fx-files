@@ -1,21 +1,24 @@
 ﻿@inherits AppComponentBase;
 
 <header>
+    @if (IsBackButtonVisible)
+    {
+        <FxButton 
+            Padding="0"
+            Margin="21px 0 10px 0"
+            OnClick="@GoBack"
+            BackgroundColor="transparent"
+            LeftIcon="images/icons/back.svg"
+            ButtonStyle="FxButtonStyle.None" />
+    }
     <div class="toolbarApp">
-        @if(IsBackButtonVisible)
-        {
-            <FxButton
-                Padding="0"
-                OnClick="@GoBack"
-                BackgroundColor="transparent"
-                LeftIcon="images/icons/back.svg"
-                ButtonStyle="FxButtonStyle.None"/>
-        }
 
         <div>
             @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrWhiteSpace(Title))
             {
-                <h1 class="title">@Title</h1>
+                <h1 class="title">
+                    @if (IsPinned) {<img class="title-icon" src="images/icons/pinned-filled-black.svg"/>} @Title
+                </h1>
             }
 
             @if (!string.IsNullOrEmpty(SubTitle) || !string.IsNullOrWhiteSpace(SubTitle))

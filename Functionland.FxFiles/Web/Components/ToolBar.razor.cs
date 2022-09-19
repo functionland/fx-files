@@ -8,6 +8,9 @@ public partial class ToolBar
     public string? Title { get; set; }
 
     [Parameter]
+    public bool IsPinned { get; set; }
+
+    [Parameter]
     public string? SubTitle { get; set; }
 
     [Parameter, EditorRequired]

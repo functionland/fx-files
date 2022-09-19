@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Functionland.FxFiles.Shared.Models
+﻿namespace Functionland.FxFiles.Shared.Models
 {
     public class FsArtifact
     {
@@ -38,5 +32,4 @@ namespace Functionland.FxFiles.Shared.Models
         public bool? IsPinned { get; set; }
         public FileCategoryType FileCategory => FileCategory.GetCategoryType(FileExtension != null ? FileExtension : "");
     }
-
 }

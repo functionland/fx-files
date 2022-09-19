@@ -92,6 +92,7 @@ $spacing-21: 21 + $base-unit;
 $spacing-24: 24 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
+$spacing-31: 31 + $base-unit;
 $spacing-34: 34 + $base-unit;
 $spacing-40: 40 + $base-unit;
 $spacing-48: 48 + $base-unit;
@@ -111,12 +112,12 @@ $icon-24: 24 + $base-unit;
 $icon-20: 20 + $base-unit;
 $icon-16: 16 + $base-unit;
 $icon-12: 12 + $base-unit;
+$icon-4: 4 + $base-unit;
 
 //icons
 $icon-base-url: "/images/icons/lightDesignSystem/";
 
 $back: $icon-base-url + "back.svg";
-$move: $icon-base-url + "move.svg";
 $copy: $icon-base-url + "copy.svg";
 $delete: $icon-base-url + "delete.svg";
 $rename: $icon-base-url + "rename.svg";
@@ -143,6 +144,7 @@ $select-check-filled: $icon-base-url + "select-check-filled.svg";
 $select-all-check-empty: $icon-base-url + "select-all-check-empty.svg";
 $select-all-check-filled: $icon-base-url + "select-all-check-filled.svg";
 
+$move: $icon-base-url + "move.svg";
 $filter: $icon-base-url + "filter.svg";
 $folder: $icon-base-url + "folder.svg";
 $add-file: $icon-base-url + "add-file.svg";
