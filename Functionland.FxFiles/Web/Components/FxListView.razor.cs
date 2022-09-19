@@ -1,13 +1,17 @@
 ﻿using System.ComponentModel;
 
 using Functionland.FxFiles.App.Components.Common;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Functionland.FxFiles.App.Components
 {
-    public partial class ListView
+    public partial class FxListView
     {
-        [Parameter, EditorRequired]
+        [Parameter]
         public string ListTitle { get; set; } = String.Empty;
+
+        [Parameter]
+        public bool HasSearchInput { get; set; } = false;
 
         [Parameter, EditorRequired]
         public List<ListItemConfig>? ListItems { get; set; }
@@ -15,7 +19,8 @@ namespace Functionland.FxFiles.App.Components
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public SortOrderEnum SortOrder = SortOrderEnum.asc;
 
-        private bool IsSelectionMode;
+        public bool IsSelected;
+        public bool IsSelectionMode;
         public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
 
@@ -47,6 +52,16 @@ namespace Functionland.FxFiles.App.Components
         public void ChangeViewMode(ViewModeEnum mode)
         {
             ViewMode = mode;
+        }
+
+        public void GoIntoItem()
+        {
+            //todo: go into folder or open file preview if it's file
+        }
+
+        public void OpenItemOverFlow()
+        {
+            //todo: open folder of file overflow bottom sheet
         }
 
         public void PointerDown()

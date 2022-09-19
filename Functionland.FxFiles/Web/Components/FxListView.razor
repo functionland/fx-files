@@ -1,4 +1,7 @@
-﻿<div class="list-title">@ListTitle</div>
+﻿@if (!string.IsNullOrEmpty(ListTitle))
+{
+    <div class="list-title">@ListTitle</div>
+}
 
 @if (!IsSelectionMode)
 {
@@ -35,14 +38,38 @@ else
     </div>
 }
 
+@if(HasSearchInput)
+{
+    <FxSearchInput IsPartial="false" />
+}
+
 <div class="list-container @ViewMode-view">
     @foreach (var item in ListItems)
-    {
-        <ListItem 
-            ItemConfig="item"
-            ViewMode="ViewMode"
-            IsSelectionMode="IsSelectionMode"
-            OnPointerUp="(() => PointerUp())"
-            OnPointerDown="(() => PointerDown())" />
+    {   
+        <div 
+        @onpointerup="PointerUp"
+        @onpointerdown="PointerDown"
+         class="item-container @ViewMode-view-item" @onclick="GoIntoItem">
+            @if (IsSelectionMode)
+            {
+                <BitCheckbox @bind-value="IsSelected" />
+            }   
+            <div class="item-content @item.IconStr-icon">
+                <div class="item-title">
+                    @if (item.IsPinned == true)
+                    {
+                        <div class="pin-badge"></div>
+                    }
+                    <div class="title-text">@item.Title</div>
+                </div>
+                <div class="item-sub-text">@item.SubTitle</div>
+            </div>
+            @if (!IsSelectionMode)
+            {
+                <div class="options-btn"
+                 @onclick="OpenItemOverFlow"
+                 @onclick:stopPropagation="true"></div>
+            }
+        </div>
     }
 </div>

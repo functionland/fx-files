@@ -345,4 +345,7 @@
   <data name="DriveRenameFailed" xml:space="preserve">
     <value>You can not rename drive</value>
   </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
 </root>
