@@ -6,5 +6,6 @@ namespace Functionland.FxFiles.Shared.Services.Contracts
     {
         public FsArtifact? FsArtifact { get; set; }
         public FsArtifactChangesType? ChangeType { get; set; }
+        public string? Description { get; set; }
     }
 }
