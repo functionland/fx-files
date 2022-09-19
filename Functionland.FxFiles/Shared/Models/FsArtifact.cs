@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Functionland.FxFiles.Shared.Models
+﻿namespace Functionland.FxFiles.Shared.Models
 {
     public class FsArtifact
     {
@@ -33,10 +27,10 @@ namespace Functionland.FxFiles.Shared.Models
         public List<FsZone>? Zones { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
+        public bool? IsSelected { get; set; }
         public string? OwnerDid { get; set; }
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
         public FileCategoryType FileCategory => FileCategory.GetCategoryType(FileExtension != null ? FileExtension : "");
     }
-
 }

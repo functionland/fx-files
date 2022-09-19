@@ -19,6 +19,7 @@ namespace Functionland.FxFiles.App.Components
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public SortOrderEnum SortOrder = SortOrderEnum.asc;
 
+        public int SelectedItems { get; set; }
         public bool IsSelected;
         public bool IsSelectionMode;
         public bool IsSelectedAll = false;
@@ -64,6 +65,12 @@ namespace Functionland.FxFiles.App.Components
             //todo: open folder of file overflow bottom sheet
         }
 
+        public void CancelSelection()
+        {
+            IsSelectionMode = false;
+            SelectedItems = 0;
+        }
+
         public void PointerDown()
         {
             PointerDownTime = DateTimeOffset.UtcNow;
@@ -74,9 +81,18 @@ namespace Functionland.FxFiles.App.Components
             if (!IsSelectionMode)
             {
                 var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
-
                 IsSelectionMode = downTime > 400;
             }
+        }
+
+        public void OnSelectionChanged(bool isSelected)
+        {
+            IsSelected = isSelected;
+
+            if (isSelected)
+                SelectedItems++;
+            else
+                SelectedItems--;
         }
     }
 }
