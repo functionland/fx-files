@@ -38,13 +38,13 @@ namespace Functionland.FxFiles.App.Pages
                 switch (item.ArtifactType)
                 {
                     case FsArtifactType.File:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()} | {item.Size}", item.IsPinned, "text-file", item.IsSelected));
+                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()} | {item.Size}", item.IsPinned, "text-file"));
                         break;
                     case FsArtifactType.Folder:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "folder", item.IsSelected));
+                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "folder"));
                         break;
                     case FsArtifactType.Drive:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "drive", item.IsSelected));
+                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "drive"));
                         break;
                     default:
                         break;

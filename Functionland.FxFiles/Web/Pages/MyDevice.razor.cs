@@ -10,12 +10,6 @@ namespace Functionland.FxFiles.App.Pages
         public List<ListItemConfig> ListItems { get; set; } = new List<ListItemConfig>();
 
         public List<FileCardConfig> PinnedCards = new List<FileCardConfig>
-        {
-            new FileCardConfig(true, true, true, "Cs intenrship", ".txt", "date", "file size"),
-            new FileCardConfig(true, true, true, "Fx Land", ".mp3", "date", "file size"),
-            new FileCardConfig(true, true, true, "doument", ".pdf", "date", "file size"),
-            new FileCardConfig(true, true, true, "Cs intenrship", ".txt", "date", "file size")
-        };
 
         protected override async Task OnInitAsync()
         {
@@ -46,20 +40,19 @@ namespace Functionland.FxFiles.App.Pages
                 switch (item.ArtifactType)
                 {
                     case FsArtifactType.File:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()} | {item.Size}", item.IsPinned, "text-file", item.IsSelected));
+                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()} | {item.Size}", item.IsPinned, "text-file"));
                         break;
                     case FsArtifactType.Folder:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "folder", item.IsSelected));
+                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "folder"));
                         break;
                     case FsArtifactType.Drive:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "drive", item.IsSelected));
+                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "drive"));
                         break;
                     default:
                         break;
                 }
             }
-
-            #endregion
         }
+        #endregion
     }
 }
