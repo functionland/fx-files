@@ -171,7 +171,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     var directoryInfo = new DirectoryInfo(subDirectory);
 
-                    if (directoryInfo.Attributes == FileAttributes.Hidden) continue;
+                    if (directoryInfo.Attributes.HasFlag(FileAttributes.Hidden)) continue;
 
                     var providerType = await GetFsFileProviderTypeAsync(subDirectory);
 
@@ -189,7 +189,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     var fileinfo = new FileInfo(file);
 
-                    if (fileinfo.Attributes == FileAttributes.Hidden) continue; 
+                    if (fileinfo.Attributes.HasFlag(FileAttributes.Hidden)) continue; 
 
                     var providerType = await GetFsFileProviderTypeAsync(file);
 
