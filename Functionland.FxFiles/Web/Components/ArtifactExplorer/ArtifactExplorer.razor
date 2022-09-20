@@ -1,0 +1,18 @@
+﻿@namespace Functionland.FxFiles.App.Components
+@inherits AppComponentBase
+
+<h3>ArtifactExplorer</h3>
+
+@if (CurrentArtifact is null)
+{
+}
+else 
+{
+    <div>@CurrentArtifact.Name</div>
+}
+
+@foreach(var artifact in Artifacts)
+{
+    // render artifact
+    <div @onclick="() => HandleArtifactClick(artifact)">@artifact.Name</div>
+}

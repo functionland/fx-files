@@ -1,21 +1,8 @@
 ﻿@page "/MyDevice"
-
 @inherits AppComponentBase;
+
 <PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
 <ToolBar IsMainToolBar="true" />
 
-<div class="mydevice-content">
-    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-        <ContentTemplate>
-            <div class="items">
-                @foreach (var cardConfig in PinnedCards)
-                {
-                    <FileCard CardConfig="cardConfig" />
-                }
-            </div>
-        </ContentTemplate>
-    </BitAccordion>
-
-    <FxListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems" />
-</div>
+<FileBrowser FileService="_fileService" PinService="_pinService"></FileBrowser>
