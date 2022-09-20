@@ -3,6 +3,8 @@ using Functionland.FxFiles.Shared.Services;
 using Functionland.FxFiles.Shared.Services.Implementations.Db;
 using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
+using Prism.Events;
+using EventAggregator = Prism.Events.EventAggregator;
 
 #if Android
 using Functionland.FxFiles.App.Platforms.Android.Implementations;
@@ -52,6 +54,9 @@ public static class IServiceCollectionExtensions
         string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
 
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+
+        services.AddSingleton<IPinService, PinService>();
+        services.AddSingleton<IEventAggregator, EventAggregator>();
 
         return services;
     }

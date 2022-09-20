@@ -2,12 +2,14 @@
 using Dapper.Contrib.Extensions;
 using DbUp;
 using DbUp.SQLite.Helpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
@@ -65,6 +67,49 @@ public class FxLocalDbService : IFxLocalDbService
         return new SqliteConnection(ConnectionString);
     }
 
+    public async Task AddPinAsync(FsArtifact artifact)
+    {
+        using var LocalDb = CreateConnection();
+        var pinnedArtifact = new PinnedArtifact()
+        {
+            FullPath = artifact.FullPath,
+            ProviderType = artifact.ProviderType,
+            PinEpochTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+            ContentHash = artifact.LastModifiedDateTime.ToString(),
+            ThumbnailPath = artifact.ThumbnailPath
+        };
+       
+        await Task.Run(() => LocalDb.Insert(pinnedArtifact));
+    }
+
+    public async Task UpdatePinAsync(PinnedArtifact pinnedArtifact)
+    {
+        var localDb = CreateConnection();
+        await Task.Run(() => localDb.Execute(
+            $"UPDATE PinnedArtifact SET ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @FullPath ",
+            new
+            {
+                ThumbnailPath = pinnedArtifact.ThumbnailPath,
+                ContentHash = pinnedArtifact.ContentHash,
+                FullPath = pinnedArtifact.FullPath
+            }));
+    }
+
+    public async Task RemovePinAsync(String FullPath)
+    {
+        using var LocalDb = CreateConnection();
+
+        await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';"));
+    }
+
+    public async Task<List<PinnedArtifact>> GetPinnedArticatInfos()
+    {
+        using var LocalDb = CreateConnection();
+       
+        var list = await Task.Run(() => LocalDb.Query<PinnedArtifact>($"SELECT * FROM PinnedArtifact"));
+        return list.ToList();
+    }
+ 
 }
 public abstract class SqliteTypeHandler<T> : SqlMapper.TypeHandler<T>
 {

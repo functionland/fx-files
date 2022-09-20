@@ -65,13 +65,39 @@ class IFileService {
 class LocalDeviceFileService {
   <<abstract>>
 }
-```
 
-# UI Components
-
-```mermaid
-classDiagram
-class FileExplorerComponent {
-  +IFileService FileService
+class FulaFileService {
+  <<abstract>>
 }
 ```
+# ZoneService Architecture
+```mermaid
+classDiagram
+IZoneService <|-- LocalZoneService
+IZoneService <|-- FulaZoneService
+LocalZoneService <|-- AndroidLocalZoneService
+LocalZoneService <|-- WindowsLocalZoneService
+LocalZoneService <|-- IosLocalZoneService
+FulaZoneService <|-- AndroidFulaZoneService
+FulaZoneService <|-- IosFulaZoneService
+FulaZoneService <|-- WindowsFulaZoneService
+
+class IZoneService {
+  <<interface>>
+  GetZones(searchText: string) FsZone[]
+}
+
+class LocalZoneService {
+  <<abstract>>
+}
+
+class FulaZoneService {
+  <<abstract>>
+}
+```
+## LocalZoneService
+The `LocalZoneService` handles all the work required to support *Zone* on the device local storages.
+The data for zones and their contents are being stored on local sqllite database.
+## FulaZoneService
+The `FulaZoneService` handles all the work required to support *Zone* for the Blox Files.
+The data for zones and their contents are being stored on *Fula Network*. It uses `FulaZoneClient` sdk to communicate with the blockchain of Blox devices called Fula.
