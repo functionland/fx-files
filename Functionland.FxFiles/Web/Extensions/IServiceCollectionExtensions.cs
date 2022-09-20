@@ -5,6 +5,7 @@ using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
 using Prism.Events;
 using EventAggregator = Prism.Events.EventAggregator;
+using Functionland.FxFiles.App.Components;
 
 #if Android
 using Functionland.FxFiles.App.Platforms.Android.Implementations;
