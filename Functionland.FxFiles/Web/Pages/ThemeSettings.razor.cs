@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.App.Pages
+﻿using Functionland.FxFiles.App.Components;
+
+namespace Functionland.FxFiles.App.Pages
 {
     public partial class ThemeSettings
     {

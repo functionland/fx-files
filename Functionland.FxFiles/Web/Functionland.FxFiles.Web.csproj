@@ -58,7 +58,6 @@
 		<Using Include="Microsoft.JSInterop" />
 		<Using Include="System.Net.Http.Json" />
 		<Using Include="System.Collections.Concurrent" />
-		<Using Include="Functionland.FxFiles.App.Components" />
 		<Using Include="Bit.BlazorUI" />
 		<Using Include="Microsoft.AspNetCore.Authorization" />
 
