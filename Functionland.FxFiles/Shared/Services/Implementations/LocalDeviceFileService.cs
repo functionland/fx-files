@@ -166,9 +166,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
                 string[] directoryFiles = Directory.GetFiles(path);
                 string[] subDirectories = Directory.GetDirectories(path);
-
+                
                 foreach (var subDirectory in subDirectories)
                 {
+                    var directoryInfo = new DirectoryInfo(subDirectory);
+
+                    if (directoryInfo.Attributes == FileAttributes.Hidden) continue;
+
                     var providerType = await GetFsFileProviderTypeAsync(subDirectory);
 
                     subArtifacts.Add(
@@ -183,6 +187,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 foreach (var file in directoryFiles)
                 {
+                    var fileinfo = new FileInfo(file);
+
+                    if (fileinfo.Attributes == FileAttributes.Hidden) continue; 
+
                     var providerType = await GetFsFileProviderTypeAsync(file);
 
                     artifacts.Add(
@@ -429,14 +437,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var drive in drives)
             {
-                var info = new DriveInfo(drive);
-                string driveName = drive;
+                var driveInfo = new DriveInfo(drive);
 
-                if (info.DriveType != DriveType.CDRom)
-                {
-                    var lable = info.VolumeLabel;
-                    driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
-                }
+                if (!driveInfo.IsReady) continue;
+
+                var lable = driveInfo.VolumeLabel;
+                var driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
 
                 artifacts.Add(
                     new FsArtifact(drive, driveName, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
