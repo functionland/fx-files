@@ -1,0 +1,28 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+.file-details-row {
+    display: flex;
+
+    .file-detail-name {
+        font-size: $font-size-14;
+        font-family: $open-sans-regular;
+        line-height: $line-height-24;
+        margin: $letter-spacing-0;
+        margin-right: auto;
+        color: color(gray-content1);
+    }
+
+    .file-detail-value {
+        margin: $letter-spacing-0;
+        margin-left: auto;
+        font-size: $font-size-14;
+        line-height: $line-height-24;
+        font-family: $open-sans-light;
+        color: color(gray-content1);
+    }
+}
+.separate-item {
+    margin-top: $spacing-12;
+    margin-bottom: $spacing-12;
+}

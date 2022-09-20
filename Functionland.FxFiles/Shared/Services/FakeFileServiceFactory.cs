@@ -9,18 +9,20 @@ namespace Functionland.FxFiles.Shared.Services
     public static class FakeFileServiceFactory
     {
 
-        public static FakeFileService CreateSimpleFileListOnRoot()
+        public static FakeFileService CreateSimpleFileListOnRoot(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             return new FakeFileService(new List<FsArtifact>
             {
                 CreateFile("/image summer.jpg"),
                 CreateFile("/image germany.jpg"),
                 CreateFile("/proposal v1-2.pdf"),
-            }
+            },
+            actionLatency,
+            enumerationLatency
             );
         }
 
-        public static FakeFileService CreateFolders()
+        public static FakeFileService CreateFolders(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             return new FakeFileService(new List<FsArtifact>
             {
@@ -29,11 +31,13 @@ namespace Functionland.FxFiles.Shared.Services
                 CreateFile("/images/image summer.jpg"),
                 CreateFile("/images/image germany.jpg"),
                 CreateFile("/docs/proposal v1-2.pdf"),
-            }
+            },
+            actionLatency,
+            enumerationLatency
             );
         }
 
-        public static FakeFileService CreateNeste4dFolders()
+        public static FakeFileService CreateNeste4dFolders(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             return new FakeFileService(new List<FsArtifact>
             {
@@ -46,11 +50,13 @@ namespace Functionland.FxFiles.Shared.Services
                 CreateFile("/images/winter/image summer.jpg"),
                 CreateFile("/images/winter/image germany.jpg"),
                 CreateFile("/docs/proposal v1-2.pdf"),
-            }
+            },
+            actionLatency,
+            enumerationLatency
             );
         }
 
-        public static FakeFileService CreateTypical()
+        public static FakeFileService CreateTypical(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             return new FakeFileService(new List<FsArtifact>
             {
@@ -63,7 +69,9 @@ namespace Functionland.FxFiles.Shared.Services
                 CreateFile("/images/winter/image summer.jpg"),
                 CreateFile("/images/winter/image germany.jpg"),
                 CreateFile("/docs/proposal v1-2.pdf"),
-            }
+            },
+            actionLatency,
+            enumerationLatency
             );
         }
 

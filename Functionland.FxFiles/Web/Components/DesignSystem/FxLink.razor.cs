@@ -13,6 +13,9 @@
         [Parameter, EditorRequired]
         public string? Link { get; set; }
 
+        [Parameter, EditorRequired]
+        public string? LinkText { get; set; }
+
     }
 
     public enum FxLinkIconSide
