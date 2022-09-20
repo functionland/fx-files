@@ -1,0 +1,25 @@
+﻿@namespace Functionland.FxFiles.App.Components
+@inherits AppComponentBase;
+
+<div class="mydevice-content">
+    <div>Hello 5</div>
+    
+    @if (IsInRoot(_currentArtifact)) {
+        <ToolBar IsMainToolBar="true" />
+
+        <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+            <ContentTemplate>
+                <div class="items">
+                    @foreach (var cardConfig in _pins)
+                    {
+                        @*<FileCard CardConfig="cardConfig" />*@
+                    }
+                </div>
+            </ContentTemplate>
+        </BitAccordion>
+    }
+    <ArtifactExplorer Artifacts="_artifacts"
+                      CurrentArtifact="_currentArtifact"
+                      OnSelectArtifact="HandleSelectArtifact">
+    </ArtifactExplorer>
+</div>
