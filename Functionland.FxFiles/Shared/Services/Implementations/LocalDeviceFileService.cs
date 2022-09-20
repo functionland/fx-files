@@ -55,7 +55,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
             {
                 FileExtension = Path.GetExtension(path),
-                Size = (int)outPutFileStream.Length,
+                Size = outPutFileStream.Length,
                 LastModifiedDateTime = File.GetLastWriteTime(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName,
             };
@@ -198,7 +198,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             ParentFullPath = Directory.GetParent(file)?.FullName,
                             LastModifiedDateTime = File.GetLastWriteTime(file),
-                            FileExtension = Path.GetExtension(file)
+                            FileExtension = Path.GetExtension(file),
+                            Size = fileinfo.Length
                         });
                 }
 
@@ -218,11 +219,14 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else
             {
+                var fileInfo = new FileInfo(path);
+
                 yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
                 {
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                     LastModifiedDateTime = File.GetLastWriteTime(path),
-                    FileExtension = Path.GetExtension(path)
+                    FileExtension = Path.GetExtension(path),
+                    Size = fileInfo.Length
                 };
             }
         }
@@ -382,7 +386,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             FileExtension = file.Extension,
                             LastModifiedDateTime = file.LastWriteTime,
-                            ParentFullPath = Directory.GetParent(file.FullName)?.FullName
+                            ParentFullPath = Directory.GetParent(file.FullName)?.FullName,
+                            Size = file.Length
                         });
                     }
 
