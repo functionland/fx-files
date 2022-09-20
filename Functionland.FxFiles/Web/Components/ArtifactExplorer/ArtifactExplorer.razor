@@ -1,18 +1,26 @@
 ﻿@namespace Functionland.FxFiles.App.Components
+@using Functionland.FxFiles.App.Components.Common
 @inherits AppComponentBase
 
 <h3>ArtifactExplorer</h3>
 
-@if (CurrentArtifact is null)
+@if (IsInRoot(CurrentArtifact))
 {
 }
 else 
 {
-    <div>@CurrentArtifact.Name</div>
+    
+    <div>Folder: @CurrentArtifact?.Name</div>
 }
 
-@foreach(var artifact in Artifacts)
+<FxListView 
+    ListTitle="@CurrentArtifact?.Name" 
+    HasSearchInput="@IsInRoot(CurrentArtifact)" 
+    ListItems="@Artifacts.Select(a=>new ListItemConfig(a.Name, a.Name, false, "folder")).ToList()">
+
+</FxListView>
+@*@foreach(var artifact in Artifacts)
 {
     // render artifact
     <div @onclick="() => HandleArtifactClick(artifact)">@artifact.Name</div>
-}
+}*@

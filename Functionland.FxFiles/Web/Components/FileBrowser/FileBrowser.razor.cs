@@ -24,7 +24,7 @@ public partial class FileBrowser
     {
         await LoadPinsAsync();
 
-        await LoadRootArtifactsAsync();
+        await LoadChildrenArtifactsAsync();
 
         await base.OnInitAsync();
     }
@@ -43,9 +43,9 @@ public partial class FileBrowser
         _pins = pins;
     }
 
-    private async Task LoadRootArtifactsAsync()
+    private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
     {
-        var allFiles = FileService.GetArtifactsAsync();
+        var allFiles = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
 
         var artifacts = new List<FsArtifact>();
 
@@ -60,6 +60,12 @@ public partial class FileBrowser
     private async Task HandleSelectArtifact(FsArtifact artifact)
     {
         _currentArtifact = artifact;
+        await LoadChildrenArtifactsAsync(_currentArtifact);
         // load current artifacts
+    }
+
+    private bool IsInRoot(FsArtifact? artifact)
+    {
+        return artifact is null ? true : false;
     }
 }

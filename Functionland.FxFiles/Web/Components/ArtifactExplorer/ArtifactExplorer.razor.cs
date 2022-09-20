@@ -8,9 +8,18 @@ public partial class ArtifactExplorer
 
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
 
+    protected override Task OnInitAsync()
+    {
+        return base.OnInitAsync();
+    }
 
     private async Task HandleArtifactClick(FsArtifact artifact)
     {
         await OnSelectArtifact.InvokeAsync(artifact);
+    }
+
+    private bool IsInRoot(FsArtifact? artifact)
+    {
+        return artifact is null ? true : false;
     }
 }
