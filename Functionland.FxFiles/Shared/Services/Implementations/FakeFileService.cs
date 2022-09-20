@@ -77,7 +77,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         private static FsArtifactType GetFsArtifactType(string path)
         {
-            string[] drives = Directory.GetLogicalDrives();
+            string[] drives = GetDrives();
 
             if (drives.Contains(path))
             {
@@ -150,6 +150,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 ThumbnailPath = path,
                 ContentHash = contentHash,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
+                Size = 20
             };
         }
 
@@ -158,15 +159,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact =
-                                     new FsArtifact(file.path, Path.GetFileName(file.path), FsArtifactType.File, FsFileProviderType.InternalMemory)
-                                     {
-                                         FileExtension = Path.GetExtension(file.path),
-                                         OriginDevice = originDevice,
-                                         ThumbnailPath = file.path,
-                                         ContentHash = file.stream.GetHashCode().ToString(),
-                                         LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime()
-                                     }
+                                     let artifact = CreateArtifact(file.path,file.stream.GetHashCode().ToString())
                                      select artifact)
             {
                 CheckIfArtifactExist(artifact.FullPath);
@@ -281,19 +274,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (string.IsNullOrWhiteSpace(path))
             {
-                string[] drives = Directory.GetLogicalDrives();
+                string[] drives = GetDrives();
                 var artifacts = new List<FsArtifact>();
 
                 foreach (var drive in drives)
                 {
-                    var info = new DriveInfo(drive);
                     string driveName = drive;
-
-                    if (info.DriveType != DriveType.CDRom)
-                    {
-                        var lable = info.VolumeLabel;
-                        driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
-                    }
 
                     artifacts.Add(
                         new FsArtifact(drive, driveName, FsArtifactType.Drive, FsFileProviderType.InternalMemory));
@@ -314,6 +300,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 yield return file;
             }
 
+        }
+
+        private static string[] GetDrives()
+        {
+            return new string[] { "C:\\", "D:\\", "E:\\", "F:\\" };
         }
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
