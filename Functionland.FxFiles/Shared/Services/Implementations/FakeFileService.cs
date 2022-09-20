@@ -77,7 +77,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         private static FsArtifactType GetFsArtifactType(string path)
         {
-            string[] drives = Directory.GetLogicalDrives();
+            string[] drives = GetDrives();
 
             if (drives.Contains(path))
             {
@@ -274,19 +274,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             if (string.IsNullOrWhiteSpace(path))
             {
-                string[] drives = Directory.GetLogicalDrives();
+                string[] drives = GetDrives();
                 var artifacts = new List<FsArtifact>();
 
                 foreach (var drive in drives)
                 {
-                    var info = new DriveInfo(drive);
                     string driveName = drive;
-
-                    if (info.DriveType != DriveType.CDRom)
-                    {
-                        var lable = info.VolumeLabel;
-                        driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
-                    }
 
                     artifacts.Add(
                         new FsArtifact(drive, driveName, FsArtifactType.Drive, FsFileProviderType.InternalMemory));
@@ -307,6 +300,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 yield return file;
             }
 
+        }
+
+        private static string[] GetDrives()
+        {
+            return new string[] { "C:\\", "D:\\", "E:\\", "F:\\" };
         }
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
