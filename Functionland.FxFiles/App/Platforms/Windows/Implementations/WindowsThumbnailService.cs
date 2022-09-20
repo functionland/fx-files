@@ -20,7 +20,7 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
             if (File.Exists(thumbPath)) return thumbPath;
 
             const int thumbnailSize = 150;
-            var image = System.Drawing.Image.FromFile(imagePath);
+            var image = System.Drawing.Image.FromFile(fsArtifact.FullPath);
 
             var imageHeight = image.Height;
             var imageWidth = image.Width;
