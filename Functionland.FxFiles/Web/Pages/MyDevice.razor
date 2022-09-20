@@ -6,6 +6,9 @@
 <ToolBar IsMainToolBar="true" />
 
 <div class="mydevice-content">
+
+    <button @onclick="Copy">Open Modal</button>
+
     <BitAccordion Title="Pinned" DefaultIsExpanded="true">
         <ContentTemplate>
             <div class="items">
@@ -19,3 +22,5 @@
 
     <FxListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems" />
 </div>
+
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef"></ArtifactSelectionModal>

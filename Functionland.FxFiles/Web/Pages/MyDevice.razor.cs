@@ -1,9 +1,11 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
+using Functionland.FxFiles.App.Components.Modal;
 
 namespace Functionland.FxFiles.App.Pages
 {
     public partial class MyDevice
     {
+        private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
         [AutoInject]
         private IFileService _fileService { get; set; } = default!;
@@ -60,5 +62,20 @@ namespace Functionland.FxFiles.App.Pages
             }
         }
         #endregion
+
+        private async Task Copy()
+        {
+            var result = await _artifactSelectionModalRef.ShowAsync();
+
+            if (result.ResultType == ArtifactSelectionResultType.Ok)
+            {
+                await Task.Delay(2000);
+                var result2 = await _artifactSelectionModalRef.ShowAsync();
+            }
+            else
+            {
+
+            }
+        }
     }
 }

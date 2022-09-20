@@ -1,0 +1,14 @@
+﻿@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.modal {
+    position: fixed;
+
+    &.open {
+        display: block;
+    }
+
+    &.close {
+        display: none;
+    }
+}
