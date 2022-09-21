@@ -183,6 +183,81 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 }, "The file already exists exception");
 
 
+                //7.Copy files and folders
+                var copyingItems = new[] { folder11, file11 };
+
+                await fileService.CopyArtifactsAsync(copyingItems, testRoot);
+                desArtifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(6, desArtifacts.Count, "Copy files and folder. All Copyied to destination.");
+
+
+                //8. Move files and folders in case of duplications. (overWrite = true)
+                var file111 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 11/file111.txt"), GetSampleFileStream());
+                var file112 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 11/file112.txt"), GetSampleFileStream());
+
+                var file113 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/Folder 11/file113.txt"), GetSampleFileStream());
+                var file114 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/Folder 11/file114.txt"), GetSampleFileStream());
+
+                await fileService.MoveArtifactsAsync(copyingItems, testRoot, true);
+
+                srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 1"));
+                Assert.AreEqual(0, srcArtifacts.Count, "Move items, including duplicate folder. All removed from source.");
+
+                desArtifacts = await GetArtifactsAsync(fileService, testRoot);
+                Assert.AreEqual(6, desArtifacts.Count, "Move items, including duplicate folder. All moved to destination.");
+
+                desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 11"));
+                Assert.AreEqual(4, desArtifacts.Count, "OverWrite duplicate folder. Extra files added in duplicate folder.");
+
+                fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 1/Folder 11/file113.txt"),
+                                                                                                  Path.Combine(testRoot, "Folder 1/Folder 11/file114.txt")});
+                
+                var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
+                var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
+
+                var isAllFileRemoved = !isFile113Exists && !isFile114Exists;
+                Assert.AreEqual<bool>(true, isAllFileRemoved, "Move duplicate items. All removed from dulicate source sub directory.");
+
+
+                //9. Copy files and folders in case of duplications. (overWrite = true)
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2/Folder 21"));
+                Assert.AreEqual(2, artifacts.Count, "Files exist in sub directory. All ready to copy.");
+
+                file311 = artifacts.Where(f => f.Name == "file311.txt").FirstOrDefault();
+                Assert.IsNotNull(file311, "File exists in source (sub directory), before copy.");
+
+                file312 = artifacts.Where(f => f.Name == "file312.txt").FirstOrDefault();
+                Assert.IsNotNull(file312, "File exists in source (sub directory), before copy.");
+
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
+                var folder21 = artifacts.Where(f => f.Name == "Folder 21").FirstOrDefault();
+                Assert.IsNotNull(folder21, "Folder exists. All set to copy.");
+
+                copyingItems = new[] { folder21 };
+
+                await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"));
+
+                desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3"));
+                Assert.AreEqual(1, desArtifacts.Count, "Copy folder with files inside. Folder copyied in destination.");
+
+                desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3/Folder 21"));
+                Assert.AreEqual(2, desArtifacts.Count, "Copy folder with files inside. All files copyied in sub folder");
+
+                await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 2/Folder 21/file313.txt"), GetSampleFileStream());
+                srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2/Folder 21"));
+                Assert.AreEqual(3, srcArtifacts.Count, "Create file in sub directory, before move the whole sub directory.");
+
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
+                folder21 = artifacts.Where(f => f.Name == "Folder 21").FirstOrDefault();
+                Assert.IsNotNull(folder21, "Folder exists. All set to copy.");
+
+                copyingItems = new[] { folder21 };
+
+                await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), true);
+                desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3/Folder 21"));
+                Assert.AreEqual(3, desArtifacts.Count, "Copy folder with files inside. All files including duplicate one copyied in sub folder");
+
+
                 Assert.Success("Test passed!");
             }
             catch (Exception ex)
