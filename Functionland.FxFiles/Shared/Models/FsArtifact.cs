@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Functionland.FxFiles.Shared.Utils;
 
 namespace Functionland.FxFiles.Shared.Models
 {
@@ -36,7 +32,15 @@ namespace Functionland.FxFiles.Shared.Models
         public string? OwnerDid { get; set; }
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
-        public FileCategoryType FileCategory => FileCategory.GetCategoryType(FileExtension != null ? FileExtension : "");
-    }
+        public string? SizeStr { get { return SizeUtil.CalculateSizeStr(Size); } }
 
+        public FileCategoryType FileCategory
+        {
+            get
+            {
+                return Models.FileCategory.GetCategoryType(FileExtension != null ? FileExtension : "");
+            }
+        }
+
+    }
 }

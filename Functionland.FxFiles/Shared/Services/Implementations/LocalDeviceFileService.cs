@@ -55,7 +55,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
             {
                 FileExtension = Path.GetExtension(path),
-                Size = (int)outPutFileStream.Length,
+                Size = outPutFileStream.Length,
                 LastModifiedDateTime = File.GetLastWriteTime(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName,
             };
@@ -166,9 +166,13 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
                 string[] directoryFiles = Directory.GetFiles(path);
                 string[] subDirectories = Directory.GetDirectories(path);
-
+                
                 foreach (var subDirectory in subDirectories)
                 {
+                    var directoryInfo = new DirectoryInfo(subDirectory);
+
+                    if (directoryInfo.Attributes.HasFlag(FileAttributes.Hidden)) continue;
+
                     var providerType = await GetFsFileProviderTypeAsync(subDirectory);
 
                     subArtifacts.Add(
@@ -183,6 +187,10 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 foreach (var file in directoryFiles)
                 {
+                    var fileinfo = new FileInfo(file);
+
+                    if (fileinfo.Attributes.HasFlag(FileAttributes.Hidden)) continue; 
+
                     var providerType = await GetFsFileProviderTypeAsync(file);
 
                     artifacts.Add(
@@ -190,7 +198,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             ParentFullPath = Directory.GetParent(file)?.FullName,
                             LastModifiedDateTime = File.GetLastWriteTime(file),
-                            FileExtension = Path.GetExtension(file)
+                            FileExtension = Path.GetExtension(file),
+                            Size = fileinfo.Length
                         });
                 }
 
@@ -210,11 +219,14 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             else
             {
+                var fileInfo = new FileInfo(path);
+
                 yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
                 {
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                     LastModifiedDateTime = File.GetLastWriteTime(path),
-                    FileExtension = Path.GetExtension(path)
+                    FileExtension = Path.GetExtension(path),
+                    Size = fileInfo.Length
                 };
             }
         }
@@ -374,7 +386,8 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             FileExtension = file.Extension,
                             LastModifiedDateTime = file.LastWriteTime,
-                            ParentFullPath = Directory.GetParent(file.FullName)?.FullName
+                            ParentFullPath = Directory.GetParent(file.FullName)?.FullName,
+                            Size = file.Length
                         });
                     }
 
@@ -429,14 +442,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
             foreach (var drive in drives)
             {
-                var info = new DriveInfo(drive);
-                string driveName = drive;
+                var driveInfo = new DriveInfo(drive);
 
-                if (info.DriveType != DriveType.CDRom)
-                {
-                    var lable = info.VolumeLabel;
-                    driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
-                }
+                if (!driveInfo.IsReady) continue;
+
+                var lable = driveInfo.VolumeLabel;
+                var driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
 
                 artifacts.Add(
                     new FsArtifact(drive, driveName, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
