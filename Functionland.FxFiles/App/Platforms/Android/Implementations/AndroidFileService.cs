@@ -2,7 +2,6 @@
 using Android.OS;
 using Android.OS.Storage;
 
-using Stream = System.IO.Stream;
 
 namespace Functionland.FxFiles.App.Platforms.Android.Implementations;
 

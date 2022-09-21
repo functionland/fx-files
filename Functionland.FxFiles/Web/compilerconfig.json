@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "outputFile": "wwwroot/styles/app.css",
     "inputFile": "Styles/app.scss"
@@ -80,10 +80,6 @@
     "inputFile": "Components/DesignSystem/FxRadioButton.razor.scss"
   },
   {
-    "outputFile": "Components/DesignSystem/FxSearchBox.razor.css",
-    "inputFile": "Components/DesignSystem/FxSearchBox.razor.scss"
-  },
-  {
     "outputFile": "Components/DesignSystem/FxSearchInput.razor.css",
     "inputFile": "Components/DesignSystem/FxSearchInput.razor.scss"
   },
@@ -144,7 +140,31 @@
     "inputFile": "Pages/Zones.razor.scss"
   },
   {
+    "outputFile": "Components/FileDetailViewItem.razor.css",
+    "inputFile": "Components/FileDetailViewItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailView.razor.css",
+    "inputFile": "Components/FileDetailView.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailViewBottomActionItem.razor.css",
+    "inputFile": "Components/FileDetailViewBottomActionItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailViewBottomActionBar.razor.css",
+    "inputFile": "Components/FileDetailViewBottomActionBar.razor.scss"
+  },
+  {
     "outputFile": "Components/FileCard.razor.css",
     "inputFile": "Components/FileCard.razor.scss"
+  },
+  {
+    "outputFile": "Components/FxFolderView.razor.css",
+    "inputFile": "Components/FxFolderView.razor.scss"
+  },
+  {
+    "outputFile": "Components/FxListView.razor.css",
+    "inputFile": "Components/FxListView.razor.scss"
   }
 ]

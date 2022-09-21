@@ -35,14 +35,12 @@ namespace Functionland.FxFiles.Shared.Models
             { ".mpeg", FileCategoryType.Video},
             { ".m4v", FileCategoryType.Video},
             { ".3gp", FileCategoryType.Video},
-            { ".3g2", FileCategoryType.Video},
             { ".3gpp", FileCategoryType.Video},
-            {".3g2", FileCategoryType.Video},
-            {".3gpp", FileCategoryType.Video}
+            { ".3g2", FileCategoryType.Video},
         };
 
         #region File category extinction method
-        public static FileCategoryType GetCategoryType(this FileCategoryType fileCategoryType, string fileExtension)
+        public static FileCategoryType GetCategoryType(string fileExtension)
         {
             if (FileExtentionsType.ContainsKey(fileExtension) && !string.IsNullOrEmpty(fileExtension) && !string.IsNullOrWhiteSpace(fileExtension))
             {

@@ -65,6 +65,10 @@ class IFileService {
 class LocalDeviceFileService {
   <<abstract>>
 }
+
+class FulaFileService {
+  <<abstract>>
+}
 ```
 # ZoneService Architecture
 ```mermaid
