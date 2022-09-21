@@ -2,7 +2,8 @@
 @inherits AppComponentBase;
 
 <div class="mydevice-content">
-    @if (IsInRoot(_currentArtifact)) {
+    @if (IsInRoot(_currentArtifact))
+    {
         <ToolBar IsMainToolBar="true" />
 
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
@@ -16,8 +17,7 @@
             </ContentTemplate>
         </BitAccordion>
     }
-    <ArtifactExplorer 
-        Artifacts="_artifacts"
-        CurrentArtifact="_currentArtifact"
-        OnSelectArtifact="HandleSelectArtifact" />
+    <ArtifactExplorer Artifacts="_artifacts"
+                      CurrentArtifact="_currentArtifact"
+                      OnSelectArtifact="HandleSelectArtifact" />
 </div>

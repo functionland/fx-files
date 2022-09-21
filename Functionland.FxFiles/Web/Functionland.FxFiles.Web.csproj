@@ -64,4 +64,8 @@
 		<Watch Remove="*.scss" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Components\Modal\ArtifactSelectionModal\" />
+	</ItemGroup>
+
 </Project>
