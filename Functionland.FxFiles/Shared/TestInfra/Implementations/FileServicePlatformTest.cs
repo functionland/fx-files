@@ -148,7 +148,40 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 Assert.AreEqual(4, srcArtifacts.Count, "Move Files & folders. All removed from source.");
                 desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(4, desArtifacts.Count, "Move Files & folders. All moved to destination.");
- 
+
+
+                //5. Rename a folder which contains multiple files
+                await fileService.RenameFolderAsync(Path.Combine(testRoot, "Folder 2/Folder 31"), "Folder 21");
+                var fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/Folder 21"),
+                                                                                                      Path.Combine(testRoot, "Folder 2/Folder 31") });
+                var newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
+                var oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
+
+                var isRenamed = newFsArtifactExists && !oldFsArtifactExists;
+                Assert.AreEqual<bool>(true, isRenamed, "Rename a folder with contaning files.");
+
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2/Folder 21"));
+                Assert.AreEqual(2, artifacts.Count, "Check for the files inside the renamed folder.");
+
+
+                //6. Rename a file to an already existed folder name
+                await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file31.txt"), "file21");
+
+                fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/file21.txt"),
+                                                                                                  Path.Combine(testRoot, "Folder 2/file31.txt")});
+                newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
+                oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
+
+                isRenamed = newFsArtifactExists && !oldFsArtifactExists;
+                Assert.AreEqual<bool>(true, isRenamed, "Rename a file");
+
+
+                //Rename a file to a duplicate file name
+                await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
+                {
+                    await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file21.txt"), "file1");
+                }, "The file already exists exception");
+
 
                 Assert.Success("Test passed!");
             }
