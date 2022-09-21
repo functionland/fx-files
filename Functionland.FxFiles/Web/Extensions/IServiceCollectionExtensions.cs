@@ -37,7 +37,6 @@ public static class IServiceCollectionExtensions
 #elif Windows
         services.AddSingleton<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
-        services.AddSingleton<IFileWatchService, WindowsFileWatchService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
         services.AddSingleton<IThumbnailService, WindowsThumbnailService>();
 #elif iOS
