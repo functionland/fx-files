@@ -5,9 +5,9 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
     public partial class FakeFileServicePlatformTest_CreateTypical : FileServicePlatformTest
     {
         [AutoInject] public IServiceProvider ServiceProvider { get; set; } = default!;
-        public override string Title => "FakeFileService Test";
+        public override string Title => "Typical FakeFileService Test";
 
-        public override string Description => "Tests the common features of this FileService";
+        public override string Description => "Tests the typical features of this FakeFileService";
 
         protected override IFileService OnGetFileService()
         {
