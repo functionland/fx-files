@@ -30,7 +30,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             var pinService = serviceProvider.GetService<IPinService>();
 
             await pinService.SetArtifactsPinAsync(
-                new FsArtifact[] {new FsArtifact("C:\\Program Files", "Program Files", FsArtifactType.Folder, FsFileProviderType.InternalMemory) });
+              new FsArtifact[] { new FsArtifact("E:\\Pic\\20170112_134108.jpg", "20170112_134108.jpg", FsArtifactType.Folder, FsFileProviderType.InternalMemory) { FileExtension = ".jpg" } }) ;
 
             var pinnedFiles = pinService.GetPinnedArtifactsAsync(null);
             await foreach(var file in pinnedFiles)

@@ -16,6 +16,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         [AutoInject] IFileService FileService { get; set; } = default!;
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
+        [AutoInject] public IThumbnailService ThumbnailService { get; set; } = default!;
 
         public SubscriptionToken ArtifactChangeSubscription { get; set; }
 
@@ -44,17 +45,23 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                         {
                             var fileExtention = Path.GetExtension(pin.ArtifactFullPath);
                             if (!string.IsNullOrWhiteSpace(fileExtention) &&
-                                LastModyDatetime != pin.LastModifiedDateTime &
                                 ImageExtensions.Contains(fileExtention.ToUpperInvariant()))
                             {
-                                //todo getThumbnail photo address
+
+                                var artifactName = Path.GetFileName(pin.ArtifactFullPath);
+                                if (string.IsNullOrEmpty(artifactName))
+                                {
+                                    artifactName = Path.GetFileName(Path.GetDirectoryName(pin.ArtifactFullPath));
+                                }
+
+                                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(new FsArtifact(pinnedArticat.FullPath, artifactName, FsArtifactType.File, FsFileProviderType.InternalMemory));
                                 var edditedPinArtfact = new PinnedArtifact
                                 {
                                     FullPath = pin.ArtifactFullPath,
                                     ContentHash = LastModyDatetime.ToString(),
                                     PinEpochTime = pinnedArticat.PinEpochTime,
                                     ProviderType = pinnedArticat.ProviderType,
-                                    //ThumbnailPath todo: tofill
+                                    ThumbnailPath = thumbnailAddress
                                 };
                                 await UpdatePinnedArticatAsyn(edditedPinArtfact);
 
@@ -99,9 +106,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
                 if (artifactChangeEvent.FsArtifact.FileExtension != null && ImageExtensions.Contains(artifactChangeEvent.FsArtifact.FileExtension.ToUpperInvariant()))
                 {
-                    // editedArtifact.ThumbnailPath todo: tofill
-                    //todo://store thumbnail photo
-                    //update pin cache
+                    var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifactChangeEvent.FsArtifact);
+                    editedArtifact.ThumbnailPath = thumbnailAddress;
+
                 }
                 await FxLocalDbService.UpdatePinAsync(editedArtifact, artifactChangeEvent.Description);
                 DeteteFromPinCache(artifactChangeEvent.Description != null ? artifactChangeEvent.Description : editedArtifact.FullPath);
@@ -124,7 +131,14 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             foreach (var artifact in artifacts)
             {
-                //todo://store thumbnail photo
+
+                if (artifact.FileExtension != null && ImageExtensions.Contains(artifact.FileExtension.ToUpperInvariant()))
+                {
+                    var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
+                    artifact.ThumbnailPath = thumbnailAddress;
+
+                }
+
                 await FxLocalDbService.AddPinAsync(artifact);
                 PinnedPathsCatche.Add(new PinnedArtifact
                 {
@@ -132,7 +146,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     ContentHash = artifact.LastModifiedDateTime.ToString(),
                     PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
                     ProviderType = artifact.ProviderType,
-                    //ThumbnailPath
+                    ThumbnailPath = artifact.ThumbnailPath
                 });
             }
         }
@@ -156,7 +170,17 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     artifact.IsPinned = true;
                     artifact.ThumbnailPath = pinnedArtifact.ThumbnailPath;
-                    //todo:checkForThumbnailPathExist
+
+                    if (string.IsNullOrEmpty(artifact.ThumbnailPath) && artifact.FileExtension != null && ImageExtensions.Contains(artifact.FileExtension.ToUpperInvariant()))
+                    {
+
+                        var result = (await FileService.CheckPathExistsAsync(new List<string> { artifact.ThumbnailPath })).FirstOrDefault();
+                        if (result != null &&  result.IsPathExist == false)
+                        {
+                            var newThumbnailPath = await ThumbnailService.MakeThumbnailAsync(artifact);
+                            artifact.ThumbnailPath = newThumbnailPath;
+                        }
+                    }
                     yield return artifact;
                 }
 

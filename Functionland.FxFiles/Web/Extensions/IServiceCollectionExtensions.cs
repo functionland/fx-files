@@ -58,7 +58,7 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<IPinService, PinService>();
         services.AddSingleton<IEventAggregator, EventAggregator>();
-
+        services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         return services;
     }
 }
