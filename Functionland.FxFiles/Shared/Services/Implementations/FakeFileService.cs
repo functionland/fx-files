@@ -5,16 +5,17 @@ using System.IO;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
-    public partial class FakeFileService : IFileService
+    public class FakeFileService : IFileService
     {
-        [AutoInject]
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();
         public TimeSpan? ActionLatency { get; set; }
         public TimeSpan? EnumerationLatency { get; set; }
 
-        public FakeFileService(IEnumerable<FsArtifact> files, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakeFileService(IServiceProvider serviceProvider, IEnumerable<FsArtifact> files, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
+            _files.Clear();
+            StringLocalizer = serviceProvider.GetRequiredService<IStringLocalizer<AppStrings>>();
             ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
             EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
             foreach (var file in files)
@@ -54,7 +55,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 };
                 _files.Add(newArtifact);
 
-                
+
             }
         }
 
@@ -125,7 +126,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
             var addedFiles = new List<FsArtifact>();
             foreach (var artifact in from file in files
-                                     let artifact = CreateArtifact(file.path,file.stream.GetHashCode().ToString())
+                                     let artifact = CreateArtifact(file.path, file.stream.GetHashCode().ToString())
                                      select artifact)
             {
                 CheckIfArtifactExist(artifact.FullPath);
@@ -138,7 +139,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             }
             return addedFiles;
         }
-       
+
         public async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -341,7 +342,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     fsArtifact.LastModifiedDateTime = DateTimeOffset.Now;
                 }
-                
+
                 fsArtifactList.Add(fsArtifact);
             }
 
