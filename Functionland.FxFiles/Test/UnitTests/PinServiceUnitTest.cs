@@ -20,13 +20,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   services.AddSingleton<IPinService, PinService>();
-                   services.AddSingleton<IEventAggregator, EventAggregator>();
-                   services.AddSingleton<IFileService, FakeFileService>();
-                   string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
-
-                   services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
-                   services.AddSingleton<IStringLocalizer<AppStrings>>();
+                   services.AddAppServices();
                }
             ).Build();
 
