@@ -5,8 +5,8 @@ namespace Functionland.FxFiles.App.Components;
 public partial class ArtifactExplorer
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-    [Parameter] public IEnumerable<FsArtifact> Artifacts { get; set; } = default!;
-    [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
+    [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
+    [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
 
     public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
     public ViewModeEnum ViewMode = ViewModeEnum.list;
