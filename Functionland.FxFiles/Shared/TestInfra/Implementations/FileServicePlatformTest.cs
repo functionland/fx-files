@@ -258,6 +258,18 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 Assert.AreEqual(3, desArtifacts.Count, "Copy folder with files inside. All files including duplicate one copyied in sub folder");
 
 
+                //10. Delete files and folders
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
+                var file21 = artifacts.Where(f => f.Name == "file21.txt").FirstOrDefault();
+                Assert.IsNotNull(file312, "File exists in source (sub directory), before delete.");
+
+                var deleteingItems = new[] { folder21, file21 };
+                await fileService.DeleteArtifactsAsync(deleteingItems);
+
+                srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
+                Assert.AreEqual(2, srcArtifacts.Count, "Delete a file and a folder. Both deleted from source.");
+
+
                 Assert.Success("Test passed!");
             }
             catch (Exception ex)
