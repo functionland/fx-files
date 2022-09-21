@@ -37,7 +37,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 await fileService.CreateFolderAsync(testRoot, "Folder 1");
                 var folder11 = await fileService.CreateFolderAsync(Path.Combine(testRoot, "Folder 1"), "Folder 11");
                 var file1 = await fileService.CreateFileAsync(Path.Combine(testRoot, "file1.txt"), GetSampleFileStream());
-                var file11 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/file11.txt"), GetSampleFileStream());               
+                var file11 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/file11.txt"), GetSampleFileStream());
 
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Create folder and file in root");
@@ -72,7 +72,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 {
                     await fileService.CreateFileAsync(Path.Combine(testRoot, ".txt"), GetSampleFileStream());
                 }, "The file name is null");
-                
+
 
                 //1. move a file
                 var movingFiles = new[] { file1 };
@@ -211,7 +211,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
 
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 1/Folder 11/file113.txt"),
                                                                                                   Path.Combine(testRoot, "Folder 1/Folder 11/file114.txt")});
-                
+
                 var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
                 var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
 
@@ -274,33 +274,37 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
             }
             catch (Exception ex)
             {
-                Assert.Fail("Test failed", ex.Message);
+                try
+                {
+                    Assert.Fail("Test failed", ex.Message);
+                }
+                catch { }
             }
         }
 
         private static async Task<List<FsArtifact>> GetArtifactsAsync(IFileService fileService, string testRoot)
-    {
-        List<FsArtifact> emptyRootFolderArtifacts = new();
-        await foreach (var item in fileService.GetArtifactsAsync(testRoot))
         {
-            emptyRootFolderArtifacts.Add(item);
+            List<FsArtifact> emptyRootFolderArtifacts = new();
+            await foreach (var item in fileService.GetArtifactsAsync(testRoot))
+            {
+                emptyRootFolderArtifacts.Add(item);
+            }
+
+            return emptyRootFolderArtifacts;
+        }
+        private Stream GetSampleFileStream()
+        {
+            var sampleText = "Hello streamer!";
+            byte[] byteArray = Encoding.ASCII.GetBytes(sampleText);
+            MemoryStream stream = new MemoryStream(byteArray);
+            return stream;
         }
 
-        return emptyRootFolderArtifacts;
-    }
-        private Stream GetSampleFileStream()
-    {
-        var sampleText = "Hello streamer!";
-        byte[] byteArray = Encoding.ASCII.GetBytes(sampleText);
-        MemoryStream stream = new MemoryStream(byteArray);
-        return stream;
-    }
-
         protected override async Task OnRunAsync()
-    {
-        var root = OnGetTestsRootPath();
-        var fileService = OnGetFileService();
-        await OnRunFileServiceTestAsync(fileService, root);
-    }
+        {
+            var root = OnGetTestsRootPath();
+            var fileService = OnGetFileService();
+            await OnRunFileServiceTestAsync(fileService, root);
+        }
     }
 }
