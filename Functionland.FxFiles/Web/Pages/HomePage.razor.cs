@@ -8,12 +8,7 @@ namespace Functionland.FxFiles.App.Pages;
 
 public partial class HomePage
 {
-    private void NavigateToTestExplorerComponent()
-    {
-        NavigationManager.NavigateTo("/TestExplorer");
-    }
-
-    public bool IsBottomSheetClose { get; set; } = true;
+     public bool IsBottomSheetClose { get; set; } = true;
 
     public void SyncCloseState(bool isClose)
     {

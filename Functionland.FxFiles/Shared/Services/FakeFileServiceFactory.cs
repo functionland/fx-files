@@ -9,69 +9,75 @@ namespace Functionland.FxFiles.Shared.Services
     public static class FakeFileServiceFactory
     {
 
-        public static FakeFileService CreateSimpleFileListOnRoot(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public static FakeFileService CreateSimpleFileListOnRoot(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            return new FakeFileService(new List<FsArtifact>
-            {
-                CreateFile("/image summer.jpg"),
-                CreateFile("/image germany.jpg"),
-                CreateFile("/proposal v1-2.pdf"),
-            },
-            actionLatency,
-            enumerationLatency
+            return new FakeFileService(serviceProvider,
+                new List<FsArtifact>
+                {
+                    CreateFile("/image summer.jpg"),
+                    CreateFile("/image germany.jpg"),
+                    CreateFile("/proposal v1-2.pdf"),
+                },
+                actionLatency,
+                enumerationLatency
+                );
+        }
+
+        public static FakeFileService CreateFolders(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        {
+            return new FakeFileService(
+                serviceProvider,
+                new List<FsArtifact>
+                {
+                    CreateFolder("/images"),
+                    CreateFolder("/docs"),
+                    CreateFile("/images/image summer.jpg"),
+                    CreateFile("/images/image germany.jpg"),
+                    CreateFile("/docs/proposal v1-2.pdf"),
+                },
+                actionLatency,
+                enumerationLatency
             );
         }
 
-        public static FakeFileService CreateFolders(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public static FakeFileService CreateNeste4dFolders(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            return new FakeFileService(new List<FsArtifact>
-            {
-                CreateFolder("/images"),
-                CreateFolder("/docs"),
-                CreateFile("/images/image summer.jpg"),
-                CreateFile("/images/image germany.jpg"),
-                CreateFile("/docs/proposal v1-2.pdf"),
-            },
-            actionLatency,
-            enumerationLatency
+            return new FakeFileService(
+                serviceProvider,
+                new List<FsArtifact>
+                {
+                    CreateFolder("/images"),
+                    CreateFolder("/images/summer"),
+                    CreateFolder("/images/winter"),
+                    CreateFolder("/docs"),
+                    CreateFile("/images/summer/image summer.jpg"),
+                    CreateFile("/images/summer/image germany.jpg"),
+                    CreateFile("/images/winter/image summer.jpg"),
+                    CreateFile("/images/winter/image germany.jpg"),
+                    CreateFile("/docs/proposal v1-2.pdf"),
+                },
+                actionLatency,
+                enumerationLatency
             );
         }
 
-        public static FakeFileService CreateNeste4dFolders(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public static FakeFileService CreateTypical(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            return new FakeFileService(new List<FsArtifact>
-            {
-                CreateFolder("/images"),
-                CreateFolder("/images/summer"),
-                CreateFolder("/images/winter"),
-                CreateFolder("/docs"),
-                CreateFile("/images/summer/image summer.jpg"),
-                CreateFile("/images/summer/image germany.jpg"),
-                CreateFile("/images/winter/image summer.jpg"),
-                CreateFile("/images/winter/image germany.jpg"),
-                CreateFile("/docs/proposal v1-2.pdf"),
-            },
-            actionLatency,
-            enumerationLatency
-            );
-        }
-
-        public static FakeFileService CreateTypical(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-        {
-            return new FakeFileService(new List<FsArtifact>
-            {
-                CreateFolder("/images"),
-                CreateFolder("/images/summer"),
-                CreateFolder("/images/winter"),
-                CreateFolder("/docs"),
-                CreateFile("/images/summer/image summer.jpg"),
-                CreateFile("/images/summer/image germany.jpg"),
-                CreateFile("/images/winter/image summer.jpg"),
-                CreateFile("/images/winter/image germany.jpg"),
-                CreateFile("/docs/proposal v1-2.pdf"),
-            },
-            actionLatency,
-            enumerationLatency
+            return new FakeFileService(serviceProvider, 
+                new List<FsArtifact>
+                {
+                    CreateFolder("/images"),
+                    CreateFolder("/images/summer"),
+                    CreateFolder("/images/winter"),
+                    CreateFolder("/docs"),
+                    CreateFile("/images/summer/image summer.jpg"),
+                    CreateFile("/images/summer/image germany.jpg"),
+                    CreateFile("/images/winter/image summer.jpg"),
+                    CreateFile("/images/winter/image germany.jpg"),
+                    CreateFile("/docs/proposal v1-2.pdf"),
+                },
+                actionLatency,
+                enumerationLatency
             );
         }
 
