@@ -348,4 +348,7 @@
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
   </data>
+  <data name="TestExplorer" xml:space="preserve">
+    <value>Test explorer</value>
+  </data>
 </root>
