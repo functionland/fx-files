@@ -45,42 +45,39 @@ else
 }
 
 <div class="list-container @ViewMode-view">
-    @if (Artifacts != null)
+    @foreach (var artifact in Artifacts)
     {
-        @foreach (var artifact in Artifacts)
-        {
-            <div @onpointerup="PointerUp"
+        <div @onpointerup="PointerUp"
          @onpointerdown="PointerDown"
          class="item-container @ViewMode-view-item" @onclick="() => HandleArtifactClick(artifact)">
-                @if (IsSelectionMode)
-                {
-                    <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
-                }
+            @if (IsSelectionMode)
+            {
+                <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
+            }
 
-                @if (!IsSelectionMode)
-                {
-                    <div class="item-icon-position text-file-icon"></div>
-                }
+            @if (!IsSelectionMode)
+            {
+                <div class="item-icon-position text-file-icon"></div>
+            }
 
-                <div class="item-content">
+            <div class="item-content">
 
-                    <div class="item-title">
-                        @if (artifact.IsPinned == true)
-                        {
-                            <div class="pin-badge"></div>
-                        }
-                        <div class="title-text">@artifact.Name</div>
-                    </div>
-                    <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
+                <div class="item-title">
+                    @if (artifact.IsPinned == true)
+                    {
+                        <div class="pin-badge"></div>
+                    }
+                    <div class="title-text">@artifact.Name</div>
                 </div>
+                <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
+            </div>
 
-                @if (!IsSelectionMode)
-                {
-                    <div class="options-btn"
+            @if (!IsSelectionMode)
+            {
+                <div class="options-btn"
              @onclick="OpenArtifactOverFlow"
              @onclick:stopPropagation="true"></div>
-                }
-            </div>
-        }
+            }
+        </div>
     }
 </div>
