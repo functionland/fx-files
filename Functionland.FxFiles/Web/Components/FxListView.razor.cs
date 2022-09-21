@@ -1,5 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Linq;
+
 using Functionland.FxFiles.App.Components.Common;
+using Functionland.FxFiles.App.Components.Modal;
+
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Functionland.FxFiles.App.Components
@@ -13,9 +17,14 @@ namespace Functionland.FxFiles.App.Components
         public bool HasSearchInput { get; set; } = false;
 
         [Parameter, EditorRequired]
-        public List<ListItemConfig>? ListItems { get; set; }
+        public List<FsArtifact>? ItemsSource { get; set; }
 
-        public List<ListItemConfig>? SelectedListItems { get; set; } = new List<ListItemConfig>();
+        //[Parameter]
+        public List<FsArtifact>? SelectedListItems { get; set; } = new List<FsArtifact>();
+        //[Parameter]
+        //public EventCallback<List<FsArtifact>?> SelectedListItemsChanged { get; set; }
+
+        private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public SortOrderEnum SortOrder = SortOrderEnum.asc;
@@ -68,7 +77,7 @@ namespace Functionland.FxFiles.App.Components
         public void CancelSelection()
         {
             IsSelectionMode = false;
-            SelectedListItems = new List<ListItemConfig>();
+            SelectedListItems = new List<FsArtifact>();
         }
 
         public void PointerDown()
@@ -85,9 +94,9 @@ namespace Functionland.FxFiles.App.Components
             }
         }
 
-        public void OnSelectionChanged(ListItemConfig selectedItem)
+        public void OnSelectionChanged(FsArtifact selectedItem)
         {
-            if (SelectedListItems.Any(item => item.Title == selectedItem.Title))
+            if (SelectedListItems.Any(item => item.FullPath == selectedItem.FullPath))
             {
                 SelectedListItems.Remove(selectedItem);
             }

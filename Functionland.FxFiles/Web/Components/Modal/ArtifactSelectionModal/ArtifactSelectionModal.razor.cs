@@ -3,21 +3,25 @@
 public partial class ArtifactSelectionModal
 {
     private bool _isModalOpen;
-    private TaskCompletionSource<ArtifactSelectionResult>? _tsc;
+    private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
+    [AutoInject]
+    private IFileService _fileService = default!;
+    public List<FsArtifact> Artifacts = default!;
 
     [Parameter]
     public bool IsMultiple { get; set; }
 
     public async Task<ArtifactSelectionResult> ShowAsync()
     {
-        _tsc?.SetCanceled();
+        _tcs?.SetCanceled();
+        await LoadArtifacts();
 
         _isModalOpen = true;
         StateHasChanged();
 
-        _tsc = new TaskCompletionSource<ArtifactSelectionResult>();
+        _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
 
-        return await _tsc.Task;
+        return await _tcs.Task;
     }
 
     private void SelectArtifact(FsArtifact artifact)
@@ -27,8 +31,25 @@ public partial class ArtifactSelectionModal
         result.ResultType = ArtifactSelectionResultType.Ok;
         result.SelectedArtifacts = new[] { artifact };
 
-        _tsc!.SetResult(result);
+        _tcs!.SetResult(result);
+        _tcs = null;
         _isModalOpen = false;
+    }
+
+    private async Task LoadArtifacts()
+    {
+        var artifactList = new List<FsArtifact>();
+        var artifacts = _fileService.GetArtifactsAsync();
+
+        await foreach (var item in artifacts)
+        {
+            if (item.ArtifactType != FsArtifactType.File)
+            {
+                artifactList.Add(item);
+            }
+        }
+
+        Artifacts = artifactList;
     }
 
     private void Close()
@@ -37,13 +58,14 @@ public partial class ArtifactSelectionModal
 
         result.ResultType = ArtifactSelectionResultType.Cancel;
 
-        _tsc!.SetResult(result);
+        _tcs!.SetResult(result);
+        _tcs = null;
         _isModalOpen = false;
     }
 
 
     public void Dispose()
     {
-        _tsc?.SetCanceled();
+        _tcs?.SetCanceled();
     }
 }

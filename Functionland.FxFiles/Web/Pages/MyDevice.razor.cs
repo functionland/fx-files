@@ -6,10 +6,13 @@ namespace Functionland.FxFiles.App.Pages
     public partial class MyDevice
     {
         private ArtifactSelectionModal _artifactSelectionModalRef = default!;
+        private FxListView _fxListViewRef = default!;
 
         [AutoInject]
         private IFileService _fileService { get; set; } = default!;
-        public List<ListItemConfig> ListItems { get; set; } = new List<ListItemConfig>();
+        public List<FsArtifact> Artifacts { get; set; } = new List<FsArtifact>();
+        private List<FsArtifact> _selectedArtifacts = new List<FsArtifact>();
+        private string _message = string.Empty;
 
         public List<FileCardConfig> PinnedCards = new List<FileCardConfig>
         {
@@ -29,52 +32,38 @@ namespace Functionland.FxFiles.App.Pages
         public async Task GetAllFilesAsync()
         {
             var allFiles = _fileService.GetArtifactsAsync();
-            //while (await allFiles.MoveNextAsync())
-            //{
-            //    var item = allFiles.Current;
-            //    //TODO:impediment file type with icon later
-            //    if (item.ArtifactType == FsArtifactType.Folder)
-            //    {
-            //        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "folder"));
-            //    }
-            //    else
-            //    {
-            //        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()} | {item.Size}", item.IsPinned, "text-file"));
-            //    }
-            //}
+            var artifacts = new List<FsArtifact>();
 
             await foreach (var item in allFiles)
             {
-                switch (item.ArtifactType)
-                {
-                    case FsArtifactType.File:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()} | {item.Size}", item.IsPinned, "text-file"));
-                        break;
-                    case FsArtifactType.Folder:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "folder"));
-                        break;
-                    case FsArtifactType.Drive:
-                        ListItems.Add(new ListItemConfig(item.Name, $"Modified {item.LastModifiedDateTime.Date.ToShortDateString()}", item.IsPinned, "drive"));
-                        break;
-                    default:
-                        break;
-                }
+                artifacts.Add(item);
             }
+
+            Artifacts = artifacts;
         }
         #endregion
 
         private async Task Copy()
         {
-            var result = await _artifactSelectionModalRef.ShowAsync();
-
-            if (result.ResultType == ArtifactSelectionResultType.Ok)
+            try
             {
-                await Task.Delay(2000);
-                var result2 = await _artifactSelectionModalRef.ShowAsync();
+                var result = await _artifactSelectionModalRef.ShowAsync();
+                if (result.ResultType == ArtifactSelectionResultType.Ok)
+                {
+                    await Task.Delay(2000);
+                    await _fileService.CopyArtifactsAsync(_fxListViewRef.SelectedListItems.ToArray(), result.SelectedArtifacts.Single().FullPath);
+                    _message = $"Copy successful {_fxListViewRef.SelectedListItems.Count} files";
+                }
+
+                else
+                {
+                    await Task.Delay(2000);
+                    _message = "Copy cancelled";
+                }
             }
-            else
+            catch (Exception e)
             {
-
+                _message = e.Message;
             }
         }
     }

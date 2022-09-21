@@ -1,6 +1,28 @@
 ﻿@namespace Functionland.FxFiles.App.Components.Modal
 @inherits AppComponentBase
 
-<div class="modal @(_isModalOpen ? "open" : "close")">
-    <h3>ArtifactSelection</h3>
-</div>
+
+<FxBottomSheet IsClosable="false" IsOpen="_isModalOpen" IsOpenChanged="Close">
+    @if (Artifacts is not null)
+    {
+        @foreach (var artifact in Artifacts)
+        {
+            <div @onclick="()=>SelectArtifact(artifact)">
+                <span style="color:white;">@artifact.Name</span>
+            </div>
+        }
+    }
+</FxBottomSheet>
+
+@*<div class="modal @(_isModalOpen ? "open" : "close")">
+    @if (Artifacts is not null)
+    {
+        @foreach (var artifact in Artifacts)
+        {
+            <div @onclick="()=>SelectArtifact(artifact)">
+                <span style="color:white;">@artifact.Name</span>
+            </div>
+        }
+    }
+    <button @onclick="Close">close</button>
+</div>*@

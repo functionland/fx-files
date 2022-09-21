@@ -44,7 +44,7 @@ else
 }
 
 <div class="list-container @ViewMode-view">
-    @foreach (var item in ListItems)
+    @foreach (var item in ItemsSource)
     {   
         <div 
         @onpointerup="PointerUp"
@@ -58,16 +58,16 @@ else
             <div class="item-content">
                 @if(!IsSelectionMode)
                 {
-                    <div class="@item.IconStr-icon"></div>
+                    <div class="@item.ProviderType.ToString()-icon"></div>
                 }
                 <div class="item-title">
                     @if (item.IsPinned == true)
                     {
                         <div class="pin-badge"></div>
                     }
-                    <div class="title-text">@item.Title</div>
+                    <div class="title-text">@item.Name</div>
                 </div>
-                <div class="item-sub-text">@item.SubTitle</div>
+                <div class="item-sub-text">@item.LastModifiedDateTime</div>
             </div>
 
             @if (!IsSelectionMode)
@@ -79,3 +79,7 @@ else
         </div>
     }
 </div>
+
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef">
+    
+</ArtifactSelectionModal>

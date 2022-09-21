@@ -3,26 +3,26 @@
     public partial class FxBottomSheet
     {
         [Parameter, EditorRequired]
-        public bool IsCloseAble { get; set; } = false;
+        public bool IsClosable { get; set; } = false;
 
         [Parameter, EditorRequired]
-        public RenderFragment? ContentRenderFragment { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         [Parameter]
-        public bool IsClose { get; set; } = true;
+        public bool IsOpen { get; set; } = true;
 
         [Parameter]
-        public EventCallback<bool> IsCloseChanged { get; set; }
+        public EventCallback<bool> IsOpenChanged { get; set; }
 
         public async Task Close()
         {
-            ChangeCloseState();
-            await IsCloseChanged.InvokeAsync(IsClose);
+            ChangeOpenState();
+            await IsOpenChanged.InvokeAsync(IsOpen);
         }
 
-        public void ChangeCloseState()
+        public void ChangeOpenState()
         {
-            IsClose = !IsClose;
+            IsOpen = true;
         }
     }
 }

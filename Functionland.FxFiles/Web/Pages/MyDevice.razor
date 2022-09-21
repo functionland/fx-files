@@ -1,7 +1,6 @@
 ﻿@page "/MyDevice"
 
 @inherits AppComponentBase;
-<PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
 <ToolBar IsMainToolBar="true" />
 
@@ -20,7 +19,10 @@
         </ContentTemplate>
     </BitAccordion>
 
-    <FxListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ListItems="ListItems" />
+    <FxListView ListTitle="@Localizer[nameof(AppStrings.MyDevice)]" ItemsSource="Artifacts"
+    @ref="_fxListViewRef"/>
+
+    <p>@_message</p>
 </div>
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef"></ArtifactSelectionModal>

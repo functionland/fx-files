@@ -10,10 +10,8 @@
     <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
     <button @onclick="(()=>NavigateToTestExplorerComponent())">Test</button>
     <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
-    <FxBottomSheet IsCloseAble="true" IsClose="IsBottomSheetClose" IsCloseChanged="SyncCloseState">
-        <ContentRenderFragment>
-            <FileDetailView FileName="Sample.docx" IsImageFile="false" />
-        </ContentRenderFragment>
-    </FxBottomSheet>
+    @*<FxBottomSheet IsCloseAble="true" IsClose="IsBottomSheetClose" IsCloseChanged="SyncCloseState">
+        <FileDetailView FileName="Sample.docx" IsImageFile="false" />
+    </FxBottomSheet>*@
 </div>
 <EmptyListView></EmptyListView>
