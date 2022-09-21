@@ -1,6 +1,6 @@
-﻿@import '../Styles/abstracts/_variables.scss';
-@import '../Styles/abstracts/_functions.scss';
-@import '../Styles/components/_bit-checkbox.scss';
+﻿@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+@import '../../Styles/components/_bit-checkbox.scss';
 
 .list-title {
     font-weight: 600;
@@ -116,7 +116,6 @@
 }
 
 list-view {
-
 }
 
 .select-action {
@@ -211,12 +210,16 @@ list-view {
     cursor: pointer;
     position: relative;
     padding: $spacing-16 21px;
+
+    .item-icon-position {
+        background-size: $icon-24;
+        background-repeat: no-repeat;
+        height: 24px;
+        width: 24px;
+    }
 }
 
 .item-content {
-    background-size: $icon-24;
-    background-repeat: no-repeat;
-
 
     .item-title {
         display: flex;
@@ -268,8 +271,11 @@ list-view {
         background-image: url($options-vertical);
     }
 
-    .item-content {
+    .item-icon-position {
         background-position: center left;
+    }
+
+    .item-content {
         padding-left: 16px;
         flex-grow: 1;
 
@@ -293,9 +299,13 @@ list-view {
         margin: 0 auto;
     }
 
+    .item-icon-position {
+        background-position: center;
+        margin: 0 auto;
+    }
+
     .item-content {
         background-position: center top;
-        padding-top: 32px;
 
         .item-title {
             display: flex;
