@@ -9,6 +9,9 @@
         public RenderFragment? ChildContent { get; set; }
 
         [Parameter]
+        public bool IsFullScreenMode { get; set; } = false;
+
+        [Parameter]
         public bool IsOpen { get; set; } = true;
 
         [Parameter]

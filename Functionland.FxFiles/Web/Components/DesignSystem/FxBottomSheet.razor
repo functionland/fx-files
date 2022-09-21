@@ -5,7 +5,7 @@
     
     <div class="overlay" @onclick="(async () => await Close())"></div>
 
-    <div class="contents column">
+    <div class="contents column @(IsFullScreenMode ? "full-screen-sheet" : "")">
         @if (IsClosable)
         {
             <div class="controls">

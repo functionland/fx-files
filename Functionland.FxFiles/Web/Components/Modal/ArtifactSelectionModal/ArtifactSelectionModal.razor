@@ -2,7 +2,7 @@
 @inherits AppComponentBase
 
 
-<FxBottomSheet IsClosable="false" IsOpen="_isModalOpen" IsOpenChanged="Close">
+<FxBottomSheet IsClosable="false" IsOpen="_isModalOpen" IsOpenChanged="Close" IsFullScreenMode="true">
     @if (Artifacts is not null)
     {
         @foreach (var artifact in Artifacts)

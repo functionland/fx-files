@@ -15,10 +15,3 @@
         display: none;
     }
 }
-
-::deep .sheet .contents {
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    border-radius: 0;
-}
