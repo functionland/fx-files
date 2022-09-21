@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Shared.Models
+﻿using Functionland.FxFiles.Shared.Utils;
+
+namespace Functionland.FxFiles.Shared.Models
 {
     public class FsArtifact
     {
@@ -31,5 +33,6 @@
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
         public FileCategoryType FileCategory => FileCategory.GetCategoryType(FileExtension != null ? FileExtension : "");
+        public string? SizeStr { get { return SizeUtil.CalculateSizeStr(Size); } }
     }
 }
