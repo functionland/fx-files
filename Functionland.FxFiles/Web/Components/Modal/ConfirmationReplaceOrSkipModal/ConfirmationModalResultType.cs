@@ -2,6 +2,6 @@
 
 public enum ConfirmationReplaceOrSkipModalResultType
 {
-    OverRide,
+    Replace,
     Skip
 }

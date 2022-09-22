@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.App.Components.Modal
+﻿using Functionland.FxFiles.Shared.Models;
+
+namespace Functionland.FxFiles.App.Components.Modal
 {
     public partial class ConfirmationReplaceOrSkipModal
     {
@@ -18,6 +20,28 @@
             _tcs = new TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>();
 
             return await _tcs.Task;
+        }
+
+        public void SkipArtifact()
+        {
+            var result = new ConfirmationReplaceOrSkipModalResult();
+
+            result.ResultType = ConfirmationReplaceOrSkipModalResultType.Skip;
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
+        }
+
+        public void ReplaceArtifact()
+        {
+            var result = new ConfirmationReplaceOrSkipModalResult();
+
+            result.ResultType = ConfirmationReplaceOrSkipModalResultType.Replace;
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
         }
 
         private void Close()
