@@ -10,11 +10,19 @@ public partial class TestExplorer
 
     private List<IPlatformTest> PlatformTests { get; set; } = new();
     public string TestName = "";
+    private bool IsDescriptionOpen = false;
+    private string Description = "";
     private List<TestProgressChangedEventArgs> testProgressChangedEventArgs = new();
     protected override Task OnInitAsync()
     {
         PlatformTests = PlatformTestService.GetTests().ToList();
         return base.OnInitAsync();
+    }
+
+    private void ShowDescription(TestProgressChangedEventArgs item)
+    {
+        IsDescriptionOpen = true;
+        Description = item.Description ?? "";
     }
 
     private async Task HandleValidSubmit()
