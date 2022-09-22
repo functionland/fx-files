@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
+using Functionland.FxFiles.App.Components.Modal;
 
 namespace Functionland.FxFiles.App.Components;
 
@@ -7,6 +8,7 @@ public partial class ArtifactExplorer
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
+    private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
 
     public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
     public ViewModeEnum ViewMode = ViewModeEnum.list;
