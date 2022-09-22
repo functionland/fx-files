@@ -8,15 +8,7 @@ namespace Functionland.FxFiles.App.Pages;
 
 public partial class HomePage
 {
-    private string internalfilePath2;
-
-    [AutoInject] public IFileService FileService { get; set; }
-    private void NavigateToTestExplorerComponent()
-    {
-        NavigationManager.NavigateTo("/TestExplorer");
-    }
-
-    public bool IsBottomSheetClose { get; set; } = true;
+     public bool IsBottomSheetClose { get; set; } = true;
 
     public void SyncCloseState(bool isClose)
     {

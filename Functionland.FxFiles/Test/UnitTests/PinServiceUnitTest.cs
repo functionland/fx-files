@@ -20,12 +20,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   services.AddSingleton<IPinService, PinService>();
-                   services.AddSingleton<IEventAggregator, EventAggregator>();
-                   services.AddSingleton<IFileService, FakeFileService>();
-                   string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "FxDB.db")};";
-
-                   services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+                   services.AddAppServices();
                }
             ).Build();
 
@@ -35,7 +30,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             var pinService = serviceProvider.GetService<IPinService>();
 
             await pinService.SetArtifactsPinAsync(
-                new FsArtifact[] {new FsArtifact("C:\\Program Files", "Program Files", FsArtifactType.Folder, FsFileProviderType.InternalMemory) });
+              new FsArtifact[] { new FsArtifact("E:\\Pic\\20170112_134108.jpg", "20170112_134108.jpg", FsArtifactType.Folder, FsFileProviderType.InternalMemory) { FileExtension = ".jpg" } }) ;
 
             var pinnedFiles = pinService.GetPinnedArtifactsAsync(null);
             await foreach(var file in pinnedFiles)
@@ -75,7 +70,7 @@ namespace Functionland.FxFiles.Shared.Test.UnitTests
             var aggrigator = serviceProvider.GetService<IEventAggregator>();
 
             await pinService.InitializeAsync();
-            aggrigator.GetEvent<ArtifactChangeEventArgs>().Publish(new ArtifactChangeEventArgs()
+            aggrigator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
                 ChangeType = FsArtifactChangesType.Delete,
                 FsArtifact = new FsArtifact("C:\\Program Files", "Program Files", FsArtifactType.Folder, FsFileProviderType.InternalMemory)

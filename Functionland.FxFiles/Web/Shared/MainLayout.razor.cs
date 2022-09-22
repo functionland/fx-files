@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.App.Shared;
+﻿using Functionland.FxFiles.App.Components;
+
+namespace Functionland.FxFiles.App.Shared;
 
 public partial class MainLayout
 {

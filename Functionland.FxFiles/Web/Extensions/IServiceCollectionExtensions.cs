@@ -5,6 +5,7 @@ using Functionland.FxFiles.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Shared.TestInfra.Implementations;
 using Prism.Events;
 using EventAggregator = Prism.Events.EventAggregator;
+using Functionland.FxFiles.App.Components;
 
 #if Android
 using Functionland.FxFiles.App.Platforms.Android.Implementations;
@@ -32,18 +33,19 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
+        services.AddSingleton<IThumbnailService, AndroidThumbnailService>();
 #elif Windows
         services.AddSingleton<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
+        services.AddSingleton<IThumbnailService, WindowsThumbnailService>();
 #elif iOS
         //TODO: services.AddSingleton<IFileService, IosFileService>();
         //services.AddTransient<IPlatformTestService, IosPlatformTestService>();
         //services.AddTransient<IosFileServicePlatformTest>();
 #else
-        var fakeFileService = FakeFileServiceFactory.CreateSimpleFileListOnRoot();
 
-        services.AddSingleton<IFileService>((_) => fakeFileService);
+        services.AddSingleton<IFileService>((serviceProvider) => FakeFileServiceFactory.CreateSimpleFileListOnRoot(serviceProvider));
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();
@@ -56,7 +58,7 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<IPinService, PinService>();
         services.AddSingleton<IEventAggregator, EventAggregator>();
-
+        services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         return services;
     }
 }
