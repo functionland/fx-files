@@ -19,8 +19,9 @@
     }
     <ArtifactExplorer Artifacts="_artifacts"
                       CurrentArtifact="_currentArtifact"
-                      OnOptionsClick="HandleOptionsArtifact"
-                      OnSelectArtifact="HandleSelectArtifact" />
+                      OnSelectArtifact="HandleSelectArtifact" 
+                      OnArtifactsOptions="HandleOptionsArtifact"
+                      OnSelectedArtifactsOptions="HandleSelectedArtifactsOptions" />
 </div>
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef"></ArtifactSelectionModal>

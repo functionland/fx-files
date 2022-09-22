@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
 using Functionland.FxFiles.App.Components.DesignSystem;
 using Functionland.FxFiles.App.Components.Modal;
+using Functionland.FxFiles.Shared.Services.Contracts;
 
 using Microsoft.Extensions.Localization;
 
@@ -13,8 +14,6 @@ public partial class FileBrowser
     private List<FsArtifact> _artifacts = new();
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
     private ArtifactOverflowModal _asm { get; set; }
-
-    [AutoInject] public IStringLocalizer StringLocalizer { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -99,7 +98,7 @@ public partial class FileBrowser
         {
             await FileService.RenameFileAsync(filePath, newName, cancellationToken);
         }
-        catch (DomainLogicException ex) when (ex.Message == StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"))
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, "file"))
         {
             //TODO: show exeception message with toast
         }
@@ -161,6 +160,11 @@ public partial class FileBrowser
     }
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
+    {
+        await _asm.ShowAsync();
+    }
+
+    private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifact)
     {
         await _asm.ShowAsync();
     }

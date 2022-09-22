@@ -2,33 +2,32 @@
 {
     public partial class ArtifactOverflowModal
     {
-        private bool _isModalOpen;
-        private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
         [AutoInject]
         private IFileService _fileService = default!;
         private List<FsArtifact> _artifacts = new();
+        private TaskCompletionSource<ArtifactOverflowResult>? _tcs;
+        private bool _isModalOpen;
 
         [Parameter]
         public bool IsMultiple { get; set; }
 
-        public async Task<ArtifactSelectionResult> ShowAsync()
+        public void ShowDetails()
         {
-            _tcs?.SetCanceled();
-            await LoadArtifacts();
+            var result = new ArtifactOverflowResult();
 
-            _isModalOpen = true;
-            StateHasChanged();
+            result.ResultType = ArtifactOverflowResultType.Details;
+            //result.SelectedArtifacts = new[] { artifact };
 
-            _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
-
-            return await _tcs.Task;
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
         }
 
-        private void SelectArtifact(FsArtifact artifact)
+        public void Rename(FsArtifact artifact)
         {
-            var result = new ArtifactSelectionResult();
+            var result = new ArtifactOverflowResult();
 
-            result.ResultType = ArtifactSelectionResultType.Ok;
+            result.ResultType = ArtifactOverflowResultType.Rename;
             result.SelectedArtifacts = new[] { artifact };
 
             _tcs!.SetResult(result);
@@ -36,24 +35,71 @@
             _isModalOpen = false;
         }
 
-        private async Task LoadArtifacts()
+        public void Copy(FsArtifact artifact)
         {
-            var artifacts = _fileService.GetArtifactsAsync();
+            var result = new ArtifactOverflowResult();
 
-            await foreach (var item in artifacts)
-            {
-                if (item.ArtifactType != FsArtifactType.File)
-                {
-                    _artifacts.Add(item);
-                }
-            }
+            result.ResultType = ArtifactOverflowResultType.Copy;
+            result.SelectedArtifacts = new[] { artifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
+        }
+
+        public void Pin(FsArtifact artifact)
+        {
+            var result = new ArtifactOverflowResult();
+
+            result.ResultType = ArtifactOverflowResultType.Pin;
+            result.SelectedArtifacts = new[] { artifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
+        }
+
+        public void Move(FsArtifact artifact)
+        {
+            var result = new ArtifactOverflowResult();
+
+            result.ResultType = ArtifactOverflowResultType.Move;
+            result.SelectedArtifacts = new[] { artifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
+        }
+
+        public void Delete(FsArtifact artifact)
+        {
+            var result = new ArtifactOverflowResult();
+
+            result.ResultType = ArtifactOverflowResultType.Details;
+            result.SelectedArtifacts = new[] { artifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
+        }
+
+        public async Task<ArtifactOverflowResult> ShowAsync()
+        {
+            _tcs?.SetCanceled();
+
+            _isModalOpen = true;
+            StateHasChanged();
+
+            _tcs = new TaskCompletionSource<ArtifactOverflowResult>();
+
+            return await _tcs.Task;
         }
 
         private void Close()
         {
-            var result = new ArtifactSelectionResult();
+            var result = new ArtifactOverflowResult();
 
-            result.ResultType = ArtifactSelectionResultType.Cancel;
+            result.ResultType = ArtifactOverflowResultType.Cancel;
 
             _tcs!.SetResult(result);
             _tcs = null;

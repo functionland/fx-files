@@ -2,8 +2,6 @@
 @using Functionland.FxFiles.App.Components.Common
 @inherits AppComponentBase
 
-<h3>ArtifactExplorer</h3>
-
 @if (!IsSelectionMode)
 {
     <div class="action-bar">
@@ -32,7 +30,7 @@ else
         </div>
 
         <div class="right-part">
-            <div class="icons-action move-icon"></div>
+            <div class="icons-action move-icon" @onclick="(() => HandleMultiArtifactsOptionsClick())"></div>
             <div class="icons-action add-folder"></div>
             <div class="icons-action vertical-option-icon"></div>
         </div>
@@ -49,7 +47,7 @@ else
     {
         <div @onpointerup="PointerUp"
          @onpointerdown="PointerDown"
-         class="item-container @ViewMode-view-item" @onclick="() => HandleArtifactClick(artifact)">
+         class="item-container @ViewMode-view-item">
             @if (IsSelectionMode)
             {
                 <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
@@ -60,7 +58,7 @@ else
                 <div class="item-icon-position text-file-icon"></div>
             }
 
-            <div class="item-content">
+            <div class="item-content" @onclick="() => HandleArtifactClick(artifact)">
 
                 <div class="item-title">
                     @if (artifact.IsPinned == true)
