@@ -16,6 +16,8 @@ public partial class ArtifactExplorer
     public bool IsSelectedAll = false;
     public DateTimeOffset PointerDownTime;
 
+    private bool _isSheetClose { get; set; } = true;
+
     protected override Task OnInitAsync()
     {
         return base.OnInitAsync();
@@ -63,7 +65,7 @@ public partial class ArtifactExplorer
 
     public void OpenArtifactOverFlow()
     {
-        //todo: open folder of file overflow bottom sheet
+        _isSheetClose = false;
     }
 
     public void CancelSelection()

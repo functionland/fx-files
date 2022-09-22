@@ -81,3 +81,35 @@ else
         </div>
     }
 </div>
+
+
+<FxBottomSheet IsClose="_isSheetClose" IsCloseAble="false">
+    <ContentRenderFragment>
+        <div class="overflow-sheet">
+            <FxButton 
+                Text="Available offline"
+                ButtonStyle="FxButtonStyle.MenuLine" 
+                LeftIcon="images/icons/lightDesignSystem/download.svg" />
+            <FxButton 
+                Text="Make a copy"
+                ButtonStyle="FxButtonStyle.MenuLine" 
+                LeftIcon="images/icons/lightDesignSystem/copy.svg" />
+            <FxButton 
+                Text="Add to pinned items"
+                ButtonStyle="FxButtonStyle.MenuLine" 
+                LeftIcon="images/icons/lightDesignSystem/pin-outline-black.svg" />
+            <FxButton 
+                Text="Move to"
+                ButtonStyle="FxButtonStyle.MenuLine" 
+                LeftIcon="images/icons/lightDesignSystem/move.svg" />
+            <FxButton 
+                Text="Share"
+                ButtonStyle="FxButtonStyle.MenuLine" 
+                LeftIcon="images/icons/lightDesignSystem/share.svg" />
+            <FxButton 
+                Text="Delete"
+                ButtonStyle="FxButtonStyle.MenuLine" 
+                LeftIcon="images/icons/lightDesignSystem/delete.svg" />
+        </div>
+    </ContentRenderFragment>
+</FxBottomSheet>
