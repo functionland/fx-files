@@ -166,5 +166,9 @@
   {
     "outputFile": "Components/FxListView.razor.css",
     "inputFile": "Components/FxListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/TransactionModal/TransactionModal.razor.css",
+    "inputFile": "Components/Modal/TransactionModal/TransactionModal.razor.scss"
   }
 ]
