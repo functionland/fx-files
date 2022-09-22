@@ -19,5 +19,8 @@
     }
     <ArtifactExplorer Artifacts="_artifacts"
                       CurrentArtifact="_currentArtifact"
+                      OnOptionsClick="HandleOptionsArtifact"
                       OnSelectArtifact="HandleSelectArtifact" />
 </div>
+
+<ArtifactOverflowModal @ref="_asm"/>

@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
+using Functionland.FxFiles.App.Components.Modal;
 
 namespace Functionland.FxFiles.App.Components;
 
@@ -7,6 +8,7 @@ public partial class FileBrowser
     private FsArtifact? _currentArtifact;
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _artifacts = new();
+    private ArtifactOverflowModal _asm { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -54,6 +56,11 @@ public partial class FileBrowser
         _currentArtifact = artifact;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         // load current artifacts
+    }
+
+    private async Task HandleOptionsArtifact(FsArtifact artifact)
+    {
+        await _asm.ShowAsync();
     }
 
     private bool IsInRoot(FsArtifact? artifact)
