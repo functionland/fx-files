@@ -34,23 +34,9 @@ namespace Functionland.FxFiles.App.Platforms.Android.Implementations
             return thumbPath;
         }
 
-        private string GetThumbnailFullPath(FsArtifact fsArtifact)
+        public override string GetAppCacheDirectory()
         {
-            var imagePath = fsArtifact.FullPath;
-            var lastModifiedDateTimeTicksStr = fsArtifact.LastModifiedDateTime.UtcTicks.ToString();
-            var finalName = imagePath + lastModifiedDateTimeTicksStr;
-
-            var imagePathHash = MakeHashData.ComputeSha256Hash(finalName);
-            var destinationDirectory = Path.Combine(MauiApplication.Current.CacheDir.Path, "FxThumbFolder");
-
-            if (!Directory.Exists(destinationDirectory))
-            {
-                Directory.CreateDirectory(destinationDirectory);
-            }
-
-            var thumbPath = Path.Combine(destinationDirectory, Path.ChangeExtension(imagePathHash, "Jpeg"));
-
-            return thumbPath;
+            return MauiApplication.Current.CacheDir.Path;
         }
     }
 }
