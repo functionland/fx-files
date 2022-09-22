@@ -6,7 +6,7 @@
     <div class="overlay" @onclick="(async () => await Close())"></div>
 
     <div class="contents column @(IsFullScreenMode ? "full-screen-sheet" : "")">
-        @if (IsClosable)
+        @if (ShowCloseButton)
         {
             <div class="controls">
                 <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">

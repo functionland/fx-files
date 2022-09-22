@@ -6,7 +6,7 @@ public partial class ArtifactSelectionModal
     private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
     [AutoInject]
     private IFileService _fileService = default!;
-    public List<FsArtifact> Artifacts = default!;
+    private List<FsArtifact> _artifacts = new();
 
     [Parameter]
     public bool IsMultiple { get; set; }
@@ -38,18 +38,15 @@ public partial class ArtifactSelectionModal
 
     private async Task LoadArtifacts()
     {
-        var artifactList = new List<FsArtifact>();
         var artifacts = _fileService.GetArtifactsAsync();
 
         await foreach (var item in artifacts)
         {
             if (item.ArtifactType != FsArtifactType.File)
             {
-                artifactList.Add(item);
+                _artifacts.Add(item);
             }
         }
-
-        Artifacts = artifactList;
     }
 
     private void Close()
