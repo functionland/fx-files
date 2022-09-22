@@ -82,17 +82,33 @@ public class FxLocalDbService : IFxLocalDbService
         await Task.Run(() => LocalDb.Insert(pinnedArtifact));
     }
 
-    public async Task UpdatePinAsync(PinnedArtifact pinnedArtifact)
+    public async Task UpdatePinAsync(PinnedArtifact pinnedArtifact, string? oldPath = null)
     {
-        var localDb = CreateConnection();
-        await Task.Run(() => localDb.Execute(
-            $"UPDATE PinnedArtifact SET ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @FullPath ",
-            new
-            {
-                ThumbnailPath = pinnedArtifact.ThumbnailPath,
-                ContentHash = pinnedArtifact.ContentHash,
-                FullPath = pinnedArtifact.FullPath
-            }));
+        if(oldPath == null)
+        {
+            var localDb = CreateConnection();
+            await Task.Run(() => localDb.Execute(
+                $"UPDATE PinnedArtifact SET ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @FullPath ",
+                new
+                {
+                    ThumbnailPath = pinnedArtifact.ThumbnailPath,
+                    ContentHash = pinnedArtifact.ContentHash,
+                    FullPath = pinnedArtifact.FullPath
+                }));
+        }
+        else
+        {
+            var localDb = CreateConnection();
+            await Task.Run(() => localDb.Execute(
+                $"UPDATE PinnedArtifact SET FullPath =@FullPath, ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @OldPath ",
+                new
+                {
+                    OldPath = oldPath,
+                    ThumbnailPath = pinnedArtifact.ThumbnailPath,
+                    ContentHash = pinnedArtifact.ContentHash,
+                    FullPath = pinnedArtifact.FullPath
+                }));
+        }
     }
 
     public async Task RemovePinAsync(String FullPath)

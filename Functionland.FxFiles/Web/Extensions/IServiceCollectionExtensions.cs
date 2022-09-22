@@ -44,9 +44,8 @@ public static class IServiceCollectionExtensions
         //services.AddTransient<IPlatformTestService, IosPlatformTestService>();
         //services.AddTransient<IosFileServicePlatformTest>();
 #else
-        var fakeFileService = FakeFileServiceFactory.CreateSimpleFileListOnRoot();
 
-        services.AddSingleton<IFileService>((_) => fakeFileService);
+        services.AddSingleton<IFileService>((serviceProvider) => FakeFileServiceFactory.CreateSimpleFileListOnRoot(serviceProvider));
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();
@@ -59,7 +58,7 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<IPinService, PinService>();
         services.AddSingleton<IEventAggregator, EventAggregator>();
-
+        services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         return services;
     }
 }

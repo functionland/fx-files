@@ -1,37 +1,51 @@
 ﻿@page "/TestExplorer"
-
 @inherits AppComponentBase;
-<EditForm Model="TestName" OnValidSubmit="HandleValidSubmit">
-    <div>
+
+<div class="page">
+    <div class="test-selector">
         <BitDropDown Label="Select tests"
                      Items="GetDropdownItems()"
                      @bind-Value="TestName"
-                     Placeholder="Select tests"
-                     Style="width: 290px; margin: 20px 0 20px 0" />
+                     Placeholder="Select tests" />
+
+        <FxButton Text="Play"
+                  ButtonStyle="FxButtonStyle.Normal"
+                  OnClick="(()=>HandleValidSubmit())">
+
+        </FxButton>
     </div>
 
-    <br />
+    <div>
+        <div class="label">Test Output</div>
 
-    <BitButton ButtonType="BitButtonType.Submit">
-        Submit
-    </BitButton>
-</EditForm>
-<div>
+        <div class="progress-items">
+            @foreach (var progress in testProgressChangedEventArgs)
+            {
+                <div class="progress-item">
+                    @if (progress.ProgressType == TestProgressType.Success)
+                    {
+                        <div class="test-icon-success"></div>
+                    }
+                    @if (progress.ProgressType == TestProgressType.Fail)
+                    {
+                        <div class="test-icon-error"></div>
+                    }
+                    
+                    <div>@progress.Title</div>
+                    @if (!string.IsNullOrEmpty(progress.Description))
+                    {
+                        <div 
+                            class="show-details"
+                     @onclick="()=>ShowDescription(progress)">
+                            (show details)
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
 
-    <table id="tests">
-        <tr>
-            <th>Title</th>
-            <th>ProgressType</th>
-            <th>Description</th>
-        </tr>
-        @foreach (var testProgressChangedEventArg in testProgressChangedEventArgs)
-        {
-            <tr>
-                <td>@testProgressChangedEventArg.Title</td>
-                <td style="@(testProgressChangedEventArg.ProgressType==TestProgressType.Success?"color:green":"color:red")">@testProgressChangedEventArg.ProgressType</td>
-                <td>@testProgressChangedEventArg.Description</td>
-            </tr>
-        }
-
-    </table>
+    <BitModal @bind-IsOpen="IsDescriptionOpen">
+        <p>@Description</p>
+    </BitModal>
 </div>

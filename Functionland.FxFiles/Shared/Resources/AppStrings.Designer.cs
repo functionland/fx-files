@@ -619,6 +619,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test explorer.
+        /// </summary>
+        public static string TestExplorer {
+            get {
+                return ResourceManager.GetString("TestExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Label.
         /// </summary>
         public static string TextAreaLabel {
