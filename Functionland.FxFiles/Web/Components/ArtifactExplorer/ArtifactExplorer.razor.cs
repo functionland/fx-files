@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.App.Components;
 public partial class ArtifactExplorer
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-    [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
+    [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
 
     public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
@@ -19,6 +19,15 @@ public partial class ArtifactExplorer
     protected override Task OnInitAsync()
     {
         return base.OnInitAsync();
+    }
+
+    protected override Task OnParamsSetAsync()
+    {
+        if (Artifacts is null)
+        {
+            Artifacts = Array.Empty<FsArtifact>();
+        }
+        return base.OnParamsSetAsync();
     }
 
     private async Task HandleArtifactClick(FsArtifact artifact)

@@ -25,28 +25,20 @@ public partial class FileBrowser
     {
         var allPins = PinService.GetPinnedArtifactsAsync(null);
 
-        var pins = new List<FsArtifact>();
-
         await foreach (var item in allPins)
         {
-            pins.Add(item);
+            _pins.Add(item);
         }
-
-        _pins = pins;
     }
 
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
     {
         var allFiles = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
 
-        var artifacts = new List<FsArtifact>();
-
         await foreach (var item in allFiles)
         {
-            artifacts.Add(item);
+            _artifacts.Add(item);
         }
-
-        _artifacts = artifacts;
     }
 
     private async Task HandleSelectArtifact(FsArtifact artifact)
