@@ -18,10 +18,11 @@
         public EventCallback OnClose { get; set; }
 
         [Parameter]
-        public bool IsOpen { get; set; } = true;
+        public EventCallback<bool> IsOpenChanged { get; set; }
 
         [Parameter]
-        public EventCallback<bool> IsOpenChanged { get; set; }
+        public bool IsOpen { get; set; } = true;
+
 
         public async Task Close()
         {
