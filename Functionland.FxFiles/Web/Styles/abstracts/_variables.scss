@@ -114,7 +114,7 @@ $icon-16: 16 + $base-unit;
 $icon-12: 12 + $base-unit;
 $icon-4: 4 + $base-unit;
 
-//icons
+//svg icons
 $icon-base-url: "/images/icons/lightDesignSystem/";
 
 $back: $icon-base-url + "back.svg";
@@ -210,8 +210,81 @@ $right-arrow-hover: $icon-base-url + "right-arrow-hover.svg";
 $right-arrow-pressed: $icon-base-url + "right-arrow-pressed.svg";
 $right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
 
+
+// outline icons
+
+$add-file: "\e900";
+$image: "\e901";
+$user: "\e902";
+$app: "\e903";
+$arrow-down: "\e904";
+$arrow-left: "\e905";
+$arrow-right: "\e906";
+$arrow-up: "\e907";
+$audio: "\e908";
+$available-offline: "\e909";
+$blox: "\e90a";
+$chevron-down: "\e90b";
+$chevron-left: "\e90c";
+$chevron-right: "\e90d";
+$chevron-up: "\e90e";
+$close: "\e90f";
+$copy: "\e910";
+$create-folder: "\e911";
+$detail: "\e912";
+$document: "\e913";
+$downloading: "\e914";
+$edit-permission: "\e915";
+$external-link: "\e916";
+$files: "\e917";
+$filter: "\e918";
+$folder: "\e919";
+$grid: "\e91a";
+$list: "\e91b";
+$merge: "\e91c";
+$move: "\e91d";
+$options-horizontal: "\e91e";
+$options-vertical: "\e91f";
+$PDF: "\e920";
+$phone: "\e921";
+$pin-outline: "\e922";
+$plug: "\e923";
+$plus: "\e924";
+$pool: "\e925";
+$refresh: "\e926";
+$rename: "\e927";
+$reward: "\e928";
+$scan-code: "\e929";
+$search: "\e92a";
+$select: "\e92b";
+$settings: "\e92c";
+$share: "\e92d";
+$star-outline: "\e92e";
+$trash: "\e92f";
+$upload-file: "\e930";
+$video: "\e931";
+$zones: "\e932";
+
+
+//filled icons
+
+$circle-filled: "\e900";
+$critical: "\e901";
+$edit: "\e902";
+$fill: "\e903";
+$info: "\e904";
+$open-in: "\e905";
+$selected: "\e906";
+$star-filled: "\e907";
+$success: "\e908";
+$warning: "\e909";
+
+
 //font faces
 $font-path: "/fonts";
+
+$Icons-Filled: "FxL-Bold";
+$Icons-Outline: "FxL-Outline";
 
 $open-sans-light: "OpenSans-Light";
 $open-sans-regular: "OpenSans-Regular";
@@ -219,6 +292,7 @@ $open-sans-semi-bold: "OpenSans-SemiBold";
 
 $montserrat-medium: "Montserrat-Medium";
 $montserrat-semi-bold: "Montserrat-SemiBold";
+
 
 @font-face {
     font-family: $montserrat-semi-bold;
@@ -249,6 +323,23 @@ $montserrat-semi-bold: "Montserrat-SemiBold";
     font-weight: 600;
     src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
 }
+
+@font-face {
+    font-family: $Icons-Filled;
+    font-style: normal;
+    font-weight: normal;
+    font-display: block;
+    src: url('#{$font-path}/FxL-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: $Icons-Outline;
+    font-style: normal;
+    font-weight: normal;
+    font-display: block;
+    src: url('#{$font-path}/FxL-Outline.ttf') format('truetype');
+}
+
 
 //font-sizes
 $font-size-52: 52 + $base-unit;
