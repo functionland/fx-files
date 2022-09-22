@@ -166,5 +166,9 @@
   {
     "outputFile": "Components/FxListView.razor.css",
     "inputFile": "Components/FxListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ConfirmationModal/ConfirmationModal.razor.css",
+    "inputFile": "Components/Modal/ConfirmationModal/ConfirmationModal.razor.scss"
   }
 ]
