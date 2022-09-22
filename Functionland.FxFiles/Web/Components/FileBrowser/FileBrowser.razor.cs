@@ -12,6 +12,7 @@ public partial class FileBrowser
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _artifacts = new();
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
+    private ArtifactOverflowModal _asm { get; set; }
 
     [AutoInject] public IStringLocalizer StringLocalizer { get; set; }
 
@@ -157,6 +158,11 @@ public partial class FileBrowser
         _currentArtifact = artifact;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         // load current artifacts
+    }
+
+    private async Task HandleOptionsArtifact(FsArtifact artifact)
+    {
+        await _asm.ShowAsync();
     }
 
     private bool IsInRoot(FsArtifact? artifact)

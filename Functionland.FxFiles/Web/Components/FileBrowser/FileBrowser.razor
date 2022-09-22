@@ -19,7 +19,10 @@
     }
     <ArtifactExplorer Artifacts="_artifacts"
                       CurrentArtifact="_currentArtifact"
+                      OnOptionsClick="HandleOptionsArtifact"
                       OnSelectArtifact="HandleSelectArtifact" />
 </div>
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef"></ArtifactSelectionModal>
+
+<ArtifactOverflowModal @ref="_asm"/>

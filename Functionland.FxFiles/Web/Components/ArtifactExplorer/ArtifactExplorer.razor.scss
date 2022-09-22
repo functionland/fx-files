@@ -345,23 +345,3 @@ list-view {
 .audio-file-icon {
     background-image: url($audio-file);
 }
-
-.overflow-sheet {
-    padding: 21px 0;
-
-    ::deep .fxbutton {
-        padding: 0;
-    }
-
-    ::deep .fxbutton-content {
-        margin: 0px 21px;
-        border-bottom: 1px solid color(gray-bg-secondary);
-    }
-
-    ::deep .fxbutton-menuline {
-        margin: 0;
-        height: 48px;
-        border-radius: 0;
-        background-color: transparent !important;
-    }
-}

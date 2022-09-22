@@ -98,6 +98,25 @@
     justify-content: space-between;
 }
 
+.fxbutton-sheetmenu {
+    margin: 0;
+    width: auto;
+    height: 48px;
+    border-radius: 0;
+    background-color: transparent !important;
+}
+
+.fxbutton fxbutton-sheetmenu {
+    padding: 0;
+
+    & .fxbutton-content {
+        margin: 0px 21px;
+        justify-content: left;
+        border-bottom: 1px solid color(gray-bg-secondary);
+    }
+}
+
+
 .fxbutton-icononly {
     padding: 8px;
     width: 40px;
