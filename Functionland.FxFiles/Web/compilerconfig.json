@@ -166,5 +166,9 @@
   {
     "outputFile": "Components/FxListView.razor.css",
     "inputFile": "Components/FxListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
+    "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
   }
 ]
