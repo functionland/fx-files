@@ -9,8 +9,9 @@
 <div class="files-content">
     <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
     <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
-    @*<FxBottomSheet IsCloseAble="true" IsClose="IsBottomSheetClose" IsCloseChanged="SyncCloseState">
-        <FileDetailView FileName="Sample.docx" IsImageFile="false" />
-    </FxBottomSheet>*@
+    <FxBottomSheet ShowCloseButton="true" IsOpen="IsBottomSheetClose" IsOpenChanged="SyncCloseState">
+        <p>ali</p>
+        <FxButton ButtonStyle="FxButtonStyle.Outline" Text="salaam"></FxButton>
+    </FxBottomSheet>
 </div>
 <EmptyListView></EmptyListView>

@@ -9,6 +9,9 @@
         public RenderFragment? ChildContent { get; set; }
 
         [Parameter]
+        public string Title { get; set; } = string.Empty;
+
+        [Parameter]
         public bool IsFullScreenMode { get; set; } = false;
 
         [Parameter]

@@ -8,7 +8,7 @@ namespace Functionland.FxFiles.App.Pages;
 
 public partial class HomePage
 {
-     public bool IsBottomSheetClose { get; set; } = true;
+    public bool IsBottomSheetClose { get; set; } = false;
 
     public void SyncCloseState(bool isClose)
     {
@@ -17,7 +17,7 @@ public partial class HomePage
 
     public void OpenSheet()
     {
-        IsBottomSheetClose = false;
+        IsBottomSheetClose = true;
     }
 }
 

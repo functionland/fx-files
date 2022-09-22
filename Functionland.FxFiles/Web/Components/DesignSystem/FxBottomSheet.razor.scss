@@ -102,6 +102,8 @@
 
         .controls {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: $spacing-24;
             padding: $spacing-8 $spacing-21;
         }
