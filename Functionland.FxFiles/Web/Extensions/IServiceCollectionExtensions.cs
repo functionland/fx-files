@@ -39,6 +39,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
         services.AddSingleton<IThumbnailService, WindowsThumbnailService>();
+        services.AddSingleton<IFileWatchService, WindowsFileWatchService>();
 #elif iOS
         //TODO: services.AddSingleton<IFileService, IosFileService>();
         //services.AddTransient<IPlatformTestService, IosPlatformTestService>();
