@@ -1,5 +1,4 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
-using Functionland.FxFiles.App.Components.Modal;
 
 namespace Functionland.FxFiles.App.Components;
 
@@ -7,8 +6,9 @@ public partial class ArtifactExplorer
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
+    [Parameter] public EventCallback<FsArtifact> OnArtifactsOptions { get; set; } = new();
+    [Parameter] public EventCallback<List<FsArtifact>> OnSelectedArtifactsOptions { get; set; } = new();
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
-    private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
 
     public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
     public ViewModeEnum ViewMode = ViewModeEnum.list;
@@ -26,6 +26,16 @@ public partial class ArtifactExplorer
     private async Task HandleArtifactClick(FsArtifact artifact)
     {
         await OnSelectArtifact.InvokeAsync(artifact);
+    }
+
+    private async Task HandleArtifactOptionsClick(FsArtifact artifact)
+    {
+        await OnArtifactsOptions.InvokeAsync(artifact);
+    }
+
+    private async Task HandleMultiArtifactsOptionsClick()
+    {
+        await OnSelectedArtifactsOptions.InvokeAsync(SelectedArtifacts);
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -61,11 +71,6 @@ public partial class ArtifactExplorer
     public void ChangeViewMode(ViewModeEnum mode)
     {
         ViewMode = mode;
-    }
-
-    public void OpenArtifactOverFlow()
-    {
-        //todo: open folder of file overflow bottom sheet
     }
 
     public void CancelSelection()

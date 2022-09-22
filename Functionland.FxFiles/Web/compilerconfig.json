@@ -170,5 +170,9 @@
   {
     "outputFile": "Components/Modal/ConfirmationReplaceOrSkipModal/ConfirmationReplaceOrSkipModal.razor.css",
     "inputFile": "Components/Modal/ConfirmationReplaceOrSkipModal/ConfirmationReplaceOrSkipModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
+    "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
   }
 ]
