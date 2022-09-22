@@ -34,6 +34,7 @@ public static class IServiceCollectionExtensions
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
         services.AddSingleton<IThumbnailService, AndroidThumbnailService>();
+        services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
 #elif Windows
         services.AddSingleton<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
