@@ -538,6 +538,42 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replace.
+        /// </summary>
+        public static string ReplaceModal {
+            get {
+                return ResourceManager.GetString("ReplaceModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To continue, please choose an action.
+        /// </summary>
+        public static string ReplaceOrSkipSubDescModal {
+            get {
+                return ResourceManager.GetString("ReplaceOrSkipSubDescModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The destination already has a file named.
+        /// </summary>
+        public static string ReplaceOrSkipSupDescModal {
+            get {
+                return ResourceManager.GetString("ReplaceOrSkipSupDescModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace or skip files.
+        /// </summary>
+        public static string ReplaceOrSkipTitleModal {
+            get {
+                return ResourceManager.GetString("ReplaceOrSkipTitleModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource not found.
         /// </summary>
         public static string ResourceNotFoundException {
@@ -588,6 +624,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string SharedFileCardTag {
             get {
                 return ResourceManager.GetString("SharedFileCardTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip.
+        /// </summary>
+        public static string SkipModal {
+            get {
+                return ResourceManager.GetString("SkipModal", resourceCulture);
             }
         }
         
