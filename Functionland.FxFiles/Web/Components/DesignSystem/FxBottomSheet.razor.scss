@@ -84,7 +84,7 @@
         max-height: 100vh;
         position: relative;
         overflow-y: hidden;
-        padding-bottom: 34px;
+        padding: $spacing-0 $spacing-21;
         box-sizing: border-box;
         transform: translateY(0);
         max-width: $screen-lg-min;
@@ -102,8 +102,11 @@
 
         .controls {
             display: flex;
-            margin-top: $spacing-24;
-            padding: $spacing-8 $spacing-21;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: $spacing-8;
+            padding: $spacing-10 $spacing-0;
+
         }
     }
 

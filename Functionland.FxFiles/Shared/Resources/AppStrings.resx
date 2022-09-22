@@ -351,4 +351,19 @@
   <data name="TestExplorer" xml:space="preserve">
     <value>Test explorer</value>
   </data>
+  <data name="ReplaceModal" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
+    <value>To continue, please choose an action</value>
+  </data>
+  <data name="ReplaceOrSkipSupDescModal" xml:space="preserve">
+    <value>The destination already has a file named</value>
+  </data>
+  <data name="ReplaceOrSkipTitleModal" xml:space="preserve">
+    <value>Replace or skip files</value>
+  </data>
+  <data name="SkipModal" xml:space="preserve">
+    <value>Skip</value>
+  </data>
 </root>
