@@ -169,6 +169,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelModal {
+            get {
+                return ResourceManager.GetString("CancelModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not operate on files exception.
         /// </summary>
         public static string CanNotOperateOnFilesException {
@@ -480,6 +489,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string Move {
             get {
                 return ResourceManager.GetString("Move", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moving files.
+        /// </summary>
+        public static string MoveFileModal {
+            get {
+                return ResourceManager.GetString("MoveFileModal", resourceCulture);
             }
         }
         

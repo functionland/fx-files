@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.App.Components.Modal.TransactionModal
+﻿namespace Functionland.FxFiles.App.Components.Modal
 {
     public partial class TransactionModal
     {
