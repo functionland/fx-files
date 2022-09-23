@@ -1,6 +1,14 @@
 ﻿@import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
 
+.open-toast {
+    display: flex;
+}
+
+.close-toast {
+    display: none;
+}
+
 .fx-taost {
     display: flex;
     align-items: center;

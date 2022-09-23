@@ -1,3 +1,6 @@
-﻿@inherits AppComponentBase;
+﻿@namespace Functionland.FxFiles.App.Components.Modal
+@inherits AppComponentBase;
 
-<h3>ToastModal</h3>
+<FxToast Title="@_title" Description="@_message" ToastType="@_toastType" IsOpenChanged="Close">
+    
+</FxToast>
