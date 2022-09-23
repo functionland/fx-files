@@ -31,7 +31,7 @@ public partial class FileBrowser
         await base.OnInitAsync();
     }
 
-    public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts, CancellationToken cancellationToken)
+    public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
     {
         List<FsArtifact> existArtifacts = new();
         string? destinationPath = await HandleSelectDestinationArtifact();
@@ -42,7 +42,7 @@ public partial class FileBrowser
 
         try
         {
-            await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false, cancellationToken);
+            await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
         }
         catch (CanNotOperateOnFilesException ex)
         {
@@ -55,7 +55,7 @@ public partial class FileBrowser
         }
     }
 
-    public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts, CancellationToken cancellationToken)
+    public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
     {
         List<FsArtifact> existArtifacts = new();
         string? destinationPath = await HandleSelectDestinationArtifact();
@@ -66,7 +66,7 @@ public partial class FileBrowser
 
         try
         {
-            await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false, cancellationToken);
+            await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
         }
         catch (CanNotOperateOnFilesException ex)
         {
@@ -94,12 +94,12 @@ public partial class FileBrowser
         return destinationPath;
     }
 
-    public async Task HandleRenameArtifact(FsArtifact artifact, string newName, CancellationToken cancellationToken)
+    public async Task HandleRenameArtifact(FsArtifact artifact, string newName)
     {
         string filePath = artifact.FullPath;
         try
         {
-            await FileService.RenameFileAsync(filePath, newName, cancellationToken);
+            await FileService.RenameFileAsync(filePath, newName);
         }
         catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, "file"))
         {
@@ -107,22 +107,22 @@ public partial class FileBrowser
         }
     }
 
-    public void HandlePinArtifacts(FsArtifact artifact)
+    public async Task HandlePinArtifacts(List<FsArtifact> artifact)
     {
 
     }
 
-    public void HandleDeleteArtifacts(FsArtifact artifact)
+    public async Task HandleDeleteArtifacts(List<FsArtifact> artifact)
     {
 
     }
 
-    public void HandleShowDetailsArtifact(FsArtifact artifact)
+    public async Task HandleShowDetailsArtifact(List<FsArtifact> artifact)
     {
 
     }
 
-    public void HandleCreateFolder(FsArtifact artifact)
+    public void HandleCreateFolder()
     {
 
     }
@@ -169,22 +169,22 @@ public partial class FileBrowser
         switch(result.ResultType)
         {
             case ArtifactOverflowResultType.Details:
-                HandleShowDetailsArtifact(artifact);
+                await HandleShowDetailsArtifact(new List<FsArtifact>() { artifact });
                 break;
-            //case ArtifactOverflowResultType.Rename:
-            //    HandleRenameArtifact(artifact, artifact.Name);
-            //    break;
-            //case ArtifactOverflowResultType.Copy:
-            //    HandleCopyArtifactsAsync(artifact);
-            //    break;
+            case ArtifactOverflowResultType.Rename:
+                await HandleRenameArtifact(artifact, artifact.Name);
+                break;
+            case ArtifactOverflowResultType.Copy:
+                await HandleCopyArtifactsAsync(new List<FsArtifact>() { artifact });
+                break;
             case ArtifactOverflowResultType.Pin:
-                HandlePinArtifacts(artifact);
+                await HandlePinArtifacts(new List<FsArtifact>() { artifact });
                 break;
-            //case ArtifactOverflowResultType.Move:
-            //    HandleMoveArtifactsAsync(artifact);
-            //    break;
+            case ArtifactOverflowResultType.Move:
+                await HandleMoveArtifactsAsync(new List<FsArtifact>() { artifact });
+                break;
             case ArtifactOverflowResultType.Delete:
-                HandleDeleteArtifacts(artifact);
+                await HandleDeleteArtifacts(new List<FsArtifact>() { artifact });
                 break;
         }
     }
@@ -198,29 +198,27 @@ public partial class FileBrowser
         {
             var result = await _asm.ShowAsync(isMultiple);
 
-            foreach (var artifact in artifacts)
+            switch (result.ResultType)
             {
-                switch (result.ResultType)
-                {
-                    case ArtifactOverflowResultType.Details:
-                        HandleShowDetailsArtifact(artifact);
-                        break;
-                    //case ArtifactOverflowResultType.Rename:
-                    //    HandleRenameArtifact(artifact, artifact.Name);
-                    //    break;
-                    //case ArtifactOverflowResultType.Copy:
-                    //    HandleCopyArtifactsAsync(artifact);
-                    //    break;
-                    case ArtifactOverflowResultType.Pin:
-                        HandlePinArtifacts(artifact);
-                        break;
-                    //case ArtifactOverflowResultType.Move:
-                    //    HandleMoveArtifactsAsync(artifact);
-                    //    break;
-                    case ArtifactOverflowResultType.Delete:
-                        HandleDeleteArtifacts(artifact);
-                        break;
-                }
+                case ArtifactOverflowResultType.Details:
+                    await HandleShowDetailsArtifact(artifacts);
+                    break;
+                case ArtifactOverflowResultType.Rename:
+                    var singleArtifact = artifacts.SingleOrDefault();
+                    await HandleRenameArtifact(singleArtifact, singleArtifact.Name);
+                    break;
+                case ArtifactOverflowResultType.Copy:
+                    await HandleCopyArtifactsAsync(artifacts);
+                    break;
+                case ArtifactOverflowResultType.Pin:
+                    await HandlePinArtifacts(artifacts);
+                    break;
+                case ArtifactOverflowResultType.Move:
+                    await HandleMoveArtifactsAsync(artifacts);
+                    break;
+                case ArtifactOverflowResultType.Delete:
+                    await HandleDeleteArtifacts(artifacts);
+                    break;
             }
         }
     }
