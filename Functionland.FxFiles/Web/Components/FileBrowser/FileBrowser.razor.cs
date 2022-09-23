@@ -34,7 +34,13 @@ public partial class FileBrowser
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
     {
         List<FsArtifact> existArtifacts = new();
-        string? destinationPath = await HandleSelectDestinationArtifact();
+        var artifactActionResult = new ArtifactActionResult()
+        {
+            ActionType = ArtifactActionType.Copy,
+            Count = artifacts.Count,
+        };
+
+        string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
         if (string.IsNullOrWhiteSpace(destinationPath))
         {
             return;
@@ -58,7 +64,13 @@ public partial class FileBrowser
     public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
     {
         List<FsArtifact> existArtifacts = new();
-        string? destinationPath = await HandleSelectDestinationArtifact();
+        var artifactActionResult = new ArtifactActionResult()
+        {
+            ActionType = ArtifactActionType.Move,
+            Count = artifacts.Count,
+        };
+
+        string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
         if (string.IsNullOrWhiteSpace(destinationPath))
         {
             return;
@@ -80,9 +92,9 @@ public partial class FileBrowser
 
     }
 
-    public async Task<string?> HandleSelectDestinationArtifact()
+    public async Task<string?> HandleSelectDestinationArtifact(FsArtifact artifact, ArtifactActionResult artifactActionResult)
     {
-        var Result = await _artifactSelectionModalRef?.ShowAsync();
+        var Result = await _artifactSelectionModalRef?.ShowAsync(artifact, artifactActionResult);
         string? destinationPath = null;
 
         if (Result?.ResultType == ArtifactSelectionResultType.Ok)
@@ -181,7 +193,7 @@ public partial class FileBrowser
     {
         var result = await _asm.ShowAsync();
 
-        switch(result.ResultType)
+        switch (result.ResultType)
         {
             case ArtifactOverflowResultType.Details:
                 await HandleShowDetailsArtifact(new List<FsArtifact>() { artifact });
@@ -209,7 +221,7 @@ public partial class FileBrowser
         var selectedArtifactsCount = artifacts.Count;
         var isMultiple = selectedArtifactsCount > 1;
 
-        if(selectedArtifactsCount > 0)
+        if (selectedArtifactsCount > 0)
         {
             var result = await _asm.ShowAsync(isMultiple);
 

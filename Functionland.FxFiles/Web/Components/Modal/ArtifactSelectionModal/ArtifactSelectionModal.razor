@@ -5,11 +5,12 @@
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
     @if (_artifacts is not null)
     {
-        @foreach (var artifact in _artifacts)
-        {
-            <div @onclick="()=>SelectArtifact(artifact)">
-                <span style="color:white;">@artifact.Name</span>
-            </div>
-        }
+        <ArtifactExplorer Artifacts="_artifacts"
+                      ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
+                      CurrentArtifact="_currentArtifact"
+                      ArtifactActionResult="_artifactActionResult"
+                      OnSelectArtifact="SelectArtifact"
+                      OnSelectDestionation="SelectDestionation"
+                      OnCancelSelectDestionationMode="Close" />
     }
 </FxBottomSheet>
