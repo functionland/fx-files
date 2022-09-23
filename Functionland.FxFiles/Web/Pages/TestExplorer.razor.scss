@@ -1,30 +1,107 @@
-﻿$var1: #dddddd;
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+$var1: #dddddd;
 $var2: #f2f2f2;
 $var3: #04AA6D;
 
-#tests {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+.page {
+    padding: $spacing-12;
+}
 
-    td, th {
-        border: 1px solid $var1;
-        padding: 8px;
-    }
+test-selector-dropdown{
+    color: color(gray-content1);
+}
 
-    tr:nth-child(even) {
-        background-color: $var2;
-    }
+.test-selector {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
 
-    tr:hover {
-        background-color: $var1;
-    }
+.label{
+    margin-top: $spacing-12;
+}
 
-    th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: $var3;
-        color: white;
+.progress-items {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.progress-item {
+    display: flex;
+    padding: 3px;
+    margin: 3px;
+
+    &:hover {
+        background-color: color(gray-bg-secondary);
     }
+}
+
+.show-details {
+    margin-left: 10px;
+    color: cornflowerblue;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.test-icon-success {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-image: url($success-mode);
+}
+
+.test-icon-error {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-image: url($error-mode);
+}
+
+.test-icon-warning {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-image: url($warning-mode);
+}
+.test-icon-info {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-image: url($info-mode);
+}
+
+::deep .bit-drp-fluent .bit-drp-lbl {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-has-value-fluent .bit-drp-wrapper .bit-drp-wrapper-txt {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-wrapper .bit-drp-wrapper-txt {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-items-wrapper {
+    background-color: color(app-bg);
+}
+
+::deep .bit-drp-items-wrapper .bit-drp-item {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-items-wrapper .bit-drp-item:hover {
+    background-color: color(gray-bg-secondary);
+}
+
+::deep .bit-drp-items-wrapper .bit-drp-slc-fluent {
+    background-color: color(gray-bg-secondary);
+}
+
+::deep .bit-drp-wrapper:focus::after {
+    border: 2px solid $green-dark-base;
 }

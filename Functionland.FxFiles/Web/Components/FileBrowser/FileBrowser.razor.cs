@@ -5,20 +5,12 @@ namespace Functionland.FxFiles.App.Components;
 public partial class FileBrowser
 {
     private FsArtifact? _currentArtifact;
-    private IEnumerable<FsArtifact> _pins = default!;
-    private IEnumerable<FsArtifact> _artifacts = default!;
+    private List<FsArtifact> _pins = new();
+    private List<FsArtifact> _artifacts = new();
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
     [Parameter] public IFileService FileService { get; set; } = default!;
-
-    //public List<FileCardConfig> PinnedCards = new List<FileCardConfig>
-    //    {
-    //        new FileCardConfig(true, true, true, "Cs intenrship", ".txt", "date", "file size"),
-    //        new FileCardConfig(true, true, true, "Fx Land", ".mp3", "date", "file size"),
-    //        new FileCardConfig(true, true, true, "doument", ".pdf", "date", "file size"),
-    //        new FileCardConfig(true, true, true, "Cs intenrship", ".txt", "date", "file size")
-    //    };
 
     protected override async Task OnInitAsync()
     {

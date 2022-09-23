@@ -1,6 +1,19 @@
+
 ﻿using Functionland.FxFiles.Shared.Models;
 using Prism.Events;
 using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+
+using Functionland.FxFiles.Shared.Models;
+using Functionland.FxFiles.Shared.Services.Contracts;
+
+using Prism.Events;
 
 namespace Functionland.FxFiles.Shared.Services.Implementations
 {
@@ -183,6 +196,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     var result = (await FileService.CheckPathExistsAsync(new List<string?> { artifact.ThumbnailPath })).FirstOrDefault();
                     if (result != null && result.IsPathExist == false)
                     {
+
                         await CreateNewThumbnailAsync(artifact, fsArtifact);
                         await FxLocalDbService.UpdatePinAsync(artifact);
                     }
