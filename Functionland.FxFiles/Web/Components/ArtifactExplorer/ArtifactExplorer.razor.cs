@@ -23,11 +23,6 @@ public partial class ArtifactExplorer
         return base.OnInitAsync();
     }
 
-    private async Task HandleArtifactClick(FsArtifact artifact)
-    {
-        await OnSelectArtifact.InvokeAsync(artifact);
-    }
-
     private bool IsInRoot(FsArtifact? artifact)
     {
         return artifact is null ? true : false;
@@ -74,17 +69,21 @@ public partial class ArtifactExplorer
         SelectedArtifacts = new List<FsArtifact>();
     }
 
-    public void PointerDown()
+    public async Task PointerDown()
     {
         PointerDownTime = DateTimeOffset.UtcNow;
     }
 
-    public void PointerUp()
+    public async Task PointerUp(FsArtifact artifact)
     {
         if (!IsSelectionMode)
         {
             var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
-            IsSelectionMode = downTime > 400;
+
+            if (downTime > 400)
+                IsSelectionMode = true;
+            else
+                await OnSelectArtifact.InvokeAsync(artifact);
         }
     }
 
