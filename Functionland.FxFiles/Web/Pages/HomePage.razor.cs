@@ -12,7 +12,7 @@ public partial class HomePage
 {
     public bool IsBottomSheetClose { get; set; } = false;
 
-    private ToastModal _toast { get; set; } = default!;
+    private ToastModal? _toast { get; set; } = default!;
 
     public void SyncCloseState(bool isClose)
     {
