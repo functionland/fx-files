@@ -8,7 +8,7 @@
         private TaskCompletionSource<ArtifactOverflowResult>? _tcs;
         private bool _isModalOpen;
 
-        [Parameter]
+
         public bool IsMultiple { get; set; }
 
         public void ShowDetails(FsArtifact artifact)
@@ -23,12 +23,11 @@
             _isModalOpen = false;
         }
 
-        public void Rename(FsArtifact artifact)
+        public void Rename()
         {
             var result = new ArtifactOverflowResult();
 
             result.ResultType = ArtifactOverflowResultType.Rename;
-            result.SelectedArtifacts = new[] { artifact };
 
             _tcs!.SetResult(result);
             _tcs = null;
@@ -71,22 +70,21 @@
             _isModalOpen = false;
         }
 
-        public void Delete(FsArtifact artifact)
+        public void Delete()
         {
             var result = new ArtifactOverflowResult();
 
-            result.ResultType = ArtifactOverflowResultType.Details;
-            result.SelectedArtifacts = new[] { artifact };
+            result.ResultType = ArtifactOverflowResultType.Delete;
 
             _tcs!.SetResult(result);
             _tcs = null;
             _isModalOpen = false;
         }
 
-        public async Task<ArtifactOverflowResult> ShowAsync()
+        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple = false)
         {
             _tcs?.SetCanceled();
-
+            IsMultiple = isMultiple;
             _isModalOpen = true;
             StateHasChanged();
 

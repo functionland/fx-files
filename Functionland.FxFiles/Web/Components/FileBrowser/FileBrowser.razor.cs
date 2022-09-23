@@ -10,8 +10,11 @@ namespace Functionland.FxFiles.App.Components;
 public partial class FileBrowser
 {
     private FsArtifact? _currentArtifact;
+
     private List<FsArtifact> _pins = new();
+
     private List<FsArtifact> _artifacts = new();
+
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
     private ArtifactOverflowModal _asm { get; set; }
 
@@ -161,12 +164,26 @@ public partial class FileBrowser
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
     {
-        await _asm.ShowAsync();
+        var result = await _asm.ShowAsync();
+        if (result.ResultType == ArtifactOverflowResultType.Delete)
+        {
+            Console.WriteLine($"Delete {artifact.Name}");
+        }
     }
 
-    private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifact)
+    private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifacts)
     {
-        await _asm.ShowAsync();
+        var isMultiple = artifacts.AsParallel().Count() > 1;
+
+        var result = await _asm.ShowAsync(isMultiple);
+
+        if (result.ResultType == ArtifactOverflowResultType.Delete)
+        {
+            foreach (var artifact in artifacts)
+            {
+                Console.WriteLine($"Delete {artifact.Name}");
+            }
+        }
     }
 
     private bool IsInRoot(FsArtifact? artifact)
