@@ -6,8 +6,8 @@ public partial class ArtifactExplorer
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
-    [Parameter] public EventCallback<FsArtifact> OnArtifactsOptions { get; set; } = new();
-    [Parameter] public EventCallback<List<FsArtifact>> OnSelectedArtifactsOptions { get; set; } = new();
+    [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
+    [Parameter] public EventCallback<List<FsArtifact>> OnMultiArtifactsOptionsClick { get; set; } = new();
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
 
     public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
@@ -30,12 +30,12 @@ public partial class ArtifactExplorer
 
     private async Task HandleArtifactOptionsClick(FsArtifact artifact)
     {
-        await OnArtifactsOptions.InvokeAsync(artifact);
+        await OnArtifactsOptionsClick.InvokeAsync(artifact);
     }
 
     private async Task HandleMultiArtifactsOptionsClick()
     {
-        await OnSelectedArtifactsOptions.InvokeAsync(SelectedArtifacts);
+        await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts);
     }
 
     private bool IsInRoot(FsArtifact? artifact)

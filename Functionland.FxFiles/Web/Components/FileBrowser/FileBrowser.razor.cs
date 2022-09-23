@@ -107,22 +107,22 @@ public partial class FileBrowser
         }
     }
 
-    public void HandlePinArtifacts()
+    public void HandlePinArtifacts(FsArtifact artifact)
     {
 
     }
 
-    public void HandleDeleteArtifacts()
+    public void HandleDeleteArtifacts(FsArtifact artifact)
     {
 
     }
 
-    public void HandleShowDetailsArtifact()
+    public void HandleShowDetailsArtifact(FsArtifact artifact)
     {
 
     }
 
-    public void HandleCreateFolder()
+    public void HandleCreateFolder(FsArtifact artifact)
     {
 
     }
@@ -165,23 +165,62 @@ public partial class FileBrowser
     private async Task HandleOptionsArtifact(FsArtifact artifact)
     {
         var result = await _asm.ShowAsync();
-        if (result.ResultType == ArtifactOverflowResultType.Delete)
+
+        switch(result.ResultType)
         {
-            Console.WriteLine($"Delete {artifact.Name}");
+            case ArtifactOverflowResultType.Details:
+                HandleShowDetailsArtifact(artifact);
+                break;
+            //case ArtifactOverflowResultType.Rename:
+            //    HandleRenameArtifact(artifact, artifact.Name);
+            //    break;
+            //case ArtifactOverflowResultType.Copy:
+            //    HandleCopyArtifactsAsync(artifact);
+            //    break;
+            case ArtifactOverflowResultType.Pin:
+                HandlePinArtifacts(artifact);
+                break;
+            //case ArtifactOverflowResultType.Move:
+            //    HandleMoveArtifactsAsync(artifact);
+            //    break;
+            case ArtifactOverflowResultType.Delete:
+                HandleDeleteArtifacts(artifact);
+                break;
         }
     }
 
     private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifacts)
     {
-        var isMultiple = artifacts.AsParallel().Count() > 1;
+        var selectedArtifactsCount = artifacts.Count;
+        var isMultiple = selectedArtifactsCount > 1;
 
-        var result = await _asm.ShowAsync(isMultiple);
-
-        if (result.ResultType == ArtifactOverflowResultType.Delete)
+        if(selectedArtifactsCount > 0)
         {
+            var result = await _asm.ShowAsync(isMultiple);
+
             foreach (var artifact in artifacts)
             {
-                Console.WriteLine($"Delete {artifact.Name}");
+                switch (result.ResultType)
+                {
+                    case ArtifactOverflowResultType.Details:
+                        HandleShowDetailsArtifact(artifact);
+                        break;
+                    //case ArtifactOverflowResultType.Rename:
+                    //    HandleRenameArtifact(artifact, artifact.Name);
+                    //    break;
+                    //case ArtifactOverflowResultType.Copy:
+                    //    HandleCopyArtifactsAsync(artifact);
+                    //    break;
+                    case ArtifactOverflowResultType.Pin:
+                        HandlePinArtifacts(artifact);
+                        break;
+                    //case ArtifactOverflowResultType.Move:
+                    //    HandleMoveArtifactsAsync(artifact);
+                    //    break;
+                    case ArtifactOverflowResultType.Delete:
+                        HandleDeleteArtifacts(artifact);
+                        break;
+                }
             }
         }
     }
