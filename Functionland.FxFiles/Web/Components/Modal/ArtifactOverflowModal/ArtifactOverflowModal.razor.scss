@@ -1,0 +1,24 @@
+﻿@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+::deep .contents column {
+    ::deep .overflow-sheet {
+        padding: 21px 0;
+
+        ::deep .fxbutton {
+            padding: 0;
+        }
+
+        ::deep .fxbutton-content {
+            margin: 0px 21px;
+            border-bottom: 1px solid color(gray-bg-secondary);
+        }
+
+        ::deep .fxbutton-menuline {
+            margin: 0;
+            height: 48px;
+            border-radius: 0;
+            background-color: transparent !important;
+        }
+    }
+}
