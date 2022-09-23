@@ -122,9 +122,24 @@ public partial class FileBrowser
 
     }
 
-    public void HandleCreateFolder()
+    public async Task HandleCreateFolder(string path, string folderName)
     {
-
+        try
+        {
+            await FileService.CreateFolderAsync(path, folderName);
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, "folder"))
+        {
+            // ToDo: toast something (...)
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder"))
+        {
+            // ToDo: toast something (Your folder needs a name, enter something.)
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"))
+        {
+            // ToDo: toast something (Name has invalid characters. Think again about what you pick.)
+        }
     }
 
     private async Task LoadPinsAsync()
