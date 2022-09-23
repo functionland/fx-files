@@ -2,9 +2,10 @@
 {
     public interface IPinService
     {
-        Task InitializeAsync();//Search for changes in files and folders, subscribe for watcher event
+        Task InitializeAsync();
         Task SetArtifactsPinAsync(FsArtifact[] artifact, CancellationToken? cancellationToken = null);
         Task SetArtifactsUnPinAsync(string[] path, CancellationToken? cancellationToken = null);
-        IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string? fullPath);
+        Task<List<FsArtifact>> GetPinnedArtifactsAsync();
+        bool IsPinned(FsArtifact fsArtifact);
     }
 }
