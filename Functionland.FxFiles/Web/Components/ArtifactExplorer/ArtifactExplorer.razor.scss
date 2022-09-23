@@ -153,9 +153,6 @@ list-view {
                 color: $pure-white;
             }
 
-            .move-selected-items-text {
-                display: none;
-            }
         }
     }
 
@@ -185,7 +182,6 @@ list-view {
 
         .add-folder {
             background-image: url(images/icons/white-create-folder.svg);
-            display: none;
         }
     }
 }
