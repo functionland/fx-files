@@ -17,7 +17,7 @@ public partial class ArtifactSelectionModal
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
         _artifactActionResult = artifactActionResult;
-        await LoadArtifacts(artifact);
+        await LoadArtifacts(artifact.FullPath);
 
         _isModalOpen = true;
         StateHasChanged();
@@ -30,25 +30,30 @@ public partial class ArtifactSelectionModal
     {
         _currentArtifact = artifact;
         _artifacts = new List<FsArtifact>();
-        await LoadArtifacts(artifact);
+        await LoadArtifacts(artifact.FullPath);
         StateHasChanged();
     }
 
-    private void SelectDestionation(FsArtifact artifact)
+    private void SelectDestionation()
     {
+        if (_currentArtifact is null)
+        {
+            return;
+        }
+
         var result = new ArtifactSelectionResult();
 
         result.ResultType = ArtifactSelectionResultType.Ok;
-        result.SelectedArtifacts = new[] { artifact };
+        result.SelectedArtifacts = new[] { _currentArtifact };
 
         _tcs!.SetResult(result);
         _tcs = null;
         _isModalOpen = false;
     }
 
-    private async Task LoadArtifacts(FsArtifact artifact)
+    private async Task LoadArtifacts(string path)
     {
-        var artifacts = _fileService.GetArtifactsAsync(artifact.FullPath);
+        var artifacts = _fileService.GetArtifactsAsync(path);
 
         await foreach (var item in artifacts)
         {
@@ -57,6 +62,11 @@ public partial class ArtifactSelectionModal
                 _artifacts.Add(item);
             }
         }
+    }
+
+    private async Task Back()
+    {
+        //TODO: Add a method in File Service for get fsArtifact Folder or drive
     }
 
     private void Close()

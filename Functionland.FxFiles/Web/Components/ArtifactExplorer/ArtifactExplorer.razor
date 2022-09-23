@@ -40,9 +40,9 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
         <div class="info-selection">
             <div class="close-btn" @onclick="(() => HandleCancelSelectDestionationMode())"></div>
             <div class="item-selected">
-                <span class="item-selected-count">@ArtifactActionResult.Count</span>
+                <span class="item-selected-count">@ArtifactActionResult?.Count</span>
                 <span class="move-selected-items-text">items ready to </span>
-                if(@ArtifactActionResult.ActionType == @ArtifactActionType.Copy){
+                @if(ArtifactActionResult?.ActionType == @ArtifactActionType.Copy){
                     <span class="move-selected-items-text">copy</span>
                 }
                 else{

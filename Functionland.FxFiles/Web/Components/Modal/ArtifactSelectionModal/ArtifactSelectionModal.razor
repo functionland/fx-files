@@ -3,6 +3,18 @@
 
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
+
+    <FxButton ButtonStyle="FxButtonStyle.Normal"
+              Text="Back"
+              Width="100%"
+              Margin="0 0 40px 0"
+              OnClick="Back" />
+    <FxButton ButtonStyle="FxButtonStyle.Normal"
+              Text="Select Destionation"
+              Width="100%"
+              Margin="0 0 40px 0"
+              OnClick="SelectDestionation" />
+
     @if (_artifacts is not null)
     {
         <ArtifactExplorer Artifacts="_artifacts"
@@ -10,7 +22,6 @@
                       CurrentArtifact="_currentArtifact"
                       ArtifactActionResult="_artifactActionResult"
                       OnSelectArtifact="SelectArtifact"
-                      OnSelectDestionation="SelectDestionation"
                       OnCancelSelectDestionationMode="Close" />
     }
 </FxBottomSheet>
