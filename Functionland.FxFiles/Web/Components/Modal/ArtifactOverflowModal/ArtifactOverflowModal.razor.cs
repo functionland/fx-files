@@ -11,12 +11,12 @@
         [Parameter]
         public bool IsMultiple { get; set; }
 
-        public void ShowDetails()
+        public void ShowDetails(FsArtifact artifact)
         {
             var result = new ArtifactOverflowResult();
 
             result.ResultType = ArtifactOverflowResultType.Details;
-            //result.SelectedArtifacts = new[] { artifact };
+            result.SelectedArtifacts = new[] { artifact };
 
             _tcs!.SetResult(result);
             _tcs = null;
