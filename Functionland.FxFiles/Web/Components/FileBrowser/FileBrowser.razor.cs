@@ -20,7 +20,7 @@ public partial class FileBrowser
     private ArtifactOverflowModal? _asm { get; set; }
     private ToastModal? _toastModalRef { get; set; }
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
-    private ConfirmationReplaceOrSkipModal? _ConfirmationReplaceOrSkipModalRef { get; set; }
+    private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -63,10 +63,13 @@ public partial class FileBrowser
 
             if (existArtifacts.Any())
             {
-                var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
-                if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                if (_confirmationReplaceOrSkipModalRef != null)
                 {
-                    await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(artifacts.ToArray());
+                    if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                    {
+                        await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                    }
                 }
             }
 
@@ -113,10 +116,10 @@ public partial class FileBrowser
 
             if (existArtifacts.Any())
             {
-                if (_ConfirmationReplaceOrSkipModalRef is not null)
+                if (_confirmationReplaceOrSkipModalRef is not null)
                 {
-                    var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
-                    if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(artifacts.ToArray());
+                    if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
                         UpdateRemovedArtifacts(existArtifacts);

@@ -8,10 +8,12 @@ namespace Functionland.FxFiles.App.Components.Modal
         private TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>? _tcs;
 
         [Parameter]
-        public string[] ArtifactsName { get; set; } = default!;
+        public string[] ArtifactsNames { get; set; } = default!;
 
-        public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync()
+        public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(FsArtifact[] artifacts) 
         {
+            ArtifactsNames = artifacts.Select(a => a.Name).ToArray();
+
             _tcs?.SetCanceled();
 
             _isModalOpen = true;

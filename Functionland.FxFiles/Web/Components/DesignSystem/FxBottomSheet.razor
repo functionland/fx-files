@@ -11,7 +11,7 @@
             <div class="controls">
                 @if (!string.IsNullOrEmpty(Title))
                 {
-                    <div class="title-modal">@Localizer[nameof(AppStrings.ReplaceOrSkipTitleModal)]</div>
+                    <div class="title-modal">@Title</div>
                 }
                 <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">
                     <img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" />
