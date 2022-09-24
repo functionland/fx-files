@@ -170,5 +170,13 @@
   {
     "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
     "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
+  },
+  {
+    "outputFile": "Components/ComingSoon/ConsentCookie.razor.css",
+    "inputFile": "Components/ComingSoon/ConsentCookie.razor.scss"
+  },
+  {
+    "outputFile": "Components/ComingSoon/ComingSoon.razor.css",
+    "inputFile": "Components/ComingSoon/ComingSoon.razor.scss"
   }
 ]
