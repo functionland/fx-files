@@ -76,9 +76,10 @@
 }
 
 .fxbutton-disabled {
-    color: $gray-dark-border !important;
+    color: color(input-disable) !important;
     border: none !important;
-    background-color: $gray-dark-bg-secondary !important;
+    background-color: color(gray-bg-secondary) !important;
+    pointer-events: none !important;
 }
 
 .fxbutton-menuline {
