@@ -338,3 +338,70 @@ list-view {
     font-size: 24px;
     @include Icon($audio);
 }
+
+.select-action {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $green-dark-base;
+    padding: 0px $spacing-31 0px $spacing-21;
+
+    .info-selection {
+        display: flex;
+        align-items: center;
+
+        .close-btn {
+            cursor: pointer;
+            width: $icon-16;
+            height: $icon-16;
+            background-size: $icon-16;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url(images/icons/white-close-btn.svg);
+        }
+
+        .item-selected {
+            margin-left: $spacing-6;
+
+            .move-selected-items-text,
+            .item-selected-count,
+            .item-selected-text {
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                font-family: $open-sans-regular;
+                letter-spacing: $letter-spacing-02;
+                color: $pure-white;
+            }
+        }
+    }
+
+    .right-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icons-action {
+            width: 20.04px;
+            cursor: pointer;
+            height: 18.19px;
+            background-size: $icon-24;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .move-icon {
+            background-image: url(images/icons/white-move.svg);
+        }
+
+        .vertical-option-icon {
+            background-image: url(images/icons/white-option-vertical.svg);
+            background-size: $icon-4;
+            margin-left: $spacing-16;
+        }
+
+        .add-folder {
+            background-image: url(images/icons/white-create-folder.svg);
+        }
+    }
+}
