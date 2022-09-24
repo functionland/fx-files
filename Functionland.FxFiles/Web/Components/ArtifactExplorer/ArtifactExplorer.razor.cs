@@ -25,11 +25,6 @@ namespace Functionland.FxFiles.App.Components
             return base.OnInitAsync();
         }
 
-        private async Task HandleArtifactClick(FsArtifact artifact)
-        {
-            await OnSelectArtifact.InvokeAsync(artifact);
-        }
-
         private async Task HandleArtifactOptionsClick(FsArtifact artifact)
         {
             await OnArtifactsOptionsClick.InvokeAsync(artifact);
@@ -91,7 +86,7 @@ namespace Functionland.FxFiles.App.Components
             PointerDownTime = DateTimeOffset.UtcNow;
         }
 
-        public void PointerUp()
+        public async Task PointerUp(FsArtifact artifact)
         {
             if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
@@ -99,6 +94,10 @@ namespace Functionland.FxFiles.App.Components
                 if (downTime > 400)
                 {
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                }
+                else
+                {
+                    await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
         }
