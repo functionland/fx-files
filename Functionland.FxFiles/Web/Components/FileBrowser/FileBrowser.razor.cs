@@ -253,11 +253,11 @@ public partial class FileBrowser
 
     private async Task LoadPinsAsync()
     {
-        var allPins = PinService.GetPinnedArtifactsAsync(null);
+        var allPins = await  PinService.GetPinnedArtifactsAsync();
 
         var pins = new List<FsArtifact>();
 
-        await foreach (var item in allPins)
+        foreach (var item in allPins)
         {
             pins.Add(item);
         }

@@ -1,4 +1,5 @@
-﻿@import '../../Styles/abstracts/_variables.scss';
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-checkbox.scss';
 
@@ -103,7 +104,7 @@
         }
 
         .filter-btn {
-            background-image: url($filter);
+            background-image: url($filter-file);
         }
     }
 }
@@ -249,12 +250,9 @@ list-view {
 }
 
 .options-btn {
-    background-size: $icon-24;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 24px;
-    height: 24px;
     cursor: pointer;
+    font-size: 24px;
+    text-align: center;
 }
 
 .list-view-item {
@@ -263,8 +261,8 @@ list-view {
     align-items: center;
     flex-flow: row nowrap;
 
-    .options-btn {
-        background-image: url($options-vertical);
+    .options-btn::before {
+        @include Icon($options-vertical);
     }
 
     .item-icon-position {
@@ -290,9 +288,8 @@ list-view {
 .grid-view-item {
     height: 120px;
 
-    .options-btn {
-        background-image: url($options-horizontal);
-        margin: 0 auto;
+    .options-btn::before {
+        @include Icon($options-horizontal);
     }
 
     .item-icon-position {
@@ -322,22 +319,27 @@ list-view {
     }
 }
 
-.folder-icon {
-    background-image: url($folder);
+.folder-icon::before {
+    font-size: 24px;
+    @include Icon($folder);
 }
 
-.text-file-icon {
-    background-image: url($text-file);
+.text-file-icon::before {
+    font-size: 24px;
+    @include Icon($document);
 }
 
-.photo-file-icon {
-    background-image: url($photo-file);
+.photo-file-icon::before {
+    font-size: 24px;
+    @include Icon($image);
 }
 
-.pdf-file-icon {
-    background-image: url($pdf-file);
+.pdf-file-icon::before {
+    font-size: 24px;
+    @include Icon($PDF);
 }
 
-.audio-file-icon {
-    background-image: url($audio-file);
+.audio-file-icon::before {
+    font-size: 24px;
+    @include Icon($audio);
 }

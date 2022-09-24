@@ -6,6 +6,9 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
     {
         [Parameter]
         public string? Text { get; set; }
+        
+        [Parameter]
+        public string? Class { get; set; }
 
         [Parameter]
         public string? MetaDataText { get; set; }

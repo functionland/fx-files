@@ -39,25 +39,11 @@ namespace Functionland.FxFiles.App.Platforms.Windows.Implementations
             thumb.Save(thumbPath);
 
             return thumbPath;
-        }        
+        }
 
-        private string GetThumbnailFullPath(FsArtifact fsArtifact)
+        public override string GetAppCacheDirectory()
         {
-            var imagePath = fsArtifact.FullPath;
-            var lastModifiedDateTimeTicksStr = fsArtifact.LastModifiedDateTime.UtcTicks.ToString();
-            var finalName = imagePath + lastModifiedDateTimeTicksStr;
-
-            var imagePathHash = MakeHashData.ComputeSha256Hash(finalName);
-            var destinationDirectory = Path.Combine(FileSystem.CacheDirectory, "FxThumbFolder");
-
-            if (!Directory.Exists(destinationDirectory))
-            {
-                Directory.CreateDirectory(destinationDirectory);
-            }
-
-            var thumbPath = Path.Combine(destinationDirectory, Path.ChangeExtension(imagePathHash, "Jpeg"));
-
-            return thumbPath;
+            return FileSystem.CacheDirectory;
         }
     }
 }
