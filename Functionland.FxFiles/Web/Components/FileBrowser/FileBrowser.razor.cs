@@ -18,6 +18,7 @@ public partial class FileBrowser
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
     private ArtifactOverflowModal _asm { get; set; }
     private ConfirmationReplaceOrSkipModal? _ConfirmationReplaceOrSkipModalRef { get; set; }
+    private ToastModal? _toastModalRef { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -59,7 +60,7 @@ public partial class FileBrowser
         if (existArtifacts.Any())
         {
             var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
-            if(Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
             {
                 await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
             }
@@ -68,35 +69,55 @@ public partial class FileBrowser
 
     public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
     {
-        List<FsArtifact> existArtifacts = new();
-        var artifactActionResult = new ArtifactActionResult()
-        {
-            ActionType = ArtifactActionType.Move,
-            Count = artifacts.Count,
-        };
-
-        string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
-        if (string.IsNullOrWhiteSpace(destinationPath))
-        {
-            return;
-        }
-
         try
         {
-            await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
-        }
-        catch (CanNotOperateOnFilesException ex)
-        {
-            existArtifacts = ex.FsArtifacts;
-        }
-
-        if (existArtifacts.Any())
-        {
-            var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
-            if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            List<FsArtifact> existArtifacts = new();
+            var artifactActionResult = new ArtifactActionResult()
             {
-                await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                ActionType = ArtifactActionType.Move,
+                Count = artifacts.Count,
+            };
+
+            string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
+            if (string.IsNullOrWhiteSpace(destinationPath))
+            {
+                return;
             }
+
+            try
+            {
+                await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
+            }
+            catch (CanNotOperateOnFilesException ex)
+            {
+                existArtifacts = ex.FsArtifacts;
+            }
+
+            artifacts = artifacts.Except(existArtifacts).ToList();
+            _artifacts = _artifacts.Except(artifacts).ToList();
+
+            if (existArtifacts.Any())
+            {
+                if (_ConfirmationReplaceOrSkipModalRef is not null)
+                {
+                    var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
+                    if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                    {
+                        await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                        _artifacts = _artifacts.Except(existArtifacts).ToList();
+                    }
+                }
+            }
+ 
+            var Title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
+            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage, );
+            _toastModalRef?.Show(Title, message, FxToastType.Success);
+        }
+        catch
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Error);
         }
 
     }

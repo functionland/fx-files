@@ -29,7 +29,6 @@ public partial class ArtifactSelectionModal
     private async Task SelectArtifact(FsArtifact artifact)
     {
         _currentArtifact = artifact;
-        _artifacts = new List<FsArtifact>();
         await LoadArtifacts(artifact.FullPath);
         StateHasChanged();
     }
@@ -53,6 +52,7 @@ public partial class ArtifactSelectionModal
 
     private async Task LoadArtifacts(string path)
     {
+        _artifacts = new List<FsArtifact>();
         var artifacts = _fileService.GetArtifactsAsync(path);
 
         await foreach (var item in artifacts)
