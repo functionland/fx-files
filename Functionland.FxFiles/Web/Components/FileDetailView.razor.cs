@@ -2,11 +2,17 @@
 {
     public partial class FileDetailView
     {
-        [Parameter, EditorRequired]
+        [Parameter]
         public bool IsImageFile { get; set; } = false;
 
-        [Parameter, EditorRequired]
+        [Parameter]
         public string? FileName { get; set; }
+
+        [Parameter]
+        public string? FileDetailAreaClass { get; set; }
+
+        [Parameter]
+        public string? ContentBodyClass { get; set; }
 
         [Parameter]
         public RenderFragment? FileDetailItemFragment { get; set; } = default!;
