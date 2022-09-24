@@ -24,6 +24,17 @@
 .not-root-mode {
     width: 100%;
 
+    ::deep .fxbutton img {
+        height: 24px;
+        width: 24px;
+    }
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+
     .action-row {
         display: flex;
         flex-flow: row nowrap;

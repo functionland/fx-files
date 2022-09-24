@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="action-box">
-                    @if (IsAddButtonVisible)
+                    @if (!IsInRoot || IsAddButtonVisible)
                     {
                         <FxButton Margin="0 8px"
                           OnClick="OnAddButtonClick"
@@ -40,7 +40,7 @@
                           LeftIcon="images/icons/plus.svg" />
                     }
 
-                    @if (IsOverflowButtonVisible)
+                    @if (!IsInRoot || IsOverflowButtonVisible)
                     {
                         <FxButton Padding="0 0 0 10px"
                           BackgroundColor="transparent"
