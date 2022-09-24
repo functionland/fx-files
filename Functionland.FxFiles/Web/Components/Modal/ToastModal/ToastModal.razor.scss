@@ -2,8 +2,8 @@
 @import '../../../Styles/abstracts/_variables.scss';
 
 .toast-modal {
-    position: absolute;
-    bottom: 16px;
+    position: fixed;
+    bottom: 90px;
     left: 12px;
     right: 12px;
 }
