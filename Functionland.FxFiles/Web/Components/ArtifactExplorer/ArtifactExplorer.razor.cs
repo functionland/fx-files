@@ -100,6 +100,10 @@ namespace Functionland.FxFiles.App.Components
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
+            else if(ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
+            {
+                await OnSelectArtifact.InvokeAsync(artifact);
+            }
         }
 
         public void OnSelectionChanged(FsArtifact selectedArtifact)

@@ -45,17 +45,20 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 if (!overwrite)
                     CheckIfArtifactExist(newPath);
 
-                if (overwrite)
-                    await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
-
-                var newArtifact = new FsArtifact(artifact.FullPath.Replace(artifact.FullPath, newPath), artifact.Name, artifact.ArtifactType, artifact.ProviderType)
+                var details = _files.Where(f => f.FullPath.StartsWith(artifact.FullPath));
+                foreach (var detail in details)
                 {
-                    Size = artifact.Size,
-                    LastModifiedDateTime = artifact.LastModifiedDateTime
-                };
-                _files.Add(newArtifact);
-
-
+                    var detailPath = detail.FullPath.Replace(artifact.FullPath, newPath);
+                    var newArtifact = new FsArtifact(detailPath, detail.Name, artifact.ArtifactType, artifact.ProviderType)
+                    {
+                        Size = artifact.Size,
+                        LastModifiedDateTime = artifact.LastModifiedDateTime
+                    };
+                    //if (overwrite)
+                    //    await DeleteArtifactsAsync(new[] { newArtifact }, cancellationToken);
+                    if(!_files.Any(c => c.FullPath == newArtifact.FullPath))
+                        _files.Add(newArtifact);
+                }
             }
         }
 
@@ -82,6 +85,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
+            path = path.Replace("/", "\\");
             if (string.IsNullOrWhiteSpace(stream?.ToString()))
                 throw new DomainLogicException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
 
@@ -178,58 +182,31 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
         {
-            var tempBag = new List<FsArtifact>();
             var finalBag = new ConcurrentBag<FsArtifact>();
-
+            var excludedPaths = new List<string>();
             foreach (var artifact in artifacts)
             {
-
-                if (string.IsNullOrWhiteSpace(artifact.FullPath))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
-
-
-                var artifactExist = ArtifacExist(artifact.FullPath);
-
-                if (!artifactExist)
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? "artifact"));
-
-
-                if (artifact.ArtifactType != FsArtifactType.Drive)
+                foreach (var file in _files)
                 {
-                    await LatencyEnumerationAsync();
-                    foreach (var file in _files)
+                    if (file.FullPath.StartsWith(artifact.FullPath))
                     {
-                        finalBag.Add(file);
-                    }
-                    while (!finalBag.IsEmpty)
-                    {
-                        _ = finalBag.TryTake(result: out FsArtifact? currentItem);
-
-                        if (currentItem != null && !string.Equals(currentItem.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            tempBag.Add(currentItem);
-                        }
-                    }
-                    foreach (var item in tempBag)
-                    {
-                        if (!item.FullPath.StartsWith(artifact.FullPath))
-                        {
-                            finalBag.Add(item);
-                        }
-
+                        excludedPaths.Add(file.FullPath);
                     }
                 }
-                else if (artifact.ArtifactType == FsArtifactType.Drive)
-                {
-                    throw new DomainLogicException(StringLocalizer[nameof(AppStrings.DriveRemoveFailed)]);
-                }
+
             }
-
-            _files = finalBag;
+            foreach (var file in _files)
+            {
+                if (!excludedPaths.Contains(file.FullPath))
+                    finalBag.Add(file);
+            }
+             _files = finalBag;
         }
 
         public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
+            if (path != null)
+                path = path.Replace("/", "\\");
             IEnumerable<FsArtifact> files = _files;
             if (!string.IsNullOrWhiteSpace(path))
                 files = files.Where(
@@ -272,20 +249,33 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
-            await Task.WhenAll(
-                CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken),
-                DeleteArtifactsAsync(artifacts, cancellationToken));
+            await CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+            await DeleteArtifactsAsync(artifacts, cancellationToken);
         }
 
         public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
+            filePath = filePath.Replace("/", "\\");
             foreach (var articat in _files)
             {
                 await LatencyEnumerationAsync();
                 if (string.Equals(articat.FullPath, filePath, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var directoryName = Path.GetDirectoryName(articat.FullPath);
-                    articat.FullPath = Path.Combine(directoryName, newName);
+                    if (string.IsNullOrEmpty(Path.GetExtension(newName)))
+                    {
+                        var oldNameExtention = Path.GetExtension(articat.Name);
+                        if(!string.IsNullOrEmpty(oldNameExtention))
+                        {
+                            newName = newName + oldNameExtention;
+                        }
+                    }
+                    var newPath = Path.Combine(directoryName, newName);
+
+                    if (ArtifacExist(newPath))
+                        throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+
+                    articat.FullPath = newPath;
                     articat.Name = newName;
                     break;
                 }
@@ -294,14 +284,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         public async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
+            folderPath = folderPath.Replace("/", "\\");
             var oldFolderName = Path.GetFileName(folderPath.TrimEnd(Path.DirectorySeparatorChar));
             foreach (var artifact in _files)
             {
                 await LatencyEnumerationAsync();
-                if (string.Equals(artifact.FullPath, folderPath, StringComparison.CurrentCultureIgnoreCase))
+                var artifactName = Path.GetFileName(artifact.FullPath.TrimEnd(Path.DirectorySeparatorChar));
+                if (string.Equals(artifactName, oldFolderName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    DirectoryInfo parentDir = Directory.GetParent(folderPath.EndsWith("\\") ? folderPath : string.Concat(folderPath, "\\"));
-                    artifact.FullPath = Path.Combine(parentDir.Parent.FullName, newName);
+
+                    artifact.FullPath = Path.Combine(artifact.FullPath.Substring(0, artifact.FullPath.LastIndexOf(Path.DirectorySeparatorChar)), newName);
                     artifact.Name = newName;
                 }
                 else if (artifact.FullPath.ToLower().StartsWith(folderPath.ToLower()))
@@ -316,8 +308,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             var fsArtifactList = new List<FsArtifactChanges>();
 
-            foreach (var path in paths)
+            foreach (var currentPath in paths)
             {
+                var path = currentPath.Replace("/", "\\");
                 if (string.IsNullOrWhiteSpace(path))
                     throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 

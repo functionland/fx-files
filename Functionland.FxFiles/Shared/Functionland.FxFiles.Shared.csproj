@@ -6,9 +6,11 @@
 
     <ItemGroup>
       <None Remove="Migrations\Script0001 - CreatePinnedArtifactTable.sql" />
+      <None Remove="Migrations\Script0002 - AddArtifactTypeToPinnedArtifact.sql" />
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Migrations\Script0002 - AddArtifactTypeToPinnedArtifact.sql" />
       <EmbeddedResource Include="Migrations\Script0001 - CreatePinnedArtifactTable.sql" />
     </ItemGroup>
 

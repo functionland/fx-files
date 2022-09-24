@@ -18,6 +18,7 @@ public partial class FileBrowser
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
     private ArtifactOverflowModal _asm { get; set; }
     private ConfirmationReplaceOrSkipModal? _ConfirmationReplaceOrSkipModalRef { get; set; }
+    private ToastModal? _toastModalRef { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -34,6 +35,8 @@ public partial class FileBrowser
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
     {
+        try
+        {
         List<FsArtifact> existArtifacts = new();
         var artifactActionResult = new ArtifactActionResult()
         {
@@ -59,44 +62,75 @@ public partial class FileBrowser
         if (existArtifacts.Any())
         {
             var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
-            if(Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
             {
                 await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
             }
+            }
+
+            var Title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
+            var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Success);
+        }
+        catch
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Error);
         }
     }
 
     public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
     {
-        List<FsArtifact> existArtifacts = new();
-        var artifactActionResult = new ArtifactActionResult()
-        {
-            ActionType = ArtifactActionType.Move,
-            Count = artifacts.Count,
-        };
-
-        string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
-        if (string.IsNullOrWhiteSpace(destinationPath))
-        {
-            return;
-        }
-
         try
         {
-            await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
-        }
-        catch (CanNotOperateOnFilesException ex)
-        {
-            existArtifacts = ex.FsArtifacts;
-        }
-
-        if (existArtifacts.Any())
-        {
-            var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
-            if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            List<FsArtifact> existArtifacts = new();
+            var artifactActionResult = new ArtifactActionResult()
             {
-                await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                ActionType = ArtifactActionType.Move,
+                Count = artifacts.Count,
+            };
+
+            string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
+            if (string.IsNullOrWhiteSpace(destinationPath))
+            {
+                return;
             }
+
+            try
+            {
+                await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
+            }
+            catch (CanNotOperateOnFilesException ex)
+            {
+                existArtifacts = ex.FsArtifacts;
+            }
+
+            artifacts = artifacts.Except(existArtifacts).ToList();
+            _artifacts = _artifacts.Except(artifacts).ToList();
+
+            if (existArtifacts.Any())
+            {
+                if (_ConfirmationReplaceOrSkipModalRef is not null)
+                {
+                    var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
+                    if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                    {
+                        await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                        _artifacts = _artifacts.Except(existArtifacts).ToList();
+                    }
+                }
+            }
+ 
+            var Title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
+            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Success);
+        }
+        catch
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Error);
         }
 
     }
@@ -117,24 +151,78 @@ public partial class FileBrowser
 
     public async Task HandleRenameArtifact(FsArtifact artifact, string newName)
     {
-        string filePath = artifact.FullPath;
         try
         {
-            await FileService.RenameFileAsync(filePath, newName);
-        }
-        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, "file"))
+            if (artifact.ArtifactType == FsArtifactType.Folder)
+            {
+        try
         {
-            //TODO: show exeception message with toast
+                    await FileService.RenameFolderAsync(artifact.FullPath, newName);
+                }
+                catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactTypeIsNull))
+                {
+                    // show exeception message with toast
+                }
+
+            }
+            else if (artifact.ArtifactType == FsArtifactType.File)
+            {
+                await FileService.RenameFileAsync(artifact.FullPath, newName);
+            }
+            else
+            {
+                // show exeception message with toast
+            }
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
         }
     }
 
-    public async Task HandlePinArtifacts(List<FsArtifact> artifact)
+    public async Task HandlePinArtifacts(List<FsArtifact> artifacts)
     {
+        var notPinedArtifacts = artifacts.Where(a => a.IsPinned == false).ToArray();
 
+        await PinService.SetArtifactsPinAsync(notPinedArtifacts.ToArray());
     }
 
-    public async Task HandleDeleteArtifacts(List<FsArtifact> artifact)
+    public async Task HandleDeleteArtifacts(List<FsArtifact> artifacts)
     {
+        //TODO: if (cancellationToken?.IsCancellationRequested == true)
+        foreach (var artifact in artifacts)
+        {
+            try
+            {
+                await FileService.DeleteArtifactsAsync(artifacts.ToArray());
+            }
+
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""))
+            {
+                // show exeception message with toast
+    }
+
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.DriveRemoveFailed))
+    {
+                // show exeception message with toast
+            }
+        }
 
     }
 
@@ -165,11 +253,11 @@ public partial class FileBrowser
 
     private async Task LoadPinsAsync()
     {
-        var allPins = PinService.GetPinnedArtifactsAsync(null);
+        var allPins = await  PinService.GetPinnedArtifactsAsync();
 
         var pins = new List<FsArtifact>();
 
-        await foreach (var item in allPins)
+        foreach (var item in allPins)
         {
             pins.Add(item);
         }
