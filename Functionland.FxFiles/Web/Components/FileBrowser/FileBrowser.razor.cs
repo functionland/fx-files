@@ -35,6 +35,8 @@ public partial class FileBrowser
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
     {
+        try
+        {
         List<FsArtifact> existArtifacts = new();
         var artifactActionResult = new ArtifactActionResult()
         {
@@ -64,6 +66,17 @@ public partial class FileBrowser
             {
                 await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
             }
+            }
+
+            var Title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
+            var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Success);
+        }
+        catch
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Error);
         }
     }
 
@@ -110,7 +123,7 @@ public partial class FileBrowser
             }
  
             var Title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
-            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage, );
+            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
             _toastModalRef?.Show(Title, message, FxToastType.Success);
         }
         catch
@@ -138,14 +151,48 @@ public partial class FileBrowser
 
     public async Task HandleRenameArtifact(FsArtifact artifact, string newName)
     {
-        string filePath = artifact.FullPath;
         try
         {
-            await FileService.RenameFileAsync(filePath, newName);
-        }
-        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, "file"))
+            if (artifact.ArtifactType == FsArtifactType.Folder)
+            {
+        try
         {
-            //TODO: show exeception message with toast
+                    await FileService.RenameFolderAsync(artifact.FullPath, newName);
+                }
+                catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactTypeIsNull))
+                {
+                    // show exeception message with toast
+                }
+
+            }
+            else if (artifact.ArtifactType == FsArtifactType.File)
+            {
+                await FileService.RenameFileAsync(artifact.FullPath, newName);
+            }
+            else
+            {
+                // show exeception message with toast
+            }
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
+        }
+        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, artifact?.ArtifactType.ToString() ?? ""))
+        {
+            // show exeception message with toast
         }
     }
 
