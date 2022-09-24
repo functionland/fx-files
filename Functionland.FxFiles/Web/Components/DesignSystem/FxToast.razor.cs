@@ -10,6 +10,18 @@
 
         [Parameter, EditorRequired]
         public string? Description { get; set; }
+
+        [Parameter]
+        public bool IsOpen { get; set; } = false;
+
+        [Parameter]
+        public EventCallback<bool> IsOpenChanged { get; set; }
+
+        private void Close()
+        {
+            IsOpen = false;
+            IsOpenChanged.InvokeAsync(IsOpen);
+        }
     }
 
     public enum FxToastType

@@ -1,6 +1,6 @@
 ﻿@inherits AppComponentBase;
 
-<div class="fx-taost  @(string.Format(" {0}-message", ToastType).ToLower())">
+<div class="@(IsOpen ? "open-toast" : "close-toast") fx-taost  @(string.Format(" {0}-message", ToastType).ToLower())">
     <div class="toast-container">
         <div class="toast-icon"></div>
         <div class="toast-messages">
@@ -8,5 +8,5 @@
             <div class="taost-message-desc">@Description</div>
         </div>
     </div>
-    <div class="close-icon"></div>
+    <div class="close-icon" @onclick="(()=>Close())"></div>
 </div>
