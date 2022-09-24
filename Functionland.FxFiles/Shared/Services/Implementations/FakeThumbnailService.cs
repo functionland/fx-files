@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
     {
         public async Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
         {
-            return "/Files/fake-pic.jpg"; 
+            return "/Files/fake-pic.jpg";
         }
     }
 }

@@ -3,12 +3,14 @@
 
 @if(IsPartial)
 {
-    <input class="input-box input-partial search-icon" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]" />
+    <div class="search-icon"></div>
+    <input class="input-box input-partial" value="@Text" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]" />
 }
 else
 {
     <div class="input-full-width">
-        <input class="input-box search-icon" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth)]" />
+        <div class="search-icon"></div>
+        <input class="input-box" value="@Text" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth)]" />
         <button class="button-search-input">@Localizer[nameof(AppStrings.ButtonSearchFullWidth)]</button>
     </div>
 }
