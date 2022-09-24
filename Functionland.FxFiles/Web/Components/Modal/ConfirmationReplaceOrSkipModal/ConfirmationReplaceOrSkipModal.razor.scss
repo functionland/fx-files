@@ -1,0 +1,34 @@
+﻿@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.title-modal {
+    font-family: $open-sans-regular;
+    font-size: $font-size-16;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content1);
+}
+
+.description-modal-sup, .description-modal-sub {
+    font-family: $open-sans-light;
+    font-size: $font-size-14;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content1);
+}
+
+.description-modal-sup {
+    margin-top: $spacing-24;
+}
+
+.description-modal-sub {
+    margin-bottom: $spacing-40;
+}
+
+.file-name-modal {
+    font-family: $open-sans-semi-bold;
+    font-size: $font-size-16;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content1);
+}

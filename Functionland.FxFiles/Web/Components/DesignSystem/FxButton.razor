@@ -1,48 +1,51 @@
 ﻿@inherits AppComponentBase;
 
-<a 
-    style="
-    width: @Width;
-    height: @Height;
-    margin: @Margin;
-    padding: @Padding;
-    color: @TextColor;
-    border-color: @BorderColor;
-    border-width: @BorderWidth;
-    border-radius: @BorderRadius;
-    align-self: @VerticalAlignment;
-    background-color: @BackgroundColor;"
-    href="@Link"
-    ontouchstart
-    draggable="false"
-    @onclick="@OnClick"
-    class="fxbutton
-    @Class
-    @(string.Format(" fxbutton-{0}", ButtonStyle).ToLower())
-    @(string.Format(" fxbutton-{0}", ButtonSize).ToLower())">
-    <div class="fxbutton-content">
-        <div>
-            @if (!string.IsNullOrEmpty(LeftIcon) || !string.IsNullOrWhiteSpace(LeftIcon))
-            {
-                <img class="fxbutton-lefticon" src="@LeftIcon" />
-            }
+@if (IsVisible)
+{
+    <a 
+        style="
+        width: @Width;
+        height: @Height;
+        margin: @Margin;
+        padding: @Padding;
+        color: @TextColor;
+        border-color: @BorderColor;
+        border-width: @BorderWidth;
+        border-radius: @BorderRadius;
+        align-self: @VerticalAlignment;
+        background-color: @BackgroundColor;"
+        href="@Link"
+        ontouchstart
+        draggable="false"
+        @onclick="@OnClick"
+        class="fxbutton
+        @Class
+        @(string.Format(" fxbutton-{0}", ButtonStyle).ToLower())
+        @(string.Format(" fxbutton-{0}", ButtonSize).ToLower())">
+        <div class="fxbutton-content">
+            <div>
+                @if (!string.IsNullOrEmpty(LeftIcon) || !string.IsNullOrWhiteSpace(LeftIcon))
+                {
+                    <img class="fxbutton-lefticon" src="@LeftIcon" />
+                }
 
-            @if (!string.IsNullOrEmpty(Text) || !string.IsNullOrWhiteSpace(Text))
-            {
-                <span class="fxbutton-text" style="margin-inline-@HorizontalTextAlignment: auto">@Text</span>
-            }
+                @if (!string.IsNullOrEmpty(Text) || !string.IsNullOrWhiteSpace(Text))
+                {
+                    <span class="fxbutton-text" style="margin-inline-@HorizontalTextAlignment: auto">@Text</span>
+                }
+            </div>
+            <div>
+                @if (!string.IsNullOrEmpty(MetaDataText) || !string.IsNullOrWhiteSpace(MetaDataText))
+                {
+
+                    <span class="fxbutton-metadata">@MetaDataText</span>
+                }
+
+                @if (!string.IsNullOrEmpty(RightIcon) || !string.IsNullOrWhiteSpace(RightIcon))
+                {
+                    <img class="fxbutton-righticon" src="@RightIcon" />
+                }
+            </div>
         </div>
-        <div>
-            @if (!string.IsNullOrEmpty(MetaDataText) || !string.IsNullOrWhiteSpace(MetaDataText))
-            {
-
-                <span class="fxbutton-metadata">@MetaDataText</span>
-            }
-
-            @if (!string.IsNullOrEmpty(RightIcon) || !string.IsNullOrWhiteSpace(RightIcon))
-            {
-                <img class="fxbutton-righticon" src="@RightIcon" />
-            }
-        </div>
-    </div>
-</a>
+    </a>
+}

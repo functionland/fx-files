@@ -4,5 +4,8 @@
     {
         [Parameter, EditorRequired]
         public bool IsPartial { get; set; }
+
+        [Parameter]
+        public string? Text { get; set; }
     }
 }

@@ -9,6 +9,7 @@
         @if (ShowCloseButton)
         {
             <div class="controls">
+                <div class="title-modal">@Localizer[nameof(AppStrings.ReplaceOrSkipTitleModal)]</div>
                 <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">
                     <img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" />
                 </button>

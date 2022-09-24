@@ -351,4 +351,37 @@
   <data name="TestExplorer" xml:space="preserve">
     <value>Test explorer</value>
   </data>
+  <data name="ReplaceModal" xml:space="preserve">
+    <value>Replace</value>
+  </data>
+  <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
+    <value>To continue, please choose an action</value>
+  </data>
+  <data name="ReplaceOrSkipSupDescModal" xml:space="preserve">
+    <value>The destination already has a file named</value>
+  </data>
+  <data name="ReplaceOrSkipTitleModal" xml:space="preserve">
+    <value>Replace or skip files</value>
+  </data>
+  <data name="SkipModal" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="ToastErrorTitle" xml:space="preserve">
+    <value>Something went wrong!</value>
+  </data>
+  <data name="TheCopyOpreationSuccessedMessage" xml:space="preserve">
+    <value>Items copied</value>
+  </data>
+  <data name="TheCopyOpreationSuccessedTiltle" xml:space="preserve">
+    <value>Your files has been copied</value>
+  </data>
+  <data name="TheMoveOpreationSuccessedMessage" xml:space="preserve">
+    <value>Items moved</value>
+  </data>
+  <data name="TheMoveOpreationSuccessedTiltle" xml:space="preserve">
+    <value>Your files has been moved</value>
+  </data>
+  <data name="TheOpreationFailedMessage" xml:space="preserve">
+    <value>The operation failed</value>
+  </data>
 </root>
