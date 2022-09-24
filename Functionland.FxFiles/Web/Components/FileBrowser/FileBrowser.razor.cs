@@ -21,6 +21,7 @@ public partial class FileBrowser
     private ToastModal? _toastModalRef { get; set; }
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef { get; set; }
+    private ConfirmationModal? _confirmationModalRef { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -225,12 +226,19 @@ public partial class FileBrowser
     {
         try
         {
-            await FileService.DeleteArtifactsAsync(artifacts.ToArray());
-            UpdateRemovedArtifacts(artifacts);
+            if(_confirmationModalRef != null)
+            {
+                var result = await _confirmationModalRef.ShowAsync();
+                if(result.ResultType == ConfirmationModalResultType.Confirm)
+                {
+                    await FileService.DeleteArtifactsAsync(artifacts.ToArray());
+                    UpdateRemovedArtifacts(artifacts);
 
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheDeleteOpreationSuccessedMessage);
-            _toastModalRef?.Show(Title, message, FxToastType.Success);
+                    var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                    var message = Localizer.GetString(AppStrings.TheDeleteOpreationSuccessedMessage);
+                    _toastModalRef?.Show(Title, message, FxToastType.Success);
+                }
+            }
         }
         catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.DriveRemoveFailed))
         {

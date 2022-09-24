@@ -169,6 +169,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not operate on files exception.
         /// </summary>
         public static string CanNotOperateOnFilesException {
@@ -201,6 +210,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string CardFileSize {
             get {
                 return ResourceManager.GetString("CardFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
         

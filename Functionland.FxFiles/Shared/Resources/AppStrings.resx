@@ -393,4 +393,10 @@
   <data name="TheDeleteOpreationSuccessedMessage" xml:space="preserve">
     <value>Items deleted</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>
