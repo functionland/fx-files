@@ -5,7 +5,7 @@
         [AutoInject]
         private IFileService _fileService = default!;
 
-        private List<FsArtifact> _artifacts = default!;
+        private List<FsArtifact> _artifacts = new();
 
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
 
@@ -60,6 +60,7 @@
         public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false)
         {
             _tcs?.SetCanceled();
+            _artifacts = artifacts;
             IsMultiple = isMultiple;
             _isModalOpen = true;
             StateHasChanged();
