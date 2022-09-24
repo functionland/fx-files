@@ -70,7 +70,7 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} already exists exception.
+        ///   Looks up a localized string similar to The {0} already exists.
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
@@ -97,7 +97,7 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} name is null.
+        ///   Looks up a localized string similar to The {0} name is empty.
         /// </summary>
         public static string ArtifactNameIsNull {
             get {
@@ -597,6 +597,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string RestException {
             get {
                 return ResourceManager.GetString("RestException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Root folder cannot be renamed.
+        /// </summary>
+        public static string RootfolderRenameException {
+            get {
+                return ResourceManager.GetString("RootfolderRenameException", resourceCulture);
             }
         }
         
