@@ -31,9 +31,17 @@ namespace Functionland.FxFiles.App.Components.FxToolBar
         [Parameter]
         public EventCallback<MouseEventArgs> OnOverflowButtonClick { get; set; }
 
-        public async Task GoBack()
+        [Parameter]
+        public EventCallback<string?> OnSearch { get; set; }
+
+        private async Task GoBack()
         {
             await JSRuntime.InvokeVoidAsync("history.back");
+        }
+
+        private void HandleSearch(string? text)
+        {
+            OnSearch.InvokeAsync(text);
         }
     }
 }

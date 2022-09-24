@@ -4,12 +4,14 @@ namespace Functionland.FxFiles.App.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
+    [AutoInject] private IFileService _fileService = default!;
+
     private bool _isModalOpen;
     private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
-    [AutoInject] private IFileService _fileService = default!;
     private List<FsArtifact> _artifacts = new();
-    private FsArtifact? _currentArtifact { get; set; }
-    private ArtifactActionResult? _artifactActionResult { get; set; }
+    private FsArtifact? _currentArtifact;
+    private ArtifactActionResult? _artifactActionResult;
+
     [Parameter] public bool IsMultiple { get; set; }
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact artifact, ArtifactActionResult artifactActionResult)

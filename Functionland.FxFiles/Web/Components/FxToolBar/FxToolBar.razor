@@ -3,7 +3,7 @@
 <div class="toolbar-box">
     @if(IsInRoot) {
         <div class="root-mode">
-            <FxSearchInput IsPartial="true" />
+            <FxSearchInput IsPartial="true" DebounceInterval="300" OnSearch="HandleSearch" />
 
             <FxButton Margin="0 8px"
                   OnClick="OnAddButtonClick"

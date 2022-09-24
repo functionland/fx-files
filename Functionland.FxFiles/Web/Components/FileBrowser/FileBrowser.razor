@@ -1,11 +1,9 @@
 ﻿@namespace Functionland.FxFiles.App.Components
-
-@inherits AppComponentBase;
-
 @using Functionland.FxFiles.App.Components.FxToolBar
+@inherits AppComponentBase
 
 <div class="file-browser-container">
-    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" />
+    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" OnSearch="HandleSearch" />
     @if (IsInRoot(_currentArtifact))
     {
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
@@ -19,14 +17,16 @@
             </ContentTemplate>
         </BitAccordion>
     }
-    <ArtifactExplorer Artifacts="_artifacts"
+    <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifact"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
-                      OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions" />
+                      OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
+                      OnFilterClick="HandleFilterClick"/>
 </div>
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" />
-<ArtifactOverflowModal @ref="_asm"/>
-<ConfirmationReplaceOrSkipModal @ref="_ConfirmationReplaceOrSkipModalRef" />
+<ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
+<ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <ToastModal @ref="_toastModalRef" />
+<FilterArtifactModal @ref="_filteredArtifactModalRef" />
