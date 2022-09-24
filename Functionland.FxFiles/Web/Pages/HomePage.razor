@@ -7,4 +7,8 @@
 
 <div class="files-content">
     <ComingSoon title="Blox Files"/>
+    <button @onclick="OpenDetail">details</button>
 </div>
+
+<ArtifactDetailModal @ref="_detailModal"></ArtifactDetailModal>
+<ToastModal @ref="_toast"></ToastModal>
