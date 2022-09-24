@@ -24,7 +24,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
         [AutoInject] public IThumbnailService ThumbnailService { get; set; } = default!;
-
+        [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
         public SubscriptionToken ArtifactChangeSubscription { get; set; }
         public ConcurrentDictionary<string, PinnedArtifact> PinnedPathsCatche { get; set; } = new();
 
@@ -89,6 +89,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     {
                         PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
                     }
+                    FileWatchService.WatchArtifact(GetPinnedFsArtifact(pinnedArticat));
                 }
             }
         }
@@ -131,7 +132,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 DeteteFromPinCache(artifactChangeEvent.Description != null ? artifactChangeEvent.Description : editedArtifact.FullPath);
                 PinnedPathsCatche.TryAdd(editedArtifact.FullPath, editedArtifact);
 
-
+                if(artifactChangeEvent.Description != null)
+                    FileWatchService.UnWatchArtifact(new FsArtifact(artifactChangeEvent.Description, Path.GetFileName(artifactChangeEvent.Description), (FsArtifactType)editedArtifact.FsArtifactType, (FsFileProviderType)editedArtifact.ProviderType));
+                FileWatchService.WatchArtifact(GetPinnedFsArtifact(editedArtifact));
             }
         }
 
@@ -171,6 +174,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                     FsArtifactType = artifact.ArtifactType
 
                 });
+                FileWatchService.WatchArtifact(artifact);
             }
         }
 
@@ -180,6 +184,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
             {
                 await FxLocalDbService.RemovePinAsync(path);
                 DeteteFromPinCache(path);
+                FileWatchService.UnWatchArtifact(new FsArtifact(path, Path.GetFileName(path),FsArtifactType.File,FsFileProviderType.InternalMemory));
             }
         }
 
