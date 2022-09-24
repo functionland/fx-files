@@ -156,12 +156,12 @@ public partial class FileBrowser
 
         var result = await GetInputModalResult(artifact);
 
-        if (result == null || result.ResultType == InputModalResultType.Cancel)
+        if (result?.ResultType == InputModalResultType.Cancel)
         {
             return;
         }
 
-        string? newName = result.ResultName;
+        string? newName = result?.ResultName;
 
         try
         {
@@ -397,7 +397,7 @@ public partial class FileBrowser
         {
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, artifact.Name);
-            artifactRenamed.Name = newName;
+            artifactRenamed.Name = newName + Path.GetExtension(artifact.Name);
         }
     }
 
