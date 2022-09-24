@@ -176,6 +176,10 @@
     "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
   },
   {
+    "outputFile": "Components/Modal/ArtifactDetailModal/ArtifactDetailModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactDetailModal/ArtifactDetailModal.razor.scss"
+  },
+  {
     "outputFile": "Components/Modal/ToastModal/ToastModal.razor.css",
     "inputFile": "Components/Modal/ToastModal/ToastModal.razor.scss"
   }
