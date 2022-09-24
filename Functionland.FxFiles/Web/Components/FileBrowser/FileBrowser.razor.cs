@@ -203,9 +203,19 @@ public partial class FileBrowser
 
     public async Task HandlePinArtifacts(List<FsArtifact> artifacts)
     {
-        var notPinedArtifacts = artifacts.Where(a => a.IsPinned == false).ToArray();
+        var notPinedArtifacts = artifacts.Where(a => a.IsPinned != true ).ToArray();
 
-        await PinService.SetArtifactsPinAsync(notPinedArtifacts.ToArray());
+        try
+        {
+            await PinService.SetArtifactsPinAsync(notPinedArtifacts);
+            UpdatePinedArtifacts(notPinedArtifacts.ToList());
+        }
+        catch
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef?.Show(Title, message, FxToastType.Error);
+        }
     }
 
     public async Task HandleDeleteArtifacts(List<FsArtifact> artifacts)
@@ -282,6 +292,11 @@ public partial class FileBrowser
         }
 
         _artifacts = artifacts;
+    }
+
+    private bool IsInRoot(FsArtifact? artifact)
+    {
+        return artifact is null ? true : false;
     }
 
     private async Task HandleSelectArtifact(FsArtifact artifact)
@@ -386,8 +401,16 @@ public partial class FileBrowser
         }
     }
 
-    private bool IsInRoot(FsArtifact? artifact)
+    private void UpdatePinedArtifacts(List<FsArtifact> artifacts)
     {
-        return artifact is null ? true : false;
+        var artifactPath = artifacts.Select(a => a.FullPath).ToList();
+        
+        foreach (var artifact in _artifacts)
+        {
+            if(artifactPath.Contains(artifact.FullPath))
+            {
+                artifact.IsPinned = true;
+            }
+        }
     }
 }
