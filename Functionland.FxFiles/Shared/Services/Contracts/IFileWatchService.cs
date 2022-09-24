@@ -9,8 +9,8 @@ namespace Functionland.FxFiles.Shared.Services.Contracts
 {
     public interface IFileWatchService
     {
-        Task InitialyzeAsync();
- 
+        void WatchArtifact(FsArtifact fsArtifact);
+        void UnWatchArtifact(FsArtifact fsArtifact);
     }
 
 }

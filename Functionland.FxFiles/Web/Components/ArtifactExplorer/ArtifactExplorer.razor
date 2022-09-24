@@ -2,7 +2,7 @@
 @using Functionland.FxFiles.App.Components.Common
 @inherits AppComponentBase
 
-@if (!IsSelectionMode)
+@if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
 {
     <div class="action-bar">
         <div class="left-actions">
@@ -17,22 +17,42 @@
         </div>
     </div>
 }
-else
+else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
 {
     <div class="select-action">
         <div class="info-selection">
-            <div class="close-btn" @onclick="(() => CancelSelection())"></div>
+            <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
             <div class="item-selected">
                 <span class="item-selected-count">@SelectedArtifacts.Count</span>
-                <span class="move-selected-items-text">items ready to move</span>
                 <span class="item-selected-text">items selected</span>
             </div>
         </div>
 
         <div class="right-part">
-            <div class="icons-action move-icon" @onclick="(() => HandleMultiArtifactsOptionsClick())"></div>
+            <div class="icons-action move-icon"></div>
+            <div class="icons-action vertical-option-icon" @onclick="(() => HandleMultiArtifactsOptionsClick())"></div>
+        </div>
+    </div>
+}
+else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
+{
+    <div class="select-action">
+        <div class="info-selection">
+            <div class="close-btn" @onclick="(() => HandleCancelSelectDestionationMode())"></div>
+            <div class="item-selected">
+                <span class="item-selected-count">@ArtifactActionResult?.Count</span>
+                <span class="move-selected-items-text">items ready to </span>
+                @if(ArtifactActionResult?.ActionType == @ArtifactActionType.Copy){
+                    <span class="move-selected-items-text">copy</span>
+                }
+                else{
+                    <span class="move-selected-items-text">move</span>
+                }
+            </div>
+        </div>
+
+        <div class="right-part">
             <div class="icons-action add-folder"></div>
-            <div class="icons-action vertical-option-icon"></div>
         </div>
     </div>
 }
@@ -43,22 +63,26 @@ else
 }
 
 <div class="list-container @ViewMode-view">
+    @if ((Artifacts == null) || (!Artifacts.Any()))
+    {
+        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" />
+    }
     @foreach (var artifact in Artifacts)
     {
-        <div @onpointerup="PointerUp"
+        <div @onpointerup="(() => PointerUp(artifact))"
          @onpointerdown="PointerDown"
          class="item-container @ViewMode-view-item">
-            @if (IsSelectionMode)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
             {
                 <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
             }
 
-            @if (!IsSelectionMode)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
                 <div class="item-icon-position text-file-icon"></div>
             }
 
-            <div class="item-content" @onclick="() => HandleArtifactClick(artifact)">
+            <div class="item-content">
 
                 <div class="item-title">
                     @if (artifact.IsPinned == true)
@@ -69,13 +93,14 @@ else
                 </div>
                 <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
             </div>
-
-            @if (!IsSelectionMode)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
                 <div class="options-btn"
-             @onclick="() => HandleArtifactOptionsClick(artifact)"
-             @onclick:stopPropagation="true"></div>
+                @onclick="() => HandleArtifactOptionsClick(artifact)"
+                @onpointerup:preventDefault="true"
+                @onpointerup:stopPropagation="true"></div>
             }
         </div>
+
     }
 </div>

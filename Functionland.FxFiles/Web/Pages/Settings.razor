@@ -8,14 +8,13 @@
 <div class="settings-content">
     <FxButton 
         Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
-        ButtonStyle="FxButtonStyle.MenuLine"
-        RightIcon="images/icons/chevron-right.svg" />
+        MetaDataText="1 new"
+        ButtonStyle="FxButtonStyle.MenuLine" />
     <FxButton 
         Text="@Localizer[nameof(AppStrings.Mode)]"
         Link="settings/theme"
-        MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + @Localizer[nameof(AppStrings.Mode).ToLower()])"
-        ButtonStyle="FxButtonStyle.MenuLine"
-        RightIcon="images/icons/chevron-right.svg" />
+        MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
+        ButtonStyle="FxButtonStyle.MenuLine"/>
     <FxButton
         Text="@Localizer[nameof(AppStrings.Pools)]"
         ButtonStyle="FxButtonStyle.MenuLine" />

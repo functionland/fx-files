@@ -691,6 +691,51 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Items copied.
+        /// </summary>
+        public static string TheCopyOpreationSuccessedMessage {
+            get {
+                return ResourceManager.GetString("TheCopyOpreationSuccessedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your files has been copied.
+        /// </summary>
+        public static string TheCopyOpreationSuccessedTiltle {
+            get {
+                return ResourceManager.GetString("TheCopyOpreationSuccessedTiltle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items moved.
+        /// </summary>
+        public static string TheMoveOpreationSuccessedMessage {
+            get {
+                return ResourceManager.GetString("TheMoveOpreationSuccessedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your files has been moved.
+        /// </summary>
+        public static string TheMoveOpreationSuccessedTiltle {
+            get {
+                return ResourceManager.GetString("TheMoveOpreationSuccessedTiltle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The operation failed.
+        /// </summary>
+        public static string TheOpreationFailedMessage {
+            get {
+                return ResourceManager.GetString("TheOpreationFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A new version of the app is available for download..
         /// </summary>
         public static string ToastDescMessage {
@@ -705,6 +750,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string ToastErrorMessage {
             get {
                 return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong!.
+        /// </summary>
+        public static string ToastErrorTitle {
+            get {
+                return ResourceManager.GetString("ToastErrorTitle", resourceCulture);
             }
         }
         

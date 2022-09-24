@@ -44,7 +44,7 @@ html, body {
         --#{$key}: #{$value};
     }
 
-    background-color: color(app-bg);
+    background-color: color(gray-bg-primary);
 }
 
 html, body[data-theme="Dark"] {
@@ -52,5 +52,5 @@ html, body[data-theme="Dark"] {
         --#{$key}: #{$value};
     }
 
-    background-color: color(app-bg);
+    background-color: color(gray-bg-primary);
 }

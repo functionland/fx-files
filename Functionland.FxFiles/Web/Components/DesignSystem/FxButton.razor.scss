@@ -104,17 +104,14 @@
     width: auto;
     height: 48px;
     border-radius: 0;
+    color: color(gray-content1) !important;
     background-color: transparent !important;
 }
 
 .fxbutton-sheetmenu .fxbutton-content {
-    margin: 0px 21px;
+    margin: 0px;
     justify-content: left;
     border-bottom: 1px solid color(gray-bg-secondary);
-}
-
-.fxbutton-sheetmenu:active {
-    background-color: color(gray-bg-secondary) !important;
 }
 
 .fxbutton-icononly {

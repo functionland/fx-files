@@ -76,7 +76,9 @@ public class FxLocalDbService : IFxLocalDbService
             ProviderType = artifact.ProviderType,
             PinEpochTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             ContentHash = artifact.LastModifiedDateTime.ToString(),
-            ThumbnailPath = artifact.ThumbnailPath
+            ThumbnailPath = artifact.ThumbnailPath, 
+            ArtifactName = artifact.Name,
+            FsArtifactType = artifact.ArtifactType
         };
        
         await Task.Run(() => LocalDb.Insert(pinnedArtifact));

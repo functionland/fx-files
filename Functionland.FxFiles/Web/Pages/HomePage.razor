@@ -1,28 +1,10 @@
 ﻿@page "/"
 @page "/Home"
+@using Functionland.FxFiles.App.Components.ComingSoon
 
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.Files)]</PageTitle>
 
-<ToolBar IsMainToolBar="true" />
-
 <div class="files-content">
-    <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
-    <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
-    <FxBottomSheet ShowCloseButton="true" IsOpen="IsBottomSheetClose" IsOpenChanged="SyncCloseState">
-        
-        <div class="description-modal-sup">@Localizer[nameof(AppStrings.ReplaceOrSkipSupDescModal)]</div>
-        <div class="file-name-modal">Examplename.docx</div>
-        <div class="description-modal-sub">@Localizer[nameof(AppStrings.ReplaceOrSkipSubDescModal)]</div>
-        <FxButton ButtonStyle="FxButtonStyle.Outline" 
-        Text="@Localizer[nameof(AppStrings.SkipModal)]" 
-        Width="100%" 
-        Margin="0 0 32px 0"></FxButton>
-        <FxButton ButtonStyle="FxButtonStyle.Normal" 
-        Text="@Localizer[nameof(AppStrings.ReplaceModal)]" 
-        Width="100%" 
-        Margin="0 0 61px 0"></FxButton>
-    </FxBottomSheet>
+    <ComingSoon title="Blox Files"/>
 </div>
-<EmptyListView></EmptyListView>
-<ToastModal @ref="_toast"></ToastModal>

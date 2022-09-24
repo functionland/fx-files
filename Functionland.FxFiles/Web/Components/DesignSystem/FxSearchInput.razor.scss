@@ -1,4 +1,5 @@
-﻿@import "../../Styles/abstracts/_variables.scss";
+﻿@import "../../Styles/abstracts/_mixins.scss";
+@import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
 
 .input-box {
@@ -50,14 +51,17 @@
     }
 }
 
-.search-icon {
-    background-image: url($search);
-    background-repeat: no-repeat;
-    background-position: center left 16px;
+.search-icon::after {
+    height: 0;
+    display: flex;
+    font-size: 20px;
+    margin-left: 16px;
+    position: absolute;
+    align-items: center;
+    @include Icon($search);
 }
 
 .search-input-active {
-    background-image: url($search-active);
     color: color(gray-bg-primary);
 
     &::placeholder {
@@ -65,10 +69,14 @@
     }
 }
 
-.search-input-disable {
-    background-image: url($search-disabled);
+.search-input-active::before {
+    @include Icon($search);
+}
 
-    &::placeholder { 
+.search-input-disable {
+    @include Icon($search);
+
+    &::placeholder {
         color: color(gray-border);
     }
 }
