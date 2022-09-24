@@ -13,7 +13,7 @@
     <FxButton 
         Text="@Localizer[nameof(AppStrings.Mode)]"
         Link="settings/theme"
-        MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + @Localizer[nameof(AppStrings.Mode).ToLower()])"
+        MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
         ButtonStyle="FxButtonStyle.MenuLine"/>
     <FxButton
         Text="@Localizer[nameof(AppStrings.Pools)]"

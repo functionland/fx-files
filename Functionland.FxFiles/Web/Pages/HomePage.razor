@@ -1,11 +1,10 @@
 ﻿@page "/"
 @page "/Home"
+@using Functionland.FxFiles.App.Components.ComingSoon
 
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.Files)]</PageTitle>
 
-<ToolBar IsMainToolBar="true" />
-
 <div class="files-content">
-    <EmptyListView />
+    <ComingSoon title="Blox Files"/>
 </div>

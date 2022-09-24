@@ -1,0 +1,80 @@
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+
+
+
+.toolbar-box {
+    width: 100%;
+    padding: 0 21px;
+}
+
+.root-mode {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content:flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.root-mode ::deep input.input-box {
+    flex-grow: 2;
+}
+
+.not-root-mode {
+    width: 100%;
+
+    ::deep .fxbutton img {
+        height: 24px;
+        width: 24px;
+    }
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+
+    .action-row {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+
+        .info-box {
+
+            .artifact-title {
+                font-family: $montserrat-medium;
+                font-style: normal;
+                font-weight: 600;
+                font-size: $font-size-24;
+                line-height: $line-height-36;
+                color: color(gray-content1);
+            }
+
+            .pinned-icon {
+                background-image: url($pin-outline-black);
+                background-repeat: no-repeat;
+                background-position: center left;
+                background-size: 24px 24px;
+                padding-left: 30px;
+            }
+
+            .artifact_subtext {
+                color: color(gray-content3);
+                font-family: $open-sans-regular;
+                font-style: normal;
+                font-weight: 400;
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+            }
+        }
+
+        .action-box {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+}
