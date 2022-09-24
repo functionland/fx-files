@@ -9,16 +9,20 @@
         public RenderFragment? ChildContent { get; set; }
 
         [Parameter]
+        public string Title { get; set; } = string.Empty;
+
+        [Parameter]
         public bool IsFullScreenMode { get; set; } = false;
 
         [Parameter]
         public EventCallback OnClose { get; set; }
 
         [Parameter]
-        public bool IsOpen { get; set; } = true;
+        public EventCallback<bool> IsOpenChanged { get; set; }
 
         [Parameter]
-        public EventCallback<bool> IsOpenChanged { get; set; }
+        public bool IsOpen { get; set; } = true;
+
 
         public async Task Close()
         {

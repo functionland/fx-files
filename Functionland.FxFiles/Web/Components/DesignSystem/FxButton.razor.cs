@@ -56,6 +56,9 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
         public string? HorizontalAlignment { get; set; }
 
         [Parameter]
+        public bool IsVisible { get; set; } = true;
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]
@@ -82,6 +85,7 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
         Disabled,
         MenuLine,
         IconOnly,
+        SheetMenu,
         None
     }
 
