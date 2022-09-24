@@ -601,6 +601,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Root folder can not be deleted.
+        /// </summary>
+        public static string RootFolderDeleteException {
+            get {
+                return ResourceManager.GetString("RootFolderDeleteException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root folder cannot be renamed.
         /// </summary>
         public static string RootfolderRenameException {
@@ -714,6 +723,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string TheCopyOpreationSuccessedTiltle {
             get {
                 return ResourceManager.GetString("TheCopyOpreationSuccessedTiltle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items deleted.
+        /// </summary>
+        public static string TheDeleteOpreationSuccessedMessage {
+            get {
+                return ResourceManager.GetString("TheDeleteOpreationSuccessedMessage", resourceCulture);
             }
         }
         

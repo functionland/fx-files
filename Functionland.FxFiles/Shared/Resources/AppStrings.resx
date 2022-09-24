@@ -387,4 +387,10 @@
   <data name="RootfolderRenameException" xml:space="preserve">
     <value>Root folder cannot be renamed</value>
   </data>
+  <data name="RootFolderDeleteException" xml:space="preserve">
+    <value>Root folder can not be deleted</value>
+  </data>
+  <data name="TheDeleteOpreationSuccessedMessage" xml:space="preserve">
+    <value>Items deleted</value>
+  </data>
 </root>
