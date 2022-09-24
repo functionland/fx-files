@@ -43,6 +43,10 @@ else
 }
 
 <div class="list-container @ViewMode-view">
+    @if ((Artifacts == null) || (!Artifacts.Any()))
+    {
+        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" />
+    }
     @foreach (var artifact in Artifacts)
     {
         <div class="item-container @ViewMode-view-item"
