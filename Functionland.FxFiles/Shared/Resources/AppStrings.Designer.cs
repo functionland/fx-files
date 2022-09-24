@@ -169,6 +169,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can not operate on files exception.
         /// </summary>
         public static string CanNotOperateOnFilesException {
@@ -201,6 +210,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string CardFileSize {
             get {
                 return ResourceManager.GetString("CardFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
             }
         }
         
@@ -601,6 +619,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Root folder can not be deleted.
+        /// </summary>
+        public static string RootFolderDeleteException {
+            get {
+                return ResourceManager.GetString("RootFolderDeleteException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Root folder cannot be renamed.
         /// </summary>
         public static string RootfolderRenameException {
@@ -714,6 +741,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string TheCopyOpreationSuccessedTiltle {
             get {
                 return ResourceManager.GetString("TheCopyOpreationSuccessedTiltle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Items deleted.
+        /// </summary>
+        public static string TheDeleteOpreationSuccessedMessage {
+            get {
+                return ResourceManager.GetString("TheDeleteOpreationSuccessedMessage", resourceCulture);
             }
         }
         
