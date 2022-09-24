@@ -5,10 +5,9 @@
 @using Functionland.FxFiles.App.Components.FxToolBar
 
 <div class="file-browser-container">
+    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" />
     @if (IsInRoot(_currentArtifact))
     {
-        <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" />
-
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
             <ContentTemplate>
                 <div class="items">
