@@ -1,0 +1,41 @@
+﻿@namespace Functionland.FxFiles.App.Components.Modal
+@inherits AppComponentBase
+
+
+<FxBottomSheet
+    OnClose="Close"
+    ShowCloseButton="true" 
+    IsFullScreenMode="false"
+    @bind-IsOpen="_isModalOpen" >
+
+    <div class="input-modal">
+        @if(_isRename)
+        {
+            <h6>RENAME</h6>
+        }
+
+        <h3>@_actionTitle</h3>
+
+        <FxTextInput 
+            Label="Name" 
+            Margin="40px 0 0 0"
+            Text="@_inputValue"
+            Placeholder="@_placeholder" />
+
+        <FxButton 
+            Text="Cancel"
+            OnClick="Close"
+            Margin="32px 0 0 0"
+            ButtonSize="FxButtonSize.Stretch"
+            ButtonStyle="FxButtonStyle.Outline" />
+
+        <FxButton 
+            Text="Confirm"
+            OnClick="Confirm"
+            Margin="16px 0 21px 0"
+            ButtonSize="FxButtonSize.Stretch"
+            ButtonStyle="FxButtonStyle.Normal" />
+
+    </div>
+
+</FxBottomSheet>
