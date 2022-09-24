@@ -1,13 +1,27 @@
 ﻿@namespace Functionland.FxFiles.App.Components
 @inherits AppComponentBase;
 
-<FxBottomSheet ShowCloseButton=true IsOpen="_isModalOpen" OnClose="HandleClose">
-    <ul>
-        <li @onclick="() => HandleFilterItemClick(null)" class="@(CurrentFilter is null ? "selected" : "")">All</li>
-        <li @onclick="() => HandleFilterItemClick(FileCategoryType.Image)" class="@(CurrentFilter is FileCategoryType.Image ? "selected" : "")">Images</li>
-        <li @onclick="() => HandleFilterItemClick(FileCategoryType.Video)" class="@(CurrentFilter is FileCategoryType.Video ? "selected" : "")">Video</li>
-        <li @onclick="() => HandleFilterItemClick(FileCategoryType.Audio)" class="@(CurrentFilter is FileCategoryType.Audio ? "selected" : "")">Audio</li>
-        <li @onclick="() => HandleFilterItemClick(FileCategoryType.Document)" class="@(CurrentFilter is FileCategoryType.Document ? "selected" : "")">Documents & others</li>
-        @*<li @onclick="() => HandleFilterItemClick(FileCategoryType.Apps)">Apps</li>*@
-    </ul>
+<FxBottomSheet Title="Filter by" ShowCloseButton=true IsOpen="_isModalOpen" OnClose="HandleClose">
+    <div>
+        <FxButton Text="All"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(null)"
+                  RightIcon="@(CurrentFilter is null? "images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Image"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Image)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Image ? "images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Video"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Video)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Video ? "images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Audio"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Audio)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Audio ? "images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Documents & others"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Document)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Document ? "images/icons/lightDesignSystem/success-mode.svg" : "")" />
+    </div>
 </FxBottomSheet>
