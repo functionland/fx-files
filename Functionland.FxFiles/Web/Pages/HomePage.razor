@@ -9,6 +9,7 @@
 <div class="files-content">
     <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
     <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
+    <button @onclick="(()=>OpenDetail())">Open FileDetail</button>
     <FxBottomSheet ShowCloseButton="true" IsOpen="IsBottomSheetClose" IsOpenChanged="SyncCloseState">
         
         <div class="description-modal-sup">@Localizer[nameof(AppStrings.ReplaceOrSkipSupDescModal)]</div>
@@ -26,3 +27,4 @@
 </div>
 <EmptyListView></EmptyListView>
 <ToastModal @ref="_toast"></ToastModal>
+<ArtifactDetailModal @ref="_detailModal"></ArtifactDetailModal>
