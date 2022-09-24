@@ -1,11 +1,13 @@
 ﻿@namespace Functionland.FxFiles.App.Components
+
 @inherits AppComponentBase;
 
-<div class="mydevice-content">
+@using Functionland.FxFiles.App.Components.FxToolBar
+
+<div class="file-browser-container">
+    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" />
     @if (IsInRoot(_currentArtifact))
     {
-        <ToolBar IsMainToolBar="true" />
-
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
             <ContentTemplate>
                 <div class="items">

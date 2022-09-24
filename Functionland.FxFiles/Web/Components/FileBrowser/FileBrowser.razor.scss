@@ -1,3 +1,8 @@
-﻿@import '../../Styles/abstracts/_variables.scss';
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-accordion.scss';
+
+.file-browser-container ::deep div.toolbar-box {
+    margin: $spacing-32 0;
+}

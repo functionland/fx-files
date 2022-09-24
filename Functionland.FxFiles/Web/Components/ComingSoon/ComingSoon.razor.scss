@@ -1,0 +1,19 @@
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+
+.coming-soon-container {
+    width: 100%;
+    width: fit-content;
+    margin: 30px auto;
+
+    .coming-soon-content {
+        padding: 20px;
+        border: 2px dashed black;
+        border-radius: 4px;
+        font-size: 20px;
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-20;
+        color: color(gray-content1);
+    }
+}
