@@ -1,13 +1,14 @@
 ﻿@namespace Functionland.FxFiles.App.Components.Modal
 @inherits AppComponentBase;
 
-<h3>ConfirmationModal</h3>
-
 <FxBottomSheet ShowCloseButton="true" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="false">
     <div class="description-modal-sup">@Localizer[nameof(AppStrings.ReplaceOrSkipSupDescModal)]</div>
-    @foreach (var fileName in ArtifactsName)
+    @if(ArtifactsName is not null)
     {
-        <div class="file-name-modal">@fileName</div>
+        @foreach (var fileName in ArtifactsName)
+        {
+            <div class="file-name-modal">@fileName</div>
+        }
     }
     <div class="description-modal-sub">@Localizer[nameof(AppStrings.ReplaceOrSkipSubDescModal)]</div>
     <FxButton ButtonStyle="FxButtonStyle.Outline"
