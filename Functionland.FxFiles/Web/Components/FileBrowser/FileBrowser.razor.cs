@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
 using Functionland.FxFiles.App.Components.DesignSystem;
 using Functionland.FxFiles.App.Components.Modal;
+using Functionland.FxFiles.Shared.Models;
 using Functionland.FxFiles.Shared.Services.Contracts;
 
 using Microsoft.Extensions.Localization;
@@ -123,15 +124,15 @@ public partial class FileBrowser
                 }
             }
 
-            var Title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
+            var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
-            _toastModalRef?.Show(Title, message, FxToastType.Success);
+            _toastModalRef?.Show(title, message, FxToastType.Success);
         }
         catch
         {
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef?.Show(Title, message, FxToastType.Error);
+            _toastModalRef?.Show(title, message, FxToastType.Error);
         }
 
     }
@@ -150,63 +151,54 @@ public partial class FileBrowser
         return destinationPath;
     }
 
-    public async Task HandleRenameArtifact(FsArtifact artifact, string newName)
+    public async Task HandleRenameArtifact(FsArtifact artifact)
     {
-        string artifactType = "";
 
-        if (artifact.ArtifactType == FsArtifactType.File)
-            artifactType = "File name";
-        else if (artifact.ArtifactType == FsArtifactType.Folder)
-            artifactType = "Folder name";
+        var result = await GetInputModalResult(artifact);
 
-        var result = await _inputModal.ShowAsync("Change name", artifact.Name, artifactType, true);
-
-        if (result.ResultType == InputModalResultType.Confirm)
+        if (result == null || result.ResultType == InputModalResultType.Cancel)
         {
-            try
-            {
-                if (artifact.ArtifactType == FsArtifactType.Folder)
-                {
-                    try
-                    {
-                        await FileService.RenameFolderAsync(artifact.FullPath, newName);
-                    }
-                    catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactTypeIsNull))
-                    {
-                        // show exeception message with toast
-                    }
+            return;
+        }
 
-                }
-                else if (artifact.ArtifactType == FsArtifactType.File)
-                {
-                    await FileService.RenameFileAsync(artifact.FullPath, newName);
-                }
-                else
-                {
-                    // show exeception message with toast
-                }
-            }
-            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""))
+        string? newName = result.ResultName;
+
+        try
+        {
+            if (artifact.ArtifactType == FsArtifactType.Folder)
             {
-                // show exeception message with toast
+                await FileService.RenameFolderAsync(artifact.FullPath, newName);
+                UpdateRenamedArtifact(artifact, newName);
             }
-            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, artifact?.ArtifactType.ToString() ?? ""))
+            else if (artifact.ArtifactType == FsArtifactType.File)
             {
-                // show exeception message with toast
+                await FileService.RenameFileAsync(artifact.FullPath, newName);
+                var artifactRenamed = _artifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+                UpdateRenamedArtifact(artifact, newName);
             }
-            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, artifact?.ArtifactType.ToString() ?? ""))
+            else
             {
-                // show exeception message with toast
-            }
-            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? ""))
-            {
-                // show exeception message with toast
-            }
-            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, artifact?.ArtifactType.ToString() ?? ""))
-            {
-                // show exeception message with toast
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.RootfolderRenameException);
+                _toastModalRef?.Show(title, message, FxToastType.Error);
             }
         }
+        catch (DomainLogicException ex) when
+        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, artifact?.ArtifactType.ToString() ?? "") ||
+        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, artifact?.ArtifactType.ToString() ?? "")) ||
+        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, artifact?.ArtifactType.ToString() ?? "")))
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = ex.Message;
+            _toastModalRef?.Show(title, message, FxToastType.Error);
+        }
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef?.Show(title, message, FxToastType.Error);
+        }
+
     }
 
     public async Task HandlePinArtifacts(List<FsArtifact> artifacts)
@@ -309,7 +301,7 @@ public partial class FileBrowser
                 await HandleShowDetailsArtifact(new List<FsArtifact>() { artifact });
                 break;
             case ArtifactOverflowResultType.Rename:
-                await HandleRenameArtifact(artifact, artifact.Name);
+                await HandleRenameArtifact(artifact);
                 break;
             case ArtifactOverflowResultType.Copy:
                 await HandleCopyArtifactsAsync(new List<FsArtifact>() { artifact });
@@ -342,7 +334,7 @@ public partial class FileBrowser
                     break;
                 case ArtifactOverflowResultType.Rename:
                     var singleArtifact = artifacts.SingleOrDefault();
-                    await HandleRenameArtifact(singleArtifact, singleArtifact.Name);
+                    await HandleRenameArtifact(singleArtifact);
                     break;
                 case ArtifactOverflowResultType.Copy:
                     await HandleCopyArtifactsAsync(artifacts);
@@ -357,6 +349,40 @@ public partial class FileBrowser
                     await HandleDeleteArtifacts(artifacts);
                     break;
             }
+        }
+    }
+
+    private async Task<InputModalResult?> GetInputModalResult(FsArtifact artifact)
+    {
+        string artifactType = "";
+
+        if (artifact.ArtifactType == FsArtifactType.File)
+        {
+            artifactType = "File name";
+        }
+        else if (artifact.ArtifactType == FsArtifactType.Folder)
+        {
+            artifactType = "Folder name";
+        }
+        else
+        {
+            return null;
+        }
+
+        var Name = Path.GetFileNameWithoutExtension(artifact.Name);
+        var result = await _inputModal.ShowAsync("Change name", Name, artifactType, true);
+
+        return result;
+    }
+
+    private void UpdateRenamedArtifact(FsArtifact artifact, string newName)
+    {
+        var artifactRenamed = _artifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+        if (artifactRenamed != null)
+        {
+            var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
+            artifactRenamed.FullPath = Path.Combine(artifactParentPath, artifact.Name);
+            artifactRenamed.Name = newName;
         }
     }
 
