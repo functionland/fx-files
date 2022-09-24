@@ -5,7 +5,7 @@
 
 
 .content-body {
-    height: 100%;
+    max-height: 100%;
     overflow-y: auto;
     // TODO: use value from the sass variables
     .file-icon-row {
@@ -37,6 +37,7 @@
             color: color(gray-content1);
         }
     }
+
     .file-details-area {
         padding: $spacing-21;
     }
@@ -150,4 +151,18 @@
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.vertical-file-detail-item {
+    display: flex;
+    overflow-x: scroll;
+}
+
+.disable-vertical-scroll {
+    overflow-y:hidden;
+}
+
+.width-and-height-detail-item {
+    width:333px;
+    height:300px;
 }
