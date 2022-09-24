@@ -1,9 +1,14 @@
+
+﻿using Functionland.FxFiles.Shared.Models;
+using Prism.Events;
+using System.Collections.Concurrent;
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 
 using Functionland.FxFiles.Shared.Models;
 using Functionland.FxFiles.Shared.Services.Contracts;
@@ -21,78 +26,86 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         [AutoInject] public IThumbnailService ThumbnailService { get; set; } = default!;
 
         public SubscriptionToken ArtifactChangeSubscription { get; set; }
-
-
-        public List<PinnedArtifact> PinnedPathsCatche { get; set; } = new List<PinnedArtifact>();
+        public ConcurrentDictionary<string, PinnedArtifact> PinnedPathsCatche { get; set; } = new();
 
         public async Task InitializeAsync()
         {
-            var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
-            if (pinnedArtifacts.Count > 0)
-            {
-                var pinnedArtifactPaths = pinnedArtifacts.Select(p => p.FullPath).ToList();
-                var existPins = await FileService.CheckPathExistsAsync(pinnedArtifactPaths);
-                foreach (var pin in existPins)
-                {
-                    if (pin.ArtifactFullPath == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
-                    if (pin.FsArtifactChangesType == FsArtifactChangesType.Delete)
-                    {
-                        await SetArtifactsUnPinAsync(new string[] { pin.ArtifactFullPath });
-                    }
-                    else if (pin.FsArtifactChangesType == FsArtifactChangesType.Modify)
-                    {
-                        var pinnedArticat = pinnedArtifacts.Where(p => string.Equals(p.FullPath, pin.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-
-                        if (pinnedArticat != null && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
-                        {
-                            var fileExtention = Path.GetExtension(pin.ArtifactFullPath);
-                            if (!string.IsNullOrWhiteSpace(fileExtention) &&
-                                ImageExtensions.Contains(fileExtention.ToUpperInvariant()))
-                            {
-
-                                var artifactName = Path.GetFileName(pin.ArtifactFullPath);
-                                if (string.IsNullOrEmpty(artifactName))
-                                {
-                                    artifactName = Path.GetFileName(Path.GetDirectoryName(pin.ArtifactFullPath));
-                                }
-
-                                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(new FsArtifact(pinnedArticat.FullPath, artifactName, FsArtifactType.File, FsFileProviderType.InternalMemory));
-                                var edditedPinArtfact = new PinnedArtifact
-                                {
-                                    FullPath = pin.ArtifactFullPath,
-                                    ContentHash = LastModyDatetime.ToString(),
-                                    PinEpochTime = pinnedArticat.PinEpochTime,
-                                    ProviderType = pinnedArticat.ProviderType,
-                                    ThumbnailPath = thumbnailAddress
-                                };
-                                await UpdatePinnedArticatAsyn(edditedPinArtfact);
-
-
-                            }
-                        }
-                    }
-                }
-            }
 
             ArtifactChangeSubscription = EventAggregator
                     .GetEvent<ArtifactChangeEvent>()
                     .SubscribeAsync(
                         HandleChangedArtifacts,
                         ThreadOption.UIThread, keepSubscriberReferenceAlive: true);
+
+            var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
+            if (pinnedArtifacts.Count == 0) return;
+
+            var pinnedArtifactPaths = pinnedArtifacts.Select(p => p.FullPath).ToList();
+            var existPins = await FileService.CheckPathExistsAsync(pinnedArtifactPaths);
+            foreach (var changedPinnedArtifact in existPins)
+            {
+                if (changedPinnedArtifact.ArtifactFullPath == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+
+                if (changedPinnedArtifact.FsArtifactChangesType == FsArtifactChangesType.Delete)
+                {
+                    await SetArtifactsUnPinAsync(new string[] { changedPinnedArtifact.ArtifactFullPath });
+                }
+                else if (changedPinnedArtifact.IsPathExist == true)
+                {
+                    var pinnedArticat = pinnedArtifacts
+                        .Where(p => string.Equals(p.FullPath, changedPinnedArtifact.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase))
+                        .FirstOrDefault();
+
+                    if (pinnedArticat != null && pinnedArticat.ProviderType != FsFileProviderType.Blox && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
+                    {
+                        if (changedPinnedArtifact.LastModifiedDateTime > LastModyDatetime)
+                        {
+                            var artifact = GetPinnedFsArtifact(pinnedArticat);
+                            if (ArtifactIsImage(artifact))
+                            {
+                                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
+                                artifact.ThumbnailPath = thumbnailAddress;
+                            }
+
+                            var edditedPinArtfact = new PinnedArtifact
+                            {
+                                ArtifactName = pinnedArticat.ArtifactName,
+                                FsArtifactType = pinnedArticat.FsArtifactType,
+                                FullPath = changedPinnedArtifact.ArtifactFullPath,
+                                ContentHash = changedPinnedArtifact.LastModifiedDateTime.ToString(),
+                                PinEpochTime = pinnedArticat.PinEpochTime,
+                                ProviderType = pinnedArticat.ProviderType,
+                                ThumbnailPath = artifact.ThumbnailPath
+                            };
+                            await UpdatePinnedArtifactAsyn(edditedPinArtfact);
+                        }
+                        else
+                        {
+                            PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
+                        }
+
+                    }
+                    else
+                    {
+                        PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
+                    }
+                }
+            }
         }
 
-        private async Task UpdatePinnedArticatAsyn(PinnedArtifact edditedPinArtfact)
+        private async Task UpdatePinnedArtifactAsyn(PinnedArtifact edditedPinArtfact)
         {
             if (edditedPinArtfact.FullPath == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
             await FxLocalDbService.UpdatePinAsync(edditedPinArtfact);
             DeteteFromPinCache(edditedPinArtfact.FullPath);
-            PinnedPathsCatche.Add(edditedPinArtfact);
+            PinnedPathsCatche.TryAdd(edditedPinArtfact.FullPath, edditedPinArtfact);
 
         }
 
         private async Task HandleChangedArtifacts(ArtifactChangeEvent artifactChangeEvent)
         {
             if (artifactChangeEvent.FsArtifact == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
+
             if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Delete)
             {
                 await SetArtifactsUnPinAsync(new string[] { artifactChangeEvent.FsArtifact.FullPath });
@@ -103,10 +116,12 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 {
                     ProviderType = artifactChangeEvent.FsArtifact.ProviderType,
                     FullPath = artifactChangeEvent.FsArtifact.FullPath,
+                    FsArtifactType = artifactChangeEvent.FsArtifact.ArtifactType,
+                    ArtifactName = artifactChangeEvent.FsArtifact.Name,
                     ContentHash = artifactChangeEvent.FsArtifact.ProviderType == FsFileProviderType.Blox ? artifactChangeEvent.FsArtifact.ContentHash : artifactChangeEvent.FsArtifact.LastModifiedDateTime.ToString()
                 };
 
-                if (artifactChangeEvent.FsArtifact.FileExtension != null && ImageExtensions.Contains(artifactChangeEvent.FsArtifact.FileExtension.ToUpperInvariant()))
+                if (ArtifactIsImage(artifactChangeEvent.FsArtifact))
                 {
                     var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifactChangeEvent.FsArtifact);
                     editedArtifact.ThumbnailPath = thumbnailAddress;
@@ -114,7 +129,7 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 }
                 await FxLocalDbService.UpdatePinAsync(editedArtifact, artifactChangeEvent.Description);
                 DeteteFromPinCache(artifactChangeEvent.Description != null ? artifactChangeEvent.Description : editedArtifact.FullPath);
-                PinnedPathsCatche.Add(editedArtifact);
+                PinnedPathsCatche.TryAdd(editedArtifact.FullPath, editedArtifact);
 
 
             }
@@ -122,9 +137,9 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
 
         private void DeteteFromPinCache(string fullPath)
         {
-            var item = PinnedPathsCatche.FirstOrDefault(p => string.Equals(p.FullPath, fullPath, StringComparison.CurrentCultureIgnoreCase));
+            PinnedPathsCatche.TryGetValue(fullPath, out var item);
             if (item != null)
-                PinnedPathsCatche.Remove(item);
+                PinnedPathsCatche.TryRemove(fullPath, out _);
 
         }
 
@@ -133,8 +148,11 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
         {
             foreach (var artifact in artifacts)
             {
-
-                if (artifact.FileExtension != null && ImageExtensions.Contains(artifact.FileExtension.ToUpperInvariant()))
+                if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    return;
+                }
+                if (ArtifactIsImage(artifact))
                 {
                     var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
                     artifact.ThumbnailPath = thumbnailAddress;
@@ -142,13 +160,16 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 }
 
                 await FxLocalDbService.AddPinAsync(artifact);
-                PinnedPathsCatche.Add(new PinnedArtifact
+                PinnedPathsCatche.TryAdd(artifact.FullPath, new PinnedArtifact
                 {
                     FullPath = artifact.FullPath,
                     ContentHash = artifact.LastModifiedDateTime.ToString(),
                     PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
                     ProviderType = artifact.ProviderType,
-                    ThumbnailPath = artifact.ThumbnailPath
+                    ThumbnailPath = artifact.ThumbnailPath,
+                    ArtifactName = artifact.Name,
+                    FsArtifactType = artifact.ArtifactType
+
                 });
             }
         }
@@ -161,35 +182,60 @@ namespace Functionland.FxFiles.Shared.Services.Implementations
                 DeteteFromPinCache(path);
             }
         }
-        public async IAsyncEnumerable<FsArtifact> GetPinnedArtifactsAsync(string? fullPath)
-        {
-            var pinnedArrtifact = PinnedPathsCatche;
-            var artifacts = FileService.GetArtifactsAsync(fullPath);
-            await foreach (var artifact in artifacts)
-            {
-                var pinnedArtifact = pinnedArrtifact.Where(p => string.Equals(p.FullPath, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                if (pinnedArtifact is not null)
-                {
-                    artifact.IsPinned = true;
-                    artifact.ThumbnailPath = pinnedArtifact.ThumbnailPath;
 
-                    if (string.IsNullOrEmpty(artifact.ThumbnailPath) && artifact.FileExtension != null && ImageExtensions.Contains(artifact.FileExtension.ToUpperInvariant()))
+        public async Task<List<FsArtifact>> GetPinnedArtifactsAsync()
+        {
+            var pinnedArtifacts = PinnedPathsCatche.Select(c => c.Value).ToList();
+            var artifacts = new List<FsArtifact>();
+            foreach (var artifact in pinnedArtifacts)
+            {
+                var fsArtifact = GetPinnedFsArtifact(artifact);
+                if (ArtifactIsImage(fsArtifact) && artifact.ThumbnailPath != null)
+                {
+
+                    var result = (await FileService.CheckPathExistsAsync(new List<string?> { artifact.ThumbnailPath })).FirstOrDefault();
+                    if (result != null && result.IsPathExist == false)
                     {
 
-                        var result = (await FileService.CheckPathExistsAsync(new List<string> { artifact.ThumbnailPath })).FirstOrDefault();
-                        if (result != null && result.IsPathExist == false)
-                        {
-                            var newThumbnailPath = await ThumbnailService.MakeThumbnailAsync(artifact);
-                            artifact.ThumbnailPath = newThumbnailPath;
-                        }
+                        await CreateNewThumbnailAsync(artifact, fsArtifact);
+                        await FxLocalDbService.UpdatePinAsync(artifact);
                     }
-                    yield return artifact;
                 }
-
+                artifacts.Add(fsArtifact);
             }
+            return artifacts;
+        }
+
+        private async Task CreateNewThumbnailAsync(PinnedArtifact artifact, FsArtifact fsArtifact)
+        {
+            var newThumbnailPath = await ThumbnailService.MakeThumbnailAsync(fsArtifact);
+            artifact.ThumbnailPath = newThumbnailPath;
 
         }
 
-        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
+        private FsArtifact GetPinnedFsArtifact(PinnedArtifact artifact)
+        {
+            if (artifact.FullPath == null || artifact.ArtifactName == null || artifact.FsArtifactType == null || artifact.ProviderType == null)
+            {
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
+            }
+            var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value);
+            return fsArtifact;
+        }
+        private bool ArtifactIsImage(FsArtifact fsArtifact)
+        {
+            fsArtifact.FileExtension ??= Path.GetExtension(fsArtifact.FullPath);
+            if (fsArtifact.FileExtension != null && ImageExtensions.Contains(fsArtifact.FileExtension.ToUpperInvariant()))
+                return true;
+            return false;
+        }
+        public bool IsPinned(FsArtifact fsArtifact)
+        {
+            if (PinnedPathsCatche.Any(c => string.Equals(c.Key, fsArtifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+                return true;
+            return false;
+        }
+
+        public static readonly List<string> ImageExtensions = new() { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
     }
 }

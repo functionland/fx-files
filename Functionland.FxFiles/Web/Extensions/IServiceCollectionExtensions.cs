@@ -34,11 +34,13 @@ public static class IServiceCollectionExtensions
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
         services.AddSingleton<IThumbnailService, AndroidThumbnailService>();
+        services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
 #elif Windows
         services.AddSingleton<IFileService, Functionland.FxFiles.App.Platforms.Windows.Implementations.WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
         services.AddSingleton<IThumbnailService, WindowsThumbnailService>();
+        services.AddSingleton<IFileWatchService, WindowsFileWatchService>();
 #elif iOS
         //TODO: services.AddSingleton<IFileService, IosFileService>();
         //services.AddTransient<IPlatformTestService, IosPlatformTestService>();
