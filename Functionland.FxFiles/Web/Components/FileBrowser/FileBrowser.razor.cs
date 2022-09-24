@@ -17,6 +17,7 @@ public partial class FileBrowser
 
     private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
     private ArtifactOverflowModal _asm { get; set; }
+    private ConfirmationReplaceOrSkipModal? _ConfirmationReplaceOrSkipModalRef { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -57,7 +58,11 @@ public partial class FileBrowser
 
         if (existArtifacts.Any())
         {
-            //TODO: handle skip or replace artifactsToCopy
+            var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
+            if(Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            {
+                await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+            }
         }
     }
 
@@ -87,7 +92,11 @@ public partial class FileBrowser
 
         if (existArtifacts.Any())
         {
-            //TODO: handle skip or replace artifactsToMove
+            var Result = await _ConfirmationReplaceOrSkipModalRef.ShowAsync();
+            if (Result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            {
+                await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+            }
         }
 
     }
