@@ -7,7 +7,8 @@
     <input class="input-box input-partial" type="text"
        placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]"
        value="@_inputText"
-       @oninput="HandleInput" />
+       @oninput="HandleInput"
+       @onfocus="HandleFocus"/>
 }
 else
 {

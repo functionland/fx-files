@@ -21,6 +21,7 @@ public partial class FileBrowser
     private FilterArtifactModal? _filteredArtifactModalRef;
     private string? _searchText;
     private FileCategoryType? _fileCategoryFilter;
+    private bool _isInSearchMode;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -354,17 +355,38 @@ public partial class FileBrowser
         return artifact is null ? true : false;
     }
 
-    private void HandleSearch(string? text)
+    private void HandleSearchFocused()
+    {
+        _isInSearchMode = true;
+    }
+
+    private async Task HandleSearch(string? text)
     {
         _searchText = text;
+        _filteredArtifacts = new();
+
+        var result = FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText);
+        await foreach (var item in result)
+        {
+            _filteredArtifacts.Add(item);
+        }
+
+        FilterArtifacts();
+    }
+
+    private void HandleToolbarBackClick()
+    {
+        _isInSearchMode = false;
+        _searchText = string.Empty;
+        _filteredArtifacts = _allArtifacts;
         FilterArtifacts();
     }
 
     private void FilterArtifacts()
     {
-        _filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
-        ? _allArtifacts
-            : _allArtifacts.Where(a => a.Name.Contains(_searchText)).ToList();
+        //_filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
+        //? _allArtifacts
+        //    : _allArtifacts.Where(a => a.Name.Contains(_searchText)).ToList();
 
         _filteredArtifacts = _fileCategoryFilter is null
             ? _filteredArtifacts

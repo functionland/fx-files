@@ -3,8 +3,13 @@
 @inherits AppComponentBase
 
 <div class="file-browser-container">
-    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" OnSearch="HandleSearch" />
-    @if (IsInRoot(_currentArtifact))
+    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+               OnSearch="HandleSearch"
+               OnSearchFocused="HandleSearchFocused"
+               IsInSearchMode="_isInSearchMode"
+               OnBackClick="HandleToolbarBackClick" />
+
+    @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
             <ContentTemplate>
@@ -17,12 +22,16 @@
             </ContentTemplate>
         </BitAccordion>
     }
-    <ArtifactExplorer Artifacts="_filteredArtifacts"
+
+    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
+    {
+        <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifact"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
                       OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
-                      OnFilterClick="HandleFilterClick"/>
+                      OnFilterClick="HandleFilterClick" />
+    }
 </div>
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" />

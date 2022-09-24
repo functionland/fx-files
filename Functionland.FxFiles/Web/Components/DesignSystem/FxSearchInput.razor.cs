@@ -10,8 +10,14 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
         private System.Timers.Timer? _timer;
 
         [Parameter, EditorRequired] public bool IsPartial { get; set; }
+        [Parameter] public EventCallback OnFocus { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public double DebounceInterval { get; set; }
+
+        private void HandleFocus()
+        {
+            OnFocus.InvokeAsync();
+        }
 
         private void HandleInput(ChangeEventArgs e)
         {
