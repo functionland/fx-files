@@ -174,5 +174,9 @@
   {
     "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
     "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ToastModal/ToastModal.razor.css",
+    "inputFile": "Components/Modal/ToastModal/ToastModal.razor.scss"
   }
 ]
