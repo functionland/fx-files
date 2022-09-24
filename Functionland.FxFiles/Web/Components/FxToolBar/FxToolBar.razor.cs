@@ -30,9 +30,12 @@ namespace Functionland.FxFiles.App.Components.FxToolBar
             OnSearchFocused.InvokeAsync();
         }
 
-        private void HandleSearch(string? text)
+        private async Task HandleSearch(string? text)
         {
-            OnSearch.InvokeAsync(text);
+            await InvokeAsync(async () =>
+            {
+                await OnSearch.InvokeAsync(text);
+            });
         }
 
         private void HandleBackClick()

@@ -58,7 +58,10 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
             StopTimer();
-            OnSearch.InvokeAsync(_inputText);
+            InvokeAsync(() =>
+            {
+                OnSearch.InvokeAsync(_inputText);
+            });
         }
     }
 }

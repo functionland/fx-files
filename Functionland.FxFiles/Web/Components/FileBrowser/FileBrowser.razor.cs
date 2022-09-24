@@ -362,16 +362,19 @@ public partial class FileBrowser
 
     private async Task HandleSearch(string? text)
     {
-        _searchText = text;
-        _allArtifacts = new();
+        //await InvokeAsync(async () =>
+        //{
+            _searchText = text;
+            _allArtifacts = new();
 
-        var result = FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText);
-        await foreach (var item in result)
-        {
-            _allArtifacts.Add(item);
-        }
+            var result = FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText);
+            await foreach (var item in result)
+            {
+                _allArtifacts.Add(item);
+            }
 
-        FilterArtifacts();
+            FilterArtifacts();
+        //});
     }
 
     private async Task HandleToolbarBackClick()
