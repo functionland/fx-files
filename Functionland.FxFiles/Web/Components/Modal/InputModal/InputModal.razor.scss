@@ -1,1 +1,9 @@
 ﻿@import "../../../Styles/abstracts/_variables.scss";
+@import "../../../Styles/abstracts/_functions.scss";
+
+.input-modal {
+    h1, h6 {
+        margin: 0;
+        font-family: $montserrat-semi-bold;
+    }
+}
