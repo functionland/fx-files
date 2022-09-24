@@ -194,5 +194,13 @@
   {
     "outputFile": "Components/Modal/ToastModal/ToastModal.razor.css",
     "inputFile": "Components/Modal/ToastModal/ToastModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/InputModal/InputModal.razor.css",
+    "inputFile": "Components/Modal/InputModal/InputModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.scss"
   }
 ]
