@@ -363,22 +363,23 @@ public partial class FileBrowser
     private async Task HandleSearch(string? text)
     {
         _searchText = text;
-        _filteredArtifacts = new();
+        _allArtifacts = new();
 
         var result = FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText);
         await foreach (var item in result)
         {
-            _filteredArtifacts.Add(item);
+            _allArtifacts.Add(item);
         }
 
         FilterArtifacts();
     }
 
-    private void HandleToolbarBackClick()
+    private async Task HandleToolbarBackClick()
     {
         _isInSearchMode = false;
         _searchText = string.Empty;
-        _filteredArtifacts = _allArtifacts;
+
+        await LoadChildrenArtifactsAsync(_currentArtifact);
         FilterArtifacts();
     }
 
@@ -387,6 +388,8 @@ public partial class FileBrowser
         //_filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
         //? _allArtifacts
         //    : _allArtifacts.Where(a => a.Name.Contains(_searchText)).ToList();
+
+        _filteredArtifacts = _allArtifacts;
 
         _filteredArtifacts = _fileCategoryFilter is null
             ? _filteredArtifacts
