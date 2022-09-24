@@ -17,9 +17,9 @@
         <h3>@_actionTitle</h3>
 
         <FxTextInput 
-            Label="Name" 
+            Label="Name"
             Margin="40px 0 0 0"
-            Text="@_inputValue"
+            @bind-Text="@_inputValue"
             Placeholder="@_placeholder" />
 
         <FxButton 

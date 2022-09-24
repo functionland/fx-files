@@ -6,7 +6,21 @@
         public string? Label { get; set; }
 
         [Parameter]
-        public string? Text { get; set; }
+        public EventCallback<string?> TextChanged { get; set; }
+
+        private string? _text { get; set; }
+        [Parameter]
+        public string? Text
+        {
+            get { return _text; }
+            set
+            {
+                if (_text == value) return;
+
+                _text = value;
+                TextChanged.InvokeAsync(value);
+            }
+        }
 
         [Parameter]
         public string? Margin { get; set; }
