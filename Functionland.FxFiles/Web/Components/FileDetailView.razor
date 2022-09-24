@@ -21,14 +21,12 @@
         <p class="file-name-text open-sans-regular">@FileName</p>
     </div>
     <div class="file-details-area">
-        <FileDetailViewItem FileDetailFieldName="Last modified" FileDetailFieldValue="07/01/22"></FileDetailViewItem>
-        <FileDetailViewItem FileDetailFieldName="File size" FileDetailFieldValue="1.23 MB"></FileDetailViewItem>
-        <FileDetailViewItem FileDetailFieldName="Source" FileDetailFieldValue="Pixel 6"></FileDetailViewItem>
+        @FileDetailItemFragment
     </div>
     <div class="bottom-body">
-            <FileDetailViewBottomActionBar />
+        @FileDetailItemActionsFragment
         <div class="close-btn-bottom-action">
-            <FxButton Text="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+            @FileDetailBottomActionFragment
         </div>
     </div>
 </main>
