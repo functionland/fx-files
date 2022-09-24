@@ -196,13 +196,33 @@ public partial class FileBrowser
         }
     }
 
-    public async Task HandlePinArtifacts(List<FsArtifact> artifact)
+    public async Task HandlePinArtifacts(List<FsArtifact> artifacts)
     {
+        var notPinedArtifacts = artifacts.Where(a => a.IsPinned == false).ToArray();
 
+        await PinService.SetArtifactsPinAsync(notPinedArtifacts.ToArray());
     }
 
-    public async Task HandleDeleteArtifacts(List<FsArtifact> artifact)
+    public async Task HandleDeleteArtifacts(List<FsArtifact> artifacts)
     {
+        //TODO: if (cancellationToken?.IsCancellationRequested == true)
+        foreach (var artifact in artifacts)
+        {
+            try
+            {
+                await FileService.DeleteArtifactsAsync(artifacts.ToArray());
+            }
+
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""))
+            {
+                // show exeception message with toast
+    }
+
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.DriveRemoveFailed))
+    {
+                // show exeception message with toast
+            }
+        }
 
     }
 
