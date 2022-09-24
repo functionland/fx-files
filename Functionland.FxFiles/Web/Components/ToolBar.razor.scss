@@ -1,4 +1,5 @@
-﻿@import '../Styles/abstracts/_variables.scss';
+﻿@import '../Styles/abstracts/_mixins.scss';
+@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
 
 header {
@@ -39,6 +40,12 @@ header {
 ::deep .fxbutton img {
     height: 24px;
     width: 24px;
+}
+
+::deep .back-button::after {
+    font-size: 24px;
+    vertical-align: middle;
+    @include Icon($arrow-left);
 }
 
 .toolbarApp {

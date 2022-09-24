@@ -120,6 +120,13 @@
         right: 0;
         top: 0;
     }
+
+    .full-screen-sheet {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        border-radius: 0;
+    }
 }
 
 /* core css */

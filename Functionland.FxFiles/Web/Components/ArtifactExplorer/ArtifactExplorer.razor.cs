@@ -1,12 +1,14 @@
 ﻿using Functionland.FxFiles.App.Components.Common;
+using Functionland.FxFiles.App.Components.Modal;
 
 namespace Functionland.FxFiles.App.Components;
 
 public partial class ArtifactExplorer
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-    [Parameter] public IEnumerable<FsArtifact> Artifacts { get; set; } = default!;
-    [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
+    [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
+    [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
+    private ArtifactSelectionModal? _artifactSelectionModalRef { get; set; }
 
     public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
     public ViewModeEnum ViewMode = ViewModeEnum.list;
@@ -19,11 +21,6 @@ public partial class ArtifactExplorer
     protected override Task OnInitAsync()
     {
         return base.OnInitAsync();
-    }
-
-    private async Task HandleArtifactClick(FsArtifact artifact)
-    {
-        await OnSelectArtifact.InvokeAsync(artifact);
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -72,17 +69,21 @@ public partial class ArtifactExplorer
         SelectedArtifacts = new List<FsArtifact>();
     }
 
-    public void PointerDown()
+    public async Task PointerDown()
     {
         PointerDownTime = DateTimeOffset.UtcNow;
     }
 
-    public void PointerUp()
+    public async Task PointerUp(FsArtifact artifact)
     {
         if (!IsSelectionMode)
         {
             var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
-            IsSelectionMode = downTime > 400;
+
+            if (downTime > 400)
+                IsSelectionMode = true;
+            else
+                await OnSelectArtifact.InvokeAsync(artifact);
         }
     }
 

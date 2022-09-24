@@ -1,0 +1,17 @@
+﻿@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.modal {
+    position: fixed;
+    height: 300px;
+    width: 400px;
+    background-color: red;
+
+    &.open {
+        display: block;
+    }
+
+    &.close {
+        display: none;
+    }
+}

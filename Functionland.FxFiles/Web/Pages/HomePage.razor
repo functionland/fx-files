@@ -7,12 +7,5 @@
 <ToolBar IsMainToolBar="true" />
 
 <div class="files-content">
-    <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
-    <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
-    <FxBottomSheet IsCloseAble="true" IsClose="IsBottomSheetClose" IsCloseChanged="SyncCloseState">
-        <ContentRenderFragment>
-            <FileDetailView FileName="Sample.docx" IsImageFile="false" />
-        </ContentRenderFragment>
-    </FxBottomSheet>
+    <EmptyListView />
 </div>
-<EmptyListView></EmptyListView>
