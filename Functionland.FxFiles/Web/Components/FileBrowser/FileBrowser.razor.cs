@@ -368,7 +368,16 @@ public partial class FileBrowser
 
         _filteredArtifacts = _fileCategoryFilter is null
             ? _filteredArtifacts
-            : _filteredArtifacts.Where(fa => fa.FileCategory == _fileCategoryFilter).ToList();
+            : _filteredArtifacts.Where(fa =>
+            {
+                if (_fileCategoryFilter == FileCategoryType.Document)
+                {
+                    return (fa.FileCategory == FileCategoryType.Document
+                                                || fa.FileCategory == FileCategoryType.Pdf
+                                                || fa.FileCategory == FileCategoryType.Other);
+                }
+                return fa.FileCategory == _fileCategoryFilter;
+            }).ToList();
     }
 
     private async Task HandleFilterClick()
