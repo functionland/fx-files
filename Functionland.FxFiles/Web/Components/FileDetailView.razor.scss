@@ -156,6 +156,10 @@
     display: flex;
     overflow-x: scroll;
     gap: $spacing-8;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
 }
 
 .disable-vertical-scroll {
