@@ -12,7 +12,7 @@
 .root-mode {
     display: flex;
     flex-flow: row nowrap;
-    justify-content:flex-start;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
 
@@ -20,6 +20,12 @@
         font-size: 24px;
         vertical-align: middle;
         @include Icon($chevron-left);
+    }
+
+    ::deep .root-add-button {
+        .fxbutton-lefticon[b-5jn8pcgp49] {
+             margin-right: 0px; 
+        }
     }
 }
 

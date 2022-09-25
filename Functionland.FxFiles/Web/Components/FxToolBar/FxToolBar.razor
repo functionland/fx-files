@@ -1,4 +1,5 @@
-﻿@inherits AppComponentBase;
+﻿@namespace Functionland.FxFiles.App.Components
+@inherits AppComponentBase;
 
 <div class="toolbar-box">
     @if (IsInRoot)
@@ -8,21 +9,25 @@
             @if (IsInSearchMode)
             {
                 <FxButton Padding="0"
-                   OnClick="@HandleBackClick"
-                   Class="search-back-button"
-                   Margin="0 8px"
-                   BackgroundColor="transparent"
-                   ButtonStyle="FxButtonStyle.None" />
+                  Margin="0 8px 0 0"
+                  OnClick="@HandleBackClick"
+                  Class="search-back-button"
+                  BackgroundColor="transparent"
+                  ButtonStyle="FxButtonStyle.None" />
             }
 
-            <FxSearchInput IsPartial="true" DebounceInterval="300" OnSearch="HandleSearch" OnFocus="HandleSearchFocused" />
+            <FxSearchInput IsPartial="true"
+                       DebounceInterval="300"
+                       OnSearch="HandleSearch"
+                       OnFocus="HandleSearchFocused" />
 
             @if (IsInSearchMode is false)
             {
-                <FxButton Margin="0 8px"
-                  OnClick="OnAddButtonClick"
-                  ButtonStyle="FxButtonStyle.IconOnly"
-                  LeftIcon="images/icons/plus.svg" />
+                <FxButton Padding="8px 10px"
+                  Margin="0 8px"
+                  Class="root-add-button"
+                  LeftIcon="images/icons/plus.svg"
+                  ButtonStyle="FxButtonStyle.Disabled" />
 
                 <FxAvatar FxAvatarSizeType="FxAvatarSizeEnum.Small" FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
             }
@@ -36,6 +41,7 @@
                   Class="back-button"
                   Margin="21px 0 10px 0"
                   BackgroundColor="transparent"
+                  IsVisible="IsBackButtonVisible"
                   ButtonStyle="FxButtonStyle.None" />
 
             <div class="action-row">
@@ -48,20 +54,19 @@
                     </div>
                 </div>
                 <div class="action-box">
-                    @if (!IsInRoot || IsAddButtonVisible)
+                    @if (!IsInRoot)
                     {
                         <FxButton Margin="0 8px"
                           OnClick="OnAddButtonClick"
+                          IsVisible="IsAddButtonVisible"
                           ButtonStyle="FxButtonStyle.IconOnly"
                           LeftIcon="images/icons/plus.svg" />
-                    }
 
-                    @if (!IsInRoot || IsOverflowButtonVisible)
-                    {
                         <FxButton Padding="0 0 0 10px"
                           BackgroundColor="transparent"
                           OnClick="OnOverflowButtonClick"
                           ButtonStyle="FxButtonStyle.None"
+                          IsVisible="IsOverflowButtonVisible"
                           LeftIcon="images/icons/lightDesignSystem/options-vertical.svg" />
                     }
                 </div>

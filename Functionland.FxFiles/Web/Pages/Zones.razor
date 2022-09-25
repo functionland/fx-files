@@ -3,9 +3,10 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.Zones)]</PageTitle>
 
-<ToolBar
-    IsMainToolBar="false"
-    IsAddButtonVisible="true"
+<FxToolBar
+    IsInRoot="false"
+    IsBackButtonVisible="false"
+    IsOverflowButtonVisible="false"
     Title="@Localizer[nameof(AppStrings.Zones)]"
     SubTitle="Add, edit and sync files in zones" />
 
