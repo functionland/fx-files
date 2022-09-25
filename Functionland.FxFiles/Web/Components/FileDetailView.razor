@@ -1,7 +1,7 @@
 ﻿@inherits AppComponentBase;
 
 <!-- Body of the sheet -->
-<main class="content-body fill column">
+<main class="content-body @ContentBodyClass fill column">
     @if (IsImageFile)
     {
         <div class="file-icon-row">
@@ -13,14 +13,17 @@
     }
     else
     {
-        <div class="file-icon-row">
-            <div class="file-icon"></div>
-        </div>
+        @if (!string.IsNullOrEmpty(FileName))
+        {
+            <div class="file-icon-row">
+                <div class="file-icon"></div>
+            </div>
+        }
     }
     <div class="file-name-row">
         <p class="file-name-text open-sans-regular">@FileName</p>
     </div>
-    <div class="file-details-area">
+    <div class="file-details-area @FileDetailAreaClass">
         @FileDetailItemFragment
     </div>
     <div class="bottom-body">
