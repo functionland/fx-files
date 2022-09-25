@@ -18,7 +18,12 @@
     border: 1px solid color(gray-bg-secondary);
     border-radius: $border-radius-4;
     padding: $spacing-16 $spacing-18;
-  
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 574px;
+
 
 
     .toast-container {
