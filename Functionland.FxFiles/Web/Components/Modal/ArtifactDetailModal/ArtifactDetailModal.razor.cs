@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.App.Components.Modal
+﻿using Functionland.FxFiles.Shared.Utils;
+
+namespace Functionland.FxFiles.App.Components.Modal
 {
     public partial class ArtifactDetailModal
     {
@@ -6,6 +8,8 @@
         private IFileService _fileService = default!;
 
         private List<FsArtifact> _artifacts = new();
+
+        private string _artifactsSize = string.Empty;
 
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
 
@@ -57,10 +61,22 @@
             _isModalOpen = false;
         }
 
+        public void CalculateArtifactsSize()
+        {
+            long? totalSize = 0;
+            foreach (var artifact in _artifacts)
+            {
+                totalSize += artifact.Size;
+            }
+
+            _artifactsSize = SizeUtil.CalculateSizeStr(totalSize);
+        }
+
         public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false)
         {
             _tcs?.SetCanceled();
             _artifacts = artifacts;
+            CalculateArtifactsSize();
             IsMultiple = isMultiple;
             _isModalOpen = true;
             StateHasChanged();

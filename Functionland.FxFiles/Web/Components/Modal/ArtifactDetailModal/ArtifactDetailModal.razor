@@ -13,17 +13,20 @@
                         <FileDetailView FileName="@artifact.Name" ContentBodyClass="disable-vertical-scroll width-and-height-detail-item">
                                 <FileDetailItemFragment>
                                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(artifact.LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(artifact.Size.ToString())"></FileDetailViewItem>
+                                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(artifact.SizeStr)"></FileDetailViewItem>
                                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(artifact.OriginDevice)"></FileDetailViewItem>
                                 </FileDetailItemFragment>
                             </FileDetailView>
                     }
                     <div class="select-action">
                         <div class="info-selection">
-                            <div class="close-btn"></div>
                             <div class="item-selected">
-                                <span class="item-selected-count"></span>
-                                <span class="item-selected-text">items selected</span>
+                                <span class="item-selected-count">@_artifacts.Count</span>
+                                <span class="item-selected-text">@Localizer[nameof(AppStrings.ItemsSelected)]</span>
+                            </div>
+                            <div class="item-selected">
+                                <span class="item-selected-count">@_artifactsSize</span>
+                                <span class="item-selected-text">(@Localizer[nameof(AppStrings.Total)])</span>
                             </div>
                         </div>
 
@@ -57,7 +60,7 @@
             <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)">
                 <FileDetailItemFragment>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].Size.ToString())"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].SizeStr)"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
                 </FileDetailItemFragment>
 
