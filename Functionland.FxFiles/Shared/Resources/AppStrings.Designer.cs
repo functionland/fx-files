@@ -439,6 +439,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to items selected.
+        /// </summary>
+        public static string ItemsSelected {
+            get {
+                return ResourceManager.GetString("ItemsSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Known error.
         /// </summary>
         public static string KnownException {
@@ -840,6 +849,15 @@ namespace Functionland.FxFiles.Shared.Resources {
         public static string TooManyRequestsExceptions {
             get {
                 return ResourceManager.GetString("TooManyRequestsExceptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to total.
+        /// </summary>
+        public static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
             }
         }
         
