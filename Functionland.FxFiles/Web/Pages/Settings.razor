@@ -3,7 +3,12 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.Settings)]</PageTitle>
 
-<ToolBar IsBackButtonVisible="false" Title="@Localizer[nameof(AppStrings.Settings)]" IsMainToolBar="false" /> 
+<FxToolBar 
+    IsInRoot="false"
+    IsAddButtonVisible="false"
+    IsBackButtonVisible="false"
+    IsOverflowButtonVisible="false"
+    Title="@Localizer[nameof(AppStrings.Settings)]" /> 
 
 <div class="settings-content">
     <FxButton 
