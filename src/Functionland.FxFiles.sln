@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functionland.FxFiles.Client
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functionland.FxFiles.Client.App", "Client\App\Functionland.FxFiles.Client.App.csproj", "{5DD4EE2C-8397-4E32-B147-6FF87D7DD648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Functionland.FxFiles.Client.Test", "Client\Functionland.FxFiles.Client.Test\Functionland.FxFiles.Client.Test.csproj", "{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Functionland.FxFiles.Client.Test", "Client\Test\Functionland.FxFiles.Client.Test.csproj", "{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
