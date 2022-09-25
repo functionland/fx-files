@@ -76,9 +76,10 @@
 }
 
 .fxbutton-disabled {
-    color: $gray-dark-border !important;
+    color: color(input-disable) !important;
     border: none !important;
-    background-color: $gray-dark-bg-secondary !important;
+    background-color: color(gray-bg-secondary) !important;
+    pointer-events: none !important;
 }
 
 .fxbutton-menuline {
@@ -104,17 +105,14 @@
     width: auto;
     height: 48px;
     border-radius: 0;
+    color: color(gray-content1) !important;
     background-color: transparent !important;
 }
 
 .fxbutton-sheetmenu .fxbutton-content {
-    margin: 0px 21px;
-    justify-content: left;
+    margin: 0px;
+    justify-content: space-between;
     border-bottom: 1px solid color(gray-bg-secondary);
-}
-
-.fxbutton-sheetmenu:active {
-    background-color: color(gray-bg-secondary) !important;
 }
 
 .fxbutton-icononly {

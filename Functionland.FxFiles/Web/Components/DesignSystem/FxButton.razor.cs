@@ -6,6 +6,9 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
     {
         [Parameter]
         public string? Text { get; set; }
+        
+        [Parameter]
+        public string? Class { get; set; }
 
         [Parameter]
         public string? MetaDataText { get; set; }
@@ -51,6 +54,9 @@ namespace Functionland.FxFiles.App.Components.DesignSystem
 
         [Parameter]
         public string? HorizontalAlignment { get; set; }
+
+        [Parameter]
+        public bool IsVisible { get; set; } = true;
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }

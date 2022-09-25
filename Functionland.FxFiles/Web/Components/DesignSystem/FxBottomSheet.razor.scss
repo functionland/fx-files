@@ -82,12 +82,12 @@
     .contents {
         width: 100%;
         max-height: 100vh;
+        max-width:600px;
         position: relative;
         overflow-y: hidden;
         padding: $spacing-0 $spacing-21;
         box-sizing: border-box;
         transform: translateY(0);
-        max-width: $screen-lg-min;
         background-color: color(app-bg);
         transition: transform 0.5s, border-radius 0.5s;
         border-radius: $border-radius-20 $border-radius-20 $letter-spacing-0 $letter-spacing-0;
@@ -125,6 +125,7 @@
     }
 
     .full-screen-sheet {
+        padding: 0;
         width: 100%;
         max-width: none;
         height: 100%;

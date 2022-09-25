@@ -261,7 +261,7 @@ namespace Functionland.FxFiles.Shared.TestInfra.Implementations
                 //10. Delete files and folders
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 var file21 = artifacts.Where(f => f.Name == "file21.txt").FirstOrDefault();
-                Assert.IsNotNull(file312, "File exists in source (sub directory), before delete.");
+                Assert.IsNotNull(file21, "File exists in source (sub directory), before delete.");
 
                 var deleteingItems = new[] { folder21, file21 };
                 await fileService.DeleteArtifactsAsync(deleteingItems);

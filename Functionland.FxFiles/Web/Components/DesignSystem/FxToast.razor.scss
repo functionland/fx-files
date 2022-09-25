@@ -1,8 +1,16 @@
 ﻿@import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
 
-.fx-taost {
+.open-toast {
     display: flex;
+}
+
+.close-toast {
+    display: none;
+}
+
+
+.fx-taost {
     align-items: center;
     justify-content: space-between;
     flex-flow: row nowrap;
@@ -10,7 +18,12 @@
     border: 1px solid color(gray-bg-secondary);
     border-radius: $border-radius-4;
     padding: $spacing-16 $spacing-18;
-    max-width: 350px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 574px;
+
 
 
     .toast-container {
@@ -93,5 +106,25 @@
 
     .taost-message-title {
         color: color(error);
+    }
+}
+
+@keyframes toast-animation {
+    0% {
+        left: -360px
+    }
+
+    100% {
+        left: 10px;
+    }
+}
+
+@keyframes toast-animation-hide {
+    0% {
+        left: 10px
+    }
+
+    100% {
+        left: -360px;
     }
 }
