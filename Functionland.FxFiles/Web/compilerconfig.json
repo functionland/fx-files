@@ -12,8 +12,8 @@
     "inputFile": "Shared/AppErrorBoundary.razor.scss"
   },
   {
-    "outputFile": "Components/ToolBar.razor.css",
-    "inputFile": "Components/ToolBar.razor.scss"
+    "outputFile": "Components/FxToolBar/FxToolBar.razor.css",
+    "inputFile": "Components/FxToolBar/FxToolBar.razor.scss"
   },
   {
     "outputFile": "Components/BottomNavigation.razor.css",
@@ -166,5 +166,45 @@
   {
     "outputFile": "Components/FxListView.razor.css",
     "inputFile": "Components/FxListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
+    "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
+  },
+  {
+    "outputFile": "Components/ComingSoon/ConsentCookie.razor.css",
+    "inputFile": "Components/ComingSoon/ConsentCookie.razor.scss"
+  },
+  {
+    "outputFile": "Components/ComingSoon/ComingSoon.razor.css",
+    "inputFile": "Components/ComingSoon/ComingSoon.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ConfirmationReplaceOrSkipModal/ConfirmationReplaceOrSkipModal.razor.css",
+    "inputFile": "Components/Modal/ConfirmationReplaceOrSkipModal/ConfirmationReplaceOrSkipModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
+    "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ArtifactDetailModal/ArtifactDetailModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactDetailModal/ArtifactDetailModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ToastModal/ToastModal.razor.css",
+    "inputFile": "Components/Modal/ToastModal/ToastModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/InputModal/InputModal.razor.css",
+    "inputFile": "Components/Modal/InputModal/InputModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/TransactionModal/TransactionModal.razor.css",
+    "inputFile": "Components/Modal/TransactionModal/TransactionModal.razor.scss"
   }
 ]

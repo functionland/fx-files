@@ -44,7 +44,7 @@ html, body {
         --#{$key}: #{$value};
     }
 
-    background-color: color(app-bg);
+    background-color: color(gray-bg-primary);
 }
 
 html, body[data-theme="Dark"] {
@@ -53,4 +53,19 @@ html, body[data-theme="Dark"] {
     }
 
     background-color: color(app-bg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 0;
+    font-family: $montserrat-semi-bold;
+}
+
+h6 {
+    margin: 0;
+    font-size: 10px;
+    font-family: $montserrat-medium;
 }

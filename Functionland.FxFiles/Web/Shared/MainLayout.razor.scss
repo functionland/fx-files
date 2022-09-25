@@ -1,6 +1,11 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
 
+.main-layout {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
 .content {
     overflow: hidden;
     position: relative;

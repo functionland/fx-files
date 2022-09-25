@@ -5,11 +5,11 @@
 
 
 .content-body {
-    height: 100%;
+    max-height: 100%;
     overflow-y: auto;
     // TODO: use value from the sass variables
     .file-icon-row {
-        padding: $spacing-8 $spacing-21;
+        padding: $spacing-8 $spacing-0;
 
         .file-icon {
             background-image: url($text-file);
@@ -27,7 +27,6 @@
     }
 
     .file-name-row {
-        padding: $letter-spacing-0 $spacing-21;
 
         .file-name-text {
             margin: $letter-spacing-0;
@@ -37,12 +36,13 @@
             color: color(gray-content1);
         }
     }
+
     .file-details-area {
-        padding: $spacing-21;
+        padding: $spacing-21 $spacing-0;
     }
 
     .bottom-body {
-        padding: $spacing-10 $spacing-21;
+        padding: $spacing-10 $spacing-0;
 
         .close-btn-bottom-action {
             margin-top: $spacing-16;
@@ -150,4 +150,23 @@
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.vertical-file-detail-item {
+    display: flex;
+    overflow-x: scroll;
+    gap: $spacing-8;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+}
+
+.disable-vertical-scroll {
+    overflow-y:hidden;
+}
+
+.width-and-height-detail-item {
+    width:333px;
+    height:300px;
 }

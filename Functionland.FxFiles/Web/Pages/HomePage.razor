@@ -1,18 +1,10 @@
 ﻿@page "/"
 @page "/Home"
+@using Functionland.FxFiles.App.Components.ComingSoon
 
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.Files)]</PageTitle>
 
-<ToolBar IsMainToolBar="true" />
-
 <div class="files-content">
-    <div>@Localizer[nameof(AppStrings.HomeMessage)]</div>
-    <button @onclick="(()=>OpenSheet())">Open BottomSheet</button>
-    <FxBottomSheet IsCloseAble="true" IsClose="IsBottomSheetClose" IsCloseChanged="SyncCloseState">
-        <ContentRenderFragment>
-            <FileDetailView FileName="Sample.docx" IsImageFile="false" />
-        </ContentRenderFragment>
-    </FxBottomSheet>
+    <ComingSoon title="Blox Files"/>
 </div>
-<EmptyListView></EmptyListView>

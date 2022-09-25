@@ -7,7 +7,6 @@ namespace Functionland.FxFiles.App;
 
 public partial class App
 {
-    //private IFileWatchService FileWatchService { get; }
     private IFxLocalDbService FxLocalDbService { get; }
     private IExceptionHandler ExceptionHandler { get; }
     private IPinService PinService { get; }
@@ -18,7 +17,6 @@ public partial class App
         FxLocalDbService = fxLocalDbService;
         ExceptionHandler = exceptionHandler;
         PinService = pinService;
-        //FileWatchService = fileWatchService;
     }
 
     protected override void OnStart()
@@ -30,7 +28,6 @@ public partial class App
             {
                 await FxLocalDbService.InitAsync();
                 await PinService.InitializeAsync();
-                //await FileWatchService.InitialyzeAsync();
             }
             catch (Exception exp)
             {

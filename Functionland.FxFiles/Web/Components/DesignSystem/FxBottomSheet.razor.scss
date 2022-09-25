@@ -82,12 +82,12 @@
     .contents {
         width: 100%;
         max-height: 100vh;
+        max-width:600px;
         position: relative;
         overflow-y: hidden;
-        padding-bottom: 34px;
+        padding: $spacing-0 $spacing-21;
         box-sizing: border-box;
         transform: translateY(0);
-        max-width: $screen-lg-min;
         background-color: color(app-bg);
         transition: transform 0.5s, border-radius 0.5s;
         border-radius: $border-radius-20 $border-radius-20 $letter-spacing-0 $letter-spacing-0;
@@ -102,8 +102,11 @@
 
         .controls {
             display: flex;
-            margin-top: $spacing-24;
-            padding: $spacing-8 $spacing-21;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: $spacing-8;
+            padding: $spacing-10 $spacing-0;
+
         }
     }
 
@@ -119,6 +122,14 @@
         padding: 0;
         right: 0;
         top: 0;
+    }
+
+    .full-screen-sheet {
+        padding: 0;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        border-radius: 0;
     }
 }
 

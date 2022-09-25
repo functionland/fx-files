@@ -1,0 +1,147 @@
+﻿@namespace Functionland.FxFiles.App.Components
+@inherits AppComponentBase;
+
+<div class="toolbar-box">
+    @if (IsInRoot)
+    {
+        <div class="root-mode">
+
+            @if (IsInSearchMode)
+            {
+                <FxButton Padding="0"
+                  Margin="0 8px 0 0"
+                  OnClick="@HandleBackClick"
+                  Class="search-back-button"
+                  BackgroundColor="transparent"
+                  ButtonStyle="FxButtonStyle.None" />
+            }
+
+            <FxSearchInput IsPartial="true"
+                       DebounceInterval="300"
+                       OnSearch="HandleSearch"
+                       OnFocus="HandleSearchFocused" />
+
+            @if (IsInSearchMode is false)
+            {
+                <FxButton Padding="8px 10px"
+                  Margin="0 8px"
+                  Class="root-add-button"
+                  LeftIcon="images/icons/plus.svg"
+                  ButtonStyle="FxButtonStyle.Disabled" />
+
+                <FxAvatar FxAvatarSizeType="FxAvatarSizeEnum.Small" FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
+            }
+        </div>
+    }
+    else
+    {
+        <div class="not-root-mode">
+            <FxButton Padding="0"
+                  OnClick="@GoBack"
+                  Class="back-button"
+                  Margin="21px 0 10px 0"
+                  BackgroundColor="transparent"
+                  IsVisible="IsBackButtonVisible"
+                  ButtonStyle="FxButtonStyle.None" />
+
+            <div class="action-row">
+                <div class="info-box">
+                    <div class="artifact-title @(IsPinned ? "pinned-icon" : "")">
+                        @Title
+                    </div>
+                    <div class="artifact-subtext">
+                        @SubTitle
+                    </div>
+                </div>
+                <div class="action-box">
+                    @if (!IsInRoot)
+                    {
+                        <FxButton Margin="0 8px"
+                          OnClick="OnAddButtonClick"
+                          IsVisible="IsAddButtonVisible"
+                          ButtonStyle="FxButtonStyle.IconOnly"
+                          LeftIcon="images/icons/plus.svg" />
+
+                        <FxButton Padding="0 0 0 10px"
+                          BackgroundColor="transparent"
+                          OnClick="OnOverflowButtonClick"
+                          ButtonStyle="FxButtonStyle.None"
+                          IsVisible="IsOverflowButtonVisible"
+                          LeftIcon="images/icons/lightDesignSystem/options-vertical.svg" />
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+@*
+    <header>
+    @if (IsBackButtonVisible)
+    {
+        <FxButton
+            Padding="0"
+            OnClick="@GoBack"
+            Class="back-button"
+            Margin="21px 0 10px 0"
+            BackgroundColor="transparent"
+            ButtonStyle="FxButtonStyle.None" />
+    }
+    <div class="toolbarApp">
+
+        <div>
+            @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrWhiteSpace(Title))
+            {
+                <h1 class="title">
+                    @if (IsPinned) {<img class="title-icon" src="images/icons/pinned-filled-black.svg"/>} @Title
+                </h1>
+            }
+
+            @if (!string.IsNullOrEmpty(SubTitle) || !string.IsNullOrWhiteSpace(SubTitle))
+            {
+                <h6 class="subtitle">@SubTitle</h6>
+            }
+        </div>
+
+        @if (IsInRoot)
+        {
+            <div class="main-toolbar">
+                <FxSearchInput IsPartial="true"/>
+
+                <FxButton
+                    Margin="0 8px"
+                    OnClick="OnAddButtonClick"
+                    ButtonStyle="FxButtonStyle.IconOnly"
+                    LeftIcon="images/icons/plus.svg" />
+
+                <FxAvatar
+                    FxAvatarSizeType="FxAvatarSizeEnum.Small"
+                    FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
+            </div>
+        }
+
+        <div class="toolbar-items">
+            @if (!IsInRoot && IsAddButtonVisible)
+            {
+                <FxButton
+                    Margin="0 8px"
+                    OnClick="OnAddButtonClick"
+                    ButtonStyle="FxButtonStyle.IconOnly"
+                    LeftIcon="images/icons/plus.svg" />
+            }
+
+            @if (IsOverflowButtonVisible)
+            {
+                <FxButton
+                    Padding="0 0 0 10px"
+                    BackgroundColor="transparent"
+                    OnClick="OnOverflowButtonClick"
+                    ButtonStyle="FxButtonStyle.None"
+                    LeftIcon="images/icons/lightDesignSystem/options-vertical.svg" />
+            }
+        </div>
+    </div>
+</header>
+*@

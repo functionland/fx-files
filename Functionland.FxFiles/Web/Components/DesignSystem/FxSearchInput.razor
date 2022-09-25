@@ -1,14 +1,20 @@
 ﻿@inherits AppComponentBase;
 
 
-@if(IsPartial)
+@if (IsPartial)
 {
-    <input class="input-box input-partial search-icon" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]" />
+    <div class="search-icon"></div>
+    <input class="input-box input-partial" type="text"
+       placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]"
+       value="@_inputText"
+       @oninput="HandleInput"
+       @onfocus="HandleFocus"/>
 }
 else
 {
     <div class="input-full-width">
-        <input class="input-box search-icon" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth)]" />
+        <div class="search-icon"></div>
+        <input class="input-box" value="@_inputText" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth)]" />
         <button class="button-search-input">@Localizer[nameof(AppStrings.ButtonSearchFullWidth)]</button>
     </div>
 }

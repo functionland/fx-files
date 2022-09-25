@@ -1,23 +1,25 @@
 ﻿@inherits AppComponentBase;
 
 
-<div class="sheet column items-center justify-end @(IsClose ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
-    
-    <div class="overlay"></div>
+<div class="sheet column items-center justify-end @(!IsOpen ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
 
-    <div class="contents column">
-        @if (IsCloseAble)
+    <div class="overlay" @onclick="(async () => await Close())"></div>
+
+    <div class="contents column @(IsFullScreenMode ? "full-screen-sheet" : "")">
+        @if (ShowCloseButton)
         {
             <div class="controls">
+                @if (!string.IsNullOrEmpty(Title))
+                {
+                    <div class="title-modal">@Title</div>
+                }
                 <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">
                     <img class="close-button-icon" src="/images/icons/lightDesignSystem/close-btn.svg" />
                 </button>
             </div>
         }
 
-        @if (ContentRenderFragment != null)
-        {
-            @ContentRenderFragment
-        }
+
+        @ChildContent
     </div>
 </div>
