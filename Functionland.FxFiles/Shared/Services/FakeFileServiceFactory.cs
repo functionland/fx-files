@@ -63,22 +63,35 @@ namespace Functionland.FxFiles.Shared.Services
 
         public static FakeFileService CreateTypical(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            return new FakeFileService(serviceProvider, 
+            return new FakeFileService(serviceProvider,
                 new List<FsArtifact>
                 {
                     CreateFolder("/images"),
                     CreateFolder("/images/summer"),
                     CreateFolder("/images/winter"),
+                    CreateFolder("/images/winter/firstweek"),
+                    CreateFolder("/images/winter/firstweek/firstday"),
+                    CreateFolder("/images/winter/firstweek/firstday/firsthour"),
+                    CreateFolder("/images/winter/firstweek/firstday/firsthour/firstminute"),
+                    CreateFolder("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond"),
+                    CreateFolder("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/firstmillisecond"),
                     CreateFolder("/docs"),
                     CreateFile("/images/summer/image summer.jpg"),
                     CreateFile("/images/summer/image germany.jpg"),
                     CreateFile("/images/winter/image summer.jpg"),
                     CreateFile("/images/winter/image germany.jpg"),
+                    CreateFile("/images/winter/firstweek/introduce australia.txt"),
+                    CreateFile("/images/winter/firstweek/image australia.jpg"),
+                    CreateFile("/images/winter/firstweek/firstday/personal stuff.txt"),
+                    CreateFile("/images/winter/firstweek/firstday/image family.jpg"),
+                    CreateFile("/images/winter/firstweek/firstday/firsthour/image workshop.jpg"),
+                    CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/meetingdoc.txt"),
+                    CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/cv.txt"),
+                    CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/image workplace.jpg"),
                     CreateFile("/docs/proposal v1-2.pdf"),
                 },
                 actionLatency,
-                enumerationLatency
-            );
+                enumerationLatency);
         }
 
         public static FsArtifact CreateFile(string filePath)

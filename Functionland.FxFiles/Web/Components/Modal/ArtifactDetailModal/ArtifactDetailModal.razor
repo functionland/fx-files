@@ -1,4 +1,30 @@
 ﻿@namespace Functionland.FxFiles.App.Components.Modal
 @inherits AppComponentBase;
 
-<h3>ArtifactDetailModal</h3>
+@if (_artifacts.Count > 0)
+{
+    <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="true">
+        <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)">
+            <FileDetailItemFragment>
+                <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
+                <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].Size.ToString())"></FileDetailViewItem>
+                <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
+            </FileDetailItemFragment>
+
+            <FileDetailItemActionsFragment>
+                <FileDetailViewBottomActionBar>
+                    <FileDetailActionBarItemFragment>
+                        <FileDetailViewBottomActionItem ActionIcon="ActionIcon.Download"></FileDetailViewBottomActionItem>
+                        <FileDetailViewBottomActionItem ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                        <FileDetailViewBottomActionItem ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                        <FileDetailViewBottomActionItem ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
+                    </FileDetailActionBarItemFragment>
+                </FileDetailViewBottomActionBar>
+            </FileDetailItemActionsFragment>
+
+            <FileDetailBottomActionFragment>
+                <FxButton Text="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+            </FileDetailBottomActionFragment>
+        </FileDetailView>
+    </FxBottomSheet>
+}

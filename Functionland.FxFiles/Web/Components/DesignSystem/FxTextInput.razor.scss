@@ -37,6 +37,7 @@
     border-radius: $border-size-4;
     padding: $spacing-14 $spacing-21;
     margin: $spacing-8 $letter-spacing-0;
+    width: 100%;
 
     &::placeholder {
         color: color(gray-content1)

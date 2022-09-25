@@ -184,10 +184,10 @@
     <value>the path is null</value>
   </data>
   <data name="ArtifactNameIsNull" xml:space="preserve">
-    <value>The {0} name is null</value>
+    <value>The {0} name is empty</value>
   </data>
   <data name="ArtifactAlreadyExistsException" xml:space="preserve">
-    <value>The {0} already exists exception</value>
+    <value>The {0} already exists</value>
   </data>
   <data name="StreamFileIsNull" xml:space="preserve">
     <value>The stream file is null</value>
@@ -383,5 +383,20 @@
   </data>
   <data name="TheOpreationFailedMessage" xml:space="preserve">
     <value>The operation failed</value>
+  </data>
+  <data name="RootfolderRenameException" xml:space="preserve">
+    <value>Root folder cannot be renamed</value>
+  </data>
+  <data name="RootFolderDeleteException" xml:space="preserve">
+    <value>Root folder can not be deleted</value>
+  </data>
+  <data name="TheDeleteOpreationSuccessedMessage" xml:space="preserve">
+    <value>Items deleted</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
   </data>
 </root>

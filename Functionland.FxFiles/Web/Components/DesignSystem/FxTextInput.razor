@@ -1,8 +1,8 @@
 ﻿@inherits AppComponentBase;
-<div class="input-box">
 
-    <label class="label-input">@Localizer[nameof(AppStrings.InputLabel)]</label>
-    <div class="field-question-input">@Localizer[nameof(AppStrings.FieldQuestionInput)]</div>
-    <input class="text-input" placeholder="@Localizer[nameof(AppStrings.PlaceHolderFilledTextInput)]" type="text" />
-    <div class="error-message">@Localizer[nameof(AppStrings.ErrorMessage)]</div>
+<div class="input-box" style="margin: @Margin">
+    <label class="label-input">@Label</label>
+    <div class="field-question-input">@FieldQuestion</div>
+    <input class="text-input" @bind-value="@Text" @bind-value:event="oninput" placeholder="@Placeholder" type="text" />
+    <div class="error-message">@ErrorMessage</div>
 </div>

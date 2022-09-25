@@ -7,7 +7,12 @@
 
             @if (IsInSearchMode)
             {
-                <button @onclick="HandleBackClick">back</button>
+                <FxButton Padding="0"
+                   OnClick="@HandleBackClick"
+                   Class="search-back-button"
+                   Margin="0 8px"
+                   BackgroundColor="transparent"
+                   ButtonStyle="FxButtonStyle.None" />
             }
 
             <FxSearchInput IsPartial="true" DebounceInterval="300" OnSearch="HandleSearch" OnFocus="HandleSearchFocused" />
