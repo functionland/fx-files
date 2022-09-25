@@ -1,0 +1,19 @@
+﻿@page "/"
+
+@namespace Functionland.FxFiles.Client.Web.Pages
+
+@using Functionland.FxFiles.Client.Shared;
+@using Functionland.FxFiles.Client.Shared.Infra;
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    var isBlazorServer = BlazorModeDetector.Current.IsBlazorServer();
+    var isDefaultDeploymentType = WebAppDeploymentTypeDetector.Current.IsDefault();
+    var isPwa = WebAppDeploymentTypeDetector.Current.IsPwa();
+    RenderMode renderMode = isBlazorServer ? RenderMode.Server : RenderMode.WebAssembly;
+}
+
+<component type="typeof(App)"
+           render-mode="@renderMode" />

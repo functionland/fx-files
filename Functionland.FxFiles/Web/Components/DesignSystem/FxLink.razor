@@ -1,3 +1,0 @@
-﻿@inherits AppComponentBase;
-
-<a href="@Link" class="fx-link fx-link-@(FxLinkIconSide != FxLinkIconSide.Regular ? FxLinkIconSide.ToString().ToLower() : "") @(FxLinkIconSide == FxLinkIconSide.Left && !IsEnabel ? "fx-link-disabled-left" : "") @(FxLinkIconSide == FxLinkIconSide.Right && !IsEnabel ? "fx-link-disabled-right" : "") @(FxLinkIconSide == FxLinkIconSide.Regular && !IsEnabel ? "fx-link-disabled" : "") @(FxLinkSize == FxLinkSize.Large ? "fx-link-large" : "")">@LinkText</a>

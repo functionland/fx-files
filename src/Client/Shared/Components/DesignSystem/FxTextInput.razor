@@ -1,0 +1,10 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components
+
+@inherits AppComponentBase;
+
+<div class="input-box" style="margin: @Margin">
+    <label class="label-input">@Label</label>
+    <div class="field-question-input">@FieldQuestion</div>
+    <input class="text-input" @bind-value="@Text" @bind-value:event="oninput" placeholder="@Placeholder" type="text" />
+    <div class="error-message">@ErrorMessage</div>
+</div>

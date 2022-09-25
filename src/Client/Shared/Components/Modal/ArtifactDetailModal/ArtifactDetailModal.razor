@@ -1,0 +1,84 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
+@inherits AppComponentBase;
+
+@if (_artifacts.Count > 0)
+{
+    if (IsMultiple)
+    {
+        <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="true">
+            <FileDetailView FileDetailAreaClass="vertical-file-detail-item">
+                <FileDetailItemFragment>
+                    @foreach (var artifact in _artifacts)
+                    {
+                        <FileDetailView FileName="@artifact.Name" ContentBodyClass="disable-vertical-scroll width-and-height-detail-item">
+                                <FileDetailItemFragment>
+                                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(artifact.LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
+                                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(artifact.SizeStr)"></FileDetailViewItem>
+                                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(artifact.OriginDevice)"></FileDetailViewItem>
+                                </FileDetailItemFragment>
+                            </FileDetailView>
+                    }
+                    <div class="select-action">
+                        <div class="info-selection">
+                            <div class="item-selected">
+                                <span class="item-selected-count">@_artifacts.Count</span>
+                                <span class="item-selected-text">@Localizer[nameof(AppStrings.ItemsSelected)]</span>
+                            </div>
+                            <div class="item-selected">
+                                <span class="item-selected-count">@_artifactsSize</span>
+                                <span class="item-selected-text">(@Localizer[nameof(AppStrings.Total)])</span>
+                            </div>
+                        </div>
+
+                        <div class="right-part">
+                            <div class="icons-action move-icon"></div>
+                            <div class="icons-action vertical-option-icon"></div>
+                        </div>
+                    </div>
+                </FileDetailItemFragment>
+
+                <FileDetailItemActionsFragment>
+                    <FileDetailViewBottomActionBar>
+                        <FileDetailActionBarItemFragment>
+                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Download"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
+                        </FileDetailActionBarItemFragment>
+                    </FileDetailViewBottomActionBar>
+                </FileDetailItemActionsFragment>
+
+                <FileDetailBottomActionFragment>
+                    <FxButton Text="Close" OnClick="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+                </FileDetailBottomActionFragment>
+            </FileDetailView>
+        </FxBottomSheet>
+    }
+    else
+    {
+        <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="true">
+            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)">
+                <FileDetailItemFragment>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].SizeStr)"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
+                </FileDetailItemFragment>
+
+                <FileDetailItemActionsFragment>
+                    <FileDetailViewBottomActionBar>
+                        <FileDetailActionBarItemFragment>
+                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Download"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
+                        </FileDetailActionBarItemFragment>
+                    </FileDetailViewBottomActionBar>
+                </FileDetailItemActionsFragment>
+
+                <FileDetailBottomActionFragment>
+                    <FxButton Text="Close" OnClick="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+                </FileDetailBottomActionFragment>
+            </FileDetailView>
+        </FxBottomSheet>
+    }
+}
