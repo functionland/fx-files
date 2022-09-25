@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.App.Components.Modal
 {
     public partial class ToastModal
     {
-        private bool _isModalOpen;
+        private bool _isModalOpen = false;
 
         private string? _title { get; set; } = string.Empty;
 

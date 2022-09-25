@@ -5,6 +5,7 @@ using Functionland.FxFiles.Shared.Models;
 using Functionland.FxFiles.Shared.Services.Contracts;
 
 using Microsoft.Extensions.Localization;
+
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Functionland.FxFiles.App.Components;
@@ -303,9 +304,7 @@ public partial class FileBrowser
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
     {
         var allFiles = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
-
         var artifacts = new List<FsArtifact>();
-
         await foreach (var item in allFiles)
         {
             artifacts.Add(item);

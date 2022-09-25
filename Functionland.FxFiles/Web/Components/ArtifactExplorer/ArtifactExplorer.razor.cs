@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.App.Components
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-        [Parameter] public List<FsArtifact> Artifacts { get; set; } = new();
+        [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<List<FsArtifact>> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
@@ -29,6 +29,19 @@ namespace Functionland.FxFiles.App.Components
         private async Task HandleArtifactOptionsClick(FsArtifact artifact)
         {
             await OnArtifactsOptionsClick.InvokeAsync(artifact);
+        }
+        protected override Task OnParamsSetAsync()
+        {
+            if (Artifacts is null)
+            {
+                Artifacts = Array.Empty<FsArtifact>();
+            }
+            return base.OnParamsSetAsync();
+        }
+
+        private async Task HandleArtifactClick(FsArtifact artifact)
+        {
+            await OnSelectArtifact.InvokeAsync(artifact);
         }
 
         private async Task HandleMultiArtifactsOptionsClick()
@@ -101,7 +114,7 @@ namespace Functionland.FxFiles.App.Components
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
-            else if(ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
+            else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             {
                 await OnSelectArtifact.InvokeAsync(artifact);
             }
