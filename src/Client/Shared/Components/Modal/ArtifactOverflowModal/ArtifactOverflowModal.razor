@@ -1,0 +1,33 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
+@inherits AppComponentBase
+
+
+<FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="false">
+    <div class="overflow-sheet" style="padding: 24px 0">
+        <FxButton Text="See details"
+            OnClick="Details"
+            ButtonStyle="FxButtonStyle.SheetMenu"
+            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/details.svg" />
+        <FxButton Text="Rename"
+            OnClick="Rename"
+            IsVisible="!IsMultiple"
+            ButtonStyle="FxButtonStyle.SheetMenu"
+            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/rename.svg" />
+        <FxButton Text="Make a copy"
+            OnClick="Copy"
+            ButtonStyle="FxButtonStyle.SheetMenu"
+            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/copy.svg" />
+        <FxButton Text="Add to pinned items"
+            OnClick="Pin"
+            ButtonStyle="FxButtonStyle.SheetMenu"
+            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/pin-outline-black.svg" />
+        <FxButton Text="Move to"
+            OnClick="Move"
+            ButtonStyle="FxButtonStyle.SheetMenu"
+            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/move.svg" />
+        <FxButton Text="Delete"
+            OnClick="Delete"
+            ButtonStyle="FxButtonStyle.SheetMenu"
+            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/delete.svg" />
+    </div>
+</FxBottomSheet>

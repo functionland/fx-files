@@ -1,0 +1,32 @@
+﻿// variables & functions
+@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+
+// utilities
+
+//Shared==============================================
+
+html, body {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    overscroll-behavior: none;
+    font-family: $open-sans-regular;
+    -webkit-tap-highlight-color: transparent;
+
+    @each $key, $value in $colors-light {
+        --#{$key}: #{$value};
+    }
+
+    background-color: color(gray-bg-primary);
+}
+
+html, body[data-theme="Dark"] {
+    @each $key, $value in $colors-dark {
+        --#{$key}: #{$value};
+    }
+
+    background-color: color(app-bg);
+}
+

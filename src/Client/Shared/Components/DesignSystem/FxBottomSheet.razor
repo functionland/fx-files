@@ -1,0 +1,26 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components
+
+@inherits AppComponentBase;
+
+<div class="sheet column items-center justify-end @(!IsOpen ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
+
+    <div class="overlay" @onclick="(async () => await Close())"></div>
+
+    <div class="contents column @(IsFullScreenMode ? "full-screen-sheet" : "")">
+        @if (ShowCloseButton)
+        {
+            <div class="controls">
+                @if (!string.IsNullOrEmpty(Title))
+                {
+                    <div class="title-modal">@Title</div>
+                }
+                <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">
+                    <img class="close-button-icon" src="/_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/close-btn.svg" />
+                </button>
+            </div>
+        }
+
+
+        @ChildContent
+    </div>
+</div>

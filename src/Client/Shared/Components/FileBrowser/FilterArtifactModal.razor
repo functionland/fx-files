@@ -1,0 +1,27 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components
+@inherits AppComponentBase;
+
+<FxBottomSheet Title="Filter by" ShowCloseButton=true IsOpen="_isModalOpen" OnClose="HandleClose">
+    <div>
+        <FxButton Text="All"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(null)"
+                  RightIcon="@(CurrentFilter is null? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Image"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Image)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Image ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Video"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Video)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Video ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Audio"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Audio)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Audio ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Documents & others"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.Document)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.Document ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+    </div>
+</FxBottomSheet>
