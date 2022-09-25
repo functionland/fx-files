@@ -38,5 +38,193 @@
   {
     "outputFile": "wwwroot/app.css",
     "inputFile": "wwwroot/app.scss"
+  },
+  {
+    "outputFile": "Pages/FxFolderView.razor.css",
+    "inputFile": "Pages/FxFolderView.razor.scss"
+  },
+  {
+    "outputFile": "Pages/MyDevice.razor.css",
+    "inputFile": "Pages/MyDevice.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Settings.razor.css",
+    "inputFile": "Pages/Settings.razor.scss"
+  },
+  {
+    "outputFile": "Pages/TestExplorer.razor.css",
+    "inputFile": "Pages/TestExplorer.razor.scss"
+  },
+  {
+    "outputFile": "Pages/ThemeSettings.razor.css",
+    "inputFile": "Pages/ThemeSettings.razor.scss"
+  },
+  {
+    "outputFile": "Pages/Zones.razor.css",
+    "inputFile": "Pages/Zones.razor.scss"
+  },
+  {
+    "outputFile": "Components/ArtifactExplorer/ArtifactExplorer.razor.css",
+    "inputFile": "Components/ArtifactExplorer/ArtifactExplorer.razor.scss"
+  },
+  {
+    "outputFile": "Components/ComingSoon/ComingSoon.razor.css",
+    "inputFile": "Components/ComingSoon/ComingSoon.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxAvatar.razor.css",
+    "inputFile": "Components/DesignSystem/FxAvatar.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxBottomSheet.razor.css",
+    "inputFile": "Components/DesignSystem/FxBottomSheet.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxBreadcrumbs.razor.css",
+    "inputFile": "Components/DesignSystem/FxBreadcrumbs.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxCheckBox.razor.css",
+    "inputFile": "Components/DesignSystem/FxCheckBox.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxDivider.razor.css",
+    "inputFile": "Components/DesignSystem/FxDivider.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxDropDown.razor.css",
+    "inputFile": "Components/DesignSystem/FxDropDown.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxGroupButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxGroupButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxLink.razor.css",
+    "inputFile": "Components/DesignSystem/FxLink.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxNumericalInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxNumericalInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxProgressBar.razor.css",
+    "inputFile": "Components/DesignSystem/FxProgressBar.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxRadioButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxRadioButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSearchInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxSearchInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSlider.razor.css",
+    "inputFile": "Components/DesignSystem/FxSlider.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxSwitchButton.razor.css",
+    "inputFile": "Components/DesignSystem/FxSwitchButton.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTab.razor.css",
+    "inputFile": "Components/DesignSystem/FxTab.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTable.razor.css",
+    "inputFile": "Components/DesignSystem/FxTable.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTag.razor.css",
+    "inputFile": "Components/DesignSystem/FxTag.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTextareaInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxTextareaInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxTextInput.razor.css",
+    "inputFile": "Components/DesignSystem/FxTextInput.razor.scss"
+  },
+  {
+    "outputFile": "Components/DesignSystem/FxToast.razor.css",
+    "inputFile": "Components/DesignSystem/FxToast.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileBrowser/FileBrowser.razor.css",
+    "inputFile": "Components/FileBrowser/FileBrowser.razor.scss"
+  },
+  {
+    "outputFile": "Components/FxToolBar/FxToolBar.razor.css",
+    "inputFile": "Components/FxToolBar/FxToolBar.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ArtifactDetailModal/ArtifactDetailModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactDetailModal/ArtifactDetailModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ArtifactSelectionModal/ArtifactSelectionModal.razor.css",
+    "inputFile": "Components/Modal/ArtifactSelectionModal/ArtifactSelectionModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ConfirmationModal/ConfirmationModal.razor.css",
+    "inputFile": "Components/Modal/ConfirmationModal/ConfirmationModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ConfirmationReplaceOrSkipModal/ConfirmationReplaceOrSkipModal.razor.css",
+    "inputFile": "Components/Modal/ConfirmationReplaceOrSkipModal/ConfirmationReplaceOrSkipModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/InputModal/InputModal.razor.css",
+    "inputFile": "Components/Modal/InputModal/InputModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ToastModal/ToastModal.razor.css",
+    "inputFile": "Components/Modal/ToastModal/ToastModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/TransactionModal/TransactionModal.razor.css",
+    "inputFile": "Components/Modal/TransactionModal/TransactionModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/BottomNavigation.razor.css",
+    "inputFile": "Components/BottomNavigation.razor.scss"
+  },
+  {
+    "outputFile": "Components/EmptyListView.razor.css",
+    "inputFile": "Components/EmptyListView.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileCard.razor.css",
+    "inputFile": "Components/FileCard.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailView.razor.css",
+    "inputFile": "Components/FileDetailView.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailViewBottomActionBar.razor.css",
+    "inputFile": "Components/FileDetailViewBottomActionBar.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailViewBottomActionItem.razor.css",
+    "inputFile": "Components/FileDetailViewBottomActionItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/FileDetailViewItem.razor.css",
+    "inputFile": "Components/FileDetailViewItem.razor.scss"
+  },
+  {
+    "outputFile": "Components/NotAuthorizedComponent.razor.css",
+    "inputFile": "Components/NotAuthorizedComponent.razor.scss"
   }
 ]
