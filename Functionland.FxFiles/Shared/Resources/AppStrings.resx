@@ -351,6 +351,12 @@
   <data name="TestExplorer" xml:space="preserve">
     <value>Test explorer</value>
   </data>
+  <data name="CancelModal" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="MoveFileModal" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
   <data name="ReplaceModal" xml:space="preserve">
     <value>Replace</value>
   </data>

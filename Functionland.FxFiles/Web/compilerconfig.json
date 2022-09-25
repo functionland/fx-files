@@ -202,5 +202,9 @@
   {
     "outputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.css",
     "inputFile": "Components/Modal/ArtifactOverflowModal/ArtifactOverflowModal.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/TransactionModal/TransactionModal.razor.css",
+    "inputFile": "Components/Modal/TransactionModal/TransactionModal.razor.scss"
   }
 ]
