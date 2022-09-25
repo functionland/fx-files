@@ -15,10 +15,17 @@
     justify-content:flex-start;
     align-items: center;
     width: 100%;
+
+    ::deep .search-back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($chevron-left);
+    }
 }
 
 .root-mode ::deep input.input-box {
     flex-grow: 2;
+
 }
 
 .not-root-mode {

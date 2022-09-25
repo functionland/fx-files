@@ -13,7 +13,7 @@
             <div class="action-btn select-all-btn @(IsSelectedAll ? "select-all-filled" : "")" @onclick="ToggleSelectedAll"></div>
             <div class="action-btn list-view-btn @(ViewMode == Common.ViewModeEnum.list ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(Common.ViewModeEnum.list))"></div>
             <div class="action-btn grid-view-btn @(ViewMode == Common.ViewModeEnum.grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(Common.ViewModeEnum.grid))"></div>
-            <div class="action-btn filter-btn"></div>
+            <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
         </div>
     </div>
 }

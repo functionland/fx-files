@@ -1,19 +1,35 @@
 ﻿@inherits AppComponentBase;
 
 <div class="toolbar-box">
-    @if(IsInRoot) {
+    @if (IsInRoot)
+    {
         <div class="root-mode">
-            <FxSearchInput IsPartial="true" />
 
-            <FxButton Margin="0 8px"
+            @if (IsInSearchMode)
+            {
+                <FxButton Padding="0"
+                   OnClick="@HandleBackClick"
+                   Class="search-back-button"
+                   Margin="0 8px"
+                   BackgroundColor="transparent"
+                   ButtonStyle="FxButtonStyle.None" />
+            }
+
+            <FxSearchInput IsPartial="true" DebounceInterval="300" OnSearch="HandleSearch" OnFocus="HandleSearchFocused" />
+
+            @if (IsInSearchMode is false)
+            {
+                <FxButton Margin="0 8px"
                   OnClick="OnAddButtonClick"
                   ButtonStyle="FxButtonStyle.IconOnly"
                   LeftIcon="images/icons/plus.svg" />
 
-            <FxAvatar FxAvatarSizeType="FxAvatarSizeEnum.Small"
-                  FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
+                <FxAvatar FxAvatarSizeType="FxAvatarSizeEnum.Small" FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
+            }
         </div>
-    } else {
+    }
+    else
+    {
         <div class="not-root-mode">
             <FxButton Padding="0"
                   OnClick="@GoBack"
@@ -52,7 +68,7 @@
             </div>
         </div>
     }
-    
+
 </div>
 
 

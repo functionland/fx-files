@@ -1,12 +1,15 @@
 ﻿@namespace Functionland.FxFiles.App.Components
-
-@inherits AppComponentBase;
-
 @using Functionland.FxFiles.App.Components.FxToolBar
+@inherits AppComponentBase
 
 <div class="file-browser-container">
-    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)" />
-    @if (IsInRoot(_currentArtifact))
+    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+               OnSearch="HandleSearch"
+               OnSearchFocused="HandleSearchFocused"
+               IsInSearchMode="_isInSearchMode"
+               OnBackClick="HandleToolbarBackClick" />
+
+    @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
             <ContentTemplate>
@@ -19,16 +22,22 @@
             </ContentTemplate>
         </BitAccordion>
     }
-    <ArtifactExplorer Artifacts="_artifacts"
+
+    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
+    {
+        <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifact"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
-                      OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions" />
+                      OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
+                      OnFilterClick="HandleFilterClick" />
+    }
 </div>
 
-<InputModal @ref="_inputModal"/>
-<ArtifactOverflowModal @ref="_asm"/>
-<ToastModal @ref="_toastModalRef" />
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" />
+<ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
+<ToastModal @ref="_toastModalRef" />
+<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter"/>
+<InputModal @ref="_inputModal"/>
 <ConfirmationModal @ref="_confirmationModalRef" />

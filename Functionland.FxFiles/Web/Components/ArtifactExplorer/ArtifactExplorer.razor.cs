@@ -12,6 +12,7 @@ namespace Functionland.FxFiles.App.Components
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
+        [Parameter] public EventCallback OnFilterClick { get; set; }
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
@@ -128,6 +129,11 @@ namespace Functionland.FxFiles.App.Components
         {
             //todo: Proper subtext for artifact
             return "Modified 09/30/22";
+        }
+
+        private void HandleFilterClick()
+        {
+            OnFilterClick.InvokeAsync();
         }
     }
 
