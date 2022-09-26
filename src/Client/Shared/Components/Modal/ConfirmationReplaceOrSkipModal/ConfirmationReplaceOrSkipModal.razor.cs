@@ -8,7 +8,7 @@
         [Parameter]
         public string[] ArtifactsNames { get; set; } = default!;
 
-        public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(FsArtifact[] artifacts)
+        public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(IEnumerable<FsArtifact> artifacts)
         {
             ArtifactsNames = artifacts.Select(a => a.Name).ToArray();
 

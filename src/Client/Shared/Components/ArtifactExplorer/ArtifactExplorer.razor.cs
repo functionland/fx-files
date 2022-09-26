@@ -5,7 +5,7 @@
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<List<FsArtifact>> OnMultiArtifactsOptionsClick { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
@@ -45,7 +45,7 @@
 
         private async Task HandleMultiArtifactsOptionsClick()
         {
-            await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts);
+            await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts.ToArray());
         }
 
         private bool IsInRoot(FsArtifact? artifact)
