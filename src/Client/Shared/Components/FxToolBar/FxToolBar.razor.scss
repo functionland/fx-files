@@ -48,6 +48,12 @@
         @include Icon($arrow-left);
     }
 
+    ::deep .overflow-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($options-vertical);
+    }
+
     .action-row {
         display: flex;
         flex-flow: row nowrap;

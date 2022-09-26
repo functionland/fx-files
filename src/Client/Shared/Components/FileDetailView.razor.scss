@@ -167,3 +167,33 @@
     width:333px;
     height:300px;
 }
+
+.folder-icon::before {
+    font-size: 24px;
+    @include Icon($folder);
+}
+
+.text-file-icon::before {
+    font-size: 24px;
+    @include Icon($document);
+}
+
+.photo-file-icon::before {
+    font-size: 24px;
+    @include Icon($image);
+}
+
+.pdf-file-icon::before {
+    font-size: 24px;
+    @include Icon($PDF);
+}
+
+.audio-file-icon::before {
+    font-size: 24px;
+    @include Icon($audio);
+}
+
+.video-file-icon::before {
+    font-size: 24px;
+    @include Icon($video);
+}

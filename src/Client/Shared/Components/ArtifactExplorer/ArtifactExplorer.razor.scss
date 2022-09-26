@@ -77,7 +77,7 @@
             margin-right: $spacing-8;
 
             &::before {
-                @include Icon($select);
+                @include Icon($select, color(gray-content3));
                 font-size: 24px;
             }
         }
@@ -92,7 +92,7 @@
 
             &::before {
                 font-size: 24px;
-                @include Icon($list);
+                @include Icon($list, color(gray-content3));
             }
         }
 
@@ -106,7 +106,7 @@
 
             &::before {
                 font-size: 24px;
-                @include Icon($grid);
+                @include Icon($grid, color(gray-content3));
             }
         }
 
@@ -117,7 +117,7 @@
 
         .filter-btn::before {
             font-size: 24px;
-            @include Icon($filter);
+            @include Icon($filter, color(gray-content3));
         }
     }
 }

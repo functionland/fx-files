@@ -7,9 +7,10 @@
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
                OnBackClick="HandleToolbarBackClick"
-               Title="@_currentArtifact?.Name"
+               Title="@(_currentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
-               IsPinned="@(_currentArtifact?.IsPinned ?? false)"/>
+               IsPinned="@(_currentArtifact?.IsPinned ?? false)"
+               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))" />
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
@@ -33,10 +34,11 @@
         <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSearch="HandleSearch"
+                      OnFilterClick="HandleFilterClick"
                       OnSelectArtifact="HandleSelectArtifact"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
                       OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
-                      OnFilterClick="HandleFilterClick" />
+                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))" />
     }
 </div>
 
@@ -45,5 +47,6 @@
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <ToastModal @ref="_toastModalRef"/>
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter"/>
-<InputModal @ref="_inputModal"/>
+<InputModal @ref="_inputModalRef"/>
 <ConfirmationModal @ref="_confirmationModalRef" />
+<ArtifactDetailModal @ref="_artifactDetailModalRef" />
