@@ -1,3 +1,4 @@
+using Functionland.FxFiles.Client.Shared.Models;
 using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
@@ -74,7 +75,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
                     }
-                    FileWatchService.WatchArtifact(GetPinnedFsArtifact(pinnedArticat));
+                    WatchParnetFolder(GetPinnedFsArtifact(pinnedArticat));
                 }
             }
         }
@@ -113,6 +114,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifactChangeEvent.FsArtifact);
                         editedArtifact.ThumbnailPath = thumbnailAddress;
+                        artifactChangeEvent.FsArtifact.ThumbnailPath = thumbnailAddress;
 
                     }
                     await FxLocalDbService.UpdatePinAsync(editedArtifact, artifactChangeEvent.Description);
@@ -120,13 +122,48 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     PinnedPathsCatche.TryAdd(editedArtifact.FullPath, editedArtifact);
 
                     if (artifactChangeEvent.Description != null)
-                        FileWatchService.UnWatchArtifact(new FsArtifact(artifactChangeEvent.Description, Path.GetFileName(artifactChangeEvent.Description), (FsArtifactType)editedArtifact.FsArtifactType, (FsFileProviderType)editedArtifact.ProviderType));
-                    FileWatchService.WatchArtifact(GetPinnedFsArtifact(editedArtifact));
+                        UnWatchParent(new FsArtifact(artifactChangeEvent.Description, Path.GetFileName(artifactChangeEvent.Description), (FsArtifactType)editedArtifact.FsArtifactType, (FsFileProviderType)editedArtifact.ProviderType));
+
+                    WatchParnetFolder(artifactChangeEvent.FsArtifact);
                 }
             }
             catch (Exception exp)
             {
                 ExceptionHandler.Handle(exp);
+            }
+        }
+
+        private void WatchParnetFolder(FsArtifact artifact)
+        {
+            string? parentPath = GetParentPath(artifact);
+            var fileName = Path.GetFileName(parentPath);
+
+            FileWatchService.WatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
+
+
+        }
+
+        private string? GetParentPath(FsArtifact artifact)
+        {
+            if (artifact.FullPath is null)
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactPathIsNull)]);
+            var path = artifact.FullPath?.TrimEnd(Path.DirectorySeparatorChar);
+
+            var parentPath = Directory.GetParent(path)?.FullName;
+            return parentPath;
+        }
+
+        private void UnWatchParent(FsArtifact artifact)
+        {
+            if (artifact.FullPath is null)
+                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactPathIsNull)]);
+            var path = artifact.FullPath?.TrimEnd(Path.DirectorySeparatorChar);
+            if (path != null)
+            {
+                var parentPath = Directory.GetParent(path)?.FullName;
+                var fileName = Path.GetFileName(parentPath);
+
+                FileWatchService.UnWatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
             }
         }
 
@@ -143,7 +180,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             foreach (var artifact in artifacts)
             {
-                if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+                var parentPath = GetParentPath(artifact);
+                if (PinnedPathsCatche.Any(p => string.Equals(p.Key, parentPath, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return;
                 }
@@ -155,7 +193,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
 
                 await FxLocalDbService.AddPinAsync(artifact);
-                PinnedPathsCatche.TryAdd(artifact.FullPath, new PinnedArtifact
+                var newPinnedArtifact = new PinnedArtifact
                 {
                     FullPath = artifact.FullPath,
                     ContentHash = artifact.LastModifiedDateTime.ToString(),
@@ -165,8 +203,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ArtifactName = artifact.Name,
                     FsArtifactType = artifact.ArtifactType
 
-                });
-                FileWatchService.WatchArtifact(artifact);
+                };
+                PinnedPathsCatche.TryAdd(artifact.FullPath, newPinnedArtifact);
+                WatchParnetFolder(artifact);
             }
         }
 
@@ -176,17 +215,29 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 await FxLocalDbService.RemovePinAsync(path);
                 DeteteFromPinCache(path);
-                FileWatchService.UnWatchArtifact(new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, FsFileProviderType.InternalMemory));
+                UnWatchParent(new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, FsFileProviderType.InternalMemory));
             }
         }
+
 
         public async Task<List<FsArtifact>> GetPinnedArtifactsAsync()
         {
             var pinnedArtifacts = PinnedPathsCatche.Select(c => c.Value).ToList();
+
             var artifacts = new List<FsArtifact>();
             foreach (var artifact in pinnedArtifacts)
             {
-                var fsArtifact = GetPinnedFsArtifact(artifact);
+                FsArtifact currentFile = null;
+                if (artifact.FsArtifactType == FsArtifactType.File)
+                {
+
+                    var files = FileService.GetArtifactsAsync(artifact.FullPath);
+                    await foreach (var file in files)
+                        currentFile = file;
+
+                }
+                var fsArtifact = currentFile == null ? GetPinnedFsArtifact(artifact) : currentFile;
+
                 if (ArtifactIsImage(fsArtifact) && artifact.ThumbnailPath != null)
                 {
 
@@ -216,7 +267,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
             }
-            var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value);
+            var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value) { ThumbnailPath = artifact.ThumbnailPath};
             return fsArtifact;
         }
         private bool ArtifactIsImage(FsArtifact fsArtifact)
