@@ -259,6 +259,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy here.
+        /// </summary>
+        public static string CopyHere {
+            get {
+                return ResourceManager.GetString("CopyHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string Current {
@@ -597,6 +606,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string MoveFileModal {
             get {
                 return ResourceManager.GetString("MoveFileModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move here.
+        /// </summary>
+        public static string MoveHere {
+            get {
+                return ResourceManager.GetString("MoveHere", resourceCulture);
             }
         }
         
