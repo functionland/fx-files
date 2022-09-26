@@ -225,14 +225,10 @@ list-view {
         flex-flow: row nowrap;
         justify-content: flex-start;
 
-        .pin-badge {
-            width: 16px;
-            height: 16px;
+        .pin-badge::before {
+            font-size: $icon-20;
+            @include Icon($pin, color(gray-content1), $Icons-Filled);
             margin-right: $spacing-8;
-            background-size: $icon-16;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url($pin-filled);
         }
 
         .title-text {

@@ -9,20 +9,20 @@
 
         private bool _isModalOpen;
 
-        private string? _actionTitle;
+        private string? _title;
 
         private string? _placeholder;
 
         private string? _inputValue;
 
-        private bool _isRename;
+        private string? _headTitle;
 
 
-        public async Task<InputModalResult> ShowAsync(string actionTilte, string inputValue, string placeholder, bool isRename)
+        public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
         {
-            _isRename = isRename;
+            _headTitle = headTitle;
             _inputValue = inputValue;
-            _actionTitle = actionTilte;
+            _title = tilte;
             _placeholder = placeholder;
 
             _tcs?.SetCanceled();

@@ -9,12 +9,12 @@
     @bind-IsOpen="_isModalOpen" >
 
     <div class="input-modal">
-        @if(_isRename)
+        @if (!string.IsNullOrEmpty(_headTitle) || !string.IsNullOrWhiteSpace(_headTitle))
         {
-            <h6>RENAME</h6>
+            <h6>@_headTitle</h6>
         }
 
-        <h3>@_actionTitle</h3>
+        <h3>@_title</h3>
 
         <FxTextInput 
             Label="Name"

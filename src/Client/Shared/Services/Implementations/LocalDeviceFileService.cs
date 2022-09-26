@@ -225,28 +225,34 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        public virtual async Task<FsArtifact?> GetArtifactAsync(string? parentPath = null, string? path = null, CancellationToken? cancellationToken = null)
+        public virtual async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
-            if (string.IsNullOrWhiteSpace(path) || string.IsNullOrEmpty(path)) return null;
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
-            if (string.IsNullOrWhiteSpace(parentPath) || string.IsNullOrEmpty(parentPath)) return null;
+            var fsArtifactType = await GetFsArtifactTypeAsync(path);
 
-            var name = (Path.GetFileName(parentPath) != string.Empty ? Path.GetFileName(parentPath) : new DriveInfo(path).Name);
-            var drive = new DriveInfo(path);
-            var artifactType = await GetFsArtifactTypeAsync(parentPath);
-            var providerType = await GetFsFileProviderTypeAsync(parentPath);
-
-            if (artifactType is FsArtifactType.Drive or FsArtifactType.Folder)
+            var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType.Value, await GetFsFileProviderTypeAsync(path))
             {
-                var result = new FsArtifact(parentPath, name, artifactType.Value, providerType)
-                {
-                    LastModifiedDateTime = Directory.GetLastWriteTime(parentPath),
-                    ParentFullPath = Directory.GetParent(parentPath)?.FullName
-                };
+                FileExtension = Path.GetExtension(path),
+                ParentFullPath = Directory.GetParent(path)?.FullName
+            };
 
-                return result;
+
+            if (fsArtifactType == FsArtifactType.File)
+            {
+                fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
             }
-            return null;
+            else if (fsArtifactType == FsArtifactType.Folder)
+            {
+                fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
+            }
+            else if (fsArtifactType == FsArtifactType.Drive)
+            {
+                fsArtifact.Name = await GetDriveNameAsync(path);
+            }
+
+            return fsArtifact;
         }
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
@@ -527,6 +533,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             foreach (var invalid in invalidChars)
                 if (name.Contains(invalid)) return true;
             return false;
+        }
+
+        private async Task<string> GetDriveNameAsync(string? path)
+        {
+            var drives = await GetDrivesAsync();
+            var drive = drives.Where(d => d.FullPath == path).FirstOrDefault();
+
+            var driveInfo = new DriveInfo(drive.FullPath);
+            var driveFullPath = drive.FullPath.TrimEnd(Path.DirectorySeparatorChar);
+            var driveName = !string.IsNullOrWhiteSpace(driveInfo.VolumeLabel) ? $"{driveInfo.VolumeLabel} ({driveFullPath})" : driveFullPath;
+            return driveName;
         }
     }
 }
