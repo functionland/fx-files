@@ -259,6 +259,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Folder.
+        /// </summary>
+        public static string CreateFolder {
+            get {
+                return ResourceManager.GetString("CreateFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string Current {
@@ -606,6 +615,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string MyDevice {
             get {
                 return ResourceManager.GetString("MyDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Folder.
+        /// </summary>
+        public static string NewFolderPlaceholder {
+            get {
+                return ResourceManager.GetString("NewFolderPlaceholder", resourceCulture);
             }
         }
         
