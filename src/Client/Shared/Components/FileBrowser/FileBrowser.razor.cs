@@ -499,7 +499,7 @@ public partial class FileBrowser
     {
         _isInSearchMode = false;
         _searchText = string.Empty;
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath, _currentArtifact?.FullPath);
+        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
         FilterArtifacts();
         StateHasChanged();

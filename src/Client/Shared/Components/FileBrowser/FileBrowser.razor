@@ -7,7 +7,7 @@
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
                OnBackClick="HandleToolbarBackClick"
-               Title="@_currentArtifact?.Name"
+               Title="@(_currentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
                IsPinned="@(_currentArtifact?.IsPinned ?? false)"/>
 
