@@ -1,9 +1,11 @@
 ﻿@import "../Styles/abstracts/_variables.scss";
 @import "../Styles/abstracts/_functions.scss";
+@import '../Styles/abstracts/_mixins.scss';
 
 .file-card-container {
     width: 252px;
     height: 216px;
+    margin-right: 16px;
 
     .file-card-media {
         height: 146px;
@@ -38,6 +40,10 @@
         background-color: color(gray-bg-primary);
         padding: $spacing-16;
         border-radius: 0px 0px $border-radius-4 $border-radius-4;
+
+        &:active {
+            background-color: color(gray-bg-secondary);
+        }
 
         .card-file-name {
             display: flex;
@@ -90,12 +96,6 @@
     //pin filled mode
     .pin-defualt-icon {
         background-image: url($pin-filled) !important;
-    }
-}
-
-.pressed-card {
-    .file-card-content {
-        background-color: color(gray-bg-secondary);
     }
 }
 

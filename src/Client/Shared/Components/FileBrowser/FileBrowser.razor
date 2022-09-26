@@ -14,9 +14,12 @@
         <BitAccordion Title="Pinned" DefaultIsExpanded="true">
             <ContentTemplate>
                 <div class="items">
-                    @foreach (var cardConfig in _pins)
+                    @foreach (var pin in _pins)
                     {
-                        @*<FileCard CardConfig="cardConfig" />*@
+                        <FileCard FileName="@pin.Name"
+                          FileSize="@pin.SizeStr"
+                          ModifiedDate="@pin.LastModifiedDateTime.ToString("yyyy-MM-dd")"
+                          FileImage="@pin.ThumbnailPath" />
                     }
                 </div>
             </ContentTemplate>
