@@ -1,5 +1,6 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
+
 using Functionland.FxFiles.App.Platforms.Android;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
@@ -90,6 +91,16 @@ public partial class AndroidFileService : LocalDeviceFileService
         {
             yield return artifact;
         }
+    }
+
+    public override async Task<FsArtifact?> GetArtifactAsync(string? parentPath = null, string? path = null, CancellationToken? cancellationToken = null)
+    {
+        if (parentPath is null)
+        {
+            return null;
+        }
+
+        return await base.GetArtifactAsync(parentPath, path, cancellationToken);
     }
 
     public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
