@@ -12,13 +12,9 @@
     .file-icon-row {
         padding: $spacing-8 $spacing-0;
 
-        .file-icon {
-            background-image: url($text-file);
-            background-position: center;
-            background-repeat: no-repeat;
-            width: $icon-32;
-            height: $icon-32;
-            background-size: $icon-32;
+        .file-icon::before {
+            @include Icon($document);
+            font-size: $icon-32;
         }
 
         .file-image-preview {
