@@ -15,6 +15,9 @@
         public string? ContentBodyClass { get; set; }
 
         [Parameter]
+        public FsArtifactType ArtifactType { get; set; }
+
+        [Parameter]
         public RenderFragment? FileDetailItemFragment { get; set; } = default!;
 
         [Parameter]
