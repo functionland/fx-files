@@ -1,4 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Models;
+
+using Microsoft.VisualBasic;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -9,7 +12,7 @@ public partial class FileBrowser
     private List<FsArtifact> _allArtifacts = new();
     private List<FsArtifact> _filteredArtifacts = new();
 
-    private InputModal? _inputModal;
+    private InputModal? _inputModalRef;
     private ToastModal? _toastModalRef;
     private ConfirmationModal? _confirmationModalRef;
     private FilterArtifactModal? _filteredArtifactModalRef;
@@ -288,23 +291,38 @@ public partial class FileBrowser
         }
     }
 
-    public async Task HandleCreateFolder(string path, string folderName)
+    public async Task HandleCreateFolder(string path)
     {
+        if (_inputModalRef is null) return;
+
+        var createFolder = Localizer.GetString(AppStrings.CreateFolder);
+        var newFolderPlaceholder = Localizer.GetString(AppStrings.NewFolderPlaceholder);
+
+        var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, string.Empty, newFolderPlaceholder);
+
         try
         {
-            await FileService.CreateFolderAsync(path, folderName);
+            if (result?.ResultType == InputModalResultType.Confirm)
+            {
+                var newFolder = await FileService.CreateFolderAsync(path, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
+                _allArtifacts.Add(newFolder);   //Ugly, but no other possible way for now.
+                FilterArtifacts();
+            }
         }
-        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactPathIsNull, "folder"))
+        catch (DomainLogicException ex) when
+        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder") ||
+        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder") ||
+        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"))))
         {
-            // ToDo: toast something (...)
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = ex.Message;
+            _toastModalRef!.Show(title, message, FxToastType.Error);
         }
-        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder"))
+        catch
         {
-            // ToDo: toast something (Your folder needs a name, enter something.)
-        }
-        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"))
-        {
-            // ToDo: toast something (Name has invalid characters. Think again about what you pick.)
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
         }
     }
 
@@ -437,9 +455,9 @@ public partial class FileBrowser
         var Name = Path.GetFileNameWithoutExtension(artifact.Name);
 
         InputModalResult? result = null;
-        if (_inputModal is not null)
+        if (_inputModalRef is not null)
         {
-            result = await _inputModal.ShowAsync(Localizer.GetString(AppStrings.ChangeName), Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), Name, artifactType);
+            result = await _inputModalRef.ShowAsync(Localizer.GetString(AppStrings.ChangeName), Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), Name, artifactType);
         }
 
         return result;
