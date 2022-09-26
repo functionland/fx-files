@@ -11,6 +11,7 @@
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
+        [Parameter] public EventCallback<string?> OnSearch { get; set; }
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
@@ -132,8 +133,32 @@
 
         public string GetArtifactIcon(FsArtifact artifact)
         {
-            //todo: Proper icon for artifact
-            return "text-file-icon";
+            if (artifact.ArtifactType == FsArtifactType.File)
+            {
+                switch (artifact.FileCategory)
+                {
+                    case FileCategoryType.Document:
+                        return "text-file-icon";
+                        break;
+                    case FileCategoryType.Other:
+                        return "text-file-icon";
+                        break;
+                    case FileCategoryType.Pdf:
+                        return "text-file-icon";
+                        break;
+                    case FileCategoryType.Image:
+                        return "photo-file-icon";
+                        break;
+                    case FileCategoryType.Audio:
+                        return "audio-file-icon";
+                        break;
+                    case FileCategoryType.Video:
+                        return "video-file-icon";
+                        break;
+                }
+            }
+
+            return "folder-icon";
         }
 
         public string GetArtifactSubText(FsArtifact artifact)
@@ -147,6 +172,5 @@
             OnFilterClick.InvokeAsync();
         }
     }
-
 }
 
