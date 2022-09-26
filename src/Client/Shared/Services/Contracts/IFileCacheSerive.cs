@@ -1,8 +1,9 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
+
+public interface IFileCacheSerive
 {
-    public interface IFileCacheSerive
-    {
-        Task MakeFolderAvailableOfflineAsync(string FolderPath);
-        Task MakeFileAvailableOfflineAsync(string FilePath);
-    }
+    Task InitAsync(CancellationToken? cancellationToken = null);
+    Task MakeFolderAvailableOfflineAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
+    Task MakeFileAvailableOfflineAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
+    Task<bool> IsAvailableOfflineAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
 }
