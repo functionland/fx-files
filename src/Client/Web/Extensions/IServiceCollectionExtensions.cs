@@ -12,7 +12,7 @@ public static class IServiceCollectionExtensions
 
         services.AddClientSharedServices();
 
-        services.AddSingleton<IFileService>((serviceProvider) => FakeFileServiceFactory.CreateSimpleFileListOnRoot(serviceProvider));
+        services.AddSingleton<IFileService>((serviceProvider) => FakeFileServiceFactory.CreateTypical(serviceProvider));
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();

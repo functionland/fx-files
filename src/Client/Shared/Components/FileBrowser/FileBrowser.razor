@@ -34,8 +34,8 @@
         <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSearch="HandleSearch"
+                      OnSelectArtifact="HandleSelectArtifactAsync"
                       OnFilterClick="HandleFilterClick"
-                      OnSelectArtifact="HandleSelectArtifact"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
                       OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))" />
