@@ -339,6 +339,11 @@ list-view {
     @include Icon($audio);
 }
 
+.video-file-icon::before {
+    font-size: 24px;
+    @include Icon($video);
+}
+
 .select-action {
     display: flex;
     height: 40px;
