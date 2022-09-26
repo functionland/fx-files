@@ -259,6 +259,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This item will be permanently deleted from your device. Are you sure you want to delete this item?.
+        /// </summary>
+        public static string DeleteItem {
+            get {
+                return ResourceManager.GetString("DeleteItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These items will be permanently deleted from your device. Are you sure you want to delete these items?.
+        /// </summary>
+        public static string DeleteItems {
+            get {
+                return ResourceManager.GetString("DeleteItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
         public static string Download {
@@ -768,15 +786,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string TheCopyOpreationSuccessedTiltle {
             get {
                 return ResourceManager.GetString("TheCopyOpreationSuccessedTiltle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Items deleted.
-        /// </summary>
-        public static string TheDeleteOpreationSuccessedMessage {
-            get {
-                return ResourceManager.GetString("TheDeleteOpreationSuccessedMessage", resourceCulture);
             }
         }
         
