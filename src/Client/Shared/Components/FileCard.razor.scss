@@ -18,13 +18,15 @@
             left: 8px;
         }
 
-        .pin-defualt-icon {
-            width: $icon-20;
-            height: $icon-20;
-            background-image: url($pin-outline);
-            background-repeat: no-repeat;
-            background-size: $icon-20;
-            background-position: center;
+        .file-card-image {
+            padding: 16px 21px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pin-defualt-icon::before {
+            font-size: $icon-20;
+            @include Icon($pin, color(gray-content1), $Icons-Filled);
             position: absolute;
             top: 10.28px;
             right: 10.28px;
@@ -42,13 +44,9 @@
             justify-content: flex-start;
             align-items: center;
 
-            .file-icon {
-                width: $icon-16;
-                height: $icon-16;
-                background-image: url($folder);
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: $icon-16;
+            .file-icon::before {
+                font-size: $font-size-16;
+                @include Icon($folder, color(gray-content1));
             }
 
             .file-name-container {
@@ -111,8 +109,8 @@
             color: color(gray-border) !important;
         }
 
-        .file-icon {
-            background-image: url($disabled-folder) !important;
+        .file-icon::before {
+            @include Icon($folder, color(gray-border));
         }
     }
 }
