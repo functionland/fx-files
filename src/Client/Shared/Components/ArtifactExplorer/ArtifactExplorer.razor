@@ -61,7 +61,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 
 @if (!IsInRoot(CurrentArtifact))
 {
-    <FxSearchInput OnSearch="OnSearch" IsPartial="false" />
+    <FxSearchInput DebounceInterval="300" OnSearch="OnSearch" IsPartial="false" />
 }
 
 <div class="list-container @ViewMode-view">

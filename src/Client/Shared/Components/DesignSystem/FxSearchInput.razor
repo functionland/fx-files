@@ -18,7 +18,7 @@ else
         <input class="input-box" value="@_inputText" @oninput="HandleInput" @onfocus="HandleFocus" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth)]" />
         @if (!string.IsNullOrEmpty(_inputText) || !string.IsNullOrWhiteSpace(_inputText))
         {
-            <button class="button-search-input" @onclick="OnDoneClick">@Localizer[nameof(AppStrings.ButtonSearchFullWidth)]</button>
+            <button class="button-search-input" @onclick="OnDoneClick">Clear</button>
         }
     </div>
 }
