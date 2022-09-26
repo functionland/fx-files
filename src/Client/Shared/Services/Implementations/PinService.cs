@@ -139,8 +139,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var fileName = Path.GetFileName(parentPath);
 
             FileWatchService.WatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
-
-
         }
 
         private string? GetParentPath(FsArtifact artifact)
@@ -155,16 +153,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private void UnWatchParent(FsArtifact artifact)
         {
-            if (artifact.FullPath is null)
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactPathIsNull)]);
-            var path = artifact.FullPath?.TrimEnd(Path.DirectorySeparatorChar);
-            if (path != null)
-            {
-                var parentPath = Directory.GetParent(path)?.FullName;
-                var fileName = Path.GetFileName(parentPath);
+            string? parentPath = GetParentPath(artifact);
+            var fileName = Path.GetFileName(parentPath);
 
-                FileWatchService.UnWatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
-            }
+            FileWatchService.UnWatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
+
         }
 
         private void DeteteFromPinCache(string fullPath)
@@ -180,8 +173,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             foreach (var artifact in artifacts)
             {
-                var parentPath = GetParentPath(artifact);
-                if (PinnedPathsCatche.Any(p => string.Equals(p.Key, parentPath, StringComparison.CurrentCultureIgnoreCase)))
+                if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return;
                 }
@@ -267,7 +259,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
             }
-            var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value) { ThumbnailPath = artifact.ThumbnailPath};
+            var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value) { ThumbnailPath = artifact.ThumbnailPath };
             return fsArtifact;
         }
         private bool ArtifactIsImage(FsArtifact fsArtifact)
