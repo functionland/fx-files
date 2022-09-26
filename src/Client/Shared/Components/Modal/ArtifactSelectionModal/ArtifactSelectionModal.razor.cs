@@ -66,7 +66,8 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        //TODO: Add a method in File Service for get fsArtifact Folder or drive
+        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetArtifactAsync(_currentArtifact?.ParentFullPath, _currentArtifact?.FullPath);
+        await LoadArtifacts(_currentArtifact?.FullPath);
     }
 
     private void Close()
