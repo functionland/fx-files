@@ -276,8 +276,9 @@
     }
 
     .item-content {
-        padding-left: 16px;
         flex-grow: 1;
+        overflow: hidden;
+        padding-left: 16px;
 
         .item-sub-text {
             font-weight: 400;
