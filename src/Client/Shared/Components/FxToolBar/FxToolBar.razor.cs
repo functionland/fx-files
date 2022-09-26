@@ -17,13 +17,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
 
         [Parameter] public bool IsInSearchMode { get; set; }
-        [Parameter] public EventCallback OnBackClick { get; set; }
-
-
-        private async Task GoBack()
-        {
-            await JSRuntime.InvokeVoidAsync("history.back");
-        }
+        [Parameter] public EventCallback<MouseEventArgs> OnBackClick { get; set; }
 
         private void HandleSearchFocused()
         {
