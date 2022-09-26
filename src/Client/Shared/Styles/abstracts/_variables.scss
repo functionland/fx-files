@@ -1,3 +1,8 @@
+// base variable
+$base-unit: px;
+$font-path: "fonts";
+$icon-base-url: "images/icons/lightDesignSystem/";
+
 //main brand colors
 $primary-color: #06B597;
 $pure-white: #FFFFFF;
@@ -75,48 +80,8 @@ $colors-dark: (
   "input-disable": $input-dark-disable
 );
 
-// base variable
-$base-unit: px;
-
-//spacing
-$spacing-0: 0 + $base-unit;
-$spacing-4: 4 + $base-unit;
-$spacing-6: 6 + $base-unit;
-$spacing-8: 8 + $base-unit;
-$spacing-10: 10 + $base-unit;
-$spacing-12: 12 + $base-unit;
-$spacing-14: 14 + $base-unit;
-$spacing-16: 16 + $base-unit;
-$spacing-18: 18 + $base-unit;
-$spacing-21: 21 + $base-unit;
-$spacing-24: 24 + $base-unit;
-$spacing-32: 32 + $base-unit;
-$spacing-30: 30 + $base-unit;
-$spacing-31: 31 + $base-unit;
-$spacing-34: 34 + $base-unit;
-$spacing-40: 40 + $base-unit;
-$spacing-48: 48 + $base-unit;
-$spacing-56: 56 + $base-unit;
-$spacing-64: 64 + $base-unit;
-$spacing-72: 72 + $base-unit;
-$spacing-80: 80 + $base-unit;
-$spacing-120: 120 + $base-unit;
-$spacing-333: 333 + $base-unit;
-
-//icon sizes
-$icon-96: 96 + $base-unit;
-$icon-64: 64 + $base-unit;
-$icon-48: 48 + $base-unit;
-$icon-32: 32 + $base-unit;
-$icon-24: 24 + $base-unit;
-$icon-20: 20 + $base-unit;
-$icon-16: 16 + $base-unit;
-$icon-12: 12 + $base-unit;
-$icon-4: 4 + $base-unit;
 
 //svg icons
-$icon-base-url: "images/icons/lightDesignSystem/";
-
 $back: $icon-base-url + "back.svg";
 $copy: $icon-base-url + "copy.svg";
 $delete: $icon-base-url + "delete.svg";
@@ -212,7 +177,6 @@ $right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
 
 
 // outline icons
-
 $add-file: "\e900";
 $image: "\e901";
 $user: "\e902";
@@ -265,25 +229,24 @@ $upload-file: "\e930";
 $video: "\e931";
 $zones: "\e932";
 
-
 //filled icons
-
-$circle-filled: "\e900";
-$critical: "\e901";
-$edit: "\e902";
-$fill: "\e903";
-$info: "\e904";
-$open-in: "\e905";
-$selected: "\e906";
-$star-filled: "\e907";
-$success: "\e908";
-$warning: "\e909";
+$avatar: "\e900";
+$pin: "\e901";
+$select: "\e902";
+$circle-filled: "\e903";
+$critical: "\e904";
+$edit: "\e905";
+$fill: "\e906";
+$info: "\e907";
+$open-in: "\e908";
+$selected: "\e909";
+$star-filled: "\e90a";
+$success: "\e90b";
+$warning: "\e90c";
 
 
 //font faces
-$font-path: "fonts";
-
-$Icons-Filled: "FxL-Bold";
+$Icons-Filled: "FxL-icon";
 $Icons-Outline: "FxL-Outline";
 
 $open-sans-light: "OpenSans-Light";
@@ -329,7 +292,7 @@ $montserrat-semi-bold: "Montserrat-SemiBold";
     font-style: normal;
     font-weight: normal;
     font-display: block;
-    src: url('#{$font-path}/FxL-Bold.ttf') format('truetype');
+    src: url('#{$font-path}/FxL-icon.ttf') format('truetype');
 }
 
 @font-face {
@@ -396,3 +359,39 @@ $border-size-0: 0 + $base-unit;
 $border-size-1: 1 + $base-unit;
 $border-size-2: 2 + $base-unit;
 $border-size-4: 4 + $base-unit;
+
+//spacing
+$spacing-0: 0 + $base-unit;
+$spacing-4: 4 + $base-unit;
+$spacing-6: 6 + $base-unit;
+$spacing-8: 8 + $base-unit;
+$spacing-10: 10 + $base-unit;
+$spacing-12: 12 + $base-unit;
+$spacing-14: 14 + $base-unit;
+$spacing-16: 16 + $base-unit;
+$spacing-18: 18 + $base-unit;
+$spacing-21: 21 + $base-unit;
+$spacing-24: 24 + $base-unit;
+$spacing-32: 32 + $base-unit;
+$spacing-30: 30 + $base-unit;
+$spacing-31: 31 + $base-unit;
+$spacing-34: 34 + $base-unit;
+$spacing-40: 40 + $base-unit;
+$spacing-48: 48 + $base-unit;
+$spacing-56: 56 + $base-unit;
+$spacing-64: 64 + $base-unit;
+$spacing-72: 72 + $base-unit;
+$spacing-80: 80 + $base-unit;
+$spacing-120: 120 + $base-unit;
+$spacing-333: 333 + $base-unit;
+
+//icon sizes
+$icon-96: 96 + $base-unit;
+$icon-64: 64 + $base-unit;
+$icon-48: 48 + $base-unit;
+$icon-32: 32 + $base-unit;
+$icon-24: 24 + $base-unit;
+$icon-20: 20 + $base-unit;
+$icon-16: 16 + $base-unit;
+$icon-12: 12 + $base-unit;
+$icon-4: 4 + $base-unit;
