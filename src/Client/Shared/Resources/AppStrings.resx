@@ -396,9 +396,6 @@
   <data name="RootFolderDeleteException" xml:space="preserve">
     <value>Root folder can not be deleted</value>
   </data>
-  <data name="TheDeleteOpreationSuccessedMessage" xml:space="preserve">
-    <value>Items deleted</value>
-  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -413,5 +410,11 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="DeleteItem" xml:space="preserve">
+    <value>This item will be permanently deleted from your device. Are you sure you want to delete this item?</value>
+  </data>
+  <data name="DeleteItems" xml:space="preserve">
+    <value>These items will be permanently deleted from your device. Are you sure you want to delete these items?</value>
   </data>
 </root>

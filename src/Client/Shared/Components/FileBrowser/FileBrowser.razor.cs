@@ -228,15 +228,22 @@ public partial class FileBrowser
         {
             if (_confirmationModalRef != null)
             {
-                var result = await _confirmationModalRef.ShowAsync();
+                var result = new ConfirmationModalResult();
+
+                if (artifacts.Count == 1)
+                {
+                    var singleArtifact = artifacts.SingleOrDefault();
+                    result = await _confirmationModalRef.ShowAsync($"Delete {singleArtifact?.Name}", Localizer.GetString(AppStrings.DeleteItem));
+                }
+                else
+                {
+                    result = await _confirmationModalRef.ShowAsync($"Delete {artifacts.Count} items", Localizer.GetString(AppStrings.DeleteItems));
+                }
+
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
                 {
                     await FileService.DeleteArtifactsAsync(artifacts.ToArray());
                     UpdateRemovedArtifacts(artifacts);
-
-                    var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                    var message = Localizer.GetString(AppStrings.TheDeleteOpreationSuccessedMessage);
-                    _toastModalRef!.Show(Title, message, FxToastType.Success);
                 }
             }
         }
@@ -409,7 +416,7 @@ public partial class FileBrowser
         InputModalResult? result = null;
         if (_inputModal is not null)
         {
-            result = await _inputModal.ShowAsync("Change name", Name, artifactType, true);
+            result = await _inputModal.ShowAsync("Change name", "RENAME", Name, artifactType);
         }
 
         return result;
