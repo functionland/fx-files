@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
+﻿using Functionland.FxFiles.Client.Shared.Services;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IPinService, PinService>();
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<IThumbnailService, FakeThumbnailService>();
-
+        services.AddSingleton<FakeFileServiceFactory>();
         return services;
     }
 }

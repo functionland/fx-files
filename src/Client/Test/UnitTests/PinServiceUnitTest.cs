@@ -17,7 +17,8 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   services.AddClientWebServices();
+                   services.AddClientSharedServices();
+                   services.AddClientTestServices();
                }
             ).Build();
 
@@ -61,8 +62,8 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   services.AddClientWebServices();
-
+                   services.AddClientSharedServices();
+                   services.AddClientTestServices();
                }
             ).Build();
 
@@ -95,7 +96,8 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   services.AddClientWebServices();
+                   services.AddClientSharedServices();
+                   services.AddClientTestServices();
 
                }
             ).Build();

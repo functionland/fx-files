@@ -15,7 +15,8 @@ namespace Functionland.FxFiles.Client.Test.IntegrationTests
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   services.AddClientWebServices();
+                   services.AddClientSharedServices();
+                   services.AddClientTestServices();
                    //services.AddSingleton<IFileService>(FakeFileServiceFactory.CreateSimpleFileListOnRoot());
                }
             ).Build();
