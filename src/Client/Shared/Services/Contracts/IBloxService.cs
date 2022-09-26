@@ -3,9 +3,9 @@
     public interface IBloxService
     {
         Task<List<Blox>> GetBloxesAsync();
-        Task<List<Blox>> GetBloxesJoinInvationAsync();
-        Task AcceptBloxInvationAsync(string bloxId);
-        Task RejectBloxInvationAsync(string bloxId);
+        Task<List<Blox>> GetBloxesJoinInvitationAsync();
+        Task AcceptBloxInvitationAsync(string bloxId);
+        Task RejectBloxInvitationAsync(string bloxId);
         Task ClearBloxData(string bloxId);
 
 
