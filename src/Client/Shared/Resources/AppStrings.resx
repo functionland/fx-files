@@ -438,4 +438,10 @@
   <data name="Rename" xml:space="preserve">
     <value>Rename</value>
   </data>
+  <data name="CopyHere" xml:space="preserve">
+    <value>Copy here</value>
+  </data>
+  <data name="MoveHere" xml:space="preserve">
+    <value>Move here</value>
+  </data>
 </root>

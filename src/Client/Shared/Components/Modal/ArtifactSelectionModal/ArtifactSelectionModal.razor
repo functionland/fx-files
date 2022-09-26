@@ -28,7 +28,7 @@
         <FxButton 
             Width="100%"
             Height="60px"
-            Text="Move here"
+                  Text="@(_artifactActionResult?.ActionType == ArtifactActionType.Copy? Localizer[nameof(AppStrings.CopyHere)] : Localizer[nameof(AppStrings.MoveHere)])"
             OnClick="SelectDestionation"
             ButtonStyle="FxButtonStyle.Normal" />
     </div>
