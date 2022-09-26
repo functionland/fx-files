@@ -8,7 +8,7 @@
 
 	<Identity
 	  Name="maui-package-name-placeholder"
-	  Publisher="CN=User Name"
+	  Publisher="CN=Function Land"
 	  Version="0.0.0.0" />
 
 	<Properties>
