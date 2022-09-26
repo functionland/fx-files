@@ -223,7 +223,7 @@ public partial class FileBrowser
         {
             var pathArtifacts = artifacts.Select(a => a.FullPath).ToArray();
             await PinService.SetArtifactsUnPinAsync(pathArtifacts);
-            await UpdatePinedArtifactsAsync(artifacts, true);
+            await UpdatePinedArtifactsAsync(artifacts, false);
         }
         catch
         {
@@ -342,7 +342,8 @@ public partial class FileBrowser
         ArtifactOverflowResult? result = null;
         if (_artifactOverflowModalRef is not null)
         {
-            result = await _artifactOverflowModalRef!.ShowAsync();
+            var isPinned = artifact.IsPinned ?? false;
+            result = await _artifactOverflowModalRef!.ShowAsync(false, isPinned);
         }
 
         switch (result?.ResultType)
@@ -381,7 +382,7 @@ public partial class FileBrowser
             ArtifactOverflowResult? result = null;
             if (_artifactOverflowModalRef is not null)
             {
-                result = await _artifactOverflowModalRef!.ShowAsync();
+                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple);
             }
 
             switch (result?.ResultType)
