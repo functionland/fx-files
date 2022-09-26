@@ -233,11 +233,11 @@ public partial class FileBrowser
                 if (artifacts.Count == 1)
                 {
                     var singleArtifact = artifacts.SingleOrDefault();
-                    result = await _confirmationModalRef.ShowAsync($"Delete {singleArtifact?.Name}", Localizer.GetString(AppStrings.DeleteItem));
+                    result = await _confirmationModalRef.ShowAsync(Localizer.GetString(AppStrings.DeleteItems, singleArtifact?.Name), Localizer.GetString(AppStrings.DeleteItemDescription));
                 }
                 else
                 {
-                    result = await _confirmationModalRef.ShowAsync($"Delete {artifacts.Count} items", Localizer.GetString(AppStrings.DeleteItems));
+                    result = await _confirmationModalRef.ShowAsync(Localizer.GetString(AppStrings.DeleteItems, artifacts.Count), Localizer.GetString(AppStrings.DeleteItemsDescription));
                 }
 
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
@@ -400,11 +400,11 @@ public partial class FileBrowser
 
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            artifactType = "File name";
+            artifactType = Localizer.GetString(AppStrings.FileRenamePlaceholder);
         }
         else if (artifact.ArtifactType == FsArtifactType.Folder)
         {
-            artifactType = "Folder name";
+            artifactType = Localizer.GetString(AppStrings.FolderRenamePlaceholder);
         }
         else
         {
@@ -416,7 +416,7 @@ public partial class FileBrowser
         InputModalResult? result = null;
         if (_inputModal is not null)
         {
-            result = await _inputModal.ShowAsync("Change name", "RENAME", Name, artifactType);
+            result = await _inputModal.ShowAsync(Localizer.GetString(AppStrings.ChangeName), Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), Name, artifactType) ;
         }
 
         return result;
