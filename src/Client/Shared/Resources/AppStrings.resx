@@ -438,6 +438,12 @@
   <data name="Rename" xml:space="preserve">
     <value>Rename</value>
   </data>
+  <data name="CreateFolder" xml:space="preserve">
+    <value>Create Folder</value>
+  </data>
+  <data name="NewFolderPlaceholder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
   <data name="CopyHere" xml:space="preserve">
     <value>Copy here</value>
   </data>
