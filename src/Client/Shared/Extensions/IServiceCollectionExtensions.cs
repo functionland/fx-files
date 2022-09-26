@@ -21,14 +21,6 @@ public static class IServiceCollectionExtensions
         services.AddScoped<AuthenticationStateProvider, AppAuthenticationStateProvider>();
         services.AddScoped(sp => (AppAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
 
-#if BlazorHybrid
-        string connectionString = $"DataSource={Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "FxDB.db")};";
-#else
-        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
-#endif
-
-        services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
-
         services.AddSingleton<IPinService, PinService>();
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<IThumbnailService, FakeThumbnailService>();

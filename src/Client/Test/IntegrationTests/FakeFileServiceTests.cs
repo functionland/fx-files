@@ -9,6 +9,7 @@ namespace Functionland.FxFiles.Client.Test.IntegrationTests
     [TestClass]
     public class FakeFileServiceTests : TestBase
     {
+        public TestContext TestContext { get; set; }
         [TestMethod]
         public async Task FakelatformTest_MustWork()
         {
@@ -16,7 +17,7 @@ namespace Functionland.FxFiles.Client.Test.IntegrationTests
                .ConfigureServices((_, services) =>
                {
                    services.AddClientSharedServices();
-                   services.AddClientTestServices();
+                   services.AddClientTestServices(TestContext);
                    //services.AddSingleton<IFileService>(FakeFileServiceFactory.CreateSimpleFileListOnRoot());
                }
             ).Build();

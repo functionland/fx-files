@@ -11,6 +11,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
     [TestClass]
     public class PinServiceUnitTest : TestBase
     {
+        public TestContext TestContext { get; set; }
         [TestMethod]
         public async Task AddPinUnitTest_MustWork()
         {
@@ -18,7 +19,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                .ConfigureServices((_, services) =>
                {
                    services.AddClientSharedServices();
-                   services.AddClientTestServices();
+                   services.AddClientTestServices(TestContext);
                }
             ).Build();
 
@@ -63,7 +64,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                .ConfigureServices((_, services) =>
                {
                    services.AddClientSharedServices();
-                   services.AddClientTestServices();
+                   services.AddClientTestServices(TestContext);
                }
             ).Build();
 
@@ -97,7 +98,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                .ConfigureServices((_, services) =>
                {
                    services.AddClientSharedServices();
-                   services.AddClientTestServices();
+                   services.AddClientTestServices(TestContext);
 
                }
             ).Build();

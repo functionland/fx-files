@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 
@@ -9,6 +10,9 @@ public static class IServiceCollectionExtensions
     public static IServiceCollection AddClientWebServices(this IServiceCollection services)
     {
         // Services being registered here can get injected in web (blazor web assembly & blzor server)
+        string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
+        services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+
 
         services.AddClientSharedServices();
 
