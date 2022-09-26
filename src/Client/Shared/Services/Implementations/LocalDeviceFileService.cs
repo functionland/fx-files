@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -222,6 +223,30 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     Size = fileInfo.Length
                 };
             }
+        }
+
+        public virtual async Task<FsArtifact?> GetArtifactAsync(string? parentPath = null, string? path = null, CancellationToken? cancellationToken = null)
+        {
+            if (string.IsNullOrWhiteSpace(path) || string.IsNullOrEmpty(path)) return null;
+
+            if (string.IsNullOrWhiteSpace(parentPath) || string.IsNullOrEmpty(parentPath)) return null;
+
+            var name = (Path.GetFileName(parentPath) != string.Empty ? Path.GetFileName(parentPath) : new DriveInfo(path).Name);
+            var drive = new DriveInfo(path);
+            var artifactType = await GetFsArtifactTypeAsync(parentPath);
+            var providerType = await GetFsFileProviderTypeAsync(parentPath);
+
+            if (artifactType is FsArtifactType.Drive or FsArtifactType.Folder)
+            {
+                var result = new FsArtifact(parentPath, name, artifactType.Value, providerType)
+                {
+                    LastModifiedDateTime = Directory.GetLastWriteTime(parentPath),
+                    ParentFullPath = Directory.GetParent(parentPath)?.FullName
+                };
+
+                return result;
+            }
+            return null;
         }
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)

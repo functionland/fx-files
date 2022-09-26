@@ -223,6 +223,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change name.
+        /// </summary>
+        public static string ChangeName {
+            get {
+                return ResourceManager.GetString("ChangeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string Clear {
+            get {
+                return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
@@ -255,6 +273,42 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Day {
             get {
                 return ResourceManager.GetString("Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete {0}.
+        /// </summary>
+        public static string DeleteItem {
+            get {
+                return ResourceManager.GetString("DeleteItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This item will be permanently deleted from your device. Are you sure you want to delete this item?.
+        /// </summary>
+        public static string DeleteItemDescription {
+            get {
+                return ResourceManager.GetString("DeleteItemDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete {0} item.
+        /// </summary>
+        public static string DeleteItems {
+            get {
+                return ResourceManager.GetString("DeleteItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These items will be permanently deleted from your device. Are you sure you want to delete these items?.
+        /// </summary>
+        public static string DeleteItemsDescription {
+            get {
+                return ResourceManager.GetString("DeleteItemsDescription", resourceCulture);
             }
         }
         
@@ -340,6 +394,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File name.
+        /// </summary>
+        public static string FileRenamePlaceholder {
+            get {
+                return ResourceManager.GetString("FileRenamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
         public static string Files {
@@ -381,6 +444,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Folder {
             get {
                 return ResourceManager.GetString("Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder name.
+        /// </summary>
+        public static string FolderRenamePlaceholder {
+            get {
+                return ResourceManager.GetString("FolderRenamePlaceholder", resourceCulture);
             }
         }
         
@@ -583,6 +655,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string Rename {
+            get {
+                return ResourceManager.GetString("Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replace.
         /// </summary>
         public static string ReplaceModal {
@@ -772,15 +853,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Items deleted.
-        /// </summary>
-        public static string TheDeleteOpreationSuccessedMessage {
-            get {
-                return ResourceManager.GetString("TheDeleteOpreationSuccessedMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Items moved.
         /// </summary>
         public static string TheMoveOpreationSuccessedMessage {
@@ -921,6 +993,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string UnknownFsFileProviderException {
             get {
                 return ResourceManager.GetString("UnknownFsFileProviderException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
         
