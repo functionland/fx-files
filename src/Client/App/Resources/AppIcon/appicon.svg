@@ -1,4 +1,40 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<svg width="450" height="450" viewBox="0 0 450 450" version="1.1" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="0" width="450" height="450" fill="#0D2960" />
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg2"
+   xml:space="preserve"
+   width="547.1333"
+   height="534.01331"
+   viewBox="0 0 547.1333 534.01331"
+   sodipodi:docname="FULA_Logo_GRN.eps"><metadata
+     id="metadata8"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+     id="defs6" /><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview4" /><g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="ink_ext_XXXXXX"
+     transform="matrix(1.3333333,0,0,-1.3333333,0,534.01333)"><g
+       id="g12"
+       transform="scale(0.1)"><path
+         d="m 2983.93,3290.39 -508.77,610.71 c -50.27,60.34 -124.75,95.24 -203.29,95.24 H 125.297 C 56.0977,3996.34 0,3940.24 0,3871.04 v -694.53 h 2930.59 c 58.86,0 91.02,68.65 53.34,113.88 z M 1118.5,705.941 1627.27,95.2305 C 1677.54,34.8906 1752.02,0 1830.55,0 h 2146.58 c 69.2,0 125.3,56.1016 125.3,125.289 V 819.82 H 1171.84 c -58.86,0 -91.02,-68.652 -53.34,-113.879 z m 1496.82,1919.579 -1137.16,-1.67 c -31.58,-0.05 -57.14,-25.68 -57.09,-57.26 l 1.66,-1137.16 c 0.05,-31.58 25.68,-57.14 57.26,-57.1 l 1137.17,1.67 c 31.57,0.05 57.13,25.68 57.09,57.26 l -1.67,1137.16 c -0.04,31.58 -25.68,57.14 -57.26,57.1 z m 1399.4,668.91 -747.23,692.98 c -35.31,37.01 -97.7,11.97 -97.62,-39.18 l 0.72,-2871.12 c 0.04,-31.27 25.44,-56.6 56.72,-56.55 l 819.08,1.2 c 31.28,0.05 56.6,25.44 56.56,56.72 l 0.52,2012.53 c 0.02,77.2 -32.14,150.92 -88.75,203.42 z M 876.156,2984.51 57.0781,2983.31 C 25.7969,2983.26 0.472656,2957.87 0.519531,2926.59 L 0,914.059 C -0.0195313,836.859 32.1406,763.141 88.7461,710.641 L 835.98,17.6602 c 35.305,-37.0118 97.696,-11.96879 97.622,39.1679 L 932.883,2927.95 c -0.047,31.28 -25.442,56.6 -56.727,56.56"
+         style="fill:#3dbb91;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="path14" /></g></g></svg>
