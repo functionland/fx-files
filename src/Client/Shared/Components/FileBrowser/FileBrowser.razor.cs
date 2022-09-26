@@ -45,7 +45,7 @@ public partial class FileBrowser
                 Count = artifacts.Count,
             };
 
-            string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -95,7 +95,7 @@ public partial class FileBrowser
                 Count = artifacts.Count,
             };
 
-            string? destinationPath = await HandleSelectDestinationArtifact(_currentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -103,7 +103,7 @@ public partial class FileBrowser
 
             try
             {
-                await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false);
+                await FileService.MoveArtifactsAsync(artifacts.ToArray(), destinationPath, false);
             }
             catch (CanNotOperateOnFilesException ex)
             {
@@ -141,7 +141,7 @@ public partial class FileBrowser
 
     }
 
-    public async Task<string?> HandleSelectDestinationArtifact(FsArtifact artifact, ArtifactActionResult artifactActionResult)
+    public async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
         var Result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
         string? destinationPath = null;
@@ -212,7 +212,7 @@ public partial class FileBrowser
         try
         {
             await PinService.SetArtifactsPinAsync(notPinedArtifacts);
-            UpdatePinedArtifacts(notPinedArtifacts.ToList());
+            await UpdatePinedArtifactsAsync(notPinedArtifacts.ToList());
         }
         catch
         {
@@ -233,10 +233,6 @@ public partial class FileBrowser
                 {
                     await FileService.DeleteArtifactsAsync(artifacts.ToArray());
                     UpdateRemovedArtifacts(artifacts);
-
-                    var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                    var message = Localizer.GetString(AppStrings.TheDeleteOpreationSuccessedMessage);
-                    _toastModalRef!.Show(Title, message, FxToastType.Success);
                 }
             }
         }
@@ -417,31 +413,37 @@ public partial class FileBrowser
 
     private void UpdateRenamedArtifact(FsArtifact artifact, string newName)
     {
-        var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+        var artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
         if (artifactRenamed != null)
         {
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, artifact.Name);
             artifactRenamed.Name = newName + Path.GetExtension(artifact.Name);
         }
+
+        _allArtifacts = _filteredArtifacts;
     }
 
-    private void UpdatePinedArtifacts(List<FsArtifact> artifacts)
+    private async Task UpdatePinedArtifactsAsync(List<FsArtifact> artifacts)
     {
+        await LoadPinsAsync();
         var artifactPath = artifacts.Select(a => a.FullPath).ToList();
 
-        foreach (var artifact in _allArtifacts)
+        foreach (var artifact in _filteredArtifacts)
         {
             if (artifactPath.Contains(artifact.FullPath))
             {
                 artifact.IsPinned = true;
             }
         }
+
+        _allArtifacts = _filteredArtifacts;
     }
 
     private void UpdateRemovedArtifacts(List<FsArtifact> artifacts)
     {
-        _allArtifacts = _allArtifacts.Except(artifacts).ToList();
+        _filteredArtifacts = _filteredArtifacts.Except(artifacts).ToList();
+        _allArtifacts = _filteredArtifacts;
     }
 
     private void HandleSearchFocused()
