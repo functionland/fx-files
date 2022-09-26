@@ -1,4 +1,5 @@
-﻿@import '../../Styles/abstracts/_variables.scss';
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/abstracts/_media-queries.scss';
 
@@ -46,9 +47,9 @@
     cursor: pointer;
     background-color: transparent;
 
-    .close-button-icon {
-        width: $icon-24;
-        height: $icon-24;
+    .close-button-icon::before {
+        font-size: 24px;
+        @include Icon($close);
     }
 }
 
