@@ -13,6 +13,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public double DebounceInterval { get; set; }
 
+        private void OnDoneClick()
+        {
+            _inputText = null;
+            OnSearch.InvokeAsync();
+        }
+
         private void HandleFocus()
         {
             OnFocus.InvokeAsync();

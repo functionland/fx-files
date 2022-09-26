@@ -6,6 +6,7 @@
                OnSearch="HandleSearch"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
+               Title="@(_currentArtifact?.Name)"
                OnBackClick="HandleToolbarBackClick" />
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
@@ -26,6 +27,7 @@
     {
         <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
+                      OnSearch="HandleSearch"
                       OnSelectArtifact="HandleSelectArtifact"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
                       OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
