@@ -306,6 +306,7 @@ public partial class FileBrowser
         var artifacts = new List<FsArtifact>();
         await foreach (var item in allFiles)
         {
+            item.IsPinned = PinService.IsPinned(item);
             artifacts.Add(item);
         }
 
