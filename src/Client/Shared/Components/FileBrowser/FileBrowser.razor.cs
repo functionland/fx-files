@@ -275,7 +275,7 @@ public partial class FileBrowser
 
     public async Task HandleShowDetailsArtifact(FsArtifact[] artifact)
     {
-        var isMultiple = artifact.Count > 1 ? true : false;
+        var isMultiple = artifact.Length > 1 ? true : false;
         var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple);
         switch (result.ResultType)
         {
@@ -287,7 +287,7 @@ public partial class FileBrowser
                 await HandleMoveArtifactsAsync(artifact);
                 break;
             case ArtifactDetailModalResultType.Pin:
-                await HandlePinArtifacts(artifact);
+                await HandlePinArtifactsAsync(artifact);
                 break;
             case ArtifactDetailModalResultType.More:
                 //TODO: Implement more here 

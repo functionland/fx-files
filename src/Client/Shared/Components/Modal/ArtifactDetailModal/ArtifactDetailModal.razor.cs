@@ -7,7 +7,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         [AutoInject]
         private IFileService _fileService = default!;
 
-        private List<FsArtifact> _artifacts = new();
+        private FsArtifact[] _artifacts = Array.Empty<FsArtifact>();
 
         private string _artifactsSize = string.Empty;
 
@@ -72,7 +72,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _artifactsSize = SizeUtil.CalculateSizeStr(totalSize);
         }
 
-        public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false)
+        public async Task<ArtifactDetailModalResult> ShowAsync(FsArtifact[] artifacts, bool isMultiple = false)
         {
             _tcs?.SetCanceled();
             _artifacts = artifacts;
