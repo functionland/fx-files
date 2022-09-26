@@ -4,7 +4,7 @@
 <main class="content-body @ContentBodyClass fill column">
     @if (IsImageFile)
     {
-        <div class="file-icon-row">
+        <div class="file-icon-row @(ArtifactType.ToString())-file-icon">
             @*TODO:// image file icon here*@
             <div>
             <img class="file-image-preview" src="sample.jpg">
@@ -15,7 +15,7 @@
     {
         @if (!string.IsNullOrEmpty(FileName))
         {
-            <div class="file-icon-row">
+            <div class="file-icon-row @(ArtifactType.ToString().ToLower())-file-icon">
                 <div class="file-icon"></div>
             </div>
         }
