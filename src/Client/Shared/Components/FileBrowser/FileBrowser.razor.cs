@@ -16,6 +16,7 @@ public partial class FileBrowser
     private ArtifactOverflowModal? _artifactOverflowModalRef;
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
+    private ArtifactDetailModal? _artifactDetailModalRef;
 
     private string? _searchText;
     private bool _isInSearchMode;
@@ -213,6 +214,8 @@ public partial class FileBrowser
         {
             await PinService.SetArtifactsPinAsync(notPinedArtifacts);
             UpdatePinedArtifacts(notPinedArtifacts.ToList());
+            //TODO: Add toast for successful message 
+            //_toastModalRef!.Show(Localizer.GetString(AppStrings.TheOpreationSuccessedTiltle), Localizer.GetString(AppStrings.TheOpreationSuccessedMessage), FxToastType.Success);
         }
         catch
         {
@@ -256,7 +259,28 @@ public partial class FileBrowser
 
     public async Task HandleShowDetailsArtifact(List<FsArtifact> artifact)
     {
-
+        var isMultiple = artifact.Count > 1 ? true : false;
+        var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple);
+        switch (result.ResultType)
+        {
+            case ArtifactDetailModalResultType.Download:
+                //TODO: Implement download logic here
+                //await HandleDownloadArtifacts(artifact);
+                break;
+            case ArtifactDetailModalResultType.Move:
+                await HandleMoveArtifactsAsync(artifact);
+                break;
+            case ArtifactDetailModalResultType.Pin:
+                await HandlePinArtifacts(artifact);
+                break;
+            case ArtifactDetailModalResultType.More:
+                //TODO: Implement more here 
+                break;
+            case ArtifactDetailModalResultType.Close:
+                break;
+            default:
+                break;
+        }
     }
 
     public async Task HandleCreateFolder(string path, string folderName)
