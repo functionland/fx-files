@@ -105,3 +105,9 @@ test-selector-dropdown{
 ::deep .bit-drp-wrapper:focus::after {
     border: 2px solid $green-dark-base;
 }
+
+::deep .bit-mdl-container {
+    padding: 16px;
+    border-radius: 4px;
+    background-color: color(app-bg);
+}

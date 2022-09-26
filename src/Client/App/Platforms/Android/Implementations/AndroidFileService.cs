@@ -93,14 +93,14 @@ public partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override async Task<FsArtifact?> GetArtifactAsync(string? parentPath = null, string? path = null, CancellationToken? cancellationToken = null)
+    public override async Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (parentPath is null)
+        if (path is null)
         {
             return null;
         }
 
-        return await base.GetArtifactAsync(parentPath, path, cancellationToken);
+        return await base.GetFsArtifactAsync(path, cancellationToken);
     }
 
     public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
