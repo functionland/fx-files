@@ -34,7 +34,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations
             return base.GetArtifactsAsync(path, searchText, cancellationToken);
         }
 
-        public override Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
+        public override Task<FsArtifact> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
             return base.GetFsArtifactAsync(path, cancellationToken);
         }
