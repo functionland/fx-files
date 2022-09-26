@@ -117,7 +117,8 @@
     justify-content: center;
 }
 
-list-view {
+.list-view {
+    height: calc(100vh - 354px);
 }
 
 .select-action {

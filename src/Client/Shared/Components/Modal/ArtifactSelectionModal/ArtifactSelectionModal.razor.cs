@@ -66,7 +66,7 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetArtifactAsync(_currentArtifact?.ParentFullPath, _currentArtifact?.FullPath);
+        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
         await LoadArtifacts(_currentArtifact?.FullPath);
     }
 

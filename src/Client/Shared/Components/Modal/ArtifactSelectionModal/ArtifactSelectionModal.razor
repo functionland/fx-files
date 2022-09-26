@@ -4,23 +4,32 @@
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
     <div class="container">
-        <FxToolBar IsInRoot="false"
-                   IsInSearchMode="false"
-                   OnBackClick="Back"
-                   Title="@_currentArtifact?.Name"
-                   SubTitle="@(_currentArtifact != null?
-                               $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}"
-                               : "")"
-                   IsPinned="@(_currentArtifact?.IsPinned ?? false)" />
+        <FxToolBar 
+            IsInRoot="false"
+            IsInSearchMode="false"
+            OnBackClick="Back"
+            Title="@_currentArtifact?.Name"
+            IsPinned="@(_currentArtifact?.IsPinned ?? false)" 
+            SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")" />
 
         @if (_artifacts is not null)
         {
-            <ArtifactExplorer Artifacts="_artifacts"
-                          ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
-                          CurrentArtifact="_currentArtifact"
-                          ArtifactActionResult="_artifactActionResult"
-                          OnSelectArtifact="SelectArtifact"
-                          OnCancelSelectDestionationMode="Close" />
+            <ArtifactExplorer 
+                Artifacts="_artifacts"
+                ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
+                CurrentArtifact="_currentArtifact"
+                ArtifactActionResult="_artifactActionResult"
+                OnSelectArtifact="SelectArtifact"
+                OnCancelSelectDestionationMode="Close" />
         }
+    </div>
+
+    <div class="button-container">
+        <FxButton 
+            Width="100%"
+            Height="60px"
+            Text="Move here"
+            OnClick="SelectDestionation"
+            ButtonStyle="FxButtonStyle.Normal" />
     </div>
 </FxBottomSheet>
