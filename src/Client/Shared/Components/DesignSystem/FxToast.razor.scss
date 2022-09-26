@@ -1,5 +1,6 @@
 ﻿@import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
+@import "../../Styles/abstracts/_mixins.scss";
 
 .open-toast {
     display: flex;
@@ -30,11 +31,7 @@
         align-items: center;
 
         .toast-icon {
-            width: $icon-20;
-            height: $icon-20;
-            background-size: $icon-20;
-            background-repeat: no-repeat;
-            background-position: center;
+            font-size: $icon-24;
         }
 
         .toast-messages {
@@ -59,18 +56,16 @@
         }
     }
 
-    .close-icon {
-        width: $icon-16;
-        height: $icon-16;
-        background-size: $icon-16;
-        background-image: url($close-btn);
+    .close-icon::before {
+        @include Icon($close);
+        font-size: $icon-16;
         cursor: pointer;
     }
 }
 
 .success-message {
-    .toast-icon {
-        background-image: url($success-mode);
+    .toast-icon::before {
+        @include Icon($success, $success-dark, $Icons-Filled);
     }
 
     .taost-message-title {
@@ -79,8 +74,8 @@
 }
 
 .info-message {
-    .toast-icon {
-        background-image: url($info-mode);
+    .toast-icon::before {
+        @include Icon($info, $info-dark, $Icons-Filled);
     }
 
     .taost-message-title {
@@ -89,8 +84,8 @@
 }
 
 .warning-message {
-    .toast-icon {
-        background-image: url($warning-mode);
+    .toast-icon::before {
+        @include Icon($warning, color(warning), $Icons-Filled);
     }
 
     .taost-message-title {
@@ -99,8 +94,8 @@
 }
 
 .error-message {
-    .toast-icon {
-        background-image: url($error-mode);
+    .toast-icon::before {
+        @include Icon($critical, color(error), $Icons-Filled);
     }
 
     .taost-message-title {
