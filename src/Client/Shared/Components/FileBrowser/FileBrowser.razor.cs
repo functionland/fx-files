@@ -2,6 +2,7 @@
 using Functionland.FxFiles.Client.Shared.Models;
 
 using Microsoft.VisualBasic;
+using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -505,18 +506,22 @@ public partial class FileBrowser
 
     private async Task HandleSearch(string? text)
     {
-        //await InvokeAsync(async () =>
+        //_ = InvokeAsync(async () =>
         //{
+        //await Task.Run(async () =>
+        //{
+
         _searchText = text;
         _allArtifacts = new();
-
-        var result = FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText);
-        await foreach (var item in result)
+        await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText))
         {
-            _allArtifacts.Add(item);
+            await Task.Yield();
+            //_allArtifacts.Add(item);
+            //FilterArtifacts();
+            //Console.WriteLine(item.FullPath);
         }
 
-        FilterArtifacts();
+        //});
         //});
     }
 
