@@ -10,7 +10,8 @@
             OnBackClick="Back"
             Title="@_currentArtifact?.Name"
             IsPinned="@(_currentArtifact?.IsPinned ?? false)" 
-            SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")" />
+            SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")"
+            OnAddButtonClick="CreateFolder" />
 
         @if (_artifacts is not null)
         {
@@ -33,3 +34,5 @@
             ButtonStyle="FxButtonStyle.Normal" />
     </div>
 </FxBottomSheet>
+<InputModal @ref="_inputModalRef" />
+<ToastModal @ref="_toastModalRef" />
