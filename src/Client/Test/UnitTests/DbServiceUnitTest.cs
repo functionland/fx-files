@@ -5,21 +5,23 @@ using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
 using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Functionland.FxFiles.Client.Test.UnitTests
 {
     [TestClass]
     public class DbServiceUnitTest : TestBase
     {
+        public TestContext TestContext { get; set; }
+
         [TestMethod]
         public async Task AddPinDbServiceUnitTest_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
                {
-                   string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
-
-                   services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+                   services.AddClientSharedServices();
+                   services.AddClientTestServices(TestContext);
                }
             ).Build();
 
