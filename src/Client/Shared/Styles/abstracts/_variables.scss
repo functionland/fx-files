@@ -85,8 +85,8 @@ $colors-dark: (
 $back: $icon-base-url + "back.svg";
 $copy: $icon-base-url + "copy.svg";
 $delete: $icon-base-url + "delete.svg";
-$rename: $icon-base-url + "rename.svg";
 $details: $icon-base-url + "details.svg";
+$rename-file: $icon-base-url + "rename.svg";
 $close-btn: $icon-base-url + "close-btn.svg";
 $tag-label: $icon-base-url + "tag-label.svg";
 $chevron-up: $icon-base-url + "chevron-up.svg";
@@ -232,7 +232,7 @@ $zones: "\e932";
 //filled icons
 $avatar: "\e900";
 $pin: "\e901";
-$select: "\e902";
+$select-filled: "\e902";
 $circle-filled: "\e903";
 $critical: "\e904";
 $edit: "\e905";

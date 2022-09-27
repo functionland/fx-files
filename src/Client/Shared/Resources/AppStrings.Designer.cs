@@ -223,6 +223,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change name.
+        /// </summary>
+        public static string ChangeName {
+            get {
+                return ResourceManager.GetString("ChangeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string Clear {
+            get {
+                return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
@@ -241,6 +259,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy here.
+        /// </summary>
+        public static string CopyHere {
+            get {
+                return ResourceManager.GetString("CopyHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Folder.
+        /// </summary>
+        public static string CreateFolder {
+            get {
+                return ResourceManager.GetString("CreateFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string Current {
@@ -255,6 +291,42 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Day {
             get {
                 return ResourceManager.GetString("Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete {0}.
+        /// </summary>
+        public static string DeleteItem {
+            get {
+                return ResourceManager.GetString("DeleteItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This item will be permanently deleted from your device. Are you sure you want to delete this item?.
+        /// </summary>
+        public static string DeleteItemDescription {
+            get {
+                return ResourceManager.GetString("DeleteItemDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete {0} item.
+        /// </summary>
+        public static string DeleteItems {
+            get {
+                return ResourceManager.GetString("DeleteItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These items will be permanently deleted from your device. Are you sure you want to delete these items?.
+        /// </summary>
+        public static string DeleteItemsDescription {
+            get {
+                return ResourceManager.GetString("DeleteItemsDescription", resourceCulture);
             }
         }
         
@@ -340,6 +412,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File name.
+        /// </summary>
+        public static string FileRenamePlaceholder {
+            get {
+                return ResourceManager.GetString("FileRenamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
         public static string Files {
@@ -381,6 +462,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Folder {
             get {
                 return ResourceManager.GetString("Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder name.
+        /// </summary>
+        public static string FolderRenamePlaceholder {
+            get {
+                return ResourceManager.GetString("FolderRenamePlaceholder", resourceCulture);
             }
         }
         
@@ -529,11 +619,29 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move here.
+        /// </summary>
+        public static string MoveHere {
+            get {
+                return ResourceManager.GetString("MoveHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Device.
         /// </summary>
         public static string MyDevice {
             get {
                 return ResourceManager.GetString("MyDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Folder.
+        /// </summary>
+        public static string NewFolderPlaceholder {
+            get {
+                return ResourceManager.GetString("NewFolderPlaceholder", resourceCulture);
             }
         }
         
@@ -579,6 +687,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Pools {
             get {
                 return ResourceManager.GetString("Pools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string Rename {
+            get {
+                return ResourceManager.GetString("Rename", resourceCulture);
             }
         }
         
@@ -768,15 +885,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string TheCopyOpreationSuccessedTiltle {
             get {
                 return ResourceManager.GetString("TheCopyOpreationSuccessedTiltle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Items deleted.
-        /// </summary>
-        public static string TheDeleteOpreationSuccessedMessage {
-            get {
-                return ResourceManager.GetString("TheDeleteOpreationSuccessedMessage", resourceCulture);
             }
         }
         

@@ -3,13 +3,17 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
     public partial class ConfirmationModal
     {
-        private string Title { get; set; } = "Delete text2049-444.txt";
-        private string Description { get; set; } = "Other users will lose access to this file. Are you sure you want to delete this file?";
+        private string? _title { get; set; }
+        private string? _description { get; set; }
         private bool _isModalOpen { get; set; }
+
         private TaskCompletionSource<ConfirmationModalResult>? _tcs = new();
 
-        public async Task<ConfirmationModalResult> ShowAsync()
+        public async Task<ConfirmationModalResult> ShowAsync(string title, string description)
         {
+            _title = title;
+            _description = description;
+
             _tcs?.SetCanceled();
 
             _isModalOpen = true;

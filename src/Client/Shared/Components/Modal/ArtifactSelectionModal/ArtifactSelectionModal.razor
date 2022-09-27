@@ -3,25 +3,33 @@
 
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
+    <div class="container">
+        <FxToolBar 
+            IsInRoot="false"
+            IsInSearchMode="false"
+            OnBackClick="Back"
+            Title="@_currentArtifact?.Name"
+            IsPinned="@(_currentArtifact?.IsPinned ?? false)" 
+            SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")" />
 
-    <FxButton ButtonStyle="FxButtonStyle.Normal"
-              Text="Back"
-              Width="100%"
-              Margin="0 0 40px 0"
-              OnClick="Back" />
-    <FxButton ButtonStyle="FxButtonStyle.Normal"
-              Text="Select Destionation"
-              Width="100%"
-              Margin="0 0 40px 0"
-              OnClick="SelectDestionation" />
+        @if (_artifacts is not null)
+        {
+            <ArtifactExplorer 
+                Artifacts="_artifacts"
+                ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
+                CurrentArtifact="_currentArtifact"
+                ArtifactActionResult="_artifactActionResult"
+                OnSelectArtifact="SelectArtifact"
+                OnCancelSelectDestionationMode="Close" />
+        }
+    </div>
 
-    @if (_artifacts is not null)
-    {
-        <ArtifactExplorer Artifacts="_artifacts"
-                      ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
-                      CurrentArtifact="_currentArtifact"
-                      ArtifactActionResult="_artifactActionResult"
-                      OnSelectArtifact="SelectArtifact"
-                      OnCancelSelectDestionationMode="Close" />
-    }
+    <div class="button-container">
+        <FxButton 
+            Width="100%"
+            Height="60px"
+                  Text="@(_artifactActionResult?.ActionType == ArtifactActionType.Copy? Localizer[nameof(AppStrings.CopyHere)] : Localizer[nameof(AppStrings.MoveHere)])"
+            OnClick="SelectDestionation"
+            ButtonStyle="FxButtonStyle.Normal" />
+    </div>
 </FxBottomSheet>

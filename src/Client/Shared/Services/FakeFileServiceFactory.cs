@@ -102,7 +102,7 @@
 
         public static FsArtifact CreateFolder(string folderPath)
         {
-            var folderName = Path.GetDirectoryName(folderPath);
+            var folderName = Path.GetFileName(folderPath);
 
             return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
         }

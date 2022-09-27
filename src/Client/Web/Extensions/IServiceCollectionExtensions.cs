@@ -18,7 +18,7 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<IFileService>(
             (serviceProvider) =>
-            serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateSimpleFileListOnRoot()
+            serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
             );
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();

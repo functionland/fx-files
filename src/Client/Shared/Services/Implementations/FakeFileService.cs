@@ -221,12 +221,9 @@
         }
 
         //TODO : Implement this GetArtifactAsync method to return a single artifact
-        public async Task<FsArtifact> GetArtifactAsync(string parentPath, string? path = null, CancellationToken? cancellationToken = null)
+        public Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
-            parentPath = parentPath.Replace("/", "\\");
-            await LatencyActionAsync();
-            if (parentPath is null) throw new Exception();
-            return _files.FirstOrDefault(f => f.FullPath == parentPath);
+            return null;
         }
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)

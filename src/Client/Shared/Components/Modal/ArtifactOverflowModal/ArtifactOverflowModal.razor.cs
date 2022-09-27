@@ -9,7 +9,8 @@
 
         private bool _isModalOpen;
 
-        public bool IsMultiple { get; set; }
+        private bool _isMultiple { get; set; }
+        private bool _isPinned { get; set; }
 
         public void Details()
         {
@@ -55,6 +56,17 @@
             _isModalOpen = false;
         }
 
+        public void UnPin()
+        {
+            var result = new ArtifactOverflowResult();
+            result.ResultType = ArtifactOverflowResultType.UnPin;
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+
+            _isModalOpen = false;
+        }
+
         public void Move()
         {
             var result = new ArtifactOverflowResult();
@@ -77,10 +89,11 @@
             _isModalOpen = false;
         }
 
-        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple = false)
+        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple = false, bool isPinned = false)
         {
             _tcs?.SetCanceled();
-            IsMultiple = isMultiple;
+            _isMultiple = isMultiple;
+            _isPinned = isPinned;
             _isModalOpen = true;
             StateHasChanged();
 

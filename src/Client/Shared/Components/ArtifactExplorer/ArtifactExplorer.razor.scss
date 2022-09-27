@@ -42,22 +42,24 @@
         }
 
         .sort-order {
-            background-image: url($chevron-up);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: $icon-16;
-            width: 16px;
-            height: 40px;
             cursor: pointer;
+
+            &::before {
+                font-size: $icon-16;
+                @include Icon($chevron-up);
+            }
         }
 
         .desc-order {
-            background-image: url($chevron-up);
             transform: rotate(180deg);
+
+            &::before {
+                @include Icon($chevron-up);
+            }
         }
 
-        .asc-order {
-            background-image: url($chevron-up);
+        .asc-order::before {
+            @include Icon($chevron-up);
         }
     }
 
@@ -68,43 +70,54 @@
         align-items: center;
 
         .action-btn {
-            background-size: $icon-24;
-            background-repeat: no-repeat;
-            background-position: center;
-            height: 40px;
-            width: 24px;
             cursor: pointer;
         }
 
         .select-all-btn {
-            background-image: url($select-all-check-empty);
             margin-right: $spacing-8;
+
+            &::before {
+                @include Icon($select, color(gray-content3));
+                font-size: 24px;
+            }
         }
 
-        .select-all-filled {
-            background-image: url($select-all-check-filled) !important;
+        .select-all-filled::before {
+            font-size: 24px;
+            @include Icon($selected, $green-dark-base, $Icons-Filled);
         }
 
         .list-view-btn {
-            background-image: url($list-view);
             margin-right: $spacing-8;
+
+            &::before {
+                font-size: 24px;
+                @include Icon($list, color(gray-content3));
+            }
         }
 
-        .list-view-selected {
-            background-image: url($list-view-selected) !important;
+        .list-view-selected::before {
+            font-size: 24px;
+            @include Icon($list, $green-dark-base);
         }
 
         .grid-view-btn {
-            background-image: url($grid-view);
             margin-right: $spacing-8;
+
+            &::before {
+                font-size: 24px;
+                @include Icon($grid, color(gray-content3));
+            }
         }
 
-        .grid-view-selected {
-            background-image: url($grid-view-selected) !important;
+        .grid-view-selected::before {
+            font-size: 24px;
+            @include Icon($grid, $green-dark-base);
         }
 
-        .filter-btn {
-            background-image: url($filter-file);
+        .filter-btn::before {
+            font-size: 24px;
+            @include Icon($filter, color(gray-content3));
         }
     }
 }
@@ -117,7 +130,8 @@
     justify-content: center;
 }
 
-list-view {
+.list-view {
+    min-height: calc(100vh - 354px);
 }
 
 .select-action {
@@ -134,12 +148,11 @@ list-view {
 
         .close-btn {
             cursor: pointer;
-            width: $icon-16;
-            height: $icon-16;
-            background-size: $icon-16;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url(images/icons/white-close-btn.svg);
+
+            &::before {
+                font-size: 16px;
+                @include Icon($close, $pure-white);
+            }
         }
 
         .item-selected {
@@ -154,7 +167,6 @@ list-view {
                 letter-spacing: $letter-spacing-02;
                 color: $pure-white;
             }
-
         }
     }
 
@@ -163,27 +175,24 @@ list-view {
         align-items: center;
         justify-content: center;
 
-        .icons-action {
-            width: 20.04px;
+        .move-icon::before {
             cursor: pointer;
-            height: 18.19px;
-            background-size: $icon-24;
-            background-repeat: no-repeat;
-            background-position: center;
+            font-size: 24px;
+            @include Icon($move, $pure-white);
         }
 
-        .move-icon {
-            background-image: url(images/icons/white-move.svg);
-        }
-
-        .vertical-option-icon {
-            background-image: url(images/icons/white-option-vertical.svg);
-            background-size: $icon-4;
+        .vertical-option-icon::before {
+            cursor: pointer;
+            font-size: 20px;
+            @include Icon($options-vertical, $pure-white);
             margin-left: $spacing-16;
         }
 
-        .add-folder {
-            background-image: url(images/icons/white-create-folder.svg);
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
         }
     }
 }
@@ -225,14 +234,10 @@ list-view {
         flex-flow: row nowrap;
         justify-content: flex-start;
 
-        .pin-badge {
-            width: 16px;
-            height: 16px;
+        .pin-badge::before {
+            font-size: $icon-20;
+            @include Icon($pin, color(gray-content1), $Icons-Filled);
             margin-right: $spacing-8;
-            background-size: $icon-16;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url($pin-filled);
         }
 
         .title-text {
@@ -271,8 +276,9 @@ list-view {
     }
 
     .item-content {
-        padding-left: 16px;
         flex-grow: 1;
+        overflow: hidden;
+        padding-left: 16px;
 
         .item-sub-text {
             font-weight: 400;
@@ -344,7 +350,7 @@ list-view {
     @include Icon($video);
 }
 
-.select-action {
+/*.select-action {
     display: flex;
     height: 40px;
     align-items: center;
@@ -358,12 +364,11 @@ list-view {
 
         .close-btn {
             cursor: pointer;
-            width: $icon-16;
-            height: $icon-16;
-            background-size: $icon-16;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url(images/icons/white-close-btn.svg);
+
+            &::before {
+                font-size: $icon-16;
+                @include Icon($close, $pure-white);
+            }
         }
 
         .item-selected {
@@ -386,27 +391,24 @@ list-view {
         align-items: center;
         justify-content: center;
 
-        .icons-action {
-            width: 20.04px;
+        .move-icon::before {
             cursor: pointer;
-            height: 18.19px;
-            background-size: $icon-24;
-            background-repeat: no-repeat;
-            background-position: center;
+            font-size: 24px;
+            @include Icon($move, $pure-white);
         }
 
-        .move-icon {
-            background-image: url(images/icons/white-move.svg);
-        }
-
-        .vertical-option-icon {
-            background-image: url(images/icons/white-option-vertical.svg);
-            background-size: $icon-4;
+        .vertical-option-icon::before {
+            cursor: pointer;
+            font-size: 20px;
+            @include Icon($options-vertical, $pure-white);
             margin-left: $spacing-16;
         }
 
-        .add-folder {
-            background-image: url(images/icons/white-create-folder.svg);
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
         }
     }
-}
+}*/

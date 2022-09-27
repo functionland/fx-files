@@ -16,9 +16,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 return;
             }
 
+            var path = fsArtifact.ArtifactType == FsArtifactType.File ? fsArtifact.ParentFullPath : fsArtifact.FullPath;
+
             FileSystemWatcher watcher = new()
             {
-                Path = fsArtifact.FullPath,
+                Path = path,
                 IncludeSubdirectories = true,
 
                 NotifyFilter = NotifyFilters.Attributes |

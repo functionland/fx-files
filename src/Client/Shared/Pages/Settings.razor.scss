@@ -3,6 +3,10 @@
 @import '../Styles/abstracts/_functions.scss';
 
 .settings-content {
+    padding: 16px 0;
+}
+
+.settings-wrapper {
     padding: 21px;
     padding-top: 10px;
     font-family: $montserrat-medium;
@@ -33,4 +37,5 @@
 p {
     font-size: 10px;
     text-align: center;
+    margin-top: 16px !important;
 }
