@@ -30,12 +30,12 @@
                         <div class="test-icon-error"></div>
                     }
                     
-                    <div>@progress.Title</div>
+                    <div class="progress-title" >@progress.Title</div>
                     @if (!string.IsNullOrEmpty(progress.Description))
                     {
                         <div 
                             class="show-details"
-                     @onclick="()=>ShowDescription(progress)">
+                            @onclick="()=>ShowDescription(progress)">
                             (show details)
                         </div>
                     }
