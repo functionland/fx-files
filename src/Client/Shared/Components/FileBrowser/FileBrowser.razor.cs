@@ -504,6 +504,8 @@ public partial class FileBrowser
         _isInSearchMode = true;
     }
 
+    CancellationTokenSource? cancellationTokenSource;
+
     private async Task HandleSearch(string? text)
     {
         //_ = InvokeAsync(async () =>
@@ -513,13 +515,51 @@ public partial class FileBrowser
 
         _searchText = text;
         _allArtifacts = new();
-        await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText))
+        FilterArtifacts();
+
+        if (cancellationTokenSource is not null)
         {
-            await Task.Yield();
-            //_allArtifacts.Add(item);
-            //FilterArtifacts();
-            //Console.WriteLine(item.FullPath);
+            cancellationTokenSource.Cancel();
         }
+
+        cancellationTokenSource = new CancellationTokenSource();
+        var token = cancellationTokenSource.Token;
+        var sw = Stopwatch.StartNew();
+        await Task.Run(async () =>
+        {
+            long counter = 1;
+            var buffer = new List<FsArtifact>();
+            try
+            {
+                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
+                {
+                    if (token.IsCancellationRequested)
+                        break;
+
+                    buffer.Add(item);
+                    if (sw.ElapsedMilliseconds > 1000)
+                    {
+                        if (token.IsCancellationRequested)
+                            break;
+                        _allArtifacts.AddRange(buffer);
+                        FilterArtifacts();
+                        buffer = new List<FsArtifact>();
+                        sw.Restart();
+                        await Task.Yield();
+                    }
+                    //Console.WriteLine(item.FullPath);
+                }
+
+                _allArtifacts.AddRange(buffer);
+                FilterArtifacts();
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
+        });
+        
 
         //});
         //});
