@@ -8,6 +8,7 @@
         [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
@@ -42,6 +43,11 @@
         private async Task HandleArtifactClick(FsArtifact artifact)
         {
             await OnSelectArtifact.InvokeAsync(artifact);
+        }
+
+        private async Task HandelArtifactMoveClick()
+        {
+            await OnSelectDestination.InvokeAsync(SelectedArtifacts.ToArray());
         }
 
         private async Task HandleMultiArtifactsOptionsClick()
