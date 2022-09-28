@@ -12,10 +12,10 @@
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].SizeStr)"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
                     <div class="modal-slider">
-                        <div class="slider-btn">@Localizer[nameof(AppStrings.PreviousSlide)]</div>
-                        <div class="number-slider">1 of 10</div>
-                        <div class="slider-btn">@Localizer[nameof(AppStrings.NextSlide)]</div>
-                    </div>
+                        <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="false"></FxLink>
+                        <div class="number-slider">1 @Localizer[nameof(AppStrings.Of)] 10</div>
+                        <FxLink FxLinkIconSide="FxLinkIconSide.Right" LinkText="@Localizer[nameof(AppStrings.NextSlide)]" IsEnabel="true"></FxLink>                        
+                    </div> 
                     <div class="select-action">
                         <div class="info-selection">
                             <div class="item-selected">

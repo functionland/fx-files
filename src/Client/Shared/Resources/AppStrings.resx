@@ -456,4 +456,7 @@
   <data name="MoveHere" xml:space="preserve">
     <value>Move here</value>
   </data>
+  <data name="Of" xml:space="preserve">
+    <value>of</value>
+  </data>
 </root>

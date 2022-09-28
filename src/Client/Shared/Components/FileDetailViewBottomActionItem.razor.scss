@@ -3,11 +3,12 @@
 @import '../Styles/abstracts/_mixins.scss';
 
 .bottom-action {
-    flex-direction: column;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
     padding: $spacing-0;
     gap: $spacing-6;
-    display: flex;
     height: 46px;
     width: 70px;
 
