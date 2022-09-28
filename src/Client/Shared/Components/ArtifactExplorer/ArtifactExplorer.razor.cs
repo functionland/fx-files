@@ -138,6 +138,11 @@
             }
         }
 
+        public void OnCreateFolder()
+        {
+            OnAddFolderButtonClick.InvokeAsync();
+        }
+
         public string GetArtifactIcon(FsArtifact artifact)
         {
             if (artifact.ArtifactType == FsArtifactType.File)
