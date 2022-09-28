@@ -2,16 +2,12 @@
 @import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
 
-.fx-avatart::before {
-    display: flex;
-    @include Icon($avatar, color(gray-bg-secondary), $Icons-Filled);
+.fx-avatart {
+    position: relative;
 
-    .avatar-status {
-        position: absolute;
-        width: $icon-16;
-        height: $icon-16;
-        background-size: $icon-16;
-        background-repeat: no-repeat;
+    &::before {
+        display: flex;
+        @include Icon($avatar, color(gray-bg-secondary), $Icons-Filled);
     }
 }
 
@@ -23,8 +19,9 @@
     font-size: $icon-32;
 
     .avatar-status {
-        right: -8px;
-        bottom: 0px;
+        position: absolute;
+        right: -13px;
+        bottom: -10px;
     }
 }
 
@@ -32,8 +29,9 @@
     font-size: $icon-48;
 
     .avatar-status {
-        right: -5px;
-        bottom: 0px;
+        position: absolute;
+        right: -10px;
+        bottom: -14px;
     }
 }
 
@@ -41,8 +39,9 @@
     font-size: $icon-64;
 
     .avatar-status {
-        right: -2px;
-        bottom: 2px;
+        position: absolute;
+        right: -8px;
+        bottom: -18px;
     }
 }
 
@@ -50,19 +49,23 @@
     font-size: $icon-96;
 
     .avatar-status {
-        right: 2px;
-        bottom: 8px;
+        position: absolute;
+        right: -4px;
+        bottom: -21px;
     }
 }
 
-.selected-status {
-    background-image: url($selected-status);
+.selected-status::before {
+    @include Icon($success, $green-dark-base, $Icons-Filled);
+    font-size: $icon-24;
 }
 
-.deselected-status {
-    background-image: url($deselected-status);
+.deselected-status::before {
+    @include Icon($success, color(app-bg), $Icons-Filled);
+    font-size: $icon-24;
 }
 
-.edit-status {
-    background-image: url($edit-status);
+.edit-status::before {
+    @include Icon($edit, $info-dark, $Icons-Filled);
+    font-size: $icon-24;
 }

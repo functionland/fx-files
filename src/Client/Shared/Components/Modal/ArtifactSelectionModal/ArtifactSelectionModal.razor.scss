@@ -1,17 +1,21 @@
 ﻿@import '../../../Styles/abstracts/_variables.scss';
 @import '../../../Styles/abstracts/_functions.scss';
 
-.modal {
-    position: fixed;
-    height: 300px;
-    width: 400px;
-    background-color: red;
+.container {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
 
-    &.open {
-        display: block;
+    & ::deep div.toolbar-box {
+        margin: $spacing-32 0;
     }
+}
 
-    &.close {
-        display: none;
-    }
+.button-container {
+    height: 102px;
+    display: flex;
+    position: sticky;
+    padding: 26px 21px;
+    justify-content: center;
+    border-top: 1px solid color(gray-bg-secondary);
 }

@@ -6,6 +6,7 @@
         Rename,
         Copy,
         Pin,
+        UnPin,
         Move,
         Delete,
         Cancel,

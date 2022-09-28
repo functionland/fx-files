@@ -1,11 +1,12 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services
 {
-    public static class FakeFileServiceFactory
+    public partial class FakeFileServiceFactory
     {
+        [AutoInject] public IServiceProvider ServiceProvider { get; set; }
 
-        public static FakeFileService CreateSimpleFileListOnRoot(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakeFileService CreateSimpleFileListOnRoot(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            return new FakeFileService(serviceProvider,
+            return new FakeFileService(ServiceProvider,
                 new List<FsArtifact>
                 {
                     CreateFile("/image summer.jpg"),
@@ -17,10 +18,10 @@
                 );
         }
 
-        public static FakeFileService CreateFolders(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakeFileService CreateFolders(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             return new FakeFileService(
-                serviceProvider,
+                ServiceProvider,
                 new List<FsArtifact>
                 {
                     CreateFolder("/images"),
@@ -34,10 +35,10 @@
             );
         }
 
-        public static FakeFileService CreateNeste4dFolders(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakeFileService CreateNeste4dFolders(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             return new FakeFileService(
-                serviceProvider,
+                ServiceProvider,
                 new List<FsArtifact>
                 {
                     CreateFolder("/images"),
@@ -55,9 +56,9 @@
             );
         }
 
-        public static FakeFileService CreateTypical(IServiceProvider serviceProvider, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakeFileService CreateTypical(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            return new FakeFileService(serviceProvider,
+            return new FakeFileService(ServiceProvider,
                 new List<FsArtifact>
                 {
                     CreateFolder("/images"),
@@ -101,7 +102,7 @@
 
         public static FsArtifact CreateFolder(string folderPath)
         {
-            var folderName = Path.GetDirectoryName(folderPath);
+            var folderName = Path.GetFileName(folderPath);
 
             return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
         }

@@ -1,10 +1,17 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
+﻿using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
+
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddClientAppServices(this IServiceCollection services)
     {
         // Services being registered here can get injected in Android, iOS, Windows, and Mac.
+
+        // Shared between all platforms
+        string connectionString = $"DataSource={Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "FxDB.db")};";
+        services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+
 
 #if ANDROID
         services.AddClientAndroidServices();

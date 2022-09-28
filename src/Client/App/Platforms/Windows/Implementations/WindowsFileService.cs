@@ -1,10 +1,11 @@
-﻿using Functionland.FxFiles.Client.Shared.Enums;
-using Functionland.FxFiles.Client.Shared.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Models;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 
@@ -38,6 +39,11 @@ public partial class WindowsFileService : LocalDeviceFileService
     public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
     {
         return base.GetArtifactsAsync(path, searchText, cancellationToken);
+    }
+
+    public override Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
+    {
+        return base.GetFsArtifactAsync(path, cancellationToken);
     }
 
     public override Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)

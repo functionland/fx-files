@@ -16,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Web\Functionland.FxFiles.Client.Web.csproj" />
+	  <ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
 	</ItemGroup>
 
 </Project>
