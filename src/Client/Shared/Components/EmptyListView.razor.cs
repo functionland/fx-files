@@ -22,5 +22,8 @@
 
         [Parameter]
         public EventCallback OnUploadButtonClick { get; set; }
+
+        [Parameter]
+        public bool IsShowButtons { get; set; }
     }
 }

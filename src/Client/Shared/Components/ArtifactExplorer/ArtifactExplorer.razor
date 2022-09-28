@@ -67,7 +67,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 <div class="list-container @ViewMode-view">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
-        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" />
+        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
     }
     @foreach (var artifact in Artifacts)
     {
