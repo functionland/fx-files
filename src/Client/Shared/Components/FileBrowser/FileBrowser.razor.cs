@@ -382,8 +382,12 @@ public partial class FileBrowser
         ArtifactOverflowResult? result = null;
         if (_artifactOverflowModalRef is not null)
         {
-            var isPinned = artifact.IsPinned ?? false;
-            result = await _artifactOverflowModalRef!.ShowAsync(false, isPinned);
+            var pinOptionResult = new PinOptionResult()
+            {
+                IsVisible = true,
+                Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
+            };
+            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult);
         }
 
         switch (result?.ResultType)
@@ -422,7 +426,8 @@ public partial class FileBrowser
             ArtifactOverflowResult? result = null;
             if (_artifactOverflowModalRef is not null)
             {
-                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple);
+                var pinOptionResult = GetPinOptionResult(artifacts);
+                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult);
             }
 
             switch (result?.ResultType)
@@ -440,6 +445,9 @@ public partial class FileBrowser
                 case ArtifactOverflowResultType.Pin:
                     await HandlePinArtifactsAsync(artifacts);
                     break;
+                case ArtifactOverflowResultType.UnPin:
+                    await HandleUnPinArtifactsAsync(artifacts);
+                    break;
                 case ArtifactOverflowResultType.Move:
                     await HandleMoveArtifactsAsync(artifacts);
                     break;
@@ -448,6 +456,32 @@ public partial class FileBrowser
                     break;
             }
         }
+    }
+
+    private PinOptionResult GetPinOptionResult(FsArtifact[] artifacts)
+    {
+        if (artifacts.All(a => a.IsPinned == true))
+        {
+            return new PinOptionResult()
+            {
+                IsVisible = true,
+                Type = PinOptionResultType.Remove
+            };
+        }
+        else if (artifacts.All(a => a.IsPinned == false))
+        {
+            return new PinOptionResult()
+            {
+                IsVisible = true,
+                Type = PinOptionResultType.Add
+            };
+        }
+
+        return new PinOptionResult()
+        {
+            IsVisible = false,
+            Type = null
+        };
     }
 
     private async Task<InputModalResult?> GetInputModalResult(FsArtifact? artifact)
