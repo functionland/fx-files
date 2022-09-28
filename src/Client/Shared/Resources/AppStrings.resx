@@ -438,6 +438,12 @@
   <data name="Rename" xml:space="preserve">
     <value>Rename</value>
   </data>
+  <data name="NextSlide" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="PreviousSlide" xml:space="preserve">
+    <value>Prev.</value>
+  </data>
   <data name="CreateFolder" xml:space="preserve">
     <value>Create Folder</value>
   </data>
@@ -449,5 +455,8 @@
   </data>
   <data name="MoveHere" xml:space="preserve">
     <value>Move here</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>of</value>
   </data>
 </root>
