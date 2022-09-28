@@ -76,7 +76,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
          @onpointerdown="PointerDown">
             @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
             {
-                <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
+                <BitCheckbox Value="!IsSelected" ValueChanged="(() => OnSelectionChanged(artifact))" />
             }
 
             @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
