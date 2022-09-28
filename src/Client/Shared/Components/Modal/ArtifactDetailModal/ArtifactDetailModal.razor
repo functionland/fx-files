@@ -6,15 +6,15 @@
     if (IsMultiple)
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
-            <FileDetailView FileName="@_artifacts[0].Name">
+            <FileDetailView FileName="@_artifacts[_currentArtifactForShowNumber].Name">
                 <FileDetailItemFragment>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].SizeStr)"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].SizeStr)"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].OriginDevice)"></FileDetailViewItem>
                     <div class="modal-slider">
-                        <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="false"></FxLink>
-                        <div class="number-slider">1 @Localizer[nameof(AppStrings.Of)] 10</div>
-                        <FxLink FxLinkIconSide="FxLinkIconSide.Right" LinkText="@Localizer[nameof(AppStrings.NextSlide)]" IsEnabel="true"></FxLink>                        
+                        <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="@(_currentArtifactForShowNumber != 0 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(false))"></FxLink>
+                        <div class="number-slider">@(_currentArtifactForShowNumber+1) @Localizer[nameof(AppStrings.Of)] @_artifacts.Length</div>
+                        <FxLink FxLinkIconSide="FxLinkIconSide.Right" LinkText="@Localizer[nameof(AppStrings.NextSlide)]" IsEnabel="@(_currentArtifactForShowNumber < _artifacts.Length - 1 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(true))"></FxLink>
                     </div> 
                     <div class="select-action">
                         <div class="info-selection">
@@ -29,8 +29,7 @@
                         </div>
 
                         <div class="right-part">
-                            <div class="icons-action move-icon"></div>
-                            <div class="icons-action vertical-option-icon"></div>
+                            <div class="icons-action move-icon" @onclick="Move"></div>
                         </div>
                     </div>
                 </FileDetailItemFragment>
