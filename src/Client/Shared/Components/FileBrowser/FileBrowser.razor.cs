@@ -46,7 +46,7 @@ public partial class FileBrowser
             var artifactActionResult = new ArtifactActionResult()
             {
                 ActionType = ArtifactActionType.Copy,
-                Count = artifacts.Length,
+                Artifacts = artifacts
             };
 
             string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
@@ -54,7 +54,7 @@ public partial class FileBrowser
             {
                 return;
             }
-
+            
             try
             {
                 await FileService.CopyArtifactsAsync(artifacts, destinationPath, false);
@@ -96,10 +96,10 @@ public partial class FileBrowser
             var artifactActionResult = new ArtifactActionResult()
             {
                 ActionType = ArtifactActionType.Move,
-                Count = artifacts.Length,
+                Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);           
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -145,12 +145,12 @@ public partial class FileBrowser
 
     public async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
-        var Result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
+        var result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
         string? destinationPath = null;
 
-        if (Result?.ResultType == ArtifactSelectionResultType.Ok)
+        if (result?.ResultType == ArtifactSelectionResultType.Ok)
         {
-            var destinationFsArtifact = Result.SelectedArtifacts.FirstOrDefault();
+            var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
             destinationPath = destinationFsArtifact?.FullPath;
         }
 
