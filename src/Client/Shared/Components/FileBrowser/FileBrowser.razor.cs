@@ -293,7 +293,14 @@ public partial class FileBrowser
                 await HandlePinArtifactsAsync(artifact);
                 break;
             case ArtifactDetailModalResultType.More:
-                //TODO: Implement more here 
+                if (artifact.Length > 1)
+                {
+                    await HandleSelectedArtifactsOptions(artifact);
+                }
+                else
+                {
+                    await HandleOptionsArtifact(artifact[0]);
+                }
                 break;
             case ArtifactDetailModalResultType.Close:
                 break;
