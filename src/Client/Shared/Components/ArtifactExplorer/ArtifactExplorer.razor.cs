@@ -21,6 +21,7 @@
         public bool IsSelected;
         public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
+        private FxSearchInput? _artifactSearch;
 
         protected override Task OnInitAsync()
         {
@@ -85,6 +86,7 @@
             {
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 IsSelectedAll = !IsSelectedAll;
+                IsSelected = false;
                 SelectedArtifacts = Artifacts?.ToList();
             }
         }
@@ -99,6 +101,7 @@
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
             IsSelectedAll = false;
+            IsSelected = true;
         }
 
         public async Task HandleCancelSelectDestionationMode()
@@ -122,11 +125,13 @@
                 }
                 else
                 {
+                    _artifactSearch?.OnDoneClick();
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
             else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             {
+                _artifactSearch?.OnDoneClick();
                 await OnSelectArtifact.InvokeAsync(artifact);
             }
         }
