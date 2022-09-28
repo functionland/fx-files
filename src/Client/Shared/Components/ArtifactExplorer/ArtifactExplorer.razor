@@ -64,7 +64,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
     <FxSearchInput DebounceInterval="300" OnSearch="OnSearch" IsPartial="false" />
 }
 
-<div class="list-container @ViewMode-view">
+<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
         <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
