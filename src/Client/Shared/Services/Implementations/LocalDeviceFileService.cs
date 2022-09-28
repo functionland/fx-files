@@ -366,11 +366,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             foreach (var artifact in artifacts)
             {
                 if (cancellationToken?.IsCancellationRequested == true) break;
-
+                
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
                     var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
+
+                    if (fileInfo.FullName == destinationInfo.FullName)
+                        throw new DomainLogicException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
 
                     if (!overwrite && destinationInfo.Exists)
                     {
@@ -392,6 +395,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     var directoryInfo = new DirectoryInfo(artifact.FullPath);
                     var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
+
+                    if (directoryInfo.FullName == destinationInfo.FullName)
+                        throw new DomainLogicException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
 
                     if (!destinationInfo.Exists)
                     {

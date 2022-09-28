@@ -781,6 +781,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The destination file is the same as the source file..
+        /// </summary>
+        public static string SameDestinationFileException {
+            get {
+                return ResourceManager.GetString("SameDestinationFileException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The destination folder is the same as the source folder..
+        /// </summary>
+        public static string SameDestinationFolderException {
+            get {
+                return ResourceManager.GetString("SameDestinationFolderException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SD Card ({0}).
         /// </summary>
         public static string SDCardName {
