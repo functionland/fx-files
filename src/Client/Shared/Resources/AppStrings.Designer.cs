@@ -511,7 +511,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search in “folder name”.
+        ///   Looks up a localized string similar to Search in “{0}”.
         /// </summary>
         public static string InputSearchFullWidth {
             get {

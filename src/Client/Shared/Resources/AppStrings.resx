@@ -268,7 +268,7 @@
     <value>Done</value>
   </data>
   <data name="InputSearchFullWidth" xml:space="preserve">
-    <value>Search in “folder name”</value>
+    <value>Search in “{0}”</value>
   </data>
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>

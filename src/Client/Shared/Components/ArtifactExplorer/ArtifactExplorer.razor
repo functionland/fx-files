@@ -29,7 +29,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         </div>
 
         <div class="right-part">
-                    <div class="icons-action move-icon" @onclick="(() => HandelArtifactMoveClick())"></div>
+            <div class="icons-action move-icon" @onclick="(() => HandelArtifactMoveClick())"></div>
             <div class="icons-action vertical-option-icon" @onclick="(() => HandleMultiArtifactsOptionsClick())"></div>
         </div>
     </div>
@@ -61,13 +61,21 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 
 @if (!IsInRoot(CurrentArtifact))
 {
-    <FxSearchInput @ref="_artifactSearch" DebounceInterval="300" OnSearch="OnSearch" IsPartial="false" />
+    <FxSearchInput 
+        Placeholder="@CurrentArtifact.Name"
+        @ref="_artifactSearch"
+        DebounceInterval="300"
+        OnSearch="OnSearch"
+        IsPartial="false" />
 }
 
 <div class="list-container @ViewMode-view">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
-        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
+        <EmptyListView 
+            OnAddFolderButtonClick="OnAddFolderButtonClick"
+            Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
     }
     @foreach (var artifact in Artifacts)
     {
