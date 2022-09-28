@@ -84,7 +84,8 @@ public partial class ArtifactSelectionModal
             if (result?.ResultType == InputModalResultType.Confirm)
             {
                 var newFolder = await _fileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
-                //TODO: Add new folder to list and update UI without reloading the list
+                _artifacts.Add(newFolder);
+                StateHasChanged();
             }
         }
         catch (DomainLogicException ex) when

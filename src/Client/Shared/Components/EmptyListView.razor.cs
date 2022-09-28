@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class EmptyListView
     {
