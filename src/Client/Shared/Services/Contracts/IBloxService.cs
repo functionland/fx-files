@@ -1,24 +1,14 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
+
+public interface IBloxService
 {
-    public interface IBloxService
-    {
-        Task<List<Blox>> GetBloxesAsync();
-        Task<List<Blox>> GetBloxesJoinInvitationAsync();
-        Task AcceptBloxInvitationAsync(string bloxId);
-        Task RejectBloxInvitationAsync(string bloxId);
-        Task ClearBloxData(string bloxId);
+    Task<List<Blox>> GetBloxesAsync(CancellationToken? cancellationToken = null);
+    Task<List<Blox>> GetBloxesJoinInvitationAsync(CancellationToken? cancellationToken = null);
+    Task AcceptBloxInvitationAsync(Blox blox,CancellationToken? cancellationToken = null);
+    Task RejectBloxInvitationAsync(Blox blox, CancellationToken? cancellationToken = null);
+    Task ClearBloxDataAsync(Blox blox, CancellationToken? cancellationToken = null);
 
-
-
-        Task<List<Pool>> GetPoolsAsync();
-        Task LeavePoolAsync(string poolId);
-        Task<(double? DueNowPaymentRequired, double? PerMounthPaymentRequired)> RequestJoinToPoolAsync(string poolId);
-        Task<bool> ConfirmJoinToPoolAsync(string poolId);
-        Task<List<Pool>> SearchPoolAsync(PoolFilter filter, double? Distance);
-
-        Task<List<(string? Did, string? Name)>> GetUsersForShare();
-
-
-        Task<Stream> GetAvatarAsync();
-    }
+    //TODO: not clear these 2 methods.
+    Task<List<(string? Did, string? Name)>> GetUsersForShare();
+    Task<Stream> GetAvatarAsync();
 }
