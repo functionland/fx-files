@@ -13,6 +13,6 @@
         public long? AudiosUsed { get; set; }
         public long? DocsUsed { get; set; }
         public long? OtherUsed { get; set; }
-        public List<KeyValuePair<string, string>> AdditinalInformation { get; set; } = new List<KeyValuePair<string, string>>()
+        public List<KeyValuePair<string, string>> AdditinalInformation { get; set; } = new List<KeyValuePair<string, string>>();
     }
 }

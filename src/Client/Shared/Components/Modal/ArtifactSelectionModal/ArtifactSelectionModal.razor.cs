@@ -12,12 +12,12 @@ public partial class ArtifactSelectionModal
 
     [Parameter] public bool IsMultiple { get; set; }
 
-    public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact artifact, ArtifactActionResult artifactActionResult)
+    public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
         _artifactActionResult = artifactActionResult;
-        await LoadArtifacts(artifact.FullPath);
+        await LoadArtifacts(artifact?.FullPath);
 
         _isModalOpen = true;
         StateHasChanged();
@@ -50,7 +50,7 @@ public partial class ArtifactSelectionModal
         _isModalOpen = false;
     }
 
-    private async Task LoadArtifacts(string path)
+    private async Task LoadArtifacts(string? path)
     {
         _artifacts = new List<FsArtifact>();
         var artifacts = _fileService.GetArtifactsAsync(path);
@@ -66,7 +66,8 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        //TODO: Add a method in File Service for get fsArtifact Folder or drive
+        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+        await LoadArtifacts(_currentArtifact?.FullPath);
     }
 
     private void Close()

@@ -220,6 +220,12 @@
 
         }
 
+        //TODO : Implement this GetArtifactAsync method to return a single artifact
+        public Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        {
+            return null;
+        }
+
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
             await LatencyActionAsync();

@@ -22,12 +22,11 @@
 
         .close-btn {
             cursor: pointer;
-            width: $icon-16;
-            height: $icon-16;
-            background-size: $icon-16;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url(images/icons/white-close-btn.svg);
+
+            &::before {
+                font-size: 16px;
+                @include Icon($close, $pure-white);
+            }
         }
 
         .item-selected {
@@ -50,27 +49,24 @@
         align-items: center;
         justify-content: center;
 
-        .icons-action {
-            width: 20.04px;
+        .move-icon::before {
             cursor: pointer;
-            height: 18.19px;
-            background-size: $icon-24;
-            background-repeat: no-repeat;
-            background-position: center;
+            font-size: 24px;
+            @include Icon($move, $pure-white);
         }
 
-        .move-icon {
-            background-image: url(images/icons/white-move.svg);
-        }
-
-        .vertical-option-icon {
-            background-image: url(images/icons/white-option-vertical.svg);
-            background-size: $icon-4;
+        .vertical-option-icon::before {
+            cursor: pointer;
+            font-size: 20px;
+            @include Icon($options-vertical, $pure-white);
             margin-left: $spacing-16;
         }
 
-        .add-folder {
-            background-image: url(images/icons/white-create-folder.svg);
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
         }
     }
 }

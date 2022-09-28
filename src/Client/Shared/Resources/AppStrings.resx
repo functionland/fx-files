@@ -396,9 +396,6 @@
   <data name="RootFolderDeleteException" xml:space="preserve">
     <value>Root folder can not be deleted</value>
   </data>
-  <data name="TheDeleteOpreationSuccessedMessage" xml:space="preserve">
-    <value>Items deleted</value>
-  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -410,5 +407,47 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>total</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="DeleteItemDescription" xml:space="preserve">
+    <value>This item will be permanently deleted from your device. Are you sure you want to delete this item?</value>
+  </data>
+  <data name="DeleteItemsDescription" xml:space="preserve">
+    <value>These items will be permanently deleted from your device. Are you sure you want to delete these items?</value>
+  </data>
+  <data name="ChangeName" xml:space="preserve">
+    <value>Change name</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="DeleteItem" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="DeleteItems" xml:space="preserve">
+    <value>Delete {0} item</value>
+  </data>
+  <data name="FileRenamePlaceholder" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="FolderRenamePlaceholder" xml:space="preserve">
+    <value>Folder name</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="CreateFolder" xml:space="preserve">
+    <value>Create Folder</value>
+  </data>
+  <data name="NewFolderPlaceholder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="CopyHere" xml:space="preserve">
+    <value>Copy here</value>
+  </data>
+  <data name="MoveHere" xml:space="preserve">
+    <value>Move here</value>
   </data>
 </root>

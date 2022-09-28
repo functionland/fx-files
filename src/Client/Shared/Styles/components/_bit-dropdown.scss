@@ -1,0 +1,35 @@
+﻿@import "../abstracts/_mixins.scss";
+@import "../abstracts/_variables.scss";
+@import "../abstracts/_functions.scss";
+
+::deep .bit-drp-fluent .bit-drp-lbl {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-has-value-fluent .bit-drp-wrapper .bit-drp-wrapper-txt {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-wrapper .bit-drp-wrapper-txt {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-items-wrapper {
+    background-color: color(app-bg);
+}
+
+::deep .bit-drp-items-wrapper .bit-drp-item {
+    color: color(gray-content1);
+}
+
+::deep .bit-drp-items-wrapper .bit-drp-item:hover {
+    background-color: color(gray-bg-secondary);
+}
+
+::deep .bit-drp-items-wrapper .bit-drp-slc-fluent {
+    background-color: color(gray-bg-secondary);
+}
+
+::deep .bit-drp-wrapper:focus::after {
+    border: 2px solid $green-dark-base;
+}

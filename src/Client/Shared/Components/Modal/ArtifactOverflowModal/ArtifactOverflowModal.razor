@@ -4,30 +4,36 @@
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="false">
     <div class="overflow-sheet" style="padding: 24px 0">
-        <FxButton Text="See details"
-            OnClick="Details"
-            ButtonStyle="FxButtonStyle.SheetMenu"
-            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/details.svg" />
-        <FxButton Text="Rename"
-            OnClick="Rename"
-            IsVisible="!IsMultiple"
-            ButtonStyle="FxButtonStyle.SheetMenu"
-            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/rename.svg" />
-        <FxButton Text="Make a copy"
-            OnClick="Copy"
-            ButtonStyle="FxButtonStyle.SheetMenu"
-            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/copy.svg" />
-        <FxButton Text="Add to pinned items"
-            OnClick="Pin"
-            ButtonStyle="FxButtonStyle.SheetMenu"
-            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/pin-outline-black.svg" />
-        <FxButton Text="Move to"
-            OnClick="Move"
-            ButtonStyle="FxButtonStyle.SheetMenu"
-            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/move.svg" />
-        <FxButton Text="Delete"
-            OnClick="Delete"
-            ButtonStyle="FxButtonStyle.SheetMenu"
-            LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/delete.svg" />
+        <FxButton Class="details-button"
+                  Text="See details"
+                  OnClick="Details"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+        <FxButton Class="rename-button"
+                  Text="Rename"
+                  OnClick="Rename"
+                  IsVisible="!_isMultiple"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+        <FxButton Class="copy-button"
+                  Text="Make a copy"
+                  OnClick="Copy"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+        <FxButton Class="pin-button"
+                  Text="Remove from pinned items"
+                  OnClick="UnPin"
+                  IsVisible="_isPinned"
+                  ButtonStyle="FxButtonStyle.SheetMenu"/>
+        <FxButton Class="pin-button"
+                  Text="Add to pinned items"
+                  OnClick="Pin"
+                  IsVisible="!_isPinned"
+                  ButtonStyle="FxButtonStyle.SheetMenu"/>
+        <FxButton Class="move-button"
+                  Text="Move to"
+                  OnClick="Move"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+        <FxButton Class="delete-button"
+                  Text="Delete"
+                  OnClick="Delete"
+                  ButtonStyle="FxButtonStyle.SheetMenu"/>
     </div>
 </FxBottomSheet>

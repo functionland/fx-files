@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -222,6 +223,36 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     Size = fileInfo.Length
                 };
             }
+        }
+
+        public virtual async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+
+            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+
+            var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType.Value, await GetFsFileProviderTypeAsync(path))
+            {
+                FileExtension = Path.GetExtension(path),
+                ParentFullPath = Directory.GetParent(path)?.FullName
+            };
+
+
+            if (fsArtifactType == FsArtifactType.File)
+            {
+                fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
+            }
+            else if (fsArtifactType == FsArtifactType.Folder)
+            {
+                fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
+            }
+            else if (fsArtifactType == FsArtifactType.Drive)
+            {
+                fsArtifact.Name = await GetDriveNameAsync(path);
+            }
+
+            return fsArtifact;
         }
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
@@ -502,6 +533,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             foreach (var invalid in invalidChars)
                 if (name.Contains(invalid)) return true;
             return false;
+        }
+
+        private async Task<string> GetDriveNameAsync(string? path)
+        {
+            var drives = await GetDrivesAsync();
+            var drive = drives.Where(d => d.FullPath == path).FirstOrDefault();
+
+            var driveInfo = new DriveInfo(drive.FullPath);
+            var driveFullPath = drive.FullPath.TrimEnd(Path.DirectorySeparatorChar);
+            var driveName = !string.IsNullOrWhiteSpace(driveInfo.VolumeLabel) ? $"{driveInfo.VolumeLabel} ({driveFullPath})" : driveFullPath;
+            return driveName;
         }
     }
 }
