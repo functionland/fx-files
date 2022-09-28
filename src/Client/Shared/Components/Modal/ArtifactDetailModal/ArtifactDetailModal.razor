@@ -1,7 +1,7 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase;
 
-@if (_artifacts.Count > 0)
+@if (_artifacts.Length > 0)
 {
     if (IsMultiple)
     {
@@ -21,7 +21,7 @@
                     <div class="select-action">
                         <div class="info-selection">
                             <div class="item-selected">
-                                <span class="item-selected-count">@_artifacts.Count</span>
+                                <span class="item-selected-count">@_artifacts.Length</span>
                                 <span class="item-selected-text">@Localizer[nameof(AppStrings.ItemsSelected)]</span>
                             </div>
                             <div class="item-selected">

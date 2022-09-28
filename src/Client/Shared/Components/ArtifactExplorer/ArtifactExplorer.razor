@@ -29,7 +29,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         </div>
 
         <div class="right-part">
-            <div class="icons-action move-icon"></div>
+                    <div class="icons-action move-icon" @onclick="(() => HandelArtifactMoveClick())"></div>
             <div class="icons-action vertical-option-icon" @onclick="(() => HandleMultiArtifactsOptionsClick())"></div>
         </div>
     </div>
@@ -67,7 +67,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 <div class="list-container @ViewMode-view">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
-        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" />
+        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
     }
     @foreach (var artifact in Artifacts)
     {

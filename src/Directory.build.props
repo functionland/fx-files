@@ -2,7 +2,7 @@
 <Project>
 	<PropertyGroup>
 
-		<BlazorMode>BlazorHybrid</BlazorMode>
+		<BlazorMode>BlazorServer</BlazorMode>
 		<!-- You can use either BlazorServer or BlazorWebAssembly or BlazorHybrid -->
 
 		<WebAppDeploymentType>DefaultDeploymentType</WebAppDeploymentType>

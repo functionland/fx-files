@@ -1,0 +1,9 @@
+{
+  "commands": {
+    "Clean-CSS": {
+      "fileName": "cmd.exe",
+      "workingDirectory": ".",
+      "arguments": "/c Clean-CSS.bat"
+    }
+  }
+}
