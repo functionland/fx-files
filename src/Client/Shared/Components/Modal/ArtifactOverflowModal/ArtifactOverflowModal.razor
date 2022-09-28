@@ -17,16 +17,23 @@
                   Text="Make a copy"
                   OnClick="Copy"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
-        <FxButton Class="pin-button"
-                  Text="Remove from pinned items"
-                  OnClick="UnPin"
-                  IsVisible="_isPinned"
-                  ButtonStyle="FxButtonStyle.SheetMenu"/>
-        <FxButton Class="pin-button"
+        @if (_pinOptionResult?.IsVisible == true)
+        {
+            @if(_pinOptionResult?.Type == PinOptionResultType.Add)
+            {
+                <FxButton Class="pin-button"
                   Text="Add to pinned items"
                   OnClick="Pin"
-                  IsVisible="!_isPinned"
-                  ButtonStyle="FxButtonStyle.SheetMenu"/>
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+            }
+            else if (_pinOptionResult?.Type == PinOptionResultType.Remove)
+            {
+                <FxButton Class="pin-button"
+                  Text="Remove from pinned items"
+                  OnClick="UnPin"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+            }      
+        }
         <FxButton Class="move-button"
                   Text="Move to"
                   OnClick="Move"
@@ -34,6 +41,6 @@
         <FxButton Class="delete-button"
                   Text="Delete"
                   OnClick="Delete"
-                  ButtonStyle="FxButtonStyle.SheetMenu"/>
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
     </div>
 </FxBottomSheet>
