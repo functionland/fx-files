@@ -379,6 +379,7 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
+        _searchText = string.Empty;
         _currentArtifact = artifact;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         // load current artifacts

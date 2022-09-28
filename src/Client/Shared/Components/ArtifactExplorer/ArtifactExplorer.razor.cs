@@ -21,6 +21,7 @@
         public bool IsSelected;
         public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
+        private FxSearchInput? _artifactSearch;
 
         protected override Task OnInitAsync()
         {
@@ -124,11 +125,13 @@
                 }
                 else
                 {
+                    _artifactSearch?.OnDoneClick();
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
             else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             {
+                _artifactSearch?.OnDoneClick();
                 await OnSelectArtifact.InvokeAsync(artifact);
             }
         }
