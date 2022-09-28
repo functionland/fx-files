@@ -79,7 +79,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
                 <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
             }
 
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid) 
             {
                 <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
             }
