@@ -1,10 +1,11 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
-public interface IPoolSevice
+public interface IBloxPoolSevice
 {
-    Task<IEnumerable<Pool>> GetPoolsAsync(CancellationToken? cancellationToken = null);
-    Task LeavePoolAsync(Pool pool, CancellationToken? cancellationToken = null);
-    Task<(double? DueNowPaymentRequired, double? PerMounthPaymentRequired)> RequestJoinToPoolAsync(Pool pool, CancellationToken? cancellationToken = null);
-    Task<bool> ConfirmJoinToPoolAsync(Pool pool, CancellationToken? cancellationToken = null);
-    IAsyncEnumerable<Pool> SearchPoolAsync(PoolFilter filter, double? Distance, CancellationToken? cancellationToken = null);
+    Task LoginAsync(string did, CancellationToken? cancellationToken = null);
+    Task<List<BloxPool>> GetMyPoolsAsync(CancellationToken? cancellationToken = null);
+    Task LeavePoolAsync(string poolId, CancellationToken? cancellationToken = null);
+    Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(string poolId, CancellationToken? cancellationToken = null);
+    Task<bool> JoinToPoolAsync(string poolId, CancellationToken? cancellationToken = null);
+    IAsyncEnumerable<BloxPool> SearchPoolAsync(PoolSearchType filter, double? distance, CancellationToken? cancellationToken = null);
 }
