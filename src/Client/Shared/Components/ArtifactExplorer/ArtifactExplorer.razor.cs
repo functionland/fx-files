@@ -85,6 +85,7 @@
             {
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 IsSelectedAll = !IsSelectedAll;
+                IsSelected = false;
                 SelectedArtifacts = Artifacts?.ToList();
             }
         }
@@ -99,6 +100,7 @@
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
             IsSelectedAll = false;
+            IsSelected = true;
         }
 
         public async Task HandleCancelSelectDestionationMode()
