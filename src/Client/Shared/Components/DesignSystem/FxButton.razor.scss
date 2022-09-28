@@ -3,8 +3,8 @@
 
 .fxbutton {
     width: min-content;
+    color: $pure-white;
     height: $spacing-40;
-    color: white;
     display: grid;
     cursor: pointer;
     overflow: hidden;
@@ -57,6 +57,7 @@
 
 .fxbutton-normal {
     color: $pure-white;
+    justify-content: center;
     background-color: $green-dark-base !important;
 }
 

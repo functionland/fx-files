@@ -1,5 +1,6 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_mixins.scss';
 
 .bottom-action {
     flex-direction: column;
@@ -16,36 +17,24 @@
         border: none
     }
 
-    .download-action-icon {
-        background-image: url($download);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: $icon-24;
-        height: $icon-24;
+    .download-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($available-offline);
     }
 
-    .move-action-icon {
-        background-image: url(images/icons/lightDesignSystem/move.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: $icon-24;
-        height: $icon-24;
+    .move-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($move);
     }
 
-    .pin-action-icon {
-        background-image: url($pin-outline-black);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: $icon-24;
-        height: $icon-24;
+    .pin-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($pin-outline);
     }
 
-    .more-action-icon {
-        background-image: url(images/icons/lightDesignSystem/options-vertical.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: $icon-24;
-        height: $icon-24;
+    .more-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($options-vertical);
     }
 
     .action-text p {

@@ -444,4 +444,16 @@
   <data name="PreviousSlide" xml:space="preserve">
     <value>Prev.</value>
   </data>
+  <data name="CreateFolder" xml:space="preserve">
+    <value>Create Folder</value>
+  </data>
+  <data name="NewFolderPlaceholder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="CopyHere" xml:space="preserve">
+    <value>Copy here</value>
+  </data>
+  <data name="MoveHere" xml:space="preserve">
+    <value>Move here</value>
+  </data>
 </root>

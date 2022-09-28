@@ -71,12 +71,10 @@
                 color: color(gray-content1);
             }
 
-            .pinned-icon {
-                background-image: url($pin-outline-black);
-                background-repeat: no-repeat;
-                background-position: center left;
-                background-size: 24px 24px;
+            .pinned-icon::before {
                 padding-left: 30px;
+                font-size: $icon-24;
+                @include Icon($pin-outline);
             }
 
             .artifact_subtext {

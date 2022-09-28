@@ -5,13 +5,15 @@
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<List<FsArtifact>> OnMultiArtifactsOptionsClick { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
+        [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
@@ -43,9 +45,14 @@
             await OnSelectArtifact.InvokeAsync(artifact);
         }
 
+        private async Task HandelArtifactMoveClick()
+        {
+            await OnSelectDestination.InvokeAsync(SelectedArtifacts.ToArray());
+        }
+
         private async Task HandleMultiArtifactsOptionsClick()
         {
-            await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts);
+            await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts.ToArray());
         }
 
         private bool IsInRoot(FsArtifact? artifact)

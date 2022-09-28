@@ -259,6 +259,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy here.
+        /// </summary>
+        public static string CopyHere {
+            get {
+                return ResourceManager.GetString("CopyHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Folder.
+        /// </summary>
+        public static string CreateFolder {
+            get {
+                return ResourceManager.GetString("CreateFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current.
         /// </summary>
         public static string Current {
@@ -601,6 +619,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move here.
+        /// </summary>
+        public static string MoveHere {
+            get {
+                return ResourceManager.GetString("MoveHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Device.
         /// </summary>
         public static string MyDevice {
@@ -615,6 +642,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string NextSlide {
             get {
                 return ResourceManager.GetString("NextSlide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Folder.
+        /// </summary>
+        public static string NewFolderPlaceholder {
+            get {
+                return ResourceManager.GetString("NewFolderPlaceholder", resourceCulture);
             }
         }
         
