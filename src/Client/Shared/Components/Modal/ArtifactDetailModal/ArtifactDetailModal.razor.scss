@@ -74,3 +74,36 @@
         }
     }
 }
+
+.modal-slider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 38px $letter-spacing-0 $spacing-16;
+
+    .slider-btn {
+        color: color(input-disable);
+        font-family: $open-sans-semi-bold;
+        font-style: normal;
+        font-size: $font-size-12;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .slider-selected {
+        color: $green-dark-base;
+    }
+
+    .number-slider {
+        background-color: color(gray-bg-secondary);
+        color: color(gray-content1);
+        font-family: $open-sans-regular;
+        font-style: normal;
+        font-size: $font-size-10;
+        line-height: $line-height-14;
+        letter-spacing: $letter-spacing-02;
+        padding: $spacing-6 $spacing-8;
+        border-radius: $border-radius-6;
+        margin: $spacing-0 $spacing-8;
+    }
+}

@@ -7,9 +7,8 @@
     padding: $spacing-0;
     gap: $spacing-6;
     display: flex;
-    flex-grow: 1;
-    flex: none;
-    order: 0;
+    height: 46px;
+    width: 70px;
 
     .action-button {
         background: transparent;
