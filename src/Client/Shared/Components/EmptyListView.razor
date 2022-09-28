@@ -4,28 +4,33 @@
 <div class="empty-list-view">
 
     <div class="empty-list-title">@Title</div>
-    <div class="buttons-box">
+    @if (IsShowButtons)
+    {
 
-        <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/add-file.svg"
+        <div class="buttons-box">
+
+            <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/add-file.svg"
                   Text="@Localizer[nameof(AppStrings.ButtonAddFile)]"
                   ButtonStyle="FxButtonStyle.Outline"
                   ButtonSize="FxButtonSize.Stretch"
                   IsVisible="IsAddFileButtonVisible"
-                  OnClick="OnAddFileButtonClick"/>
+                  OnClick="OnAddFileButtonClick" />
 
-        <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/upload-file.svg"
+            <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/upload-file.svg"
                   Text="@Localizer[nameof(AppStrings.ButtonUploadFiles)]"
                   ButtonStyle="FxButtonStyle.Outline"
-                  ButtonSize="FxButtonSize.Stretch" 
+                  ButtonSize="FxButtonSize.Stretch"
                   IsVisible="IsUploadButtonVisible"
-                  OnClick="OnUploadButtonClick"/>
+                  OnClick="OnUploadButtonClick" />
 
-        <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/create-folder.svg"
+            <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/create-folder.svg"
                   Text="@Localizer[nameof(AppStrings.ButtonAddNewFolder)]"
                   ButtonStyle="FxButtonStyle.Outline"
                   ButtonSize="FxButtonSize.Stretch"
                   IsVisible="IsAddFolderButtonVisible"
-                  OnClick="OnAddFolderButtonClick"/>
-    </div>
+                  OnClick="OnAddFolderButtonClick" />
+        </div>
+
+    }
 
 </div>
