@@ -81,8 +81,12 @@
 
         public void ToggleSelectedAll()
         {
-            IsSelectedAll = !IsSelectedAll;
-            //todo: select all items
+            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                IsSelectedAll = !IsSelectedAll;
+                SelectedArtifacts = Artifacts?.ToList();
+            }
         }
 
         public void ChangeViewMode(ViewModeEnum mode)
@@ -94,6 +98,7 @@
         {
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
+            IsSelectedAll = false;
         }
 
         public async Task HandleCancelSelectDestionationMode()
@@ -128,7 +133,10 @@
 
         public void OnSelectionChanged(FsArtifact selectedArtifact)
         {
-            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
+            var item = SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath);
+            IsSelected = item;
+
+            if (IsSelected)
             {
                 SelectedArtifacts.Remove(selectedArtifact);
             }
