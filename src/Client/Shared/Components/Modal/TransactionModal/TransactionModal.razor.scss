@@ -1,2 +1,14 @@
-﻿body {
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.transaction-modal {
+
+    .title-modal {
+        font-family: $montserrat-semi-bold;
+        font-style: normal;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+        color: color(gray-content1);
+    }
 }

@@ -450,4 +450,7 @@
   <data name="MoveHere" xml:space="preserve">
     <value>Move here</value>
   </data>
+  <data name="MoveFile" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
 </root>

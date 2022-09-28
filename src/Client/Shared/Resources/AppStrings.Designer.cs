@@ -612,6 +612,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Moving files.
         /// </summary>
+        public static string MoveFile {
+            get {
+                return ResourceManager.GetString("MoveFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moving files.
+        /// </summary>
         public static string MoveFileModal {
             get {
                 return ResourceManager.GetString("MoveFileModal", resourceCulture);

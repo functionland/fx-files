@@ -1,4 +1,8 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase;
 
-<h3>TransactionModal</h3>
+<div class="transaction-modal">
+    <div class="title-modal">@Localizer[nameof(AppStrings.MoveFile)]</div>
+    <div class="file-name">File name example.Docx</div>
+    <FxButton title="cancel" ButtonStyle="FxButtonStyle.Normal" Width="100%"></FxButton>
+</div>
