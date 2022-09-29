@@ -1,12 +1,12 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Exceptions
-{
-    public class CanNotOperateOnFilesException : DomainLogicException
-    {
-        public List<FsArtifact> FsArtifacts { get; set; }
+﻿namespace Functionland.FxFiles.Client.Shared.Exceptions;
 
-        public CanNotOperateOnFilesException(string message, List<FsArtifact> fsArtifacts) : base(message)
-        {
-            FsArtifacts = fsArtifacts;
-        }
+[Serializable]
+public class CanNotOperateOnFilesException : DomainLogicException
+{
+    public List<FsArtifact> FsArtifacts { get; set; }
+
+    public CanNotOperateOnFilesException(string message, List<FsArtifact> fsArtifacts) : base(message)
+    {
+        FsArtifacts = fsArtifacts;
     }
 }

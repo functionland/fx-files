@@ -4,32 +4,19 @@ namespace Functionland.FxFiles.Client.App;
 
 public partial class App
 {
-    private IFxLocalDbService FxLocalDbService { get; }
     private IExceptionHandler ExceptionHandler { get; }
-    private IPinService PinService { get; }
+    public IServiceProvider ServiceProvider { get; set; }
 
-    public App(IFxLocalDbService fxLocalDbService, IExceptionHandler exceptionHandler, IPinService pinService)
+    public App(IExceptionHandler exceptionHandler, IServiceProvider serviceProvider)
     {
         InitializeComponent();
-        FxLocalDbService = fxLocalDbService;
         ExceptionHandler = exceptionHandler;
-        PinService = pinService;
+        ServiceProvider = serviceProvider;
     }
 
     protected override void OnStart()
     {
         base.OnStart();
-        _ = Task.Run(async () =>
-        {
-            try
-            {
-                await FxLocalDbService.InitAsync();
-                await PinService.InitializeAsync();
-            }
-            catch (Exception exp)
-            {
-                ExceptionHandler.Handle(exp);
-            }
-        });
+        _ = Task.Run(async () => { await ServiceProvider.RunAppEvents(); });
     }
 }

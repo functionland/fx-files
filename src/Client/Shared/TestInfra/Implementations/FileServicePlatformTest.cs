@@ -17,7 +17,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 {
                     testsRootArtifact = await fileService.CreateFolderAsync(rootPath, "FileServiceTestsFolder");
                 }
-                catch (DomainLogicException ex) when (ex.Message == "The folder already exists exception") //TODO: use AppStrings for exception
+                catch (ArtifactAlreadyExistsException ex)
                 {
                     var rootArtifacts = await GetArtifactsAsync(fileService, rootPath);
                     testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "FileServiceTestsFolder"));
@@ -44,28 +44,23 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
 
                 //Expecting exceptions
-                await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
+                await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
                 {
                     await fileService.CreateFolderAsync(testRoot, "Folder 1");
                 }, "The folder already exists exception");
 
-                await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
+                await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
                 {
                     await fileService.CreateFileAsync(Path.Combine(testRoot, "file1.txt"), GetSampleFileStream());
                 }, "The file already exists exception");
 
-                //Invalid chars are not the same on both android and windows! No point testing it here.
-                //await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
-                //{
-                //    await fileService.CreateFolderAsync(testRoot, "Folder **");
-                //}, "The folder name has invalid chars.");
-
-                await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
+               
+                await Assert.ShouldThrowAsync<ArtifactNameNullException>(async () =>
                 {
                     await fileService.CreateFolderAsync(testRoot, "");
                 }, "The folder name is null");
 
-                await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
+                await Assert.ShouldThrowAsync<ArtifactNameNullException>(async () =>
                 {
                     await fileService.CreateFileAsync(Path.Combine(testRoot, ".txt"), GetSampleFileStream());
                 }, "The file name is null");
@@ -174,7 +169,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
 
                 //Rename a file to a duplicate file name
-                await Assert.ShouldThrowAsync<DomainLogicException>(async () =>
+                await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
                 {
                     await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file21.txt"), "file1");
                 }, "The file already exists exception");
