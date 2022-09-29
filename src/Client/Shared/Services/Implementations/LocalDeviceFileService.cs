@@ -1,9 +1,4 @@
-﻿using DbUp;
-using Functionland.FxFiles.Client.Shared.Utils;
-using Microsoft.Extensions.Localization;
-using System.IO;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -145,6 +140,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 await foreach (var item in GetChildArtifactsAsync(path, cancellationToken))
                 {
+                    if (cancellationToken?.IsCancellationRequested == true) yield break;
                     yield return item;
                 }
 
@@ -156,8 +152,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 foreach (var drive in drives)
                 {
+                    if (cancellationToken?.IsCancellationRequested == true) yield break;
                     await foreach (var item in GetAllFileAndFoldersAsync(drive.FullPath, searchText, cancellationToken))
                     {
+                        if (cancellationToken?.IsCancellationRequested == true) yield break;
                         yield return item;
                     }
                 }
@@ -166,6 +164,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await foreach (var item in GetChildArtifactsAsync(path, cancellationToken))
             {
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
                 yield return item;
             }
         }
@@ -499,6 +498,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 foreach (var drive in drives)
                 {
+                    if (cancellationToken?.IsCancellationRequested == true) yield break;
                     drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
                     yield return drive;
                 }
@@ -511,15 +511,23 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? "artifact"));
 
             if (fsArtifactType is not FsArtifactType.Folder and not FsArtifactType.Drive)
-                //TODO: throw correct exception
-                throw new Exception("");
-
+            {
+                var fileinfo = new FileInfo(path);
+                yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
+                {
+                    ParentFullPath = Directory.GetParent(path)?.FullName,
+                    LastModifiedDateTime = File.GetLastWriteTime(path),
+                    FileExtension = Path.GetExtension(path),
+                    Size = fileinfo.Length
+                };
+            }
 
             string[] files = Directory.GetFiles(path);
             string[] folders = Directory.GetDirectories(path);
 
             foreach (var folder in folders)
             {
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
                 var directoryInfo = new DirectoryInfo(folder);
 
                 if (directoryInfo.Attributes.HasFlag(FileAttributes.Hidden)) continue;
@@ -536,6 +544,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             foreach (var file in files)
             {
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
                 var fileinfo = new FileInfo(file);
 
                 if (fileinfo.Attributes.HasFlag(FileAttributes.Hidden)) continue;
