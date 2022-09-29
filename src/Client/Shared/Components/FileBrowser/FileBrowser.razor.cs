@@ -159,7 +159,6 @@ public partial class FileBrowser
 
     public async Task HandleRenameArtifactAsync(FsArtifact? artifact)
     {
-
         var result = await GetInputModalResult(artifact);
         if (result?.ResultType == InputModalResultType.Cancel)
         {
@@ -168,44 +167,79 @@ public partial class FileBrowser
 
         string? newName = result?.ResultName;
 
-        try
+        if (artifact?.ArtifactType == FsArtifactType.Folder)
         {
-            if (artifact?.ArtifactType == FsArtifactType.Folder)
+            try
             {
                 await FileService.RenameFolderAsync(artifact.FullPath, newName);
                 UpdateRenamedArtifact(artifact, newName);
             }
-            else if (artifact?.ArtifactType == FsArtifactType.File)
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder"))
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.ArtifactNameIsNullException, AppStrings.Folder);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"))
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, AppStrings.Folder);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"))
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, AppStrings.Folder);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+            catch
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+
+        }
+        else if (artifact?.ArtifactType == FsArtifactType.File)
+        {
+            try
             {
                 await FileService.RenameFileAsync(artifact.FullPath, newName);
                 var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
                 UpdateRenamedArtifact(artifact, newName);
             }
-            else if (artifact?.ArtifactType == FsArtifactType.Drive)
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "file"))
             {
                 var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.RootfolderRenameException);
+                var message = Localizer.GetString(AppStrings.ArtifactNameIsNullException, AppStrings.File);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"))
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, AppStrings.File);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+            catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"))
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, AppStrings.File);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+            catch
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
                 _toastModalRef!.Show(title, message, FxToastType.Error);
             }
         }
-        catch (DomainLogicException ex) when
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, artifact?.ArtifactType.ToString() ?? "") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, artifact?.ArtifactType.ToString() ?? "")) ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, artifact?.ArtifactType.ToString() ?? "")))
+        else if (artifact?.ArtifactType == FsArtifactType.Drive)
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = ex.Message;
+            var message = Localizer.GetString(AppStrings.RootfolderRenameException);
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
-        }
-
     }
-
     public async Task HandlePinArtifactsAsync(FsArtifact[] artifacts)
     {
         try

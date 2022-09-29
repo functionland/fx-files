@@ -106,6 +106,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have not entered any name.
+        /// </summary>
+        public static string ArtifactNameIsNullException {
+            get {
+                return ResourceManager.GetString("ArtifactNameIsNullException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} path is null.
         /// </summary>
         public static string ArtifactPathIsNull {
@@ -390,6 +399,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string FieldQuestionInput {
             get {
                 return ResourceManager.GetString("FieldQuestionInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to file.
+        /// </summary>
+        public static string File {
+            get {
+                return ResourceManager.GetString("File", resourceCulture);
             }
         }
         
