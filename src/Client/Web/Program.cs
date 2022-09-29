@@ -58,6 +58,8 @@ public class Program
 
         var app = builder.Build();
 
+        _ = Task.Run(async () => { await app.Services.RunAppEvents(); });
+
         Startup.Middlewares.Use(app, builder.Environment);
 
         return app;

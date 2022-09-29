@@ -6,6 +6,7 @@
 
 
 .content-body {
+    margin: $spacing-21 $spacing-0;
     max-height: 100%;
     overflow-y: auto;
     // TODO: use value from the sass variables
@@ -37,7 +38,7 @@
     }
 
     .file-details-area {
-        padding: $spacing-21 $spacing-0;
+        padding: $spacing-21 $spacing-0 $spacing-56;
     }
 
     .bottom-body {

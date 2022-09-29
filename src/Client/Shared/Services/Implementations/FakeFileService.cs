@@ -61,7 +61,7 @@
         private void CheckIfArtifactExist(string newPath)
         {
             if (ArtifacExist(newPath))
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactAlreadyExistsException)]);
+                throw new ArtifactAlreadyExistsException(StringLocalizer[nameof(AppStrings.ArtifactAlreadyExistsException)]);
         }
 
         private bool ArtifacExist(string newPath)
@@ -82,18 +82,18 @@
         {
             path = path.Replace("/", "\\");
             if (string.IsNullOrWhiteSpace(stream?.ToString()))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
+                throw new StreamNullException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
 
             if (string.IsNullOrWhiteSpace(path))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
 
             var fileName = Path.GetFileNameWithoutExtension(path);
 
             if (string.IsNullOrWhiteSpace(fileName))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
+                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
 
             if (CheckIfNameHasInvalidChars(fileName))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
 
             await LatencyActionAsync();
             if (path is null) throw new Exception();
@@ -142,14 +142,14 @@
         public async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(path))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
 
 
             if (string.IsNullOrWhiteSpace(folderName))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
+                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
 
             if (CheckIfNameHasInvalidChars(folderName))
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
 
 
             await LatencyActionAsync();
@@ -274,7 +274,7 @@
                     var newPath = Path.Combine(directoryName, newName);
 
                     if (ArtifacExist(newPath))
-                        throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+                        throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
 
                     articat.FullPath = newPath;
                     articat.Name = newName;
@@ -313,7 +313,7 @@
             {
                 var path = currentPath.Replace("/", "\\");
                 if (string.IsNullOrWhiteSpace(path))
-                    throw new DomainLogicException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
+                    throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
                 var artifactIsExist = ArtifacExist(path);
 

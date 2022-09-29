@@ -29,4 +29,26 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IBloxService, FakeBloxService>();
         return services;
     }
+
+    public static async Task RunAppEvents(this IServiceProvider serviceProvider, AppEventOption? option = null)
+    {
+        var exceptionHandler = serviceProvider.GetRequiredService<IExceptionHandler>();
+        try
+        {
+            var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
+            var PinService = serviceProvider.GetRequiredService<IPinService>();
+
+            await FxLocalDbService.InitAsync();
+            await PinService.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            exceptionHandler.Handle(ex);
+        }
+    }
+}
+
+public class AppEventOption
+{
+    //TODO: Put something that you need in your app events.
 }
