@@ -188,16 +188,13 @@ public partial class FileBrowser
                 _toastModalRef!.Show(title, message, FxToastType.Error);
             }
         }
-        catch (DomainLogicException ex) when
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, artifact?.ArtifactType.ToString() ?? "") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, artifact?.ArtifactType.ToString() ?? "")) ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, artifact?.ArtifactType.ToString() ?? "")))
+        catch (DomainLogicException ex) when (ex is ArtifactNameNullException or ArtifactInvalidNameException or ArtifactAlreadyExistsException)
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = ex.Message;
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
-        catch
+        catch (Exception)
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
@@ -262,7 +259,7 @@ public partial class FileBrowser
                 }
             }
         }
-        catch (DomainLogicException ex) when (ex.Message == Localizer.GetString(AppStrings.DriveRemoveFailed))
+        catch (CanNotModifyOrDeleteDriveException ex)
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.RootFolderDeleteException);
@@ -327,10 +324,7 @@ public partial class FileBrowser
                 FilterArtifacts();
             }
         }
-        catch (DomainLogicException ex) when
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"))))
+        catch (DomainLogicException ex) when (ex is ArtifactNameNullException or ArtifactInvalidNameException or ArtifactAlreadyExistsException)
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = ex.Message;
