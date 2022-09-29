@@ -30,7 +30,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var existPins = await FileService.CheckPathExistsAsync(pinnedArtifactPaths);
             foreach (var changedPinnedArtifact in existPins)
             {
-                if (changedPinnedArtifact.ArtifactFullPath == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+                if (changedPinnedArtifact.ArtifactFullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
 
                 if (changedPinnedArtifact.FsArtifactChangesType == FsArtifactChangesType.Delete)
                 {
@@ -82,7 +82,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private async Task UpdatePinnedArtifactAsyn(PinnedArtifact edditedPinArtfact)
         {
-            if (edditedPinArtfact.FullPath == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+            if (edditedPinArtfact.FullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
             await FxLocalDbService.UpdatePinAsync(edditedPinArtfact);
             DeteteFromPinCache(edditedPinArtfact.FullPath);
             PinnedPathsCatche.TryAdd(edditedPinArtfact.FullPath, edditedPinArtfact);
@@ -93,7 +93,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             try
             {
-                if (artifactChangeEvent.FsArtifact == null) throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
+                if (artifactChangeEvent.FsArtifact == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
 
                 if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Delete)
                 {
@@ -144,7 +144,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         private string? GetParentPath(FsArtifact artifact)
         {
             if (artifact.FullPath is null)
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactPathIsNull)]);
+                throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.ArtifactPathIsNull)]);
             var path = artifact.FullPath?.TrimEnd(Path.DirectorySeparatorChar);
 
             var parentPath = Directory.GetParent(path)?.FullName;
@@ -257,7 +257,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             if (artifact.FullPath == null || artifact.ArtifactName == null || artifact.FsArtifactType == null || artifact.ProviderType == null)
             {
-                throw new DomainLogicException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
+                throw new ArtifactDoseNotExistsException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
             }
             var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value) { ThumbnailPath = artifact.ThumbnailPath };
             return fsArtifact;
