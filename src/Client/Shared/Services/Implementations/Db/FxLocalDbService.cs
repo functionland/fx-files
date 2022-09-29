@@ -103,6 +103,7 @@ public class FxLocalDbService : IFxLocalDbService
 
     public async Task RemovePinAsync(String FullPath)
     {
+        if (string.IsNullOrEmpty(FullPath)) return;
         using var LocalDb = CreateConnection();
 
         await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';"));

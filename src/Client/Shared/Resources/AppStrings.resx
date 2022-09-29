@@ -268,7 +268,7 @@
     <value>Done</value>
   </data>
   <data name="InputSearchFullWidth" xml:space="preserve">
-    <value>Search in “folder name”</value>
+    <value>Search in “{0}”</value>
   </data>
   <data name="InputSearchParial" xml:space="preserve">
     <value>Search your files</value>
@@ -438,6 +438,12 @@
   <data name="Rename" xml:space="preserve">
     <value>Rename</value>
   </data>
+  <data name="NextSlide" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="PreviousSlide" xml:space="preserve">
+    <value>Prev.</value>
+  </data>
   <data name="CreateFolder" xml:space="preserve">
     <value>Create Folder</value>
   </data>
@@ -461,5 +467,8 @@
   </data>
   <data name="File" xml:space="preserve">
     <value>file</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>of</value>
   </data>
 </root>

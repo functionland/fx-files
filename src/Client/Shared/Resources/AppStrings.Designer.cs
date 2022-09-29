@@ -529,7 +529,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search in “folder name”.
+        ///   Looks up a localized string similar to Search in “{0}”.
         /// </summary>
         public static string InputSearchFullWidth {
             get {
@@ -664,11 +664,29 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string NextSlide {
+            get {
+                return ResourceManager.GetString("NextSlide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Night.
         /// </summary>
         public static string Night {
             get {
                 return ResourceManager.GetString("Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to of.
+        /// </summary>
+        public static string Of {
+            get {
+                return ResourceManager.GetString("Of", resourceCulture);
             }
         }
         
@@ -705,6 +723,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Pools {
             get {
                 return ResourceManager.GetString("Pools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prev..
+        /// </summary>
+        public static string PreviousSlide {
+            get {
+                return ResourceManager.GetString("PreviousSlide", resourceCulture);
             }
         }
         
