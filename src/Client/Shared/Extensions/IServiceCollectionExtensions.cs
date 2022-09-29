@@ -30,11 +30,19 @@ public static class IServiceCollectionExtensions
 
     public static async Task RunAppEvents(this IServiceProvider serviceProvider, AppEventOption? option = null)
     {
-        var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
-        var PinService = serviceProvider.GetRequiredService<IPinService>();
+        var exceptionHandler = serviceProvider.GetRequiredService<IExceptionHandler>();
+        try
+        {
+            var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
+            var PinService = serviceProvider.GetRequiredService<IPinService>();
 
-        await FxLocalDbService.InitAsync();
-        await PinService.InitializeAsync();
+            await FxLocalDbService.InitAsync();
+            await PinService.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            exceptionHandler.Handle(ex);
+        }
     }
 }
 
