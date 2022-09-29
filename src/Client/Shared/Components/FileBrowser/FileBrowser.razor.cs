@@ -1,7 +1,10 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Models;
-
 using Microsoft.VisualBasic;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -16,6 +19,7 @@ public partial class FileBrowser
     private ToastModal? _toastModalRef;
     private ConfirmationModal? _confirmationModalRef;
     private FilterArtifactModal? _filteredArtifactModalRef;
+    private SortArtifactModal? _sortedArtifactModalRef;
     private ArtifactOverflowModal? _artifactOverflowModalRef;
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
@@ -24,6 +28,8 @@ public partial class FileBrowser
     private string? _searchText;
     private bool _isInSearchMode;
     private FileCategoryType? _fileCategoryFilter;
+    private SortTypeEnum _currentSortType = SortTypeEnum.Name;
+    private bool _IsAscOrder = true;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -571,5 +577,51 @@ public partial class FileBrowser
     {
         _fileCategoryFilter = await _filteredArtifactModalRef!.ShowAsync();
         FilterArtifacts();
+    }
+
+    private async Task HandleSortClick()
+    {
+        _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
+        if(_currentSortType is SortTypeEnum.LastModified)
+        {
+            if(_IsAscOrder)
+            {
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.LastModifiedDateTime).ToList();
+                return;
+            }else
+            {
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.LastModifiedDateTime).ToList();
+                return;
+            }
+    
+        }
+
+        if (_currentSortType is SortTypeEnum.Size)
+        {
+            if (_IsAscOrder)
+            {
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Size).ToList();
+                return;
+            }
+            else
+            {
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Size).ToList();
+                return;
+            }
+        }
+
+        if (_currentSortType is SortTypeEnum.Name)
+        {
+            if (_IsAscOrder)
+            {
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Name).ToList();
+                return;
+            }
+            else
+            {
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Name).ToList();
+                return;
+            }
+        }
     }
 }

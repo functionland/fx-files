@@ -1,9 +1,13 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class ArtifactExplorer
     {
+        [Parameter] public bool IsAscOrder { get; set; } = true;
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
+        [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
@@ -12,12 +16,13 @@
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
+        [Parameter] public EventCallback OnSortClick { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
+        
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
-        public SortOrderEnum SortOrder = SortOrderEnum.asc;
         public bool IsSelected;
         public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
@@ -60,23 +65,15 @@
             return artifact is null ? true : false;
         }
 
-        public void ToggleSortOrder()
+        public void HandleSortClick()
         {
-            if (SortOrder == SortOrderEnum.asc)
-            {
-                SortOrder = SortOrderEnum.desc;
-            }
-            else
-            {
-                SortOrder = SortOrderEnum.asc;
-            }
-
-            //todo: change order of list items
+            OnSortClick.InvokeAsync();
         }
 
-        public void OnSortChange()
+        public void HandleSortOrderClick()
         {
-            //todo: Open sort bottom sheet
+            IsAscOrder = !IsAscOrder;
+            //todo
         }
 
         public void ToggleSelectedAll()
