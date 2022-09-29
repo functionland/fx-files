@@ -27,4 +27,18 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<FakeFileServiceFactory>();
         return services;
     }
+
+    public static async Task RunAppEvents(this IServiceProvider serviceProvider, AppEventOption? option = null)
+    {
+        var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
+        var PinService = serviceProvider.GetRequiredService<IPinService>();
+
+        await FxLocalDbService.InitAsync();
+        await PinService.InitializeAsync();
+    }
+}
+
+public class AppEventOption
+{
+    //TODO: Put something that you need in your app events.
 }
