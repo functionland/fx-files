@@ -579,21 +579,33 @@ public partial class FileBrowser
         FilterArtifacts();
     }
 
+    private void HandleSortOrderClick()
+    {
+        _IsAscOrder = !_IsAscOrder;
+        sortFilteredArtifacts();
+    }
+
     private async Task HandleSortClick()
     {
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
-        if(_currentSortType is SortTypeEnum.LastModified)
+        sortFilteredArtifacts();
+    }
+
+    private void sortFilteredArtifacts()
+    {
+        if (_currentSortType is SortTypeEnum.LastModified)
         {
-            if(_IsAscOrder)
+            if (_IsAscOrder)
             {
                 _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
-            }else
+            }
+            else
             {
                 _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
             }
-    
+
         }
 
         if (_currentSortType is SortTypeEnum.Size)

@@ -4,10 +4,10 @@ namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class ArtifactExplorer
     {
-        [Parameter] public bool IsAscOrder { get; set; } = true;
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
+        [Parameter] public bool IsAscOrder { get; set; } = true;
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
@@ -19,7 +19,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnSortClick { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
-        
+        [Parameter] public EventCallback OnSortOrderClick { get; set; }
+
+
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
@@ -72,8 +74,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public void HandleSortOrderClick()
         {
-            IsAscOrder = !IsAscOrder;
-            //todo
+
+            OnSortOrderClick.InvokeAsync();
         }
 
         public void ToggleSelectedAll()
