@@ -4,5 +4,7 @@
     ThumbnailPath TEXT NULL,
     ContentHash TEXT NULL,
     ProviderType INTEGER NULL,
-    PinEpochTime INTEGER NULL
+    PinEpochTime INTEGER NULL,
+    FsArtifactType INTEGER NULL,
+    ArtifactName TEXT NULL
 )

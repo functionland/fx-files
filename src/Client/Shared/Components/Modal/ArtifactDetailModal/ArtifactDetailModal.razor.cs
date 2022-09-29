@@ -11,6 +11,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private string _artifactsSize = string.Empty;
 
+        private int _currentArtifactForShowNumber = 0;
+
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
 
         private bool _isModalOpen;
@@ -72,9 +74,22 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _artifactsSize = FsArtifactUtils.CalculateSizeStr(totalSize);
         }
 
+        public void ChangeArtifactSlideItem(bool isNext)
+        {
+            if (isNext)
+            {
+                _currentArtifactForShowNumber++;
+            }
+            else
+            {
+                _currentArtifactForShowNumber--;
+            }
+        }
+
         public async Task<ArtifactDetailModalResult> ShowAsync(FsArtifact[] artifacts, bool isMultiple = false)
         {
             _tcs?.SetCanceled();
+            _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;
             CalculateArtifactsSize();
             IsMultiple = isMultiple;
