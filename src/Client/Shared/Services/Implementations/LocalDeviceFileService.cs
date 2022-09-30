@@ -310,7 +310,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             foreach (var artifact in artifacts)
             {
                 if (cancellationToken?.IsCancellationRequested == true) break;
-                
+
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
@@ -516,7 +516,50 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (fsArtifactType is null)
                 throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? "artifact"));
 
-            if (fsArtifactType is not FsArtifactType.Folder and not FsArtifactType.Drive)
+            if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
+            {
+                string[] files = Directory.GetFiles(path);
+                string[] folders = Directory.GetDirectories(path);
+
+                foreach (var folder in folders)
+                {
+                    if (cancellationToken?.IsCancellationRequested == true) yield break;
+                    var directoryInfo = new DirectoryInfo(folder);
+
+                    if (directoryInfo.Attributes.HasFlag(FileAttributes.Hidden) ||
+                        directoryInfo.Attributes.HasFlag(FileAttributes.System) ||
+                        directoryInfo.Attributes.HasFlag(FileAttributes.Temporary)) continue;
+
+                    var providerType = await GetFsFileProviderTypeAsync(folder);
+
+                    yield return new FsArtifact(folder, Path.GetFileName(folder), FsArtifactType.Folder, providerType)
+                    {
+                        ParentFullPath = Directory.GetParent(folder)?.FullName,
+                        LastModifiedDateTime = Directory.GetLastWriteTime(folder)
+                    };
+                }
+
+                foreach (var file in files)
+                {
+                    if (cancellationToken?.IsCancellationRequested == true) yield break;
+                    var fileinfo = new FileInfo(file);
+
+                    if (fileinfo.Attributes.HasFlag(FileAttributes.Hidden) ||
+                        fileinfo.Attributes.HasFlag(FileAttributes.System) ||
+                        fileinfo.Attributes.HasFlag(FileAttributes.Temporary)) continue;
+
+                    var providerType = await GetFsFileProviderTypeAsync(file);
+
+                    yield return new FsArtifact(file, Path.GetFileName(file), FsArtifactType.File, providerType)
+                    {
+                        ParentFullPath = Directory.GetParent(file)?.FullName,
+                        LastModifiedDateTime = File.GetLastWriteTime(file),
+                        FileExtension = Path.GetExtension(file),
+                        Size = fileinfo.Length
+                    };
+                }
+            }
+            else
             {
                 var fileinfo = new FileInfo(path);
                 yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
@@ -524,44 +567,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                     LastModifiedDateTime = File.GetLastWriteTime(path),
                     FileExtension = Path.GetExtension(path),
-                    Size = fileinfo.Length
-                };
-            }
-
-            string[] files = Directory.GetFiles(path);
-            string[] folders = Directory.GetDirectories(path);
-
-            foreach (var folder in folders)
-            {
-                if (cancellationToken?.IsCancellationRequested == true) yield break;
-                var directoryInfo = new DirectoryInfo(folder);
-
-                if (directoryInfo.Attributes.HasFlag(FileAttributes.Hidden)) continue;
-
-                var providerType = await GetFsFileProviderTypeAsync(folder);
-
-                yield return new FsArtifact(folder, Path.GetFileName(folder), FsArtifactType.Folder, providerType)
-                {
-                    ParentFullPath = Directory.GetParent(folder)?.FullName,
-                    LastModifiedDateTime = Directory.GetLastWriteTime(folder)
-                };
-            }
-
-
-            foreach (var file in files)
-            {
-                if (cancellationToken?.IsCancellationRequested == true) yield break;
-                var fileinfo = new FileInfo(file);
-
-                if (fileinfo.Attributes.HasFlag(FileAttributes.Hidden)) continue;
-
-                var providerType = await GetFsFileProviderTypeAsync(file);
-
-                yield return new FsArtifact(file, Path.GetFileName(file), FsArtifactType.File, providerType)
-                {
-                    ParentFullPath = Directory.GetParent(file)?.FullName,
-                    LastModifiedDateTime = File.GetLastWriteTime(file),
-                    FileExtension = Path.GetExtension(file),
                     Size = fileinfo.Length
                 };
             }
