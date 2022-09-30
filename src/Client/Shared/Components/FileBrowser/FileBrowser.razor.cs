@@ -372,8 +372,18 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        _currentArtifact = artifact;
-        await LoadChildrenArtifactsAsync(_currentArtifact);
+        if (artifact.ArtifactType == FsArtifactType.File)
+        {
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(artifact.FullPath)
+            });
+        }
+        else
+        {
+            _currentArtifact = artifact;
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+        }
         // load current artifacts
     }
 
