@@ -1,0 +1,20 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components
+@using Functionland.FxFiles.Client.Shared.Components.Common;
+@inherits AppComponentBase;
+
+<FxBottomSheet Title="Sort by" ShowCloseButton=true IsOpen="_isModalOpen" OnClose="HandleClose">
+    <div>
+        <FxButton Text="Name"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleSortItemClick(SortTypeEnum.Name)"
+                  RightIcon="@(CurrentSort is SortTypeEnum.Name? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Last modified"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleSortItemClick(SortTypeEnum.LastModified)"
+                  RightIcon="@(CurrentSort is SortTypeEnum.LastModified ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+        <FxButton Text="Size"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleSortItemClick(SortTypeEnum.Size)"
+                  RightIcon="@(CurrentSort is SortTypeEnum.Size ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+    </div>
+</FxBottomSheet>
