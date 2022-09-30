@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Models
 {
-    [Table("PinnedArtifact")]
+    [Dapper.Contrib.Extensions.Table("PinnedArtifact")]
     public class PinnedArtifact
     {
         [Key]
