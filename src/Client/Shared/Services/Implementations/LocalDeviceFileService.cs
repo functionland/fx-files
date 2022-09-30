@@ -36,7 +36,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var fileName = Path.GetFileNameWithoutExtension(path);
 
             if (string.IsNullOrWhiteSpace(fileName))
-                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
+                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
             if (CheckIfNameHasInvalidChars(fileName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
@@ -77,7 +77,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
 
             if (string.IsNullOrWhiteSpace(folderName))
-                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
+                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
             if (CheckIfNameHasInvalidChars(folderName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
@@ -289,7 +289,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var artifactType = GetFsArtifactTypeAsync(filePath);
 
             if (string.IsNullOrWhiteSpace(newName))
-                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "file"));
+                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
@@ -329,7 +329,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
 
             if (string.IsNullOrWhiteSpace(newName))
-                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNull, "folder"));
+                throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
             if (cancellationToken?.IsCancellationRequested == true) return;
 
