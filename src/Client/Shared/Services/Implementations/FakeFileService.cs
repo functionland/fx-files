@@ -200,7 +200,7 @@
 
         public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
-            if (path != null)
+            if (!string.IsNullOrWhiteSpace(path))
                 path = path.Replace("/", "\\");
             IEnumerable<FsArtifact> files = _files;
             if (!string.IsNullOrWhiteSpace(path))
@@ -208,7 +208,7 @@
                     f => string.Equals(Path.GetDirectoryName(f.FullPath), path, StringComparison.CurrentCultureIgnoreCase)
                     && !string.Equals(f.FullPath, path, StringComparison.CurrentCultureIgnoreCase));
 
-            if (searchText is not null)
+            if (!string.IsNullOrWhiteSpace(searchText))
                 files = files.Where(f => f.Name.Contains(searchText));
 
 
