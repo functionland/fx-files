@@ -19,7 +19,7 @@
                 <span class="file-name">@FileName</span> @*.<span class="file-format">FileFormat</span>*@
             </div>
         </div>
-        <div class="file-info">
+        <div class="file-info @((ModifiedDate == null || FileSize == "0 bytes")? "visibility-hidden": "")">
             <div class="modified-date">@ModifiedDate</div> | <span class="file-size">@FileSize</span>
         </div>
     </div>
