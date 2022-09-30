@@ -397,10 +397,12 @@ public partial class FileBrowser
         _searchText = string.Empty;
         if (artifact.ArtifactType == FsArtifactType.File)
         {
+#if BlazorHybrid
             await Launcher.OpenAsync(new OpenFileRequest
             {
                 File = new ReadOnlyFile(artifact.FullPath)
             });
+#endif
         }
         else
         {
