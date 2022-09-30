@@ -53,10 +53,13 @@ public partial class ArtifactSelectionModal
     private async Task LoadArtifacts(string? path)
     {
         _artifacts = new List<FsArtifact>();
-        var artifacts = _fileService.GetArtifactsAsync(path);
+        var artifacts = _fileService.GetArtifactsAsync(path);     
+        var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
         {
+            if (artifactPaths.Contains(item.FullPath)) continue;
+
             if (item.ArtifactType != FsArtifactType.File)
             {
                 _artifacts.Add(item);

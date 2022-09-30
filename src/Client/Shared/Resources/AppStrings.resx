@@ -456,6 +456,18 @@
   <data name="MoveHere" xml:space="preserve">
     <value>Move here</value>
   </data>
+  <data name="SameDestinationFileException" xml:space="preserve">
+    <value>The destination file is the same as the source file.</value>
+  </data>
+  <data name="SameDestinationFolderException" xml:space="preserve">
+    <value>The destination folder is the same as the source folder.</value>
+  </data>
+  <data name="ArtifactNameIsNullException" xml:space="preserve">
+    <value>You have not entered any name</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>file</value>
+  </data>
   <data name="Of" xml:space="preserve">
     <value>of</value>
   </data>

@@ -52,7 +52,7 @@ public partial class FileBrowser
             var artifactActionResult = new ArtifactActionResult()
             {
                 ActionType = ArtifactActionType.Copy,
-                Count = artifacts.Length,
+                Artifacts = artifacts
             };
 
             string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
@@ -102,7 +102,7 @@ public partial class FileBrowser
             var artifactActionResult = new ArtifactActionResult()
             {
                 ActionType = ArtifactActionType.Move,
-                Count = artifacts.Length,
+                Artifacts = artifacts
             };
 
             string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
@@ -151,12 +151,12 @@ public partial class FileBrowser
 
     public async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
-        var Result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
+        var result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
         string? destinationPath = null;
 
-        if (Result?.ResultType == ArtifactSelectionResultType.Ok)
+        if (result?.ResultType == ArtifactSelectionResultType.Ok)
         {
-            var destinationFsArtifact = Result.SelectedArtifacts.FirstOrDefault();
+            var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
             destinationPath = destinationFsArtifact?.FullPath;
         }
 
@@ -165,7 +165,6 @@ public partial class FileBrowser
 
     public async Task HandleRenameArtifactAsync(FsArtifact? artifact)
     {
-
         var result = await GetInputModalResult(artifact);
         if (result?.ResultType == InputModalResultType.Cancel)
         {
@@ -174,41 +173,53 @@ public partial class FileBrowser
 
         string? newName = result?.ResultName;
 
-        try
+        if (artifact?.ArtifactType == FsArtifactType.Folder)
         {
-            if (artifact?.ArtifactType == FsArtifactType.Folder)
+            try
             {
                 await FileService.RenameFolderAsync(artifact.FullPath, newName);
                 UpdateRenamedArtifact(artifact, newName);
             }
-            else if (artifact?.ArtifactType == FsArtifactType.File)
+            catch (DomainLogicException ex)
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
+            }
+            catch
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+                _toastModalRef!.Show(title, message, FxToastType.Error);
+            }
+
+        }
+        else if (artifact?.ArtifactType == FsArtifactType.File)
+        {
+            try
             {
                 await FileService.RenameFileAsync(artifact.FullPath, newName);
                 var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
                 UpdateRenamedArtifact(artifact, newName);
             }
-            else if (artifact?.ArtifactType == FsArtifactType.Drive)
+            catch (DomainLogicException ex)
             {
                 var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.RootfolderRenameException);
+                _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
+            }
+            catch
+            {
+                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
                 _toastModalRef!.Show(title, message, FxToastType.Error);
             }
         }
-        catch (DomainLogicException ex) when (ex is ArtifactNameNullException or ArtifactInvalidNameException or ArtifactAlreadyExistsException)
+        else if (artifact?.ArtifactType == FsArtifactType.Drive)
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = ex.Message;
+            var message = Localizer.GetString(AppStrings.RootfolderRenameException);
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
-        catch (Exception)
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
-        }
-
     }
-
     public async Task HandlePinArtifactsAsync(FsArtifact[] artifacts)
     {
         try
@@ -216,11 +227,13 @@ public partial class FileBrowser
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
         }
-        catch
+        catch (Exception ex)
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(Title, message, FxToastType.Error);
+
+            Console.WriteLine($"FxFilesException: {ex.Message}");
         }
     }
 
@@ -268,8 +281,7 @@ public partial class FileBrowser
         catch (CanNotModifyOrDeleteDriveException ex)
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.RootFolderDeleteException);
-            _toastModalRef!.Show(Title, message, FxToastType.Error);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
         }
         catch
         {
