@@ -18,10 +18,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         public async Task InitializeAsync()
         {
             ArtifactChangeSubscription = EventAggregator
-                    .GetEvent<ArtifactChangeEvent>()
-                    .Subscribe(
-                        HandleChangedArtifacts,
-                        ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+                        .GetEvent<ArtifactChangeEvent>()
+                        .Subscribe(
+                            HandleChangedArtifacts,
+                            ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
             var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
             if (pinnedArtifacts.Count == 0) return;
@@ -173,6 +173,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             foreach (var artifact in artifacts)
             {
+
                 if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     return;
@@ -185,6 +186,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
 
                 await FxLocalDbService.AddPinAsync(artifact);
+
                 var newPinnedArtifact = new PinnedArtifact
                 {
                     FullPath = artifact.FullPath,
