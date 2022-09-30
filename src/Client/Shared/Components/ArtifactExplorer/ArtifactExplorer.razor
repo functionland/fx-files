@@ -69,7 +69,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
         IsPartial="false" />
 }
 
-<div class="list-container @ViewMode-view">
+<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
         <EmptyListView 
@@ -87,7 +87,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
                 <BitCheckbox Value="!IsSelected" ValueChanged="(() => OnSelectionChanged(artifact))" />
             }
 
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid) 
             {
                 <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
             }

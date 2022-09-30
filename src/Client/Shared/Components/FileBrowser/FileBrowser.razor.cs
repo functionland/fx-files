@@ -7,6 +7,7 @@ using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Models;
 
 using Microsoft.VisualBasic;
+using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -583,20 +584,64 @@ public partial class FileBrowser
         _isInSearchMode = true;
     }
 
+    CancellationTokenSource? cancellationTokenSource;
+
     private async Task HandleSearch(string? text)
     {
-        //await InvokeAsync(async () =>
+        //_ = InvokeAsync(async () =>
         //{
+        //await Task.Run(async () =>
+        //{
+
         _searchText = text;
         _allArtifacts = new();
+        FilterArtifacts();
 
-        var result = FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText);
-        await foreach (var item in result)
+        if (cancellationTokenSource is not null)
         {
-            _allArtifacts.Add(item);
+            cancellationTokenSource.Cancel();
         }
 
-        FilterArtifacts();
+        cancellationTokenSource = new CancellationTokenSource();
+        var token = cancellationTokenSource.Token;
+        var sw = Stopwatch.StartNew();
+        await Task.Run(async () =>
+        {
+            long counter = 1;
+            var buffer = new List<FsArtifact>();
+            try
+            {
+                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
+                {
+                    if (token.IsCancellationRequested)
+                        break;
+
+                    buffer.Add(item);
+                    if (sw.ElapsedMilliseconds > 1000)
+                    {
+                        if (token.IsCancellationRequested)
+                            break;
+                        _allArtifacts.AddRange(buffer);
+                        FilterArtifacts();
+                        buffer = new List<FsArtifact>();
+                        sw.Restart();
+                        await Task.Yield();
+                    }
+                    //Console.WriteLine(item.FullPath);
+                }
+
+                _allArtifacts.AddRange(buffer);
+                FilterArtifacts();
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
+        });
+        
+
+        //});
         //});
     }
 
