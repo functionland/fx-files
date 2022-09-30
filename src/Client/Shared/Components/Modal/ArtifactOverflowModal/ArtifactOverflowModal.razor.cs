@@ -10,7 +10,7 @@
         private bool _isModalOpen;
 
         private bool _isMultiple { get; set; }
-        private bool _isPinned { get; set; }
+        private PinOptionResult? _pinOptionResult { get; set; }
 
         public void Details()
         {
@@ -89,11 +89,11 @@
             _isModalOpen = false;
         }
 
-        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple = false, bool isPinned = false)
+        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult)
         {
             _tcs?.SetCanceled();
             _isMultiple = isMultiple;
-            _isPinned = isPinned;
+            _pinOptionResult = pinOptionResult;
             _isModalOpen = true;
             StateHasChanged();
 

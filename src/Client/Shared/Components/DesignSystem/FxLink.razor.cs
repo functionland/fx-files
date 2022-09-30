@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class FxLink
     {
@@ -10,11 +12,14 @@
         [Parameter, EditorRequired]
         public FxLinkIconSide FxLinkIconSide { get; set; }
 
-        [Parameter, EditorRequired]
+        [Parameter]
         public string? Link { get; set; }
 
         [Parameter, EditorRequired]
         public string? LinkText { get; set; }
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnHandelClick { get; set; } = default!;
 
     }
 
