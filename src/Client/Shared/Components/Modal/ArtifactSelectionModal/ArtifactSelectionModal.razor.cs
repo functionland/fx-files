@@ -70,6 +70,7 @@ public partial class ArtifactSelectionModal
         }
     }
 
+    //TODO: Move to service and use in ArtifactExplorer
     private async Task CreateFolder()
     {
         if (_inputModalRef is null) return;
