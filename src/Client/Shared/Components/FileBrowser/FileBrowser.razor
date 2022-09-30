@@ -3,7 +3,7 @@
 
 <div class="file-browser-container">
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
-               OnSearch="HandleSearch"
+               OnSearch="HandleDeepSearchAsync"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
                OnBackClick="HandleToolbarBackClick"
@@ -36,6 +36,7 @@
                       CurrentSortType="_currentSortType"
                       IsAscOrder="_IsAscOrder"
                       OnSearch="HandleSearch"
+                      OnCancelSearch="HandleCancelSearchAsync"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnFilterClick="HandleFilterClick"
                       OnSortClick="HandleSortClick"

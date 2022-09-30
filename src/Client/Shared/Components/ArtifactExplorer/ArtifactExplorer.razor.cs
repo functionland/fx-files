@@ -18,6 +18,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnFilterClick { get; set; }
         [Parameter] public EventCallback OnSortClick { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
+        [Parameter] public EventCallback OnCancelSearch { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
         [Parameter] public EventCallback OnSortOrderClick { get; set; }
 
@@ -28,7 +29,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public bool IsSelected;
         public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
-        private FxSearchInput? _artifactSearch;
 
         protected override Task OnInitAsync()
         {
@@ -124,13 +124,11 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 }
                 else
                 {
-                    _artifactSearch?.OnDoneClick();
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
             else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             {
-                _artifactSearch?.OnDoneClick();
                 await OnSelectArtifact.InvokeAsync(artifact);
             }
         }

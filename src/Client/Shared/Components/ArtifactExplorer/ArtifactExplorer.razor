@@ -63,9 +63,9 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 {
     <FxSearchInput 
         Placeholder="@CurrentArtifact.Name"
-        @ref="_artifactSearch"
         DebounceInterval="300"
         OnSearch="OnSearch"
+        OnCancel="OnCancelSearch"
         IsPartial="false" />
 }
 

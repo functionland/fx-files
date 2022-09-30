@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
     public partial class FxSearchInput
     {
 
-        private string? _inputText = string.Empty;
+        private string? _inputText;
         private System.Timers.Timer? _timer;
 
         [Parameter, EditorRequired] public bool IsPartial { get; set; }
@@ -13,11 +13,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnFocus { get; set; }
         [Parameter] public double DebounceInterval { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
+        [Parameter] public EventCallback OnCancel { get; set; }
 
-        public void OnDoneClick()
+        public void HandleClear()
         {
             _inputText = null;
-            OnSearch.InvokeAsync();
+            OnCancel.InvokeAsync();
         }
 
         private void HandleFocus()

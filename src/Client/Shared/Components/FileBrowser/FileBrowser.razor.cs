@@ -580,6 +580,13 @@ public partial class FileBrowser
         _allArtifacts = _filteredArtifacts;
     }
 
+    private async Task HandleCancelSearchAsync()
+    {
+        _isInSearchMode = false;
+        cancellationTokenSource?.Cancel();
+        _searchText = string.Empty;
+        await LoadChildrenArtifactsAsync(_currentArtifact);
+    }
     private void HandleSearchFocused()
     {
         _isInSearchMode = true;
@@ -587,7 +594,7 @@ public partial class FileBrowser
 
     CancellationTokenSource? cancellationTokenSource;
 
-    private async Task HandleSearch(string? text)
+    private async Task HandleDeepSearchAsync(string? text)
     {
         _searchText = text;
         _allArtifacts = new();
@@ -627,17 +634,24 @@ public partial class FileBrowser
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ExceptionHandler.Handle(ex);
             }
-            
+
         });
     }
 
+    private void HandleSearch(string? text)
+    {
+        if (text != null)
+        {
+            _searchText = text;
+            _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();     
+        }
+    }
     private async Task HandleToolbarBackClick()
     {
-        var test = _allArtifacts;
         _isInSearchMode = false;
         cancellationTokenSource?.Cancel();
         _searchText = string.Empty;
