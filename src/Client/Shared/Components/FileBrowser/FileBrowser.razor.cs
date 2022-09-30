@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -7,7 +8,6 @@ using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Models;
 
 using Microsoft.VisualBasic;
-using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -396,10 +396,12 @@ public partial class FileBrowser
         _searchText = string.Empty;
         if (artifact.ArtifactType == FsArtifactType.File)
         {
+#if BlazorHybrid
             await Launcher.OpenAsync(new OpenFileRequest
             {
                 File = new ReadOnlyFile(artifact.FullPath)
             });
+#endif
         }
         else
         {
@@ -633,13 +635,13 @@ public partial class FileBrowser
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
-            
+
         });
-        
+
 
         //});
         //});
