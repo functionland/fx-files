@@ -9,11 +9,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private System.Timers.Timer? _timer;
 
         [Parameter, EditorRequired] public bool IsPartial { get; set; }
+        [Parameter] public string? Placeholder { get; set; }
         [Parameter] public EventCallback OnFocus { get; set; }
-        [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public double DebounceInterval { get; set; }
+        [Parameter] public EventCallback<string?> OnSearch { get; set; }
 
-        private void OnDoneClick()
+        public void OnDoneClick()
         {
             _inputText = null;
             OnSearch.InvokeAsync();

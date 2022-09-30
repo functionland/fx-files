@@ -20,7 +20,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -36,7 +36,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -52,7 +52,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -68,7 +68,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -112,7 +112,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -128,7 +128,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -144,7 +144,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -160,7 +160,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -176,7 +176,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
             {
-                throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
 
@@ -193,7 +193,7 @@ public partial class AndroidFileService : LocalDeviceFileService
         var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
         if (storageManager is null)
         {
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnableToLoadStorageManager));
+            throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToLoadStorageManager));
         }
 
         var storageVolumes = storageManager.StorageVolumes.ToList();
@@ -273,7 +273,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             return FsFileProviderType.ExternalMemory;
         }
         else
-            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
+            throw new UnknownFsFileProviderException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
 
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)

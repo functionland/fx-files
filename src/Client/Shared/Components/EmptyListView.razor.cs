@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class EmptyListView
     {
@@ -22,5 +24,8 @@
 
         [Parameter]
         public EventCallback OnUploadButtonClick { get; set; }
+
+        [Parameter]
+        public bool IsShowButtons { get; set; }
     }
 }

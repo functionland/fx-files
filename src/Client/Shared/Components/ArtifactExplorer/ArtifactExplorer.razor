@@ -6,8 +6,8 @@
 {
     <div class="action-bar">
         <div class="left-actions">
-            <div class="selected-sort" @onclick="OnSortChange">Name</div>
-            <div class="sort-order @SortOrder-order" @onclick="ToggleSortOrder"></div>
+            <div class="selected-sort" @onclick="HandleSortClick">@CurrentSortType</div>
+            <div class="sort-order @(IsAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
         </div>
         <div class="right-actions">
             <div class="action-btn select-all-btn @(IsSelectedAll ? "select-all-filled" : "")" @onclick="ToggleSelectedAll"></div>
@@ -29,7 +29,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         </div>
 
         <div class="right-part">
-            <div class="icons-action move-icon"></div>
+            <div class="icons-action move-icon" @onclick="(() => HandelArtifactMoveClick())"></div>
             <div class="icons-action vertical-option-icon" @onclick="(() => HandleMultiArtifactsOptionsClick())"></div>
         </div>
     </div>
@@ -40,7 +40,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
         <div class="info-selection">
             <div class="close-btn" @onclick="(() => HandleCancelSelectDestionationMode())"></div>
             <div class="item-selected">
-                <span class="item-selected-count">@ArtifactActionResult?.Count</span>
+                <span class="item-selected-count">@ArtifactActionResult?.Artifacts?.Length</span>
                 <span class="move-selected-items-text">items ready to </span>
                 @if (ArtifactActionResult?.ActionType == @ArtifactActionType.Copy)
                 {
@@ -61,13 +61,21 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 
 @if (!IsInRoot(CurrentArtifact))
 {
-    <FxSearchInput DebounceInterval="300" OnSearch="OnSearch" IsPartial="false" />
+    <FxSearchInput 
+        Placeholder="@CurrentArtifact.Name"
+        @ref="_artifactSearch"
+        DebounceInterval="300"
+        OnSearch="OnSearch"
+        IsPartial="false" />
 }
 
-<div class="list-container @ViewMode-view">
+<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
-        <EmptyListView Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" OnAddFolderButtonClick="OnAddFolderButtonClick" />
+        <EmptyListView 
+            OnAddFolderButtonClick="OnAddFolderButtonClick"
+            Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
     }
     @foreach (var artifact in Artifacts)
     {
@@ -76,10 +84,10 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
          @onpointerdown="PointerDown">
             @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
             {
-                <BitCheckbox OnChange="(() => OnSelectionChanged(artifact))" />
+                <BitCheckbox Value="!IsSelected" ValueChanged="(() => OnSelectionChanged(artifact))" />
             }
 
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid) 
             {
                 <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
             }

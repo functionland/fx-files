@@ -6,19 +6,16 @@
 
 
 .content-body {
+    margin: $spacing-21 $spacing-0;
     max-height: 100%;
     overflow-y: auto;
     // TODO: use value from the sass variables
     .file-icon-row {
         padding: $spacing-8 $spacing-0;
 
-        .file-icon {
-            background-image: url($text-file);
-            background-position: center;
-            background-repeat: no-repeat;
-            width: $icon-32;
-            height: $icon-32;
-            background-size: $icon-32;
+        .file-icon::before {
+            @include Icon($document);
+            font-size: $icon-32;
         }
 
         .file-image-preview {
@@ -35,11 +32,13 @@
             font-family: $open-sans-regular;
             line-height: $line-height-30;
             color: color(gray-content1);
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
     }
 
     .file-details-area {
-        padding: $spacing-21 $spacing-0;
+        padding: $spacing-21 $spacing-0 $spacing-56;
     }
 
     .bottom-body {

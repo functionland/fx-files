@@ -1,25 +1,34 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
+        [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
+        [Parameter] public bool IsAscOrder { get; set; } = true;
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
+        [Parameter] public EventCallback OnSortClick { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
+        [Parameter] public EventCallback OnSortOrderClick { get; set; }
+
+
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
-        public SortOrderEnum SortOrder = SortOrderEnum.asc;
         public bool IsSelected;
         public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
+        private FxSearchInput? _artifactSearch;
 
         protected override Task OnInitAsync()
         {
@@ -44,6 +53,11 @@
             await OnSelectArtifact.InvokeAsync(artifact);
         }
 
+        private async Task HandelArtifactMoveClick()
+        {
+            await OnSelectDestination.InvokeAsync(SelectedArtifacts.ToArray());
+        }
+
         private async Task HandleMultiArtifactsOptionsClick()
         {
             await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts.ToArray());
@@ -54,29 +68,26 @@
             return artifact is null ? true : false;
         }
 
-        public void ToggleSortOrder()
+        public void HandleSortClick()
         {
-            if (SortOrder == SortOrderEnum.asc)
-            {
-                SortOrder = SortOrderEnum.desc;
-            }
-            else
-            {
-                SortOrder = SortOrderEnum.asc;
-            }
-
-            //todo: change order of list items
+            OnSortClick.InvokeAsync();
         }
 
-        public void OnSortChange()
+        public void HandleSortOrderClick()
         {
-            //todo: Open sort bottom sheet
+
+            OnSortOrderClick.InvokeAsync();
         }
 
         public void ToggleSelectedAll()
         {
-            IsSelectedAll = !IsSelectedAll;
-            //todo: select all items
+            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                IsSelectedAll = !IsSelectedAll;
+                IsSelected = false;
+                SelectedArtifacts = Artifacts?.ToList();
+            }
         }
 
         public void ChangeViewMode(ViewModeEnum mode)
@@ -88,6 +99,8 @@
         {
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
+            IsSelectedAll = false;
+            IsSelected = true;
         }
 
         public async Task HandleCancelSelectDestionationMode()
@@ -111,18 +124,23 @@
                 }
                 else
                 {
+                    _artifactSearch?.OnDoneClick();
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
             else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             {
+                _artifactSearch?.OnDoneClick();
                 await OnSelectArtifact.InvokeAsync(artifact);
             }
         }
 
         public void OnSelectionChanged(FsArtifact selectedArtifact)
         {
-            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
+            var item = SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath);
+            IsSelected = item;
+
+            if (IsSelected)
             {
                 SelectedArtifacts.Remove(selectedArtifact);
             }
@@ -130,6 +148,11 @@
             {
                 SelectedArtifacts.Add(selectedArtifact);
             }
+        }
+
+        public void OnCreateFolder()
+        {
+            OnAddFolderButtonClick.InvokeAsync();
         }
 
         public string GetArtifactIcon(FsArtifact artifact)

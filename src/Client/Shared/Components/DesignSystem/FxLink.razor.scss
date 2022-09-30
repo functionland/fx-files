@@ -1,5 +1,6 @@
 ﻿@import "../../Styles/abstracts/_variables.scss";
 @import "../../Styles/abstracts/_functions.scss";
+@import "../../Styles/abstracts/_mixins.scss";
 
 .fx-link {
     color: $green-dark-base;
@@ -8,6 +9,7 @@
     font-size: $font-size-12;
     line-height: $line-height-16;
     letter-spacing: $letter-spacing-02;
+    display: flex;
 
     &:hover {
         color: $green-dark-hover;
@@ -24,36 +26,54 @@
 }
 
 .fx-link-left {
-    padding-left: $spacing-16;
-    background-image: url($left-arrow);
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: 6.06px 11.97px;
+    &::before {
+        @include Icon($chevron-left, $green-dark-base);
+        font-size: 16px;
+        margin-right: $spacing-4;
+    }
 
     &:hover {
-        background-image: url($left-arrow-hover);
+        .fx-link-left::before {
+            @include Icon($chevron-left, $green-dark-hover);
+            font-size: 16px;
+            margin-right: $spacing-4;
+        }
     }
 
     &:active {
-        background-image: url($left-arrow-pressed);
+        .fx-link-left::before {
+            @include Icon($chevron-left, $green-dark-pressed);
+            font-size: 16px;
+            margin-right: $spacing-4;
+        }
     }
 }
 
 .fx-link-right {
-    padding-right: $spacing-16;
-    background-image: url($right-arrow);
-    background-repeat: no-repeat;
-    background-position: right center;
-    background-size: 6.06px 11.97px;
+    &::after {
+        @include Icon($chevron-right, $green-dark-base);
+        font-size: 16px;
+        margin-left: $spacing-4;
+    }
 
     &:hover {
-        background-image: url($right-arrow-hover);
+        .fx-link-left::after {
+            @include Icon($chevron-right, $green-dark-hover);
+            font-size: 16px;
+            margin-left: $spacing-4;
+        }
     }
 
     &:active {
-        background-image: url($right-arrow-pressed);
+        .fx-link-left::after {
+            @include Icon($chevron-right, $green-dark-pressed);
+            font-size: 16px;
+            margin-left: $spacing-4;
+        }
     }
+
 }
+
 
 .fx-link-disabled,
 .fx-link-disabled:hover,
@@ -65,13 +85,23 @@
 .fx-link-disabled-left {
     color: color(input-disable);
     pointer-events: none;
-    background-image: url($left-arrow-disabled);
+
+    &::before {
+        @include Icon($chevron-left, color(input-disable));
+        font-size: 16px;
+        margin-right: $spacing-4;
+    }
 }
 
 .fx-link-disabled-right {
     color: color(input-disable);
     pointer-events: none;
-    background-image: url($right-arrow-disabled);
+
+    &::after {
+        @include Icon($chevron-right, color(input-disable));
+        font-size: 16px;
+        margin-left: $spacing-4;
+    }
 }
 
 

@@ -1,4 +1,5 @@
-﻿@import '../abstracts/_variables.scss';
+﻿@import '../abstracts/_mixins.scss';
+@import '../abstracts/_variables.scss';
 @import '../abstracts/_functions.scss';
 
 
@@ -41,23 +42,8 @@
 }
 
 ::deep .bit-chb-fluent .bit-chb-checkmark {
-    font-weight: bold;
-    font-size: $font-size-8;
+    font-size: $font-size-16;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ::deep .bit-chb-enabled-unchecked-fluent div button {
     background: $gray-dark-border;
@@ -79,4 +65,8 @@
 
 ::deep .bit-chb-disabled-unchecked-fluent div button span {
     background-color: $gray-dark-border;
+}
+
+::deep .bit-icon--Accept:before {
+    @include Icon($select-filled, #fff, $Icons-Filled);
 }

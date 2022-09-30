@@ -1,5 +1,6 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+@import '../Styles/components/_bit-dropdown.scss';
 
 $var1: #dddddd;
 $var2: #f2f2f2;
@@ -14,8 +15,8 @@ test-selector-dropdown{
 }
 
 .test-selector {
-    display: flex;
     align-items: end;
+    display: flex;
     gap: 10px;
 }
 
@@ -29,16 +30,23 @@ test-selector-dropdown{
 }
 
 .progress-item {
+    border-radius: 4px;
     display: flex;
-    padding: 3px;
-    margin: 3px;
+    padding: 5px;
+    margin: 5px;
 
     &:hover {
         background-color: color(gray-bg-secondary);
     }
 }
 
+.progress-title {
+    padding-left: 30px;
+    overflow-wrap: anywhere;
+}
+
 .show-details {
+    min-width: 103px;
     margin-left: 10px;
     color: cornflowerblue;
 
@@ -50,64 +58,36 @@ test-selector-dropdown{
 .test-icon-success {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    position: absolute;
     background-image: url($success-mode);
 }
 
 .test-icon-error {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    position: absolute;
     background-image: url($error-mode);
 }
 
 .test-icon-warning {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    position: absolute;
     background-image: url($warning-mode);
 }
 .test-icon-info {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    position: absolute;
     background-image: url($info-mode);
-}
-
-::deep .bit-drp-fluent .bit-drp-lbl {
-    color: color(gray-content1);
-}
-
-::deep .bit-drp-has-value-fluent .bit-drp-wrapper .bit-drp-wrapper-txt {
-    color: color(gray-content1);
-}
-
-::deep .bit-drp-wrapper .bit-drp-wrapper-txt {
-    color: color(gray-content1);
-}
-
-::deep .bit-drp-items-wrapper {
-    background-color: color(app-bg);
-}
-
-::deep .bit-drp-items-wrapper .bit-drp-item {
-    color: color(gray-content1);
-}
-
-::deep .bit-drp-items-wrapper .bit-drp-item:hover {
-    background-color: color(gray-bg-secondary);
-}
-
-::deep .bit-drp-items-wrapper .bit-drp-slc-fluent {
-    background-color: color(gray-bg-secondary);
-}
-
-::deep .bit-drp-wrapper:focus::after {
-    border: 2px solid $green-dark-base;
 }
 
 ::deep .bit-mdl-container {
     padding: 16px;
     border-radius: 4px;
     background-color: color(app-bg);
+
+    .bit-mdl-scrl-cnt::-webkit-scrollbar {
+        height: 6px;
+    }
 }

@@ -106,6 +106,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have not entered any name.
+        /// </summary>
+        public static string ArtifactNameIsNullException {
+            get {
+                return ResourceManager.GetString("ArtifactNameIsNullException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The {0} path is null.
         /// </summary>
         public static string ArtifactPathIsNull {
@@ -394,6 +403,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to file.
+        /// </summary>
+        public static string File {
+            get {
+                return ResourceManager.GetString("File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FileAlreadyExistsException.
         /// </summary>
         public static string FileAlreadyExistsException {
@@ -511,7 +529,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search in “folder name”.
+        ///   Looks up a localized string similar to Search in “{0}”.
         /// </summary>
         public static string InputSearchFullWidth {
             get {
@@ -646,11 +664,29 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string NextSlide {
+            get {
+                return ResourceManager.GetString("NextSlide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Night.
         /// </summary>
         public static string Night {
             get {
                 return ResourceManager.GetString("Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to of.
+        /// </summary>
+        public static string Of {
+            get {
+                return ResourceManager.GetString("Of", resourceCulture);
             }
         }
         
@@ -687,6 +723,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Pools {
             get {
                 return ResourceManager.GetString("Pools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prev..
+        /// </summary>
+        public static string PreviousSlide {
+            get {
+                return ResourceManager.GetString("PreviousSlide", resourceCulture);
             }
         }
         
@@ -777,6 +822,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string RootfolderRenameException {
             get {
                 return ResourceManager.GetString("RootfolderRenameException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The destination file is the same as the source file..
+        /// </summary>
+        public static string SameDestinationFileException {
+            get {
+                return ResourceManager.GetString("SameDestinationFileException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The destination folder is the same as the source folder..
+        /// </summary>
+        public static string SameDestinationFolderException {
+            get {
+                return ResourceManager.GetString("SameDestinationFolderException", resourceCulture);
             }
         }
         

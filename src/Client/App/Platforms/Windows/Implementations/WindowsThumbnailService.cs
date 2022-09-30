@@ -28,9 +28,15 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
                 imageHeight = (int)(((float)imageHeight / (float)imageWidth) * thumbnailSize);
                 imageWidth = thumbnailSize;
             }
-
             var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
-            thumb.Save(thumbPath);
+            try
+            {
+                thumb.Save(thumbPath);
+            }
+            catch(Exception)
+            {
+                thumb.Dispose();
+            }
 
             return thumbPath;
         }

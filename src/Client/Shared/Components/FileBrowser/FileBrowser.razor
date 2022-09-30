@@ -14,31 +14,36 @@
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
-        <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-            <ContentTemplate>
-                <div class="items">
+            <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+                <ContentTemplate>
+                    <div class="items">
                     @foreach (var pin in _pins)
                     {
-                        <FileCard FileName="@pin.Name"
+                                <FileCard FileName="@pin.Name"
                           FileSize="@pin.SizeStr"
                           ModifiedDate="@pin.LastModifiedDateTime.ToString("yyyy-MM-dd")"
                           FileImage="@pin.ThumbnailPath" />
                     }
-                </div>
-            </ContentTemplate>
-        </BitAccordion>
+                    </div>
+                </ContentTemplate>
+            </BitAccordion>
     }
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        <ArtifactExplorer Artifacts="_filteredArtifacts"
+            <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
+                      CurrentSortType="_currentSortType"
+                      IsAscOrder="_IsAscOrder"
                       OnSearch="HandleSearch"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnFilterClick="HandleFilterClick"
+                      OnSortClick="HandleSortClick"
+                      OnSortOrderClick="HandleSortOrderClick"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
                       OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
-                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))" />
+                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
+                      OnSelectDestination="HandleMoveArtifactsAsync" />
     }
 </div>
 
@@ -47,6 +52,7 @@
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <ToastModal @ref="_toastModalRef"/>
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter"/>
+<SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef"/>
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
