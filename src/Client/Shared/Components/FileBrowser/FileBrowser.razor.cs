@@ -8,6 +8,7 @@ using Functionland.FxFiles.Client.Shared.Models;
 
 using Microsoft.VisualBasic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -396,10 +397,12 @@ public partial class FileBrowser
         _searchText = string.Empty;
         if (artifact.ArtifactType == FsArtifactType.File)
         {
+#if BlazorHybrid
             await Launcher.OpenAsync(new OpenFileRequest
             {
                 File = new ReadOnlyFile(artifact.FullPath)
             });
+#endif
         }
         else
         {
@@ -588,11 +591,6 @@ public partial class FileBrowser
 
     private async Task HandleSearch(string? text)
     {
-        //_ = InvokeAsync(async () =>
-        //{
-        //await Task.Run(async () =>
-        //{
-
         _searchText = text;
         _allArtifacts = new();
         FilterArtifacts();
@@ -607,7 +605,6 @@ public partial class FileBrowser
         var sw = Stopwatch.StartNew();
         await Task.Run(async () =>
         {
-            long counter = 1;
             var buffer = new List<FsArtifact>();
             try
             {
@@ -627,40 +624,32 @@ public partial class FileBrowser
                         sw.Restart();
                         await Task.Yield();
                     }
-                    //Console.WriteLine(item.FullPath);
                 }
 
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                ExceptionHandler.Handle(ex);
             }
-            
-        });
-        
 
-        //});
-        //});
+        });
     }
 
     private async Task HandleToolbarBackClick()
     {
+        var test = _allArtifacts;
         _isInSearchMode = false;
+        cancellationTokenSource?.Cancel();
         _searchText = string.Empty;
         _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
-        FilterArtifacts();
         StateHasChanged();
     }
 
     private void FilterArtifacts()
     {
-        //_filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
-        //? _allArtifacts
-        //    : _allArtifacts.Where(a => a.Name.Contains(_searchText)).ToList();
-
         _filteredArtifacts = _allArtifacts;
 
         _filteredArtifacts = _fileCategoryFilter is null
