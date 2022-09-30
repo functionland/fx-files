@@ -6,8 +6,8 @@
 {
     <div class="action-bar">
         <div class="left-actions">
-            <div class="selected-sort" @onclick="OnSortChange">Name</div>
-            <div class="sort-order @SortOrder-order" @onclick="ToggleSortOrder"></div>
+            <div class="selected-sort" @onclick="HandleSortClick">@CurrentSortType</div>
+            <div class="sort-order @(IsAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
         </div>
         <div class="right-actions">
             <div class="action-btn select-all-btn @(IsSelectedAll ? "select-all-filled" : "")" @onclick="ToggleSelectedAll"></div>
