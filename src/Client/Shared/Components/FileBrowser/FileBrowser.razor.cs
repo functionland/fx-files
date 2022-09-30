@@ -227,11 +227,13 @@ public partial class FileBrowser
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
         }
-        catch
+        catch (Exception ex)
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(Title, message, FxToastType.Error);
+
+            Console.WriteLine($"FxFilesException: {ex.Message}");
         }
     }
 
