@@ -232,16 +232,23 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
                 var fsArtifact = currentFile == null ? GetPinnedFsArtifact(artifact) : currentFile;
 
-                if (ArtifactIsImage(fsArtifact) && artifact.ThumbnailPath != null)
+                if (ArtifactIsImage(fsArtifact))
                 {
-
-                    var result = (await FileService.CheckPathExistsAsync(new List<string?> { artifact.ThumbnailPath })).FirstOrDefault();
-                    if (result != null && result.IsPathExist == false)
+                    if (fsArtifact.ThumbnailPath != null)
                     {
-
+                        var result = (await FileService.CheckPathExistsAsync(new List<string?> { artifact.ThumbnailPath })).FirstOrDefault();
+                        if (result != null && result.IsPathExist == false)
+                        {
+                            await CreateNewThumbnailAsync(artifact, fsArtifact);
+                            await FxLocalDbService.UpdatePinAsync(artifact);
+                        }
+                    }
+                    else
+                    {
                         await CreateNewThumbnailAsync(artifact, fsArtifact);
                         await FxLocalDbService.UpdatePinAsync(artifact);
                     }
+                    
                 }
                 artifacts.Add(fsArtifact);
             }
@@ -252,6 +259,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             var newThumbnailPath = await ThumbnailService.MakeThumbnailAsync(fsArtifact);
             artifact.ThumbnailPath = newThumbnailPath;
+            fsArtifact.ThumbnailPath = newThumbnailPath;
 
         }
 
