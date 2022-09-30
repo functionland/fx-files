@@ -32,6 +32,7 @@ public partial class FileBrowser
     private string? _searchText;
     private bool _isInSearchMode;
     private FileCategoryType? _fileCategoryFilter;
+    private ArtifactExplorerMode _artifactExplorerMode;
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _IsAscOrder = true;
 
@@ -449,6 +450,8 @@ public partial class FileBrowser
                 await HandleDeleteArtifactsAsync(new FsArtifact[] { artifact });
                 break;
         }
+
+        _artifactExplorerMode = ArtifactExplorerMode.Normal;
     }
 
     private async Task HandleSelectedArtifactsOptions(FsArtifact[] artifacts)
@@ -490,6 +493,8 @@ public partial class FileBrowser
                     await HandleDeleteArtifactsAsync(artifacts);
                     break;
             }
+
+            _artifactExplorerMode = ArtifactExplorerMode.Normal;
         }
     }
 

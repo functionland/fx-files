@@ -22,12 +22,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
         [Parameter] public EventCallback OnSortOrderClick { get; set; }
 
-
-
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
-        public bool IsSelected;
-        public bool IsSelectedAll = false;
+        public bool IsSelected = true;
         public DateTimeOffset PointerDownTime;
 
         protected override Task OnInitAsync()
@@ -39,6 +36,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             await OnArtifactsOptionsClick.InvokeAsync(artifact);
         }
+
         protected override Task OnParamsSetAsync()
         {
             if (Artifacts is null)
@@ -61,6 +59,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private async Task HandleMultiArtifactsOptionsClick()
         {
             await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts.ToArray());
+            ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
         }
 
         private bool IsInRoot(FsArtifact? artifact)
@@ -84,7 +83,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
             if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                IsSelectedAll = !IsSelectedAll;
                 IsSelected = false;
                 SelectedArtifacts = Artifacts?.ToList();
             }
@@ -99,7 +97,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
-            IsSelectedAll = false;
             IsSelected = true;
         }
 
@@ -120,6 +117,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
                 if (downTime > 400)
                 {
+                    IsSelected = true;
+                    SelectedArtifacts = new List<FsArtifact>();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 }
                 else
@@ -189,4 +188,3 @@ namespace Functionland.FxFiles.Client.Shared.Components
         }
     }
 }
-
