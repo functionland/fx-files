@@ -1,10 +1,12 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
-using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Models;
-using Microsoft.VisualBasic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+
+using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Models;
+
+using Microsoft.VisualBasic;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -391,9 +393,20 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
+        //TODO : Is search text must be here?
         _searchText = string.Empty;
-        _currentArtifact = artifact;
-        await LoadChildrenArtifactsAsync(_currentArtifact);
+        if (artifact.ArtifactType == FsArtifactType.File)
+        {
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(artifact.FullPath)
+            });
+        }
+        else
+        {
+            _currentArtifact = artifact;
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+        }
         // load current artifacts
     }
 

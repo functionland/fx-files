@@ -150,6 +150,11 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
+        public void OnCreateFolder()
+        {
+            OnAddFolderButtonClick.InvokeAsync();
+        }
+
         public string GetArtifactIcon(FsArtifact artifact)
         {
             if (artifact.ArtifactType == FsArtifactType.File)
