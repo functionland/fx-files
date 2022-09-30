@@ -54,7 +54,7 @@
     else
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="true">
-            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)">
+            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)" FilePath ="@_artifacts[0].FullPath">
                 <FileDetailItemFragment>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].SizeStr)"></FileDetailViewItem>
