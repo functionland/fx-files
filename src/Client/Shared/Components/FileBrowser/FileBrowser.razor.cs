@@ -235,7 +235,7 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(Title, message, FxToastType.Error);
 
-            Console.WriteLine($"FxFilesException: {ex.Message}");
+            Console.WriteLine($"FxFilesException: {ex}");
         }
     }
 
