@@ -53,9 +53,6 @@ ILocalDeviceFileService <|-- FakeFileService
 IFulaFileService <|-- FakeFileService
 IFileService <|-- IFulaFileService
 IFulaFileService <|-- FulaFileService
-FulaFileService <|-- AndroidFulaFileService
-FulaFileService <|-- IosFulaFileService
-FulaFileService <|-- WindowsFulaFileService
 
 class IFileService {
   <<interface>>
@@ -69,9 +66,6 @@ class LocalDeviceFileService {
   <<abstract>>
 }
 
-class FulaFileService {
-  <<abstract>>
-}
 ```
 # PinService Architecture
 ```mermaid
