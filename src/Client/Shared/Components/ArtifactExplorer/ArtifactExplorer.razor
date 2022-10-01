@@ -103,7 +103,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
                 </div>
                 <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
             </div>
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
             {
                 <div class="options-btn"
              @onclick="() => HandleArtifactOptionsClick(artifact)"
