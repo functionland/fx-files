@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileService
 {
     public class FakeFileService : ILocalDeviceFileService, IFulaFileService
     {
