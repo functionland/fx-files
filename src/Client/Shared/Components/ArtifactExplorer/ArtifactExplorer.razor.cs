@@ -13,7 +13,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
-        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
+        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
         [Parameter] public EventCallback OnSortClick { get; set; }
@@ -24,8 +24,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
-        public bool IsSelected = true;
         public DateTimeOffset PointerDownTime;
+        public bool IsSelected;
 
         protected override Task OnInitAsync()
         {
@@ -59,7 +59,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private async Task HandleMultiArtifactsOptionsClick()
         {
             await OnMultiArtifactsOptionsClick.InvokeAsync(SelectedArtifacts.ToArray());
-            ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
         }
 
         private bool IsInRoot(FsArtifact? artifact)
@@ -83,8 +82,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
             if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                IsSelected = false;
                 SelectedArtifacts = Artifacts?.ToList();
+                IsSelected = true;
             }
         }
 
@@ -97,7 +96,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
-            IsSelected = true;
+            IsSelected = false;
         }
 
         public async Task HandleCancelSelectDestionationMode()
@@ -117,7 +116,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
                 if (downTime > 400)
                 {
-                    IsSelected = true;
+                    IsSelected = false;
                     SelectedArtifacts = new List<FsArtifact>();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 }
@@ -134,15 +133,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public void OnSelectionChanged(FsArtifact selectedArtifact)
         {
-            var item = SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath);
-            IsSelected = item;
-
-            if (IsSelected)
+            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
             {
+                IsSelected = false;
                 SelectedArtifacts.Remove(selectedArtifact);
             }
             else
             {
+                IsSelected = true;
                 SelectedArtifacts.Add(selectedArtifact);
             }
         }

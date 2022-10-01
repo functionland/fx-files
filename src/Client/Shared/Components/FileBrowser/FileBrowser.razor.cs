@@ -141,6 +141,8 @@ public partial class FileBrowser
                 }
             }
 
+            ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
+
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
@@ -450,8 +452,6 @@ public partial class FileBrowser
                 await HandleDeleteArtifactsAsync(new FsArtifact[] { artifact });
                 break;
         }
-
-        _artifactExplorerMode = ArtifactExplorerMode.Normal;
     }
 
     private async Task HandleSelectedArtifactsOptions(FsArtifact[] artifacts)
@@ -464,6 +464,7 @@ public partial class FileBrowser
             ArtifactOverflowResult? result = null;
             if (_artifactOverflowModalRef is not null)
             {
+                ArtifactExplorerModeChange(ArtifactExplorerMode.SelectArtifact);
                 var pinOptionResult = GetPinOptionResult(artifacts);
                 result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult);
             }
@@ -492,10 +493,19 @@ public partial class FileBrowser
                 case ArtifactOverflowResultType.Delete:
                     await HandleDeleteArtifactsAsync(artifacts);
                     break;
+                case ArtifactOverflowResultType.Cancel:
+                    ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
+                    break;
             }
 
-            _artifactExplorerMode = ArtifactExplorerMode.Normal;
+            ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
         }
+    }
+
+    private void ArtifactExplorerModeChange(ArtifactExplorerMode mode)
+    {
+        _artifactExplorerMode = mode;
+        StateHasChanged();
     }
 
     private PinOptionResult GetPinOptionResult(FsArtifact[] artifacts)
