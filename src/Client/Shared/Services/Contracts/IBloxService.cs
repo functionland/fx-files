@@ -2,7 +2,6 @@
 
 public interface IBloxService
 {
-    Task LoginAsync(string did);
     Task<List<Blox>> GetBloxesAsync(CancellationToken? cancellationToken = null);
     Task FillBloxStatsAsync(Blox blox, CancellationToken? cancellationToken = null);
     Task<List<Blox>> GetBloxInvitationsAsync(CancellationToken? cancellationToken = null);
