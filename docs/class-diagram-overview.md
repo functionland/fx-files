@@ -44,12 +44,15 @@ As you see, there are different implementations of `IFileService` for different 
 Amongst these implementations `FakeFileService` is the interesting one for developers, as they can use it to easily test their application, removing all the barriers to setup a proper file system for testing purposes.
 ```mermaid
 classDiagram
-IFileService <|-- LocalDeviceFileService
+IFileService <|-- ILocalDeviceFileService
+ILocalDeviceFileService <|-- LocalDeviceFileService
 LocalDeviceFileService <|-- AndroidFileService
 LocalDeviceFileService <|-- IosFileService
 LocalDeviceFileService <|-- WindowsFileService
-IFileService <|-- FakeFileService
-IFileService <|-- FulaFileService
+ILocalDeviceFileService <|-- FakeFileService
+IFulaFileService <|-- FakeFileService
+IFileService <|-- IFulaFileService
+IFulaFileService <|-- FulaFileService
 FulaFileService <|-- AndroidFulaFileService
 FulaFileService <|-- IosFulaFileService
 FulaFileService <|-- WindowsFulaFileService
