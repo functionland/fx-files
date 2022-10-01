@@ -25,6 +25,8 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         services.AddSingleton<FakeFileServiceFactory>();
+        services.AddSingleton<FakeBloxServiceFactory>();
+        services.AddSingleton<IBloxService, FakeBloxService>();
         return services;
     }
 

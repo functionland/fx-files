@@ -2,7 +2,7 @@
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
-    public abstract partial class LocalDeviceFileService : IFileService
+    public abstract partial class LocalDeviceFileService : ILocalDeviceFileService
     {
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
