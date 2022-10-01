@@ -42,7 +42,7 @@
 }
 
 ::deep .bit-chb-fluent .bit-chb-checkmark {
-    font-size: $font-size-16;
+    font-size: 17px;
 }
 
 ::deep .bit-chb-enabled-unchecked-fluent div button {
@@ -68,6 +68,5 @@
 }
 
 ::deep .bit-icon--Accept:before {
-    @include Icon($select-filled);
-    font-family: $Icons-Filled;
+    @include Icon($select-filled, #fff, $Icons-Filled);
 }

@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.Client.Test.Utils
+﻿namespace Functionland.FxFiles.Client.Shared.Utils
 {
     public static class ListUtils
     {

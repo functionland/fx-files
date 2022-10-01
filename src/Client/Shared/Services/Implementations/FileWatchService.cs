@@ -21,7 +21,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             FileSystemWatcher watcher = new()
             {
                 Path = path,
-                IncludeSubdirectories = true,
 
                 NotifyFilter = NotifyFilters.Attributes |
                                    NotifyFilters.CreationTime |

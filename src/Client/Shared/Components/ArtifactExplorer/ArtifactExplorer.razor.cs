@@ -1,27 +1,31 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
+        [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
+        [Parameter] public bool IsAscOrder { get; set; } = true;
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
-        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
+        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
+        [Parameter] public EventCallback OnSortClick { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
+        [Parameter] public EventCallback OnCancelSearch { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
+        [Parameter] public EventCallback OnSortOrderClick { get; set; }
 
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
-        public SortOrderEnum SortOrder = SortOrderEnum.asc;
-        public bool IsSelected;
-        public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
-        private FxSearchInput? _artifactSearch;
+        public bool IsSelected;
 
         protected override Task OnInitAsync()
         {
@@ -32,6 +36,7 @@
         {
             await OnArtifactsOptionsClick.InvokeAsync(artifact);
         }
+
         protected override Task OnParamsSetAsync()
         {
             if (Artifacts is null)
@@ -61,23 +66,15 @@
             return artifact is null ? true : false;
         }
 
-        public void ToggleSortOrder()
+        public void HandleSortClick()
         {
-            if (SortOrder == SortOrderEnum.asc)
-            {
-                SortOrder = SortOrderEnum.desc;
-            }
-            else
-            {
-                SortOrder = SortOrderEnum.asc;
-            }
-
-            //todo: change order of list items
+            OnSortClick.InvokeAsync();
         }
 
-        public void OnSortChange()
+        public void HandleSortOrderClick()
         {
-            //todo: Open sort bottom sheet
+
+            OnSortOrderClick.InvokeAsync();
         }
 
         public void ToggleSelectedAll()
@@ -85,9 +82,8 @@
             if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                IsSelectedAll = !IsSelectedAll;
-                IsSelected = false;
                 SelectedArtifacts = Artifacts?.ToList();
+                IsSelected = true;
             }
         }
 
@@ -100,8 +96,7 @@
         {
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
-            IsSelectedAll = false;
-            IsSelected = true;
+            IsSelected = false;
         }
 
         public async Task HandleCancelSelectDestionationMode()
@@ -121,34 +116,38 @@
                 var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
                 if (downTime > 400)
                 {
+                    IsSelected = false;
+                    SelectedArtifacts = new List<FsArtifact>();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 }
                 else
                 {
-                    _artifactSearch?.OnDoneClick();
                     await OnSelectArtifact.InvokeAsync(artifact);
                 }
             }
             else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             {
-                _artifactSearch?.OnDoneClick();
                 await OnSelectArtifact.InvokeAsync(artifact);
             }
         }
 
         public void OnSelectionChanged(FsArtifact selectedArtifact)
         {
-            var item = SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath);
-            IsSelected = item;
-
-            if (IsSelected)
+            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
             {
+                IsSelected = false;
                 SelectedArtifacts.Remove(selectedArtifact);
             }
             else
             {
+                IsSelected = true;
                 SelectedArtifacts.Add(selectedArtifact);
             }
+        }
+
+        public void OnCreateFolder()
+        {
+            OnAddFolderButtonClick.InvokeAsync();
         }
 
         public string GetArtifactIcon(FsArtifact artifact)
@@ -187,4 +186,3 @@
         }
     }
 }
-

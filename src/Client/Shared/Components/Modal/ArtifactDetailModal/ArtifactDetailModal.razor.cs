@@ -71,7 +71,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 totalSize += artifact.Size;
             }
 
-            _artifactsSize = SizeUtil.CalculateSizeStr(totalSize);
+            _artifactsSize = FsArtifactUtils.CalculateSizeStr(totalSize);
         }
 
         public void ChangeArtifactSlideItem(bool isNext)

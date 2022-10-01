@@ -6,3 +6,29 @@
 .file-browser-container ::deep div.toolbar-box {
     margin: $spacing-32 0;
 }
+
+.root-title {
+    font-family: $montserrat-semi-bold;
+    font-size: $font-size-24;
+    line-height: $line-height-36;
+    color: color(gray-content1);
+    margin: $spacing-40 $spacing-21 $spacing-16;
+}
+
+.disable-pinned {
+    color: color(input-disable);
+    font-family: $montserrat-semi-bold;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
+    padding: $spacing-0 $spacing-21;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: $spacing-4;
+
+    &::before {
+        @include Icon($chevron-right, color(input-disable) );
+    }
+}
+
+

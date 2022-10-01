@@ -3,7 +3,7 @@
 
 <div class="file-browser-container">
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
-               OnSearch="HandleSearch"
+               OnSearch="HandleDeepSearchAsync"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
                OnBackClick="HandleToolbarBackClick"
@@ -14,28 +14,43 @@
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
+        @if (_pins?.Count > 0)
+        {
             <BitAccordion Title="Pinned" DefaultIsExpanded="true">
                 <ContentTemplate>
                     <div class="items">
-                    @foreach (var pin in _pins)
-                    {
-                                <FileCard FileName="@pin.Name"
+                        @foreach (var pin in _pins)
+                        {
+                            <FileCard FileName="@pin.Name"
                           FileSize="@pin.SizeStr"
                           ModifiedDate="@pin.LastModifiedDateTime.ToString("yyyy-MM-dd")"
                           FileImage="@pin.ThumbnailPath" />
-                    }
+                        }
                     </div>
                 </ContentTemplate>
             </BitAccordion>
+        }
+        else {
+            <div class="disable-pinned">
+                Pinned (empty)</div>
+        }
+
+        <div class="root-title">My device files</div>
     }
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-            <ArtifactExplorer Artifacts="_filteredArtifacts"
+        <ArtifactExplorer Artifacts="_filteredArtifacts"
+                      ArtifactExplorerMode="_artifactExplorerMode"
                       CurrentArtifact="_currentArtifact"
+                      CurrentSortType="_currentSortType"
+                      IsAscOrder="_IsAscOrder"
                       OnSearch="HandleSearch"
+                      OnCancelSearch="HandleCancelSearchAsync"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnFilterClick="HandleFilterClick"
+                      OnSortClick="HandleSortClick"
+                      OnSortOrderClick="HandleSortOrderClick"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
                       OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
@@ -46,8 +61,9 @@
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" />
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
-<ToastModal @ref="_toastModalRef"/>
-<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter"/>
-<InputModal @ref="_inputModalRef"/>
+<ToastModal @ref="_toastModalRef" />
+<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter" />
+<SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
+<InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
