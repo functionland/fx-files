@@ -23,7 +23,24 @@
         [Parameter]
         public string? FileSize { get; set; }
 
+        private string? _path;
+
         [Parameter]
-        public string? FileImage { get; set; } 
+        public string? FileImage
+        {
+            get => getFileImage(_path);
+            set => _path = value;
+        }
+
+        private string getFileImage(string? path)
+        {
+            if(path != null)
+            {
+                var resultPath = "_content/Functionland.FxFiles.Client.Shared/" + path + ".HandleByApp=true";
+                return resultPath;
+            }
+
+            return "_content/Functionland.FxFiles.Client.Shared/images/backgrounds/card-media.png";
+        }
     }
 }

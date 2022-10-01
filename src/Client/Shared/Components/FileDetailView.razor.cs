@@ -9,6 +9,9 @@
         public string? FileName { get; set; }
 
         [Parameter]
+        public string? FilePath { get; set; }
+
+        [Parameter]
         public string? FileDetailAreaClass { get; set; }
 
         [Parameter]
