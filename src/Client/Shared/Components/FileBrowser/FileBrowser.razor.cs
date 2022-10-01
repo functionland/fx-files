@@ -201,9 +201,10 @@ public partial class FileBrowser
         {
             try
             {
-                await FileService.RenameFileAsync(artifact.FullPath, newName);
+                var fullName = newName + artifact.FileExtension;
+                await FileService.RenameFileAsync(artifact.FullPath, fullName);
                 var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
-                UpdateRenamedArtifact(artifact, newName);
+                UpdateRenamedArtifact(artifact, fullName);
             }
             catch (DomainLogicException ex)
             {
@@ -547,14 +548,14 @@ public partial class FileBrowser
         return result;
     }
 
-    private void UpdateRenamedArtifact(FsArtifact artifact, string newName)
+    private void UpdateRenamedArtifact(FsArtifact artifact, string fullNewName)
     {
         var artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
         if (artifactRenamed != null)
         {
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
-            artifactRenamed.FullPath = Path.Combine(artifactParentPath, newName);
-            artifactRenamed.Name = newName + Path.GetExtension(artifact.Name);
+            artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
+            artifactRenamed.Name = fullNewName;
         }
 
         _allArtifacts = _filteredArtifacts;
