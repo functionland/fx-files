@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public abstract partial class FulaFileService : IFulaFileService
+public partial class FulaFileService : IFulaFileService
 {
     public virtual Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
     {
