@@ -32,6 +32,7 @@ public partial class FileBrowser
     private string? _searchText;
     private bool _isInSearchMode;
     private FileCategoryType? _fileCategoryFilter;
+    private ArtifactExplorerMode _artifactExplorerMode;
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _IsAscOrder = true;
 
@@ -139,6 +140,8 @@ public partial class FileBrowser
                     }
                 }
             }
+
+            ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
 
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
@@ -461,6 +464,7 @@ public partial class FileBrowser
             ArtifactOverflowResult? result = null;
             if (_artifactOverflowModalRef is not null)
             {
+                ArtifactExplorerModeChange(ArtifactExplorerMode.SelectArtifact);
                 var pinOptionResult = GetPinOptionResult(artifacts);
                 result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult);
             }
@@ -489,8 +493,19 @@ public partial class FileBrowser
                 case ArtifactOverflowResultType.Delete:
                     await HandleDeleteArtifactsAsync(artifacts);
                     break;
+                case ArtifactOverflowResultType.Cancel:
+                    ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
+                    break;
             }
+
+            ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
         }
+    }
+
+    private void ArtifactExplorerModeChange(ArtifactExplorerMode mode)
+    {
+        _artifactExplorerMode = mode;
+        StateHasChanged();
     }
 
     private PinOptionResult GetPinOptionResult(FsArtifact[] artifacts)

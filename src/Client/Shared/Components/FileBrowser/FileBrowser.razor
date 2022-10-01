@@ -32,6 +32,7 @@
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
             <ArtifactExplorer Artifacts="_filteredArtifacts"
+                      ArtifactExplorerMode="_artifactExplorerMode"
                       CurrentArtifact="_currentArtifact"
                       CurrentSortType="_currentSortType"
                       IsAscOrder="_IsAscOrder"

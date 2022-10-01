@@ -13,7 +13,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
         [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
-        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
+        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
         [Parameter] public EventCallback OnFilterClick { get; set; }
         [Parameter] public EventCallback OnSortClick { get; set; }
@@ -22,13 +22,10 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
         [Parameter] public EventCallback OnSortOrderClick { get; set; }
 
-
-
         public List<FsArtifact> SelectedArtifacts { get; set; } = new List<FsArtifact>();
         public ViewModeEnum ViewMode = ViewModeEnum.list;
-        public bool IsSelected;
-        public bool IsSelectedAll = false;
         public DateTimeOffset PointerDownTime;
+        public bool IsSelected;
 
         protected override Task OnInitAsync()
         {
@@ -39,6 +36,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             await OnArtifactsOptionsClick.InvokeAsync(artifact);
         }
+
         protected override Task OnParamsSetAsync()
         {
             if (Artifacts is null)
@@ -84,9 +82,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
             if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
             {
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                IsSelectedAll = !IsSelectedAll;
-                IsSelected = false;
                 SelectedArtifacts = Artifacts?.ToList();
+                IsSelected = true;
             }
         }
 
@@ -99,8 +96,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
             SelectedArtifacts = new List<FsArtifact>();
-            IsSelectedAll = false;
-            IsSelected = true;
+            IsSelected = false;
         }
 
         public async Task HandleCancelSelectDestionationMode()
@@ -120,6 +116,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
                 if (downTime > 400)
                 {
+                    IsSelected = false;
+                    SelectedArtifacts = new List<FsArtifact>();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 }
                 else
@@ -135,15 +133,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public void OnSelectionChanged(FsArtifact selectedArtifact)
         {
-            var item = SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath);
-            IsSelected = item;
-
-            if (IsSelected)
+            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
             {
+                IsSelected = false;
                 SelectedArtifacts.Remove(selectedArtifact);
             }
             else
             {
+                IsSelected = true;
                 SelectedArtifacts.Add(selectedArtifact);
             }
         }
@@ -189,4 +186,3 @@ namespace Functionland.FxFiles.Client.Shared.Components
         }
     }
 }
-
