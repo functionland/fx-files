@@ -28,6 +28,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public ViewModeEnum ViewMode = ViewModeEnum.list;
         public bool IsSelected;
         public bool IsSelectedAll = false;
+        public bool IsFiltered = false;
         public DateTimeOffset PointerDownTime;
 
         protected override Task OnInitAsync()
@@ -185,6 +186,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private void HandleFilterClick()
         {
+            IsFiltered = !IsFiltered;
             OnFilterClick.InvokeAsync();
         }
     }

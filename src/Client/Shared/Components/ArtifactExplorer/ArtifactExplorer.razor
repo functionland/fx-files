@@ -13,7 +13,7 @@
             <div class="action-btn select-all-btn @(IsSelectedAll ? "select-all-filled" : "")" @onclick="ToggleSelectedAll"></div>
             <div class="action-btn list-view-btn @(ViewMode == ViewModeEnum.list ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.list))"></div>
             <div class="action-btn grid-view-btn @(ViewMode == ViewModeEnum.grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.grid))"></div>
-            <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
+            <div class="action-btn filter-btn @(IsFiltered ? "filter-btn-selected" : "" )" @onclick="HandleFilterClick"></div>
         </div>
     </div>
 }
@@ -103,12 +103,12 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
                 </div>
                 <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
             </div>
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
             {
                 <div class="options-btn"
-             @onclick="() => HandleArtifactOptionsClick(artifact)"
-             @onpointerup:preventDefault="true"
-             @onpointerup:stopPropagation="true"></div>
+                    @onclick="() => HandleArtifactOptionsClick(artifact)"
+                    @onpointerup:preventDefault="true"
+                    @onpointerup:stopPropagation="true"></div>             
             }
         </div>
     }
