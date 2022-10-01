@@ -27,6 +27,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             if (subpath.EndsWith(".HandleByApp=true"))
             {
+                subpath = subpath.Replace("%20", " ");
                 subpath = subpath.Replace(".HandleByApp=true", string.Empty);
                 subpath = subpath.Replace("_content/Functionland.FxFiles.Client.Shared/", string.Empty);
 
@@ -71,7 +72,7 @@ public class ContactFileInfo : IFileInfo
             var streamReader = new StreamReader(_path);
             return streamReader.BaseStream;
         }
-        catch (System.IO.FileNotFoundException)
+        catch
         {
             return new MemoryStream();
         }
