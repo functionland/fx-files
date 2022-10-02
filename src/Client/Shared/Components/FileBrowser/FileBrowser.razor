@@ -2,7 +2,8 @@
 @inherits AppComponentBase
 
 <div class="file-browser-container">
-    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+   <div class="sticky-content">
+        <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
                OnSearch="HandleDeepSearchAsync"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
@@ -30,9 +31,11 @@
                 </ContentTemplate>
             </BitAccordion>
         }
-        else {
+        else
+        {
             <div class="disable-pinned">
-                Pinned (empty)</div>
+                Pinned (empty)
+            </div>
         }
 
         <div class="root-title">My device files</div>
@@ -40,21 +43,61 @@
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
+        @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
+        {
+            <div class="action-bar">
+                <div class="left-actions">
+                    <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
+                    <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
+                </div>
+                <div class="right-actions">
+                    <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
+                    <div class="action-btn list-view-btn @(_viewMode == ViewModeEnum.list ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.list))"></div>
+                    <div class="action-btn grid-view-btn @(_viewMode == ViewModeEnum.grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.grid))"></div>
+                    <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
+                </div>
+            </div>
+        }
+        else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
+        {
+            <div class="select-action">
+                <div class="info-selection">
+                    <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
+                    <div class="item-selected">
+                        <span class="item-selected-count">@_selectedArtifacts?.Length</span>
+                        <span class="item-selected-text">items selected</span>
+                    </div>
+                </div>
+
+                <div class="right-part">
+                    <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                    <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
+                </div>
+            </div>
+        }
+
+        @if (!IsInRoot(_currentArtifact))
+        {
+            <FxSearchInput Placeholder="@_currentArtifact?.Name"
+                   OnCancel="HandleCancelSearchAsync"
+                   DebounceInterval="300"
+                   OnSearch="HandleSearch"
+                   IsPartial="false" />
+        }
+    }
+   </div>
+
+    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
+    {
         <ArtifactExplorer Artifacts="_filteredArtifacts"
-                      ArtifactExplorerMode="_artifactExplorerMode"
                       CurrentArtifact="_currentArtifact"
-                      CurrentSortType="_currentSortType"
-                      IsAscOrder="_IsAscOrder"
-                      OnSearch="HandleSearch"
-                      OnCancelSearch="HandleCancelSearchAsync"
                       OnSelectArtifact="HandleSelectArtifactAsync"
-                      OnFilterClick="HandleFilterClick"
-                      OnSortClick="HandleSortClick"
-                      OnSortOrderClick="HandleSortOrderClick"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
-                      OnMultiArtifactsOptionsClick="HandleSelectedArtifactsOptions"
-                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
-                      OnSelectDestination="HandleMoveArtifactsAsync" />
+                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
+                      ViewMode="_viewMode"
+                      @bind-IsSelected="_isSelected"
+                      @bind-SelectedArtifacts="_selectedArtifacts"
+                      @bind-ArtifactExplorerMode="_artifactExplorerMode"/>
     }
 </div>
 
