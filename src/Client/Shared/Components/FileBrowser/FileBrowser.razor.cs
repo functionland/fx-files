@@ -93,6 +93,10 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
+
+            _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            await LoadPinsAsync();
         }
         catch
         {
@@ -149,6 +153,10 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
+
+            _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            await LoadPinsAsync();
         }
         catch
         {
@@ -156,7 +164,6 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
-
     }
 
     public async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
