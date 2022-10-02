@@ -1,24 +1,12 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
+
+public interface IBloxService
 {
-    public interface IBloxService
-    {
-        Task<List<Blox>> GetBloxesAsync();
-        Task<List<Blox>> GetBloxesJoinInvationAsync();
-        Task AcceptBloxInvationAsync(string bloxId);
-        Task RejectBloxInvationAsync(string bloxId);
-        Task ClearBloxData(string bloxId);
-
-
-
-        Task<List<Pool>> GetPoolsAsync();
-        Task LeavePoolAsync(string poolId);
-        Task<(double? DueNowPaymentRequired, double? PerMounthPaymentRequired)> RequestJoinToPoolAsync(string poolId);
-        Task<bool> ConfirmJoinToPoolAsync(string poolId);
-        Task<List<Pool>> SearchPoolAsync(PoolFilter filter, double? Distance);
-
-        Task<List<(string? Did, string? Name)>> GetUsersForShare();
-
-
-        Task<Stream> GetAvatarAsync();
-    }
+    Task LoginAsync(string did);
+    Task<List<Blox>> GetBloxesAsync(CancellationToken? cancellationToken = null);
+    Task FillBloxStatsAsync(Blox blox, CancellationToken? cancellationToken = null);
+    Task<List<Blox>> GetBloxInvitationsAsync(CancellationToken? cancellationToken = null);
+    Task AcceptBloxInvitationAsync(string bloxId,CancellationToken? cancellationToken = null);
+    Task RejectBloxInvitationAsync(string bloxId, CancellationToken? cancellationToken = null);
+    Task ClearBloxDataAsync(string bloxId, CancellationToken? cancellationToken = null);
 }

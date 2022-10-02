@@ -11,6 +11,10 @@ public static class IAndroidServiceCollectionExtensions
         // Services being registered here can get injected in Android.
 
         services.AddSingleton<IFileService, AndroidFileService>();
+
+        services.AddSingleton<IFulaFileService, AndroidFulaFileService>();
+        services.AddSingleton<ILocalDeviceFileService, AndroidFileService>();
+
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();

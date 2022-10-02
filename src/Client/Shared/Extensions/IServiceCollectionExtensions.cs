@@ -21,10 +21,14 @@ public static class IServiceCollectionExtensions
         services.AddScoped<AuthenticationStateProvider, AppAuthenticationStateProvider>();
         services.AddScoped(sp => (AppAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
 
-        services.AddSingleton<IPinService, PinService>();
+        services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
+        services.AddSingleton<IFulaPinService, FulaPinService>();
+
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         services.AddSingleton<FakeFileServiceFactory>();
+        services.AddSingleton<FakeBloxServiceFactory>();
+        services.AddSingleton<IBloxService, FakeBloxService>();
         return services;
     }
 
@@ -34,7 +38,7 @@ public static class IServiceCollectionExtensions
         try
         {
             var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
-            var PinService = serviceProvider.GetRequiredService<IPinService>();
+            var PinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
 
             await FxLocalDbService.InitAsync();
             await PinService.InitializeAsync();

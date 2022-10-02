@@ -13,7 +13,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
     {
         public TestContext TestContext { get; set; }
         [TestMethod]
-        public async Task AddPinUnitTest_MustWork()
+        public async Task AddLocalDevicePinUnitTest_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
@@ -26,9 +26,9 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var serviceScope = testHost.Services.CreateScope();
             var serviceProvider = serviceScope.ServiceProvider;
 
-            var pinService = serviceProvider.GetService<IPinService>();
-            var localdbService = serviceProvider.GetService<IFxLocalDbService>();
-            var fileService = serviceProvider.GetService<IFileService>();
+            var pinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
+            var localdbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
+            var fileService = serviceProvider.GetRequiredService<IFileService>();
             await fileService.CreateFileAsync("E:\\Pic\\20170112_134108.jpg", GetSampleFileStream());
             await localdbService.InitAsync();
             await pinService.InitializeAsync();
@@ -58,7 +58,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             return stream;
         }
         [TestMethod]
-        public async Task PublishEvent_MustWork()
+        public async Task LocalDevicePinPublishEvent_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
@@ -71,9 +71,9 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var serviceScope = testHost.Services.CreateScope();
             var serviceProvider = serviceScope.ServiceProvider;
 
-            var pinService = serviceProvider.GetService<IPinService>();
-            var aggrigator = serviceProvider.GetService<IEventAggregator>();
-            var localdbService = serviceProvider.GetService<IFxLocalDbService>();
+            var pinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
+            var aggrigator = serviceProvider.GetRequiredService<IEventAggregator>();
+            var localdbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
 
             await localdbService.InitAsync();
             await pinService.InitializeAsync();
@@ -92,7 +92,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
         }
 
         [TestMethod]
-        public async Task GetPins_MustWork()
+        public async Task LocalDeviceGetPins_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
                .ConfigureServices((_, services) =>
@@ -106,9 +106,9 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var serviceScope = testHost.Services.CreateScope();
             var serviceProvider = serviceScope.ServiceProvider;
 
-            var pinService = serviceProvider.GetService<IPinService>();
-            var aggrigator = serviceProvider.GetService<IEventAggregator>();
-            var localdbService = serviceProvider.GetService<IFxLocalDbService>();
+            var pinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
+            var aggrigator = serviceProvider.GetRequiredService<IEventAggregator>();
+            var localdbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
 
             await localdbService.InitAsync();
             await pinService.InitializeAsync();

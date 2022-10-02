@@ -4,9 +4,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations.Test
 
 public partial class InternalAndroidFileServicePlatformTest : FileServicePlatformTest
 {
-    public IFileService FileService { get; set; }
+    public ILocalDeviceFileService FileService { get; set; }
 
-    public InternalAndroidFileServicePlatformTest(IFileService fileService)
+    public InternalAndroidFileServicePlatformTest(ILocalDeviceFileService fileService)
     {
         FileService = fileService;
     }

@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services
+﻿using Functionland.FxFiles.Client.Shared.Services.Implementations.FileService;
+
+namespace Functionland.FxFiles.Client.Shared.Services
 {
     public partial class FakeFileServiceFactory
     {

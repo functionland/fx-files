@@ -185,44 +185,12 @@ public partial class FileBrowser
 
         if (artifact?.ArtifactType == FsArtifactType.Folder)
         {
-            try
-            {
-                await FileService.RenameFolderAsync(artifact.FullPath, newName);
-                UpdateRenamedArtifact(artifact, newName);
-            }
-            catch (DomainLogicException ex)
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
-            }
-            catch
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-                _toastModalRef!.Show(title, message, FxToastType.Error);
-            }
+            await RenameFolderAsync(artifact, newName);
 
         }
         else if (artifact?.ArtifactType == FsArtifactType.File)
         {
-            try
-            {
-                var fullName = newName + artifact.FileExtension;
-                await FileService.RenameFileAsync(artifact.FullPath, fullName);
-                var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
-                UpdateRenamedArtifact(artifact, fullName);
-            }
-            catch (DomainLogicException ex)
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
-            }
-            catch
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-                _toastModalRef!.Show(title, message, FxToastType.Error);
-            }
+            await RenameFileAsync(artifact, newName);
         }
         else if (artifact?.ArtifactType == FsArtifactType.Drive)
         {
@@ -231,6 +199,7 @@ public partial class FileBrowser
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
     }
+
     public async Task HandlePinArtifactsAsync(FsArtifact[] artifacts)
     {
         try
@@ -787,6 +756,48 @@ public partial class FileBrowser
                 _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Name).ToList();
                 return;
             }
+        }
+    }
+
+    private async Task RenameFileAsync(FsArtifact? artifact, string? newName)
+    {
+        try
+        {
+            await FileService.RenameFileAsync(artifact.FullPath, newName);
+            var fullName = newName + artifact.FileExtension;
+            var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+            UpdateRenamedArtifact(artifact, fullName);
+        }
+        catch (DomainLogicException ex)
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
+        }
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
+        }
+    }
+
+    private async Task RenameFolderAsync(FsArtifact? artifact, string? newName)
+    {
+        try
+        {
+            await FileService.RenameFolderAsync(artifact.FullPath, newName);
+            UpdateRenamedArtifact(artifact, newName);
+        }
+        catch (DomainLogicException ex)
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
+        }
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
         }
     }
 }
