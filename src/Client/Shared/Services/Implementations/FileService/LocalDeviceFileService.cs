@@ -421,7 +421,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (!driveInfo.IsReady) continue;
 
                 var lable = driveInfo.VolumeLabel;
-                var driveName = !string.IsNullOrWhiteSpace(lable) ? lable : drive;
+                var drivePath = drive.TrimEnd(Path.DirectorySeparatorChar);
+                var driveName = !string.IsNullOrWhiteSpace(lable) ? $"{lable} ({drivePath})" : drivePath;
 
                 artifacts.Add(
                     new FsArtifact(drive, driveName, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
