@@ -2,14 +2,21 @@
 @import '../../../Styles/abstracts/_functions.scss';
 @import '../../../Styles/abstracts/_mixins.scss';
 
-.container {
-    height: 100%;
-    overflow-y: auto;
-    position: relative;
+.sticky-header {
+    position: sticky;
+    top: 0;
+    right: 0;
+    left: 0;
 
     & ::deep div.toolbar-box {
         margin: $spacing-32 0;
     }
+}
+
+.container {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
 }
 
 .select-action {
