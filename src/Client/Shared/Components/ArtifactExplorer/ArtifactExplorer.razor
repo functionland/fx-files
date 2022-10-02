@@ -9,7 +9,7 @@
         <EmptyListView 
             OnAddFolderButtonClick="OnAddFolderButtonClick"
             Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
-            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
     }
     @foreach (var artifact in Artifacts)
     {
