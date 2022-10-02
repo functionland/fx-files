@@ -604,6 +604,7 @@ public partial class FileBrowser
         _searchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
     }
+
     private void HandleSearchFocused()
     {
         _isInSearchMode = true;
@@ -667,11 +668,13 @@ public partial class FileBrowser
             _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
         }
     }
+
     private async Task HandleToolbarBackClick()
     {
         _isInSearchMode = false;
         cancellationTokenSource?.Cancel();
         _searchText = string.Empty;
+        ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
         _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
         StateHasChanged();
