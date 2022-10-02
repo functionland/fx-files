@@ -1,5 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 
+using Microsoft.JSInterop;
+
 namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class ArtifactExplorer
@@ -152,6 +154,16 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public void OnCreateFolder()
         {
             OnAddFolderButtonClick.InvokeAsync();
+        }
+
+        public async Task OnGoToTopPage()
+        {
+            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+        }
+
+        public async Task OnScrollCheck()
+        {
+            await JSRuntime.InvokeVoidAsync("OnScrollCheck");
         }
 
         public string GetArtifactIcon(FsArtifact artifact)

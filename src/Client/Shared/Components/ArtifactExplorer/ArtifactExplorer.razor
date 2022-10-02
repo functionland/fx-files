@@ -72,10 +72,9 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
-        <EmptyListView 
-            OnAddFolderButtonClick="OnAddFolderButtonClick"
-            Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
-            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
+        <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
+                   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
+                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
     }
     @foreach (var artifact in Artifacts)
     {
@@ -112,4 +111,7 @@ else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
             }
         </div>
     }
+</div>
+<div class="position-scroll-btn">
+    <FxButton ButtonStyle="FxButtonStyle.IconOnly" BorderRadius="100px" Height="60px" Width="60px" OnClick="OnGoToTopPage"></FxButton>
 </div>
