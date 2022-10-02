@@ -295,6 +295,9 @@ public partial class FileBrowser
                     await HandleOptionsArtifact(artifact[0]);
                 }
                 break;
+            case ArtifactDetailModalResultType.Upload:
+                //TODO: Implement upload logic here
+                break;
             case ArtifactDetailModalResultType.Close:
                 break;
             default:
