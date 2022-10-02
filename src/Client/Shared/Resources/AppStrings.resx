@@ -471,4 +471,7 @@
   <data name="Of" xml:space="preserve">
     <value>of</value>
   </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
 </root>
