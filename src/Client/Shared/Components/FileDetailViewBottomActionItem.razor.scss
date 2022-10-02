@@ -38,6 +38,11 @@
         @include Icon($options-vertical);
     }
 
+    .upload-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($upload-file);
+    }
+
     .action-text p {
         margin: $spacing-0;
         margin-top: $spacing-6;
