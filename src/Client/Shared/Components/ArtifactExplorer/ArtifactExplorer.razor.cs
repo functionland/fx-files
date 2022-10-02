@@ -8,19 +8,10 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<FsArtifact[]> OnMultiArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
-        [Parameter] public EventCallback OnCancelSelectDestionationMode { get; set; } = new();
-        [Parameter] public EventCallback<FsArtifact[]> OnSelectDestination { get; set; } = new();
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
-        [Parameter] public ArtifactActionResult ArtifactActionResult { get; set; } = new();
-        [Parameter] public EventCallback OnFilterClick { get; set; }
-        [Parameter] public EventCallback OnSortClick { get; set; }
-        [Parameter] public EventCallback<string?> OnSearch { get; set; }
-        [Parameter] public EventCallback OnCancelSearch { get; set; }
-        [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }   //ToDo: So many parameters! Is it fine?
-        [Parameter] public EventCallback OnSortOrderClick { get; set; }
+        [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
         [Parameter] public bool IsSelected { get; set; }
         [Parameter] public EventCallback<bool> IsSelectedChanged { get; set; }
         [Parameter] public FsArtifact[] SelectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
@@ -56,11 +47,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private bool IsInRoot(FsArtifact? artifact)
         {
             return artifact is null ? true : false;
-        }
-
-        public async Task HandleCancelSelectDestionationMode()
-        {
-            await OnCancelSelectDestionationMode.InvokeAsync();
         }
 
         public void PointerDown()

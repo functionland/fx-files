@@ -1,5 +1,6 @@
 ﻿@import '../../../Styles/abstracts/_variables.scss';
 @import '../../../Styles/abstracts/_functions.scss';
+@import '../../../Styles/abstracts/_mixins.scss';
 
 .container {
     height: 100%;
@@ -8,6 +9,55 @@
 
     & ::deep div.toolbar-box {
         margin: $spacing-32 0;
+    }
+}
+
+.select-action {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $green-dark-base;
+    padding: 0px $spacing-31 0px $spacing-21;
+
+    .info-selection {
+        display: flex;
+        align-items: center;
+
+        .close-btn {
+            cursor: pointer;
+
+            &::before {
+                font-size: $icon-16;
+                @include Icon($close, $pure-white);
+            }
+        }
+
+        .item-selected {
+            margin-left: $spacing-6;
+
+            .selected-items-text,
+            .selected-items-count{
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                font-family: $open-sans-regular;
+                letter-spacing: $letter-spacing-02;
+                color: $pure-white;
+            }
+        }
+    }
+
+    .right-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
+        }
     }
 }
 

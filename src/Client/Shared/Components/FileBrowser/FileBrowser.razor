@@ -75,34 +75,10 @@
                 </div>
             </div>
         }
-        else if (_artifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
-        {
-            <div class="select-action">
-                <div class="info-selection">
-                    <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
-                    <div class="item-selected">
-                        <span class="item-selected-count">@_selectedArtifacts?.Length</span>
-                        <span class="move-selected-items-text">items ready to </span>
-                        @if (_artifactActionResult?.ActionType == @ArtifactActionType.Copy)
-                        {
-                            <span class="move-selected-items-text">copy</span>
-                        }
-                        else
-                        {
-                            <span class="move-selected-items-text">move</span>
-                        }
-                    </div>
-                </div>
-
-                <div class="right-part">
-                    <div class="icons-action add-folder"></div>
-                </div>
-            </div>
-        }
 
         @if (!IsInRoot(_currentArtifact))
         {
-            <FxSearchInput Placeholder="@_currentArtifact.Name"
+            <FxSearchInput Placeholder="@_currentArtifact?.Name"
                    OnCancel="HandleCancelSearchAsync"
                    DebounceInterval="300"
                    OnSearch="HandleSearch"
@@ -117,7 +93,7 @@
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
-                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
+                      OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="_viewMode"
                       @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
