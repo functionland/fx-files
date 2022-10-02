@@ -2,6 +2,7 @@
 using Functionland.FxFiles.Client.App.Platforms.iOS.Implementations.Test;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
 
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class IiOSServiceCollectionExtensions
@@ -10,7 +11,12 @@ public static class IiOSServiceCollectionExtensions
     {
         // Services being registered here can get injected in iOS.
 
-        //TODO: services.AddSingleton<IFileService, IosFileService>();
+        services.AddSingleton<ILocalDeviceFileService, IosFileService>();
+        services.AddSingleton<IFulaFileService, IosFulaFileService>();
+
+        services.AddSingleton<IFulaFileService, IosFulaFileService>();
+        services.AddSingleton<ILocalDeviceFileService, IosFileService>();
+
         //services.AddTransient<IPlatformTestService, IosPlatformTestService>();
         //services.AddTransient<IosFileServicePlatformTest>();
         services.AddSingleton<IFileService, IosFileService>();

@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Models;
 
 using Microsoft.VisualBasic;
-using System.Diagnostics;
-using System.Threading;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -28,13 +27,17 @@ public partial class FileBrowser
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
+    private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
+    private ArtifactActionResult _artifactActionResult { get; set; } = new();
 
     private string? _searchText;
     private bool _isInSearchMode;
+    private ViewModeEnum _viewMode = ViewModeEnum.list;
     private FileCategoryType? _fileCategoryFilter;
     private ArtifactExplorerMode _artifactExplorerMode;
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
-    private bool _IsAscOrder = true;
+    private bool _isAscOrder = true;
+    private bool _isSelected;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -182,44 +185,12 @@ public partial class FileBrowser
 
         if (artifact?.ArtifactType == FsArtifactType.Folder)
         {
-            try
-            {
-                await FileService.RenameFolderAsync(artifact.FullPath, newName);
-                UpdateRenamedArtifact(artifact, newName);
-            }
-            catch (DomainLogicException ex)
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
-            }
-            catch
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-                _toastModalRef!.Show(title, message, FxToastType.Error);
-            }
+            await RenameFolderAsync(artifact, newName);
 
         }
         else if (artifact?.ArtifactType == FsArtifactType.File)
         {
-            try
-            {
-                var fullName = newName + artifact.FileExtension;
-                await FileService.RenameFileAsync(artifact.FullPath, fullName);
-                var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
-                UpdateRenamedArtifact(artifact, fullName);
-            }
-            catch (DomainLogicException ex)
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
-            }
-            catch
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-                _toastModalRef!.Show(title, message, FxToastType.Error);
-            }
+            await RenameFileAsync(artifact, newName);
         }
         else if (artifact?.ArtifactType == FsArtifactType.Drive)
         {
@@ -228,6 +199,7 @@ public partial class FileBrowser
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
     }
+
     public async Task HandlePinArtifactsAsync(FsArtifact[] artifacts)
     {
         try
@@ -455,6 +427,32 @@ public partial class FileBrowser
         }
     }
 
+    public void ToggleSelectedAll()
+    {
+        if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
+        {
+            _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+            foreach (var artifact in _allArtifacts)
+            {
+
+            }
+            _selectedArtifacts = _allArtifacts.ToArray();
+            _isSelected = true;
+        }
+    }
+
+    public void ChangeViewMode(ViewModeEnum mode)
+    {
+        _viewMode = mode;
+    }
+
+    public void CancelSelectionMode()
+    {
+        _artifactExplorerMode = ArtifactExplorerMode.Normal;
+        _selectedArtifacts = Array.Empty<FsArtifact>();
+        _isSelected = false;
+    }
+
     private async Task HandleSelectedArtifactsOptions(FsArtifact[] artifacts)
     {
         var selectedArtifactsCount = artifacts.Length;
@@ -506,6 +504,7 @@ public partial class FileBrowser
     private void ArtifactExplorerModeChange(ArtifactExplorerMode mode)
     {
         _artifactExplorerMode = mode;
+        _isSelected = false;
         StateHasChanged();
     }
 
@@ -665,7 +664,7 @@ public partial class FileBrowser
         if (text != null)
         {
             _searchText = text;
-            _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();     
+            _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
         }
     }
     private async Task HandleToolbarBackClick()
@@ -704,7 +703,7 @@ public partial class FileBrowser
 
     private void HandleSortOrderClick()
     {
-        _IsAscOrder = !_IsAscOrder;
+        _isAscOrder = !_isAscOrder;
         sortFilteredArtifacts();
     }
 
@@ -718,7 +717,7 @@ public partial class FileBrowser
     {
         if (_currentSortType is SortTypeEnum.LastModified)
         {
-            if (_IsAscOrder)
+            if (_isAscOrder)
             {
                 _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
@@ -733,7 +732,7 @@ public partial class FileBrowser
 
         if (_currentSortType is SortTypeEnum.Size)
         {
-            if (_IsAscOrder)
+            if (_isAscOrder)
             {
                 _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Size).ToList();
                 return;
@@ -747,7 +746,7 @@ public partial class FileBrowser
 
         if (_currentSortType is SortTypeEnum.Name)
         {
-            if (_IsAscOrder)
+            if (_isAscOrder)
             {
                 _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Name).ToList();
                 return;
@@ -757,6 +756,48 @@ public partial class FileBrowser
                 _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Name).ToList();
                 return;
             }
+        }
+    }
+
+    private async Task RenameFileAsync(FsArtifact? artifact, string? newName)
+    {
+        try
+        {
+            await FileService.RenameFileAsync(artifact.FullPath, newName);
+            var fullName = newName + artifact.FileExtension;
+            var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+            UpdateRenamedArtifact(artifact, fullName);
+        }
+        catch (DomainLogicException ex)
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
+        }
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
+        }
+    }
+
+    private async Task RenameFolderAsync(FsArtifact? artifact, string? newName)
+    {
+        try
+        {
+            await FileService.RenameFolderAsync(artifact.FullPath, newName);
+            UpdateRenamedArtifact(artifact, newName);
+        }
+        catch (DomainLogicException ex)
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
+        }
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
         }
     }
 }

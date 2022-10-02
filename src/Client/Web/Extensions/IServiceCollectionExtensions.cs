@@ -20,6 +20,15 @@ public static class IServiceCollectionExtensions
             (serviceProvider) =>
             serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
             );
+        services.AddSingleton<IFulaFileService>(
+           (serviceProvider) =>
+           serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
+           );
+        services.AddSingleton<ILocalDeviceFileService>(
+           (serviceProvider) =>
+           serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
+           );
+
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();

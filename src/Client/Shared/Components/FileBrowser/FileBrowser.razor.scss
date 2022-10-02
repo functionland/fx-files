@@ -6,3 +6,210 @@
 .file-browser-container ::deep div.toolbar-box {
     margin: $spacing-32 0;
 }
+
+.root-title {
+    font-family: $montserrat-semi-bold;
+    font-size: $font-size-24;
+    line-height: $line-height-36;
+    color: color(gray-content1);
+    margin: $spacing-0 $spacing-21 $spacing-16;
+}
+
+.disable-pinned {
+    color: color(input-disable);
+    font-family: $montserrat-semi-bold;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
+    padding: $spacing-0 $spacing-21;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: $spacing-4;
+    margin-bottom: $spacing-48;
+
+    &::before {
+        @include Icon($chevron-right, color(input-disable) );
+    }
+}
+
+.action-bar {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 0 $spacing-21;
+    background-color: color(gray-bg-primary);
+
+    .left-actions {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+
+        .selected-sort {
+            font-family: $open-sans-regular;
+            font-style: normal;
+            font-weight: 400;
+            font-size: $font-size-14;
+            line-height: $line-height-24;
+            letter-spacing: $letter-spacing-02;
+            margin-right: $spacing-4;
+            color: color(gray-content1);
+            cursor: pointer;
+        }
+
+        .sort-order {
+            cursor: pointer;
+
+            &::before {
+                font-size: $icon-16;
+                @include Icon($chevron-up);
+            }
+        }
+
+        .desc-order {
+            transform: rotate(180deg);
+
+            &::before {
+                @include Icon($chevron-up);
+            }
+        }
+
+        .asc-order::before {
+            @include Icon($chevron-up);
+        }
+    }
+
+    .right-actions {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+
+        .action-btn {
+            cursor: pointer;
+        }
+
+        .select-all-btn {
+            margin-right: $spacing-8;
+
+            &::before {
+                @include Icon($select, color(gray-content3));
+                font-size: 24px;
+            }
+        }
+
+        .select-all-filled::before {
+            font-size: 24px;
+            @include Icon($selected, $green-dark-base, $Icons-Filled);
+        }
+
+        .list-view-btn {
+            margin-right: $spacing-8;
+
+            &::before {
+                font-size: 24px;
+                @include Icon($list, color(gray-content3));
+            }
+        }
+
+        .list-view-selected::before {
+            font-size: 24px;
+            @include Icon($list, $green-dark-base);
+        }
+
+        .grid-view-btn {
+            margin-right: $spacing-8;
+
+            &::before {
+                font-size: 24px;
+                @include Icon($grid, color(gray-content3));
+            }
+        }
+
+        .grid-view-selected::before {
+            font-size: 24px;
+            @include Icon($grid, $green-dark-base);
+        }
+
+        .filter-btn::before {
+            font-size: 24px;
+            @include Icon($filter, color(gray-content3));
+        }
+    }
+}
+
+.select-action {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $green-dark-base;
+    padding: 0px $spacing-31 0px $spacing-21;
+
+    .info-selection {
+        display: flex;
+        align-items: center;
+
+        .close-btn {
+            cursor: pointer;
+
+            &::before {
+                font-size: 16px;
+                @include Icon($close, $pure-white);
+            }
+        }
+
+        .item-selected {
+            margin-left: $spacing-6;
+
+            .move-selected-items-text,
+            .item-selected-count,
+            .item-selected-text {
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                font-family: $open-sans-regular;
+                letter-spacing: $letter-spacing-02;
+                color: $pure-white;
+            }
+        }
+    }
+
+    .right-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .move-icon::before {
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($move, $pure-white);
+        }
+
+        .vertical-option-icon::before {
+            cursor: pointer;
+            font-size: 20px;
+            @include Icon($options-vertical, $pure-white);
+            margin-left: $spacing-16;
+        }
+
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
+        }
+    }
+}
+
+.sticky-content {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: color(app-bg);
+    z-index: 2;
+    padding-top: 32px;
+}
+

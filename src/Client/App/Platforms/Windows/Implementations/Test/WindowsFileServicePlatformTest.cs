@@ -4,9 +4,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations.Test
 
 public partial class WindowsFileServicePlatformTest : FileServicePlatformTest
 {
-    public IFileService FileService { get; set; }
+    public ILocalDeviceFileService FileService { get; set; }
 
-    public WindowsFileServicePlatformTest(IFileService fileService)
+    public WindowsFileServicePlatformTest(ILocalDeviceFileService fileService)
     {
         FileService = fileService;
     }

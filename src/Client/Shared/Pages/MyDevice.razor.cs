@@ -8,6 +8,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 
         [AutoInject] private IFileService _fileService { get; set; } = default!;
 
-        [AutoInject] private IPinService _pinService { get; set; } = default!;
+        [AutoInject] private ILocalDevicePinService _pinService { get; set; } = default!;
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileService
 {
-    public class FakeFileService : IFileService
+    public class FakeFileService : ILocalDeviceFileService, IFulaFileService
     {
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
         private ConcurrentBag<FsArtifact> _files = new ConcurrentBag<FsArtifact>();

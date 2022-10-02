@@ -44,15 +44,15 @@ As you see, there are different implementations of `IFileService` for different 
 Amongst these implementations `FakeFileService` is the interesting one for developers, as they can use it to easily test their application, removing all the barriers to setup a proper file system for testing purposes.
 ```mermaid
 classDiagram
-IFileService <|-- LocalDeviceFileService
+IFileService <|-- ILocalDeviceFileService
+ILocalDeviceFileService <|-- LocalDeviceFileService
 LocalDeviceFileService <|-- AndroidFileService
 LocalDeviceFileService <|-- IosFileService
 LocalDeviceFileService <|-- WindowsFileService
-IFileService <|-- FakeFileService
-IFileService <|-- FulaFileService
-FulaFileService <|-- AndroidFulaFileService
-FulaFileService <|-- IosFulaFileService
-FulaFileService <|-- WindowsFulaFileService
+ILocalDeviceFileService <|-- FakeFileService
+IFulaFileService <|-- FakeFileService
+IFileService <|-- IFulaFileService
+IFulaFileService <|-- FulaFileService
 
 class IFileService {
   <<interface>>
@@ -66,38 +66,12 @@ class LocalDeviceFileService {
   <<abstract>>
 }
 
-class FulaFileService {
-  <<abstract>>
-}
 ```
-# ZoneService Architecture
+# PinService Architecture
 ```mermaid
 classDiagram
-IZoneService <|-- LocalZoneService
-IZoneService <|-- FulaZoneService
-LocalZoneService <|-- AndroidLocalZoneService
-LocalZoneService <|-- WindowsLocalZoneService
-LocalZoneService <|-- IosLocalZoneService
-FulaZoneService <|-- AndroidFulaZoneService
-FulaZoneService <|-- IosFulaZoneService
-FulaZoneService <|-- WindowsFulaZoneService
-
-class IZoneService {
-  <<interface>>
-  GetZones(searchText: string) FsZone[]
-}
-
-class LocalZoneService {
-  <<abstract>>
-}
-
-class FulaZoneService {
-  <<abstract>>
-}
+IPinService <|-- ILocalDevicePinService
+ILocalDevicePinService <|-- LocalDevicePinService
+IPinService <|-- IFulaPinService
+IFulaPinService <|-- FulaPinService
 ```
-## LocalZoneService
-The `LocalZoneService` handles all the work required to support *Zone* on the device local storages.
-The data for zones and their contents are being stored on local sqllite database.
-## FulaZoneService
-The `FulaZoneService` handles all the work required to support *Zone* for the Blox Files.
-The data for zones and their contents are being stored on *Fula Network*. It uses `FulaZoneClient` sdk to communicate with the blockchain of Blox devices called Fula.
