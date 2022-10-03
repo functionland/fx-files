@@ -82,7 +82,7 @@ public partial class FileBrowser
             {
                 if (_confirmationReplaceOrSkipModalRef != null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
@@ -139,7 +139,7 @@ public partial class FileBrowser
             {
                 if (_confirmationReplaceOrSkipModalRef is not null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);

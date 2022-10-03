@@ -745,16 +745,16 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace.
+        ///   Looks up a localized string similar to Replace {0} item(s) .
         /// </summary>
-        public static string ReplaceModal {
+        public static string ReplaceButtonModal {
             get {
-                return ResourceManager.GetString("ReplaceModal", resourceCulture);
+                return ResourceManager.GetString("ReplaceButtonModal", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To continue, please choose an action.
+        ///   Looks up a localized string similar to What do you want to do?.
         /// </summary>
         public static string ReplaceOrSkipSubDescModal {
             get {
@@ -763,7 +763,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The destination already has a file named.
+        ///   Looks up a localized string similar to The destination folder already has {0} item(s) with the same name,.
         /// </summary>
         public static string ReplaceOrSkipSupDescModal {
             get {
@@ -772,7 +772,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace or skip files.
+        ///   Looks up a localized string similar to Replace or skip {0} item(s).
         /// </summary>
         public static string ReplaceOrSkipTitleModal {
             get {
@@ -871,11 +871,11 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skip.
+        ///   Looks up a localized string similar to Skip {0} item(s).
         /// </summary>
-        public static string SkipModal {
+        public static string SkipButtonModal {
             get {
-                return ResourceManager.GetString("SkipModal", resourceCulture);
+                return ResourceManager.GetString("SkipButtonModal", resourceCulture);
             }
         }
         
