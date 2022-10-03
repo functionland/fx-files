@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 
@@ -15,18 +16,7 @@ public partial class WindowsThumbnailService : LocalThumbnailService
 
         var image = System.Drawing.Image.FromFile(fsArtifact.FullPath);
 
-        var imageWidth = image.Width / 2;
-        var imageHeight = image.Height / 2;
-
-        if (imageWidth <= 252)
-        {
-            imageWidth = image.Width;
-        }
-
-        if (imageHeight <= 146)
-        {
-            imageHeight = image.Height;
-        }
+        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
 
         var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
         try
