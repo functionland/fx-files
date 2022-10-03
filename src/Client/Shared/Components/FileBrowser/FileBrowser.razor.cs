@@ -681,13 +681,19 @@ public partial class FileBrowser
 
     private async Task HandleToolbarBackClick()
     {
-        _isInSearchMode = false;
-        cancellationTokenSource?.Cancel();
-        _searchText = string.Empty;
-        ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
-        await LoadChildrenArtifactsAsync(_currentArtifact);
-        StateHasChanged();
+        if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
+        {
+            ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
+        }
+        else
+        {
+            _isInSearchMode = false;
+            cancellationTokenSource?.Cancel();
+            _searchText = string.Empty;
+            _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            StateHasChanged();
+        }
     }
 
     private void FilterArtifacts()
