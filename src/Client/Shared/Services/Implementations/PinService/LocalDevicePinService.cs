@@ -17,10 +17,10 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     public async Task InitializeAsync()
     {
         ArtifactChangeSubscription = EventAggregator
-                    .GetEvent<ArtifactChangeEvent>()
-                    .Subscribe(
-                        HandleChangedArtifacts,
-                        ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+                        .GetEvent<ArtifactChangeEvent>()
+                        .Subscribe(
+                            HandleChangedArtifacts,
+                            ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
         var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
         if (pinnedArtifacts.Count == 0) return;
@@ -172,7 +172,6 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     {
         foreach (var artifact in artifacts)
         {
-
             if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
             {
                 return;
