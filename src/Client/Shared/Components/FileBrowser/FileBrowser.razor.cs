@@ -78,6 +78,8 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
+            var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+
             if (existArtifacts.Count > 0)
             {
                 if (_confirmationReplaceOrSkipModalRef != null)
@@ -85,7 +87,7 @@ public partial class FileBrowser
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                        await FileService.CopyArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
                     }
                 }
             }
@@ -137,8 +139,13 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
-            var movedArtifact = artifacts.Except(existArtifacts);
-            UpdateRemovedArtifacts(movedArtifact);
+            var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+            
+            var movedArtifact = artifacts.Except(overwriteArtifacts);
+            if(movedArtifact.Any())
+            {
+                UpdateRemovedArtifacts(movedArtifact);
+            }
 
             if (existArtifacts.Count > 0)
             {
@@ -147,8 +154,8 @@ public partial class FileBrowser
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
-                        UpdateRemovedArtifacts(existArtifacts);
+                        await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
+                        UpdateRemovedArtifacts(overwriteArtifacts);
                     }
                 }
             }
@@ -827,5 +834,20 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
+    }
+
+    private static List<FsArtifact> GetShouldOverwriteArtiacts(FsArtifact[] artifacts, List<FsArtifact> existArtifacts)
+    {
+        List<FsArtifact> overwriteArtifacts = new();
+        var pathExistArtifacts = existArtifacts.Select(a => a.FullPath);
+        foreach (var artifact in artifacts)
+        {
+            if (pathExistArtifacts.Any(p => p.StartsWith(artifact.FullPath)))
+            {
+                overwriteArtifacts.Add(artifact);
+            }
+        }
+
+        return overwriteArtifacts;
     }
 }

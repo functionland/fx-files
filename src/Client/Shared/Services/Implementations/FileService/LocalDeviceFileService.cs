@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Functionland.FxFiles.Client.Shared.Extensions;
+using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -14,7 +15,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -25,11 +26,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseFile = AppStrings.File.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(stream?.ToString()))
                 throw new StreamNullException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
 
             if (string.IsNullOrWhiteSpace(path))
-                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
 
             var fileName = Path.GetFileNameWithoutExtension(path);
 
@@ -37,10 +40,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
             if (CheckIfNameHasInvalidChars(fileName))
-                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             if (File.Exists(path))
-                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
 
             using FileStream outPutFileStream = new(path, FileMode.Create);
             await stream.CopyToAsync(outPutFileStream);
@@ -70,20 +73,22 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseFolder = AppStrings.Folder.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(path))
-                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
 
             if (string.IsNullOrWhiteSpace(folderName))
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
             if (CheckIfNameHasInvalidChars(folderName))
-                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var newPath = Path.Combine(path, folderName);
 
             if (Directory.Exists(newPath))
-                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
+                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
 
             Directory.CreateDirectory(newPath);
 
@@ -109,6 +114,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private void DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(artifact.FullPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
 
@@ -117,7 +124,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if ((artifact.ArtifactType == FsArtifactType.Folder && !isDirectoryExist) ||
                 (artifact.ArtifactType == FsArtifactType.File && !isFileExist))
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? "artifact"));
+                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
@@ -201,8 +208,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseFile = AppStrings.File.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
 
             var streamReader = new StreamReader(filePath);
             return streamReader.BaseStream;
@@ -214,8 +223,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
-                await DeleteArtifactsAsync(artifacts, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -226,8 +234,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseFile = AppStrings.File.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "file"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
 
             var artifactType = GetFsArtifactTypeAsync(filePath);
 
@@ -237,12 +247,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (cancellationToken?.IsCancellationRequested == true) return;
 
             if (CheckIfNameHasInvalidChars(newName))
-                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "file"));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var isExistOld = File.Exists(filePath);
 
             if (!isExistOld)
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, "file"));
+                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             await Task.Run(() =>
             {
@@ -255,7 +265,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var isFileExist = File.Exists(newPath);
 
                 if (isFileExist)
-                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
 
                 File.Move(filePath, newPath);
             });
@@ -263,8 +273,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseFolder = AppStrings.Folder.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(folderPath))
-                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+                throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
             var artifactType = GetFsArtifactTypeAsync(folderPath);
 
@@ -277,12 +289,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (cancellationToken?.IsCancellationRequested == true) return;
 
             if (CheckIfNameHasInvalidChars(newName))
-                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder"));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var isExistOld = Directory.Exists(folderPath);
 
             if (!isExistOld)
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, "folder"));
+                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, lowerCaseFolder));
 
             var fsArtifactType = await GetFsArtifactTypeAsync(folderPath);
 
@@ -297,13 +309,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var isExist = Directory.Exists(newPath);
 
                 if (isExist)
-                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"));
+                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
 
                 Directory.Move(folderPath, newPath);
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool mustDeleteSource = false, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             var ignoredList = new List<FsArtifact>();
 
@@ -333,6 +345,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         }
 
                         fileInfo.CopyTo(destinationInfo.FullName, true);
+
+                        if (mustDeleteSource)
+                        {
+                            DeleteArtifactAsync(artifact, cancellationToken);
+                        }
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -378,7 +395,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, overwrite, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, mustDeleteSource, overwrite, cancellationToken);
+
+                    if (!childIgnoredList.Any() && mustDeleteSource)
+                    {
+                        DeleteArtifactAsync(artifact, cancellationToken);
+                    }
+
                     ignoredList.AddRange(childIgnoredList);
                 }
             }

@@ -70,7 +70,16 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} already exists.
+        ///   Looks up a localized string similar to Artifact.
+        /// </summary>
+        public static string Artifact {
+            get {
+                return ResourceManager.GetString("Artifact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name.
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
@@ -93,6 +102,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ArtifactNameHasInvalidChars {
             get {
                 return ResourceManager.GetString("ArtifactNameHasInvalidChars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid characters in the item name.
+        /// </summary>
+        public static string ArtifactNameHasInvalidCharsException {
+            get {
+                return ResourceManager.GetString("ArtifactNameHasInvalidCharsException", resourceCulture);
             }
         }
         
