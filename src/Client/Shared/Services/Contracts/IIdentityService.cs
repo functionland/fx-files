@@ -11,6 +11,12 @@ public interface IIdentityService
     Task<List<FulaUser>> LoginAsync(string did, CancellationToken? cancellationToken = null);
 
     /// <summary>
+    /// Ensure login call befor all methods
+    /// </summary>
+    /// <returns></returns>
+    Task EnsureLoginedAsync();
+
+    /// <summary>
     /// Change user account
     /// </summary>
     /// <param name="did"></param>
