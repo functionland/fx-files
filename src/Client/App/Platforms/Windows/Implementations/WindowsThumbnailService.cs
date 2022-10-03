@@ -1,49 +1,48 @@
 ﻿using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
 
-namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
+namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
+
+public partial class WindowsThumbnailService : LocalThumbnailService
 {
-    public partial class WindowsThumbnailService : LocalThumbnailService
+    [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+
+    public override async Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
     {
-        [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+        var thumbPath = GetThumbnailFullPath(fsArtifact);
 
-        public override async Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+        if (File.Exists(thumbPath)) return thumbPath;
+
+        var image = System.Drawing.Image.FromFile(fsArtifact.FullPath);
+
+        var imageWidth = image.Width / 2;
+        var imageHeight = image.Height / 2;
+
+        if (imageWidth <= 252)
         {
-            var thumbPath = GetThumbnailFullPath(fsArtifact);
-
-            if (File.Exists(thumbPath)) return thumbPath;
-
-            const int thumbnailSize = 150;
-            var image = System.Drawing.Image.FromFile(fsArtifact.FullPath);
-
-            var imageHeight = image.Height;
-            var imageWidth = image.Width;
-            if (imageHeight > imageWidth)
-            {
-                imageWidth = (int)(((float)imageWidth / (float)imageHeight) * thumbnailSize);
-                imageHeight = thumbnailSize;
-            }
-            else
-            {
-                imageHeight = (int)(((float)imageHeight / (float)imageWidth) * thumbnailSize);
-                imageWidth = thumbnailSize;
-            }
-            var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
-            try
-            {
-                thumb.Save(thumbPath);
-            }
-            catch(Exception)
-            {
-                thumb.Dispose();
-            }
-
-            return thumbPath;
+            imageWidth = image.Width;
         }
 
-        public override string GetAppCacheDirectory()
+        if (imageHeight <= 146)
         {
-            return FileSystem.CacheDirectory;
+            imageHeight = image.Height;
         }
+
+        var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
+        try
+        {
+            thumb.Save(thumbPath);
+        }
+        catch (Exception)
+        {
+            thumb.Dispose();
+        }
+
+        return thumbPath;
+    }
+
+    public override string GetAppCacheDirectory()
+    {
+        return FileSystem.CacheDirectory;
     }
 }
