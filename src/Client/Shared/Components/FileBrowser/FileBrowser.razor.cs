@@ -674,6 +674,7 @@ public partial class FileBrowser
         _searchText = string.Empty;
         _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         StateHasChanged();
     }
 
