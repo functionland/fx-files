@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.App;
+﻿using Microsoft.Extensions.FileProviders;
+
+namespace Functionland.FxFiles.Client.App;
 
 public partial class MainPage
 {
@@ -27,5 +29,14 @@ public partial class MainPage
                 settings.BlockNetworkImage = false;
 #endif
         });
+    }
+}
+
+public class FxViewerBlazorWebView : BlazorWebView
+{
+    public override IFileProvider CreateFileProvider(string contentRootDir)
+    {
+        var baseFileProvider =  base.CreateFileProvider(contentRootDir);
+        return new FxFileProvider(baseFileProvider);
     }
 }

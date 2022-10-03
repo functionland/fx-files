@@ -6,10 +6,10 @@
     if (IsMultiple)
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
-            <FileDetailView FileName="@_artifacts[_currentArtifactForShowNumber].Name">
+            <FileDetailView FileName="@_artifacts[_currentArtifactForShowNumber].Name" FileCategoryType="@_artifacts[_currentArtifactForShowNumber].FileCategory" FsArtifactType="_artifacts[_currentArtifactForShowNumber].ArtifactType">
                 <FileDetailItemFragment>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].SizeStr)"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].OriginDevice)"></FileDetailViewItem>
                     <div class="modal-slider">
                         <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="@(_currentArtifactForShowNumber != 0 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(false))"></FxLink>
@@ -37,7 +37,7 @@
                 <FileDetailItemActionsFragment>
                     <FileDetailViewBottomActionBar>
                         <FileDetailActionBarItemFragment>
-                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Download"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
@@ -53,18 +53,18 @@
     }
     else
     {
-        <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="true">
-            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)">
+        <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
+            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)" FilePath="@_artifacts[0].FullPath" FileCategoryType="@_artifacts[0].FileCategory" FsArtifactType="@_artifacts[0].ArtifactType">
                 <FileDetailItemFragment>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].SizeStr)"></FileDetailViewItem>
+                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
                 </FileDetailItemFragment>
 
                 <FileDetailItemActionsFragment>
                     <FileDetailViewBottomActionBar>
                         <FileDetailActionBarItemFragment>
-                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Download"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>

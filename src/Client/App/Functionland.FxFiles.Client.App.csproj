@@ -1,83 +1,95 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-    <PropertyGroup>
-        <TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
-        <OutputType>Exe</OutputType>
-        <UseMaui>true</UseMaui>
-        <SingleProject>true</SingleProject>
-        <EnableDefaultCssItems>false</EnableDefaultCssItems>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 
-        <!-- Display name -->
-        <ApplicationTitle>Functionland.FxFiles</ApplicationTitle>
+		<!-- Display name -->
+		<ApplicationTitle>Functionland.FxFiles</ApplicationTitle>
 
-        <!-- App Identifier -->
-        <ApplicationId>com.bitplatform.Todo.Template</ApplicationId>
-        <ApplicationIdGuid>A6B6FEDD-EFCA-4A47-9E85-C04B9C1D5F2B</ApplicationIdGuid>
+		<!-- App Identifier -->
+		<ApplicationId>com.bitplatform.Todo.Template</ApplicationId>
+		<ApplicationIdGuid>A6B6FEDD-EFCA-4A47-9E85-C04B9C1D5F2B</ApplicationIdGuid>
 
-        <!-- Versions -->
-        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-        <ApplicationVersion>1</ApplicationVersion>
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
 
-        <!-- Required for C# Hot Reload -->
-        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>        
-    </PropertyGroup>
+		<!-- Required for C# Hot Reload -->
+		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
-        <EnableLLVM>true</EnableLLVM>
-        <AndroidPackageFormat>apk</AndroidPackageFormat>
-        <RuntimeIdentifiers>android-arm</RuntimeIdentifiers>
-        <MauiUseDefaultAotProfile Condition="Exists('custom.aprof')">false</MauiUseDefaultAotProfile>
-    </PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+		<EnableLLVM>true</EnableLLVM>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+		<RuntimeIdentifiers>android-arm</RuntimeIdentifiers>
+		<MauiUseDefaultAotProfile Condition="Exists('custom.aprof')">false</MauiUseDefaultAotProfile>
+	</PropertyGroup>
 
-    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
-        <LinkDescription Include="Platforms\Android\Linker.xml" />
-        <AndroidAotProfile Condition="Exists('custom.aprof')" Include="custom.aprof" />
-        <!-- Run the following commands to create custom.aprof file which improves the Android app performance -->
-        <!-- dotnet add package Mono.AotProfiler.Android -->
-        <!-- dotnet build -t:BuildAndStartAotProfiling -f net6.0-android /p:UseInterpreter=false -->
-        <!-- dotnet build -t:FinishAotProfiling -f net6.0-android -->
-        <!-- dotnet remove package Mono.AotProfiler.Android -->
-    </ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<LinkDescription Include="Platforms\Android\Linker.xml" />
+		<AndroidAotProfile Condition="Exists('custom.aprof')" Include="custom.aprof" />
+		<!-- Run the following commands to create custom.aprof file which improves the Android app performance -->
+		<!-- dotnet add package Mono.AotProfiler.Android -->
+		<!-- dotnet build -t:BuildAndStartAotProfiling -f net6.0-android /p:UseInterpreter=false -->
+		<!-- dotnet build -t:FinishAotProfiling -f net6.0-android -->
+		<!-- dotnet remove package Mono.AotProfiler.Android -->
+	</ItemGroup>
 
-    <ItemGroup>
-        <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundScale="0.7" Color="#212529" BaseSize="128,128" />
+	<ItemGroup>
+		<!-- Android App Icon -->
+		<MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundScale="0.5" Color="#1B262C" />
 
-        <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\splash.png" Color="#212529" BaseSize="128,128" />
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundScale="0.9" Color="#212529" />
 
-        <!-- Images -->
-        <MauiImage Include="Resources\Images\*" />
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#212529" BaseSize="128,128" />
 
-        <!-- Fonts -->
-        <MauiFont Include="Resources\Fonts\*" />
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
 
-        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<!-- Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
 
-        <Using Include="Microsoft.Extensions.Configuration" />
-        <Using Include="Functionland.FxFiles.Client.Shared.Components" />
-        <Using Include="Functionland.FxFiles.Client.Shared.Services.Implementations" />
-        <Using Include="Functionland.FxFiles.Client.Shared.Services.Contracts" />
-        <Using Include="Microsoft.AspNetCore.Components.WebView.Maui" />
-    </ItemGroup>
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 
-    <ItemGroup>
-        <PackageReference Include="Bit.BlazorUI" Version="4.3.1" />
-        <PackageReference Include="Bit.CodeAnalyzers" Version="4.3.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Bit.SourceGenerators" Version="4.3.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <Content Remove="Properties\launchSettings.json" />
-    </ItemGroup>
+		<Using Include="Microsoft.Extensions.Configuration" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Components" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Services.Implementations" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Services.Contracts" />
+		<Using Include="Microsoft.AspNetCore.Components.WebView.Maui" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Bit.BlazorUI" Version="4.3.1" />
+		<PackageReference Include="Bit.CodeAnalyzers" Version="4.3.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Bit.SourceGenerators" Version="4.3.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<Content Remove="Properties\launchSettings.json" />
 
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-ios'">
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.2" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.2" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+	</ItemGroup>
 </Project>

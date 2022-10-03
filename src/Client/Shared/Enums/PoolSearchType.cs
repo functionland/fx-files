@@ -1,9 +1,9 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Enums
 {
-    public enum PoolFilter
+    public enum PoolSearchType
     {
         InMyCity,
         InMyState,
-        WithDistance
+        WithinDistance
     }
 }

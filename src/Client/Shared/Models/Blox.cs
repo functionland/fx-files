@@ -1,17 +1,20 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Models
+﻿namespace Functionland.FxFiles.Client.Shared.Models;
+
+public class Blox
 {
-    public class Blox
-    {
-        public int? Id { get; set; }
-        public string? Name { get; set; }
-        public string? OwnerId { get; set; }
-        public string? PoolName { get; set; }
-        public float? AvailableSpace { get; set; }
-        public float? CurrentUse { get; set; }
-        public float? PhotosUsed { get; set; }
-        public float? VideosUsed { get; set; }
-        public float? AudiosUsed { get; set; }
-        public float? DocsUsed { get; set; }
-        public float? OtherUsed { get; set; }
-    }
+    public string Id { get; set; } = default!;
+    public string Name { get; set; } = default!;
+    public string OwnerId { get; set; } = default!;
+    public string? PoolId { get; set; }
+    public string? PoolName { get; set; }
+    
+    public long TotalSpace { get; set; }
+    public long FreeSpace { get; set; }
+    public long UsedSpace { get; set; }
+
+    public long? PhotosUsed { get; set; }
+    public long? VideosUsed { get; set; }
+    public long? AudiosUsed { get; set; }
+    public long? DocsUsed { get; set; }
+    public long? OtherUsed { get; set; }
 }

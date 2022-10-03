@@ -20,7 +20,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations
 
             if (image != null)
             {
-                IImage newImage = image.Downsize(150, true);
+                IImage newImage = image.Downsize(210, 114, true);
                 using MemoryStream memStream = new MemoryStream();
                 using var fileStream = new FileStream(thumbPath, FileMode.Create);
                 newImage.Save(memStream);

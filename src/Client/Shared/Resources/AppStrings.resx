@@ -357,20 +357,17 @@
   <data name="MoveFileModal" xml:space="preserve">
     <value>Moving files</value>
   </data>
-  <data name="ReplaceModal" xml:space="preserve">
-    <value>Replace</value>
-  </data>
-  <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
-    <value>To continue, please choose an action</value>
+  <data name="ReplaceButtonModal" xml:space="preserve">
+    <value>Replace {0} item(s) </value>
   </data>
   <data name="ReplaceOrSkipSupDescModal" xml:space="preserve">
-    <value>The destination already has a file named</value>
+    <value>The destination folder already has {0} item(s) with the same name,</value>
   </data>
   <data name="ReplaceOrSkipTitleModal" xml:space="preserve">
-    <value>Replace or skip files</value>
+    <value>Replace or skip {0} item(s)</value>
   </data>
-  <data name="SkipModal" xml:space="preserve">
-    <value>Skip</value>
+  <data name="SkipButtonModal" xml:space="preserve">
+    <value>Skip {0} item(s)</value>
   </data>
   <data name="ToastErrorTitle" xml:space="preserve">
     <value>Something went wrong!</value>
@@ -456,7 +453,25 @@
   <data name="MoveHere" xml:space="preserve">
     <value>Move here</value>
   </data>
+  <data name="SameDestinationFileException" xml:space="preserve">
+    <value>The destination file is the same as the source file.</value>
+  </data>
+  <data name="SameDestinationFolderException" xml:space="preserve">
+    <value>The destination folder is the same as the source folder.</value>
+  </data>
+  <data name="ArtifactNameIsNullException" xml:space="preserve">
+    <value>You have not entered any name</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>file</value>
+  </data>
   <data name="Of" xml:space="preserve">
     <value>of</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
+    <value>What do you want to do?</value>
   </data>
 </root>

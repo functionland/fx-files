@@ -8,7 +8,7 @@
 
 	<Identity
 	  Name="maui-package-name-placeholder"
-	  Publisher="CN=Function Land"
+	  Publisher="CN=Functionland"
 	  Version="0.0.0.0" />
 
 	<Properties>
@@ -33,9 +33,9 @@
 			  Description="$placeholder$"
 			  Square150x150Logo="$placeholder$.png"
 			  Square44x44Logo="$placeholder$.png"
-			  BackgroundColor="transparent">
+			  BackgroundColor="#1B262C">
 				<uap:DefaultTile Square71x71Logo="$placeholder$.png" Wide310x150Logo="$placeholder$.png" Square310x310Logo="$placeholder$.png" />
-				<uap:SplashScreen Image="$placeholder$.png" />
+				<uap:SplashScreen Image="$placeholder$.png"  BackgroundColor="#1B262C"/>
 			</uap:VisualElements>
 		</Application>
 	</Applications>

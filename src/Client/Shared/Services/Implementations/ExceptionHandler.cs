@@ -1,5 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Shared;
+using Microsoft.AppCenter.Crashes;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
@@ -9,6 +11,8 @@ public partial class ExceptionHandler : IExceptionHandler
 
     public void Handle(Exception exception, IDictionary<string, object?>? parameters = null)
     {
+        Crashes.TrackError(exception);
+
 #if DEBUG
         string exceptionMessage = (exception as KnownException)?.Message ?? exception.ToString();
         MessageBox.Show(exceptionMessage, _localizer[nameof(AppStrings.Error)]);

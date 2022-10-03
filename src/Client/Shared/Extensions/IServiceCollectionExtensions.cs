@@ -21,10 +21,36 @@ public static class IServiceCollectionExtensions
         services.AddScoped<AuthenticationStateProvider, AppAuthenticationStateProvider>();
         services.AddScoped(sp => (AppAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
 
-        services.AddSingleton<IPinService, PinService>();
+        services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
+        services.AddSingleton<IFulaPinService, FulaPinService>();
+
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         services.AddSingleton<FakeFileServiceFactory>();
+        services.AddSingleton<FakeBloxServiceFactory>();
+        services.AddSingleton<IBloxService, FakeBloxService>();
         return services;
     }
+
+    public static async Task RunAppEvents(this IServiceProvider serviceProvider, AppEventOption? option = null)
+    {
+        var exceptionHandler = serviceProvider.GetRequiredService<IExceptionHandler>();
+        try
+        {
+            var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
+            var PinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
+
+            await FxLocalDbService.InitAsync();
+            await PinService.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            exceptionHandler.Handle(ex);
+        }
+    }
+}
+
+public class AppEventOption
+{
+    //TODO: Put something that you need in your app events.
 }
