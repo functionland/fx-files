@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.Shared.Utils
 {
-    public class FsArtifactUtils
+    public static class FsArtifactUtils
     {
 
         public const long OneKB = 1024;
