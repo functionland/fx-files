@@ -159,6 +159,9 @@
     justify-content: space-between;
     background-color: $green-dark-base;
     padding: 0px $spacing-31 0px $spacing-21;
+    position: sticky;
+    top: 138px;
+    z-index: 2;
 
     .info-selection {
         display: flex;
