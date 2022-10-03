@@ -93,3 +93,23 @@ IsAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToke
 GetFulaLocalFolderAddress()
 }
 ```
+
+# ShareService Architecture
+```mermaid
+classDiagram
+IShareService <|-- ILocalDeviceShareService
+IShareService <|-- IFulaShareService
+ILocalDeviceShareService <|-- LocalDeviceShareService
+IFulaShareService <|-- FulaShareService
+
+class IShareService{
+<<interface>>
+InitAsync(CancellationToken? cancellationToken = null)
+EnsureInitializedAsync()
+ShareFsArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+ShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+UnShareFsArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
+UnShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null) FsArtifact
+}
+```
