@@ -2,7 +2,7 @@
 @inherits AppComponentBase
 
 <div class="file-browser-container">
-   <div class="sticky-content">
+   
         <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
                OnSearch="HandleDeepSearchAsync"
                OnSearchFocused="HandleSearchFocused"
@@ -85,7 +85,7 @@
                    IsPartial="false" />
         }
     }
-   </div>
+
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
