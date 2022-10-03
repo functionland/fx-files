@@ -16,73 +16,66 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     public async Task InitializeAsync()
     {
-        try
-        {
-            ArtifactChangeSubscription = EventAggregator
+        ArtifactChangeSubscription = EventAggregator
                         .GetEvent<ArtifactChangeEvent>()
                         .Subscribe(
                             HandleChangedArtifacts,
                             ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
-            var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
-            if (pinnedArtifacts.Count == 0) return;
+        var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
+        if (pinnedArtifacts.Count == 0) return;
 
-            var pinnedArtifactPaths = pinnedArtifacts.Select(p => p.FullPath).ToList();
-            var existPins = await FileService.CheckPathExistsAsync(pinnedArtifactPaths);
-            foreach (var changedPinnedArtifact in existPins)
+        var pinnedArtifactPaths = pinnedArtifacts.Select(p => p.FullPath).ToList();
+        var existPins = await FileService.CheckPathExistsAsync(pinnedArtifactPaths);
+        foreach (var changedPinnedArtifact in existPins)
+        {
+            if (changedPinnedArtifact.ArtifactFullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+
+            if (changedPinnedArtifact.FsArtifactChangesType == FsArtifactChangesType.Delete)
             {
-                if (changedPinnedArtifact.ArtifactFullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+                await SetArtifactsUnPinAsync(new string[] { changedPinnedArtifact.ArtifactFullPath });
+            }
+            else if (changedPinnedArtifact.IsPathExist == true)
+            {
+                var pinnedArticat = pinnedArtifacts
+                    .Where(p => string.Equals(p.FullPath, changedPinnedArtifact.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase))
+                    .FirstOrDefault();
 
-                if (changedPinnedArtifact.FsArtifactChangesType == FsArtifactChangesType.Delete)
+                if (pinnedArticat != null && pinnedArticat.ProviderType != FsFileProviderType.Blox && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
                 {
-                    await SetArtifactsUnPinAsync(new string[] { changedPinnedArtifact.ArtifactFullPath });
-                }
-                else if (changedPinnedArtifact.IsPathExist == true)
-                {
-                    var pinnedArticat = pinnedArtifacts
-                        .Where(p => string.Equals(p.FullPath, changedPinnedArtifact.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase))
-                        .FirstOrDefault();
-
-                    if (pinnedArticat != null && pinnedArticat.ProviderType != FsFileProviderType.Blox && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
+                    if (changedPinnedArtifact.LastModifiedDateTime > LastModyDatetime)
                     {
-                        if (changedPinnedArtifact.LastModifiedDateTime > LastModyDatetime)
+                        var artifact = GetPinnedFsArtifact(pinnedArticat);
+                        if (ArtifactIsImage(artifact))
                         {
-                            var artifact = GetPinnedFsArtifact(pinnedArticat);
-                            if (ArtifactIsImage(artifact))
-                            {
-                                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
-                                artifact.ThumbnailPath = thumbnailAddress;
-                            }
-
-                            var edditedPinArtfact = new PinnedArtifact
-                            {
-                                ArtifactName = pinnedArticat.ArtifactName,
-                                FsArtifactType = pinnedArticat.FsArtifactType,
-                                FullPath = changedPinnedArtifact.ArtifactFullPath,
-                                ContentHash = changedPinnedArtifact.LastModifiedDateTime.ToString(),
-                                PinEpochTime = pinnedArticat.PinEpochTime,
-                                ProviderType = pinnedArticat.ProviderType,
-                                ThumbnailPath = artifact.ThumbnailPath
-                            };
-                            await UpdatePinnedArtifactAsyn(edditedPinArtfact);
-                        }
-                        else
-                        {
-                            PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
+                            var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
+                            artifact.ThumbnailPath = thumbnailAddress;
                         }
 
+                        var edditedPinArtfact = new PinnedArtifact
+                        {
+                            ArtifactName = pinnedArticat.ArtifactName,
+                            FsArtifactType = pinnedArticat.FsArtifactType,
+                            FullPath = changedPinnedArtifact.ArtifactFullPath,
+                            ContentHash = changedPinnedArtifact.LastModifiedDateTime.ToString(),
+                            PinEpochTime = pinnedArticat.PinEpochTime,
+                            ProviderType = pinnedArticat.ProviderType,
+                            ThumbnailPath = artifact.ThumbnailPath
+                        };
+                        await UpdatePinnedArtifactAsyn(edditedPinArtfact);
                     }
                     else
                     {
                         PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
                     }
-                    WatchParnetFolder(GetPinnedFsArtifact(pinnedArticat));
+
                 }
+                else
+                {
+                    PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
+                }
+                WatchParnetFolder(GetPinnedFsArtifact(pinnedArticat));
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Fx file exception - Initialize: {ex}");
         }
     }
 
@@ -144,14 +137,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         string? parentPath = GetParentPath(artifact);
         var fileName = Path.GetFileName(parentPath);
 
-        try
-        {
-            FileWatchService.WatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Fx file exception - WatchParentFolder: {ex}. \r\n ArtifactFullPath: {artifact.FullPath}. \r\n ParentFullPath: {parentPath}");
-        }
+        FileWatchService.WatchArtifact(new FsArtifact(parentPath, fileName, FsArtifactType.Folder, providerType: (FsFileProviderType)artifact.ProviderType));
     }
 
     private string? GetParentPath(FsArtifact artifact)
@@ -186,47 +172,32 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     {
         foreach (var artifact in artifacts)
         {
-
-            try
+            if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
             {
-                if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    return;
-                }
-                if (ArtifactIsImage(artifact))
-                {
-                    var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
-                    artifact.ThumbnailPath = thumbnailAddress;
-
-                }
-
-                try
-                {
-                    await FxLocalDbService.AddPinAsync(artifact);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Fx file exception - FxLocalDbService: {ex}. \r\n ArtifactFullPath: {artifact.FullPath}");
-                }
-
-                var newPinnedArtifact = new PinnedArtifact
-                {
-                    FullPath = artifact.FullPath,
-                    ContentHash = artifact.LastModifiedDateTime.ToString(),
-                    PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
-                    ProviderType = artifact.ProviderType,
-                    ThumbnailPath = artifact.ThumbnailPath,
-                    ArtifactName = artifact.Name,
-                    FsArtifactType = artifact.ArtifactType
-
-                };
-                PinnedPathsCatche.TryAdd(artifact.FullPath, newPinnedArtifact);
-                WatchParnetFolder(artifact);
+                return;
             }
-            catch (Exception ex)
+            if (ArtifactIsImage(artifact))
             {
-                Console.WriteLine($"Fx file exception - SetArtifactsPin: {ex}. \r\n ArtifactFullPath: {artifact.FullPath}");
+                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
+                artifact.ThumbnailPath = thumbnailAddress;
+
             }
+
+            await FxLocalDbService.AddPinAsync(artifact);
+
+            var newPinnedArtifact = new PinnedArtifact
+            {
+                FullPath = artifact.FullPath,
+                ContentHash = artifact.LastModifiedDateTime.ToString(),
+                PinEpochTime = DateTimeOffset.Now.ToUnixTimeSeconds(),
+                ProviderType = artifact.ProviderType,
+                ThumbnailPath = artifact.ThumbnailPath,
+                ArtifactName = artifact.Name,
+                FsArtifactType = artifact.ArtifactType
+
+            };
+            PinnedPathsCatche.TryAdd(artifact.FullPath, newPinnedArtifact);
+            WatchParnetFolder(artifact);
         }
     }
 
