@@ -187,7 +187,7 @@
     <value>The {0} name is empty</value>
   </data>
   <data name="ArtifactAlreadyExistsException" xml:space="preserve">
-    <value>The {0} already exists</value>
+    <value>This {0} already  contains  an item  with the same name</value>
   </data>
   <data name="StreamFileIsNull" xml:space="preserve">
     <value>The stream file is null</value>
@@ -470,6 +470,12 @@
   </data>
   <data name="Of" xml:space="preserve">
     <value>of</value>
+  </data>
+  <data name="Artifact" xml:space="preserve">
+    <value>Artifact</value>
+  </data>
+  <data name="ArtifactNameHasInvalidCharsException" xml:space="preserve">
+    <value>Invalid characters in the item name</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Upload</value>
