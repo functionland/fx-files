@@ -32,6 +32,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: sticky;
+    top: 178px;
+    z-index: 2;
 
     .button-search-input {
         background-color: color(gray-bg-secondary);

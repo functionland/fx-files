@@ -702,6 +702,7 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             StateHasChanged();
         }
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
     }
 
     private void FilterArtifacts()
