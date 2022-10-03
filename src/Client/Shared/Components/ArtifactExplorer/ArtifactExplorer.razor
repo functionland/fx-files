@@ -6,9 +6,10 @@
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
     @if ((Artifacts == null) || (!Artifacts.Any()))
     {
-        <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
-                   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)" />
+        <EmptyListView 
+            OnAddFolderButtonClick="OnAddFolderButtonClick"
+            Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
     }
     @foreach (var artifact in Artifacts)
     {
@@ -34,7 +35,7 @@
                     }
                     <div class="title-text">@artifact.Name</div>
                 </div>
-                <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
+                <div class="item-sub-text"></div>
             </div>
             @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
             {

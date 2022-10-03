@@ -82,7 +82,7 @@ public partial class FileBrowser
             {
                 if (_confirmationReplaceOrSkipModalRef != null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
@@ -93,6 +93,15 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
+
+            _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            await LoadPinsAsync();
+        }
+        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
         }
         catch
         {
@@ -135,7 +144,7 @@ public partial class FileBrowser
             {
                 if (_confirmationReplaceOrSkipModalRef is not null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
@@ -149,6 +158,15 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
+
+            _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            await LoadPinsAsync();
+        }
+        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
         }
         catch
         {
@@ -156,7 +174,6 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
-
     }
 
     public async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
@@ -207,7 +224,7 @@ public partial class FileBrowser
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
         }
-        catch (Exception ex)
+        catch
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
@@ -294,6 +311,9 @@ public partial class FileBrowser
                 {
                     await HandleOptionsArtifact(artifact[0]);
                 }
+                break;
+            case ArtifactDetailModalResultType.Upload:
+                //TODO: Implement upload logic here
                 break;
             case ArtifactDetailModalResultType.Close:
                 break;
@@ -571,8 +591,6 @@ public partial class FileBrowser
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
             artifactRenamed.Name = fullNewName;
         }
-
-        _allArtifacts = _filteredArtifacts;
     }
 
     private async Task UpdatePinedArtifactsAsync(IEnumerable<FsArtifact> artifacts, bool IsPinned)
@@ -604,6 +622,7 @@ public partial class FileBrowser
         _searchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
     }
+
     private void HandleSearchFocused()
     {
         _isInSearchMode = true;
@@ -667,15 +686,23 @@ public partial class FileBrowser
             _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
         }
     }
+
     private async Task HandleToolbarBackClick()
     {
-        _isInSearchMode = false;
-        cancellationTokenSource?.Cancel();
-        _searchText = string.Empty;
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
-        await LoadChildrenArtifactsAsync(_currentArtifact);
+        if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
+        {
+            ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
+        }
+        else
+        {
+            _isInSearchMode = false;
+            cancellationTokenSource?.Cancel();
+            _searchText = string.Empty;
+            _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            StateHasChanged();
+        }
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-        StateHasChanged();
     }
 
     private void FilterArtifacts()
@@ -720,12 +747,12 @@ public partial class FileBrowser
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.LastModifiedDateTime).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.LastModifiedDateTime).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
             }
 
@@ -735,12 +762,12 @@ public partial class FileBrowser
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Size).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size).ToList();
                 return;
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Size).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size).ToList();
                 return;
             }
         }
@@ -749,12 +776,12 @@ public partial class FileBrowser
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Name).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name).ToList();
                 return;
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Name).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name).ToList();
                 return;
             }
         }
