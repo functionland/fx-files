@@ -98,6 +98,11 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await LoadPinsAsync();
         }
+        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
+        }
         catch
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
@@ -158,6 +163,11 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await LoadPinsAsync();
         }
+        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
+        }
         catch
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
@@ -214,7 +224,7 @@ public partial class FileBrowser
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
         }
-        catch (Exception ex)
+        catch
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
