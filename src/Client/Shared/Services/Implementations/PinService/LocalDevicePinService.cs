@@ -273,9 +273,12 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     }
     private bool ArtifactIsImage(FsArtifact fsArtifact)
     {
+        if (!File.Exists(fsArtifact.FullPath)) return false;
+
         fsArtifact.FileExtension ??= Path.GetExtension(fsArtifact.FullPath);
         if (fsArtifact.FileExtension != null && ImageExtensions.Contains(fsArtifact.FileExtension.ToUpperInvariant()))
             return true;
+
         return false;
     }
     public bool IsPinned(FsArtifact fsArtifact)
