@@ -1,13 +1,8 @@
 ﻿@page "/Settings/Theme"
 @inherits AppComponentBase;
 
-<FxToolBar
-    IsInRoot="false"
-    IsBackButtonVisible="true" 
-    IsAddButtonVisible="false"
-    IsOverflowButtonVisible="false" />
 
-@if(_isLoaded)
+@if (_isLoaded)
 {
     <div class="theme-content">
         @($"Use System Theme ({SystemTheme})")
@@ -15,4 +10,49 @@
         Dark Theme
         <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
     </div>
+}
+
+<!-- Progressbar sample -->
+<div style="padding: 21px">
+    <BitProgressIndicator 
+        BarHeight="4"
+        Label="Example title"
+        Description="@description"
+        PercentComplete="@CompletedPercent" />
+    <div class="progress-dsc">
+        <p>1 of 2</p>
+        <p>@description</p>
+    </div>
+
+    <FxButton
+        Width="150px"
+        Margin="16px 0"
+        Text="Start Progress"
+        OnClick="@StartProgress"
+        ButtonStyle="FxButtonStyle.Normal" />
+</div>
+
+@code {
+    private string description = "Push button to start!";
+    public int CompletedPercent { get; set; }
+    private async Task StartProgress()
+    {
+        CompletedPercent = 0;
+        while (CompletedPercent <= 100)
+        {
+            if (CompletedPercent == 100)
+            {
+                description = $"Completed !";
+                break;
+            }
+            else
+            {
+                CompletedPercent++;
+                description = $"{CompletedPercent}%";
+            }
+
+            StateHasChanged();
+            await Task.Delay(100);
+        }
+    }
 }
