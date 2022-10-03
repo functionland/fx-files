@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
 
-public interface IFulaUserClient
+public interface IFulaIdentityClient
 {
     Task<FulaUser> GetMyUserAsync(string did, CancellationToken? cancellationToken = null);
     Task<FulaUser> GetUserAsync(string myDid, string otherDid, CancellationToken? cancellationToken = null);
