@@ -15,7 +15,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -223,8 +223,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, cancellationToken);
-                await DeleteArtifactsAsync(artifacts, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -316,7 +315,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool mustDeleteSource = false, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             var ignoredList = new List<FsArtifact>();
 
@@ -346,6 +345,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         }
 
                         fileInfo.CopyTo(destinationInfo.FullName, true);
+
+                        if (mustDeleteSource)
+                        {
+                            DeleteArtifactAsync(artifact, cancellationToken);
+                        }
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -391,7 +395,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, overwrite, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, mustDeleteSource, overwrite, cancellationToken);
+
+                    if (!childIgnoredList.Any() && mustDeleteSource)
+                    {
+                        DeleteArtifactAsync(artifact, cancellationToken);
+                    }
+
                     ignoredList.AddRange(childIgnoredList);
                 }
             }
