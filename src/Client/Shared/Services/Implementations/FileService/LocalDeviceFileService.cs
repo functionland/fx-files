@@ -329,7 +329,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
                     if (fileInfo.FullName == destinationInfo.FullName)
-                        throw new DomainLogicException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
+                        throw new SameDestinationFileException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
 
                     if (!overwrite && destinationInfo.Exists)
                     {
@@ -358,7 +358,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
                     if (directoryInfo.FullName == destinationInfo.FullName)
-                        throw new DomainLogicException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
+                        throw new SameDestinationFolderException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
 
                     if (!destinationInfo.Exists)
                     {

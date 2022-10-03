@@ -75,3 +75,41 @@ ILocalDevicePinService <|-- LocalDevicePinService
 IPinService <|-- IFulaPinService
 IFulaPinService <|-- FulaPinService
 ```
+# OfflineAvailablityService Architecture
+```mermaid
+classDiagram
+IOfflineAvailablityService <|-- WindowsOfflineAvailablityService
+IOfflineAvailablityService <|-- AndroidOfflineAvailablityService
+IOfflineAvailablityService <|-- IosOfflineAvailablityService
+IOfflineAvailablityService <|-- FakeOfflineAvailablityService
+
+class IOfflineAvailablityService{
+<<interface>>
+InitAsync(CancellationToken? cancellationToken = null)
+EnsureInitializedAsync()
+MakeAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+RemoveAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+IsAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+GetFulaLocalFolderAddress()
+}
+```
+
+# ShareService Architecture
+```mermaid
+classDiagram
+IShareService <|-- ILocalDeviceShareService
+IShareService <|-- IFulaShareService
+ILocalDeviceShareService <|-- LocalDeviceShareService
+IFulaShareService <|-- FulaShareService
+
+class IShareService{
+<<interface>>
+InitAsync(CancellationToken? cancellationToken = null)
+EnsureInitializedAsync()
+ShareFsArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+ShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+UnShareFsArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
+UnShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null) FsArtifact
+}
+```

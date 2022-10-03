@@ -35,15 +35,18 @@
                     }
                     <div class="title-text">@artifact.Name</div>
                 </div>
-                <div class="item-sub-text">@GetArtifactSubText(artifact)</div>
+                <div class="item-sub-text"></div>
             </div>
             @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
             {
                 <div class="options-btn"
-             @onclick="() => HandleArtifactOptionsClick(artifact)"
-             @onpointerup:preventDefault="true"
-             @onpointerup:stopPropagation="true"></div>
+                    @onclick="() => HandleArtifactOptionsClick(artifact)"
+                    @onpointerup:preventDefault="true"
+                    @onpointerup:stopPropagation="true"></div>             
             }
         </div>
     }
+</div>
+<div class="position-scroll-btn">
+    <FxButton ButtonStyle="FxButtonStyle.IconOnly" BorderRadius="100px" Height="60px" Width="60px" OnClick="OnGoToTopPage"></FxButton>
 </div>

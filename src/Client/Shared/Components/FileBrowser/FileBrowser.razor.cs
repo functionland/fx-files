@@ -82,7 +82,7 @@ public partial class FileBrowser
             {
                 if (_confirmationReplaceOrSkipModalRef != null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
@@ -97,6 +97,11 @@ public partial class FileBrowser
             _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await LoadPinsAsync();
+        }
+        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
         }
         catch
         {
@@ -139,7 +144,7 @@ public partial class FileBrowser
             {
                 if (_confirmationReplaceOrSkipModalRef is not null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
@@ -157,6 +162,11 @@ public partial class FileBrowser
             _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await LoadPinsAsync();
+        }
+        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        {
+            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
         }
         catch
         {
@@ -214,7 +224,7 @@ public partial class FileBrowser
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
         }
-        catch (Exception ex)
+        catch
         {
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
@@ -581,8 +591,6 @@ public partial class FileBrowser
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
             artifactRenamed.Name = fullNewName;
         }
-
-        _allArtifacts = _filteredArtifacts;
     }
 
     private async Task UpdatePinedArtifactsAsync(IEnumerable<FsArtifact> artifacts, bool IsPinned)
@@ -694,6 +702,7 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             StateHasChanged();
         }
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
     }
 
     private void FilterArtifacts()
