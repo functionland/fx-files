@@ -738,12 +738,12 @@ public partial class FileBrowser
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.LastModifiedDateTime).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.LastModifiedDateTime).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
             }
 
@@ -753,12 +753,12 @@ public partial class FileBrowser
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Size).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size).ToList();
                 return;
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Size).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size).ToList();
                 return;
             }
         }
@@ -767,12 +767,12 @@ public partial class FileBrowser
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.Name).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name).ToList();
                 return;
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.Name).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name).ToList();
                 return;
             }
         }
