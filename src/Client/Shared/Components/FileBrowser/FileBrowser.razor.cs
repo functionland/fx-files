@@ -581,8 +581,6 @@ public partial class FileBrowser
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
             artifactRenamed.Name = fullNewName;
         }
-
-        _allArtifacts = _filteredArtifacts;
     }
 
     private async Task UpdatePinedArtifactsAsync(IEnumerable<FsArtifact> artifacts, bool IsPinned)
