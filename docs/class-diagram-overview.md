@@ -75,3 +75,21 @@ ILocalDevicePinService <|-- LocalDevicePinService
 IPinService <|-- IFulaPinService
 IFulaPinService <|-- FulaPinService
 ```
+# OfflineAvailablityService Architecture
+```mermaid
+classDiagram
+IOfflineAvailablityService <|-- WindowsOfflineAvailablityService
+IOfflineAvailablityService <|-- AndroidOfflineAvailablityService
+IOfflineAvailablityService <|-- IosOfflineAvailablityService
+IOfflineAvailablityService <|-- FakeOfflineAvailablityService
+
+class IOfflineAvailablityService{
+<<interface>>
+InitAsync(CancellationToken? cancellationToken = null)
+EnsureInitializedAsync()
+MakeAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+RemoveAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+IsAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+GetFulaLocalFolderAddress()
+}
+```

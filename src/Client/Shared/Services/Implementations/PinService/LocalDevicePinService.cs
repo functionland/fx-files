@@ -12,7 +12,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; }
-    public ConcurrentDictionary<string, PinnedArtifact> PinnedPathsCatche { get; set; } = new();
+    public ConcurrentDictionary<string, PinnedArtifact> PinnedPathsCache { get; set; } = new();
 
     public async Task InitializeAsync()
     {
@@ -66,13 +66,13 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                     }
                     else
                     {
-                        PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
+                        PinnedPathsCache.TryAdd(pinnedArticat.FullPath, pinnedArticat);
                     }
 
                 }
                 else
                 {
-                    PinnedPathsCatche.TryAdd(pinnedArticat.FullPath, pinnedArticat);
+                    PinnedPathsCache.TryAdd(pinnedArticat.FullPath, pinnedArticat);
                 }
                 WatchParnetFolder(GetPinnedFsArtifact(pinnedArticat));
             }
@@ -84,7 +84,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         if (edditedPinArtfact.FullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
         await FxLocalDbService.UpdatePinAsync(edditedPinArtfact);
         DeteteFromPinCache(edditedPinArtfact.FullPath);
-        PinnedPathsCatche.TryAdd(edditedPinArtfact.FullPath, edditedPinArtfact);
+        PinnedPathsCache.TryAdd(edditedPinArtfact.FullPath, edditedPinArtfact);
 
     }
 
@@ -93,6 +93,8 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         try
         {
             if (artifactChangeEvent.FsArtifact == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
+
+            if (!PinnedPathsCache.ContainsKey(artifactChangeEvent.FsArtifact.FullPath)) return;
 
             if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Delete)
             {
@@ -118,7 +120,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                 }
                 await FxLocalDbService.UpdatePinAsync(editedArtifact, artifactChangeEvent.Description);
                 DeteteFromPinCache(artifactChangeEvent.Description != null ? artifactChangeEvent.Description : editedArtifact.FullPath);
-                PinnedPathsCatche.TryAdd(editedArtifact.FullPath, editedArtifact);
+                PinnedPathsCache.TryAdd(editedArtifact.FullPath, editedArtifact);
 
                 if (artifactChangeEvent.Description != null)
                     UnWatchParent(new FsArtifact(artifactChangeEvent.Description, Path.GetFileName(artifactChangeEvent.Description), (FsArtifactType)editedArtifact.FsArtifactType, (FsFileProviderType)editedArtifact.ProviderType));
@@ -161,9 +163,9 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     private void DeteteFromPinCache(string fullPath)
     {
-        PinnedPathsCatche.TryGetValue(fullPath, out var item);
+        PinnedPathsCache.TryGetValue(fullPath, out var item);
         if (item != null)
-            PinnedPathsCatche.TryRemove(fullPath, out _);
+            PinnedPathsCache.TryRemove(fullPath, out _);
 
     }
 
@@ -172,7 +174,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     {
         foreach (var artifact in artifacts)
         {
-            if (PinnedPathsCatche.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+            if (PinnedPathsCache.Any(p => string.Equals(p.Key, artifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
             {
                 return;
             }
@@ -196,7 +198,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                 FsArtifactType = artifact.ArtifactType
 
             };
-            PinnedPathsCatche.TryAdd(artifact.FullPath, newPinnedArtifact);
+            PinnedPathsCache.TryAdd(artifact.FullPath, newPinnedArtifact);
             WatchParnetFolder(artifact);
         }
     }
@@ -214,7 +216,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     public async Task<List<FsArtifact>> GetPinnedArtifactsAsync()
     {
-        var pinnedArtifacts = PinnedPathsCatche.Select(c => c.Value).ToList();
+        var pinnedArtifacts = PinnedPathsCache.Select(c => c.Value).ToList();
 
         var artifacts = new List<FsArtifact>();
         foreach (var artifact in pinnedArtifacts)
@@ -282,7 +284,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     }
     public bool IsPinned(FsArtifact fsArtifact)
     {
-        if (PinnedPathsCatche.Any(c => string.Equals(c.Key, fsArtifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
+        if (PinnedPathsCache.Any(c => string.Equals(c.Key, fsArtifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
             return true;
         return false;
     }
