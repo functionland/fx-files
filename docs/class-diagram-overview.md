@@ -90,6 +90,6 @@ EnsureInitializedAsync()
 MakeAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
 RemoveAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
 IsAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
-GetFulaLocalFolder()
+GetFulaLocalFolderAddress()
 }
 ```
