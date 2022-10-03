@@ -1112,14 +1112,5 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("UpdateConcurrencyException", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zones.
-        /// </summary>
-        public static string Zones {
-            get {
-                return ResourceManager.GetString("Zones", resourceCulture);
-            }
-        }
     }
 }

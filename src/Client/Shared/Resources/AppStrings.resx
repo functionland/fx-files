@@ -225,9 +225,6 @@
   <data name="MyDevice" xml:space="preserve">
     <value>My Device</value>
   </data>
-  <data name="Zones" xml:space="preserve">
-    <value>Zones</value>
-  </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>

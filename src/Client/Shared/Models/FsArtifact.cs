@@ -26,7 +26,6 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public DateTimeOffset LastModifiedDateTime { get; set; }
         public string? ThumbnailPath { get; set; }
         // For UI
-        public List<FsZone>? Zones { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
         public string? OwnerDid { get; set; }
