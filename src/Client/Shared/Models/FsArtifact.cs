@@ -23,9 +23,12 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string? ContentHash { get; set; }
         public string? ParentFullPath { get; set; }
         public string? OriginDevice { get; set; }
+        public DateTimeOffset CreateDateTime { get; set; }
         public DateTimeOffset LastModifiedDateTime { get; set; }
+        public string LastModifiedByWho { get; set; }
         public string? ThumbnailPath { get; set; }
         // For UI
+        public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
         public string? OwnerDid { get; set; }
