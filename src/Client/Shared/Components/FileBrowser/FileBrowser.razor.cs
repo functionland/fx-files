@@ -397,8 +397,6 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        //TODO : Is search text must be here?
-        _searchText = string.Empty;
         _fxSearchInputRef?.HandleClear();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
@@ -698,6 +696,7 @@ public partial class FileBrowser
 
     private async Task HandleToolbarBackClick()
     {
+        _fxSearchInputRef?.HandleClear();
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
