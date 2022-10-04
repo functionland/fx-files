@@ -1,6 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 
-using Microsoft.JSInterop;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -100,48 +99,46 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public void OnCreateFolder()
         {
             OnAddFolderButtonClick.InvokeAsync();
-            SelectedArtifacts.Add(selectedArtifact);
         }
-    }
 
-    public async Task OnGoToTopPage()
-    {
-        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-    }
-
-    public async Task OnScrollCheck()
-    {
-        await JSRuntime.InvokeVoidAsync("OnScrollCheck");
-    }
-
-    public string GetArtifactIcon(FsArtifact artifact)
-    {
-        if (artifact.ArtifactType == FsArtifactType.File)
+        public async Task OnGoToTopPage()
         {
-            switch (artifact.FileCategory)
-            {
-                case FileCategoryType.Document:
-                    return "text-file-icon";
-                case FileCategoryType.Other:
-                    return "text-file-icon";
-                case FileCategoryType.Pdf:
-                    return "text-file-icon";
-                case FileCategoryType.Image:
-                    return "photo-file-icon";
-                case FileCategoryType.Audio:
-                    return "audio-file-icon";
-                case FileCategoryType.Video:
-                    return "video-file-icon";
-            }
+            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         }
 
-        return "folder-icon";
-    }
+        public async Task OnScrollCheck()
+        {
+            await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+        }
 
-    public string GetArtifactSubText(FsArtifact artifact)
-    {
-        //todo: Proper subtext for artifact
-        return "Modified 09/30/22";
+        public string GetArtifactIcon(FsArtifact artifact)
+        {
+            if (artifact.ArtifactType == FsArtifactType.File)
+            {
+                switch (artifact.FileCategory)
+                {
+                    case FileCategoryType.Document:
+                        return "text-file-icon";
+                    case FileCategoryType.Other:
+                        return "text-file-icon";
+                    case FileCategoryType.Pdf:
+                        return "text-file-icon";
+                    case FileCategoryType.Image:
+                        return "photo-file-icon";
+                    case FileCategoryType.Audio:
+                        return "audio-file-icon";
+                    case FileCategoryType.Video:
+                        return "video-file-icon";
+                }
+            }
+
+            return "folder-icon";
+        }
+
+        public string GetArtifactSubText(FsArtifact artifact)
+        {
+            //todo: Proper subtext for artifact
+            return "Modified 09/30/22";
+        }
     }
-}
 }
