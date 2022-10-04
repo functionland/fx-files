@@ -44,6 +44,10 @@
             ButtonSize="FxButtonSize.Stretch" />
 
         <p>@Localizer[nameof(AppStrings.FilesAndBloxHardware)] @CurrentVersion</p>
+
+        <button @onclick="OpenBottomSheet">open</button>
     </div>
 
 </div>
+
+            <ArtifactDetailModal @ref="_artifactRef"></ArtifactDetailModal>
