@@ -57,4 +57,12 @@ public interface IShareService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     IAsyncEnumerable<FsArtifact> GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null);
+
+    /// <summary>
+    /// Who has access to an artifact?
+    /// </summary>
+    /// <param name="artifactFullPath"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<List<FulaUser>> WhoHasAccessToArtifact(string artifactFullPath, CancellationToken? cancellationToken = null);
 }
