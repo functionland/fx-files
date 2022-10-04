@@ -35,5 +35,4 @@ public interface IFulaDatabaseClient
     /// <returns></returns>
     Task<bool> IsPinnedAsync(string did, string psth);
 
-    //TODO: Check status of share items.
 }
