@@ -46,10 +46,8 @@
     padding: $spacing-16 21px;
 
     .item-icon-position {
-        background-size: $icon-24;
-        background-repeat: no-repeat;
-        height: 24px;
-        width: 24px;
+        font-size: $icon-24;
+        margin-right: 1px;
     }
 }
 
@@ -98,10 +96,6 @@
         @include Icon($options-vertical);
     }
 
-    .item-icon-position {
-        background-position: center left;
-    }
-
     .item-content {
         flex-grow: 1;
         overflow: hidden;
@@ -127,7 +121,6 @@
     }
 
     .item-icon-position {
-        background-position: center;
         margin: 0 auto;
     }
 
@@ -147,33 +140,52 @@
     }
 }
 
+.disable-item {
+    background-color: color(gray-bg-primary);
+    pointer-events: none;
+
+    .item-content {
+
+        .item-title {
+            .title-text {
+                color: color(gray-border);
+            }
+        }
+
+        .item-sub-text {
+            color: color(gray-border);
+        }
+    }
+
+    .item-icon-position::before {
+        color: color(gray-border);
+    }
+}
+.selected-item {
+    background-color: color(gray-bg-primary);
+}
+
 .folder-icon::before {
-    font-size: 24px;
     @include Icon($folder);
 }
 
 .text-file-icon::before {
-    font-size: 24px;
     @include Icon($document);
 }
 
 .photo-file-icon::before {
-    font-size: 24px;
     @include Icon($image);
 }
 
 .pdf-file-icon::before {
-    font-size: 24px;
     @include Icon($PDF);
 }
 
 .audio-file-icon::before {
-    font-size: 24px;
     @include Icon($audio);
 }
 
 .video-file-icon::before {
-    font-size: 24px;
     @include Icon($video);
 }
 
@@ -246,21 +258,21 @@
     position: fixed;
     bottom: 95px;
     right: 15px;
-    display:none;
+    display: none;
 }
 
 ::deep .fxbutton-content img {
     height: $icon-24 !important;
 }
 
-@media only screen and (min-width: 600px)  {
+@media only screen and (min-width: 600px) {
     // handle back to top button location in APP
     $a: 50vw;
     $b: 285px;
+
     .position-scroll-btn {
         position: fixed;
         bottom: 95px;
         right: calc(#{$a} - #{$b});
-        
     }
 }
