@@ -143,7 +143,7 @@ public partial class FileBrowser
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
             
             var movedArtifact = artifacts.Except(overwriteArtifacts);
-            if(movedArtifact.Any())
+            if (movedArtifact.Any())
             {
                 UpdateRemovedArtifacts(movedArtifact);
             }
@@ -412,7 +412,6 @@ public partial class FileBrowser
             _currentArtifact = artifact;
             await LoadChildrenArtifactsAsync(_currentArtifact);
         }
-        // load current artifacts
     }
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
