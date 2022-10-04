@@ -396,7 +396,7 @@ public partial class FileBrowser
             _allArtifacts = artifacts;
             FilterArtifacts();
         }
-        catch (UnauthorizedAccessException ex)
+        catch (AndroidSpecialFilesUnauthorizedAccessException ex)
         {
             _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
             _currentArtifact = await FileService.GetFsArtifactAsync(parentArtifact?.ParentFullPath);

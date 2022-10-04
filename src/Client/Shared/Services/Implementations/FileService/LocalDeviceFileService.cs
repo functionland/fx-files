@@ -542,8 +542,18 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
-                string[] files = Directory.GetFiles(path);
-                string[] folders = Directory.GetDirectories(path);
+                string[] files;
+                string[] folders;
+
+                try
+                {
+                    files = Directory.GetFiles(path);
+                    folders = Directory.GetDirectories(path);
+                }
+                catch (UnauthorizedAccessException androidUnaccessibleFiles)
+                {
+                    throw new AndroidSpecialFilesUnauthorizedAccessException(androidUnaccessibleFiles.Message);
+                }
 
                 foreach (var folder in folders)
                 {
