@@ -27,7 +27,8 @@
                                 <FileCard FileName="@pin.Name"
                                           FileSize="@pin.SizeStr"
                                           ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")"
-                                          FileImage="@pin.ThumbnailPath" />
+                                          FileImage="@pin.ThumbnailPath"
+                                          IsFile="@(pin.ArtifactType == FsArtifactType.File)"/>
                             </div>
                         }
                     </div>
