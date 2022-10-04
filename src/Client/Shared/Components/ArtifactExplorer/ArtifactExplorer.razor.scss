@@ -23,11 +23,6 @@
     justify-content: center;
 }
 
-.list-view {
-    min-height: calc(100vh - 354px);
-}
-
-
 
 .move-files-action {
     padding-right: $spacing-24;
@@ -245,9 +240,27 @@
     }
 }*/
 
+
+
 .position-scroll-btn {
-    position: absolute;
-    bottom: 15px;
+    position: fixed;
+    bottom: 95px;
     right: 15px;
     display:none;
+}
+
+::deep .fxbutton-content img {
+    height: $icon-24 !important;
+}
+
+@media only screen and (min-width: 600px)  {
+    // handle back to top button location in APP
+    $a: 50vw;
+    $b: 285px;
+    .position-scroll-btn {
+        position: fixed;
+        bottom: 95px;
+        right: calc(#{$a} - #{$b});
+        
+    }
 }
