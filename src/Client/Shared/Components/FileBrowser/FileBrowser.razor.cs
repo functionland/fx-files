@@ -396,11 +396,13 @@ public partial class FileBrowser
             _allArtifacts = artifacts;
             FilterArtifacts();
         }
+        //ToDo: Needs more business-wise data to implement
         catch (AndroidSpecialFilesUnauthorizedAccessException ex)
         {
             _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
             _currentArtifact = await FileService.GetFsArtifactAsync(parentArtifact?.ParentFullPath);
         }
+        //ToDo: Add a general catch in case of other exceptions
     }
 
     private bool IsInRoot(FsArtifact? artifact)
