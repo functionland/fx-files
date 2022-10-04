@@ -13,8 +13,6 @@ public static class IServiceCollectionExtensions
 
         services.AddAuthorizationCore();
 
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-
         services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
         services.AddScoped<AuthenticationStateProvider, AppAuthenticationStateProvider>();
