@@ -242,17 +242,17 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         var isDrive = await FsArtifactIsDriveAsync(path);
 
-        if (Directory.Exists(path))
+        if (isDrive)
+        {
+            return FsArtifactType.Drive;
+        }
+        else if (Directory.Exists(path))
         {
             return FsArtifactType.Folder;
         }
         else if (File.Exists(path))
         {
             return FsArtifactType.File;
-        }
-        else if (isDrive)
-        {
-            return FsArtifactType.Drive;
         }
         else
         {

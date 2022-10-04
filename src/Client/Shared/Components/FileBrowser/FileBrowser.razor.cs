@@ -141,7 +141,7 @@ public partial class FileBrowser
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
-            
+
             var movedArtifact = artifacts.Except(overwriteArtifacts);
             if (movedArtifact.Any())
             {
@@ -705,11 +705,34 @@ public partial class FileBrowser
             _isInSearchMode = false;
             cancellationTokenSource?.Cancel();
             _searchText = string.Empty;
-            _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await FileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+            await UpdateCurrentArtifactForBackButton(_currentArtifact);
             await LoadChildrenArtifactsAsync(_currentArtifact);
             StateHasChanged();
         }
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+    }
+
+    private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
+    {
+        if (fsArtifact.ParentFullPath is null)
+        {
+            _currentArtifact = null;
+            return;
+        }
+
+        var previousArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
+        if (previousArtifact != null && previousArtifact.ArtifactType == FsArtifactType.Drive)
+        {
+            var drives = FileService.GetArtifactsAsync(null);
+            var rootArtifacts = new List<FsArtifact>();
+            await foreach (var drive in drives)
+            {
+                rootArtifacts.Add(drive);
+            }
+            _currentArtifact = rootArtifacts.FirstOrDefault(a => a.FullPath == fsArtifact.ParentFullPath);
+            return;
+        }
+        _currentArtifact = previousArtifact;
     }
 
     private void FilterArtifacts()
