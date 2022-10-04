@@ -285,5 +285,10 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         return false;
     }
 
+    public Task EnsureInitializedAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public static readonly List<string> ImageExtensions = new() { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
 }
