@@ -36,4 +36,9 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
     {
         throw new NotImplementedException();
     }
+
+    public Task<List<FulaUser>> WhoHasAccessToArtifact(string artifactFullPath, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
 }

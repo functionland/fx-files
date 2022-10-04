@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Utils;
+using System.Collections.Generic;
 
 namespace Functionland.FxFiles.Client.Shared.Models
 {
@@ -25,7 +26,7 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string? OriginDevice { get; set; }
         public DateTimeOffset CreateDateTime { get; set; }
         public DateTimeOffset LastModifiedDateTime { get; set; }
-        public string LastModifiedByWho { get; set; }
+        public string WhoMadeLastEdit { get; set; }
         public string? ThumbnailPath { get; set; }
         // For UI
         public string LocalFullPath { get; set; }

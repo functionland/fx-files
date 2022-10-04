@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

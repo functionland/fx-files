@@ -1,4 +1,5 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class BloxService : IBloxService
 {
