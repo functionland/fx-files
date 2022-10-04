@@ -66,10 +66,12 @@ public partial class ArtifactSelectionModal
         {
             if (artifactPaths.Contains(item.FullPath)) continue;
 
-            if (item.ArtifactType != FsArtifactType.File)
+            if (item.ArtifactType == FsArtifactType.File)
             {
-                _artifacts.Add(item);
+                item.IsDisabled = true;
             }
+
+            _artifacts.Add(item);
         }
     }
 
