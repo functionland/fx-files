@@ -567,9 +567,9 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to internal.
         /// </summary>
-        public static string internalStorageName {
+        public static string InternalStorageName {
             get {
-                return ResourceManager.GetString("internalStorageName", resourceCulture);
+                return ResourceManager.GetString("InternalStorageName", resourceCulture);
             }
         }
         

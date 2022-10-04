@@ -288,11 +288,11 @@
   <data name="ModifiedDate" xml:space="preserve">
     <value>Modified 09/30/22</value>
   </data>
-  <data name="internalStorageName" xml:space="preserve">
-    <value>internal</value>
+  <data name="InternalStorageName" xml:space="preserve">
+    <value>Internal storage</value>
   </data>
   <data name="SDCardName" xml:space="preserve">
-    <value>SD Card ({0})</value>
+    <value>SD card ({0})</value>
   </data>
   <data name="UnknownFsFileProviderException" xml:space="preserve">
     <value>Unknown file provider for path: {0}</value>
