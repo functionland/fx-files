@@ -5,7 +5,7 @@
 window.onscroll = function () { OnScrollCheck() };
 
 function OnScrollCheck() {
-    if (document.documentElement.scrollTop > 100) {
+    if (document.documentElement.scrollTop > 85) {
         var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
         scrollButton.style.display = 'block';
     }
