@@ -96,10 +96,8 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
-
-            _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await LoadPinsAsync();
+            
+            await NavigateToDestionation(destinationPath);
         }
         catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
         {
@@ -142,12 +140,6 @@ public partial class FileBrowser
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
 
-            var movedArtifact = artifacts.Except(overwriteArtifacts);
-            if (movedArtifact.Any())
-            {
-                UpdateRemovedArtifacts(movedArtifact);
-            }
-
             if (existArtifacts.Count > 0)
             {
                 if (_confirmationReplaceOrSkipModalRef is not null)
@@ -156,7 +148,6 @@ public partial class FileBrowser
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
-                        UpdateRemovedArtifacts(overwriteArtifacts);
                     }
                 }
             }
@@ -167,9 +158,7 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
 
-            _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await LoadPinsAsync();
+            await NavigateToDestionation(destinationPath);
         }
         catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
         {
@@ -277,7 +266,7 @@ public partial class FileBrowser
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
                 {
                     await FileService.DeleteArtifactsAsync(artifacts);
-                    UpdateRemovedArtifacts(artifacts);
+                    await UpdateRemovedArtifactsAsync(artifacts);
                 }
             }
         }
@@ -397,7 +386,7 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        _fxSearchInputRef?.HandleClear();
+        _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
 #if BlazorHybrid
@@ -590,7 +579,17 @@ public partial class FileBrowser
 
     private void UpdateRenamedArtifact(FsArtifact artifact, string fullNewName)
     {
-        var artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+        FsArtifact? artifactRenamed = null;
+
+        if (artifact.FullPath == _currentArtifact?.FullPath)
+        {
+            artifactRenamed = _currentArtifact;
+        }
+        else
+        {
+            artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+        }
+
         if (artifactRenamed != null)
         {
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
@@ -604,19 +603,31 @@ public partial class FileBrowser
         await LoadPinsAsync();
         var artifactPath = artifacts.Select(a => a.FullPath);
 
-        foreach (var artifact in _filteredArtifacts)
+        if (_currentArtifact != null && artifactPath.Any(p => p == _currentArtifact.FullPath))
         {
-            if (artifactPath.Contains(artifact.FullPath))
+            _currentArtifact.IsPinned = IsPinned;
+        }
+        else
+        {
+            foreach (var artifact in _filteredArtifacts)
             {
-                artifact.IsPinned = IsPinned;
+                if (artifactPath.Contains(artifact.FullPath))
+                {
+                    artifact.IsPinned = IsPinned;
+                }
             }
+            _allArtifacts = _filteredArtifacts;
         }
 
-        _allArtifacts = _filteredArtifacts;
     }
 
-    private void UpdateRemovedArtifacts(IEnumerable<FsArtifact> artifacts)
+    private async Task UpdateRemovedArtifactsAsync(IEnumerable<FsArtifact> artifacts)
     {
+        if(artifacts.Count() == 1 && artifacts.SingleOrDefault()?.FullPath == _currentArtifact?.FullPath)
+        {
+            await HandleToolbarBackClick();
+            return;
+        }
         _filteredArtifacts = _filteredArtifacts.Except(artifacts).ToList();
         _allArtifacts = _filteredArtifacts;
     }
@@ -695,7 +706,7 @@ public partial class FileBrowser
 
     private async Task HandleToolbarBackClick()
     {
-        _fxSearchInputRef?.HandleClear();
+        _fxSearchInputRef?.HandleClearInputText();
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
@@ -872,5 +883,12 @@ public partial class FileBrowser
         }
 
         return overwriteArtifacts;
+    }
+
+    private async Task NavigateToDestionation(string? destinationPath)
+    {
+        _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+        await LoadChildrenArtifactsAsync(_currentArtifact);
+        await LoadPinsAsync();
     }
 }
