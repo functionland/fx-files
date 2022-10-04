@@ -1,30 +1,29 @@
 ﻿using Functionland.FxFiles.Client.Shared.Utils;
 
-namespace Functionland.FxFiles.Client.Shared.Services.Implementations
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+
+public abstract class LocalThumbnailService : IThumbnailService
 {
-    public abstract class LocalThumbnailService : IThumbnailService
+    public abstract Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
+
+    public abstract string GetAppCacheDirectory();
+
+    public virtual string GetThumbnailFullPath(FsArtifact fsArtifact)
     {
-        public abstract Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
+        var imagePath = fsArtifact.FullPath;
+        var lastModifiedDateTimeTicksStr = fsArtifact.LastModifiedDateTime.UtcTicks.ToString();
+        var finalName = imagePath + lastModifiedDateTimeTicksStr;
 
-        public abstract string GetAppCacheDirectory();
+        var imagePathHash = MakeHashData.ComputeSha256Hash(finalName);
+        var destinationDirectory = Path.Combine(GetAppCacheDirectory(), "FxThumbFolder");
 
-        public virtual string GetThumbnailFullPath(FsArtifact fsArtifact)
+        if (!Directory.Exists(destinationDirectory))
         {
-            var imagePath = fsArtifact.FullPath;
-            var lastModifiedDateTimeTicksStr = fsArtifact.LastModifiedDateTime.UtcTicks.ToString();
-            var finalName = imagePath + lastModifiedDateTimeTicksStr;
-
-            var imagePathHash = MakeHashData.ComputeSha256Hash(finalName);
-            var destinationDirectory = Path.Combine(GetAppCacheDirectory(), "FxThumbFolder");
-
-            if (!Directory.Exists(destinationDirectory))
-            {
-                Directory.CreateDirectory(destinationDirectory);
-            }
-
-            var thumbPath = Path.Combine(destinationDirectory, Path.ChangeExtension(imagePathHash, "Jpeg"));
-
-            return thumbPath;
+            Directory.CreateDirectory(destinationDirectory);
         }
-    }
+
+        var thumbPath = Path.Combine(destinationDirectory, Path.ChangeExtension(imagePathHash, "Jpeg"));
+
+        return thumbPath;
+    }       
 }

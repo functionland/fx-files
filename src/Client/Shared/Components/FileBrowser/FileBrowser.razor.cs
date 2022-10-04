@@ -27,6 +27,7 @@ public partial class FileBrowser
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
+    private FxSearchInput? _fxSearchInputRef;
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
 
@@ -78,6 +79,8 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
+            var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+
             if (existArtifacts.Count > 0)
             {
                 if (_confirmationReplaceOrSkipModalRef != null)
@@ -85,7 +88,7 @@ public partial class FileBrowser
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        await FileService.CopyArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
+                        await FileService.CopyArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
                     }
                 }
             }
@@ -137,8 +140,13 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
-            var movedArtifact = artifacts.Except(existArtifacts);
-            UpdateRemovedArtifacts(movedArtifact);
+            var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+            
+            var movedArtifact = artifacts.Except(overwriteArtifacts);
+            if(movedArtifact.Any())
+            {
+                UpdateRemovedArtifacts(movedArtifact);
+            }
 
             if (existArtifacts.Count > 0)
             {
@@ -147,8 +155,8 @@ public partial class FileBrowser
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        await FileService.MoveArtifactsAsync(existArtifacts.ToArray(), destinationPath, true);
-                        UpdateRemovedArtifacts(existArtifacts);
+                        await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
+                        UpdateRemovedArtifacts(overwriteArtifacts);
                     }
                 }
             }
@@ -389,8 +397,7 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        //TODO : Is search text must be here?
-        _searchText = string.Empty;
+        _fxSearchInputRef?.HandleClear();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
 #if BlazorHybrid
@@ -689,6 +696,7 @@ public partial class FileBrowser
 
     private async Task HandleToolbarBackClick()
     {
+        _fxSearchInputRef?.HandleClear();
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
@@ -702,6 +710,7 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             StateHasChanged();
         }
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
     }
 
     private void FilterArtifacts()
@@ -731,16 +740,16 @@ public partial class FileBrowser
     private void HandleSortOrderClick()
     {
         _isAscOrder = !_isAscOrder;
-        sortFilteredArtifacts();
+        SortFilteredArtifacts();
     }
 
     private async Task HandleSortClick()
     {
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
-        sortFilteredArtifacts();
+        SortFilteredArtifacts();
     }
 
-    private void sortFilteredArtifacts()
+    private void SortFilteredArtifacts()
     {
         if (_currentSortType is SortTypeEnum.LastModified)
         {
@@ -826,5 +835,20 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Error);
         }
+    }
+
+    private static List<FsArtifact> GetShouldOverwriteArtiacts(FsArtifact[] artifacts, List<FsArtifact> existArtifacts)
+    {
+        List<FsArtifact> overwriteArtifacts = new();
+        var pathExistArtifacts = existArtifacts.Select(a => a.FullPath);
+        foreach (var artifact in artifacts)
+        {
+            if (pathExistArtifacts.Any(p => p.StartsWith(artifact.FullPath)))
+            {
+                overwriteArtifacts.Add(artifact);
+            }
+        }
+
+        return overwriteArtifacts;
     }
 }

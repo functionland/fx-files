@@ -4,7 +4,12 @@
 @import '../../Styles/components/_bit-accordion.scss';
 
 .file-browser-container ::deep div.toolbar-box {
-    margin: $spacing-32 0;
+    padding-top: $spacing-16;
+    padding-bottom: $spacing-16;
+    background-color: color(app-bg);
+    position: sticky;
+    top: 0;
+    z-index: 2;
 }
 
 .root-title {
@@ -12,7 +17,11 @@
     font-size: $font-size-24;
     line-height: $line-height-36;
     color: color(gray-content1);
-    margin: $spacing-0 $spacing-21 $spacing-16;
+    padding: $spacing-16 $spacing-21;
+    background-color: color(app-bg);
+    position: sticky;
+    top: 70px;
+    z-index: 2;
 }
 
 .disable-pinned {
@@ -25,7 +34,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: $spacing-4;
-    margin-bottom: $spacing-48;
+    padding: $spacing-16 $spacing-21;
 
     &::before {
         @include Icon($chevron-right, color(input-disable) );
@@ -40,6 +49,9 @@
     height: 40px;
     padding: 0 $spacing-21;
     background-color: color(gray-bg-primary);
+    position: sticky;
+    top: 138px;
+    z-index: 2;
 
     .left-actions {
         display: flex;
@@ -147,6 +159,9 @@
     justify-content: space-between;
     background-color: $green-dark-base;
     padding: 0px $spacing-31 0px $spacing-21;
+    position: sticky;
+    top: 138px;
+    z-index: 2;
 
     .info-selection {
         display: flex;
@@ -212,4 +227,3 @@
     z-index: 2;
     padding-top: 32px;
 }
-
