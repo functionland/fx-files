@@ -27,9 +27,24 @@ public partial class FileBrowser
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
+    private ProgressModal _progressModalRef = default!;
     private FxSearchInput? _fxSearchInputRef;
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
+
+    // ProgressBar
+    private ProgressMode ProgressBarMode { get; set; }
+    private string ProgressBarTitle { get; set; } = default!;
+    private string ProgressBarCurrentText { get; set; } = default!;
+    private string ProgressBarCurrentSubText { get; set; } = default!;
+    private int ProgressBarCurrentValue { get; set; }
+    private int ProgressBarMax { get; set; }
+    private bool ProgressBarIsCancellable { get; set; } = true;
+    private async Task ProgressBarOnCancelAsync()
+    {
+        // Todo: Write OnCancel logic.
+    }
+
 
     private string? _searchText;
     private bool _isInSearchMode;
@@ -72,7 +87,24 @@ public partial class FileBrowser
 
             try
             {
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false);
+                ProgressBarTitle = "Copying files";
+                ProgressBarIsCancellable = true;
+                ProgressBarMode = ProgressMode.Progressive;
+                await _progressModalRef.ShowAsync();
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
+                    , onProgress: (progressInfo) =>
+                    {
+                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                        ProgressBarMax = progressInfo.MaxValue ?? 100;
+                    },
+                    cts.Token);
+
+                await _progressModalRef.CloseAsync();
+
             }
             catch (CanNotOperateOnFilesException ex)
             {

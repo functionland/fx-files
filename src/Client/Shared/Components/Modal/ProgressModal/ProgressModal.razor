@@ -1,0 +1,23 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
+@inherits AppComponentBase
+
+
+<FxBottomSheet 
+    Title="@Title"
+    OnClose="CloseAsync"
+    ShowCloseButton="true"
+    IsFullScreenMode="false"
+    @bind-IsOpen="_isModalOpen">
+    
+    <h3>ProgressModal</h3>
+
+    @*<div>@Title</div>*@
+    <div>@CurrentText</div>
+    <div>@CurrentSubText</div>
+    <div>@ProgressCurrentValue</div>
+    <div>@ProgressMax</div>
+    @if (IsCancellable)
+    {
+        <FxButton OnClick="CloseAsync" Text="Cancel" ButtonStyle="FxButtonStyle.Normal"/>
+    }
+</FxBottomSheet>

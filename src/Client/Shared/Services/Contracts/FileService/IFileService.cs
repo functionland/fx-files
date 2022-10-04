@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts
+﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Contracts
 {
     public interface IFileService
     {
@@ -7,7 +9,7 @@
         Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null);
         Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null);
         Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null);
-        Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null);
+        Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null,  CancellationToken? cancellationToken = null);
         Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null);
         Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null);
         Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null);
