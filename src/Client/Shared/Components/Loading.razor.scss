@@ -1,0 +1,25 @@
+﻿@import "../Styles/abstracts/_functions.scss";
+@import "../Styles/abstracts/_variables.scss";
+
+.loading-container {
+    height: calc(100vh - 81px);
+    max-width: 600px;
+    width: 100%;
+    z-index: 1;
+    position: fixed;
+    background-color: color(app-bg);
+
+    .loading-icon {
+        max-width: 64px;
+        height: 64px;
+        margin: 10% auto;
+
+        background: {
+            image: url("images/Loading/Loading.svg");
+            repeat: no-repeat;
+            size: $icon-64;
+            position: center;
+        }
+    }
+}
+    
