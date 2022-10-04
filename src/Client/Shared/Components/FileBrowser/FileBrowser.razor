@@ -79,6 +79,7 @@
         @if (!IsInRoot(_currentArtifact))
         {
             <FxSearchInput Placeholder="@_currentArtifact?.Name"
+                   @ref="_fxSearchInputRef"
                    OnCancel="HandleCancelSearchAsync"
                    DebounceInterval="300"
                    OnSearch="HandleSearch"

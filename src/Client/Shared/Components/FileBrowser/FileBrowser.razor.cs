@@ -27,6 +27,7 @@ public partial class FileBrowser
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
+    private FxSearchInput? _fxSearchInputRef;
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
 
@@ -398,6 +399,7 @@ public partial class FileBrowser
     {
         //TODO : Is search text must be here?
         _searchText = string.Empty;
+        _fxSearchInputRef?.HandleClear();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
 #if BlazorHybrid
@@ -739,16 +741,16 @@ public partial class FileBrowser
     private void HandleSortOrderClick()
     {
         _isAscOrder = !_isAscOrder;
-        sortFilteredArtifacts();
+        SortFilteredArtifacts();
     }
 
     private async Task HandleSortClick()
     {
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
-        sortFilteredArtifacts();
+        SortFilteredArtifacts();
     }
 
-    private void sortFilteredArtifacts()
+    private void SortFilteredArtifacts()
     {
         if (_currentSortType is SortTypeEnum.LastModified)
         {
