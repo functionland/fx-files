@@ -412,7 +412,6 @@ public partial class FileBrowser
             _currentArtifact = artifact;
             await LoadChildrenArtifactsAsync(_currentArtifact);
         }
-        // load current artifacts
     }
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
