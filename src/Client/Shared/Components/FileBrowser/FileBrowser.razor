@@ -2,17 +2,16 @@
 @inherits AppComponentBase
 
 <div class="file-browser-container">
-    <div class="sticky-content">
-        <FxToolBar Title="@(_currentArtifact?.Name)"
-                   SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
-                   IsInRoot="IsInRoot(_currentArtifact)"
-                   IsInSearchMode="_isInSearchMode"
-                   IsPinned="@(_currentArtifact?.IsPinned ?? false)"
-                   OnSearch="HandleDeepSearchAsync"
-                   OnSearchFocused="HandleSearchFocused"
-                   OnBackClick="HandleToolbarBackClick"
-                   OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
-                   OnOverflowButtonClick="@(() => HandleOptionsArtifact(_currentArtifact))" />
+   
+        <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+               OnSearch="HandleDeepSearchAsync"
+               OnSearchFocused="HandleSearchFocused"
+               IsInSearchMode="_isInSearchMode"
+               OnBackClick="HandleToolbarBackClick"
+               Title="@(_currentArtifact?.Name)"
+               SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
+               IsPinned="@(_currentArtifact?.IsPinned ?? false)"
+               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))" />
 
         @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
         {
@@ -23,10 +22,12 @@
                         <div class="items">
                             @foreach (var pin in _pins)
                             {
+                            <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                 <FileCard FileName="@pin.Name"
                               FileSize="@pin.SizeStr"
-                              ModifiedDate="@pin.LastModifiedDateTime.ToString("yyyy-MM-dd")"
+                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")"
                               FileImage="@pin.ThumbnailPath" />
+                            </div>
                             }
                         </div>
                     </ContentTemplate>
@@ -77,16 +78,17 @@
                 </div>
             }
 
-            @if (!IsInRoot(_currentArtifact))
-            {
-                <FxSearchInput Placeholder="@_currentArtifact?.Name"
-                       OnCancel="HandleCancelSearchAsync"
-                       DebounceInterval="300"
-                       OnSearch="HandleSearch"
-                       IsPartial="false" />
-            }
+        @if (!IsInRoot(_currentArtifact))
+        {
+            <FxSearchInput Placeholder="@_currentArtifact?.Name"
+                   @ref="_fxSearchInputRef"
+                   OnCancel="HandleCancelSearchAsync"
+                   DebounceInterval="300"
+                   OnSearch="HandleSearch"
+                   IsPartial="false" />
         }
-    </div>
+    }
+
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
