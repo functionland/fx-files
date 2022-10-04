@@ -140,10 +140,15 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
+            catch
+            {
+
+            }
+
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
-            
+
             var movedArtifact = artifacts.Except(overwriteArtifacts);
-            if(movedArtifact.Any())
+            if (movedArtifact.Any())
             {
                 UpdateRemovedArtifacts(movedArtifact);
             }
@@ -379,15 +384,23 @@ public partial class FileBrowser
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
     {
         var allFiles = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
-        var artifacts = new List<FsArtifact>();
-        await foreach (var item in allFiles)
+        try
         {
-            item.IsPinned = PinService.IsPinned(item);
-            artifacts.Add(item);
-        }
+            var artifacts = new List<FsArtifact>();
+            await foreach (var item in allFiles)
+            {
+                item.IsPinned = PinService.IsPinned(item);
+                artifacts.Add(item);
+            }
 
-        _allArtifacts = artifacts;
-        FilterArtifacts();
+            _allArtifacts = artifacts;
+            FilterArtifacts();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+            _currentArtifact = await FileService.GetFsArtifactAsync(parentArtifact?.ParentFullPath);
+        }
     }
 
     private bool IsInRoot(FsArtifact? artifact)
