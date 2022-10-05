@@ -49,7 +49,7 @@
     {
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            <div class="action-bar">
+            <div class="@(_isInSearchMode ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
                     <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
@@ -64,7 +64,7 @@
         }
         else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
-            <div class="select-action">
+            <div class="@(_isInSearchMode ? "select-action-search" : "") select-action">
                 <div class="info-selection">
                     <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
                     <div class="item-selected">

@@ -41,6 +41,8 @@
     }
 }
 
+
+
 .action-bar {
     display: flex;
     flex-flow: row nowrap;
@@ -151,6 +153,9 @@
         }
     }
 }
+.action-bar-search {
+    top: 72px;
+}
 
 .select-action {
     display: flex;
@@ -218,6 +223,9 @@
     }
 }
 
+.select-action-search {
+    top: 72px;
+}
 .sticky-content {
     position: sticky;
     top: 0;
