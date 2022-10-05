@@ -25,7 +25,7 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
         throw new NotImplementedException();
     }
 
-    public bool IsPinned(FsArtifact fsArtifact)
+    public Task<bool> IsPinnedAsync(FsArtifact fsArtifact)
     {
         throw new NotImplementedException();
     }

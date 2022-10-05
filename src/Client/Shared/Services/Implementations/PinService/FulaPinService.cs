@@ -18,7 +18,7 @@ public partial class FulaPinService : IFulaPinService
         throw new NotImplementedException();
     }
 
-    public bool IsPinned(FsArtifact fsArtifact)
+    public Task<bool> IsPinnedAsync(FsArtifact fsArtifact)
     {
         throw new NotImplementedException();
     }
