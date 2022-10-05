@@ -19,7 +19,8 @@
             <FxSearchInput IsPartial="true"
                        DebounceInterval="300"
                        OnSearch="HandleSearch"
-                       OnFocus="HandleSearchFocused" />
+                       OnFocus="HandleSearchFocused"
+                       @ref="_searchInputRef"/>
 
             @if (IsInSearchMode is false)
             {
@@ -39,7 +40,7 @@
             <FxButton Padding="0"
                   OnClick="@HandleBackClick"
                   Class="back-button"
-                  Margin="21px 0 10px 0"
+                  Margin="0 0 16px 0"
                   BackgroundColor="transparent"
                   IsVisible="IsBackButtonVisible"
                   ButtonStyle="FxButtonStyle.None" />

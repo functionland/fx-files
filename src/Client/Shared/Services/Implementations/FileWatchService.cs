@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Functionland.FxFiles.Client.Shared.Services.Common;
+using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {

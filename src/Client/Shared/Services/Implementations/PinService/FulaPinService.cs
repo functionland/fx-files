@@ -2,6 +2,11 @@
 
 public partial class FulaPinService : IFulaPinService
 {
+    public Task EnsureInitializedAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     //TODO: complete FulaPinService
     public Task<List<FsArtifact>> GetPinnedArtifactsAsync()
     {

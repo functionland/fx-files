@@ -6,30 +6,31 @@
     <div class="empty-list-title">@Title</div>
     @if (IsShowButtons)
     {
-
         <div class="buttons-box">
             <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/add-file.svg"
                   Text="@Localizer[nameof(AppStrings.ButtonAddFile)]"
                   ButtonStyle="FxButtonStyle.Outline"
                   ButtonSize="FxButtonSize.Stretch"
                   IsVisible="IsAddFileButtonVisible"
-                  OnClick="OnAddFileButtonClick" />
+                  OnClick="OnAddFileButtonClick"
+                  Margin="0 0 16px 0"/>
 
             <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/upload-file.svg"
                   Text="@Localizer[nameof(AppStrings.ButtonUploadFiles)]"
                   ButtonStyle="FxButtonStyle.Outline"
                   ButtonSize="FxButtonSize.Stretch"
                   IsVisible="IsUploadButtonVisible"
-                  OnClick="OnUploadButtonClick" />
+                  OnClick="OnUploadButtonClick" 
+                  Margin="0 0 16px 0" />
 
             <FxButton LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/create-folder.svg"
                   Text="@Localizer[nameof(AppStrings.ButtonAddNewFolder)]"
                   ButtonStyle="FxButtonStyle.Outline"
                   ButtonSize="FxButtonSize.Stretch"
                   IsVisible="IsAddFolderButtonVisible"
-                  OnClick="OnAddFolderButtonClick" />
+                  OnClick="OnAddFolderButtonClick"
+                  Margin="0 0 16px 0" />
         </div>
-
     }
 
 </div>
