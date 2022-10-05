@@ -21,7 +21,6 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     {
         if (PinnedPathsCache.Any()) return;
         _tcs ??= new TaskCompletionSource();
-        await Task.Delay(10000);
 
         try
         {
@@ -198,8 +197,6 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     private async Task UpdatePinnedArtifactAsyn(PinnedArtifact edditedPinArtfact)
     {
-        await EnsureInitializedAsync();
-
         if (edditedPinArtfact.FullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
         await FxLocalDbService.UpdatePinAsync(edditedPinArtfact);
         DeteteFromPinCache(edditedPinArtfact.FullPath);
@@ -211,7 +208,6 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     {
         try
         {
-            await EnsureInitializedAsync();
             if (artifactChangeEvent.FsArtifact == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
 
             if (!PinnedPathsCache.ContainsKey(artifactChangeEvent.FsArtifact.FullPath)) return;
