@@ -110,15 +110,22 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var pinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
             var aggrigator = serviceProvider.GetRequiredService<IEventAggregator>();
             var localdbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
+            var fileService = serviceProvider.GetRequiredService<IFileService>();
 
             await localdbService.InitAsync();
             await pinService.InitializeAsync();
 
-            var artifact1 = new FsArtifact("E:\\Pic\\", "Pic", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
+
+            await fileService.CreateFolderAsync("E:\\", "Pic");
+            await fileService.CreateFolderAsync("E:\\Pic\\", "MyPic");
+
+            var artifact1 = new FsArtifact("E:\\Pic", "Pic", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
+
+
             await pinService.SetArtifactsPinAsync(new FsArtifact[] { artifact1 });
 
             await pinService.SetArtifactsPinAsync(
-                new FsArtifact[] { new FsArtifact("E:\\Pic\\MyPic\\", "MyPic", FsArtifactType.Folder, FsFileProviderType.InternalMemory) });
+                new FsArtifact[] { new FsArtifact("E:\\Pic\\MyPic", "MyPic", FsArtifactType.Folder, FsFileProviderType.InternalMemory) });
 
             var allPinnedFile = await pinService.GetPinnedArtifactsAsync();
 
