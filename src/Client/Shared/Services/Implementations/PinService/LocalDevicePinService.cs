@@ -20,8 +20,9 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     public async Task InitializeAsync()
     {
         if (PinnedPathsCache.Any()) return;
-
         _tcs ??= new TaskCompletionSource();
+        await Task.Delay(10000);
+
         try
         {
             ArtifactChangeSubscription = EventAggregator
@@ -87,18 +88,9 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                 }
             }
         }
-        catch
-        {
-            _tcs.SetCanceled();
-            _tcs = null;
-            throw;
-        }
         finally
         {
-            if (_tcs != null)
-            {
-                _tcs.SetResult();
-            }
+            _tcs.SetResult();
         }
 
     }
