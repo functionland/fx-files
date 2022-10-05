@@ -17,8 +17,13 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public void HandleClear()
         {
-            _inputText = null;
+            HandleClearInputText();
             OnCancel.InvokeAsync();
+        }
+
+        public void HandleClearInputText()
+        {
+            _inputText = null;
         }
 
         private void HandleFocus()

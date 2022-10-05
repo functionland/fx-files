@@ -14,113 +14,6 @@
     line-height: $line-height-24;
 }
 
-.action-bar {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
-    height: 40px;
-    padding: 0 $spacing-21;
-    background-color: color(gray-bg-primary);
-
-    .left-actions {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: center;
-
-        .selected-sort {
-            font-family: $open-sans-regular;
-            font-style: normal;
-            font-weight: 400;
-            font-size: $font-size-14;
-            line-height: $line-height-24;
-            letter-spacing: $letter-spacing-02;
-            margin-right: $spacing-4;
-            color: color(gray-content1);
-            cursor: pointer;
-        }
-
-        .sort-order {
-            cursor: pointer;
-
-            &::before {
-                font-size: $icon-16;
-                @include Icon($chevron-up);
-            }
-        }
-
-        .desc-order {
-            transform: rotate(180deg);
-
-            &::before {
-                @include Icon($chevron-up);
-            }
-        }
-
-        .asc-order::before {
-            @include Icon($chevron-up);
-        }
-    }
-
-    .right-actions {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: center;
-
-        .action-btn {
-            cursor: pointer;
-        }
-
-        .select-all-btn {
-            margin-right: $spacing-8;
-
-            &::before {
-                @include Icon($select, color(gray-content3));
-                font-size: 24px;
-            }
-        }
-
-        .select-all-filled::before {
-            font-size: 24px;
-            @include Icon($selected, $green-dark-base, $Icons-Filled);
-        }
-
-        .list-view-btn {
-            margin-right: $spacing-8;
-
-            &::before {
-                font-size: 24px;
-                @include Icon($list, color(gray-content3));
-            }
-        }
-
-        .list-view-selected::before {
-            font-size: 24px;
-            @include Icon($list, $green-dark-base);
-        }
-
-        .grid-view-btn {
-            margin-right: $spacing-8;
-
-            &::before {
-                font-size: 24px;
-                @include Icon($grid, color(gray-content3));
-            }
-        }
-
-        .grid-view-selected::before {
-            font-size: 24px;
-            @include Icon($grid, $green-dark-base);
-        }
-
-        .filter-btn::before {
-            font-size: 24px;
-            @include Icon($filter, color(gray-content3));
-        }
-    }
-}
 
 .grid-view {
     display: grid;
@@ -130,72 +23,6 @@
     justify-content: center;
 }
 
-.list-view {
-    min-height: calc(100vh - 354px);
-}
-
-.select-action {
-    display: flex;
-    height: 40px;
-    align-items: center;
-    justify-content: space-between;
-    background-color: $green-dark-base;
-    padding: 0px $spacing-31 0px $spacing-21;
-
-    .info-selection {
-        display: flex;
-        align-items: center;
-
-        .close-btn {
-            cursor: pointer;
-
-            &::before {
-                font-size: 16px;
-                @include Icon($close, $pure-white);
-            }
-        }
-
-        .item-selected {
-            margin-left: $spacing-6;
-
-            .move-selected-items-text,
-            .item-selected-count,
-            .item-selected-text {
-                font-size: $font-size-14;
-                line-height: $line-height-24;
-                font-family: $open-sans-regular;
-                letter-spacing: $letter-spacing-02;
-                color: $pure-white;
-            }
-        }
-    }
-
-    .right-part {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .move-icon::before {
-            cursor: pointer;
-            font-size: 24px;
-            @include Icon($move, $pure-white);
-        }
-
-        .vertical-option-icon::before {
-            cursor: pointer;
-            font-size: 20px;
-            @include Icon($options-vertical, $pure-white);
-            margin-left: $spacing-16;
-        }
-
-        .add-folder::before {
-            display: none;
-            cursor: pointer;
-            font-size: 24px;
-            @include Icon($create-folder, $pure-white);
-        }
-    }
-}
 
 .move-files-action {
     padding-right: $spacing-24;
@@ -219,10 +46,12 @@
     padding: $spacing-16 21px;
 
     .item-icon-position {
-        background-size: $icon-24;
-        background-repeat: no-repeat;
-        height: 24px;
-        width: 24px;
+        font-size: $icon-24;
+        margin-right: 1px;
+    }
+
+    &:hover {
+        background-color: color(gray-bg-secondary);
     }
 }
 
@@ -271,10 +100,6 @@
         @include Icon($options-vertical);
     }
 
-    .item-icon-position {
-        background-position: center left;
-    }
-
     .item-content {
         flex-grow: 1;
         overflow: hidden;
@@ -300,8 +125,8 @@
     }
 
     .item-icon-position {
-        background-position: center;
         margin: 0 auto;
+        text-align: center;
     }
 
     .item-content {
@@ -320,33 +145,52 @@
     }
 }
 
+.disable-item {
+    background-color: color(gray-bg-primary);
+    pointer-events: none;
+
+    .item-content {
+
+        .item-title {
+            .title-text {
+                color: color(gray-border);
+            }
+        }
+
+        .item-sub-text {
+            color: color(gray-border);
+        }
+    }
+
+    .item-icon-position::before {
+        color: color(gray-border);
+    }
+}
+.selected-item {
+    background-color: color(gray-bg-primary);
+}
+
 .folder-icon::before {
-    font-size: 24px;
     @include Icon($folder);
 }
 
 .text-file-icon::before {
-    font-size: 24px;
     @include Icon($document);
 }
 
 .photo-file-icon::before {
-    font-size: 24px;
     @include Icon($image);
 }
 
 .pdf-file-icon::before {
-    font-size: 24px;
     @include Icon($PDF);
 }
 
 .audio-file-icon::before {
-    font-size: 24px;
     @include Icon($audio);
 }
 
 .video-file-icon::before {
-    font-size: 24px;
     @include Icon($video);
 }
 
@@ -412,3 +256,28 @@
         }
     }
 }*/
+
+
+
+.position-scroll-btn {
+    position: fixed;
+    bottom: 95px;
+    right: 15px;
+    display: none;
+}
+
+::deep .fxbutton-content img {
+    height: $icon-24 !important;
+}
+
+@media only screen and (min-width: 600px) {
+    // handle back to top button location in APP
+    $a: 50vw;
+    $b: 285px;
+
+    .position-scroll-btn {
+        position: fixed;
+        bottom: 95px;
+        right: calc(#{$a} - #{$b});
+    }
+}

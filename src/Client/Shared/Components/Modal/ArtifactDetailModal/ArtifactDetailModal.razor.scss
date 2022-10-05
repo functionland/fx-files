@@ -1,7 +1,7 @@
-﻿@import '../../../Styles/abstracts/_mixins.scss';
-@import '../../../Styles/abstracts/_variables.scss';
+﻿@import '../../../Styles/abstracts/_variables.scss';
 @import '../../../Styles/abstracts/_functions.scss';
-
+@import '../../../Styles/abstracts/_media-queries.scss';
+@import '../../../Styles/abstracts/_mixins.scss';
 .select-action {
     display: flex;
     height: 56px;
@@ -102,4 +102,39 @@
         border-radius: $border-radius-6;
         margin: $spacing-0 $spacing-8;
     }
+}
+
+.folder-file-icon::before {
+    font-size: 32px;
+    @include Icon($folder);
+}
+
+.text-file-icon::before {
+    font-size: 32px;
+    @include Icon($document);
+}
+
+.image-file-icon::before {
+    font-size: 32px;
+    @include Icon($image);
+}
+
+.pdf-file-icon::before {
+    font-size: 32px;
+    @include Icon($PDF);
+}
+
+.audio-file-icon::before {
+    font-size: 32px;
+    @include Icon($audio);
+}
+
+.video-file-icon::before {
+    font-size: 32px;
+    @include Icon($video);
+}
+
+.other-file-icon::before {
+    font-size: 32px;
+    @include Icon($document);
 }

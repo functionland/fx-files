@@ -15,6 +15,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private FxToastType _toastType { get; set; }
 
+        private Timer _timer = new Timer(5000);
+
         public void Show(string title, string message, FxToastType toastType)
         {
             _title = title;
@@ -23,9 +25,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _isModalOpen = true;
             StateHasChanged();
             // Add timer for closing the modal after 5 seconds
-            var timer = new Timer(5000);
-            timer.Elapsed += OnTimedEvent!;
-            timer.Enabled = true;
+            _timer.Elapsed += OnTimedEvent!;
+            _timer.Enabled = true;
             StateHasChanged();
         }
 
@@ -41,6 +42,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 {
                     Close();
                     StateHasChanged();
+                    _timer.Stop();
+                    _timer.Enabled = false;
                 });
             }
         }

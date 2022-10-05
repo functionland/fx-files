@@ -32,9 +32,10 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
-        public string? OwnerDid { get; set; }
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
+        public bool? IsDisabled { get; set; }
+        public string? OwnerDid { get; set; }
         public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
         public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension ?? "");
     }

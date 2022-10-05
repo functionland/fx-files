@@ -31,6 +31,11 @@ namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations
 
         public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                path = "./";
+            }
+
             return base.GetArtifactsAsync(path, searchText, cancellationToken);
         }
 

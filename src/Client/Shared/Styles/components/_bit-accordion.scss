@@ -2,8 +2,8 @@
 @import "../abstracts/_functions.scss";
 
 ::deep .bit-acd.bit-acd-fluent {
-    padding: 0;
     border: none;
+    padding: $spacing-16 0 0;
     color: color(gray-content1);
     background-color: transparent;
 }
@@ -21,7 +21,7 @@
     flex-direction: row-reverse;
     justify-content: flex-end;
     padding: 0 20px;
-    margin: 10px 0;
+    margin: 0;
 }
 
 ::deep .bit-acd .header.expanded .header-icon {
@@ -32,7 +32,7 @@
 }
 
 ::deep .bit-acd .header.collapsed {
-    margin-bottom: 48px;
+    /*margin-bottom: 48px;*/
     font-size: $font-size-18;
 }
 
@@ -49,6 +49,7 @@
 ::deep .bit-acd .content.expanded {
     display: inline-grid;
     padding-top: 0;
+    padding-bottom: 10px;
 }
 
 ::deep .bit-acd .content.expanded::-webkit-scrollbar {
@@ -64,5 +65,11 @@
     scroll-behavior: smooth;
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    padding: 0 21px 16px 21px;
+    padding: 0 $spacing-16;
+}
+
+::deep .bit-acd .title-description-wrapper .title {
+    font-family: $montserrat-semi-bold;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
 }

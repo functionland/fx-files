@@ -14,7 +14,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public bool IsAddFolderButtonVisible { get; set; } = true;
 
         [Parameter]
-        public bool IsUploadButtonVisible { get; set; } = true;
+        public bool IsUploadButtonVisible { get; set; } 
 
         [Parameter]
         public EventCallback OnAddFileButtonClick { get; set; }
