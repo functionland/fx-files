@@ -342,5 +342,11 @@
 
             return fsArtifactList;
         }
+
+        public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        {
+            //TODO: Fill FsArtifact's data
+            return Task.CompletedTask;
+        }
     }
 }

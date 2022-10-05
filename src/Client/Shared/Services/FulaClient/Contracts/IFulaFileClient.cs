@@ -19,7 +19,7 @@ public interface IFulaFileClient
     Task RenameFolderAsync(DIdDocument dIdDocument, string folderPath, string newName, CancellationToken? cancellationToken = null);
     Task DeleteArtifactsAsync(DIdDocument dIdDocument, IEnumerable<string> sourcesPath, CancellationToken? cancellationToken = null);
     IAsyncEnumerable<FsArtifact> GetArtifactsAsync(DIdDocument dIdDocument, string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
-   
+
     Task ShareFolderAsync(DIdDocument dIdDocument, IEnumerable<string> dids, string fullPath, CancellationToken? cancellationToken = null);
     Task ShareFoldersAsync(DIdDocument dIdDocument, IEnumerable<string> dids, IEnumerable<string> fullPaths, CancellationToken? cancellationToken = null);
 
@@ -31,8 +31,8 @@ public interface IFulaFileClient
 
     Task UnShareFileAsync(DIdDocument dIdDocument, IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null);
     Task UnShareFilesAsync(DIdDocument dIdDocument, IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null);
-   
+
     IAsyncEnumerable<FsArtifact> GetSharedArtifacsAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
 
-    Task<List<FulaUser>> WhoHasAccessToArtifact(DIdDocument dIdDocument, string artifactFullPath, CancellationToken? cancellationToken = null);
+    Task<FsArtifact> GetFsArtifactMetaAsync(DIdDocument dIdDocument, string fullPath, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
 }

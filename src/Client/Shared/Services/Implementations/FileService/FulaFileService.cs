@@ -61,4 +61,9 @@ public partial class FulaFileService : IFulaFileService
     {
         throw new NotImplementedException();
     }
+
+    public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
 }

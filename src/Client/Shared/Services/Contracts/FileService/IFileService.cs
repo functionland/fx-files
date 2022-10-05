@@ -14,5 +14,6 @@
         IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
         Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null);
         Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null);
+        Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
     }
 }

@@ -28,6 +28,8 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public DateTimeOffset LastModifiedDateTime { get; set; }
         public string WhoMadeLastEdit { get; set; }
         public string? ThumbnailPath { get; set; }
+        public List<FsArtifactActivity>? FsArtifactActivity { get; set; }
+        public List<FulaUser> WhoHasAccess { get; set; }
         // For UI
         public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
