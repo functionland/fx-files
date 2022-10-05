@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.FileProviders;
 
 namespace Functionland.FxFiles.Client.App;
 
@@ -29,6 +30,21 @@ public partial class MainPage
                 settings.BlockNetworkImage = false;
 #endif
         });
+
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        var backButtonService = MauiApplication.Current.Services.GetRequiredService<IGoBackService>();
+        if (backButtonService?.GoBackAsync != null)
+        {
+            backButtonService.GoBackAsync().GetAwaiter();
+            return true;
+        }
+        else
+        {
+            return base.OnBackButtonPressed();
+        }   
     }
 }
 

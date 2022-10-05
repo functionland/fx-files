@@ -20,6 +20,13 @@ public partial class ArtifactSelectionModal
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
+        GoBackService.GoBackAsync = (Task () =>
+        {
+            Close();
+            StateHasChanged();
+            return Task.CompletedTask;
+        });
+
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
         _artifactActionResult = artifactActionResult;
