@@ -2,7 +2,6 @@
 
 public interface IBloxPoolSevice
 {
-    Task LoginAsync(string did, CancellationToken? cancellationToken = null);
     Task<List<BloxPool>> GetMyPoolsAsync(CancellationToken? cancellationToken = null);
     Task LeavePoolAsync(string poolId, CancellationToken? cancellationToken = null);
     Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(string poolId, CancellationToken? cancellationToken = null);
