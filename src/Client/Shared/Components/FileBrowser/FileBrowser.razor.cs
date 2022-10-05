@@ -726,16 +726,22 @@ public partial class FileBrowser
         {
             ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
         }
-        else
+        if (!_isInSearchMode)
         {
-            _isInSearchMode = false;
             cancellationTokenSource?.Cancel();
-            _searchText = string.Empty;
+            _fxSearchInputRef?.HandleClearInputText();
             await UpdateCurrentArtifactForBackButton(_currentArtifact);
             await LoadChildrenArtifactsAsync(_currentArtifact);
             StateHasChanged();
+            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         }
-        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+        if (_isInSearchMode)
+        {
+            _isInSearchMode = false;
+            _fxSearchInputRef?.HandleClearInputText();
+            await LoadChildrenArtifactsAsync();
+            StateHasChanged();
+        }
     }
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
