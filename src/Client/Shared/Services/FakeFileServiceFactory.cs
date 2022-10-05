@@ -1,4 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Implementations.FileService;
+﻿using DbUp.Engine.Preprocessors;
+
+using Functionland.FxFiles.Client.Shared.Services.Implementations.FileService;
 
 namespace Functionland.FxFiles.Client.Shared.Services
 {
@@ -72,20 +74,20 @@ namespace Functionland.FxFiles.Client.Shared.Services
                     CreateFolder("/images/winter/firstweek/firstday/firsthour/firstminute"),
                     CreateFolder("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond"),
                     CreateFolder("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/firstmillisecond"),
-                    CreateFolder("/docs"),
-                    CreateFile("/images/summer/image summer.jpg"),
-                    CreateFile("/images/summer/image germany.jpg"),
-                    CreateFile("/images/winter/image summer.jpg"),
-                    CreateFile("/images/winter/image germany.jpg"),
-                    CreateFile("/images/winter/firstweek/introduce australia.txt"),
-                    CreateFile("/images/winter/firstweek/image australia.jpg"),
-                    CreateFile("/images/winter/firstweek/firstday/personal stuff.txt"),
-                    CreateFile("/images/winter/firstweek/firstday/image family.jpg"),
-                    CreateFile("/images/winter/firstweek/firstday/firsthour/image workshop.jpg"),
-                    CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/meetingdoc.txt"),
-                    CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/cv.txt"),
-                    CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/image workplace.jpg"),
-                    CreateFile("/docs/proposal v1-2.pdf"),
+                    //CreateFolder("/docs"),
+                    //CreateFile("/images/summer/image summer.jpg"),
+                    //CreateFile("/images/summer/image germany.jpg"),
+                    //CreateFile("/images/winter/image summer.jpg"),
+                    //CreateFile("/images/winter/image germany.jpg"),
+                    //CreateFile("/images/winter/firstweek/introduce australia.txt"),
+                    //CreateFile("/images/winter/firstweek/image australia.jpg"),
+                    //CreateFile("/images/winter/firstweek/firstday/personal stuff.txt"),
+                    //CreateFile("/images/winter/firstweek/firstday/image family.jpg"),
+                    //CreateFile("/images/winter/firstweek/firstday/firsthour/image workshop.jpg"),
+                    //CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/meetingdoc.txt"),
+                    //CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/cv.txt"),
+                    //CreateFile("/images/winter/firstweek/firstday/firsthour/firstminute/firstsecond/image workplace.jpg"),
+                    //CreateFile("/docs/proposal v1-2.pdf"),
                 },
                 actionLatency,
                 enumerationLatency);
@@ -106,7 +108,12 @@ namespace Functionland.FxFiles.Client.Shared.Services
         {
             var folderName = Path.GetFileName(folderPath);
 
-            return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
+            var pathParts = folderPath.Split('/');
+            var x = string.Join("/", pathParts.Take(pathParts.Length - 1));
+            return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
+            {
+                ParentFullPath = string.Join("/", pathParts.Take(pathParts.Length - 1)),
+            };
         }
 
         public static FsArtifact CreateDrive(string drivePath)

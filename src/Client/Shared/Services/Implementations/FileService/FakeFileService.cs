@@ -222,7 +222,9 @@
 
         public async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
+            //"/images/winter/firstweek/firstday/firsthour"
             await LatencyActionAsync();
+            var test = _files.FirstOrDefault(f => f.FullPath == path)!;
             return _files.FirstOrDefault(f => f.FullPath == path)!;
         }
 
