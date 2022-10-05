@@ -19,7 +19,8 @@
             <FxSearchInput IsPartial="true"
                        DebounceInterval="300"
                        OnSearch="HandleSearch"
-                       OnFocus="HandleSearchFocused" />
+                       OnFocus="HandleSearchFocused"
+                       @ref="_searchInputRef"/>
 
             @if (IsInSearchMode is false)
             {
