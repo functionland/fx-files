@@ -542,8 +542,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
-                string[] files = Directory.GetFiles(path);
-                string[] folders = Directory.GetDirectories(path);
+                string[] files = Array.Empty<string>();
+                string[] folders = Array.Empty<string>();
+
+                try
+                {
+                    files = Directory.GetFiles(path);
+                    folders = Directory.GetDirectories(path);
+                }
+                catch { }
 
                 foreach (var folder in folders)
                 {
