@@ -1,7 +1,7 @@
 ﻿@import "../Styles/abstracts/_functions.scss";
 @import "../Styles/abstracts/_variables.scss";
 
-.loading-icon {
+.loading-container {
     height: 100%;
     max-width: 600px;
     width: 100%;
@@ -10,6 +10,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .loading-icon {
+        width: $icon-64;
+        height: $icon-64;
+        
+        background: {
+            image: url("images/Loading/Loading.svg");
+            repeat: no-repeat;
+            size: $icon-64;
+            position: center;
+        }
+    }
 }
 
 .artifact-item-loading {
