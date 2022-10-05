@@ -8,7 +8,16 @@
                 <FxTag Title="@TagTitle" TagType="FxTagType.Regular" Width="51px" />
             </div>
         }
-        <img src="@FileImage" class="file-card-image" />
+
+        @if (!string.IsNullOrEmpty(FileImage))
+        {
+            <img src="@FileImage" class="file-card-image" />
+        }
+        else
+        {
+            <div class="file-card-icon"></div>
+        }
+
         <div class="pin-defualt-icon"></div>
     </div>
     <div class="file-card-content">

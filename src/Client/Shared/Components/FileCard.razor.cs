@@ -42,7 +42,7 @@
                 return resultPath;
             }
 
-            return "_content/Functionland.FxFiles.Client.Shared/images/backgrounds/card-media.png";
+            return string.Empty;
         }
     }
 }
