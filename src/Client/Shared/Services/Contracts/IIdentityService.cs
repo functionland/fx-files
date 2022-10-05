@@ -8,7 +8,7 @@ public interface IIdentityService
     /// <param name="did"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<FulaUser>> LoginAsync(string did, CancellationToken? cancellationToken = null);
+    Task<List<FulaUser>> LoginAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Ensure login call befor all methods
@@ -17,12 +17,19 @@ public interface IIdentityService
     Task EnsureLoginedAsync();
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<DIdDocument> ConnectToWalletAsync(CancellationToken? cancellationToken = null);
+
+    /// <summary>
     /// Change user account
     /// </summary>
     /// <param name="did"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<FulaUser> ChangeTokenAsync(string did, CancellationToken? cancellationToken = null);
+    Task<FulaUser> ChangeTokenAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get current user identity. Befor call this method, you must login.
@@ -37,7 +44,7 @@ public interface IIdentityService
     /// <param name="did"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<FulaUser> GetUserAsync(string did, CancellationToken? cancellationToken = null);
+    Task<FulaUser> GetUserAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get other users by did
@@ -45,14 +52,14 @@ public interface IIdentityService
     /// <param name="dids"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<FulaUser>> GetUsersAsync(IEnumerable<string> dids, CancellationToken? cancellationToken = null);
+    Task<List<FulaUser>> GetUsersAsync(DIdDocument dIdDocument, IEnumerable<string> dids, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get my avatar
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Stream> GetMyAvatarAsync(CancellationToken? cancellationToken = null);
+    Task<Stream> GetMyAvatarAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get other user's avatar
@@ -60,7 +67,7 @@ public interface IIdentityService
     /// <param name="did"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Stream> GetAvatarAsync(string did, CancellationToken? cancellationToken = null);
+    Task<Stream> GetAvatarAsync(DIdDocument dIdDocument, string did, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get avatar thumbnail by did
@@ -68,5 +75,5 @@ public interface IIdentityService
     /// <param name="did"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<string> GetAvatarThumbnailUrlAsync(string did, CancellationToken? cancellationToken = null);
+    Task<string> GetAvatarThumbnailUrlAsync(DIdDocument dIdDocument, string did, CancellationToken? cancellationToken = null);
 }

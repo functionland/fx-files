@@ -9,7 +9,7 @@ public interface IFulaDatabaseClient
     /// <param name="paths"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task SetPinAsync(string did, string[] paths, CancellationToken? cancellationToken = null);
+    Task SetPinAsync(DIdDocument dIdDocument, string[] paths, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Unpin some paths.
@@ -18,14 +18,14 @@ public interface IFulaDatabaseClient
     /// <param name="path"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task SetUnPinAsync(string did, string[] path, CancellationToken? cancellationToken = null);
+    Task SetUnPinAsync(DIdDocument dIdDocument, string[] path, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get all pinned items.
     /// </summary>
     /// <param name="did"></param>
     /// <returns></returns>
-    Task<string[]> GetPinnedAsync(string did);
+    Task<string[]> GetPinnedAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Check is pinned a path or not.
@@ -33,6 +33,6 @@ public interface IFulaDatabaseClient
     /// <param name="did"></param>
     /// <param name="psth"></param>
     /// <returns></returns>
-    Task<bool> IsPinnedAsync(string did, string psth);
+    Task<bool> IsPinnedAsync(DIdDocument dIdDocument, string psth, CancellationToken? cancellationToken = null);
 
 }
