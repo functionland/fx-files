@@ -693,6 +693,7 @@ public partial class FileBrowser
                             break;
                         _allArtifacts.AddRange(buffer);
                         FilterArtifacts();
+                        await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
                         buffer = new List<FsArtifact>();
                         sw.Restart();
                         await Task.Yield();
@@ -701,6 +702,7 @@ public partial class FileBrowser
 
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
+                await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
             }
             catch (Exception ex)
             {
