@@ -14,8 +14,8 @@
 
 .root-title {
     font-family: $montserrat-semi-bold;
-    font-size: $font-size-24;
-    line-height: $line-height-36;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
     color: color(gray-content1);
     padding: $spacing-16 $spacing-21;
     background-color: color(app-bg);
@@ -35,11 +35,14 @@
     align-items: center;
     gap: $spacing-4;
     padding: $spacing-16 $spacing-21;
+    margin-bottom: $spacing-16;
 
     &::before {
         @include Icon($chevron-right, color(input-disable) );
     }
 }
+
+
 
 .action-bar {
     display: flex;
@@ -50,7 +53,7 @@
     padding: 0 $spacing-21;
     background-color: color(gray-bg-primary);
     position: sticky;
-    top: 138px;
+    top: 126px;
     z-index: 2;
 
     .left-actions {
@@ -151,6 +154,9 @@
         }
     }
 }
+.action-bar-search {
+    top: 72px;
+}
 
 .select-action {
     display: flex;
@@ -160,7 +166,7 @@
     background-color: $green-dark-base;
     padding: 0px $spacing-31 0px $spacing-21;
     position: sticky;
-    top: 138px;
+    top: 126px;
     z-index: 2;
 
     .info-selection {
@@ -218,6 +224,9 @@
     }
 }
 
+.select-action-search {
+    top: 72px;
+}
 .sticky-content {
     position: sticky;
     top: 0;

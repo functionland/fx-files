@@ -3,6 +3,8 @@
     public partial class FileCard
     {
         [Parameter]
+        public bool IsFile { get; set; } //TODO: remove this parameter after get size for folder pinned
+        [Parameter]
         public bool IsPinned { get; set; }
 
         [Parameter]

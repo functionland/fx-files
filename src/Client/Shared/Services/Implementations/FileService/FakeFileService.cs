@@ -220,10 +220,10 @@
 
         }
 
-        //TODO : Implement this GetArtifactAsync method to return a single artifact
-        public Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        public async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
-            return null;
+            await LatencyActionAsync();
+            return _files.FirstOrDefault(f => f.FullPath == path)!;
         }
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
@@ -341,6 +341,12 @@
             }
 
             return fsArtifactList;
+        }
+
+        public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        {
+            //TODO: Fill FsArtifact's data
+            return Task.CompletedTask;
         }
     }
 }

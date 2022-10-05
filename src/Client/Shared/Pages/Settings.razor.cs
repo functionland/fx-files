@@ -31,7 +31,9 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 
         private void GetAppVersion()
         {
+#if BlazorHybrid
             CurrentVersion = AppInfo.Current.VersionString;
+#endif
         }
 
         public async Task OpenBottomSheet()

@@ -1,3 +1,4 @@
+using Functionland.FxFiles.Client.Shared.Services.Common;
 using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
@@ -45,7 +46,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                 {
                     if (changedPinnedArtifact.LastModifiedDateTime > LastModyDatetime)
                     {
-                        var artifact = GetPinnedFsArtifact(pinnedArticat);
+                        var artifact = await GetPinnedFsArtifact(pinnedArticat);
                         if (ArtifactIsImage(artifact))
                         {
                             var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
@@ -74,7 +75,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                 {
                     PinnedPathsCache.TryAdd(pinnedArticat.FullPath, pinnedArticat);
                 }
-                WatchParnetFolder(GetPinnedFsArtifact(pinnedArticat));
+                WatchParnetFolder(await GetPinnedFsArtifact(pinnedArticat));
             }
         }
     }
@@ -219,34 +220,34 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         var pinnedArtifacts = PinnedPathsCache.Select(c => c.Value).ToList();
 
         var artifacts = new List<FsArtifact>();
-        foreach (var artifact in pinnedArtifacts)
+        foreach (var pinnedArtifact in pinnedArtifacts)
         {
             FsArtifact currentFile = null;
-            if (artifact.FsArtifactType == FsArtifactType.File)
+            if (pinnedArtifact.FsArtifactType == FsArtifactType.File)
             {
 
-                var files = FileService.GetArtifactsAsync(artifact.FullPath);
+                var files = FileService.GetArtifactsAsync(pinnedArtifact.FullPath);
                 await foreach (var file in files)
                     currentFile = file;
 
             }
-            var fsArtifact = currentFile == null ? GetPinnedFsArtifact(artifact) : currentFile;
+            var fsArtifact = currentFile == null ? await GetPinnedFsArtifact(pinnedArtifact) : currentFile;
 
             if (ArtifactIsImage(fsArtifact))
             {
                 if (fsArtifact.ThumbnailPath != null)
                 {
-                    var result = (await FileService.CheckPathExistsAsync(new List<string?> { artifact.ThumbnailPath })).FirstOrDefault();
+                    var result = (await FileService.CheckPathExistsAsync(new List<string?> { pinnedArtifact.ThumbnailPath })).FirstOrDefault();
                     if (result != null && result.IsPathExist == false)
                     {
-                        await CreateNewThumbnailAsync(artifact, fsArtifact);
-                        await FxLocalDbService.UpdatePinAsync(artifact);
+                        await CreateNewThumbnailAsync(pinnedArtifact, fsArtifact);
+                        await FxLocalDbService.UpdatePinAsync(pinnedArtifact);
                     }
                 }
                 else
                 {
-                    await CreateNewThumbnailAsync(artifact, fsArtifact);
-                    await FxLocalDbService.UpdatePinAsync(artifact);
+                    await CreateNewThumbnailAsync(pinnedArtifact, fsArtifact);
+                    await FxLocalDbService.UpdatePinAsync(pinnedArtifact);
                 }
 
             }
@@ -263,13 +264,17 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     }
 
-    private FsArtifact GetPinnedFsArtifact(PinnedArtifact artifact)
+    private async Task<FsArtifact> GetPinnedFsArtifact(PinnedArtifact pinnedArtifact)
     {
-        if (artifact.FullPath == null || artifact.ArtifactName == null || artifact.FsArtifactType == null || artifact.ProviderType == null)
+        if (pinnedArtifact.FullPath == null || pinnedArtifact.ArtifactName == null || pinnedArtifact.FsArtifactType == null || pinnedArtifact.ProviderType == null)
         {
             throw new ArtifactDoseNotExistsException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
         }
-        var fsArtifact = new FsArtifact(artifact.FullPath, artifact.ArtifactName, artifact.FsArtifactType.Value, artifact.ProviderType.Value) { ThumbnailPath = artifact.ThumbnailPath };
+        
+        var fsArtifact = await FileService.GetFsArtifactAsync(pinnedArtifact.FullPath);
+        fsArtifact.IsPinned = true;
+        fsArtifact.ThumbnailPath = pinnedArtifact.ThumbnailPath;
+
         return fsArtifact;
     }
     private bool ArtifactIsImage(FsArtifact fsArtifact)
@@ -287,6 +292,11 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         if (PinnedPathsCache.Any(c => string.Equals(c.Key, fsArtifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
             return true;
         return false;
+    }
+
+    public Task EnsureInitializedAsync()
+    {
+        throw new NotImplementedException();
     }
 
     public static readonly List<string> ImageExtensions = new() { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };
