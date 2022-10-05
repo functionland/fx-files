@@ -39,6 +39,7 @@ public partial class FileBrowser
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _isAscOrder = true;
     private bool _isSelected;
+    private bool _isLoading = true;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -49,7 +50,7 @@ public partial class FileBrowser
         await LoadPinsAsync();
 
         await LoadChildrenArtifactsAsync();
-
+        _isLoading = false;
         await base.OnInitAsync();
     }
 
@@ -96,7 +97,7 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
-            
+
             await NavigateToDestionation(destinationPath);
         }
         catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
@@ -386,6 +387,7 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
+        _isLoading = true;
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
@@ -401,6 +403,7 @@ public partial class FileBrowser
             _currentArtifact = artifact;
             await LoadChildrenArtifactsAsync(_currentArtifact);
         }
+        _isLoading = false;
     }
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
@@ -623,7 +626,7 @@ public partial class FileBrowser
 
     private async Task UpdateRemovedArtifactsAsync(IEnumerable<FsArtifact> artifacts)
     {
-        if(artifacts.Count() == 1 && artifacts.SingleOrDefault()?.FullPath == _currentArtifact?.FullPath)
+        if (artifacts.Count() == 1 && artifacts.SingleOrDefault()?.FullPath == _currentArtifact?.FullPath)
         {
             await HandleToolbarBackClick();
             return;
@@ -706,6 +709,7 @@ public partial class FileBrowser
 
     private async Task HandleToolbarBackClick()
     {
+        _isLoading = true;
         _fxSearchInputRef?.HandleClearInputText();
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
@@ -721,6 +725,7 @@ public partial class FileBrowser
             StateHasChanged();
         }
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+        _isLoading = false;
     }
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)

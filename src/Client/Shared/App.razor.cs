@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
-using System.Reflection;
+﻿using System.Reflection;
+
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace Functionland.FxFiles.Client.Shared;
 
@@ -14,11 +15,14 @@ public partial class App
 
     private bool _cultureHasNotBeenSet = true;
 
+    private bool _isLoading = true;
+
     private async Task OnNavigateAsync(NavigationContext args)
     {
         // Blazor Server & Pre Rendering use created cultures in UseRequestLocalization middleware
         // Android, windows and iOS have to set culture programmatically.
         // Browser is gets handled in Web project's Program.cs
+        _isLoading = true;
 #if BlazorHybrid && MultilingualEnabled
         if (_cultureHasNotBeenSet)
         {
@@ -35,5 +39,11 @@ public partial class App
             _lazyLoadedAssemblies.AddRange(assemblies);
         }
 #endif
+        _isLoading = false;
+    }
+    override protected async Task OnInitializedAsync()
+    {
+        _isLoading = false;
+        await base.OnInitializedAsync();
     }
 }

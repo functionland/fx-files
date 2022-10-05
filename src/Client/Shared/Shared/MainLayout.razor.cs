@@ -12,6 +12,7 @@ public partial class MainLayout
 
     private FxTheme DesiredTheme;
     private FxTheme SystemTheme;
+    private bool _isLoading = true;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,7 +30,13 @@ public partial class MainLayout
                 await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
 
             await ThemeInterop.RegisterForSystemThemeChangedAsync();
+            _isLoading = false;
             StateHasChanged();
         }
+        else
+        {
+            _isLoading = false;
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

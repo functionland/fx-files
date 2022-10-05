@@ -2,10 +2,16 @@
 <div class="main-layout">
     <div class="content">
         <AppErrorBoundary>
-            @Body
+            @if (_isLoading)
+            {
+                <Loading />
+            }
+            else
+            {
+              @Body
+            }
         </AppErrorBoundary>
     </div>
-
     <BottomNavigation />
 
 </div>

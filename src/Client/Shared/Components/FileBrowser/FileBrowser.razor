@@ -1,6 +1,9 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components
 @inherits AppComponentBase
-
+@if (_isLoading)
+{
+    <Loading />
+}
 <div class="file-browser-container">
 
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
@@ -25,9 +28,9 @@
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                 <FileCard FileName="@pin.Name"
-                                          FileSize="@pin.SizeStr"
-                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")"
-                                          FileImage="@pin.ThumbnailPath" />
+                              FileSize="@pin.SizeStr"
+                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")"
+                              FileImage="@pin.ThumbnailPath" />
                             </div>
                         }
                     </div>

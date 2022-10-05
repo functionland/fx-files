@@ -1,22 +1,17 @@
 ﻿@import "../Styles/abstracts/_functions.scss";
 @import "../Styles/abstracts/_variables.scss";
-    
+
 .loading-icon {
     height: 100%;
     max-width: 600px;
     width: 100%;
     z-index: 3;
     position: fixed;
-    background-color: color(app-bg);
-
-    background: {
-        image: url("images/Loading/Loading.svg");
-        repeat: no-repeat;
-        size: $icon-64;
-        position: center;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .artifact-item-loading {
-    background-position: center 40%; 
+    background-position: center 40%;
 }
