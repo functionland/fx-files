@@ -1,3 +1,4 @@
+using Functionland.FxFiles.Client.Shared.Services.Common;
 using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
@@ -291,6 +292,11 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         if (PinnedPathsCache.Any(c => string.Equals(c.Key, fsArtifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
             return true;
         return false;
+    }
+
+    public Task EnsureInitializedAsync()
+    {
+        throw new NotImplementedException();
     }
 
     public static readonly List<string> ImageExtensions = new() { ".JPG", ".JPEG", ".JPE", ".BMP", ".GIF", ".PNG" };

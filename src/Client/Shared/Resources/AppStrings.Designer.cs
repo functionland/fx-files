@@ -565,11 +565,11 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to internal.
+        ///   Looks up a localized string similar to Internal storage.
         /// </summary>
-        public static string internalStorageName {
+        public static string InternalStorageName {
             get {
-                return ResourceManager.GetString("internalStorageName", resourceCulture);
+                return ResourceManager.GetString("InternalStorageName", resourceCulture);
             }
         }
         
@@ -862,7 +862,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SD Card ({0}).
+        ///   Looks up a localized string similar to SD card ({0}).
         /// </summary>
         public static string SDCardName {
             get {

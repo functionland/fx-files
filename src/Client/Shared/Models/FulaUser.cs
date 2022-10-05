@@ -2,7 +2,6 @@
 
 public class FulaUser
 {
-    public string Did { get; set; } = default!;
-    public string Name { get; set; } = default!;
+    public DIdDocument? DIdDocument { get; set; }
     public bool IsParent { get; set; }
 }

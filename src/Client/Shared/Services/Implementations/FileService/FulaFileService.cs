@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public abstract partial class FulaFileService : IFulaFileService
+public partial class FulaFileService : IFulaFileService
 {
     public virtual Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
     {
@@ -58,6 +58,11 @@ public abstract partial class FulaFileService : IFulaFileService
     }
 
     public virtual Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

@@ -10,6 +10,11 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
         _fsArtifacts = fsArtifacts.ToList();
     }
 
+    public Task EnsureInitializedAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<List<FsArtifact>> GetPinnedArtifactsAsync()
     {
         throw new NotImplementedException();

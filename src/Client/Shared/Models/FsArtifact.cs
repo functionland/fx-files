@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Utils;
+using System.Collections.Generic;
 
 namespace Functionland.FxFiles.Client.Shared.Models
 {
@@ -23,10 +24,14 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string? ContentHash { get; set; }
         public string? ParentFullPath { get; set; }
         public string? OriginDevice { get; set; }
+        public DateTimeOffset CreateDateTime { get; set; }
         public DateTimeOffset LastModifiedDateTime { get; set; }
+        public string WhoMadeLastEdit { get; set; }
         public string? ThumbnailPath { get; set; }
+        public List<FsArtifactActivity>? FsArtifactActivity { get; set; }
+        public List<FulaUser> WhoHasAccess { get; set; }
         // For UI
-        public List<FsZone>? Zones { get; set; }
+        public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
         public string? IsAvailableOffline { get; set; }

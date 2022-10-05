@@ -19,6 +19,8 @@ public static class IServiceCollectionExtensions
 
 
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
+        services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
+
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();
         services.AddSingleton<IFileService>(

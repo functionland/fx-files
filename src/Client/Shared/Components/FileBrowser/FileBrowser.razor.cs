@@ -96,7 +96,7 @@ public partial class FileBrowser
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Success);
-            
+
             await NavigateToDestionation(destinationPath);
         }
         catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
@@ -136,6 +136,11 @@ public partial class FileBrowser
             catch (CanNotOperateOnFilesException ex)
             {
                 existArtifacts = ex.FsArtifacts;
+            }
+
+            catch
+            {
+
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
@@ -368,15 +373,25 @@ public partial class FileBrowser
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
     {
         var allFiles = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
-        var artifacts = new List<FsArtifact>();
-        await foreach (var item in allFiles)
+        try
         {
-            item.IsPinned = PinService.IsPinned(item);
-            artifacts.Add(item);
-        }
+            var artifacts = new List<FsArtifact>();
+            await foreach (var item in allFiles)
+            {
+                item.IsPinned = PinService.IsPinned(item);
+                artifacts.Add(item);
+            }
 
-        _allArtifacts = artifacts;
-        FilterArtifacts();
+            _allArtifacts = artifacts;
+            FilterArtifacts();
+        }
+        //ToDo: Needs more business-wise data to implement
+        catch (AndroidSpecialFilesUnauthorizedAccessException ex)
+        {
+            _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+            _currentArtifact = await FileService.GetFsArtifactAsync(parentArtifact?.ParentFullPath);
+        }
+        //ToDo: Add a general catch in case of other exceptions
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -623,7 +638,7 @@ public partial class FileBrowser
 
     private async Task UpdateRemovedArtifactsAsync(IEnumerable<FsArtifact> artifacts)
     {
-        if(artifacts.Count() == 1 && artifacts.SingleOrDefault()?.FullPath == _currentArtifact?.FullPath)
+        if (artifacts.Count() == 1 && artifacts.SingleOrDefault()?.FullPath == _currentArtifact?.FullPath)
         {
             await HandleToolbarBackClick();
             return;
@@ -711,16 +726,22 @@ public partial class FileBrowser
         {
             ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
         }
-        else
+        if (!_isInSearchMode)
         {
-            _isInSearchMode = false;
             cancellationTokenSource?.Cancel();
-            _searchText = string.Empty;
+            _fxSearchInputRef?.HandleClearInputText();
             await UpdateCurrentArtifactForBackButton(_currentArtifact);
             await LoadChildrenArtifactsAsync(_currentArtifact);
             StateHasChanged();
+            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         }
-        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+        if (_isInSearchMode)
+        {
+            _isInSearchMode = false;
+            _fxSearchInputRef?.HandleClearInputText();
+            await LoadChildrenArtifactsAsync();
+            StateHasChanged();
+        }
     }
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
