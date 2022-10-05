@@ -24,10 +24,10 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             return size switch
             {
                 (< OneKB) => $"{size} bytes",
-                (>= OneKB) and (< OneMB) => $"{size / OneKB} KB",
-                (>= OneMB) and (< OneGB) => $"{size / OneMB} MB",
-                (>= OneGB) and (< OneTB) => $"{size / OneMB} GB",
-                (>= OneTB) => $"{size / OneTB}"
+                (>= OneKB) and (< OneMB) => $"{string.Format("{0:F2}", (float)size / OneKB)} KB",
+                (>= OneMB) and (< OneGB) => $"{string.Format("{0:F2}", (float)size / OneMB)} MB",
+                (>= OneGB) and (< OneTB) => $"{string.Format("{0:F2}", (float)size / OneMB)} GB",
+                (>= OneTB) => $"{string.Format("{0:F2}", (float)size / OneTB)} TB"
             };
         }
 
