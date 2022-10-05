@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Services;
+﻿
+using Functionland.FxFiles.Client.Shared.Services;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<FakeFileServiceFactory>();
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
+        services.AddSingleton<IGoBackService, GoBackService>();
         return services;
     }
 
