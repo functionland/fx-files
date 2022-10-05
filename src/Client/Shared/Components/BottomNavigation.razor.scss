@@ -38,11 +38,6 @@ footer {
     color: $green-dark-base;
 }
 
-
-::deep .navbarApp-link:hover {
-    color: $green-dark-hover;
-}
-
 .navbarApp-linkLabel {
     margin-top: 8px;
     font-size: 12px;
@@ -53,4 +48,10 @@ footer {
 .navbarApp-linkLabel > span {
     display: none;
     margin-right: 8px;
+}
+
+@media(hover: hover) and (pointer: fine) {
+    ::deep .navbarApp-link:hover {
+        color: $green-dark-hover;
+    }
 }
