@@ -1,25 +1,22 @@
 ﻿@import "../Styles/abstracts/_functions.scss";
 @import "../Styles/abstracts/_variables.scss";
-
-.loading-container {
-    height: calc(100vh - 81px);
+    
+.loading-icon {
+    height: 100%;
     max-width: 600px;
     width: 100%;
     z-index: 3;
     position: fixed;
     background-color: color(app-bg);
 
-    .loading-icon {
-        max-width: 64px;
-        height: 64px;
-        margin: 10% auto;
-
-        background: {
-            image: url("images/Loading/Loading.svg");
-            repeat: no-repeat;
-            size: $icon-64;
-            position: center;
-        }
+    background: {
+        image: url("images/Loading/Loading.svg");
+        repeat: no-repeat;
+        size: $icon-64;
+        position: center;
     }
 }
-    
+
+.artifact-item-loading {
+    background-position: center 40%; 
+}
