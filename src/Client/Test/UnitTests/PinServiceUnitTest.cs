@@ -133,7 +133,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             {
                 Console.WriteLine(file.FullPath);
             }
-            var pathPinnedFiles = pinService.IsPinned(artifact1);
+            var pathPinnedFiles = await pinService.IsPinnedAsync(artifact1);
 
         }
 
