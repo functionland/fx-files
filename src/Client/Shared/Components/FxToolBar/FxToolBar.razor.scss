@@ -72,12 +72,11 @@
             }
 
             .pinned-icon::before {
-                padding-left: 30px;
+                margin-right: $spacing-4;
                 font-size: $icon-24;
-                @include Icon($pin-outline);
+                @include Icon($pin, color(gray-content1), $Icons-Filled);
             }
-
-/*            .artifact_subtext {
+            /*            .artifact_subtext {
                 color: color(gray-content3);
                 font-family: $open-sans-regular;
                 font-style: normal;

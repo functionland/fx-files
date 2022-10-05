@@ -1,6 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 
-using Microsoft.JSInterop;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
