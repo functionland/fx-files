@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+
 
 namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
 
@@ -55,5 +56,5 @@ public interface IFulaDatabaseClient
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<T> MutationAsync<T>(string query, JObject values, CancellationToken? cancellationToken = null);
+    Task<T> MutationAsync<T>(string query, JsonObject values, CancellationToken? cancellationToken = null);
 }
