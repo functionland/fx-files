@@ -25,11 +25,12 @@
                         @foreach (var pin in _pins)
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                <FileCard FileName="@pin.Name"
+                                <FileCard ArtifactType="@pin.ArtifactType"
+                                          FileName="@pin.Name"
                                           FileSize="@pin.SizeStr"
-                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")"
                                           FileImage="@pin.ThumbnailPath"
-                                          IsFile="@(pin.ArtifactType == FsArtifactType.File)"/>
+                                          FileType="@pin.FileCategory"
+                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
                         }
                     </div>
