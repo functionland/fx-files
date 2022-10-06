@@ -66,4 +66,9 @@ public partial class FulaFileService : IFulaFileService
     {
         throw new NotImplementedException();
     }
+
+    public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
 }

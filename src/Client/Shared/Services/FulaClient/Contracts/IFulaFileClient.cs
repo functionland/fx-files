@@ -4,8 +4,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
 
 public interface IFulaFileClient
 {
-    Task UploadFileAsync(string token, string path, Stream stream, Action<FileProgressEventArgs>? onProgress = null, CancellationToken cancellationToken);
-    Task AddFolderAsync(string token, string path, string folderName, CancellationToken cancellationToken);
+    Task UploadFileAsync(string token, string path, Stream stream, Action<FileProgressEventArgs>? onProgress = null, CancellationToken? cancellationToken = null);
+    Task AddFolderAsync(string token, string path, string folderName, CancellationToken? cancellationToken = null);
     Task<Stream> GetFileStreamAsync(string token, string filePath, CancellationToken? cancellationToken = null);
     Task MoveArtifactsAsync(string token, IEnumerable<string> sourcesPath, string destinationPath, bool overwrite = false, CancellationToken? cancellationToken = null);
     Task CopyArtifactsAsync(string token, IEnumerable<string> sourcesPath, string destinationPath, bool overwrite = false, CancellationToken? cancellationToken = null);

@@ -672,5 +672,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             //TODO: Fill FsArtifact's data
             return Task.CompletedTask;
         }
+
+        public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
