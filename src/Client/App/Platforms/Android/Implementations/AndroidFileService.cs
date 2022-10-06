@@ -214,7 +214,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
             if (storage.IsPrimary)
             {
-                var internalFileName = StringLocalizer.GetString(AppStrings.internalStorageName);
+                var internalFileName = StringLocalizer.GetString(AppStrings.InternalStorageName);
                 drives.Add(new FsArtifact(fullPath, internalFileName, FsArtifactType.Drive, FsFileProviderType.InternalMemory)
                 {
                     Capacity = capacity,

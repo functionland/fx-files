@@ -2,16 +2,16 @@
 
 public interface IFulaBloxClient
 {
-    Task<List<Blox>> GetBloxesAsync(string did, CancellationToken? cancellationToken = null);
-    Task<Blox> FillBloxStatsAsync(string did, string bloxId, CancellationToken? cancellationToken = null);
-    Task<List<Blox>> GetBloxInvitationsAsync(string did, CancellationToken? cancellationToken = null);
-    Task AcceptBloxInvitationAsync(string did, string bloxId, CancellationToken? cancellationToken = null);
-    Task RejectBloxInvitationAsync(string did, string bloxId, CancellationToken? cancellationToken = null);
-    Task ClearBloxDataAsync(string did, string bloxId, CancellationToken? cancellationToken = null);
+    Task<List<Blox>> GetBloxesAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
+    Task<Blox> FillBloxStatsAsync(DIdDocument dIdDocument, string bloxId, CancellationToken? cancellationToken = null);
+    Task<List<Blox>> GetBloxInvitationsAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
+    Task AcceptBloxInvitationAsync(DIdDocument dIdDocument, string bloxId, CancellationToken? cancellationToken = null);
+    Task RejectBloxInvitationAsync(DIdDocument dIdDocument, string bloxId, CancellationToken? cancellationToken = null);
+    Task ClearBloxDataAsync(DIdDocument dIdDocument, string bloxId, CancellationToken? cancellationToken = null);
 
-    Task<List<BloxPool>> GetMyPoolsAsync(string did, CancellationToken? cancellationToken = null);
-    Task LeavePoolAsync(string did, string poolId, CancellationToken? cancellationToken = null);
-    Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(string did, string poolId, CancellationToken? cancellationToken = null);
-    Task<bool> JoinToPoolAsync(string did, string poolId, CancellationToken? cancellationToken = null);
-    IAsyncEnumerable<BloxPool> SearchPoolAsync(string did, PoolSearchType filter, double? distance, CancellationToken? cancellationToken = null);
+    Task<List<BloxPool>> GetMyPoolsAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
+    Task LeavePoolAsync(DIdDocument dIdDocument, string poolId, CancellationToken? cancellationToken = null);
+    Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(DIdDocument dIdDocument, string poolId, CancellationToken? cancellationToken = null);
+    Task<bool> JoinToPoolAsync(DIdDocument dIdDocument, string poolId, CancellationToken? cancellationToken = null);
+    IAsyncEnumerable<BloxPool> SearchPoolAsync(DIdDocument dIdDocument, PoolSearchType filter, double? distance, CancellationToken? cancellationToken = null);
 }

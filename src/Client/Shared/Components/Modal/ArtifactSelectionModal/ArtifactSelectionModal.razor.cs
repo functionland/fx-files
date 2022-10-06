@@ -41,32 +41,38 @@ public partial class ArtifactSelectionModal
 
     private void SelectDestionation()
     {
-        if (_currentArtifact is null)
+        try
         {
-            return;
+            if (_currentArtifact is null)
+            {
+                return;
+            }
+
+            var result = new ArtifactSelectionResult();
+
+            result.ResultType = ArtifactSelectionResultType.Ok;
+            result.SelectedArtifacts = new[] { _currentArtifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
         }
+        catch (Exception)
+        {
 
-        var result = new ArtifactSelectionResult();
-
-        result.ResultType = ArtifactSelectionResultType.Ok;
-        result.SelectedArtifacts = new[] { _currentArtifact };
-
-        _tcs!.SetResult(result);
-        _tcs = null;
-        _isModalOpen = false;
+            throw;
+        }
     }
 
     private async Task LoadArtifacts(string? path)
     {
         _artifacts = new List<FsArtifact>();
-        var artifacts = _fileService.GetArtifactsAsync(path);     
+        var artifacts = _fileService.GetArtifactsAsync(path);
         var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
         {
-            if (artifactPaths.Contains(item.FullPath)) continue;
-
-            if (item.ArtifactType == FsArtifactType.File)
+            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
             {
                 item.IsDisabled = true;
             }

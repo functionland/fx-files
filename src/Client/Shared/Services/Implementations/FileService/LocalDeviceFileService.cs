@@ -542,8 +542,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
-                string[] files = Directory.GetFiles(path);
-                string[] folders = Directory.GetDirectories(path);
+                string[] files = Array.Empty<string>();
+                string[] folders = Array.Empty<string>();
+
+                try
+                {
+                    files = Directory.GetFiles(path);
+                    folders = Directory.GetDirectories(path);
+                }
+                catch { }
 
                 foreach (var folder in folders)
                 {
@@ -658,6 +665,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             }
 
+        }
+
+        public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        {
+            //TODO: Fill FsArtifact's data
+            return Task.CompletedTask;
         }
     }
 }
