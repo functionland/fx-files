@@ -11,6 +11,13 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task<ConfirmationModalResult> ShowAsync(string title, string description)
         {
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+
             _title = title;
             _description = description;
 

@@ -13,8 +13,7 @@
                IsPinned="@(_currentArtifact?.IsPinned ?? false)"
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
                OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
-               IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)"
-               IsInFileBrowser="true"/>
+               IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {

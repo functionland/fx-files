@@ -6,7 +6,7 @@
 
 //Shared==============================================
 
-html, body {
+body {
     margin: 0;
     padding: 0;
     user-select: none;
@@ -19,15 +19,15 @@ html, body {
         --#{$key}: #{$value};
     }
 
-    background-color: color(gray-bg-primary);
+    background-color: $gray-light-bg-primary;
 }
 
-html, body[data-theme="Dark"] {
+body[data-theme="Dark"] {
     @each $key, $value in $colors-dark {
         --#{$key}: #{$value};
     }
 
-    background-color: color(app-bg);
+    background-color: $main-dark;
 }
 
 *,
