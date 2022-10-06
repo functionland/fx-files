@@ -44,15 +44,12 @@
     cursor: pointer;
     position: relative;
     padding: $spacing-16 21px;
+    border-radius: $border-radius-3;
 
     .item-icon-position {
         font-size: $icon-24;
         margin-right: 1px;
     }
-
-/*    &:hover {
-        background-color: color(gray-hover);
-    }*/
 }
 
 @media (hover: hover) {
@@ -125,7 +122,6 @@
 
 .grid-view-item {
     height: 120px;
-    border-radius: $border-radius-3;
 
     .options-btn::before {
         @include Icon($options-horizontal);
