@@ -72,9 +72,7 @@ public partial class ArtifactSelectionModal
 
         await foreach (var item in artifacts)
         {
-            if (artifactPaths.Contains(item.FullPath)) continue;
-
-            if (item.ArtifactType == FsArtifactType.File)
+            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
             {
                 item.IsDisabled = true;
             }
