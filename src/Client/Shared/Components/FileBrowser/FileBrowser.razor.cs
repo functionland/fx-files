@@ -138,11 +138,6 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
-            catch
-            {
-
-            }
-
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
 
             if (existArtifacts.Count > 0)
@@ -378,7 +373,7 @@ public partial class FileBrowser
             var artifacts = new List<FsArtifact>();
             await foreach (var item in allFiles)
             {
-                item.IsPinned = PinService.IsPinned(item);
+                item.IsPinned = await PinService.IsPinnedAsync(item);
                 artifacts.Add(item);
             }
 
@@ -665,7 +660,9 @@ public partial class FileBrowser
     private async Task HandleDeepSearchAsync(string? text)
     {
         _searchText = text;
-        _allArtifacts = new();
+        _allArtifacts.Clear();
+        _filteredArtifacts.Clear();
+
         FilterArtifacts();
 
         if (cancellationTokenSource is not null)
@@ -676,31 +673,40 @@ public partial class FileBrowser
         cancellationTokenSource = new CancellationTokenSource();
         var token = cancellationTokenSource.Token;
         var sw = Stopwatch.StartNew();
+
         await Task.Run(async () =>
         {
-            var buffer = new List<FsArtifact>();
             try
             {
                 await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
                 {
                     if (token.IsCancellationRequested)
-                        break;
+                        return;
 
-                    buffer.Add(item);
+                    _allArtifacts.Add(item);
                     if (sw.ElapsedMilliseconds > 1000)
                     {
                         if (token.IsCancellationRequested)
-                            break;
-                        _allArtifacts.AddRange(buffer);
+                            return;
+
                         FilterArtifacts();
-                        buffer = new List<FsArtifact>();
+                        await InvokeAsync(() =>
+                        {
+                            StateHasChanged();
+                        });
                         sw.Restart();
                         await Task.Yield();
                     }
                 }
 
-                _allArtifacts.AddRange(buffer);
+                if (token.IsCancellationRequested)
+                    return;
+
                 FilterArtifacts();
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
             }
             catch (Exception ex)
             {
@@ -708,6 +714,8 @@ public partial class FileBrowser
             }
 
         });
+
+
     }
 
     private void HandleSearch(string? text)
@@ -737,6 +745,7 @@ public partial class FileBrowser
         }
         if (_isInSearchMode)
         {
+            cancellationTokenSource?.Cancel();
             _isInSearchMode = false;
             _fxSearchInputRef?.HandleClearInputText();
             await LoadChildrenArtifactsAsync();
@@ -744,27 +753,16 @@ public partial class FileBrowser
         }
     }
 
-    private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
+    private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
-        if (fsArtifact.ParentFullPath is null)
+        try
         {
-            _currentArtifact = null;
-            return;
+            _currentArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
         }
-
-        var previousArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
-        if (previousArtifact != null && previousArtifact.ArtifactType == FsArtifactType.Drive)
-        {
-            var drives = FileService.GetArtifactsAsync(null);
-            var rootArtifacts = new List<FsArtifact>();
-            await foreach (var drive in drives)
+        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
             {
-                rootArtifacts.Add(drive);
-            }
-            _currentArtifact = rootArtifacts.FirstOrDefault(a => a.FullPath == fsArtifact.ParentFullPath);
-            return;
+            _currentArtifact = null;
         }
-        _currentArtifact = previousArtifact;
     }
 
     private void FilterArtifacts()
@@ -814,7 +812,7 @@ public partial class FileBrowser
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.LastModifiedDateTime).ToList();
                 return;
             }
 
@@ -829,7 +827,7 @@ public partial class FileBrowser
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.Size).ToList();
                 return;
             }
         }
@@ -843,7 +841,7 @@ public partial class FileBrowser
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name).ToList();
+                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.Name).ToList();
                 return;
             }
         }

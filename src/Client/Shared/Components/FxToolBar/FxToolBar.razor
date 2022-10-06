@@ -17,7 +17,7 @@
             }
 
             <FxSearchInput IsPartial="true"
-                       DebounceInterval="300"
+                       DebounceInterval="1000"
                        OnSearch="HandleSearch"
                        OnFocus="HandleSearchFocused"
                        @ref="_searchInputRef"/>
@@ -63,12 +63,15 @@
                           ButtonStyle="FxButtonStyle.IconOnly"
                           LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
 
-                        <FxButton Class="overflow-button"
+                        @if (!IsInSelectMode)
+                        {
+                          <FxButton Class="overflow-button"
                           Padding="0 0 0 10px"
                           BackgroundColor="transparent"
                           OnClick="OnOverflowButtonClick"
                           ButtonStyle="FxButtonStyle.None"
                           IsVisible="IsOverflowButtonVisible" />
+                        }
                     }
                 </div>
             </div>

@@ -10,9 +10,11 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public bool IsPinned { get; set; }
         [Parameter] public string? SubTitle { get; set; }
         [Parameter, EditorRequired] public bool IsInRoot { get; set; }
+        [Parameter] public bool IsInSelectMode { get; set; } = false;
         [Parameter] public bool IsAddButtonVisible { get; set; } = true;
         [Parameter] public bool IsBackButtonVisible { get; set; } = true;
         [Parameter] public bool IsOverflowButtonVisible { get; set; } = true;
+        [Parameter] public bool IsInFileBrowser { get; set; } = false;
         [Parameter] public EventCallback<MouseEventArgs> OnAddButtonClick { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> OnOverflowButtonClick { get; set; }
         [Parameter] public EventCallback OnSearchFocused { get; set; }
@@ -38,7 +40,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private async Task HandleBackClick()
         {
-            _searchInputRef.HandleClearInputText();
+            if (!IsInFileBrowser)
+            {
+                await JSRuntime.InvokeVoidAsync("history.back");
+                return;
+            }
+            if (_searchInputRef != null)
+            {
+                _searchInputRef.HandleClearInputText();
+            }
             await OnBackClick.InvokeAsync();
         }
     }
