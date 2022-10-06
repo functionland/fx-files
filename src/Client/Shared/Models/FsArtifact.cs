@@ -30,6 +30,8 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string? ThumbnailPath { get; set; }
         public List<FsArtifactActivity>? FsArtifactActivity { get; set; }
         public List<FulaUser> WhoHasAccess { get; set; }
+        public FulaUser Owner { get; set; }
+
         // For UI
         public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
@@ -37,7 +39,6 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
         public bool? IsDisabled { get; set; }
-        public string? OwnerDid { get; set; }
         public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
         public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension ?? "");
     }

@@ -2,12 +2,22 @@
 
 public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 {
-    public Task EnsureInitializedAsync()
+    public Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public IAsyncEnumerable<FsArtifact> GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null)
+    public Task<List<FulaUser>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerable<FsArtifact> GetSharedByMeArtifactsAsync(CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerable<FsArtifact> GetSharedWithMeArtifactsAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -17,27 +27,27 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         throw new NotImplementedException();
     }
 
-    public Task ShareFsArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+    public Task<bool> IsSahredByMeAsync(string path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task ShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+    public Task RevokeShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task UnShareFsArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
+    public Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task UnShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+    public Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task<List<FulaUser>> WhoHasAccessToArtifact(string artifactFullPath, CancellationToken? cancellationToken = null)
+    public Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
