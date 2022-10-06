@@ -19,7 +19,7 @@
             ButtonStyle="FxButtonStyle.MenuLine" />
         <FxButton 
             Text="@Localizer[nameof(AppStrings.Mode)]"
-            Link="settings/theme"
+            OnClick="@(() => NavigationManager.NavigateTo("settings/theme", false, true))"
             MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
             ButtonStyle="FxButtonStyle.MenuLine"/>
         <FxButton

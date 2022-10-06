@@ -32,6 +32,7 @@ footer {
     align-items: center;
     text-decoration: none;
     flex-direction: column;
+    pointer-events: none;
 }
 
 ::deep .navbarApp-link.active {

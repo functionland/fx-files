@@ -33,26 +33,27 @@ public partial class MainPage
 
     }
 
+
+#if ANDROID
     protected override bool OnBackButtonPressed()
     {
         var backButtonService = MauiApplication.Current.Services.GetRequiredService<IGoBackService>();
         if (backButtonService?.GoBackAsync != null)
         {
             backButtonService.GoBackAsync().GetAwaiter();
-            return true;
         }
-        else
-        {
-            return base.OnBackButtonPressed();
-        }   
+
+        return backButtonService?.CanGoBack ?? base.OnBackButtonPressed();
     }
+#endif
+
 }
 
 public class FxViewerBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
-        var baseFileProvider =  base.CreateFileProvider(contentRootDir);
+        var baseFileProvider = base.CreateFileProvider(contentRootDir);
         return new FxFileProvider(baseFileProvider);
     }
 }
