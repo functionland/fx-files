@@ -31,7 +31,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 subpath = subpath.Replace(".HandleByApp=true", string.Empty);
                 subpath = subpath.Replace("_content/Functionland.FxFiles.Client.Shared/", string.Empty);
 
-                return new ContactFileInfo(subpath);
+                return new FxFileInfo(subpath);
             }
 
             return _fileProvider.GetFileInfo(subpath);
@@ -44,11 +44,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
     }
 }
 
-public class ContactFileInfo : IFileInfo
+public class FxFileInfo : IFileInfo
 {
     private readonly string _path;
 
-    public ContactFileInfo(string path)
+    public FxFileInfo(string path)
     {
         _path = path;
     }
