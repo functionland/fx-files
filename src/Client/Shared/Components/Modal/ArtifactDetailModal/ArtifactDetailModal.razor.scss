@@ -134,6 +134,11 @@
     @include Icon($video);
 }
 
+.app-file-icon::before {
+    font-size: 32px;
+    @include Icon($app);
+}
+
 .other-file-icon::before {
     font-size: 32px;
     @include Icon($document);

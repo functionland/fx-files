@@ -1,39 +1,60 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
+﻿using System.Text.Json.Nodes;
+
+
+namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
 
 public interface IFulaDatabaseClient
 {
     /// <summary>
-    /// Pin some paths.
+    /// Every query operation takes a GraphQl query for <b>reading</b> operation. 
     /// </summary>
-    /// <param name="did">Unique user id</param>
-    /// <param name="paths"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="query">
+    /// query {
+    ///         read(input:{
+    ///         collection: "profile",
+    ///           filter:
+    ///             {
+    ///             age: { gt: 50}
+    ///             }
+    ///         }){
+    ///           id
+    ///           name
+    ///           age
+    ///         }
+    ///       } 
+    /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task SetPinAsync(string did, string[] paths, CancellationToken? cancellationToken = null);
+    Task<List<T>> QueryAsync<T>(string query, CancellationToken? cancellationToken = null);
 
     /// <summary>
-    /// Unpin some paths.
+    /// Every mutation operation takes a query an values for create, update or delete operation
     /// </summary>
-    /// <param name="did"></param>
-    /// <param name="path"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="query">
+    ///  mutation addProfile($values:JSON)
+    ///  {
+    ///      create(input:{
+    ///      collection: "profile",
+    ///    values: $values
+    ///      }){
+    ///          id
+    ///          name
+    ///    isActive
+    ///  }
+    ///  }
+    /// </param>
+    /// <param name="values">
+    ///     {
+    ///        values: [{
+    ///         id: 1,
+    ///            name: 'Mehdi',
+    ///            isActive: false
+    ///          }]
+    ///     }
+    /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task SetUnPinAsync(string did, string[] path, CancellationToken? cancellationToken = null);
-
-    /// <summary>
-    /// Get all pinned items.
-    /// </summary>
-    /// <param name="did"></param>
-    /// <returns></returns>
-    Task<string[]> GetPinnedAsync(string did);
-
-    /// <summary>
-    /// Check is pinned a path or not.
-    /// </summary>
-    /// <param name="did"></param>
-    /// <param name="psth"></param>
-    /// <returns></returns>
-    Task<bool> IsPinnedAsync(string did, string psth);
-
-    //TODO: Check status of share items and Zone items.
+    Task<List<T>> MutateAsync<T>(string query, IEnumerable<T> values, CancellationToken? cancellationToken = null);
 }
