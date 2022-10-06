@@ -10,7 +10,8 @@
                    Title="@_currentArtifact?.Name"
                    IsPinned="@(_currentArtifact?.IsPinned ?? false)"
                    SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")"
-                   OnAddButtonClick="CreateFolder" />
+                   OnAddButtonClick="CreateFolder"
+                   IsInFileBrowser="true"/>
 
         <div class="select-action">
             <div class="info-selection">
