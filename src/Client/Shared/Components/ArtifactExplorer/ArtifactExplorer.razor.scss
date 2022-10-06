@@ -49,9 +49,11 @@
         font-size: $icon-24;
         margin-right: 1px;
     }
+}
 
-    &:hover {
-        background-color: color(gray-hover);
+@media (hover: hover) and (pointer: fine) {
+    a.item-container:hover {
+        background-color: color(gray-bg-secondary);
     }
 }
 
