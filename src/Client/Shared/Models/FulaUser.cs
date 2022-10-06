@@ -2,6 +2,12 @@
 
 public class FulaUser
 {
-    public DIdDocument? DIdDocument { get; set; }
+    public FulaUser(string dId)
+    {
+        DId = dId;
+    }
+
+    public string DId { get; set; }
+    public string? Username { get; set; }
     public bool IsParent { get; set; }
 }

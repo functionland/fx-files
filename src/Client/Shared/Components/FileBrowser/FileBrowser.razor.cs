@@ -411,7 +411,7 @@ public partial class FileBrowser : IDisposable
         catch (AndroidSpecialFilesUnauthorizedAccessException ex)
         {
             _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
-            _currentArtifact = await FileService.GetFsArtifactAsync(parentArtifact?.ParentFullPath);
+            _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
         //ToDo: Add a general catch in case of other exceptions
     }
@@ -785,12 +785,14 @@ public partial class FileBrowser : IDisposable
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
-        if (fsArtifact?.ParentFullPath == null)
+        try
+        {
+            _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+        }
+        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
             _currentArtifact = null;
-            return;
         }
-        _currentArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
     }
 
     private void FilterArtifacts()
@@ -938,7 +940,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task NavigateToDestionation(string? destinationPath)
     {
-        _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+        _currentArtifact = await FileService.GetArtifactAsync(destinationPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
         await LoadPinsAsync();
     }

@@ -17,7 +17,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     private TaskCompletionSource? _tcs { get; set; }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken? cancellationToken = null)
     {
         if (PinnedPathsCache.Any()) return;
         _tcs ??= new TaskCompletionSource();
@@ -137,7 +137,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         }
     }
 
-    public async Task<List<FsArtifact>> GetPinnedArtifactsAsync()
+    public async Task<List<FsArtifact>> GetPinnedArtifactsAsync(CancellationToken? cancellationToken = null)
     {
         await EnsureInitializedAsync();
         var pinnedArtifacts = PinnedPathsCache.Select(c => c.Value).ToList();
@@ -179,7 +179,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         return artifacts;
     }
 
-    public async Task<bool> IsPinnedAsync(FsArtifact fsArtifact)
+    public async Task<bool> IsPinnedAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
     {
         await EnsureInitializedAsync();
         if (PinnedPathsCache.Any(c => string.Equals(c.Key, fsArtifact.FullPath, StringComparison.CurrentCultureIgnoreCase)))
@@ -187,7 +187,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         return false;
     }
 
-    public async Task EnsureInitializedAsync()
+    public async Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
     {
         if (_tcs == null) return;
         await _tcs.Task;
@@ -300,7 +300,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
             throw new ArtifactDoseNotExistsException(StringLocalizer[nameof(AppStrings.ArtifactDoseNotExistsException)]);
         }
 
-        var fsArtifact = await FileService.GetFsArtifactAsync(pinnedArtifact.FullPath);
+        var fsArtifact = await FileService.GetArtifactAsync(pinnedArtifact.FullPath);
         fsArtifact.IsPinned = true;
         fsArtifact.ThumbnailPath = pinnedArtifact.ThumbnailPath;
 
