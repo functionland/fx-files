@@ -43,5 +43,5 @@ public interface IOfflineAvailablityService
     /// Get fula local folder address
     /// </summary>
     /// <returns></returns>
-    string GetFulaLocalFolderAddress();
+    //string GetFulaLocalFolderAddress();
 }

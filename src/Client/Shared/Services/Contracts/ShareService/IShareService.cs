@@ -22,7 +22,7 @@ public interface IShareService
     /// <param name="fsArtifact"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task ShareFsArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
+    Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Share some artifacts with others
@@ -31,7 +31,7 @@ public interface IShareService
     /// <param name="fsArtifact"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task ShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null);
+    Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null);
 
     /// <summary>
     ///  Unshare an artifact with others
@@ -40,7 +40,7 @@ public interface IShareService
     /// <param name="artifactFullPath"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UnShareFsArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null);
+    Task RevokeShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Unshare some artifacts with others
@@ -49,14 +49,18 @@ public interface IShareService
     /// <param name="fsArtifact"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UnShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null);
+    Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get shared artifacts
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    IAsyncEnumerable<FsArtifact> GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null);
+    IAsyncEnumerable<FsArtifact> GetSharedByMeArtifactsAsync(CancellationToken? cancellationToken = null);
+
+    IAsyncEnumerable<FsArtifact> GetSharedWithMeArtifactsAsync(CancellationToken? cancellationToken = null);
+
+    Task<bool> IsSahredByMeAsync(string path, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Who has access to an artifact?
@@ -64,5 +68,5 @@ public interface IShareService
     /// <param name="artifactFullPath"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<FulaUser>> WhoHasAccessToArtifact(string artifactFullPath, CancellationToken? cancellationToken = null);
+    Task<List<FulaUser>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null);
 }

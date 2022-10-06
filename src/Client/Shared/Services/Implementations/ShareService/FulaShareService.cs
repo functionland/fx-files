@@ -7,7 +7,7 @@ public class FulaShareService : IFulaShareService
         throw new NotImplementedException();
     }
 
-    public IAsyncEnumerable<FsArtifact> GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null)
+    public IAsyncEnumerable<FsArtifact> GetSharedByMeArtifactsAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -17,22 +17,22 @@ public class FulaShareService : IFulaShareService
         throw new NotImplementedException();
     }
 
-    public Task ShareFsArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+    public Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task ShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+    public Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task UnShareFsArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
+    public Task UnShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task UnShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+    public Task UnShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
