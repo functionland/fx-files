@@ -67,5 +67,10 @@ namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations
         {
             return FsFileProviderType.InternalMemory;
         }
+
+        public override Task<List<FsArtifact>> GetDrivesAsync()
+        {
+            return Task.FromResult(new List<FsArtifact>());
+        }
     }
 }

@@ -418,8 +418,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 return FsArtifactType.File;
             }
 
-            string[] drives = Directory.GetLogicalDrives();
-            if (drives.Contains(path))
+            var drives = await GetDrivesAsync();
+            if (drives.Any(drive=> drive.FullPath == path))
             {
                 return FsArtifactType.Drive;
             }
