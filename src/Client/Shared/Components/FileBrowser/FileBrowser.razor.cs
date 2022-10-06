@@ -785,14 +785,12 @@ public partial class FileBrowser : IDisposable
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
-        try
+        if (fsArtifact?.ParentFullPath == null)
         {
-            _currentArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
-        }
-        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
-            {
             _currentArtifact = null;
+            return;
         }
+        _currentArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
     }
 
     private void FilterArtifacts()
