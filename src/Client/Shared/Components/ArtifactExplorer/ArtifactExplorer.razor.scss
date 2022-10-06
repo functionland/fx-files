@@ -194,6 +194,10 @@
     @include Icon($video);
 }
 
+.app-file-icon::before {
+    @include Icon($app);
+}
+
 /*.select-action {
     display: flex;
     height: 40px;
