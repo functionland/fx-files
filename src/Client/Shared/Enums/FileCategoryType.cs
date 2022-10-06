@@ -6,6 +6,7 @@
         Video,
         Audio,
         Document,
+        App,
         Pdf,
         Other
     }

@@ -124,13 +124,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
                     case FileCategoryType.Other:
                         return "text-file-icon";
                     case FileCategoryType.Pdf:
-                        return "text-file-icon";
+                        return "pdf-file-icon";
                     case FileCategoryType.Image:
                         return "photo-file-icon";
                     case FileCategoryType.Audio:
                         return "audio-file-icon";
                     case FileCategoryType.Video:
                         return "video-file-icon";
+                    case FileCategoryType.App:
+                        return "app-file-icon";
                 }
             }
 

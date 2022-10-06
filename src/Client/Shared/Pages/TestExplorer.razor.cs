@@ -1,5 +1,9 @@
-﻿using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
+﻿using Bit.BlazorUI;
+
+using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
+
+using static Dapper.SqlMapper;
 
 namespace Functionland.FxFiles.Client.Shared.Pages;
 
@@ -15,6 +19,8 @@ public partial class TestExplorer
     protected override Task OnInitAsync()
     {
         PlatformTests = PlatformTestService.GetTests().ToList();
+        GoBackService.GoBackAsync = HandleBack;
+
         return base.OnInitAsync();
     }
 
@@ -64,7 +70,10 @@ public partial class TestExplorer
 
         return bitDropDownItems;
     }
-
-
+    private Task HandleBack()
+    {
+        NavigationManager.NavigateTo("settings", false, true);
+        return Task.CompletedTask;
+    }
 }
 
