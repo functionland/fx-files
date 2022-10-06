@@ -14,6 +14,54 @@ public partial class AppComponentBase : ComponentBase
 
     [AutoInject] protected IJSRuntime JSRuntime { get; set; } = default!;
 
+    public bool IsAndroid
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Platform == DevicePlatform.Android;
+#else
+            return false;
+#endif
+        }
+    }
+
+    public bool IsWindows
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Platform == DevicePlatform.WinUI;
+#else
+            return false;
+#endif
+        }
+    }
+
+    public bool IsiOS
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Platform == DevicePlatform.iOS;
+#else
+            return false;
+#endif
+        }
+    }
+
+    public bool IsmacOS
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst;
+#else
+            return false;
+#endif
+        }
+    }
+
     protected async sealed override Task OnInitializedAsync()
     {
         try
