@@ -665,7 +665,9 @@ public partial class FileBrowser
     private async Task HandleDeepSearchAsync(string? text)
     {
         _searchText = text;
-        _allArtifacts = new();
+        _allArtifacts.Clear();
+        _filteredArtifacts.Clear();
+
         FilterArtifacts();
 
         if (cancellationTokenSource is not null)
@@ -676,9 +678,9 @@ public partial class FileBrowser
         cancellationTokenSource = new CancellationTokenSource();
         var token = cancellationTokenSource.Token;
         var sw = Stopwatch.StartNew();
+
         await Task.Run(async () =>
         {
-            var buffer = new List<FsArtifact>();
             try
             {
                 await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
@@ -686,17 +688,17 @@ public partial class FileBrowser
                     if (token.IsCancellationRequested)
                         return;
 
-                    buffer.Add(item);
+                    _allArtifacts.Add(item);
                     if (sw.ElapsedMilliseconds > 1000)
                     {
                         if (token.IsCancellationRequested)
                             return;
-                        _allArtifacts.AddRange(buffer);
+
                         FilterArtifacts();
-#if BlazorHybrid
-                        await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
-#endif
-                        buffer = new List<FsArtifact>();
+                        await InvokeAsync(() =>
+                        {
+                            StateHasChanged();
+                        });
                         sw.Restart();
                         await Task.Yield();
                     }
@@ -705,11 +707,11 @@ public partial class FileBrowser
                 if (token.IsCancellationRequested)
                     return;
 
-                _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
-#if BlazorHybrid
-                        await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
-#endif
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
             }
             catch (Exception ex)
             {
@@ -717,6 +719,8 @@ public partial class FileBrowser
             }
 
         });
+
+
     }
 
     private void HandleSearch(string? text)

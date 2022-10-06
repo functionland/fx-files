@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Extensions;
+using System.IO;
 using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
@@ -605,66 +606,88 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private async IAsyncEnumerable<FsArtifact> GetAllFileAndFoldersAsync(string path, string searchText, CancellationToken? cancellationToken = null)
         {
-            var files = new List<string>();
-            var folders = new List<string>();
+            var files = new List<(string fullPath, FileInfo fileInfo)>();
+            var folders = new List<(string fullPath, DirectoryInfo directoryInfo)>();
+
+            if (cancellationToken?.IsCancellationRequested == true) yield break;
+
             try
             {
-                files = Directory.GetFiles(path).ToList();
-                folders = Directory.GetDirectories(path).ToList();
+                files = Directory
+                    .GetFiles(path)
+                    .Select(c => (c, new FileInfo(c)))
+                    .Where(c =>
+                            !c.Item2.Attributes.HasFlag(FileAttributes.Hidden) &&
+                            !c.Item2.Attributes.HasFlag(FileAttributes.System) &&
+                            !c.Item2.Attributes.HasFlag(FileAttributes.Temporary) &&
+                             c.Item2.Name.ToLower().Contains(searchText.ToLower())
+                        )
+                    .ToList();
+
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
+
+
+                folders = Directory
+                        .GetDirectories(path)
+                        .Select(c => (c, new DirectoryInfo(c)))
+                        .Where(c =>
+                                !c.Item2.Attributes.HasFlag(FileAttributes.Hidden) &&
+                                !c.Item2.Attributes.HasFlag(FileAttributes.System) &&
+                                !c.Item2.Attributes.HasFlag(FileAttributes.Temporary)
+                            )
+                        .ToList();
+
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
+
             }
             catch { }
 
-            foreach (var file in files)
+            var filesCount = files.Count;
+
+            for (int i = 0; i < filesCount; i++)
             {
+                var (fullPath, fileInfo) = files[i];
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-                var fileinfo = new FileInfo(file);
+                var providerType = await GetFsFileProviderTypeAsync(fullPath);
 
-                if (fileinfo.Attributes.HasFlag(FileAttributes.Hidden) ||
-                    fileinfo.Attributes.HasFlag(FileAttributes.System) ||
-                    fileinfo.Attributes.HasFlag(FileAttributes.Temporary) ||
-                    !fileinfo.Name.ToUpper().Contains(searchText.ToUpper())) continue;
-
-                var providerType = await GetFsFileProviderTypeAsync(file);
-
-                yield return new FsArtifact(file, Path.GetFileName(file), FsArtifactType.File, providerType)
+                yield return new FsArtifact(fullPath, Path.GetFileName(fullPath), FsArtifactType.File, providerType)
                 {
-                    ParentFullPath = Directory.GetParent(file)?.FullName,
-                    LastModifiedDateTime = File.GetLastWriteTime(file),
-                    FileExtension = Path.GetExtension(file),
-                    Size = fileinfo.Length
+                    ParentFullPath = Directory.GetParent(fullPath)?.FullName,
+                    LastModifiedDateTime = File.GetLastWriteTime(fullPath),
+                    FileExtension = Path.GetExtension(fullPath),
+                    Size = fileInfo.Length
                 };
             }
 
-            foreach (var folder in folders)
+            files.Clear();
+
+            var foldersCount = folders.Count;
+
+            for (int i = 0; i < foldersCount; i++)
             {
+                var (fullPath, directoryInfo) = folders[i];
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-                var directoryInfo = new DirectoryInfo(folder);
+                var providerType = await GetFsFileProviderTypeAsync(fullPath);
 
-                if (directoryInfo.Attributes.HasFlag(FileAttributes.Hidden) ||
-                    directoryInfo.Attributes.HasFlag(FileAttributes.System) ||
-                    directoryInfo.Attributes.HasFlag(FileAttributes.Temporary)) continue;
-
-                var providerType = await GetFsFileProviderTypeAsync(folder);
-
-                if (directoryInfo.Name.ToUpper().Contains(searchText.ToUpper()))
+                if (directoryInfo.Name.ToLower().Contains(searchText.ToLower()))
                 {
-                    yield return new FsArtifact(folder, Path.GetFileName(folder), FsArtifactType.Folder, providerType)
+                    yield return new FsArtifact(fullPath, Path.GetFileName(fullPath), FsArtifactType.Folder, providerType)
                     {
-                        ParentFullPath = Directory.GetParent(folder)?.FullName,
-                        LastModifiedDateTime = Directory.GetLastWriteTime(folder)
+                        ParentFullPath = Directory.GetParent(fullPath)?.FullName,
+                        LastModifiedDateTime = Directory.GetLastWriteTime(fullPath)
                     };
                 }
 
-                await foreach (var item in GetAllFileAndFoldersAsync(folder, searchText, cancellationToken))
+                await foreach (var item in GetAllFileAndFoldersAsync(fullPath, searchText, cancellationToken))
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     yield return item;
                 }
-
             }
 
+            folders.Clear();
         }
 
         public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
