@@ -125,6 +125,7 @@
 
 .grid-view-item {
     height: 120px;
+    border-radius: $border-radius-3;
 
     .options-btn::before {
         @include Icon($options-horizontal);
