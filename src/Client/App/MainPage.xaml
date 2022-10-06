@@ -8,8 +8,7 @@
     BackgroundColor="{AppThemeBinding Dark=#212529, Light=#FFFFFF}">
 
 
-
-    <app:FxViewerBlazorWebView BackgroundColor="{AppThemeBinding Dark=#212529, Light=#FFFFFF}" HostPage="wwwroot/index.html">
+    <app:FxViewerBlazorWebView BackgroundColor="Transparent" HostPage="wwwroot/index.html">
         <b:BlazorWebView.RootComponents>
             <b:RootComponent ComponentType="{x:Type client:App}" Selector="app" />
         </b:BlazorWebView.RootComponents>
