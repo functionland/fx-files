@@ -2,7 +2,7 @@
 
 @inherits AppComponentBase;
 
-<div class="sheet column items-center justify-end @(!IsOpen ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
+@*<div class="sheet column items-center justify-end @(!IsOpen ? "close-bottom-sheet-animation" : "show-bottom-sheet-animation")">
 
     <div class="overlay" @onclick="(async () => await Close())"></div>
 
@@ -22,5 +22,26 @@
 
 
         @ChildContent
+    </div>
+</div>*@
+
+<div class="sheet-wrapper @(IsOpen ? "sheet-wrapper-apear" : "")" @onclick="(async () => await Close())">
+    <div class="bottom-sheet @(!IsOpen ? "" : "show-bottom-sheet")">
+        <div class="bottom-sheet-contents">
+            @if (ShowCloseButton)
+            {
+                <div class="controls">
+                    @if (!string.IsNullOrEmpty(Title))
+                    {
+                        <div class="title-modal">@Title</div>
+                    }
+                    <button @onclick="(async () => await Close())" class="close-sheet close-button" type="button" title="Close the sheet">
+                        <div class="close-button-icon"></div>
+                    </button>
+                </div>
+            }
+
+            @ChildContent
+        </div>
     </div>
 </div>
