@@ -684,13 +684,13 @@ public partial class FileBrowser
                 await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
                 {
                     if (token.IsCancellationRequested)
-                        break;
+                        return;
 
                     buffer.Add(item);
                     if (sw.ElapsedMilliseconds > 1000)
                     {
                         if (token.IsCancellationRequested)
-                            break;
+                            return;
                         _allArtifacts.AddRange(buffer);
                         FilterArtifacts();
                         await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
@@ -699,6 +699,9 @@ public partial class FileBrowser
                         await Task.Yield();
                     }
                 }
+
+                if (token.IsCancellationRequested)
+                    return;
 
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
@@ -739,6 +742,7 @@ public partial class FileBrowser
         }
         if (_isInSearchMode)
         {
+            cancellationTokenSource?.Cancel();
             _isInSearchMode = false;
             _fxSearchInputRef?.HandleClearInputText();
             await LoadChildrenArtifactsAsync();
@@ -746,9 +750,9 @@ public partial class FileBrowser
         }
     }
 
-    private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
+    private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
-        if (fsArtifact.ParentFullPath is null)
+        if (fsArtifact?.ParentFullPath is null)
         {
             _currentArtifact = null;
             return;
@@ -763,7 +767,7 @@ public partial class FileBrowser
             {
                 rootArtifacts.Add(drive);
             }
-            _currentArtifact = rootArtifacts.FirstOrDefault(a => a.FullPath == fsArtifact.ParentFullPath);
+            _currentArtifact = rootArtifacts.FirstOrDefault(a => a.FullPath == fsArtifact?.ParentFullPath);
             return;
         }
         _currentArtifact = previousArtifact;
