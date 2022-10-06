@@ -693,7 +693,9 @@ public partial class FileBrowser
                             return;
                         _allArtifacts.AddRange(buffer);
                         FilterArtifacts();
+#if BlazorHybrid
                         await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
+#endif
                         buffer = new List<FsArtifact>();
                         sw.Restart();
                         await Task.Yield();
@@ -705,7 +707,9 @@ public partial class FileBrowser
 
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
-                await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
+#if BlazorHybrid
+                        await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
+#endif
             }
             catch (Exception ex)
             {
