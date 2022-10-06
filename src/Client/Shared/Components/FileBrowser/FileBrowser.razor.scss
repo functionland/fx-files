@@ -152,6 +152,11 @@
             font-size: 24px;
             @include Icon($filter, color(gray-content3));
         }
+
+        .filter-btn-selected::before {
+            font-size: 24px;
+            @include Icon($fill, $green-dark-base, $Icons-Filled);
+        }
     }
 }
 .action-bar-search {
