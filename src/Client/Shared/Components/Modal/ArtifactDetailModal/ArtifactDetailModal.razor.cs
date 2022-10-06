@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
@@ -88,6 +89,13 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task<ArtifactDetailModalResult> ShowAsync(FsArtifact[] artifacts, bool isMultiple = false)
         {
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+
             _tcs?.SetCanceled();
             _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;

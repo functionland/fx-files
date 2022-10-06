@@ -42,7 +42,7 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+    public virtual Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -62,7 +62,12 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+    public Task FillArtifactMetaAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
