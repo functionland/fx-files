@@ -77,7 +77,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null)
+        if (path is null && string.IsNullOrWhiteSpace(searchText))
         {
             var drives = await GetDrivesAsync();
             foreach (var drive in drives)
@@ -95,11 +95,6 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null)
-        {
-            return null;
-        }
-
         return await base.GetFsArtifactAsync(path, cancellationToken);
     }
 

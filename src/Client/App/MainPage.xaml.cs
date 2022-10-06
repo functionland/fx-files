@@ -49,7 +49,7 @@ public partial class MainPage
 
 }
 
-public class FxViewerBlazorWebView : BlazorWebView
+public class FxBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {

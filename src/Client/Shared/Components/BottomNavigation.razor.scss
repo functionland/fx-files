@@ -19,9 +19,8 @@ footer {
 }
 
 .navbarApp__wrapper {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /*grid-template-columns: repeat(4, 1fr);*/
+    display: flex;
+    justify-content: space-around;
 }
 
 ::deep .navbarApp-link {
