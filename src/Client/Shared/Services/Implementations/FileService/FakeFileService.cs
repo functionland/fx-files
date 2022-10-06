@@ -220,7 +220,7 @@
 
         }
 
-        public async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        public async Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
             await LatencyActionAsync();
             return _files.FirstOrDefault(f => f.FullPath == path)!;

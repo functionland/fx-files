@@ -13,7 +13,7 @@ public interface IOfflineAvailablityService
     /// Ensure that service initilized before all methods
     /// </summary>
     /// <returns></returns>
-    Task EnsureInitializedAsync();
+    Task EnsureInitializedAsync(CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Make available offline an artifact

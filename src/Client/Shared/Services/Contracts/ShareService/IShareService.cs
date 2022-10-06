@@ -13,13 +13,13 @@ public interface IShareService
     /// Ensure that service initilized before all methods
     /// </summary>
     /// <returns></returns>
-    Task EnsureInitializedAsync();
+    Task EnsureInitializedAsync(CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Share an artifact with others
     /// </summary>
     /// <param name="dids"></param>
-    /// <param name="fsArtifact"></param>
+    /// <param name="artifact"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null);
@@ -46,26 +46,37 @@ public interface IShareService
     /// Unshare some artifacts with others
     /// </summary>
     /// <param name="dids"></param>
-    /// <param name="fsArtifact"></param>
+    /// <param name="artifactFullPaths"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null);
 
     /// <summary>
-    /// Get shared artifacts
+    /// Get shared by me artifacts
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     IAsyncEnumerable<FsArtifact> GetSharedByMeArtifactsAsync(CancellationToken? cancellationToken = null);
 
+    /// <summary>
+    /// Get shared by with artifacts
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     IAsyncEnumerable<FsArtifact> GetSharedWithMeArtifactsAsync(CancellationToken? cancellationToken = null);
 
+    /// <summary>
+    /// Is shred by me?
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     Task<bool> IsSahredByMeAsync(string path, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Who has access to an artifact?
     /// </summary>
-    /// <param name="artifactFullPath"></param>
+    /// <param name="path"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<List<FulaUser>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null);

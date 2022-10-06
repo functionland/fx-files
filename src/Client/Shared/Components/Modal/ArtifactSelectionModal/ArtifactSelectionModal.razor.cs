@@ -122,7 +122,7 @@ public partial class ArtifactSelectionModal
     {
         try
         {
-            _currentArtifact = await _fileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+            _currentArtifact = await _fileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {

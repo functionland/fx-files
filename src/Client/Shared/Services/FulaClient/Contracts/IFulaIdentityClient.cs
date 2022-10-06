@@ -2,7 +2,7 @@
 
 public interface IFulaIdentityClient
 {
-    Task<FulaUser> GetUserAsync(DIdDocument dIdDocument, string did, CancellationToken? cancellationToken = null);
-    Task<List<FulaUser>> GetUsersAsync(DIdDocument dIdDocument, IEnumerable<string> otherDids, CancellationToken? cancellationToken = null);
-    Task<Stream> GetAvatarAsync(DIdDocument dIdDocument, string did, CancellationToken? cancellationToken = null);
+    Task<FulaUser> GetUserAsync(string token, string did, CancellationToken? cancellationToken = null);
+    Task<List<FulaUser>> GetUsersAsync(string token, IEnumerable<string> otherDids, CancellationToken? cancellationToken = null);
+    Task<Stream> GetAvatarAsync(string token, string did, CancellationToken? cancellationToken = null);
 }

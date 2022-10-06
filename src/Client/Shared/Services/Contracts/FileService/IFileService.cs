@@ -12,8 +12,7 @@
         Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null);
         Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null);
         IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
-        // Todo: Remove Fs
-        Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null);
+        Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null);
         Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null);
         Task FillArtifactMetaAsync(FsArtifact artifact, CancellationToken? cancellationToken = null);
         Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);

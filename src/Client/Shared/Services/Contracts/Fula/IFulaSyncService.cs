@@ -2,9 +2,9 @@
 
 public interface IFulaSyncService
 {
-    Task InitAsync();
-    Task EnsureInitializedAsync();
-    Task<List<BloxSyncItem>> SyncItemsAsync();
-    Task<List<FsArtifact>> SyncContentsAsync();
-    Task SyncContentAsync(FsArtifact artifact);
+    Task InitAsync(CancellationToken? cancellationToken = null);
+    Task EnsureInitializedAsync(CancellationToken? cancellationToken = null);
+    Task<List<BloxSyncItem>> SyncItemsAsync(CancellationToken? cancellationToken = null);
+    Task<List<FsArtifact>> SyncContentsAsync(CancellationToken? cancellationToken = null);
+    Task SyncContentAsync(FsArtifact artifact, CancellationToken? cancellationToken = null);
 }

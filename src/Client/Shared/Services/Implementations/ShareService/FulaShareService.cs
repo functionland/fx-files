@@ -2,7 +2,7 @@
 
 public class FulaShareService : IFulaShareService
 {
-    public Task EnsureInitializedAsync()
+    public Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

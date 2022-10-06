@@ -2,23 +2,22 @@
 
 public partial class FulaPinService : IFulaPinService
 {
-    public Task EnsureInitializedAsync()
+    public Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    //TODO: complete FulaPinService
-    public Task<List<FsArtifact>> GetPinnedArtifactsAsync()
+    public Task<List<FsArtifact>> GetPinnedArtifactsAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task InitializeAsync()
+    public Task InitializeAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> IsPinnedAsync(FsArtifact fsArtifact)
+    public Task<bool> IsPinnedAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
