@@ -1,5 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Models
 {
@@ -39,6 +40,6 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public bool? IsDisabled { get; set; }
         public string? OwnerDid { get; set; }
         public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
-        public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension ?? "");
+        public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension?.ToLower() ?? "");
     }
 }
