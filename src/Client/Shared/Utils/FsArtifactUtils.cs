@@ -147,6 +147,9 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".msix", FileCategoryType.App},
             { ".apk", FileCategoryType.App},
             { ".jar", FileCategoryType.App},
+            { ".apkm", FileCategoryType.App},
+            { ".apks", FileCategoryType.App},
+            { ".xapk", FileCategoryType.App},
         };
 
         public static FileCategoryType GetCategoryType(string fileExtension)
