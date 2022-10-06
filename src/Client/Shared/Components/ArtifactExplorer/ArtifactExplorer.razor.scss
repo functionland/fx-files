@@ -58,6 +58,7 @@
     }
 }
 
+
 .item-content {
 
     .item-title {
@@ -195,6 +196,10 @@
 
 .video-file-icon::before {
     @include Icon($video);
+}
+
+.app-file-icon::before {
+    @include Icon($app);
 }
 
 /*.select-action {

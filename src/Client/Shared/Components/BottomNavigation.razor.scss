@@ -31,15 +31,11 @@ footer {
     align-items: center;
     text-decoration: none;
     flex-direction: column;
+    pointer-events: none;
 }
 
 ::deep .navbarApp-link.active {
     color: $green-dark-base;
-}
-
-
-::deep .navbarApp-link:hover {
-    color: $green-dark-hover;
 }
 
 .navbarApp-linkLabel {
@@ -52,4 +48,10 @@ footer {
 .navbarApp-linkLabel > span {
     display: none;
     margin-right: 8px;
+}
+
+@media(hover: hover) and (pointer: fine) {
+    ::deep .navbarApp-link:hover {
+        color: $green-dark-hover;
+    }
 }
