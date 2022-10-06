@@ -26,8 +26,8 @@
 </div>*@
 
 <div class="sheet-wrapper @(IsOpen ? "sheet-wrapper-apear" : "")" @onclick="(async () => await Close())">
-    <div class="bottom-sheet @(!IsOpen ? "" : "show-bottom-sheet")">
-        <div class="bottom-sheet-contents">
+    <div class="bottom-sheet column items-center justify-end @(!IsOpen ? "" : "show-bottom-sheet")" @onclick:stopPropagation="true" @onclick:preventDefault="true">
+        <div class="bottom-sheet-contents column">
             @if (ShowCloseButton)
             {
                 <div class="controls">
