@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
-public interface IBloxPoolSevice
+public interface IFulaPoolSevice
 {
     Task<List<BloxPool>> GetMyPoolsAsync(CancellationToken? cancellationToken = null);
     Task LeavePoolAsync(string poolId, CancellationToken? cancellationToken = null);

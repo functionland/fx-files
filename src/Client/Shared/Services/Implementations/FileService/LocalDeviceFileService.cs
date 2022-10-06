@@ -177,7 +177,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        public virtual async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        public virtual async Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
@@ -680,10 +680,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             folders.Clear();
         }
 
-        public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        public Task FillArtifactMetaAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
         {
             //TODO: Fill FsArtifact's data
             return Task.CompletedTask;
+        }
+
+        public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

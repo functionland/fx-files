@@ -220,7 +220,7 @@
 
         }
 
-        public async Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        public async Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
             await LatencyActionAsync();
             return _files.FirstOrDefault(f => f.FullPath == path)!;
@@ -343,10 +343,15 @@
             return fsArtifactList;
         }
 
-        public Task GetFsArtifactMetaAsync(FsArtifact fsArtifact, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        public Task FillArtifactMetaAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
         {
             //TODO: Fill FsArtifact's data
             return Task.CompletedTask;
+        }
+
+        public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

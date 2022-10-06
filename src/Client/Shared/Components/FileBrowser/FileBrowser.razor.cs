@@ -384,7 +384,7 @@ public partial class FileBrowser
         catch (AndroidSpecialFilesUnauthorizedAccessException ex)
         {
             _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
-            _currentArtifact = await FileService.GetFsArtifactAsync(parentArtifact?.ParentFullPath);
+            _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
         //ToDo: Add a general catch in case of other exceptions
     }
@@ -757,7 +757,7 @@ public partial class FileBrowser
     {
         try
         {
-            _currentArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
+            _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
             {
@@ -906,7 +906,7 @@ public partial class FileBrowser
 
     private async Task NavigateToDestionation(string? destinationPath)
     {
-        _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
+        _currentArtifact = await FileService.GetArtifactAsync(destinationPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
         await LoadPinsAsync();
     }
