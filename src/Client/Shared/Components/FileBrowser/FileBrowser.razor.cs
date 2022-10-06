@@ -138,11 +138,6 @@ public partial class FileBrowser
                 existArtifacts = ex.FsArtifacts;
             }
 
-            catch
-            {
-
-            }
-
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
 
             if (existArtifacts.Count > 0)
@@ -744,27 +739,16 @@ public partial class FileBrowser
         }
     }
 
-    private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
+    private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
-        if (fsArtifact.ParentFullPath is null)
+        try
         {
-            _currentArtifact = null;
-            return;
+            _currentArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
         }
-
-        var previousArtifact = await FileService.GetFsArtifactAsync(fsArtifact?.ParentFullPath);
-        if (previousArtifact != null && previousArtifact.ArtifactType == FsArtifactType.Drive)
-        {
-            var drives = FileService.GetArtifactsAsync(null);
-            var rootArtifacts = new List<FsArtifact>();
-            await foreach (var drive in drives)
+        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
             {
-                rootArtifacts.Add(drive);
-            }
-            _currentArtifact = rootArtifacts.FirstOrDefault(a => a.FullPath == fsArtifact.ParentFullPath);
-            return;
+            _currentArtifact = null;
         }
-        _currentArtifact = previousArtifact;
     }
 
     private void FilterArtifacts()

@@ -95,11 +95,6 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null)
-        {
-            return null;
-        }
-
         return await base.GetFsArtifactAsync(path, cancellationToken);
     }
 

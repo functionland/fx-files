@@ -200,7 +200,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
             else if (fsArtifactType == FsArtifactType.Drive)
             {
-                fsArtifact.Name = await GetDriveNameAsync(path);
+                var drives = await GetDrivesAsync();
+                fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
             }
 
             return fsArtifact;
@@ -507,17 +508,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             foreach (var invalid in invalidChars)
                 if (name.Contains(invalid)) return true;
             return false;
-        }
-
-        private async Task<string> GetDriveNameAsync(string? path)
-        {
-            var drives = await GetDrivesAsync();
-            var drive = drives.Where(d => d.FullPath == path).FirstOrDefault();
-
-            var driveInfo = new DriveInfo(drive.FullPath);
-            var driveFullPath = drive.FullPath.TrimEnd(Path.DirectorySeparatorChar);
-            var driveName = !string.IsNullOrWhiteSpace(driveInfo.VolumeLabel) ? $"{driveInfo.VolumeLabel} ({driveFullPath})" : driveFullPath;
-            return driveName;
         }
 
         private async IAsyncEnumerable<FsArtifact> GetChildArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
