@@ -52,7 +52,7 @@
     }
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
     .item-container:hover {
         background-color: color(gray-hover);
     }
