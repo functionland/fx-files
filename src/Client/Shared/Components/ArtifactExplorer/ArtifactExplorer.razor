@@ -4,12 +4,12 @@
 
 
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
-    @if ((Artifacts == null) || (!Artifacts.Any()))
+    @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
         <EmptyListView 
             OnAddFolderButtonClick="OnAddFolderButtonClick"
             Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
-            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsLoading)" />
     }
     @foreach (var artifact in Artifacts)
     {

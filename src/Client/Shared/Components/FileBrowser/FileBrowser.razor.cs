@@ -727,7 +727,6 @@ public partial class FileBrowser : IDisposable
             var buffer = new List<FsArtifact>();
             try
             {
-                _isLoading = true;
                 await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
                 {
                     if (token.IsCancellationRequested)
@@ -765,21 +764,21 @@ public partial class FileBrowser : IDisposable
             catch (Exception ex)
             {
                 ExceptionHandler.Handle(ex);
+            }
+            finally
+            {
                 _isLoading = false;
             }
 
         });
-        _isLoading = false;
     }
 
     private void HandleSearch(string? text)
     {
         if (text != null)
         {
-            _isLoading = true;
             _searchText = text;
             _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
-            _isLoading = false;
         }
     }
 
@@ -792,23 +791,18 @@ public partial class FileBrowser : IDisposable
         }
         if (!_isInSearchMode)
         {
-            _isLoading = true;
-            cancellationTokenSource?.Cancel();
             _fxSearchInputRef?.HandleClearInputText();
             await UpdateCurrentArtifactForBackButton(_currentArtifact);
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            _isLoading = false;
             StateHasChanged();
         }
         if (_isInSearchMode)
         {
-            _isLoading = true;
             cancellationTokenSource?.Cancel();
             _isInSearchMode = false;
             _fxSearchInputRef?.HandleClearInputText();
             await LoadChildrenArtifactsAsync();
-            _isLoading = false;
             StateHasChanged();
         }
     }
@@ -817,20 +811,16 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            _isLoading = true;
             _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
-            _isLoading = false;
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
             _currentArtifact = null;
-            _isLoading = false;
         }
     }
 
     private void FilterArtifacts()
     {
-        _isLoading = true;
         _filteredArtifacts = _allArtifacts;
 
         _filteredArtifacts = _fileCategoryFilter is null
@@ -845,7 +835,6 @@ public partial class FileBrowser : IDisposable
                 }
                 return fa.FileCategory == _fileCategoryFilter;
             }).ToList();
-        _isLoading = false;
     }
 
     private async Task HandleFilterClick()
