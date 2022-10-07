@@ -5,9 +5,9 @@
     xmlns:app="clr-namespace:Functionland.FxFiles.Client.App"
     xmlns:b="clr-namespace:Microsoft.AspNetCore.Components.WebView.Maui;assembly=Microsoft.AspNetCore.Components.WebView.Maui"
     xmlns:client="clr-namespace:Functionland.FxFiles.Client.Shared;assembly=Functionland.FxFiles.Client.Shared"
-    BackgroundColor="{AppThemeBinding Dark=#212529, Light=#FFFFFF}">
+    BackgroundColor="#212529">
 
-    <app:FxBlazorWebView BackgroundColor="{AppThemeBinding Dark=#212529, Light=#FFFFFF}" HostPage="wwwroot/index.html">
+    <app:FxBlazorWebView BackgroundColor="#212529" HostPage="wwwroot/index.html">
         <b:BlazorWebView.RootComponents>
             <b:RootComponent ComponentType="{x:Type client:App}" Selector="app" />
         </b:BlazorWebView.RootComponents>
