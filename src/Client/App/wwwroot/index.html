@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#212529">
+    <!--<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#212529">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFFFF">-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <base href="/" />
     <link rel="stylesheet" href="_content/Bit.BlazorUI/styles/bit.blazorui.min.css" />
@@ -11,12 +11,13 @@
     <link href="_content/Functionland.FxFiles.Client.Shared/app.css" rel="stylesheet" />
     <style>
 
-        /*html, body, #app-container {
+        html, #app-container {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-        }*/
+            background-color: #212529;
+        }
 
         .lds-wrapper {
             position: absolute;
@@ -38,7 +39,7 @@
                 width: 16px;
                 height: 16px;
                 border-radius: 50%;
-                background: #fff;
+                background: var(--gray-content1);
                 animation: lds-grid 1.2s linear infinite;
             }
 
@@ -134,14 +135,14 @@
     <div class="status-bar-safe-area"></div>
 
     <app>
-        <div class="lds-wrapper">
+        <!--<div class="lds-wrapper">
             <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
+        </div>-->
     </app>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
-    <script src="_content/Bit.BlazorUI/scripts/bit.blazorui.min.js"></script>
     <script src="_content/Functionland.FxFiles.Client.Shared/scripts/theme.js"></script>
+    <script src="_content/Bit.BlazorUI/scripts/bit.blazorui.min.js"></script>
     <script src="_content/Functionland.FxFiles.Client.Shared/scripts/backToTop.js"></script>
     <script src="_content/Functionland.FxFiles.Client.Shared/scripts/app.js"></script>
 
