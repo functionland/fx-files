@@ -12,7 +12,7 @@
 	  Version="0.0.0.0" />
 
 	<Properties>
-		<DisplayName>Functionland</DisplayName>
+		<DisplayName>$placeholder$</DisplayName>
 		<PublisherDisplayName>Functionland</PublisherDisplayName>
 		<Logo>$placeholder$.png</Logo>
 	</Properties>
