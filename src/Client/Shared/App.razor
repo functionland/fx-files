@@ -10,16 +10,22 @@
                         <NotAuthorizedComponent />
                     </NotAuthorized>
                     <Authorizing>
-                        <LoadingComponent Color="#FFF" />
+                        @if (_isLoading)
+                        {
+                            <LoadingComponent />
+                        }
                     </Authorizing>
                 </AuthorizeRouteView>
             </Found>
             <NotFound>
                 <PageNotFound />
             </NotFound>
-            @*<Navigating>
-                <LoadingComponent Color="#FFF" />
-            </Navigating>*@
+            <Navigating>
+                @if (_isLoading)
+                {
+                    <LoadingComponent />
+                }
+            </Navigating>
         </Router>
     </LayoutView>
 </CascadingAuthenticationState>

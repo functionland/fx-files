@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
+﻿using System.Reflection;
 
-using System.Reflection;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace Functionland.FxFiles.Client.Shared;
 
@@ -25,7 +25,9 @@ public partial class App
     private FxTheme DesiredTheme;
     private FxTheme SystemTheme;
 
-    
+
+
+    private bool _isLoading = true;
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
@@ -48,6 +50,7 @@ public partial class App
             await ThemeInterop.RegisterForSystemThemeChangedAsync();
             StateHasChanged();
         }
+        // Browser is gets handled in Web project's Program.cs
 #if BlazorHybrid && MultilingualEnabled
         if (_cultureHasNotBeenSet)
         {
@@ -64,5 +67,10 @@ public partial class App
             _lazyLoadedAssemblies.AddRange(assemblies);
         }
 #endif
+        _isLoading = false;
+    }
+    override protected async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
     }
 }

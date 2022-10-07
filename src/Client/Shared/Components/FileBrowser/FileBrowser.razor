@@ -1,6 +1,9 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components
 @inherits AppComponentBase
-
+@if (_isLoading)
+{
+    <LoadingComponent ZIndex="999"/>
+}
 <div class="file-browser-container">
 
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
@@ -103,6 +106,7 @@
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="_viewMode"
                       FileCategoryFilter="_fileCategoryFilter"
+                      IsLoading="_isLoading"
                       @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />

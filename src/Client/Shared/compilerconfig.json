@@ -222,5 +222,13 @@
   {
     "outputFile": "Components/NotAuthorizedComponent.razor.css",
     "inputFile": "Components/NotAuthorizedComponent.razor.scss"
+  },
+  {
+    "outputFile": "Components/FxLoading.razor.css",
+    "inputFile": "Components/FxLoading.razor.scss"
+  },
+  {
+    "outputFile": "Components/LoadingComponent.razor.css",
+    "inputFile": "Components/LoadingComponent.razor.scss"
   }
 ]

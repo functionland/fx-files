@@ -19,6 +19,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback<FsArtifact[]> SelectedArtifactsChanged { get; set; }
         [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
+        [Parameter] public bool IsLoading { get; set; }
 
         public DateTimeOffset PointerDownTime;
 
