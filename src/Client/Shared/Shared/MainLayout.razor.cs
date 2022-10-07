@@ -12,10 +12,11 @@ public partial class MainLayout
 
     private FxTheme DesiredTheme;
     private FxTheme SystemTheme;
-    private bool _isLoading = true;
+    private bool _isLoading = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        _isLoading = true;
         if (firstRender)
         {
             DesiredTheme = await ThemeInterop.GetThemeAsync();

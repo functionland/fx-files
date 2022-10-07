@@ -15,7 +15,7 @@ public partial class App
 
     private bool _cultureHasNotBeenSet = true;
 
-    private bool _isLoading = true;
+    private bool _isLoading = false;
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
@@ -43,6 +43,7 @@ public partial class App
     }
     override protected async Task OnInitializedAsync()
     {
+        _isLoading = true;
         _isLoading = false;
         await base.OnInitializedAsync();
     }

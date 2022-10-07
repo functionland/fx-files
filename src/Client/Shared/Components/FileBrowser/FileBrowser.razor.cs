@@ -39,7 +39,7 @@ public partial class FileBrowser
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _isAscOrder = true;
     private bool _isSelected;
-    private bool _isLoading = true;
+    private bool _isLoading = false;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -47,6 +47,7 @@ public partial class FileBrowser
 
     protected override async Task OnInitAsync()
     {
+        _isLoading = true;
         await LoadPinsAsync();
 
         await LoadChildrenArtifactsAsync();
@@ -201,7 +202,6 @@ public partial class FileBrowser
         if (artifact?.ArtifactType == FsArtifactType.Folder)
         {
             await RenameFolderAsync(artifact, newName);
-
         }
         else if (artifact?.ArtifactType == FsArtifactType.File)
         {
@@ -219,11 +219,14 @@ public partial class FileBrowser
     {
         try
         {
+            _isLoading = true;
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
+            _isLoading = false;
         }
         catch
         {
+            _isLoading = false;
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(Title, message, FxToastType.Error);
@@ -234,12 +237,15 @@ public partial class FileBrowser
     {
         try
         {
+            _isLoading = true;
             var pathArtifacts = artifacts.Select(a => a.FullPath).ToArray();
             await PinService.SetArtifactsUnPinAsync(pathArtifacts);
             await UpdatePinedArtifactsAsync(artifacts, false);
+            _isLoading = false;
         }
         catch
         {
+            _isLoading = false;
             var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(Title, message, FxToastType.Error);
@@ -266,8 +272,10 @@ public partial class FileBrowser
 
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
                 {
+                    _isLoading = true;
                     await FileService.DeleteArtifactsAsync(artifacts);
                     await UpdateRemovedArtifactsAsync(artifacts);
+                    _isLoading = false;
                 }
             }
         }
@@ -387,7 +395,6 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        _isLoading = true;
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
@@ -401,9 +408,10 @@ public partial class FileBrowser
         else
         {
             _currentArtifact = artifact;
+            _isLoading = true;
             await LoadChildrenArtifactsAsync(_currentArtifact);
+            _isLoading = false;
         }
-        _isLoading = false;
     }
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
@@ -422,7 +430,9 @@ public partial class FileBrowser
         switch (result?.ResultType)
         {
             case ArtifactOverflowResultType.Details:
+                _isLoading = true;
                 await HandleShowDetailsArtifact(new FsArtifact[] { artifact });
+                _isLoading = false;
                 break;
             case ArtifactOverflowResultType.Rename:
                 await HandleRenameArtifactAsync(artifact);
@@ -450,10 +460,6 @@ public partial class FileBrowser
         if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
             _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-            foreach (var artifact in _allArtifacts)
-            {
-
-            }
             _selectedArtifacts = _allArtifacts.ToArray();
             _isSelected = true;
         }
@@ -489,7 +495,9 @@ public partial class FileBrowser
             switch (result?.ResultType)
             {
                 case ArtifactOverflowResultType.Details:
+                    _isLoading = true;
                     await HandleShowDetailsArtifact(artifacts);
+                    _isLoading = false;
                     break;
                 case ArtifactOverflowResultType.Rename when (!isMultiple):
                     var singleArtifact = artifacts.SingleOrDefault();
@@ -621,7 +629,6 @@ public partial class FileBrowser
             }
             _allArtifacts = _filteredArtifacts;
         }
-
     }
 
     private async Task UpdateRemovedArtifactsAsync(IEnumerable<FsArtifact> artifacts)
@@ -637,10 +644,12 @@ public partial class FileBrowser
 
     private async Task HandleCancelSearchAsync()
     {
+        _isLoading = true;
         _isInSearchMode = false;
         cancellationTokenSource?.Cancel();
         _searchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
+        _isLoading = false;
     }
 
     private void HandleSearchFocused()
@@ -666,6 +675,7 @@ public partial class FileBrowser
         var sw = Stopwatch.StartNew();
         await Task.Run(async () =>
         {
+            _isLoading = true;
             var buffer = new List<FsArtifact>();
             try
             {
@@ -689,27 +699,31 @@ public partial class FileBrowser
 
                 _allArtifacts.AddRange(buffer);
                 FilterArtifacts();
+                _isLoading = false;
             }
             catch (Exception ex)
             {
                 ExceptionHandler.Handle(ex);
+                _isLoading = false;
             }
 
         });
+        _isLoading = false;
     }
 
     private void HandleSearch(string? text)
     {
         if (text != null)
         {
+            _isLoading = true;
             _searchText = text;
             _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
+            _isLoading = false;
         }
     }
 
     private async Task HandleToolbarBackClick()
     {
-        _isLoading = true;
         _fxSearchInputRef?.HandleClearInputText();
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
@@ -725,7 +739,6 @@ public partial class FileBrowser
             StateHasChanged();
         }
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-        _isLoading = false;
     }
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact fsArtifact)
@@ -753,6 +766,7 @@ public partial class FileBrowser
 
     private void FilterArtifacts()
     {
+        _isLoading = true;
         _filteredArtifacts = _allArtifacts;
 
         _filteredArtifacts = _fileCategoryFilter is null
@@ -767,6 +781,7 @@ public partial class FileBrowser
                 }
                 return fa.FileCategory == _fileCategoryFilter;
             }).ToList();
+        _isLoading = false;
     }
 
     private async Task HandleFilterClick()
@@ -892,8 +907,10 @@ public partial class FileBrowser
 
     private async Task NavigateToDestionation(string? destinationPath)
     {
+        _isLoading = true;
         _currentArtifact = await FileService.GetFsArtifactAsync(destinationPath);
         await LoadChildrenArtifactsAsync(_currentArtifact);
         await LoadPinsAsync();
+        _isLoading = false;
     }
 }
