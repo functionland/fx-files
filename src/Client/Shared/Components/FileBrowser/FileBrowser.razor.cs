@@ -427,10 +427,17 @@ public partial class FileBrowser : IDisposable
         if (artifact.ArtifactType == FsArtifactType.File)
         {
 #if BlazorHybrid
-            await Launcher.OpenAsync(new OpenFileRequest
+            try
             {
-                File = new ReadOnlyFile(artifact.FullPath)
-            });
+                await Launcher.OpenAsync(new OpenFileRequest
+                {
+                    File = new ReadOnlyFile(artifact.FullPath)
+                });
+            }
+            catch (Exception ex)
+            {
+                _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+            }
 #endif
         }
         else
