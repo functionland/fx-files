@@ -44,6 +44,7 @@
     cursor: pointer;
     position: relative;
     padding: $spacing-16 21px;
+    border-radius: $border-radius-3;
 
     .item-icon-position {
         font-size: $icon-24;
@@ -51,9 +52,9 @@
     }
 }
 
-@media(hover: hover) and (pointer: fine) {
+@media (hover: hover) {
     .item-container:hover {
-        background-color: color(gray-bg-secondary);
+        background-color: color(gray-hover);
     }
 }
 
