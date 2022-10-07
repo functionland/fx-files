@@ -113,7 +113,27 @@
     }
 }
 
+@-webkit-keyframes toast-animation {
+    0% {
+        left: -360px
+    }
+
+    100% {
+        left: 10px;
+    }
+}
+
 @keyframes toast-animation-hide {
+    0% {
+        left: 10px
+    }
+
+    100% {
+        left: -360px;
+    }
+}
+
+@-webkit-keyframes toast-animation-hide {
     0% {
         left: 10px
     }

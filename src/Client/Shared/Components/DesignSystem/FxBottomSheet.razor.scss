@@ -97,6 +97,7 @@
 
 .show-bottom-sheet-animation {
     animation: showBottomSheet 500ms ease-in-out forwards;
+    -webkit-animation: showBottomSheet 500ms ease-in-out forwards;
 }
 
 @keyframes showBottomSheet {
@@ -109,6 +110,17 @@
         height: unset;
     }
 }
+
+@-webkit-keyframes showBottomSheet {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0px);
+        height: unset;
+    }
+} 
 
 .row {
     display: flex;
