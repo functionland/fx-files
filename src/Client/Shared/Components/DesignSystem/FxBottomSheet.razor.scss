@@ -173,7 +173,7 @@
     padding: $spacing-0 $spacing-21;
     position: relative;
     transform: translateY(0);
-    overflow-y: hidden;
+    overflow-y: auto;
     background-color: color(app-bg);
     border-radius: $border-radius-20 $border-radius-20 0px 0px;
     transition: transform 0.5s, border-radius 0.5s;
