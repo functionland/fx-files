@@ -41,9 +41,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.GetArtifactsAsync(path, searchText, cancellationToken);
     }
 
-    public override Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
+    public override Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
     {
-        return base.GetFsArtifactAsync(path, cancellationToken);
+        return base.GetArtifactAsync(path, cancellationToken);
     }
 
     public override Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)

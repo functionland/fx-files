@@ -60,10 +60,6 @@
     "inputFile": "Pages/ThemeSettings.razor.scss"
   },
   {
-    "outputFile": "Pages/Zones.razor.css",
-    "inputFile": "Pages/Zones.razor.scss"
-  },
-  {
     "outputFile": "Components/ArtifactExplorer/ArtifactExplorer.razor.css",
     "inputFile": "Components/ArtifactExplorer/ArtifactExplorer.razor.scss"
   },

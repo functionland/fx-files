@@ -24,15 +24,16 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             return size switch
             {
                 (< OneKB) => $"{size} bytes",
-                (>= OneKB) and (< OneMB) => $"{size / OneKB} KB",
-                (>= OneMB) and (< OneGB) => $"{size / OneMB} MB",
-                (>= OneGB) and (< OneTB) => $"{size / OneMB} GB",
-                (>= OneTB) => $"{size / OneTB}"
+                (>= OneKB) and (< OneMB) => $"{string.Format("{0:F2}", (float)size / OneKB)} KB",
+                (>= OneMB) and (< OneGB) => $"{string.Format("{0:F2}", (float)size / OneMB)} MB",
+                (>= OneGB) and (< OneTB) => $"{string.Format("{0:F2}", (float)size / OneMB)} GB",
+                (>= OneTB) => $"{string.Format("{0:F2}", (float)size / OneTB)} TB"
             };
         }
 
         public static IDictionary<string, FileCategoryType> FileExtentionsType = new Dictionary<string, FileCategoryType>()
         {
+            //Image
             {".jpg", FileCategoryType.Image},
             {".jpeg", FileCategoryType.Image},
             {".png", FileCategoryType.Image},
@@ -40,13 +41,65 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".bmp", FileCategoryType.Image},
             { ".tiff", FileCategoryType.Image},
             { ".tif", FileCategoryType.Image},
+            { ".jfif", FileCategoryType.Image},
+            { ".exif", FileCategoryType.Image},
+            { ".ppm", FileCategoryType.Image},
+            { ".pgm", FileCategoryType.Image},
+            { ".pbm", FileCategoryType.Image},
+            { ".pnm", FileCategoryType.Image},
+            { ".webp", FileCategoryType.Image},
+            { ".heif", FileCategoryType.Image},
+            { ".avif", FileCategoryType.Image},
+            { ".ico", FileCategoryType.Image},
+            { ".svg", FileCategoryType.Image},
+            
+            //PDF
+            
             { ".pdf", FileCategoryType.Pdf},
+
+            //Audio
             { ".mp3", FileCategoryType.Audio},
             { ".wav", FileCategoryType.Audio},
             { ".wma", FileCategoryType.Audio},
             { ".aac", FileCategoryType.Audio},
             { ".ogg", FileCategoryType.Audio},
             { ".flac", FileCategoryType.Audio},
+            { ".aa", FileCategoryType.Audio},
+            { ".aax", FileCategoryType.Audio},
+            { ".act", FileCategoryType.Audio},
+            { ".aiff", FileCategoryType.Audio},
+            { ".alac", FileCategoryType.Audio},
+            { ".amr", FileCategoryType.Audio},
+            { ".ape", FileCategoryType.Audio},
+            { ".au", FileCategoryType.Audio},
+            { ".awb", FileCategoryType.Audio},
+            { ".dss", FileCategoryType.Audio},
+            { ".dvf", FileCategoryType.Audio},
+            { ".gsm", FileCategoryType.Audio},
+            { ".iklax", FileCategoryType.Audio},
+            { ".ivs", FileCategoryType.Audio},
+            { ".m4a", FileCategoryType.Audio},
+            { ".m4b", FileCategoryType.Audio},
+            { ".m4p", FileCategoryType.Audio},
+            { ".mmf", FileCategoryType.Audio},
+            { ".mpc", FileCategoryType.Audio},
+            { ".msv", FileCategoryType.Audio},
+            { ".nmf", FileCategoryType.Audio},
+            { ".oga", FileCategoryType.Audio},
+            { ".mogg", FileCategoryType.Audio},
+            { ".opus", FileCategoryType.Audio},
+            { ".ra", FileCategoryType.Audio},
+            { ".raw", FileCategoryType.Audio},
+            { ".rf64", FileCategoryType.Audio},
+            { ".voc", FileCategoryType.Audio},
+            { ".vox", FileCategoryType.Audio},
+            { ".wv", FileCategoryType.Audio},
+            { ".8svx", FileCategoryType.Audio},
+            { ".cda", FileCategoryType.Audio},
+            
+            
+
+            //Video
             { ".mp4", FileCategoryType.Video},
             { ".avi", FileCategoryType.Video},
             { ".wmv", FileCategoryType.Video},
@@ -60,12 +113,49 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".3gp", FileCategoryType.Video},
             { ".3gpp", FileCategoryType.Video},
             { ".3g2", FileCategoryType.Video},
+            { ".3gpp2", FileCategoryType.Video},
+            { ".webm", FileCategoryType.Video},
+            { ".ts", FileCategoryType.Video},
+            { ".mts", FileCategoryType.Video},
+            { ".m2ts", FileCategoryType.Video},
+            { ".vob", FileCategoryType.Video},
+            { ".ogv", FileCategoryType.Video},
+            { ".mxf", FileCategoryType.Video},
+            { ".roq", FileCategoryType.Video},
+            { ".nsv", FileCategoryType.Video},
+            { ".f4v", FileCategoryType.Video},
+            { ".f4p", FileCategoryType.Video},
+            { ".f4a", FileCategoryType.Video},
+            { ".f4b", FileCategoryType.Video},
+            { ".drc", FileCategoryType.Video},
+            { ".gifv", FileCategoryType.Video},
+            { ".mng", FileCategoryType.Video},
+            { ".qt", FileCategoryType.Video},
+            { ".yuv", FileCategoryType.Video},
+            { ".rm", FileCategoryType.Video},
+            { ".rmvb", FileCategoryType.Video},
+            { ".viv", FileCategoryType.Video},
+            { ".asf", FileCategoryType.Video},
+            { ".amv", FileCategoryType.Video},
+            { ".mp2", FileCategoryType.Video},
+            { ".mpe", FileCategoryType.Video},
+            { ".mpv", FileCategoryType.Video},
+
+            //APP
+            { ".exe", FileCategoryType.App},
+            { ".msi", FileCategoryType.App},
+            { ".msix", FileCategoryType.App},
+            { ".apk", FileCategoryType.App},
+            { ".jar", FileCategoryType.App},
+            { ".apkm", FileCategoryType.App},
+            { ".apks", FileCategoryType.App},
+            { ".xapk", FileCategoryType.App},
         };
 
         public static FileCategoryType GetCategoryType(string fileExtension)
         {
-            if (FileExtentionsType.ContainsKey(fileExtension) && 
-                !string.IsNullOrEmpty(fileExtension) && 
+            if (FileExtentionsType.ContainsKey(fileExtension) &&
+                !string.IsNullOrEmpty(fileExtension) &&
                 !string.IsNullOrWhiteSpace(fileExtension))
             {
                 return FileExtentionsType[fileExtension];

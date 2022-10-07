@@ -14,13 +14,13 @@
 
 .root-title {
     font-family: $montserrat-semi-bold;
-    font-size: $font-size-24;
-    line-height: $line-height-36;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
     color: color(gray-content1);
     padding: $spacing-16 $spacing-21;
     background-color: color(app-bg);
     position: sticky;
-    top: 70px;
+    top: 72px;
     z-index: 2;
 }
 
@@ -35,11 +35,14 @@
     align-items: center;
     gap: $spacing-4;
     padding: $spacing-16 $spacing-21;
+    margin-bottom: $spacing-16;
 
     &::before {
         @include Icon($chevron-right, color(input-disable) );
     }
 }
+
+
 
 .action-bar {
     display: flex;
@@ -149,7 +152,15 @@
             font-size: 24px;
             @include Icon($filter, color(gray-content3));
         }
+
+        .filter-btn-selected::before {
+            font-size: 24px;
+            @include Icon($fill, $green-dark-base, $Icons-Filled);
+        }
     }
+}
+.action-bar-search {
+    top: 72px;
 }
 
 .select-action {
@@ -218,6 +229,9 @@
     }
 }
 
+.select-action-search {
+    top: 72px;
+}
 .sticky-content {
     position: sticky;
     top: 0;

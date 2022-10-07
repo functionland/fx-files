@@ -3,6 +3,12 @@
     public partial class FileCard
     {
         [Parameter]
+        public FsArtifactType ArtifactType { get; set; }
+        
+        [Parameter]
+        public FileCategoryType FileType { get; set; }
+
+        [Parameter]
         public bool IsPinned { get; set; }
 
         [Parameter]
@@ -40,7 +46,33 @@
                 return resultPath;
             }
 
-            return "_content/Functionland.FxFiles.Client.Shared/images/backgrounds/card-media.png";
+            return string.Empty;
+        }
+
+        public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
+        {
+            if (artifactType == FsArtifactType.File)
+            {
+                switch (fileType)
+                {
+                    case FileCategoryType.Document:
+                        return "text-file-icon";
+                    case FileCategoryType.Other:
+                        return "text-file-icon";
+                    case FileCategoryType.Pdf:
+                        return "pdf-file-icon";
+                    case FileCategoryType.Image:
+                        return "photo-file-icon";
+                    case FileCategoryType.Audio:
+                        return "audio-file-icon";
+                    case FileCategoryType.Video:
+                        return "video-file-icon";
+                    case FileCategoryType.App:
+                        return "app-file-icon";
+                }
+            }
+
+            return "folder-icon";
         }
     }
 }

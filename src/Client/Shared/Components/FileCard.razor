@@ -8,18 +8,27 @@
                 <FxTag Title="@TagTitle" TagType="FxTagType.Regular" Width="51px" />
             </div>
         }
-        <img src="@FileImage" class="file-card-image" />
+
+        @if (!string.IsNullOrEmpty(FileImage))
+        {
+            <img src="@FileImage" draggable="false" class="file-card-image" />
+        }
+        else
+        {
+            <div class="file-card-icon @GetArtifactIcon(ArtifactType, FileType)"></div>
+        }
+
         <div class="pin-defualt-icon"></div>
     </div>
     <div class="file-card-content">
         <div class="card-file-name">
-            <div class="file-icon"></div>
+            <div class="file-icon @GetArtifactIcon(ArtifactType, FileType)"></div>
 
             <div class="file-name-container">
-                <span class="file-name">@FileName</span> @*.<span class="file-format">FileFormat</span>*@
+                <span class="file-name">@FileName</span>
             </div>
         </div>
-        <div class="file-info @((ModifiedDate == null || FileSize == "0 bytes")? "visibility-hidden": "")">
+        <div class="file-info @(ArtifactType != FsArtifactType.File ? "visibility-hidden": "")">
             <div class="modified-date">@ModifiedDate</div> | <span class="file-size">@FileSize</span>
         </div>
     </div>

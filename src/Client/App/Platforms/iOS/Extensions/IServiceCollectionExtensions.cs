@@ -11,12 +11,13 @@ public static class IiOSServiceCollectionExtensions
     {
         // Services being registered here can get injected in iOS.
 
-        services.AddSingleton<IFulaFileService, IosFulaFileService>();
+        services.AddSingleton<IFulaFileService, FulaFileService>();
         services.AddSingleton<ILocalDeviceFileService, IosFileService>();
-       
         services.AddSingleton<IFileService, IosFileService>();
+
         services.AddSingleton<IPlatformTestService, IosPlatformTestService>();
-        
+        services.AddTransient<IosFileServicePlatformTest>();
+
         services.AddSingleton<IThumbnailService, IosThumbnailService>();
         services.AddSingleton<IFileWatchService, IosFileWatchService>();
         return services;
