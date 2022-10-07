@@ -1,7 +1,8 @@
-﻿@import "../Styles/abstracts/_functions.scss";
+﻿@import "../Styles/abstracts/_variables.scss";
+@import "../Styles/abstracts/_functions.scss";
 @import "../Styles/abstracts/_mixins.scss";
 
 
 .loading-container {
-    ​​​​​​​background-color: color(app-bg);
+    background-color: color(app-bg);
 }
