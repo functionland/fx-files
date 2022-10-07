@@ -706,6 +706,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleDeepSearchAsync(string? text)
     {
+        _isLoading = true;
         _searchText = text;
         _allArtifacts.Clear();
         _filteredArtifacts.Clear();
@@ -723,10 +724,10 @@ public partial class FileBrowser : IDisposable
 
         await Task.Run(async () =>
         {
-            _isLoading = true;
             var buffer = new List<FsArtifact>();
             try
             {
+                _isLoading = true;
                 await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
                 {
                     if (token.IsCancellationRequested)
@@ -741,6 +742,10 @@ public partial class FileBrowser : IDisposable
                         FilterArtifacts();
                         await InvokeAsync(() =>
                         {
+                            if (_isLoading)
+                            {
+                                _isLoading = false;
+                            }
                             StateHasChanged();
                         });
                         sw.Restart();
@@ -756,7 +761,6 @@ public partial class FileBrowser : IDisposable
                 {
                     StateHasChanged();
                 });
-                _isLoading = false;
             }
             catch (Exception ex)
             {
@@ -788,19 +792,23 @@ public partial class FileBrowser : IDisposable
         }
         if (!_isInSearchMode)
         {
+            _isLoading = true;
             cancellationTokenSource?.Cancel();
             _fxSearchInputRef?.HandleClearInputText();
             await UpdateCurrentArtifactForBackButton(_currentArtifact);
             await LoadChildrenArtifactsAsync(_currentArtifact);
-            StateHasChanged();
             await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+            _isLoading = false;
+            StateHasChanged();
         }
         if (_isInSearchMode)
         {
+            _isLoading = true;
             cancellationTokenSource?.Cancel();
             _isInSearchMode = false;
             _fxSearchInputRef?.HandleClearInputText();
             await LoadChildrenArtifactsAsync();
+            _isLoading = false;
             StateHasChanged();
         }
     }
@@ -809,11 +817,14 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
+            _isLoading = true;
             _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            _isLoading = false;
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
             _currentArtifact = null;
+            _isLoading = false;
         }
     }
 

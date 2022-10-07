@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 
 using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace Functionland.FxFiles.Client.Shared;
 
@@ -28,7 +27,7 @@ public partial class App
 
 
 
-    private bool _isLoading = false;
+    private bool _isLoading = true;
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
@@ -52,7 +51,6 @@ public partial class App
             StateHasChanged();
         }
         // Browser is gets handled in Web project's Program.cs
-        _isLoading = true;
 #if BlazorHybrid && MultilingualEnabled
         if (_cultureHasNotBeenSet)
         {
@@ -73,8 +71,6 @@ public partial class App
     }
     override protected async Task OnInitializedAsync()
     {
-        _isLoading = true;
-        _isLoading = false;
         await base.OnInitializedAsync();
     }
 }

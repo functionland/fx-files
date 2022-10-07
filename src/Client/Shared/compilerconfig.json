@@ -228,10 +228,6 @@
     "inputFile": "Components/FxLoading.razor.scss"
   },
   {
-    "outputFile": "Components/Loading.razor.css",
-    "inputFile": "Components/Loading.razor.scss"
-  },
-  {
     "outputFile": "Components/LoadingComponent.razor.css",
     "inputFile": "Components/LoadingComponent.razor.scss"
   }
