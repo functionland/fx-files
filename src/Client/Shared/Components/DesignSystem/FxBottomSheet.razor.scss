@@ -86,12 +86,14 @@
         }
     }
 
-    .full-screen-sheet {
-        padding: 0;
-        width: 100%;
-        max-width: 600px;
+}
+
+.full-screen-sheet {
+    height: 100%;
+
+    .bottom-sheet-contents {
         height: 100%;
-        border-radius: 0;
+        border-radius: $border-radius-3;
     }
 }
 
