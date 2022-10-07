@@ -96,8 +96,8 @@
 }
 
 .show-bottom-sheet-animation {
-    animation: showBottomSheet 500ms ease-in-out forwards;
-    -webkit-animation: showBottomSheet 500ms ease-in-out forwards;
+    animation: showBottomSheet 300ms ease-in-out forwards;
+    -webkit-animation: showBottomSheet 300ms ease-in-out forwards;
 }
 
 @keyframes showBottomSheet {
