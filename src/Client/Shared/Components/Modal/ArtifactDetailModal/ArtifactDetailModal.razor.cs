@@ -123,10 +123,10 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _timer = new(600);
             _timer.Enabled = true;
             _timer.Start();
-            _timer.Elapsed += async (sender, e) => { await _timer_Elapsed(sender, e); };
+            _timer.Elapsed += async (sender, e) => { await TimeElapsedForCloseDetailModal(sender, e); };
         }
 
-        private async Task _timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)
         {
             _artifacts = Array.Empty<FsArtifact>();
             await InvokeAsync(() =>
