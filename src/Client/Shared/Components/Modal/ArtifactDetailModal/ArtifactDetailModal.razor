@@ -58,7 +58,7 @@
                 <FileDetailItemFragment>
                     @if (_artifacts[0].FileCategory == FileCategoryType.Image)
                     {
-                        <img src="@("_content/Functionland.FxFiles.Client.Shared/" + _artifacts[0].FullPath + ".HandleByApp=true")" style=:width:400px; />
+                        <img src="@("_content/Functionland.FxFiles.Client.Shared/" + _artifacts[0].FullPath + ".HandleByApp=true")" style=width:400px; />
                     }
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
