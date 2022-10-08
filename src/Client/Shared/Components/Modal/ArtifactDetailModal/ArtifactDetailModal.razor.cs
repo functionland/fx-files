@@ -129,6 +129,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private void _timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             _artifacts = Array.Empty<FsArtifact>();
+            StateHasChanged();
             _timer.Enabled = false;
             _timer.Stop();
         }
