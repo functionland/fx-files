@@ -123,13 +123,16 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _timer = new(600);
             _timer.Enabled = true;
             _timer.Start();
-            _timer.Elapsed += _timer_Elapsed;
+            _timer.Elapsed += async (sender, e) => { await _timer_Elapsed(sender, e); };
         }
 
-        private void _timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        private async Task _timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             _artifacts = Array.Empty<FsArtifact>();
-            StateHasChanged();
+            await InvokeAsync(() =>
+             {
+                 StateHasChanged();
+             });
             _timer.Enabled = false;
             _timer.Stop();
         }
