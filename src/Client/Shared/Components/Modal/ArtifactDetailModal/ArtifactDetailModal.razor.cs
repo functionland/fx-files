@@ -64,6 +64,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _isModalOpen = false;
         }
 
+        //TODO: If we don't need to calculate the size of the artifacts for folder we can refactor this method
         public void CalculateArtifactsSize()
         {
             long? totalSize = 0;

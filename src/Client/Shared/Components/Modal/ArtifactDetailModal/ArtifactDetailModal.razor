@@ -13,9 +13,9 @@
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].OriginDevice)"></FileDetailViewItem>
                     <div class="modal-slider">
                         <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="@(_currentArtifactForShowNumber != 0 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(false))"></FxLink>
-                        <div class="number-slider">@(_currentArtifactForShowNumber+1) @Localizer[nameof(AppStrings.Of)] @_artifacts.Length</div>
+                        <div class="number-slider">@(_currentArtifactForShowNumber + 1) @Localizer[nameof(AppStrings.Of)] @_artifacts.Length</div>
                         <FxLink FxLinkIconSide="FxLinkIconSide.Right" LinkText="@Localizer[nameof(AppStrings.NextSlide)]" IsEnabel="@(_currentArtifactForShowNumber < _artifacts.Length - 1 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(true))"></FxLink>
-                    </div> 
+                    </div>
                     <div class="select-action">
                         <div class="info-selection">
                             <div class="item-selected">
@@ -56,6 +56,10 @@
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
             <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)" FilePath="@_artifacts[0].FullPath" FileCategoryType="@_artifacts[0].FileCategory" FsArtifactType="@_artifacts[0].ArtifactType">
                 <FileDetailItemFragment>
+                    @if (_artifacts[0].FileCategory == FileCategoryType.Image)
+                    {
+                        <img src="@("_content/Functionland.FxFiles.Client.Shared/" + _artifacts[0].FullPath + ".HandleByApp=true")" style=:width:400px; />
+                    }
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
