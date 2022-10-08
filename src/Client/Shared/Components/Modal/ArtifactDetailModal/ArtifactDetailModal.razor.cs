@@ -18,6 +18,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private bool _isModalOpen;
 
+        private System.Timers.Timer? _timer;
+
         public bool IsMultiple { get; set; }
 
         public void Download()
@@ -118,6 +120,17 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs = null;
 
             _isModalOpen = false;
+            _timer = new(600);
+            _timer.Enabled = true;
+            _timer.Start();
+            _timer.Elapsed += _timer_Elapsed;
+        }
+
+        private void _timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            _artifacts = Array.Empty<FsArtifact>();
+            _timer.Enabled = false;
+            _timer.Stop();
         }
 
         public void Dispose()
