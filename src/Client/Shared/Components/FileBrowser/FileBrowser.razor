@@ -79,7 +79,10 @@
                 </div>
 
                 <div class="right-part">
-                    <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                    @if (_selectedArtifacts?.Length>0)
+                    {
+                        <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                    }
                     <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
                 </div>
             </div>
