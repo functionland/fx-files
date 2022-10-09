@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
-
+using Functionland.FxFiles.Client.Shared.Models;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -21,7 +22,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
 
-        public DateTimeOffset PointerDownTime;
+        private System.Timers.Timer? _timer;
 
         protected override Task OnInitAsync()
         {
@@ -54,33 +55,50 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public void PointerDown()
         {
-            PointerDownTime = DateTimeOffset.UtcNow;
-        }
+            _timer = new(500);
+            _timer.Enabled = true;
+            _timer.Start();
 
-        public async Task PointerUp(FsArtifact artifact)
-        {
-            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            _timer.Elapsed += async (sender, e) =>
             {
-                var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
-                if (downTime > 400)
+                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
                     IsSelected = false;
                     SelectedArtifacts = Array.Empty<FsArtifact>();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+
+                    await InvokeAsync(() =>
+                    {
+                        ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                        StateHasChanged();
+                    });
                 }
-                else
-                {
-                    await OnSelectArtifact.InvokeAsync(artifact);
-                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-                }
-            }
-            else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
+
+                _timer.Enabled = false;
+                _timer.Stop();
+            };
+
+        }
+
+        public async Task PointerUp(FsArtifact artifact)
+        {
+            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
             {
+                _timer.Stop();
+                _timer.Enabled = false;
+
                 await OnSelectArtifact.InvokeAsync(artifact);
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
             }
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+            else
+            {
+                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+            }
+        }
+
+        public void PointerMove()
+        {
+            _timer.Stop();
         }
 
         public async Task OnSelectionChanged(FsArtifact selectedArtifact)
@@ -95,6 +113,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 IsSelected = true;
                 SelectedArtifacts = SelectedArtifacts.Append(selectedArtifact).ToArray();
             }
+
             await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
             await IsSelectedChanged.InvokeAsync(IsSelected);
         }

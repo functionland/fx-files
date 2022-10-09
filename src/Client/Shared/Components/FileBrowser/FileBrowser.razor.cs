@@ -578,10 +578,13 @@ public partial class FileBrowser : IDisposable
     {
         ChangeDeviceBackFunctionality(mode);
         _artifactExplorerModeValue = mode;
+
         if (mode == ArtifactExplorerMode.Normal)
         {
             _isSelected = false;
+            _selectedArtifacts = Array.Empty<FsArtifact>();
         }
+
         StateHasChanged();
     }
 
