@@ -103,14 +103,36 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return newFsArtifact;
         }
 
-        public virtual async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+        public virtual async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            var progressCount = 0;
+
             foreach (var artifact in artifacts)
             {
                 if (cancellationToken?.IsCancellationRequested == true)
                     break;
 
                 DeleteArtifactAsync(artifact);
+
+                progressCount++;
+                if (onProgress is not null)
+                {
+                    int? totalCount = null;
+                    var subText = progressCount.ToString();
+                    if (artifacts is IList<FsArtifact> list)
+                    {
+                        totalCount = list.Count;
+                        subText += $" / {totalCount}";
+                    }
+
+                    onProgress(new ProgressInfo
+                    {
+                        CurrentText = artifact.Name,
+                        CurrentSubText = subText,
+                        CurrentValue = progressCount,
+                        MaxValue = totalCount
+                    });
+                }
             }
         }
 
@@ -220,13 +242,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, onProgress, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -374,6 +396,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                     foreach (var file in directoryFiles)
                     {
+                        if (cancellationToken?.IsCancellationRequested == true) break;
+
                         var providerType = await GetFsFileProviderTypeAsync(file.FullName);
 
                         children.Add(new FsArtifact(file.FullName, file.Name, FsArtifactType.File, providerType)
@@ -389,6 +413,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                     foreach (var subDirectory in directorySubDirectories)
                     {
+                        if (cancellationToken?.IsCancellationRequested == true) break;
+
                         var providerType = await GetFsFileProviderTypeAsync(subDirectory.FullName);
 
                         children.Add(new FsArtifact(subDirectory.FullName, subDirectory.Name, FsArtifactType.Folder, providerType)
