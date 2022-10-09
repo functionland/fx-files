@@ -61,7 +61,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
             _timer.Elapsed += async (sender, e) =>
             {
-                if (_timer.Enabled)
+                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
                     IsSelected = false;
                     SelectedArtifacts = Array.Empty<FsArtifact>();
@@ -77,6 +77,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 _timer.Enabled = false;
                 _timer.Stop();
             };
+
         }
 
         public async Task PointerUp(FsArtifact artifact)
