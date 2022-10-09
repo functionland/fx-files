@@ -1,5 +1,8 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using System;
+
+using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Models;
+
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Functionland.FxFiles.Client.Shared.Components
@@ -21,6 +24,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
+        [Parameter] public EventCallback HandleBack { get; set; }
 
         private System.Timers.Timer? _timer;
 
@@ -163,6 +167,53 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             //todo: Proper subtext for artifact
             return "Modified 09/30/22";
+        }
+
+        (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+
+        string message = "touch to begin";
+
+        private void HandleTouchStart(TouchEventArgs t)
+        {
+            startPoint.ReferencePoint = t.TargetTouches[0];
+            startPoint.StartTime = DateTimeOffset.Now;
+        }
+
+        private async Task HandleTouchEnd(TouchEventArgs t)
+        {
+            const double swipeThreshold = 0.8;
+            if (startPoint.ReferencePoint == null)
+            {
+                return;
+            }
+
+            var endReferencePoint = t.ChangedTouches[0];
+
+            var diffX = startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
+            var diffY = startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
+            var diffTime = DateTimeOffset.Now - startPoint.StartTime;
+            var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
+            var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
+
+            //var run = Math.Abs(diffX);
+            //var rise = Math.Abs(diffY);
+            //var ang = Math.Atan2(rise, run) * (180/Math.PI);
+            //
+            //if (ang > 10 && ang < 80)
+            //{
+            //    message = "diagonal";
+            //}
+
+            if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
+            if (Math.Abs(velocityX - velocityY) < .5) return;
+
+            if (velocityX >= swipeThreshold)
+            {
+                if (diffX < 0)
+                {
+                    await HandleBack.InvokeAsync();
+                }
+            }
         }
     }
 }
