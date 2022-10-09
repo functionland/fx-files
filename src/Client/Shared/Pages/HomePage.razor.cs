@@ -2,14 +2,13 @@
 
 public partial class HomePage
 {
-    [AutoInject]
-    private IFileService _fileService = default!;
-
-    public bool IsBottomSheetClose { get; set; } = false;
-
-    public void SyncCloseState(bool isClose)
+    protected override Task OnInitAsync()
     {
-        IsBottomSheetClose = isClose;
+        if (IsiOS)
+            NavigationManager.NavigateTo("settings", false, true);
+        else
+            NavigationManager.NavigateTo("mydevice", false, true);
+
+        return base.OnInitAsync();
     }
 }
-

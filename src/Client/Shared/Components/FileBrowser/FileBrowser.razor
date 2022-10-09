@@ -1,6 +1,9 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components
 @inherits AppComponentBase
-
+@if (_isLoading)
+{
+    <LoadingComponent ZIndex="999"/>
+}
 <div class="file-browser-container">
 
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
@@ -12,7 +15,8 @@
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
                IsPinned="@(_currentArtifact?.IsPinned ?? false)"
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
-               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))" />
+               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
+               IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
@@ -24,11 +28,12 @@
                         @foreach (var pin in _pins)
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                <FileCard FileName="@pin.Name"
+                                <FileCard ArtifactType="@pin.ArtifactType"
+                                          FileName="@pin.Name"
                                           FileSize="@pin.SizeStr"
-                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")"
                                           FileImage="@pin.ThumbnailPath"
-                                          IsFile="@(pin.ArtifactType == FsArtifactType.File)"/>
+                                          FileType="@pin.FileCategory"
+                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
                         }
                     </div>
@@ -49,7 +54,7 @@
     {
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            <div class="action-bar">
+            <div class="@(_isInSearchMode ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
                     <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
@@ -58,13 +63,13 @@
                     <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
                     <div class="action-btn list-view-btn @(_viewMode == ViewModeEnum.list ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.list))"></div>
                     <div class="action-btn grid-view-btn @(_viewMode == ViewModeEnum.grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.grid))"></div>
-                    <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
+                    <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
                 </div>
             </div>
         }
         else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
-            <div class="select-action">
+            <div class="@(_isInSearchMode ? "select-action-search" : "") select-action">
                 <div class="info-selection">
                     <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
                     <div class="item-selected">
@@ -74,7 +79,10 @@
                 </div>
 
                 <div class="right-part">
-                    <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                    @if (_selectedArtifacts?.Length>0)
+                    {
+                        <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                    }
                     <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
                 </div>
             </div>
@@ -101,6 +109,7 @@
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="_viewMode"
                       FileCategoryFilter="_fileCategoryFilter"
+                      IsLoading="_isLoading"
                       @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />

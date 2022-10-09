@@ -12,6 +12,17 @@
         private FxTheme SystemTheme { get; set; }
         private FxTheme DesiredTheme { get; set; }
 
+        protected override Task OnInitAsync()
+        {
+            GoBackService.GoBackAsync = (Task()=>
+            {
+                HandleToolbarBack();
+                return Task.CompletedTask; 
+            });
+
+            return base.OnInitAsync();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -45,6 +56,11 @@
             IsDarkMode = isTheme;
             await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
             StateHasChanged();
+        }
+
+        private void HandleToolbarBack()
+        {
+            NavigationManager.NavigateTo("settings", false, true);
         }
     }
 }

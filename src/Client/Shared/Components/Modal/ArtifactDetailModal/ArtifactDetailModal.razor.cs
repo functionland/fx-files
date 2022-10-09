@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
@@ -16,6 +17,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
 
         private bool _isModalOpen;
+
+        private System.Timers.Timer? _timer;
 
         public bool IsMultiple { get; set; }
 
@@ -63,6 +66,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _isModalOpen = false;
         }
 
+        //TODO: If we don't need to calculate the size of the artifacts for folder we can refactor this method
         public void CalculateArtifactsSize()
         {
             long? totalSize = 0;
@@ -88,6 +92,13 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task<ArtifactDetailModalResult> ShowAsync(FsArtifact[] artifacts, bool isMultiple = false)
         {
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+
             _tcs?.SetCanceled();
             _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;
@@ -109,6 +120,21 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs = null;
 
             _isModalOpen = false;
+            _timer = new(600);
+            _timer.Enabled = true;
+            _timer.Start();
+            _timer.Elapsed += async (sender, e) => { await TimeElapsedForCloseDetailModal(sender, e); };
+        }
+
+        private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            _artifacts = Array.Empty<FsArtifact>();
+            await InvokeAsync(() =>
+             {
+                 StateHasChanged();
+             });
+            _timer.Enabled = false;
+            _timer.Stop();
         }
 
         public void Dispose()

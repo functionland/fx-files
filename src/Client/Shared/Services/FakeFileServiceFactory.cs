@@ -106,7 +106,10 @@ namespace Functionland.FxFiles.Client.Shared.Services
         {
             var folderName = Path.GetFileName(folderPath);
 
-            return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
+            return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
+            {
+                ParentFullPath = folderPath.Replace($"/{folderName}", "")
+            };
         }
 
         public static FsArtifact CreateDrive(string drivePath)

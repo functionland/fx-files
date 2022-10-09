@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
+
 
 namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
 
@@ -25,7 +26,7 @@ public interface IFulaDatabaseClient
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<T> QueryAsync<T>(string query, CancellationToken? cancellationToken = null);
+    Task<List<T>> QueryAsync<T>(string query, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Every mutation operation takes a query an values for create, update or delete operation
@@ -55,5 +56,5 @@ public interface IFulaDatabaseClient
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<T> MutationAsync<T>(string query, JObject values, CancellationToken? cancellationToken = null);
+    Task<List<T>> MutateAsync<T>(string query, IEnumerable<T> values, CancellationToken? cancellationToken = null);
 }

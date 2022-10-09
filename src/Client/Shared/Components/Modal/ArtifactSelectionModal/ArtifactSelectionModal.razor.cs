@@ -1,5 +1,6 @@
 ﻿using System.IO;
 
+using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
@@ -20,6 +21,13 @@ public partial class ArtifactSelectionModal
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
+        GoBackService.GoBackAsync = (Task () =>
+        {
+            Close();
+            StateHasChanged();
+            return Task.CompletedTask;
+        });
+
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
         _artifactActionResult = artifactActionResult;
@@ -72,9 +80,7 @@ public partial class ArtifactSelectionModal
 
         await foreach (var item in artifacts)
         {
-            if (artifactPaths.Contains(item.FullPath)) continue;
-
-            if (item.ArtifactType == FsArtifactType.File)
+            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
             {
                 item.IsDisabled = true;
             }
@@ -121,7 +127,15 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+        try
+        {
+            _currentArtifact = await _fileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
+        }
+        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
+        {
+            _currentArtifact = null;
+        }
+        
         await LoadArtifacts(_currentArtifact?.FullPath);
     }
 

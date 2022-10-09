@@ -8,6 +8,13 @@
 
         public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(int artifactsCount)
         {
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+
             _artifactsCount = artifactsCount;
             _tcs?.SetCanceled();
 
