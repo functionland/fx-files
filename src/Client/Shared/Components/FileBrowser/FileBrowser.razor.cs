@@ -111,15 +111,16 @@ public partial class FileBrowser : IDisposable
                 await _progressModalRef.ShowAsync();
 
                 CancellationTokenSource cts = new CancellationTokenSource();
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false);
-                    //, onProgress: (progressInfo) =>
-                    //{
-                    //    ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                    //    ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
-                    //    ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                    //    ProgressBarMax = progressInfo.MaxValue ?? 100;
-                    //},
-                    //cts.Token);
+                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
+                    , onProgress: (progressInfo) =>
+                    {
+                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                        ProgressBarMax = progressInfo.MaxValue ?? 100;
+                    },
+                    cts.Token);
+
 
                 await _progressModalRef.CloseAsync();
 
