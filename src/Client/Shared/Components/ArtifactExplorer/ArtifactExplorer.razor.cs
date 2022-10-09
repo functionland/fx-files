@@ -1,6 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 
-using Microsoft.JSInterop;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -20,6 +19,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback<FsArtifact[]> SelectedArtifactsChanged { get; set; }
         [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
+        [Parameter] public bool IsLoading { get; set; }
 
         public DateTimeOffset PointerDownTime;
 
@@ -125,13 +125,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
                     case FileCategoryType.Other:
                         return "text-file-icon";
                     case FileCategoryType.Pdf:
-                        return "text-file-icon";
+                        return "pdf-file-icon";
                     case FileCategoryType.Image:
                         return "photo-file-icon";
                     case FileCategoryType.Audio:
                         return "audio-file-icon";
                     case FileCategoryType.Video:
                         return "video-file-icon";
+                    case FileCategoryType.App:
+                        return "app-file-icon";
                 }
             }
 

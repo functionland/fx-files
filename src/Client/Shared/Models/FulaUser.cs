@@ -2,7 +2,12 @@
 
 public class FulaUser
 {
-    public string Did { get; set; } = default!;
-    public string Name { get; set; } = default!;
+    public FulaUser(string dId)
+    {
+        DId = dId;
+    }
+
+    public string DId { get; set; }
+    public string? Username { get; set; }
     public bool IsParent { get; set; }
 }

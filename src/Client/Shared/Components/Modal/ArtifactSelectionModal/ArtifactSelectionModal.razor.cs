@@ -1,5 +1,6 @@
 ﻿using System.IO;
 
+using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
@@ -20,6 +21,13 @@ public partial class ArtifactSelectionModal
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
+        GoBackService.GoBackAsync = (Task () =>
+        {
+            Close();
+            StateHasChanged();
+            return Task.CompletedTask;
+        });
+
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
         _artifactActionResult = artifactActionResult;
@@ -41,35 +49,43 @@ public partial class ArtifactSelectionModal
 
     private void SelectDestionation()
     {
-        if (_currentArtifact is null)
+        try
         {
-            return;
+            if (_currentArtifact is null)
+            {
+                return;
+            }
+
+            var result = new ArtifactSelectionResult();
+
+            result.ResultType = ArtifactSelectionResultType.Ok;
+            result.SelectedArtifacts = new[] { _currentArtifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
         }
+        catch (Exception)
+        {
 
-        var result = new ArtifactSelectionResult();
-
-        result.ResultType = ArtifactSelectionResultType.Ok;
-        result.SelectedArtifacts = new[] { _currentArtifact };
-
-        _tcs!.SetResult(result);
-        _tcs = null;
-        _isModalOpen = false;
+            throw;
+        }
     }
 
     private async Task LoadArtifacts(string? path)
     {
         _artifacts = new List<FsArtifact>();
-        var artifacts = _fileService.GetArtifactsAsync(path);     
+        var artifacts = _fileService.GetArtifactsAsync(path);
         var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
         {
-            if (artifactPaths.Contains(item.FullPath)) continue;
-
-            if (item.ArtifactType != FsArtifactType.File)
+            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
             {
-                _artifacts.Add(item);
+                item.IsDisabled = true;
             }
+
+            _artifacts.Add(item);
         }
     }
 
@@ -111,7 +127,15 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+        try
+        {
+            _currentArtifact = await _fileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
+        }
+        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
+        {
+            _currentArtifact = null;
+        }
+        
         await LoadArtifacts(_currentArtifact?.FullPath);
     }
 

@@ -4,16 +4,16 @@
 
 
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
-    @if ((Artifacts == null) || (!Artifacts.Any()))
+    @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
         <EmptyListView 
             OnAddFolderButtonClick="OnAddFolderButtonClick"
             Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
-            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsLoading)" />
     }
     @foreach (var artifact in Artifacts)
     {
-        <div class="item-container @ViewMode-view-item"
+        <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "") "
          @onpointerup="(() => PointerUp(artifact))"
          @onpointerdown="PointerDown">
             @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
@@ -42,11 +42,17 @@
                 <div class="options-btn"
                     @onclick="() => HandleArtifactOptionsClick(artifact)"
                     @onpointerup:preventDefault="true"
-                    @onpointerup:stopPropagation="true"></div>             
+                    @onpointerup:stopPropagation="true"></div>
             }
         </div>
     }
 </div>
 <div class="position-scroll-btn">
-    <FxButton ButtonStyle="FxButtonStyle.IconOnly" BorderRadius="100px" Height="60px" Width="60px" OnClick="OnGoToTopPage"></FxButton>
+    <FxButton 
+        Width="60px"
+        Height="60px"
+        BorderRadius="100px"
+        OnClick="OnGoToTopPage"
+        ButtonStyle="FxButtonStyle.IconOnly"
+        RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
 </div>

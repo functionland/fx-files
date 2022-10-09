@@ -1,6 +1,12 @@
 ﻿@page "/Settings/Theme"
 @inherits AppComponentBase;
 
+<FxToolBar
+    IsInRoot="false"
+    IsBackButtonVisible="true" 
+    IsAddButtonVisible="false"
+    IsOverflowButtonVisible="false"
+    OnBackClick="HandleToolbarBack"/>
 
 @if (_isLoaded)
 {

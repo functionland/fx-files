@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.FileProviders;
 
 namespace Functionland.FxFiles.Client.App;
 
@@ -29,14 +30,30 @@ public partial class MainPage
                 settings.BlockNetworkImage = false;
 #endif
         });
+
     }
+
+
+#if ANDROID
+    protected override bool OnBackButtonPressed()
+    {
+        var backButtonService = MauiApplication.Current.Services.GetRequiredService<IGoBackService>();
+        if (backButtonService?.GoBackAsync != null)
+        {
+            backButtonService.GoBackAsync().GetAwaiter();
+        }
+
+        return backButtonService?.CanGoBack ?? base.OnBackButtonPressed();
+    }
+#endif
+
 }
 
-public class FxViewerBlazorWebView : BlazorWebView
+public class FxBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
-        var baseFileProvider =  base.CreateFileProvider(contentRootDir);
+        var baseFileProvider = base.CreateFileProvider(contentRootDir);
         return new FxFileProvider(baseFileProvider);
     }
 }

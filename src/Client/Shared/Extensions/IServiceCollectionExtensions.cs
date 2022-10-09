@@ -1,5 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Services;
-using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
+﻿
+using Functionland.FxFiles.Client.Shared.Services;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -14,13 +14,12 @@ public static class IServiceCollectionExtensions
 
         services.AddAuthorizationCore();
 
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-
         services.AddSingleton<IExceptionHandler, ExceptionHandler>();
 
         services.AddScoped<AuthenticationStateProvider, AppAuthenticationStateProvider>();
         services.AddScoped(sp => (AppAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
 
+        services.AddSingleton<IFulaFileService, FulaFileService>();
         services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
         services.AddSingleton<IFulaPinService, FulaPinService>();
 
@@ -29,6 +28,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<FakeFileServiceFactory>();
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
+        services.AddSingleton<IGoBackService, GoBackService>();
         return services;
     }
 
