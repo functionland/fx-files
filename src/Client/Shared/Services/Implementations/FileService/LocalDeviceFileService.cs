@@ -11,13 +11,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, onProgress, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -318,7 +318,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool mustDeleteSource = false, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool mustDeleteSource = false, bool overwrite = false, CancellationToken? cancellationToken = null)
         {
             var ignoredList = new List<FsArtifact>();
             var progressCount = 0;
@@ -398,7 +398,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, mustDeleteSource, overwrite, null, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, mustDeleteSource, overwrite, cancellationToken);
 
                     if (!childIgnoredList.Any() && mustDeleteSource)
                     {
@@ -408,25 +408,25 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ignoredList.AddRange(childIgnoredList);
                 }
 
-                progressCount++;
-                if (onProgress is not null)
-                {
-                    int? totalCount = null;
-                    var subText = progressCount.ToString();
-                    if (artifacts is IList<FsArtifact> list)
-                    {
-                        totalCount = list.Count;
-                        subText += $" / {totalCount}";
-                    }
+                //progressCount++;
+                //if (onProgress is not null)
+                //{
+                //    int? totalCount = null;
+                //    var subText = progressCount.ToString();
+                //    if (artifacts is IList<FsArtifact> list)
+                //    {
+                //        totalCount = list.Count;
+                //        subText += $" / {totalCount}";
+                //    }
                     
-                    onProgress(new ProgressInfo
-                    {
-                        CurrentText = artifact.Name,
-                        CurrentSubText = subText,
-                        CurrentValue = progressCount,
-                        MaxValue = totalCount
-                    });
-                }
+                //    onProgress(new ProgressInfo
+                //    {
+                //        CurrentText = artifact.Name,
+                //        CurrentSubText = subText,
+                //        CurrentValue = progressCount,
+                //        MaxValue = totalCount
+                //    });
+                //}
             }
 
             return ignoredList;
