@@ -17,6 +17,8 @@
 
         private string? _headTitle;
 
+        private FxTextInput? _inputRef;
+
 
         public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
         {
@@ -36,8 +38,28 @@
             _isModalOpen = true;
             StateHasChanged();
 
+            var timer = new System.Timers.Timer(700);
+            timer.Elapsed += TimerElapsed;
+            timer.Enabled = true;
+            timer.Start();
+
             _tcs = new TaskCompletionSource<InputModalResult>();
             return await _tcs.Task;
+        }
+
+        private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            InvokeAsync(async () =>
+            {
+                await _inputRef!.FocusInputAsync();
+            });
+
+            var timer = (System.Timers.Timer)sender;
+            timer.Elapsed -= TimerElapsed;
+            timer.Enabled = false;
+            timer.Stop();
+
+            timer.Dispose();
         }
 
         private void Close()
