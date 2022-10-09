@@ -3,7 +3,7 @@
 @inherits AppComponentBase
 
 
-<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")">
+<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
         <EmptyListView 
