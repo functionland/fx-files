@@ -2,22 +2,63 @@
 @inherits AppComponentBase
 
 
-<FxBottomSheet 
-    Title="@Title"
-    OnClose="CloseAsync"
-    ShowCloseButton="true"
-    IsFullScreenMode="false"
-    @bind-IsOpen="_isModalOpen">
-    
-    <h3>ProgressModal</h3>
+<FxBottomSheet Title="@Title"
+               OnClose="CloseAsync"
+               ShowCloseButton="true"
+               IsFullScreenMode="false"
+               @bind-IsOpen="_isModalOpen">
+    <div>
+        <BitProgressIndicator BarHeight="4"
+                              Label="Example title"
+                              Description="@description"
+                              PercentComplete="@CompletedPercent" />
+        <div class="progress-dsc">
+            <p>1 of 2</p>
+            <p>@description</p>
+        </div>
 
-    @*<div>@Title</div>*@
-    <div>@CurrentText</div>
+        <FxButton Width="150px"
+                  Margin="16px 0"
+                  Text="Start Progress"
+                  OnClick="@StartProgress"
+                  ButtonStyle="FxButtonStyle.Normal" />
+
+        @if (IsCancellable)
+        {
+            <FxButton OnClick="CloseAsync" Text="@Localizer[nameof(AppStrings.Cancel)]"
+                  ButtonStyle="FxButtonStyle.Normal"
+                  ButtonSize="FxButtonSize.Stretch" />
+        }
+    </div>
+
+    @*<div>@CurrentText</div>
     <div>@CurrentSubText</div>
     <div>@ProgressCurrentValue</div>
-    <div>@ProgressMax</div>
-    @if (IsCancellable)
-    {
-        <FxButton OnClick="CloseAsync" Text="Cancel" ButtonStyle="FxButtonStyle.Normal"/>
-    }
+    <div>@ProgressMax</div>*@
+    
 </FxBottomSheet>
+
+@code {
+    private string description = "Push button to start!";
+    public int CompletedPercent { get; set; }
+    private async Task StartProgress()
+    {
+        CompletedPercent = 0;
+        while (CompletedPercent <= 100)
+        {
+            if (CompletedPercent == 100)
+            {
+                description = $"Completed !";
+                break;
+            }
+            else
+            {
+                CompletedPercent++;
+                description = $"{CompletedPercent}%";
+            }
+
+            StateHasChanged();
+            await Task.Delay(100);
+        }
+    }
+}
