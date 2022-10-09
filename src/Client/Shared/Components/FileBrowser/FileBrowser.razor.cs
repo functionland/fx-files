@@ -851,6 +851,7 @@ public partial class FileBrowser : IDisposable
     {
         _fileCategoryFilter = await _filteredArtifactModalRef!.ShowAsync();
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         FilterArtifacts();
     }
 
