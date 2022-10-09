@@ -1,12 +1,11 @@
 ﻿@page "/Settings/Theme"
 @inherits AppComponentBase;
 
-<FxToolBar
-    IsInRoot="false"
-    IsBackButtonVisible="true" 
-    IsAddButtonVisible="false"
-    IsOverflowButtonVisible="false"
-    OnBackClick="HandleToolbarBack"/>
+<FxToolBar IsInRoot="false"
+           IsBackButtonVisible="true"
+           IsAddButtonVisible="false"
+           IsOverflowButtonVisible="false"
+           OnBackClick="HandleToolbarBack" />
 
 @if (_isLoaded)
 {
@@ -19,55 +18,19 @@
 }
 
 <button onclick="@(async ()=>await ShowProgressModal())">Test</button>
-<ProgressModal @ref="_prgressModalRef" CurrentText="Example title"/>
-<!-- Progressbar sample -->
-<div style="padding: 21px">
-    <BitProgressIndicator 
-        BarHeight="4"
-        Label="Example title"
-        Description="@description"
-        PercentComplete="@CompletedPercent" />
-    <div class="progress-dsc">
-        <p>1 of 2</p>
-        <p>@description</p>
-    </div>
+<ProgressModal @ref="_prgressModalRef"
+               Title="Moving Files..."
+               CurrentText="File1.txt"
+               CurrentSubText="1 of 2"
+               ProgressCurrentValue="_progressCurrentValue" />
 
-    <FxButton
-        Width="150px"
-        Margin="16px 0"
-        Text="Start Progress"
-        OnClick="@StartProgress"
-        ButtonStyle="FxButtonStyle.Normal" />
-</div>
 
 @code {
-    private string description = "Push button to start!";
-    public int CompletedPercent { get; set; }
-    private async Task StartProgress()
-    {
-        CompletedPercent = 0;
-        while (CompletedPercent <= 100)
-        {
-            if (CompletedPercent == 100)
-            {
-                description = $"Completed !";
-                break;
-            }
-            else
-            {
-                CompletedPercent++;
-                description = $"{CompletedPercent}%";
-            }
-
-            StateHasChanged();
-            await Task.Delay(100);
-        }
-    }
-    private ProgressModal _prgressModalRef;
-
+    private ProgressModal? _prgressModalRef;
+    private int _progressCurrentValue = 30;
     private async Task ShowProgressModal()
     {
-        if(_prgressModalRef is not null)
+        if (_prgressModalRef is not null)
         {
             await _prgressModalRef.ShowAsync();
         }

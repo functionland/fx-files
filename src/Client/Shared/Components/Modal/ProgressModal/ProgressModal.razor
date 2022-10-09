@@ -7,14 +7,15 @@
                IsFullScreenMode="false"
                @bind-IsOpen="_isModalOpen">
     <div class="progress-container">
-        <div class="title">@Localizer[nameof(AppStrings.MovingFiles)]</div>
+        <div class="title">@Title</div>
         <div class="main-content">
             <BitProgressIndicator BarHeight="4"
                                   Label="@CurrentText"
-                                  PercentComplete="@CompletedPercent" />
+                                  PercentComplete="@ProgressCurrentValue" 
+                                  />
             <div class="progress-dsc">
-                <p>1 of 2</p>
-                <p>@description</p>
+                <p>@CurrentSubText</p>
+                <p>@(ProgressCurrentValue+"%")</p>
             </div>
         </div>
 
@@ -27,34 +28,4 @@
         }
     </div>
 
-    @*<div>@CurrentText</div>
-    <div>@CurrentSubText</div>
-    <div>@ProgressCurrentValue</div>
-    <div>@ProgressMax</div>*@
-
 </FxBottomSheet>
-
-@code {
-    private string description = "Push button to start!";
-    public int CompletedPercent { get; set; }
-    private async Task StartProgress()
-    {
-        CompletedPercent = 0;
-        while (CompletedPercent <= 100)
-        {
-            if (CompletedPercent == 100)
-            {
-                description = $"Completed !";
-                break;
-            }
-            else
-            {
-                CompletedPercent++;
-                description = $"{CompletedPercent}%";
-            }
-
-            StateHasChanged();
-            await Task.Delay(100);
-        }
-    }
-}
