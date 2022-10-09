@@ -19,9 +19,9 @@
 }
 
 <button onclick="@(async ()=>await ShowProgressModal())">Test</button>
-<ProgressModal @ref="_prgressModalRef"/>
+<ProgressModal @ref="_prgressModalRef" CurrentText="Example title"/>
 <!-- Progressbar sample -->
-@*<div style="padding: 21px">
+<div style="padding: 21px">
     <BitProgressIndicator 
         BarHeight="4"
         Label="Example title"
@@ -38,31 +38,31 @@
         Text="Start Progress"
         OnClick="@StartProgress"
         ButtonStyle="FxButtonStyle.Normal" />
-</div>*@
+</div>
 
 @code {
-    //private string description = "Push button to start!";
-    //public int CompletedPercent { get; set; }
-    //private async Task StartProgress()
-    //{
-    //    CompletedPercent = 0;
-    //    while (CompletedPercent <= 100)
-    //    {
-    //        if (CompletedPercent == 100)
-    //        {
-    //            description = $"Completed !";
-    //            break;
-    //        }
-    //        else
-    //        {
-    //            CompletedPercent++;
-    //            description = $"{CompletedPercent}%";
-    //        }
+    private string description = "Push button to start!";
+    public int CompletedPercent { get; set; }
+    private async Task StartProgress()
+    {
+        CompletedPercent = 0;
+        while (CompletedPercent <= 100)
+        {
+            if (CompletedPercent == 100)
+            {
+                description = $"Completed !";
+                break;
+            }
+            else
+            {
+                CompletedPercent++;
+                description = $"{CompletedPercent}%";
+            }
 
-    //        StateHasChanged();
-    //        await Task.Delay(100);
-    //    }
-    //}
+            StateHasChanged();
+            await Task.Delay(100);
+        }
+    }
     private ProgressModal _prgressModalRef;
 
     private async Task ShowProgressModal()

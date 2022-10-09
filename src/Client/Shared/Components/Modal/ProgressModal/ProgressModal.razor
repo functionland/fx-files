@@ -2,32 +2,28 @@
 @inherits AppComponentBase
 
 
-<FxBottomSheet Title="@Title"
-               OnClose="CloseAsync"
-               ShowCloseButton="true"
+<FxBottomSheet OnClose="CloseAsync"
+               ShowCloseButton="false"
                IsFullScreenMode="false"
                @bind-IsOpen="_isModalOpen">
-    <div>
-        <BitProgressIndicator BarHeight="4"
-                              Label="Example title"
-                              Description="@description"
-                              PercentComplete="@CompletedPercent" />
-        <div class="progress-dsc">
-            <p>1 of 2</p>
-            <p>@description</p>
+    <div class="progress-container">
+        <div class="title">@Localizer[nameof(AppStrings.MovingFiles)]</div>
+        <div class="main-content">
+            <BitProgressIndicator BarHeight="4"
+                                  Label="@CurrentText"
+                                  PercentComplete="@CompletedPercent" />
+            <div class="progress-dsc">
+                <p>1 of 2</p>
+                <p>@description</p>
+            </div>
         </div>
-
-        <FxButton Width="150px"
-                  Margin="16px 0"
-                  Text="Start Progress"
-                  OnClick="@StartProgress"
-                  ButtonStyle="FxButtonStyle.Normal" />
 
         @if (IsCancellable)
         {
             <FxButton OnClick="CloseAsync" Text="@Localizer[nameof(AppStrings.Cancel)]"
                   ButtonStyle="FxButtonStyle.Normal"
-                  ButtonSize="FxButtonSize.Stretch" />
+                  Height="60px"
+                  Width="100%"/>
         }
     </div>
 
@@ -35,7 +31,7 @@
     <div>@CurrentSubText</div>
     <div>@ProgressCurrentValue</div>
     <div>@ProgressMax</div>*@
-    
+
 </FxBottomSheet>
 
 @code {
