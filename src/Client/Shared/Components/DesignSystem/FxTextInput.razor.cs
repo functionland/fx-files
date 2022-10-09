@@ -33,5 +33,12 @@
 
         [Parameter]
         public string? ErrorMessage { get; set; }
+
+        private ElementReference _input;
+
+        public async Task FocusInputAsync()
+        {
+            await _input.FocusAsync();
+        }
     }
 }

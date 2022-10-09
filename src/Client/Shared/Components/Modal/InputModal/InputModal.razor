@@ -16,8 +16,9 @@
 
         <h3>@_title</h3>
 
-        <FxTextInput 
+        <FxTextInput
             Label="Name"
+            @ref="_inputRef"
             Margin="40px 0 0 0"
             @bind-Text="@_inputValue"
             Placeholder="@_placeholder" />

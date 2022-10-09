@@ -96,7 +96,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
-        public void PointerMove()
+        public void PointerCancel()
         {
             _timer.Stop();
         }
