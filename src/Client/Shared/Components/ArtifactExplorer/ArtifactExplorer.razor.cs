@@ -181,7 +181,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private async Task HandleTouchEnd(TouchEventArgs t)
         {
-            const double swipeThreshold = 0.8;
+            const double swipeThreshold = 0.2;
             if (startPoint.ReferencePoint == null)
             {
                 return;
@@ -205,7 +205,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
             //}
 
             if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
-            if (Math.Abs(velocityX - velocityY) < .5) return;
+            if (Math.Abs(velocityX - velocityY) < .2) return;
 
             if (velocityX >= swipeThreshold)
             {
