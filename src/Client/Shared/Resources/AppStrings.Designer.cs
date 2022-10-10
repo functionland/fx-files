@@ -601,6 +601,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        public static string Login {
+            get {
+                return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log out.
         /// </summary>
         public static string LogOut {
@@ -705,6 +714,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Of {
             get {
                 return ResourceManager.GetString("Of", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Onboarding.
+        /// </summary>
+        public static string Onboarding {
+            get {
+                return ResourceManager.GetString("Onboarding", resourceCulture);
             }
         }
         
@@ -1137,15 +1155,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Upload {
             get {
                 return ResourceManager.GetString("Upload", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zones.
-        /// </summary>
-        public static string Zones {
-            get {
-                return ResourceManager.GetString("Zones", resourceCulture);
             }
         }
     }
