@@ -388,7 +388,6 @@ public partial class FileBrowser : IDisposable
         {
             ExceptionHandler?.Handle(exception);
             _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
-        }
     }
 
     private bool IsInRoot(FsArtifact? artifact)
