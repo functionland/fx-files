@@ -27,7 +27,7 @@ public partial class FileBrowser : IDisposable
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
-    private ProgressModal _progressModalRef = default!;
+    private ProgressModal? _progressModalRef;
     private FxSearchInput? _fxSearchInputRef;
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
@@ -40,9 +40,10 @@ public partial class FileBrowser : IDisposable
     private int ProgressBarCurrentValue { get; set; }
     private int ProgressBarMax { get; set; }
     private bool ProgressBarIsCancellable { get; set; } = true;
-    private async Task ProgressBarOnCancelAsync()
+    private CancellationTokenSource? ProgressBarCts;
+    private void ProgressBarOnCancel()
     {
-        // Todo: Write OnCancel logic.
+        ProgressBarCts?.Cancel();
     }
 
 
@@ -105,29 +106,36 @@ public partial class FileBrowser : IDisposable
 
             try
             {
-                ProgressBarTitle = "Copying files";
-                ProgressBarIsCancellable = true;
-                ProgressBarMode = ProgressMode.Progressive;
-                await _progressModalRef.ShowAsync();
+                if (_progressModalRef is not null)
+                {
+                    ProgressBarTitle = "Copying files";
+                    ProgressBarIsCancellable = true;
+                    ProgressBarMode = ProgressMode.Progressive;
 
-                CancellationTokenSource cts = new CancellationTokenSource();
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
-                    , onProgress: (progressInfo) =>
-                    {
-                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
-                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                        ProgressBarMax = progressInfo.MaxValue ?? 100;
-                    },
-                    cts.Token);
+                    await _progressModalRef.ShowAsync();
+                    ProgressBarCts = new CancellationTokenSource();
 
-
-                await _progressModalRef.CloseAsync();
-
+                    await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
+                        , onProgress: async (progressInfo) =>
+                        {
+                            ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                            ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                            ProgressBarMax = progressInfo.MaxValue ?? 100;
+                            await InvokeAsync(() => StateHasChanged());
+                        },
+                        ProgressBarCts.Token);
+                }
             }
             catch (CanNotOperateOnFilesException ex)
             {
                 existArtifacts = ex.FsArtifacts;
+            }
+
+            if (_progressModalRef is not null)
+            {
+                await _progressModalRef.CloseAsync();
+                StateHasChanged();
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
