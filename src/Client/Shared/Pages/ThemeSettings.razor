@@ -16,23 +16,3 @@
         <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
     </div>
 }
-
-<button onclick="@(async ()=>await ShowProgressModal())">Test</button>
-<ProgressModal @ref="_prgressModalRef"
-               Title="Moving Files..."
-               CurrentText="File1.txt"
-               CurrentSubText="1 of 2"
-               ProgressCurrentValue="_progressCurrentValue" />
-
-
-@code {
-    private ProgressModal? _prgressModalRef;
-    private int _progressCurrentValue = 30;
-    private async Task ShowProgressModal()
-    {
-        if (_prgressModalRef is not null)
-        {
-            await _prgressModalRef.ShowAsync();
-        }
-    }
-}
