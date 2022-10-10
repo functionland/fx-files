@@ -483,4 +483,7 @@
   <data name="Onboarding" xml:space="preserve">
     <value>Onboarding</value>
   </data>
+  <data name="ArtifactUnauthorizedAccessException" xml:space="preserve">
+    <value>Access is denied.</value>
+  </data>
 </root>

@@ -27,9 +27,11 @@ public partial class FileBrowser : IDisposable
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
+    private ProgressModal _progressModalRef = default!;
     private FxSearchInput? _fxSearchInputRef;
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
+
 
     private string? _searchText;
     private bool _isInSearchMode;
@@ -417,13 +419,19 @@ public partial class FileBrowser : IDisposable
             _allArtifacts = artifacts;
             FilterArtifacts();
         }
-        //ToDo: Needs more business-wise data to implement
-        catch (AndroidSpecialFilesUnauthorizedAccessException ex)
+        catch (ArtifactUnauthorizedAccessException ex)
         {
-            _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
             _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
-        //ToDo: Add a general catch in case of other exceptions
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
+            _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
+        }
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -653,7 +661,7 @@ public partial class FileBrowser : IDisposable
         }
         else
         {
-            artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+            artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
         }
 
         if (artifactRenamed != null)
@@ -661,6 +669,7 @@ public partial class FileBrowser : IDisposable
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
             artifactRenamed.Name = fullNewName;
+            FilterArtifacts();
         }
     }
 
@@ -675,14 +684,14 @@ public partial class FileBrowser : IDisposable
         }
         else
         {
-            foreach (var artifact in _filteredArtifacts)
+            foreach (var artifact in _allArtifacts)
             {
                 if (artifactPath.Contains(artifact.FullPath))
                 {
                     artifact.IsPinned = IsPinned;
                 }
             }
-            _allArtifacts = _filteredArtifacts;
+            FilterArtifacts();
         }
     }
 
@@ -693,8 +702,8 @@ public partial class FileBrowser : IDisposable
             await HandleToolbarBackClick();
             return;
         }
-        _filteredArtifacts = _filteredArtifacts.Except(artifacts).ToList();
-        _allArtifacts = _filteredArtifacts;
+        _allArtifacts = _allArtifacts.Except(artifacts).ToList();
+        FilterArtifacts();
     }
 
     private async Task HandleCancelSearchAsync()
@@ -795,25 +804,30 @@ public partial class FileBrowser : IDisposable
     private async Task HandleToolbarBackClick()
     {
         _fxSearchInputRef?.HandleClearInputText();
+
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             _artifactExplorerMode = ArtifactExplorerMode.Normal;
         }
-        if (!_isInSearchMode)
+        else
         {
-            _fxSearchInputRef?.HandleClearInputText();
-            await UpdateCurrentArtifactForBackButton(_currentArtifact);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            StateHasChanged();
-        }
-        if (_isInSearchMode)
-        {
-            cancellationTokenSource?.Cancel();
-            _isInSearchMode = false;
-            _fxSearchInputRef?.HandleClearInputText();
-            await LoadChildrenArtifactsAsync();
-            StateHasChanged();
+            if (!_isInSearchMode)
+            {
+                _fxSearchInputRef?.HandleClearInputText();
+                await UpdateCurrentArtifactForBackButton(_currentArtifact);
+                await LoadChildrenArtifactsAsync(_currentArtifact);
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                StateHasChanged();
+            }
+
+            if (_isInSearchMode)
+            {
+                cancellationTokenSource?.Cancel();
+                _isInSearchMode = false;
+                _fxSearchInputRef?.HandleClearInputText();
+                await LoadChildrenArtifactsAsync();
+                StateHasChanged();
+            }
         }
     }
 

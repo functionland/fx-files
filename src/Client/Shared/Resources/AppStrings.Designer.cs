@@ -151,6 +151,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access is denied..
+        /// </summary>
+        public static string ArtifactUnauthorizedAccessException {
+            get {
+                return ResourceManager.GetString("ArtifactUnauthorizedAccessException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid request.
         /// </summary>
         public static string BadRequestException {

@@ -236,4 +236,9 @@
     "inputFile": "Pages/FxLogin.razor.scss"
   },
  
+  },
+  {
+    "outputFile": "Components/Modal/ProgressModal/ProgressModal.razor.css",
+    "inputFile": "Components/Modal/ProgressModal/ProgressModal.razor.scss"
+  }
 ]
