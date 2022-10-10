@@ -15,7 +15,6 @@ public partial class ArtifactSelectionModal
     private FsArtifact? _currentArtifact;
     private ArtifactActionResult? _artifactActionResult;
     private InputModal _inputModalRef = default!;
-    private ToastModal _toastModalRef = default!;
 
     [Parameter] public bool IsMultiple { get; set; }
 
@@ -108,20 +107,9 @@ public partial class ArtifactSelectionModal
                 StateHasChanged();
             }
         }
-        catch (DomainLogicException ex) when
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"))))
+        catch (Exception exception)
         {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = ex.Message;
-            _toastModalRef!.Show(title, message, FxToastType.Error);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
     }
 
