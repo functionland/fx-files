@@ -10,5 +10,5 @@ public class FulaUser
     public string DId { get; set; }
     public string? Username { get; set; }
     public bool IsParent { get; set; }
-    public bool CanAceessToFula { get; set; }
+    public bool HasAceessToFula { get; set; }
 }

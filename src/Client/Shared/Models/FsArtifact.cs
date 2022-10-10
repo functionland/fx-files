@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Models
@@ -30,9 +29,9 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public string WhoMadeLastEdit { get; set; }
         public string? ThumbnailPath { get; set; }
         public List<FsArtifactActivity>? FsArtifactActivity { get; set; }
-        public List<FulaUser> WhoHasAccess { get; set; }
+        public List<ArtifactPermissionInfo>? PermissionedUsers { get; set; }
         public FulaUser Owner { get; set; }
-
+        public ArtifactPermissionLevel? PermissionLevel { get; set; }
         // For UI
         public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
