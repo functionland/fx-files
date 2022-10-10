@@ -33,13 +33,10 @@ public partial class FileBrowser : IDisposable
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
 
     // ProgressBar
-    private ProgressMode ProgressBarMode { get; set; }
-    private string ProgressBarTitle { get; set; } = default!;
     private string ProgressBarCurrentText { get; set; } = default!;
     private string ProgressBarCurrentSubText { get; set; } = default!;
     private int ProgressBarCurrentValue { get; set; }
     private int ProgressBarMax { get; set; }
-    private bool ProgressBarIsCancellable { get; set; } = true;
     private CancellationTokenSource? ProgressBarCts;
     private void ProgressBarOnCancel()
     {
@@ -107,11 +104,7 @@ public partial class FileBrowser : IDisposable
             {
                 if (_progressModalRef is not null)
                 {
-                    ProgressBarTitle = "Copying files";
-                    ProgressBarIsCancellable = true;
-                    ProgressBarMode = ProgressMode.Progressive;
-
-                    await _progressModalRef.ShowAsync();
+                    await _progressModalRef.ShowAsync(ProgressMode.Infinite, "Copying files", true);
                     ProgressBarCts = new CancellationTokenSource();
 
                     await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
