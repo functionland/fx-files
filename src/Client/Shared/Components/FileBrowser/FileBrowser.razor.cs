@@ -17,7 +17,10 @@ public partial class FileBrowser : IDisposable
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _allArtifacts = new();
     private List<FsArtifact> _filteredArtifacts = new();
-
+    private string? _searchText;
+    private bool _isInSearchMode;
+    private ViewModeEnum _viewMode = ViewModeEnum.list;
+    private FileCategoryType? _fileCategoryFilter;
     private InputModal? _inputModalRef;
     private ConfirmationModal? _confirmationModalRef;
     private FilterArtifactModal? _filteredArtifactModalRef;
@@ -28,16 +31,11 @@ public partial class FileBrowser : IDisposable
     private ArtifactDetailModal? _artifactDetailModalRef;
     private ProgressModal _progressModalRef = default!;
     private FxSearchInput? _fxSearchInputRef;
-    private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
-    private ArtifactActionResult _artifactActionResult { get; set; } = new();
-
-
-    private string? _searchText;
-    private bool _isInSearchMode;
-    private ViewModeEnum _viewMode = ViewModeEnum.list;
-    private FileCategoryType? _fileCategoryFilter;
-
     private ArtifactExplorerMode _artifactExplorerModeValue;
+    private SortTypeEnum _currentSortType = SortTypeEnum.Name;
+    private bool _isAscOrder = true;
+    private bool _isSelected;
+    private bool _isLoading = false;
     private ArtifactExplorerMode _artifactExplorerMode
     {
         get { return _artifactExplorerModeValue; }
@@ -49,11 +47,8 @@ public partial class FileBrowser : IDisposable
             }
         }
     }
-
-    private SortTypeEnum _currentSortType = SortTypeEnum.Name;
-    private bool _isAscOrder = true;
-    private bool _isSelected;
-    private bool _isLoading = false;
+    private ArtifactActionResult _artifactActionResult { get; set; } = new();
+    private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
