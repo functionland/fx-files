@@ -1,18 +1,22 @@
 ﻿@page "/Settings/Theme"
 @inherits AppComponentBase;
 
-<FxToolBar IsInRoot="false"
-           IsBackButtonVisible="true"
-           IsAddButtonVisible="false"
-           IsOverflowButtonVisible="false"
-           OnBackClick="HandleToolbarBack" />
+<div class="theme-content">
+    <FxToolBar
+        IsInRoot="false"
+        IsBackButtonVisible="true" 
+        IsAddButtonVisible="false"
+        IsOverflowButtonVisible="false"
+        OnBackClick="HandleToolbarBack"/>
 
-@if (_isLoaded)
-{
-    <div class="theme-content">
-        @($"Use System Theme ({SystemTheme})")
-        <BitCheckbox @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
-        Dark Theme
-        <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
-    </div>
-}
+    @if(_isLoaded)
+    {
+        <div class="theme-options">
+            @($"Use System Theme ({SystemTheme})")
+            <BitCheckbox @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
+            Dark Theme
+            <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
+        </div>
+    }
+
+</div>
