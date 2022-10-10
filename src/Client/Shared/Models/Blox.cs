@@ -4,7 +4,7 @@ public class Blox
 {
     public string Id { get; set; } = default!;
     public string Name { get; set; } = default!;
-    public string OwnerId { get; set; } = default!;
+    public FulaUser Owner { get; set; } = default!;
     public string? PoolId { get; set; }
     public string? PoolName { get; set; }
     
