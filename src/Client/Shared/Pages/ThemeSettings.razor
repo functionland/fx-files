@@ -1,38 +1,22 @@
 ﻿@page "/Settings/Theme"
 @inherits AppComponentBase;
 
-<FxToolBar IsInRoot="false"
-           IsBackButtonVisible="true"
-           IsAddButtonVisible="false"
-           IsOverflowButtonVisible="false"
-           OnBackClick="HandleToolbarBack" />
+<div class="theme-content">
+    <FxToolBar
+        IsInRoot="false"
+        IsBackButtonVisible="true" 
+        IsAddButtonVisible="false"
+        IsOverflowButtonVisible="false"
+        OnBackClick="HandleToolbarBack"/>
 
-@if (_isLoaded)
-{
-    <div class="theme-content">
-        @($"Use System Theme ({SystemTheme})")
-        <BitCheckbox @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
-        Dark Theme
-        <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
-    </div>
-}
-
-<button onclick="@(async ()=>await ShowProgressModal())">Test</button>
-<ProgressModal @ref="_prgressModalRef"
-               Title="Moving Files..."
-               CurrentText="File1.txt"
-               CurrentSubText="1 of 2"
-               ProgressCurrentValue="_progressCurrentValue" />
-
-
-@code {
-    private ProgressModal? _prgressModalRef;
-    private int _progressCurrentValue = 30;
-    private async Task ShowProgressModal()
+    @if(_isLoaded)
     {
-        if (_prgressModalRef is not null)
-        {
-            await _prgressModalRef.ShowAsync();
-        }
+        <div class="theme-options">
+            @($"Use System Theme ({SystemTheme})")
+            <BitCheckbox @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
+            Dark Theme
+            <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
+        </div>
     }
-}
+
+</div>

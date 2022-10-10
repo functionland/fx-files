@@ -2,9 +2,12 @@
 @import '../Styles/abstracts/_functions.scss';
 @import '../Styles/components/_bit-toggle.scss';
 @import '../Styles/components/_bit-checkbox.scss';
-@import '../Styles/components/_bit-progress-indicator.scss';
 
 .theme-content {
+    padding-top: 16px;
+}
+
+.theme-options {
     gap: 10px;
     display: grid;
     padding: 21px;

@@ -32,19 +32,6 @@ public partial class FileBrowser : IDisposable
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
 
-    // ProgressBar
-    private ProgressMode ProgressBarMode { get; set; }
-    private string ProgressBarTitle { get; set; } = default!;
-    private string ProgressBarCurrentText { get; set; } = default!;
-    private string ProgressBarCurrentSubText { get; set; } = default!;
-    private int ProgressBarCurrentValue { get; set; }
-    private int ProgressBarMax { get; set; }
-    private bool ProgressBarIsCancellable { get; set; } = true;
-    private async Task ProgressBarOnCancelAsync()
-    {
-        // Todo: Write OnCancel logic.
-    }
-
 
     private string? _searchText;
     private bool _isInSearchMode;
@@ -105,25 +92,7 @@ public partial class FileBrowser : IDisposable
 
             try
             {
-                ProgressBarTitle = "Copying files";
-                ProgressBarIsCancellable = true;
-                ProgressBarMode = ProgressMode.Progressive;
-                await _progressModalRef.ShowAsync();
-
-                CancellationTokenSource cts = new CancellationTokenSource();
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
-                    , onProgress: (progressInfo) =>
-                    {
-                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
-                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                        ProgressBarMax = progressInfo.MaxValue ?? 100;
-                    },
-                    cts.Token);
-
-
-                await _progressModalRef.CloseAsync();
-
+                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false);
             }
             catch (CanNotOperateOnFilesException ex)
             {
@@ -611,10 +580,13 @@ public partial class FileBrowser : IDisposable
     {
         ChangeDeviceBackFunctionality(mode);
         _artifactExplorerModeValue = mode;
+
         if (mode == ArtifactExplorerMode.Normal)
         {
             _isSelected = false;
+            _selectedArtifacts = Array.Empty<FsArtifact>();
         }
+
         StateHasChanged();
     }
 
@@ -825,25 +797,30 @@ public partial class FileBrowser : IDisposable
     private async Task HandleToolbarBackClick()
     {
         _fxSearchInputRef?.HandleClearInputText();
+
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             _artifactExplorerMode = ArtifactExplorerMode.Normal;
         }
-        if (!_isInSearchMode)
+        else
         {
-            _fxSearchInputRef?.HandleClearInputText();
-            await UpdateCurrentArtifactForBackButton(_currentArtifact);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            StateHasChanged();
-        }
-        if (_isInSearchMode)
-        {
-            cancellationTokenSource?.Cancel();
-            _isInSearchMode = false;
-            _fxSearchInputRef?.HandleClearInputText();
-            await LoadChildrenArtifactsAsync();
-            StateHasChanged();
+            if (!_isInSearchMode)
+            {
+                _fxSearchInputRef?.HandleClearInputText();
+                await UpdateCurrentArtifactForBackButton(_currentArtifact);
+                await LoadChildrenArtifactsAsync(_currentArtifact);
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                StateHasChanged();
+            }
+
+            if (_isInSearchMode)
+            {
+                cancellationTokenSource?.Cancel();
+                _isInSearchMode = false;
+                _fxSearchInputRef?.HandleClearInputText();
+                await LoadChildrenArtifactsAsync();
+                StateHasChanged();
+            }
         }
     }
 
@@ -881,6 +858,7 @@ public partial class FileBrowser : IDisposable
     {
         _fileCategoryFilter = await _filteredArtifactModalRef!.ShowAsync();
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         FilterArtifacts();
     }
 

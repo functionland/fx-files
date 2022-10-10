@@ -1,5 +1,9 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using System;
 
+using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Models;
+
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -20,8 +24,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
+        [Parameter] public EventCallback HandleBack { get; set; }
 
-        public DateTimeOffset PointerDownTime;
+        private System.Timers.Timer? _timer;
 
         protected override Task OnInitAsync()
         {
@@ -54,33 +59,50 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public void PointerDown()
         {
-            PointerDownTime = DateTimeOffset.UtcNow;
-        }
+            _timer = new(500);
+            _timer.Enabled = true;
+            _timer.Start();
 
-        public async Task PointerUp(FsArtifact artifact)
-        {
-            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            _timer.Elapsed += async (sender, e) =>
             {
-                var downTime = (DateTimeOffset.UtcNow.Ticks - PointerDownTime.Ticks) / TimeSpan.TicksPerMillisecond;
-                if (downTime > 400)
+                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
                     IsSelected = false;
                     SelectedArtifacts = Array.Empty<FsArtifact>();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+
+                    await InvokeAsync(() =>
+                    {
+                        ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                        StateHasChanged();
+                    });
                 }
-                else
-                {
-                    await OnSelectArtifact.InvokeAsync(artifact);
-                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-                }
-            }
-            else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectDestionation)
+
+                _timer.Enabled = false;
+                _timer.Stop();
+            };
+
+        }
+
+        public async Task PointerUp(FsArtifact artifact)
+        {
+            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
             {
+                _timer.Stop();
+                _timer.Enabled = false;
+
                 await OnSelectArtifact.InvokeAsync(artifact);
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
             }
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+            else
+            {
+                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+            }
+        }
+
+        public void PointerCancel()
+        {
+            _timer.Stop();
         }
 
         public async Task OnSelectionChanged(FsArtifact selectedArtifact)
@@ -95,6 +117,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 IsSelected = true;
                 SelectedArtifacts = SelectedArtifacts.Append(selectedArtifact).ToArray();
             }
+
             await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
             await IsSelectedChanged.InvokeAsync(IsSelected);
         }
@@ -144,6 +167,53 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             //todo: Proper subtext for artifact
             return "Modified 09/30/22";
+        }
+
+        (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+
+        string message = "touch to begin";
+
+        private void HandleTouchStart(TouchEventArgs t)
+        {
+            startPoint.ReferencePoint = t.TargetTouches[0];
+            startPoint.StartTime = DateTimeOffset.Now;
+        }
+
+        private async Task HandleTouchEnd(TouchEventArgs t)
+        {
+            const double swipeThreshold = 0.8;
+            if (startPoint.ReferencePoint == null)
+            {
+                return;
+            }
+
+            var endReferencePoint = t.ChangedTouches[0];
+
+            var diffX = startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
+            var diffY = startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
+            var diffTime = DateTimeOffset.Now - startPoint.StartTime;
+            var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
+            var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
+
+            //var run = Math.Abs(diffX);
+            //var rise = Math.Abs(diffY);
+            //var ang = Math.Atan2(rise, run) * (180/Math.PI);
+            //
+            //if (ang > 10 && ang < 80)
+            //{
+            //    message = "diagonal";
+            //}
+
+            if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
+            if (Math.Abs(velocityX - velocityY) < .5) return;
+
+            if (velocityX >= swipeThreshold)
+            {
+                if (diffX < 0)
+                {
+                    await HandleBack.InvokeAsync();
+                }
+            }
         }
     }
 }

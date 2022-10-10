@@ -110,6 +110,7 @@
                       ViewMode="_viewMode"
                       FileCategoryFilter="_fileCategoryFilter"
                       IsLoading="_isLoading"
+                      HandleBack="HandleToolbarBackClick"
                       @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />
@@ -125,13 +126,3 @@
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
-<ProgressModal
-    Title="@ProgressBarTitle"
-    CurrentText="@ProgressBarCurrentText"
-    CurrentSubText="@ProgressBarCurrentSubText"
-    IsCancellable="@ProgressBarIsCancellable"
-    ProgressCurrentValue="@ProgressBarCurrentValue"
-    ProgressMax="@ProgressBarMax"
-    ProgressMode="@ProgressBarMode"
-    OnCancel="ProgressBarOnCancelAsync"
-    @ref="_progressModalRef" />
