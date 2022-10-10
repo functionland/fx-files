@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
-public interface IOfflineAvailablityService
+public interface IOfflineAvailabilityService
 {
     /// <summary>
     /// Fill inline cache data (availabl offlined data) from database
