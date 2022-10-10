@@ -795,25 +795,30 @@ public partial class FileBrowser : IDisposable
     private async Task HandleToolbarBackClick()
     {
         _fxSearchInputRef?.HandleClearInputText();
+
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             _artifactExplorerMode = ArtifactExplorerMode.Normal;
         }
-        if (!_isInSearchMode)
+        else
         {
-            _fxSearchInputRef?.HandleClearInputText();
-            await UpdateCurrentArtifactForBackButton(_currentArtifact);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            StateHasChanged();
-        }
-        if (_isInSearchMode)
-        {
-            cancellationTokenSource?.Cancel();
-            _isInSearchMode = false;
-            _fxSearchInputRef?.HandleClearInputText();
-            await LoadChildrenArtifactsAsync();
-            StateHasChanged();
+            if (!_isInSearchMode)
+            {
+                _fxSearchInputRef?.HandleClearInputText();
+                await UpdateCurrentArtifactForBackButton(_currentArtifact);
+                await LoadChildrenArtifactsAsync(_currentArtifact);
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                StateHasChanged();
+            }
+
+            if (_isInSearchMode)
+            {
+                cancellationTokenSource?.Cancel();
+                _isInSearchMode = false;
+                _fxSearchInputRef?.HandleClearInputText();
+                await LoadChildrenArtifactsAsync();
+                StateHasChanged();
+            }
         }
     }
 
