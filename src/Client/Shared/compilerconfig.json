@@ -230,5 +230,10 @@
   {
     "outputFile": "Components/LoadingComponent.razor.css",
     "inputFile": "Components/LoadingComponent.razor.scss"
-  }
+  },
+  {
+    "outputFile": "Pages/FxLogin.razor.css",
+    "inputFile": "Pages/FxLogin.razor.scss"
+  },
+ 
 ]
