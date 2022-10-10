@@ -1,0 +1,71 @@
+﻿@import "../abstracts/_variables.scss";
+@import "../abstracts/_functions.scss";
+
+
+::deep .bit-pi-fluent .bit-pi-bar {
+    background-color: $green-dark-base;
+}
+
+::deep .bit-pi-fluent .bit-pi-track {
+    background-color: color(gray-border);
+}
+
+::deep .bit-pi-fluent .bit-pi-lbl {
+    color: color(gray-content1);
+    font-family: $open-sans-regular;
+    font-size: $font-size-12;
+}
+
+::deep .bit-pi-fluent .bit-pi-wrapper {
+    border-radius: 4px;
+    margin: 8px 0;
+    padding: 0;
+}
+
+::deep .bit-pi-fluent .bit-pi-dsc {
+    font-family: $open-sans-light;
+    color: color(gray-content2);
+    font-size: $font-size-12;
+    text-align: right;
+    display: none; //replaced with progress-dsc class
+}
+
+@-webkit-keyframes MOVE-BG {
+    from {
+        -webkit-transform: translateX(0);
+    }
+
+    to {
+        -webkit-transform: translateX(46px);
+    }
+}
+
+@keyframes MOVE-BG {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(46px);
+    }
+}
+
+::deep .bit-pi-indeterminate-fluent .bit-pi-bar {
+    width: auto;
+    left: -46px;
+    position: absolute;
+    transition: width .3s ease 0s;
+    min-width: -webkit-fill-available;
+    background: -webkit-repeating-linear-gradient( 145deg, color(gray-bg-secondary) 1px, $green-dark-base 2px, color(gray-bg-secondary) 11px, $green-dark-base 12px, color(gray-bg-secondary) 20px );
+    background: repeating-linear-gradient( -55deg, color(gray-bg-secondary) 1px, $green-dark-base 2px, color(gray-bg-secondary) 11px, $green-dark-base 12px, color(gray-bg-secondary) 20px );
+    animation: MOVE-BG .6s linear 0s infinite;
+    -webkit-animation: MOVE-BG .6s linear 0s infinite;
+}
+
+::deep .progress-dsc {
+    display: flex;
+    font-size: $font-size-12;
+    color: color(gray-content2);
+    justify-content: space-between;
+    font-family: $open-sans-light;
+}

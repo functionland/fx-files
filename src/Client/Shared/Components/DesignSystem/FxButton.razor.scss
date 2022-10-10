@@ -76,13 +76,6 @@
     background-color: transparent !important;
 }
 
-.fxbutton-disabled {
-    color: color(input-disable) !important;
-    border: none !important;
-    background-color: color(gray-bg-secondary) !important;
-    pointer-events: none !important;
-}
-
 .fxbutton-menuline {
     width: auto;
     margin: 4px 21px;
@@ -123,6 +116,14 @@
     .fxbutton-lefticon, .fxbutton-righticon {
         margin: 0;
     }
+}
+
+.fxbutton-disabled {
+    background-color: color(gray-bg-secondary);
+    border: none !important;
+    color: color(input-disable) !important;
+    opacity: .5;
+    pointer-events: none !important;
 }
 
 .fxbutton-icononly:hover {

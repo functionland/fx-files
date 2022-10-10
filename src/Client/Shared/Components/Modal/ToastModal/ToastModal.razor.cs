@@ -9,22 +9,16 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
     public partial class ToastModal : IDisposable
     {
-        private static event Action<string, string, FxToastType> OnShow = default!;
-
+        private static event Func<string, string, FxToastType, Task> OnShow = default!;
         private bool _isModalOpen = false;
-
         private string? _title { get; set; } = string.Empty;
-
         private string? _message { get; set; } = string.Empty;
-
         private FxToastType _toastType { get; set; }
-
         private Timer _timer = new Timer(5000);
-
 
         protected override Task OnInitAsync()
         {
-            OnShow += ShowMessage;
+            OnShow += HandleShow;
             return base.OnInitAsync();
         }
 
@@ -34,17 +28,15 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 OnShow.Invoke(title, message, toastType);
         }
 
-        public void ShowMessage(string title, string message, FxToastType toastType)
+        public async Task HandleShow(string title, string message, FxToastType toastType)
         {
             _title = title;
             _message = message;
             _toastType = toastType;
             _isModalOpen = true;
-            StateHasChanged();
-            // Add timer for closing the modal after 5 seconds
             _timer.Elapsed += OnTimedEvent!;
             _timer.Enabled = true;
-            StateHasChanged();
+            await InvokeAsync(() => StateHasChanged());
         }
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -71,7 +63,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public void Dispose()
         {
-            OnShow -= ShowMessage;
+            OnShow -= HandleShow;
             _timer.Elapsed -= OnTimedEvent!;
         }
     }

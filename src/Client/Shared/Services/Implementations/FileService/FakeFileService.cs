@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileService
+﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileService
 {
     public class FakeFileService : ILocalDeviceFileService, IFulaFileService
     {
@@ -31,7 +33,7 @@
                 await Task.Delay(EnumerationLatency.Value);
         }
 
-        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
@@ -160,7 +162,7 @@
             return await CreateFolder(finalPath, folderName, cancellationToken);
         }
 
-        private async Task<FsArtifact> CreateFolder(string path, string folderName, CancellationToken? cancellationToken, bool beOverWritten = false)
+        private async Task<FsArtifact> CreateFolder(string path, string folderName, CancellationToken? cancellationToken)
         {
 
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
@@ -169,13 +171,12 @@
                 OriginDevice = originDevice,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
             };
-            if (beOverWritten)
-                await DeleteArtifactsAsync(new[] { artifact }, cancellationToken);
+
             _files.Add(artifact);
             return artifact;
         }
 
-        public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+        public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             var finalBag = new ConcurrentBag<FsArtifact>();
             var excludedPaths = new List<string>();
@@ -248,10 +249,10 @@
 
         }
 
-        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
-            await CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
-            await DeleteArtifactsAsync(artifacts, cancellationToken);
+            await CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
+            await DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
         }
 
         public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
