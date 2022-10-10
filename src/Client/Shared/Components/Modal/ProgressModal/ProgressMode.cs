@@ -2,7 +2,7 @@
 {
     public enum ProgressMode
     {
-        Inifinite,
+        Infinite,
         Progressive
     }
 }
