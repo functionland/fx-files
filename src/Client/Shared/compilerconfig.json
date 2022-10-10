@@ -40,10 +40,6 @@
     "inputFile": "wwwroot/app.scss"
   },
   {
-    "outputFile": "Pages/FxFolderView.razor.css",
-    "inputFile": "Pages/FxFolderView.razor.scss"
-  },
-  {
     "outputFile": "Pages/MyDevice.razor.css",
     "inputFile": "Pages/MyDevice.razor.scss"
   },

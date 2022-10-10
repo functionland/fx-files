@@ -3,7 +3,7 @@
 
 @if (_artifacts.Length > 0)
 {
-    if (IsMultiple)
+    if (_isMultiple)
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
             <FileDetailView FileName="@_artifacts[_currentArtifactForShowNumber].Name" FileCategoryType="@_artifacts[_currentArtifactForShowNumber].FileCategory" FsArtifactType="_artifacts[_currentArtifactForShowNumber].ArtifactType">
