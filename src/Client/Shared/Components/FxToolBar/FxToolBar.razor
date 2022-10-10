@@ -43,7 +43,7 @@
                   Margin="0 0 16px 0"
                   BackgroundColor="transparent"
                   IsVisible="IsBackButtonVisible"
-                  ButtonStyle="FxButtonStyle.None" />
+                  ButtonStyle="@(IsInSelectMode? FxButtonStyle.Disabled : FxButtonStyle.None)" />
 
             <div class="action-row">
                 <div class="info-box">
