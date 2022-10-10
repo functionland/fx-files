@@ -17,6 +17,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         Upload,
         Move,
         Pin,
+        Unpin,
         More
     }
 }

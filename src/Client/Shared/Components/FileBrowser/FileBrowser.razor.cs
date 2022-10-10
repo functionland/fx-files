@@ -310,6 +310,9 @@ public partial class FileBrowser : IDisposable
             case ArtifactDetailModalResultType.Pin:
                 await HandlePinArtifactsAsync(artifact);
                 break;
+            case ArtifactDetailModalResultType.Unpin:
+                await HandleUnPinArtifactsAsync(artifact);
+                break;
             case ArtifactDetailModalResultType.More:
                 if (artifact.Length > 1)
                 {
