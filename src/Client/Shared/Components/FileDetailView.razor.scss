@@ -13,27 +13,28 @@
     .image-icon-row {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-content: center;
         background-color: color(gray-border);
-        height: 254px;
         margin-bottom: $spacing-16;
         margin-top: $spacing-18;
         position: relative;
 
         .image-container {
-            max-width: 100%;
             max-height: 254px;
+            display: flex;
+            align-items: center;
+            align-content: center;
 
             .file-image-preview {
-                max-width: 100%;
                 max-height: 254px;
+                max-width: 100%;
             }
 
             .image-file-icon::before {
                 position: absolute;
                 top: $spacing-8;
                 left: $spacing-21;
-                font-size: 32px;
+                font-size: $font-size-32;
                 @include Icon($image);
             }
         }
@@ -43,42 +44,42 @@
         padding: $spacing-8 $spacing-0;
 
         .folder-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($folder);
         }
 
         .text-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($document);
         }
 
         .image-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($image);
         }
 
         .pdf-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($PDF);
         }
 
         .audio-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($audio);
         }
 
         .video-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($video);
         }
 
         .app-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($app);
         }
 
         .other-file-icon::before {
-            font-size: 32px;
+            font-size: $font-size-32;
             @include Icon($document);
         }
     }
