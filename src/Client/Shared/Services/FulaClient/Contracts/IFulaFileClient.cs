@@ -33,4 +33,6 @@ public interface IFulaFileClient
 
     Task<FsArtifact> GetArtifactMetaAsync(string token, string path, CancellationToken? cancellationToken = null);
     Task<List<FsArtifactActivity>> GetActivityHistoryAsync(string token, string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
+
+    Task<string> GetLinkForShareAsync(string token, string path, CancellationToken? cancellationToken = null);
 }
