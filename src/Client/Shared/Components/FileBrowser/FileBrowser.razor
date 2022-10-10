@@ -126,3 +126,13 @@
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
+<ProgressModal
+    Title="@ProgressBarTitle"
+    CurrentText="@ProgressBarCurrentText"
+    CurrentSubText="@ProgressBarCurrentSubText"
+    IsCancellable="@ProgressBarIsCancellable"
+    ProgressCurrentValue="@ProgressBarCurrentValue"
+    ProgressMax="@ProgressBarMax"
+    ProgressMode="@ProgressBarMode"
+    OnCancel="ProgressBarOnCancel"
+    @ref="_progressModalRef" />
