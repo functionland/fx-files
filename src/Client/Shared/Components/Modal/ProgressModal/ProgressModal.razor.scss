@@ -1,0 +1,20 @@
+﻿@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/components/_bit-progress-indicator.scss';
+
+.progress-container {
+    padding: 8px 0 40px;
+
+    .title {
+        padding: 16px 0;
+        color: color(gray-content1);
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+    }
+
+    .main-content {
+        margin: 24px 0 40px;
+    }
+}
