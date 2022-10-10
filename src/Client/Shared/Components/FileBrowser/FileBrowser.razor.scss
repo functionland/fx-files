@@ -3,6 +3,12 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-accordion.scss';
 
+.file-browser-container {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
 .file-browser-container ::deep div.toolbar-box {
     padding-top: $spacing-16;
     padding-bottom: $spacing-16;

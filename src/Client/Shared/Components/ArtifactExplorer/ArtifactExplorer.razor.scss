@@ -3,6 +3,10 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-checkbox.scss';
 
+.list-container {
+    flex-grow: 2;
+}
+
 .list-title {
     font-weight: 600;
     font-style: normal;
