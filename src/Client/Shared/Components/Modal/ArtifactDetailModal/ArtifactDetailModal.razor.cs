@@ -20,7 +20,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             var result = new ArtifactDetailModalResult();
             result.ResultType = ArtifactDetailModalResultType.Download;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -31,7 +31,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             var result = new ArtifactDetailModalResult();
             result.ResultType = ArtifactDetailModalResultType.Move;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -42,7 +42,18 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             var result = new ArtifactDetailModalResult();
             result.ResultType = ArtifactDetailModalResultType.Pin;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
+            _tcs = null;
+
+            _isModalOpen = false;
+        }
+
+        public void Unpin()
+        {
+            var result = new ArtifactDetailModalResult();
+            result.ResultType = ArtifactDetailModalResultType.Unpin;
+
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -53,7 +64,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             var result = new ArtifactDetailModalResult();
             result.ResultType = ArtifactDetailModalResultType.More;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -109,7 +120,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             var result = new ArtifactDetailModalResult();
             result.ResultType = ArtifactDetailModalResultType.Close;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
