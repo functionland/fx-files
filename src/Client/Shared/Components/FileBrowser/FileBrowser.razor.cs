@@ -27,9 +27,11 @@ public partial class FileBrowser : IDisposable
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ConfirmationReplaceOrSkipModal? _confirmationReplaceOrSkipModalRef;
     private ArtifactDetailModal? _artifactDetailModalRef;
+    private ProgressModal _progressModalRef = default!;
     private FxSearchInput? _fxSearchInputRef;
     private FsArtifact[] _selectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
     private ArtifactActionResult _artifactActionResult { get; set; } = new();
+
 
     private string? _searchText;
     private bool _isInSearchMode;
@@ -795,25 +797,30 @@ public partial class FileBrowser : IDisposable
     private async Task HandleToolbarBackClick()
     {
         _fxSearchInputRef?.HandleClearInputText();
+
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
         {
             _artifactExplorerMode = ArtifactExplorerMode.Normal;
         }
-        if (!_isInSearchMode)
+        else
         {
-            _fxSearchInputRef?.HandleClearInputText();
-            await UpdateCurrentArtifactForBackButton(_currentArtifact);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            StateHasChanged();
-        }
-        if (_isInSearchMode)
-        {
-            cancellationTokenSource?.Cancel();
-            _isInSearchMode = false;
-            _fxSearchInputRef?.HandleClearInputText();
-            await LoadChildrenArtifactsAsync();
-            StateHasChanged();
+            if (!_isInSearchMode)
+            {
+                _fxSearchInputRef?.HandleClearInputText();
+                await UpdateCurrentArtifactForBackButton(_currentArtifact);
+                await LoadChildrenArtifactsAsync(_currentArtifact);
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                StateHasChanged();
+            }
+
+            if (_isInSearchMode)
+            {
+                cancellationTokenSource?.Cancel();
+                _isInSearchMode = false;
+                _fxSearchInputRef?.HandleClearInputText();
+                await LoadChildrenArtifactsAsync();
+                StateHasChanged();
+            }
         }
     }
 

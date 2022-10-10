@@ -230,5 +230,9 @@
   {
     "outputFile": "Components/LoadingComponent.razor.css",
     "inputFile": "Components/LoadingComponent.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/ProgressModal/ProgressModal.razor.css",
+    "inputFile": "Components/Modal/ProgressModal/ProgressModal.razor.scss"
   }
 ]
