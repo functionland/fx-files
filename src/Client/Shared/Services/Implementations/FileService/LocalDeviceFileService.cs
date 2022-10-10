@@ -588,6 +588,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     files = Directory.GetFiles(path);
                     folders = Directory.GetDirectories(path);
                 }
+                catch (UnauthorizedAccessException)
+                {
+                    throw new ArtifactUnauthorizedAccessException(StringLocalizer.GetString(AppStrings.ArtifactUnauthorizedAccessException));
+                }
                 catch { }
 
                 foreach (var folder in folders)

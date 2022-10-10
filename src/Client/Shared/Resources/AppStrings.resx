@@ -477,4 +477,7 @@
   <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
     <value>What do you want to do?</value>
   </data>
+  <data name="ArtifactUnauthorizedAccessException" xml:space="preserve">
+    <value>Access is denied.</value>
+  </data>
 </root>

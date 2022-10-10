@@ -419,13 +419,19 @@ public partial class FileBrowser : IDisposable
             _allArtifacts = artifacts;
             FilterArtifacts();
         }
-        //ToDo: Needs more business-wise data to implement
-        catch (AndroidSpecialFilesUnauthorizedAccessException ex)
+        catch (ArtifactUnauthorizedAccessException ex)
         {
-            _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
             _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
-        //ToDo: Add a general catch in case of other exceptions
+        catch
+        {
+            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            _toastModalRef!.Show(title, message, FxToastType.Error);
+            _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
+        }
     }
 
     private bool IsInRoot(FsArtifact? artifact)
