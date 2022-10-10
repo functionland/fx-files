@@ -661,7 +661,7 @@ public partial class FileBrowser : IDisposable
         }
         else
         {
-            artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+            artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
         }
 
         if (artifactRenamed != null)
@@ -669,6 +669,7 @@ public partial class FileBrowser : IDisposable
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
             artifactRenamed.Name = fullNewName;
+            FilterArtifacts();
         }
     }
 
@@ -683,14 +684,14 @@ public partial class FileBrowser : IDisposable
         }
         else
         {
-            foreach (var artifact in _filteredArtifacts)
+            foreach (var artifact in _allArtifacts)
             {
                 if (artifactPath.Contains(artifact.FullPath))
                 {
                     artifact.IsPinned = IsPinned;
                 }
             }
-            _allArtifacts = _filteredArtifacts;
+            FilterArtifacts();
         }
     }
 
@@ -701,8 +702,8 @@ public partial class FileBrowser : IDisposable
             await HandleToolbarBackClick();
             return;
         }
-        _filteredArtifacts = _filteredArtifacts.Except(artifacts).ToList();
-        _allArtifacts = _filteredArtifacts;
+        _allArtifacts = _allArtifacts.Except(artifacts).ToList();
+        FilterArtifacts();
     }
 
     private async Task HandleCancelSearchAsync()
