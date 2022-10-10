@@ -578,10 +578,13 @@ public partial class FileBrowser : IDisposable
     {
         ChangeDeviceBackFunctionality(mode);
         _artifactExplorerModeValue = mode;
+
         if (mode == ArtifactExplorerMode.Normal)
         {
             _isSelected = false;
+            _selectedArtifacts = Array.Empty<FsArtifact>();
         }
+
         StateHasChanged();
     }
 
@@ -848,6 +851,7 @@ public partial class FileBrowser : IDisposable
     {
         _fileCategoryFilter = await _filteredArtifactModalRef!.ShowAsync();
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         FilterArtifacts();
     }
 
