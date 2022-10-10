@@ -28,14 +28,14 @@ public partial class FilterArtifactModal
 
     private void HandleFilterItemClick(FileCategoryType? fileCategoryType)
     {
-        _tcs!.SetResult(fileCategoryType);
+        _tcs?.SetResult(fileCategoryType);
         _tcs = null;
         _isModalOpen = false;
     }
 
     private void HandleClose()
     {
-        _tcs!.SetResult(CurrentFilter);
+        _tcs?.SetResult(CurrentFilter);
         _tcs = null;
         _isModalOpen = false;
     }
