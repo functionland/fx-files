@@ -117,7 +117,7 @@
     }
 </div>
 
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" />
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" />
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <ToastModal @ref="_toastModalRef" />
@@ -125,4 +125,4 @@
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" />
+<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>

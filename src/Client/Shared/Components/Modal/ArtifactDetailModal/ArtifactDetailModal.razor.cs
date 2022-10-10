@@ -5,22 +5,15 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
     public partial class ArtifactDetailModal
     {
-        [AutoInject]
-        private IFileService _fileService = default!;
-
         private FsArtifact[] _artifacts = Array.Empty<FsArtifact>();
-
         private string _artifactsSize = string.Empty;
-
         private int _currentArtifactForShowNumber = 0;
-
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
-
         private bool _isModalOpen;
-
         private System.Timers.Timer? _timer;
+        private bool _isMultiple;
 
-        public bool IsMultiple { get; set; }
+        [Parameter] public IFileService FileService { get; set; } = default!;
 
         public void Download()
         {
@@ -103,7 +96,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;
             CalculateArtifactsSize();
-            IsMultiple = isMultiple;
+            _isMultiple = isMultiple;
             _isModalOpen = true;
             StateHasChanged();
 

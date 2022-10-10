@@ -2,15 +2,10 @@
 {
     public partial class ArtifactOverflowModal
     {
-        [AutoInject]
-        private IFileService _fileService = default!;
-
         private TaskCompletionSource<ArtifactOverflowResult>? _tcs;
-
         private bool _isModalOpen;
-
-        private bool _isMultiple { get; set; }
-        private PinOptionResult? _pinOptionResult { get; set; }
+        private bool _isMultiple;
+        private PinOptionResult? _pinOptionResult;
 
         public void Details()
         {

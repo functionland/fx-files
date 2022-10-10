@@ -3,12 +3,12 @@
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
+using Microsoft.AspNetCore.Components;
+
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
-    [AutoInject] private IFileService _fileService = default!;
-
     private bool _isModalOpen;
     private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
     private List<FsArtifact> _artifacts = new();
@@ -18,6 +18,7 @@ public partial class ArtifactSelectionModal
     private ToastModal _toastModalRef = default!;
 
     [Parameter] public bool IsMultiple { get; set; }
+    [Parameter] public IFileService FileService { get; set; } = default!;
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
@@ -75,7 +76,7 @@ public partial class ArtifactSelectionModal
     private async Task LoadArtifacts(string? path)
     {
         _artifacts = new List<FsArtifact>();
-        var artifacts = _fileService.GetArtifactsAsync(path);
+        var artifacts = FileService.GetArtifactsAsync(path);
         var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
@@ -103,7 +104,7 @@ public partial class ArtifactSelectionModal
         {
             if (result?.ResultType == InputModalResultType.Confirm)
             {
-                var newFolder = await _fileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
+                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
                 _artifacts.Add(newFolder);
                 StateHasChanged();
             }
@@ -129,7 +130,7 @@ public partial class ArtifactSelectionModal
     {
         try
         {
-            _currentArtifact = await _fileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
+            _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
