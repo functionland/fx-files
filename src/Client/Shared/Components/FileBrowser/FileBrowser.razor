@@ -1,9 +1,6 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components
 @inherits AppComponentBase
-@if (_isLoading)
-{
-    <LoadingComponent ZIndex="999"/>
-}
+
 <div class="file-browser-container">
 
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
@@ -25,15 +22,19 @@
             <BitAccordion Title="Pinned" DefaultIsExpanded="true">
                 <ContentTemplate>
                     <div class="items">
+                        @if (_isPinBoxLoading)
+                        {
+                            <LoadingComponent ZIndex="999" />
+                        }
                         @foreach (var pin in _pins)
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                 <FileCard ArtifactType="@pin.ArtifactType"
-                                          FileName="@pin.Name"
-                                          FileSize="@pin.SizeStr"
-                                          FileImage="@pin.ThumbnailPath"
-                                          FileType="@pin.FileCategory"
-                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                              FileName="@pin.Name"
+                              FileSize="@pin.SizeStr"
+                              FileImage="@pin.ThumbnailPath"
+                              FileType="@pin.FileCategory"
+                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
                         }
                     </div>
@@ -79,7 +80,7 @@
                 </div>
 
                 <div class="right-part">
-                    @if (_selectedArtifacts?.Length>0)
+                    @if (_selectedArtifacts?.Length > 0)
                     {
                         <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
                     }
@@ -109,7 +110,7 @@
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="_viewMode"
                       FileCategoryFilter="_fileCategoryFilter"
-                      IsLoading="_isLoading"
+                      IsLoading="_isArtifactExplorerLoading"
                       HandleBack="HandleToolbarBackClick"
                       @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
@@ -124,4 +125,4 @@
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>
+<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
