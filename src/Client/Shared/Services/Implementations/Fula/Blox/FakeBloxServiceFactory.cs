@@ -2,7 +2,7 @@
 
 public partial class FakeBloxServiceFactory
 {
-    public FakeBloxService CreateTypicalBlox(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    public FakeBloxService CreateTypical(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
         var bloxs = new List<Blox>
         {
@@ -54,7 +54,7 @@ public partial class FakeBloxServiceFactory
 
         return bloxs;
     }
-    public FakeBloxService CreateALotOfABloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    public FakeBloxService CreateALotOfBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
         var bloxs = new FakeBloxService(
             new List<Blox>
