@@ -33,6 +33,11 @@
         @include Icon($pin-outline);
     }
 
+    .unpin-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($pin, color(gray-content1), $Icons-Filled);
+    }
+
     .more-action-icon::before {
         font-size: $icon-24;
         @include Icon($options-vertical);

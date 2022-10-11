@@ -9,10 +9,7 @@ public static class IWindowsServiceCollectionExtensions
     public static IServiceCollection AddClientWindowsServices(this IServiceCollection services)
     {
         // Services being registered here can get injected in Windows.
-
-        services.AddSingleton<IFileService, WindowsFileService>();
         services.AddSingleton<ILocalDeviceFileService, WindowsFileService>();
-
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
         services.AddSingleton<IThumbnailService, WindowsThumbnailService>();

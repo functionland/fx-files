@@ -2,6 +2,7 @@
 using Android.OS.Storage;
 
 using Functionland.FxFiles.App.Platforms.Android;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
@@ -98,7 +99,7 @@ public partial class AndroidFileService : LocalDeviceFileService
         return await base.GetArtifactAsync(path, cancellationToken);
     }
 
-    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -111,10 +112,10 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+        await base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
-    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -127,7 +128,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+        await base.CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
     public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
@@ -162,7 +163,7 @@ public partial class AndroidFileService : LocalDeviceFileService
         await base.RenameFolderAsync(folderPath, newName, cancellationToken);
     }
 
-    public override async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+    public override async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -175,7 +176,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.DeleteArtifactsAsync(artifacts, cancellationToken);
+        await base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
 
     public override async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
