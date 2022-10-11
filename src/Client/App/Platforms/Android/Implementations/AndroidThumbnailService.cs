@@ -29,9 +29,10 @@ public class AndroidThumbnailService : LocalThumbnailService
 
         var imageFile = new Java.IO.File(fsArtifact.FullPath);
         var bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
+        bitmap = CorrectRotation(fsArtifact.FullPath, bitmap);
+
         if (bitmap != null)
         {
-            bitmap = CorrectOration(fsArtifact.FullPath, bitmap);
             (int imageWidth, int imageHeight) = ImageUtils.ScaleImage((int)bitmap.Width, (int)bitmap.Height, 252, 146);
             var newBitmap = bitmap.Downsize(imageWidth, imageHeight);
             using var fileStream = new FileStream(thumbPath, FileMode.Create);
@@ -46,11 +47,12 @@ public class AndroidThumbnailService : LocalThumbnailService
         return MauiApplication.Current.CacheDir.Path;
     }
 
-    private Bitmap? CorrectOration(string photoPath, Bitmap bitmap)
+    private Bitmap? CorrectRotation(string photoPath, Bitmap? bitmap)
     {
+        if(bitmap == null) return null;
+
         ExifInterface ei = new ExifInterface(photoPath);
-        int orientation = ei.GetAttributeInt(ExifInterface.TagOrientation,
-                                             ExifInterface.OrientationUndefined);
+        int orientation = ei.GetAttributeInt(ExifInterface.TagOrientation,ExifInterface.OrientationUndefined);
 
         Bitmap? rotatedBitmap = null;
         switch (orientation)
@@ -76,11 +78,10 @@ public class AndroidThumbnailService : LocalThumbnailService
         return rotatedBitmap;
     }
 
-    public static Bitmap? rotateImage(Bitmap source, float angle)
+    private static Bitmap? rotateImage(Bitmap source, float angle)
     {
         Matrix matrix = new Matrix();
         matrix.PostRotate(angle);
-        return Bitmap.CreateBitmap(source, 0, 0, source.Width, source.Height,
-                                   matrix, true);
+        return Bitmap.CreateBitmap(source, 0, 0, source.Width, source.Height, matrix, true);
     }
 }

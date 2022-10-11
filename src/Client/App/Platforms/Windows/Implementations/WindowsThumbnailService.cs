@@ -1,7 +1,9 @@
 ﻿using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
 using Functionland.FxFiles.Client.Shared.Utils;
+
 using System.Drawing;
+
 using Windows.System;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
@@ -40,43 +42,44 @@ public partial class WindowsThumbnailService : LocalThumbnailService
         return FileSystem.CacheDirectory;
     }
 
-    public System.Drawing.Image CorrectRotation(System.Drawing.Image? img)
+    private System.Drawing.Image? CorrectRotation(System.Drawing.Image? image)
     {
-        if (Array.IndexOf(img.PropertyIdList, 274) > -1)
+        if (image != null && Array.IndexOf(image.PropertyIdList, 274) > -1)
         {
-            var orientation = (int)img.GetPropertyItem(274).Value[0];
+            var orientationByte = image.GetPropertyItem(274)?.Value?[0];
+            var orientation = orientationByte == null ? 0 : (int)orientationByte;
+
             switch (orientation)
             {
                 case 1:
                     // No rotation required.
                     break;
                 case 2:
-                    img.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    image.RotateFlip(RotateFlipType.RotateNoneFlipX);
                     break;
                 case 3:
-                    img.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                    image.RotateFlip(RotateFlipType.Rotate180FlipNone);
                     break;
                 case 4:
-                    img.RotateFlip(RotateFlipType.Rotate180FlipX);
+                    image.RotateFlip(RotateFlipType.Rotate180FlipX);
                     break;
                 case 5:
-                    img.RotateFlip(RotateFlipType.Rotate90FlipX);
+                    image.RotateFlip(RotateFlipType.Rotate90FlipX);
                     break;
                 case 6:
-                    img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    image.RotateFlip(RotateFlipType.Rotate90FlipNone);
                     break;
                 case 7:
-                    img.RotateFlip(RotateFlipType.Rotate270FlipX);
+                    image.RotateFlip(RotateFlipType.Rotate270FlipX);
                     break;
                 case 8:
-                    img.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    image.RotateFlip(RotateFlipType.Rotate270FlipNone);
                     break;
             }
-            // This EXIF data is now invalid and should be removed.
-            img.RemovePropertyItem(274);
+            image.RemovePropertyItem(274);
         }
 
-        return img;
+        return image;
     }
 
 }
