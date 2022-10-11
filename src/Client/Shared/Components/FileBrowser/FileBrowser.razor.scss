@@ -4,8 +4,7 @@
 @import '../../Styles/components/_bit-accordion.scss';
 
 .file-browser-container {
-    min-height: 100vh;
-    padding-bottom: 81px;
+    min-height: calc(100vh - 81px);
     display: flex;
     flex-flow: column nowrap;
 }
