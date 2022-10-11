@@ -57,7 +57,6 @@ public partial class FileBrowser : IDisposable
 
     protected override async Task OnInitAsync()
     {
-        await Task.Delay(2000);
         await LoadPinsAsync();
 
         await LoadChildrenArtifactsAsync();
@@ -353,16 +352,25 @@ public partial class FileBrowser : IDisposable
 
     private async Task LoadPinsAsync()
     {
-        var allPins = await PinService.GetPinnedArtifactsAsync();
-
-        var pins = new List<FsArtifact>();
-
-        foreach (var item in allPins)
+        try
         {
-            pins.Add(item);
-        }
+            _isPinBoxLoading = true;
+            await Task.Delay(2000);
+            var allPins = await PinService.GetPinnedArtifactsAsync();
 
-        _pins = pins;
+            var pins = new List<FsArtifact>();
+
+            foreach (var item in allPins)
+            {
+                pins.Add(item);
+            }
+
+            _pins = pins;
+        }
+        finally
+        {
+            _isPinBoxLoading = false;
+        }
     }
 
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)

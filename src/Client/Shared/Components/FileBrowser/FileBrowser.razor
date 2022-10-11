@@ -17,39 +17,42 @@
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
-        @if (_pins?.Count > 0)
-        {
-            <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-                <ContentTemplate>
-                    <div class="items">
-                        @if (true)
+        <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+            <ContentTemplate>
+                <div class="items">
+                    @if (true)
+                    {
+                        <FxLoadingComponent ZIndex="999" />
+                    }
+                    else
+                    {
+                        if (_pins?.Count > 0)
                         {
-                            <FxLoadingComponent ZIndex="999" />
-                        }
-                        @foreach (var pin in _pins)
-                        {
-                            <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                <FileCard ArtifactType="@pin.ArtifactType"
+                            @foreach (var pin in _pins)
+                            {
+                                <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                    <FileCard ArtifactType="@pin.ArtifactType"
                               FileName="@pin.Name"
                               FileSize="@pin.SizeStr"
                               FileImage="@pin.ThumbnailPath"
                               FileType="@pin.FileCategory"
                               ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="disable-pinned">
+                                Pinned (empty)
                             </div>
                         }
-                    </div>
-                </ContentTemplate>
-            </BitAccordion>
-        }
-        else
-        {
-            <div class="disable-pinned">
-                Pinned (empty)
-            </div>
-        }
-
-        <div class="root-title">My device files</div>
+                    }
+                </div>
+            </ContentTemplate>
+        </BitAccordion>
     }
+
+    <div class="root-title">My device files</div>
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
@@ -103,7 +106,8 @@
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        @if(_isArtifactExplorerLoading){
+        @if (_isArtifactExplorerLoading)
+        {
             <FxLoadingComponent ZIndex="999" />
         }
         <ArtifactExplorer Artifacts="_filteredArtifacts"
