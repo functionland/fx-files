@@ -169,6 +169,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blox pool is not found.
+        /// </summary>
+        public static string BloxPoolIsNotFoundException {
+            get {
+                return ResourceManager.GetString("BloxPoolIsNotFoundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add files.
         /// </summary>
         public static string ButtonAddFile {

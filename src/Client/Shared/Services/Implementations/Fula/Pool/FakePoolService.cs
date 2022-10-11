@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Functionland.FxFiles.Client.Shared.Services.Implementations
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
     public class FakePoolService : IFulaPoolSevice
     {
@@ -8,6 +6,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         private readonly List<BloxPool> _AllFulaBloxPools;
         public TimeSpan? ActionLatency { get; set; }
         public TimeSpan? EnumerationLatency { get; set; }
+        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
         public FakePoolService(IEnumerable<BloxPool> bloxPool, IEnumerable<BloxPool> allFulaBloxPools, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
@@ -45,7 +44,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             var bloxPool = _BloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
 
-            if (bloxPool is null) return;//TODO
+            if (bloxPool is null)
+                throw new BloxPoolIsNotFoundException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
+
             _BloxPools.Remove(bloxPool);
         }
         public async Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(string poolId, CancellationToken? cancellationToken = null)
@@ -70,21 +71,21 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             var bloxPools = new List<BloxPool>();
 
-            if(filter == PoolSearchType.InMyCity)
+            if (filter == PoolSearchType.InMyCity)
             {
                 for (int i = 0; i <= 2; i++)
                 {
                     bloxPools.Add(_AllFulaBloxPools[i]);
                 }
             }
-            else if(filter == PoolSearchType.InMyState)
+            else if (filter == PoolSearchType.InMyState)
             {
                 for (int i = 0; i <= 6; i++)
                 {
                     bloxPools.Add(_AllFulaBloxPools[i]);
                 }
             }
-            else if(filter == PoolSearchType.WithinDistance || distance >= 50)
+            else if (filter == PoolSearchType.WithinDistance || distance >= 50)
             {
                 bloxPools = _AllFulaBloxPools;
             }
