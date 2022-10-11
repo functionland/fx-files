@@ -22,9 +22,9 @@
             <BitAccordion Title="Pinned" DefaultIsExpanded="true">
                 <ContentTemplate>
                     <div class="items">
-                        @if (_isPinBoxLoading)
+                        @if (true)
                         {
-                            <LoadingComponent ZIndex="999" />
+                            <FxLoadingComponent ZIndex="999" />
                         }
                         @foreach (var pin in _pins)
                         {
@@ -104,7 +104,7 @@
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
         @if(_isArtifactExplorerLoading){
-            <LoadingComponent ZIndex="999" />
+            <FxLoadingComponent ZIndex="999" />
         }
         <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
