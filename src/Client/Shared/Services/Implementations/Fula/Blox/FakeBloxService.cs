@@ -6,6 +6,7 @@ public class FakeBloxService : IBloxService
     private readonly List<Blox> _invitedBlox;
     public TimeSpan? ActionLatency { get; set; }
     public TimeSpan? EnumerationLatency { get; set; }
+    public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
     public FakeBloxService(IEnumerable<Blox> bloxs, IEnumerable<Blox> invitedBloxs, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
@@ -40,7 +41,8 @@ public class FakeBloxService : IBloxService
     {
         var blox = _invitedBlox.FirstOrDefault(b => b.Id == bloxId);
 
-        if (blox is null) return;//TODO
+        if (blox is null)
+            throw new BloxIsNotFoundException(StringLocalizer.GetString(AppStrings.BloxIsNotFoundException));
 
         _invitedBlox.Remove(blox);
         _bloxs.Add(blox);
@@ -74,7 +76,8 @@ public class FakeBloxService : IBloxService
     {
         var blox = _invitedBlox.FirstOrDefault(b => b.Id == bloxId);
 
-        if (blox is null) return; //TODO
+        if (blox is null)
+            throw new BloxIsNotFoundException(StringLocalizer.GetString(AppStrings.BloxIsNotFoundException));
 
         _invitedBlox.Remove(blox);
     }

@@ -160,6 +160,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blox is not found.
+        /// </summary>
+        public static string BloxIsNotFoundException {
+            get {
+                return ResourceManager.GetString("BloxIsNotFoundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add files.
         /// </summary>
         public static string ButtonAddFile {
@@ -1137,15 +1146,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Upload {
             get {
                 return ResourceManager.GetString("Upload", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zones.
-        /// </summary>
-        public static string Zones {
-            get {
-                return ResourceManager.GetString("Zones", resourceCulture);
             }
         }
     }
