@@ -74,7 +74,6 @@ public partial class WindowsThumbnailService : LocalThumbnailService
             }
             // This EXIF data is now invalid and should be removed.
             img.RemovePropertyItem(274);
-
         }
 
         return img;

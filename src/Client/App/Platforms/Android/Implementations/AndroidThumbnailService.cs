@@ -35,7 +35,7 @@ public class AndroidThumbnailService : LocalThumbnailService
             (int imageWidth, int imageHeight) = ImageUtils.ScaleImage((int)bitmap.Width, (int)bitmap.Height, 252, 146);
             var newBitmap = bitmap.Downsize(imageWidth, imageHeight);
             using var fileStream = new FileStream(thumbPath, FileMode.Create);
-            await newBitmap.CompressAsync(Bitmap.CompressFormat.Jpeg, 1, fileStream);
+            await newBitmap.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, fileStream);
         }
 
         return thumbPath;
