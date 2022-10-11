@@ -2,22 +2,17 @@
 {
     public partial class ArtifactOverflowModal
     {
-        [AutoInject]
-        private IFileService _fileService = default!;
-
         private TaskCompletionSource<ArtifactOverflowResult>? _tcs;
-
         private bool _isModalOpen;
-
-        private bool _isMultiple { get; set; }
-        private PinOptionResult? _pinOptionResult { get; set; }
+        private bool _isMultiple;
+        private PinOptionResult? _pinOptionResult;
 
         public void Details()
         {
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Details;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -28,7 +23,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Rename;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -39,7 +34,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Copy;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -50,7 +45,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Pin;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -61,7 +56,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.UnPin;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -72,7 +67,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Move;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -83,7 +78,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Delete;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
@@ -113,7 +108,7 @@
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Cancel;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;

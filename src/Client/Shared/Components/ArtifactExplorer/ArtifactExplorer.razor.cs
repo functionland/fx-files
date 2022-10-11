@@ -171,8 +171,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
 
-        string message = "touch to begin";
-
         private void HandleTouchStart(TouchEventArgs t)
         {
             startPoint.ReferencePoint = t.TargetTouches[0];
@@ -181,7 +179,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private async Task HandleTouchEnd(TouchEventArgs t)
         {
-            const double swipeThreshold = 0.8;
+            const double swipeThreshold = 0.3;
             if (startPoint.ReferencePoint == null)
             {
                 return;
@@ -191,7 +189,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
             var diffX = startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
             var diffY = startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
-            var diffTime = DateTimeOffset.Now - startPoint.StartTime;
+            var diffTime = DateTime.Now - startPoint.StartTime;
             var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
             var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
 
@@ -205,13 +203,18 @@ namespace Functionland.FxFiles.Client.Shared.Components
             //}
 
             if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
-            if (Math.Abs(velocityX - velocityY) < .5) return;
+            if (Math.Abs(velocityX - velocityY) < .3) return;
 
             if (velocityX >= swipeThreshold)
             {
+                if (velocityY >= swipeThreshold)
+                {
+                    return;
+                }
                 if (diffX < 0)
                 {
                     await HandleBack.InvokeAsync();
+                    return;
                 }
             }
         }

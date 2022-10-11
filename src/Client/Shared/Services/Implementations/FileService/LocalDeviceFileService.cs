@@ -560,6 +560,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private async IAsyncEnumerable<FsArtifact> GetChildArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
+            var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+
             if (string.IsNullOrWhiteSpace(path))
             {
                 var drives = await GetDrivesAsync();
@@ -576,7 +578,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var fsArtifactType = await GetFsArtifactTypeAsync(path);
 
             if (fsArtifactType is null)
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? "artifact"));
+                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? lowerCaseArtifact));
 
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
@@ -587,6 +589,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     files = Directory.GetFiles(path);
                     folders = Directory.GetDirectories(path);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    throw new ArtifactUnauthorizedAccessException(StringLocalizer.GetString(AppStrings.ArtifactUnauthorizedAccessException));
                 }
                 catch { }
 

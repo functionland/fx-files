@@ -6,6 +6,7 @@
         Upload,
         Move,
         Pin,
+        Unpin,
         More,
         Close
     }

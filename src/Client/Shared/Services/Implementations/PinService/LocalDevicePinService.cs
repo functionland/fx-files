@@ -6,7 +6,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 public partial class LocalDevicePinService : ILocalDevicePinService
 {
     [AutoInject] IFxLocalDbService FxLocalDbService { get; set; } = default!;
-    [AutoInject] IFileService FileService { get; set; } = default!;
+    [AutoInject] ILocalDeviceFileService FileService { get; set; } = default!;
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IThumbnailService ThumbnailService { get; set; } = default!;

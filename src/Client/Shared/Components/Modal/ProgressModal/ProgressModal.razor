@@ -11,11 +11,10 @@
         <div class="main-content">
             <BitProgressIndicator BarHeight="4"
                                   Label="@CurrentText"
-                                  PercentComplete="@ProgressCurrentValue" 
-                                  />
+                                  PercentComplete="@(ProgressMode == ProgressMode.Infinite ? null : ProgressCurrentValue)" />
             <div class="progress-dsc">
                 <p>@CurrentSubText</p>
-                <p>@(ProgressCurrentValue+"%")</p>
+                <p>@(ProgressCurrentValue + "%")</p>
             </div>
         </div>
 
@@ -24,7 +23,7 @@
             <FxButton OnClick="CloseAsync" Text="@Localizer[nameof(AppStrings.Cancel)]"
                   ButtonStyle="FxButtonStyle.Normal"
                   Height="60px"
-                  Width="100%"/>
+                  Width="100%" />
         }
     </div>
 
