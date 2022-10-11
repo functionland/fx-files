@@ -31,7 +31,7 @@ public class AndroidThumbnailService : LocalThumbnailService
         var bitmap = BitmapFactory.DecodeFile(imageFile.AbsolutePath);
         if (bitmap != null)
         {
-            bitmap = CorrectOration(fsArtifact.FullPath, bitmap);
+            bitmap = CorrectRotation(fsArtifact.FullPath, bitmap);
             (int imageWidth, int imageHeight) = ImageUtils.ScaleImage((int)bitmap.Width, (int)bitmap.Height, 252, 146);
             var newBitmap = bitmap.Downsize(imageWidth, imageHeight);
             using var fileStream = new FileStream(thumbPath, FileMode.Create);
@@ -46,7 +46,7 @@ public class AndroidThumbnailService : LocalThumbnailService
         return MauiApplication.Current.CacheDir.Path;
     }
 
-    private Bitmap? CorrectOration(string photoPath, Bitmap bitmap)
+    private Bitmap? CorrectRotation(string photoPath, Bitmap bitmap)
     {
         ExifInterface ei = new ExifInterface(photoPath);
         int orientation = ei.GetAttributeInt(ExifInterface.TagOrientation,
