@@ -1,15 +1,9 @@
-﻿
-namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class BloxService : IBloxService
 {
     //TODO: Implement BloxService
     public Task AcceptBloxInvitationAsync(string bloxId, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task ClearBloxDataAsync(string bloxId, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

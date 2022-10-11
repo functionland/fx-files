@@ -19,6 +19,8 @@ public interface IIdentityService
     /// <returns></returns>
     Task<FulaUser> GetCurrentUserAsync(CancellationToken? cancellationToken = null);
 
+    Task<FulaUser> RefreshUserAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
+
     Task<bool> IsLoggedInAsync(CancellationToken? cancellationToken = null);
 
 
