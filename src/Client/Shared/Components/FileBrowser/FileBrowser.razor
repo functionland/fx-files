@@ -103,6 +103,9 @@
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
+        @if(_isArtifactExplorerLoading){
+            <LoadingComponent ZIndex="999" />
+        }
         <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
