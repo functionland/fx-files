@@ -41,5 +41,10 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public bool? IsDisabled { get; set; }
         public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
         public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension?.ToLower() ?? "");
+
+        public override string ToString()
+        {
+            return $"{Name} -> {FullPath}";
+        }
     }
 }
