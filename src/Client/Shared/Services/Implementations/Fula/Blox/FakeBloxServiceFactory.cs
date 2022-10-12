@@ -26,13 +26,19 @@ public partial class FakeBloxServiceFactory
 
     public FakeBloxService CreateInvitedBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
+        var fulaUser = new FulaUser("FulaUserDID")
+        {
+            Username = "NewFulaUser",
+            IsParent = false
+        };
+
         var invitedBloxs = new FakeBloxService(
             new List<Blox>
             {
                 CreateBlox("Fifth one", "Fifth Blox"),
-                CreateBlox("Second Blox", "Second Blox",10000000000, 6000000000, 4000000000, "Second Owner", "Second Pool", "Second"),
-                CreateBlox("Third Blox", "Third Blox",20000000000, 0, 20000000000,"Third Blox Owner", null, null, 0, 0, 0, 0, 0),
-                CreateBlox("Fourth Blox", "Fourth Blox",20000000000, 20000000000, 0,"Fourth Blox Owner", null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
+                CreateBlox("Second Blox", "Second Blox",10000000000, 6000000000, 4000000000, fulaUser, "Second Pool", "Second"),
+                CreateBlox("Third Blox", "Third Blox",20000000000, 0, 20000000000, fulaUser, null, null, 0, 0, 0, 0, 0),
+                CreateBlox("Fourth Blox", "Fourth Blox",20000000000, 20000000000, 0, fulaUser, null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
             },
             actionLatency,
             enumerationLatency);
@@ -56,29 +62,35 @@ public partial class FakeBloxServiceFactory
     }
     public FakeBloxService CreateALotOfBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
+        var fulaUser = new FulaUser("DID")
+        {
+            Username = "FulaUser",
+            IsParent = true
+        };
+
         var bloxs = new FakeBloxService(
             new List<Blox>
             {
                 CreateBlox("First Blox", "First Blox"),
-                CreateBlox("Second Blox", "Second Blox",null, null, null,"Second Blox Owner"),
-                CreateBlox("Third Blox", "Third Blox",null, null, null,"Third Blox Owner"),
-                CreateBlox("Fourth Blox", "Fourth Blox",20000000000, 8000000000, 12000000000,"Fourth Blox Owner"),
-                CreateBlox("Fifth Blox", "Fifth Blox",20000000000, 0, 20000000000,"Fifth Blox Owner", null, null, 0, 0, 0, 0, 0),
-                CreateBlox("Sixth Blox", "Sixth Blox",20000000000, 20000000000, 0,"Sixth Blox Owner", null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-                CreateBlox("Seventh Blox", "Seventh Blox",30000000000, 23000000000, 7000000000,"Seventh Blox Owner", null, null, 11000000000, 5000000000, 4000000000, 1000000000, 2000000000),
-                CreateBlox("Eighth Blox", "Eighth Blox",null, null, null,"Eighth Owner", "Eighth Pool", "Eighth"),
+                CreateBlox("Second Blox", "Second Blox",null, null, null,fulaUser),
+                CreateBlox("Third Blox", "Third Blox",null, null, null,fulaUser),
+                CreateBlox("Fourth Blox", "Fourth Blox",20000000000, 8000000000, 12000000000,fulaUser),
+                CreateBlox("Fifth Blox", "Fifth Blox",20000000000, 0, 20000000000,fulaUser, null, null, 0, 0, 0, 0, 0),
+                CreateBlox("Sixth Blox", "Sixth Blox",20000000000, 20000000000, 0,fulaUser, null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
+                CreateBlox("Seventh Blox", "Seventh Blox",30000000000, 23000000000, 7000000000,fulaUser, null, null, 11000000000, 5000000000, 4000000000, 1000000000, 2000000000),
+                CreateBlox("Eighth Blox", "Eighth Blox",null, null, null,fulaUser, "Eighth Pool", "Eighth"),
                 CreateBlox("Canada Blox", "Canada Blox",null, null, null, null, "Canada Pool", "Canada"),
                 CreateBlox("Germany Blox", "Germany Blox",10000000000, 3000000000, 7000000000, null, "Germany Pool", "Germany"),
-                CreateBlox("China Blox", "China Blox",10000000000, 0, 10000000000, "China Owner", "China Pool", "China"),
-                CreateBlox("Home Blox", "Home Blox",10000000000, 6000000000, 4000000000, "Home Owner", "Home Pool", "Home"),
-                CreateBlox("Company Blox", "Company Blox",10000000000, 10000000000, 0, "Company Owner", "Company Pool", "Company"),
-                CreateBlox("My City Blox", "My City Blox",30000000000, 22000000000, 8000000000,"My City Blox", null, null, 10000000000, 5000000000, 4000000000, 1000000000, 2000000000)
+                CreateBlox("China Blox", "China Blox",10000000000, 0, 10000000000, fulaUser, "China Pool", "China"),
+                CreateBlox("Home Blox", "Home Blox",10000000000, 6000000000, 4000000000, fulaUser, "Home Pool", "Home"),
+                CreateBlox("Company Blox", "Company Blox",10000000000, 10000000000, 0, fulaUser, "Company Pool", "Company"),
+                CreateBlox("My City Blox", "My City Blox",30000000000, 22000000000, 8000000000,fulaUser, null, null, 10000000000, 5000000000, 4000000000, 1000000000, 2000000000)
             },
             new List<Blox>
             {
-                CreateBlox("My City InvitedBloxs", "My City Blox",10000000000, 0, 0, "My City Blox Owner", "My City", "My City Pool"),
-                CreateBlox("My Father InvitedBloxs", "My Father Blox",10000000000, 5000000000, 5000000000, "Father", "12364"),
-                CreateBlox("My Friend InvitedBloxs", "My Friend Blox",10000000000, 2000000000, 8000000000,"My Friend Blox Owner", null, null, 1000000000, 0, 0, 1000000000, 0),
+                CreateBlox("My City InvitedBloxs", "My City Blox",10000000000, 0, 0, fulaUser, "My City", "My City Pool"),
+                CreateBlox("My Father InvitedBloxs", "My Father Blox",10000000000, 5000000000, 5000000000, fulaUser, "12364"),
+                CreateBlox("My Friend InvitedBloxs", "My Friend Blox",10000000000, 2000000000, 8000000000,fulaUser, null, null, 1000000000, 0, 0, 1000000000, 0),
                 CreateBlox("The long number of characters in the InvitedBloxs name should be handled ", "InvitedBloxs")
             },
             actionLatency,
@@ -92,7 +104,7 @@ public partial class FakeBloxServiceFactory
                                   long? totalSpace = null,
                                   long? usedSpace = null,
                                   long? freeSpace = null,
-                                  string? ownerId = null,
+                                  FulaUser owner = null,
                                   string? poolName = null,
                                   string? poolId = null,
                                   long? photosUsed = null,
@@ -104,7 +116,18 @@ public partial class FakeBloxServiceFactory
         var blox = new Blox()
         {
             Id = bloxId,
-            Name = name
+            Name = name,
+            TotalSpace = totalSpace,
+            UsedSpace = usedSpace,
+            FreeSpace = freeSpace,
+            Owner = owner,
+            PoolName = poolName,
+            PoolId = poolId,
+            PhotosUsed = photosUsed,
+            VideosUsed = videosUsed,
+            AudiosUsed = audiosUsed,
+            DocsUsed = docsUsed,
+            OtherUsed = otherUsed
         };
 
         return blox;
