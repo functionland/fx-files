@@ -16,6 +16,41 @@ public partial class AppComponentBase : ComponentBase
 
     [AutoInject] protected IGoBackService GoBackService { get; set; } = default!;
 
+    public bool IsDesktop
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Idiom == DeviceIdiom.Desktop;
+#else
+            return false;
+#endif
+        }
+    }
+
+    public bool IsTablet
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Idiom == DeviceIdiom.Tablet;
+#else
+            return false;
+#endif
+        }
+    }
+
+    public bool IsPhone
+    {
+        get
+        {
+#if BlazorHybrid
+            return DeviceInfo.Current.Idiom == DeviceIdiom.Phone;
+#else
+            return false;
+#endif
+        }
+    }
 
     public bool IsAndroid
     {

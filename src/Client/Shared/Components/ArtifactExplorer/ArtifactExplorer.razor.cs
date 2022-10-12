@@ -118,8 +118,11 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 SelectedArtifacts = SelectedArtifacts.Append(selectedArtifact).ToArray();
             }
 
+            ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+            await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
             await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
             await IsSelectedChanged.InvokeAsync(IsSelected);
+            StateHasChanged();
         }
 
         public void OnCreateFolder()
