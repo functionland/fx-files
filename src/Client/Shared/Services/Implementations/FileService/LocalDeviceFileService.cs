@@ -17,7 +17,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, onProgress, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, ignoredList, onProgress, true, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -248,7 +248,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, onProgress, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, ignoredList, onProgress, true, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -340,9 +340,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool mustDeleteSource = false, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(
+            IEnumerable<FsArtifact> artifacts, string destination,
+            bool mustDeleteSource = false, bool overwrite = false, 
+            List<FsArtifact>? ignoredList = null, 
+            Action<ProgressInfo>? onProgress = null,
+            bool shouldProgress = true,
+            CancellationToken? cancellationToken = null)
         {
-            var ignoredList = new List<FsArtifact>();
             var progressCount = 0;
             foreach (var artifact in artifacts)
             {
@@ -424,18 +429,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, mustDeleteSource, overwrite, onProgress, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, 
+                        mustDeleteSource, overwrite, ignoredList, onProgress, false, cancellationToken);
 
                     if (!childIgnoredList.Any() && mustDeleteSource)
                     {
                         DeleteArtifactAsync(artifact, cancellationToken);
                     }
-
-                    ignoredList.AddRange(childIgnoredList);
                 }
 
                 progressCount++;
-                if (onProgress is not null)
+                if (onProgress is not null && shouldProgress)
                 {
                     int? totalCount = null;
                     var subText = progressCount.ToString();
