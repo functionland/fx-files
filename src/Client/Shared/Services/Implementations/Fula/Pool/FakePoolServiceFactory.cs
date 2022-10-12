@@ -170,7 +170,17 @@
             var bloxPool = new BloxPool()
             {
                 Id = poolId,
-                Name = name
+                Name = name,
+                PoolType = poolType,
+                LastUpdate = lastUpdate,
+                MonthlyRate = monthlyRate,
+                CurrentUse = currentUse,
+                PhotosUsed = photosUsed,
+                VideosUsed = videosUsed,
+                AudiosUsed = audiosUsed,
+                DocsUsed = docsUsed,
+                OtherUsed = otherUsed,
+                AdditinalInformation = additinalInformation
             };
 
             return bloxPool;

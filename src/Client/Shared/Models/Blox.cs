@@ -8,9 +8,9 @@ public class Blox
     public string? PoolId { get; set; }
     public string? PoolName { get; set; }
     
-    public long TotalSpace { get; set; }
-    public long FreeSpace { get; set; }
-    public long UsedSpace { get; set; }
+    public long? TotalSpace { get; set; }
+    public long? FreeSpace { get; set; }
+    public long? UsedSpace { get; set; }
 
     public long? PhotosUsed { get; set; }
     public long? VideosUsed { get; set; }
