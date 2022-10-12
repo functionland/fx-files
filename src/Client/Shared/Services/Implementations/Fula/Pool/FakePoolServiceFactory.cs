@@ -4,10 +4,22 @@
     {
         public FakePoolService CreateSimpleBloxPool(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
+            var dict = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Location", "8.2 miles"),
+                new KeyValuePair<string, string>("Join Date", "2022/10/12"),
+                new KeyValuePair<string, string>("Count", "38856 devices"),
+                new KeyValuePair<string, string>("L2 type", "8.2 Plkadot"),
+                new KeyValuePair<string, string>("Replication factor", "x10"),
+                new KeyValuePair<string, string>("Disk space", "100 GB"),
+                new KeyValuePair<string, string>("Ping speed", "0.08 sec")
+            };
+
             var bloxPool = new FakePoolService(
             new List<BloxPool>
             {
-                CreateBloxPool(123457, "The long number of characters in the bloxPool name should be handled ", PoolType.Primary, DateTimeOffset.Now, 1500, 8000000000000)
+                CreateBloxPool(123457, "The long number of characters in the bloxPool name should be handled ", PoolType.Primary, 
+                               DateTimeOffset.Now, 1500, 28000000000, 8000000000, 10000000000, 4000000000, 3000000000, 3000000000, dict)
             },
             actionLatency,
             enumerationLatency);
@@ -17,14 +29,23 @@
         public FakePoolService CreateBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             var now = DateTimeOffset.Now;
-
+            var dict = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Location", "9.3 miles"),
+                new KeyValuePair<string, string>("Join Date", "2022/09/11"),
+                new KeyValuePair<string, string>("Count", "300 devices"),
+                new KeyValuePair<string, string>("L2 type", "3.2 Plkadot"),
+                new KeyValuePair<string, string>("Replication factor", "x11"),
+                new KeyValuePair<string, string>("Disk space", "110 GB"),
+                new KeyValuePair<string, string>("Ping speed", "0.05 sec")
+            };
             var bloxPools = new FakePoolService(
             new List<BloxPool>
             {
                 CreateBloxPool(111 ,"BloxPool 1"),
                 CreateBloxPool(112 ,"BloxPool 2" , PoolType.Primary),
                 CreateBloxPool(113 ,"BloxPool 3" , PoolType.Secondary, now, 1450, 2000000000, 1000000000, 0, 0, 1000000000, 0),
-                CreateBloxPool(114 ,"BloxPool 4" , PoolType.Secondary, null, 130, 28000000000, 8000000000, 10000000000, 4000000000, 3000000000, 3000000000),
+                CreateBloxPool(114 ,"BloxPool 4" , PoolType.Secondary, null, 130, 28000000000, 8000000000, 10000000000, 4000000000, 3000000000, 3000000000,dict),
 
             },
             actionLatency,
@@ -88,11 +109,20 @@
         public FakePoolService CreateALotOfBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             var now = DateTimeOffset.Now;
-
+            var dict = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("Location", "100 miles"),
+                new KeyValuePair<string, string>("Join Date", "2022/10/01"),
+                new KeyValuePair<string, string>("Count", "45 devices"),
+                new KeyValuePair<string, string>("L2 type", "3.2 Plkadot"),
+                new KeyValuePair<string, string>("Replication factor", "x5"),
+                new KeyValuePair<string, string>("Disk space", "500 GB"),
+                new KeyValuePair<string, string>("Ping speed", "0.08 sec")
+            };
             var bloxPools = new FakePoolService(
             new List<BloxPool>
             {
-                CreateBloxPool(1111 ,"BloxPool One" , PoolType.Primary, now, 1546, 121000000000, 1000000000, 20000000000, 40000000000, 30000000000, 30000000000),
+                CreateBloxPool(1111 ,"BloxPool One" , PoolType.Primary, now, 1546, 121000000000, 1000000000, 20000000000, 40000000000, 30000000000, 30000000000,dict),
                 CreateBloxPool(1112 ,"BloxPool Two", PoolType.Secondary),
                 CreateBloxPool(1113 ,"BloxPool Three", PoolType.Secondary),
                 CreateBloxPool(1114 ,"BloxPool Four" , PoolType.Secondary, now, 1300, 5000000000, 1000000000,1000000000, 1000000000, 1000000000, 1000000000),
@@ -101,7 +131,7 @@
                 CreateBloxPool(1117 ,"BloxPool Seven" , PoolType.Secondary, null, null, 3000000000, 1000000000, 2000000000, 0, 0, 0),
                 CreateBloxPool(1118 ,"BloxPool Eight" , PoolType.Secondary, now, 400, 9000000000, 5000000000, 2000000000, 0, 3000000000, 0),
                 CreateBloxPool(1119 ,"BloxPool Nine" , PoolType.Secondary, now, 13020000, 10000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-                CreateBloxPool(25875 ,"The long number of characters in the bloxPool name should be handled 1235" , PoolType.Secondary, now, 875200, 13000000000, 1000000000, 2000000000, 2000000000, 3000000000,5000000000)
+                CreateBloxPool(25875 ,"The long number of characters in the bloxPool name should be handled 1235" , PoolType.Secondary, now, 875200, 13000000000, 1000000000, 2000000000, 2000000000, 3000000000,5000000000,dict)
             },
             new List<BloxPool>
             {
@@ -134,7 +164,8 @@
                                        long? videosUsed = null,
                                        long? audiosUsed = null,
                                        long? docsUsed = null,
-                                       long? otherUsed = null)
+                                       long? otherUsed = null,
+                                       List<KeyValuePair<string, string>>? additinalInformation = null)
         {
             var bloxPool = new BloxPool()
             {
