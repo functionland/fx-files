@@ -13,7 +13,7 @@
                IsPinned="@(_currentArtifact?.IsPinned ?? false)"
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
                OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
-               IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
+               IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
@@ -56,7 +56,7 @@
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
+        @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
             <div class="@(_isInSearchMode ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         }
-        else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
+        else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
             <div class="@(_isInSearchMode ? "select-action-search" : "") select-action">
                 <div class="info-selection">
@@ -121,7 +121,7 @@
                       HandleBack="HandleToolbarBackClick"
                       @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
-                      @bind-ArtifactExplorerMode="_artifactExplorerMode" />
+                      @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
     }
 </div>
 

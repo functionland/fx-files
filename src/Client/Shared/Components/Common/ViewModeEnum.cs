@@ -2,6 +2,7 @@
 {
     public enum ViewModeEnum
     {
+        // Todo: Rename to PascalCase
         list,
         grid
     }
