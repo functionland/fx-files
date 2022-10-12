@@ -486,4 +486,10 @@
   <data name="ArtifactUnauthorizedAccessException" xml:space="preserve">
     <value>Access is denied.</value>
   </data>
+  <data name="BloxIsNotFoundException" xml:space="preserve">
+    <value>Blox is not found</value>
+  </data>
+  <data name="BloxPoolIsNotFoundException" xml:space="preserve">
+    <value>Blox pool is not found</value>
+  </data>
 </root>
