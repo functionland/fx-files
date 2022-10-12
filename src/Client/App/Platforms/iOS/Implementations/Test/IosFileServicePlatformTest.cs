@@ -5,15 +5,21 @@ namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations.Test;
 
 public partial class IosFileServicePlatformTest : FileServicePlatformTest
 {
-    [AutoInject] public FakeFileServiceFactory FakeFileServiceFactory { get; set; } = default!;
+    public ILocalDeviceFileService FileService { get; set; }
+
+    public IosFileServicePlatformTest(ILocalDeviceFileService fileService)
+    {
+        FileService = fileService;
+    }
+
     public override string Title => "IosFileService Test";
 
     public override string Description => "Tests the common features of this FileService";
 
     protected override IFileService OnGetFileService()
     {
-        return FakeFileServiceFactory.CreateTypical();
+        return FileService;
     }
 
-    protected override string OnGetTestsRootPath() => "fakeroot";
+    protected override string OnGetTestsRootPath() => FileSystem.Current.CacheDirectory;
 }

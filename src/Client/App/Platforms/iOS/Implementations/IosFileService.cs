@@ -1,66 +1,29 @@
 ﻿using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations
+namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations;
+
+public partial class IosFileService : LocalDeviceFileService
 {
-    public partial class IosFileService : LocalDeviceFileService
+    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
     {
-        public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+        if (string.IsNullOrWhiteSpace(path))
         {
-            return base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
-        }
-        public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
-        {
-            return base.CreateFileAsync(path, stream, cancellationToken);
+            path = "./";
         }
 
-        public override Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
-        {
-            return base.CreateFilesAsync(files, cancellationToken);
-        }
+        return base.GetArtifactsAsync(path, searchText, cancellationToken);
+    }
 
-        public override Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
-        {
-            return base.CreateFolderAsync(path, folderName, cancellationToken);
-        }
+    public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
+    {
+        return FsFileProviderType.InternalMemory;
+    }
 
-        public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
-        {
-            return base.DeleteArtifactsAsync(artifacts, cancellationToken);
-        }
-
-        public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
-        {
-            return base.GetArtifactsAsync(path, searchText, cancellationToken);
-        }
-
-        public override Task<FsArtifact> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
-        {
-            return base.GetFsArtifactAsync(path, cancellationToken);
-        }
-
-        public override Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
-        {
-            return base.RenameFolderAsync(folderPath, newName, cancellationToken);
-        }
-
-        public override Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
-        {
-            return base.GetFileContentAsync(filePath, cancellationToken);
-        }
-
-        public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
-        {
-            return base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
-        }
-        public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
-        {
-            return base.RenameFileAsync(filePath, newName, cancellationToken);
-        }
-
-        public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
-        {
-            return FsFileProviderType.InternalMemory;
-        }
+    public override Task<List<FsArtifact>> GetDrivesAsync()
+    {
+        return Task.FromResult(new List<FsArtifact>());
     }
 }

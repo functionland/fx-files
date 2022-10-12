@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Models;
 
@@ -11,9 +11,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 
 public partial class WindowsFileService : LocalDeviceFileService
 {
-    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
-        return base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+        return base.CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
     public override Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -31,9 +31,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.CreateFolderAsync(path, folderName, cancellationToken);
     }
 
-    public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+    public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
-        return base.DeleteArtifactsAsync(artifacts, cancellationToken);
+        return base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
 
     public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
@@ -41,9 +41,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.GetArtifactsAsync(path, searchText, cancellationToken);
     }
 
-    public override Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
+    public override Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
     {
-        return base.GetFsArtifactAsync(path, cancellationToken);
+        return base.GetArtifactAsync(path, cancellationToken);
     }
 
     public override Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
@@ -56,9 +56,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
-        return base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+        return base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
     public override Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)

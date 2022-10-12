@@ -3,37 +3,57 @@
 
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
+    <div class="sticky-header">
+        <FxToolBar IsInRoot="false"
+                   IsInSearchMode="false"
+                   OnBackClick="Back"
+                   Title="@_currentArtifact?.Name"
+                   IsPinned="@(_currentArtifact?.IsPinned ?? false)"
+                   SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")"
+                   OnAddButtonClick="CreateFolder"/>
+
+        <div class="select-action">
+            <div class="info-selection">
+                <div class="close-btn" @onclick="(() => Close())"></div>
+                <div class="item-selected">
+                    <span class="selected-items-count">@_artifactActionResult?.Artifacts?.Length</span>
+                    <span class="selected-items-text">items ready to </span>
+                    @if (_artifactActionResult?.ActionType == @ArtifactActionType.Copy)
+                    {
+                        <span class="selected-items-text">copy</span>
+                    }
+                    else
+                    {
+                        <span class="selected-items-text">move</span>
+                    }
+                </div>
+            </div>
+
+            <div class="right-part">
+                <div class="add-folder"></div>
+            </div>
+        </div>
+
+    </div>
     <div class="container">
-        <FxToolBar 
-            IsInRoot="false"
-            IsInSearchMode="false"
-            OnBackClick="Back"
-            Title="@_currentArtifact?.Name"
-            IsPinned="@(_currentArtifact?.IsPinned ?? false)" 
-            SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")"
-            OnAddButtonClick="CreateFolder" />
+
 
         @if (_artifacts is not null)
         {
-            <ArtifactExplorer 
-                Artifacts="_artifacts"
-                ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
-                CurrentArtifact="_currentArtifact"
-                ArtifactActionResult="_artifactActionResult"
-                OnSelectArtifact="SelectArtifact"
-                OnCancelSelectDestionationMode="Close"
-                OnAddFolderButtonClick="CreateFolder"/>
+            <ArtifactExplorer Artifacts="_artifacts"
+                          ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
+                          CurrentArtifact="_currentArtifact"
+                          OnSelectArtifact="SelectArtifact"
+                          OnAddFolderButtonClick="CreateFolder" />
         }
     </div>
 
     <div class="button-container">
-        <FxButton 
-            Width="100%"
-            Height="60px"
+        <FxButton Width="100%"
+                  Height="60px"
                   Text="@(_artifactActionResult?.ActionType == ArtifactActionType.Copy? Localizer[nameof(AppStrings.CopyHere)] : Localizer[nameof(AppStrings.MoveHere)])"
-            OnClick="SelectDestionation"
-            ButtonStyle="FxButtonStyle.Normal" />
+                  OnClick="SelectDestionation"
+                  ButtonStyle="FxButtonStyle.Normal" />
     </div>
 </FxBottomSheet>
 <InputModal @ref="_inputModalRef" />
-<ToastModal @ref="_toastModalRef" />

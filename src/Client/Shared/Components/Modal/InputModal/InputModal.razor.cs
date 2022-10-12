@@ -2,24 +2,23 @@
 {
     public partial class InputModal
     {
-        [AutoInject]
-        private IFileService _fileService = default!;
-
         private TaskCompletionSource<InputModalResult>? _tcs;
-
         private bool _isModalOpen;
-
         private string? _title;
-
         private string? _placeholder;
-
         private string? _inputValue;
-
         private string? _headTitle;
-
+        private FxTextInput? _inputRef;
 
         public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
         {
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+
             _headTitle = headTitle;
             _inputValue = inputValue;
             _title = tilte;
@@ -29,8 +28,28 @@
             _isModalOpen = true;
             StateHasChanged();
 
+            var timer = new System.Timers.Timer(700);
+            timer.Elapsed += TimerElapsed;
+            timer.Enabled = true;
+            timer.Start();
+
             _tcs = new TaskCompletionSource<InputModalResult>();
             return await _tcs.Task;
+        }
+
+        private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            InvokeAsync(async () =>
+            {
+                await _inputRef!.FocusInputAsync();
+            });
+
+            var timer = (System.Timers.Timer)sender;
+            timer.Elapsed -= TimerElapsed;
+            timer.Enabled = false;
+            timer.Stop();
+
+            timer.Dispose();
         }
 
         private void Close()

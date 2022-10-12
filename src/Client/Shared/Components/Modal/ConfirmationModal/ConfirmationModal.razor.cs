@@ -3,14 +3,20 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
     public partial class ConfirmationModal
     {
-        private string? _title { get; set; }
-        private string? _description { get; set; }
-        private bool _isModalOpen { get; set; }
-
+        private string? _title;
+        private string? _description;
+        private bool _isModalOpen;
         private TaskCompletionSource<ConfirmationModalResult>? _tcs = new();
 
         public async Task<ConfirmationModalResult> ShowAsync(string title, string description)
         {
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
+
             _title = title;
             _description = description;
 

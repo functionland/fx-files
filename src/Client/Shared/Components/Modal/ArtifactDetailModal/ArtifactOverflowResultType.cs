@@ -3,8 +3,10 @@
     public enum ArtifactDetailModalResultType
     {
         Download,
+        Upload,
         Move,
         Pin,
+        Unpin,
         More,
         Close
     }

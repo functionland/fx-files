@@ -5,45 +5,38 @@
 
 
 <div class="settings-content">
-    <FxToolBar 
-        IsInRoot="false"
-        IsAddButtonVisible="false"
-        IsBackButtonVisible="false"
-        IsOverflowButtonVisible="false"
-        Title="@Localizer[nameof(AppStrings.Settings)]" /> 
+    <FxToolBar IsInRoot="false"
+               IsAddButtonVisible="false"
+               IsBackButtonVisible="false"
+               IsOverflowButtonVisible="false"
+               Title="@Localizer[nameof(AppStrings.Settings)]" />
 
     <div class="settings-wrapper">
-        <FxButton 
-            Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
-            MetaDataText="1 new"
-            ButtonStyle="FxButtonStyle.MenuLine" />
-        <FxButton 
-            Text="@Localizer[nameof(AppStrings.Mode)]"
-            Link="settings/theme"
-            MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
-            ButtonStyle="FxButtonStyle.MenuLine"/>
-        <FxButton
-            Text="@Localizer[nameof(AppStrings.Pools)]"
-            ButtonStyle="FxButtonStyle.MenuLine" />
-        <FxButton
-            Text="@Localizer[nameof(AppStrings.About)]"
-            ButtonStyle="FxButtonStyle.MenuLine" />
+        <FxButton Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
+                  MetaDataText="1 new"
+                  ButtonStyle="FxButtonStyle.MenuLine" />
+        <FxButton Text="@Localizer[nameof(AppStrings.Mode)]"
+                  OnClick="@(() => NavigationManager.NavigateTo("settings/theme", false, true))"
+                  MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
+                  ButtonStyle="FxButtonStyle.MenuLine" />
+        <FxButton Text="@Localizer[nameof(AppStrings.Pools)]"
+                  ButtonStyle="FxButtonStyle.MenuLine" />
+        <FxButton Text="@Localizer[nameof(AppStrings.About)]"
+                  ButtonStyle="FxButtonStyle.MenuLine" />
 
         <FxButton Text="@Localizer[nameof(AppStrings.TestExplorer)]"
                   ButtonStyle="FxButtonStyle.MenuLine"
-                  Link="TestExplorer" />
+                  OnClick="@(() => NavigationManager.NavigateTo("settings/TestExplorer", false, true))" />
 
-        <FxDivider
-            FxDividerSize="FxDividerSize.Thin"
-            FxDividerMode="FxDividerMode.Solid" 
-            FxDividerType="FxDividerType.Horizontal" />
+        <FxDivider FxDividerSize="FxDividerSize.Thin"
+                   FxDividerMode="FxDividerMode.Solid"
+                   FxDividerType="FxDividerType.Horizontal" />
 
-        <FxButton
-            Text="@Localizer[nameof(AppStrings.LogOut)]"
-            ButtonStyle="FxButtonStyle.Normal"
-            ButtonSize="FxButtonSize.Stretch" />
+        <FxButton Text="@Localizer[nameof(AppStrings.LogOut)]"
+                  ButtonStyle="FxButtonStyle.Normal"
+                  ButtonSize="FxButtonSize.Stretch" />
 
-        <p>@Localizer[nameof(AppStrings.FilesAndBloxHardware)] 00.01.05</p>
+        <p>@Localizer[nameof(AppStrings.FilesAndBloxHardware)] @CurrentVersion</p>
     </div>
 
 </div>

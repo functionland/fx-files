@@ -14,8 +14,10 @@ namespace Functionland.FxFiles.Client.Shared.Components
     public enum ActionIcon
     {
         Download,
+        Upload,
         Move,
         Pin,
+        Unpin,
         More
     }
 }

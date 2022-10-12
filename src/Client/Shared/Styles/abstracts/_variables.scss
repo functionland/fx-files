@@ -17,6 +17,7 @@ $gray-dark-content1: #F8F9FA;
 $gray-dark-content2: #E9ECEF;
 $gray-dark-content3: #CED4DA;
 $gray-dark-border: #868E96;
+$gray-dark-hover: #49505745;
 $gray-dark-bg-secondary: #495057;
 $gray-dark-bg-primary: #343A40;
 $gray-dark-app-bg: #343A40;
@@ -35,6 +36,7 @@ $input-dark-disable: $gray-dark-border;
 $gray-light-content1: #343A40;
 $gray-light-content2: #495057;
 $gray-light-content3: #6F767D;
+$gray-light-hover: #e9ecef7a;
 $gray-light-bg-primary: #F8F9FA;
 $gray-light-app-bg: $pure-white;
 $green-light-base: $green-dark-base;
@@ -56,6 +58,7 @@ $colors-light: (
   "warning": $warning-light,
   "green-bg": $green-light-bg,
   "gray-border": $gray-light-border,
+  "gray-hover": $gray-light-hover,
   "green-border": $green-light-border,
   "gray-content1": $gray-light-content1,
   "gray-content2": $gray-light-content2,
@@ -71,6 +74,7 @@ $colors-dark: (
   "warning": $warning-dark,
   "green-bg": $green-dark-bg,
   "gray-border": $gray-dark-border,
+  "gray-hover": $gray-dark-hover,
   "green-border": $green-dark-border,
   "gray-content1": $gray-dark-content1,
   "gray-content2": $gray-dark-content2,
@@ -227,7 +231,6 @@ $star-outline: "\e92e";
 $trash: "\e92f";
 $upload-file: "\e930";
 $video: "\e931";
-$zones: "\e932";
 
 //filled icons
 $avatar: "\e900";
@@ -350,6 +353,7 @@ $box-shadow-light-m: 0px 3px 5px rgba(0, 0, 0, 0.1), 0px 1px 18px rgba(0, 0, 0, 
 $box-shadow-light-l: 0px 24px 38px rgba(0, 0, 0, 0.04), 0px 9px 46px rgba(0, 0, 0, 0.06), 0px 11px 15px rgba(0, 0, 0, 0.1);
 
 //border-radius
+$border-radius-3: 3 + $base-unit;
 $border-radius-4: 4 + $base-unit;
 $border-radius-6: 6 + $base-unit;
 $border-radius-20: 20 + $base-unit;

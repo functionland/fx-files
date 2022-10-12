@@ -6,7 +6,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
     {
         private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
-        [AutoInject] private IFileService _fileService { get; set; } = default!;
+        [AutoInject] private ILocalDeviceFileService _fileService { get; set; } = default!;
 
         [AutoInject] private ILocalDevicePinService _pinService { get; set; } = default!;
     }

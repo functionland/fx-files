@@ -1,5 +1,8 @@
-﻿using Functionland.FxFiles.Client.Shared.Shared;
+﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Shared;
+using Microsoft.AppCenter.Crashes;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
@@ -9,19 +12,26 @@ public partial class ExceptionHandler : IExceptionHandler
 
     public void Handle(Exception exception, IDictionary<string, object?>? parameters = null)
     {
+        Crashes.TrackError(exception);
+
 #if DEBUG
-        string exceptionMessage = (exception as KnownException)?.Message ?? exception.ToString();
-        MessageBox.Show(exceptionMessage, _localizer[nameof(AppStrings.Error)]);
-        Console.WriteLine(exceptionMessage);
+        var title = _localizer.GetString(AppStrings.ToastErrorTitle);
+        var message = (exception as KnownException)?.Message ?? exception.ToString(); ;
+        ToastModal.Show(title, message, FxToastType.Error);
+        Console.WriteLine(message);
         Debugger.Break();
 #else
         if (exception is KnownException knownException)
         {
-            MessageBox.Show(knownException.Message, _localizer[nameof(AppStrings.Error)]);
+            var title = _localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = exception.Message;
+            ToastModal.Show(title, message, FxToastType.Error);
         }
         else
         {
-            MessageBox.Show(_localizer[nameof(AppStrings.UnknownException)], _localizer[nameof(AppStrings.Error)]);
+            var title = _localizer.GetString(AppStrings.ToastErrorTitle);
+            var message = _localizer.GetString(AppStrings.TheOpreationFailedMessage);
+            ToastModal.Show(title, message, FxToastType.Error);
         }
 #endif
 

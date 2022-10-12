@@ -14,6 +14,10 @@
         background-position: center;
         border-radius: $border-radius-4 $border-radius-4 0px 0px;
 
+        &:active {
+            background-color: color(gray-bg-secondary);
+        }
+
         .tag-wrapper {
             position: absolute;
             bottom: 8px;
@@ -21,10 +25,20 @@
         }
 
         .file-card-image {
-            padding: 16px 21px;
-            object-fit: cover;
             width: 100%;
             height: 100%;
+            max-height:146px;
+            object-fit: contain;
+        }
+
+        .file-card-icon {
+            font-size: 80px;
+            padding: 16px 21px;
+            text-align: center;
+        }
+
+        .file-card-icon::before {
+            color: $green-dark-base;
         }
 
         .pin-defualt-icon::before {
@@ -42,10 +56,6 @@
         padding: $spacing-16;
         border-radius: 0px 0px $border-radius-4 $border-radius-4;
 
-        &:active {
-            background-color: color(gray-bg-secondary);
-        }
-
         .card-file-name {
             display: flex;
             justify-content: flex-start;
@@ -53,7 +63,7 @@
 
             .file-icon::before {
                 font-size: $font-size-16;
-                @include Icon($folder, color(gray-content1));
+                color: color(gray-content1);
             }
 
             .file-name-container {
@@ -111,7 +121,11 @@
         }
 
         .file-icon::before {
-            @include Icon($folder, color(gray-border));
+            color: color(gray-border);
+        }
+
+        .file-card-icon::before {
+            color: color(gray-border);
         }
     }
 }
@@ -119,4 +133,33 @@
 .visibility-hidden 
 {
     visibility: hidden;
+}
+
+
+.folder-icon::before {
+    @include Icon($folder);
+}
+
+.text-file-icon::before {
+    @include Icon($document);
+}
+
+.photo-file-icon::before {
+    @include Icon($image);
+}
+
+.pdf-file-icon::before {
+    @include Icon($PDF);
+}
+
+.audio-file-icon::before {
+    @include Icon($audio);
+}
+
+.video-file-icon::before {
+    @include Icon($video);
+}
+
+.app-file-icon::before {
+    @include Icon($app);
 }

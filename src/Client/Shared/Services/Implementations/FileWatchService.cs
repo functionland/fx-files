@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Functionland.FxFiles.Client.Shared.Services.Common;
+using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -6,17 +7,20 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
     {
         [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
 
-        private ConcurrentDictionary<string, FileSystemWatcher> WatcherDictionary = new();
+        private readonly ConcurrentDictionary<string, (FileSystemWatcher Watcher, int WatchCount)> WatcherDictionary = new();
+        public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public virtual void WatchArtifact(FsArtifact fsArtifact)
         {
-            if (WatcherDictionary.TryGetValue(fsArtifact.FullPath, out var _))
+            if (WatcherDictionary.TryGetValue(fsArtifact.FullPath, out var watchedArtifact))
             {
+                WatcherDictionary[fsArtifact.FullPath] = (watchedArtifact.Watcher, watchedArtifact.WatchCount += 1);
                 return;
             }
 
             var path = fsArtifact.ArtifactType == FsArtifactType.File ? fsArtifact.ParentFullPath : fsArtifact.FullPath;
+            if(path == null) throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
 
             FileSystemWatcher watcher = new()
             {
@@ -40,7 +44,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Deleted += new FileSystemEventHandler(OnChanged);
 
-            WatcherDictionary.TryAdd(fsArtifact.FullPath, watcher);
+            WatcherDictionary.TryAdd(fsArtifact.FullPath, (watcher, 1));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
@@ -48,8 +52,16 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             if (WatcherDictionary.TryGetValue(fsArtifact.FullPath, out var watcher))
             {
-                watcher.Dispose();
-                WatcherDictionary.TryRemove(fsArtifact.FullPath, out _);
+                if (watcher.WatchCount == 1)
+                {
+                    watcher.Watcher.Dispose();
+                    WatcherDictionary.TryRemove(fsArtifact.FullPath, out _);
+                }
+                else
+                {
+                    var currentArtifactWatch = WatcherDictionary[fsArtifact.FullPath];
+                    WatcherDictionary[fsArtifact.FullPath] = (currentArtifactWatch.Watcher, currentArtifactWatch.WatchCount -= 1);
+                }
             }
         }
 

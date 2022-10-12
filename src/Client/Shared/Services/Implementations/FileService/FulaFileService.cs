@@ -1,13 +1,15 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 
-public abstract partial class FulaFileService : IFulaFileService
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+
+public partial class FulaFileService : IFulaFileService
 {
     public virtual Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public virtual Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -27,7 +29,7 @@ public abstract partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+    public virtual Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -42,12 +44,12 @@ public abstract partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task<FsArtifact> GetFsArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+    public virtual Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public virtual Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -58,6 +60,16 @@ public abstract partial class FulaFileService : IFulaFileService
     }
 
     public virtual Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task FillArtifactMetaAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

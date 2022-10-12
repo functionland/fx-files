@@ -4,10 +4,10 @@
 <main class="content-body @ContentBodyClass fill column">
     @if (IsImageFile)
     {
-        <div class="file-icon-row @(ArtifactType.ToString())-file-icon">
-            @*TODO:// image file icon here*@
-
-            <div>
+        <div class="image-icon-row">
+            
+            <div class="image-container">
+                <div class="image-file-icon"></div>
                 <img class="file-image-preview" src="@("_content/Functionland.FxFiles.Client.Shared/" + FilePath + ".HandleByApp=true")">
             </div>
         </div>
@@ -16,8 +16,8 @@
     {
         @if (!string.IsNullOrEmpty(FileName))
         {
-            <div class="file-icon-row @(ArtifactType.ToString().ToLower())-file-icon">
-                <div class="file-icon"></div>
+            <div class="file-icon-row">
+                <div class="@(FsArtifactType == FsArtifactType.File ? FileCategoryType.ToString().ToLower() : "folder")-file-icon"></div>
             </div>
         }
     }

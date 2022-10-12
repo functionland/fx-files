@@ -1,25 +1,33 @@
 ﻿using System.IO;
 
+using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
+
+using Microsoft.AspNetCore.Components;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
-    [AutoInject] private IFileService _fileService = default!;
-
     private bool _isModalOpen;
     private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
     private List<FsArtifact> _artifacts = new();
     private FsArtifact? _currentArtifact;
     private ArtifactActionResult? _artifactActionResult;
     private InputModal _inputModalRef = default!;
-    private ToastModal _toastModalRef = default!;
 
     [Parameter] public bool IsMultiple { get; set; }
+    [Parameter] public IFileService FileService { get; set; } = default!;
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
+        GoBackService.GoBackAsync = (Task () =>
+        {
+            Close();
+            StateHasChanged();
+            return Task.CompletedTask;
+        });
+
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
         _artifactActionResult = artifactActionResult;
@@ -41,35 +49,43 @@ public partial class ArtifactSelectionModal
 
     private void SelectDestionation()
     {
-        if (_currentArtifact is null)
+        try
         {
-            return;
+            if (_currentArtifact is null)
+            {
+                return;
+            }
+
+            var result = new ArtifactSelectionResult();
+
+            result.ResultType = ArtifactSelectionResultType.Ok;
+            result.SelectedArtifacts = new[] { _currentArtifact };
+
+            _tcs!.SetResult(result);
+            _tcs = null;
+            _isModalOpen = false;
         }
+        catch (Exception)
+        {
 
-        var result = new ArtifactSelectionResult();
-
-        result.ResultType = ArtifactSelectionResultType.Ok;
-        result.SelectedArtifacts = new[] { _currentArtifact };
-
-        _tcs!.SetResult(result);
-        _tcs = null;
-        _isModalOpen = false;
+            throw;
+        }
     }
 
     private async Task LoadArtifacts(string? path)
     {
         _artifacts = new List<FsArtifact>();
-        var artifacts = _fileService.GetArtifactsAsync(path);     
+        var artifacts = FileService.GetArtifactsAsync(path);
         var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
         {
-            if (artifactPaths.Contains(item.FullPath)) continue;
-
-            if (item.ArtifactType != FsArtifactType.File)
+            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
             {
-                _artifacts.Add(item);
+                item.IsDisabled = true;
             }
+
+            _artifacts.Add(item);
         }
     }
 
@@ -87,31 +103,28 @@ public partial class ArtifactSelectionModal
         {
             if (result?.ResultType == InputModalResultType.Confirm)
             {
-                var newFolder = await _fileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
+                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
                 _artifacts.Add(newFolder);
                 StateHasChanged();
             }
         }
-        catch (DomainLogicException ex) when
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameIsNull, "folder") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactNameHasInvalidChars, "folder") ||
-        (ex.Message == Localizer.GetString(AppStrings.ArtifactAlreadyExistsException, "folder"))))
+        catch (Exception exception)
         {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = ex.Message;
-            _toastModalRef!.Show(title, message, FxToastType.Error);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
     }
 
     private async Task Back()
     {
-        _currentArtifact = _currentArtifact?.ParentFullPath is null ? null : await _fileService.GetFsArtifactAsync(_currentArtifact?.ParentFullPath);
+        try
+        {
+            _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
+        }
+        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
+        {
+            _currentArtifact = null;
+        }
+        
         await LoadArtifacts(_currentArtifact?.FullPath);
     }
 

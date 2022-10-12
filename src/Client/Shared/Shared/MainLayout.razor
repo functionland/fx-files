@@ -2,10 +2,18 @@
 <div class="main-layout">
     <div class="content">
         <AppErrorBoundary>
-            @Body
+            @if (_isLoading)
+            {
+                <LoadingComponent />
+            }
+            else
+            {
+              @Body
+            }
         </AppErrorBoundary>
     </div>
-
     <BottomNavigation />
 
 </div>
+
+<ToastModal />

@@ -9,6 +9,13 @@ public partial class FilterArtifactModal
 
     public async Task<FileCategoryType?> ShowAsync()
     {
+        GoBackService.GoBackAsync = (Task () =>
+        {
+            HandleClose();
+            StateHasChanged();
+            return Task.CompletedTask;
+        });
+
         _tcs?.SetCanceled();
 
         _isModalOpen = true;
@@ -21,14 +28,14 @@ public partial class FilterArtifactModal
 
     private void HandleFilterItemClick(FileCategoryType? fileCategoryType)
     {
-        _tcs!.SetResult(fileCategoryType);
+        _tcs?.SetResult(fileCategoryType);
         _tcs = null;
         _isModalOpen = false;
     }
 
     private void HandleClose()
     {
-        _tcs!.SetResult(CurrentFilter);
+        _tcs?.SetResult(CurrentFilter);
         _tcs = null;
         _isModalOpen = false;
     }

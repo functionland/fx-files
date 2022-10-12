@@ -2,6 +2,7 @@
 using Android.OS.Storage;
 
 using Functionland.FxFiles.App.Platforms.Android;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
@@ -77,7 +78,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null)
+        if (path is null && string.IsNullOrWhiteSpace(searchText))
         {
             var drives = await GetDrivesAsync();
             foreach (var drive in drives)
@@ -93,17 +94,12 @@ public partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override async Task<FsArtifact?> GetFsArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
+    public override async Task<FsArtifact?> GetArtifactAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null)
-        {
-            return null;
-        }
-
-        return await base.GetFsArtifactAsync(path, cancellationToken);
+        return await base.GetArtifactAsync(path, cancellationToken);
     }
 
-    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -116,10 +112,10 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.MoveArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+        await base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
-    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -132,7 +128,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.CopyArtifactsAsync(artifacts, destination, overwrite, cancellationToken);
+        await base.CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
     public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
@@ -167,7 +163,7 @@ public partial class AndroidFileService : LocalDeviceFileService
         await base.RenameFolderAsync(folderPath, newName, cancellationToken);
     }
 
-    public override async Task DeleteArtifactsAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+    public override async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         if (!PermissionUtils.CheckStoragePermission())
         {
@@ -180,7 +176,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
         }
 
-        await base.DeleteArtifactsAsync(artifacts, cancellationToken);
+        await base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
 
     public override async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
@@ -214,7 +210,7 @@ public partial class AndroidFileService : LocalDeviceFileService
 
             if (storage.IsPrimary)
             {
-                var internalFileName = StringLocalizer.GetString(AppStrings.internalStorageName);
+                var internalFileName = StringLocalizer.GetString(AppStrings.InternalStorageName);
                 drives.Add(new FsArtifact(fullPath, internalFileName, FsArtifactType.Drive, FsFileProviderType.InternalMemory)
                 {
                     Capacity = capacity,
@@ -242,17 +238,17 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         var isDrive = await FsArtifactIsDriveAsync(path);
 
-        if (Directory.Exists(path))
+        if (isDrive)
+        {
+            return FsArtifactType.Drive;
+        }
+        else if (Directory.Exists(path))
         {
             return FsArtifactType.Folder;
         }
         else if (File.Exists(path))
         {
             return FsArtifactType.File;
-        }
-        else if (isDrive)
-        {
-            return FsArtifactType.Drive;
         }
         else
         {

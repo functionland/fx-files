@@ -4,14 +4,18 @@
     {
         private bool _isModalOpen;
         private TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>? _tcs;
+        private int _artifactsCount;
 
-        [Parameter]
-        public string[] ArtifactsNames { get; set; } = default!;
-
-        public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(IEnumerable<FsArtifact> artifacts)
+        public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(int artifactsCount)
         {
-            ArtifactsNames = artifacts.Select(a => a.Name).ToArray();
+            GoBackService.GoBackAsync = (Task () =>
+            {
+                Close();
+                StateHasChanged();
+                return Task.CompletedTask;
+            });
 
+            _artifactsCount = artifactsCount;
             _tcs?.SetCanceled();
 
             _isModalOpen = true;

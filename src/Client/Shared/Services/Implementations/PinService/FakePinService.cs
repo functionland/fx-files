@@ -2,25 +2,22 @@
 
 public class FakePinService : ILocalDevicePinService, IFulaPinService
 {
-    //TODO: Complete fake implementation
-    private readonly List<FsArtifact> _fsArtifacts;
-
-    public FakePinService(IEnumerable<FsArtifact> fsArtifacts)
-    {
-        _fsArtifacts = fsArtifacts.ToList();
-    }
-
-    public Task<List<FsArtifact>> GetPinnedArtifactsAsync()
+    public Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task InitializeAsync()
+    public Task<List<FsArtifact>> GetPinnedArtifactsAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public bool IsPinned(FsArtifact fsArtifact)
+    public Task InitializeAsync(CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> IsPinnedAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
