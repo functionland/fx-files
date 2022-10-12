@@ -32,11 +32,11 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public List<ArtifactPermissionInfo>? PermissionedUsers { get; set; }
         public FulaUser Owner { get; set; }
         public ArtifactPermissionLevel? PermissionLevel { get; set; }
+        public bool? IsAvailableOffline { get; set; }
         // For UI
         public string LocalFullPath { get; set; }
         public bool? IsSharedWithMe { get; set; }
         public bool? IsSharedByMe { get; set; }
-        public string? IsAvailableOffline { get; set; }
         public bool? IsPinned { get; set; }
         public bool? IsDisabled { get; set; }
         public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
