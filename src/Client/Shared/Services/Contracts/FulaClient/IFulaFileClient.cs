@@ -1,6 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 
-namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
+namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFulaFileClient
 {

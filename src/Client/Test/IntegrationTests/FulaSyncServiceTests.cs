@@ -1,10 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Enums;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
-using Functionland.FxFiles.Client.Shared.Services.FulaClient.Implementation;
+﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Functionland.FxFiles.Client.Shared.Services.Implementations;
-using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
-using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,7 +9,7 @@ namespace Functionland.FxFiles.Client.Test.IntegrationTests
     public class FulaSyncServiceTests : TestBase
     {
         public TestContext TestContext { get; set; }
-        
+
         [TestMethod]
         public async Task SyncScenario01_MustWork()
         {

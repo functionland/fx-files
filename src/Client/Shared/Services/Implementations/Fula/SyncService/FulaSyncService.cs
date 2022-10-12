@@ -1,13 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
-using Functionland.FxFiles.Client.Shared.Utils;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
@@ -45,18 +36,18 @@ public partial class FulaSyncService : IFulaSyncService
     public async Task<List<FsArtifact>> SyncItemsAsync(CancellationToken? cancellationToken = null)
     {
         var syncItems = await GetSyncItemsAsync();
-        
+
         var updatedArtifacts = new List<FsArtifact>();
-        foreach(var item in syncItems)
+        foreach (var item in syncItems)
         {
             var list = await SyncAsync(item);
             updatedArtifacts.AddRange(list);
         }
-        
+
         return updatedArtifacts;
     }
 
-    private async Task<List<FsArtifact>> SyncAsync(FulaSyncItem syncItem) 
+    private async Task<List<FsArtifact>> SyncAsync(FulaSyncItem syncItem)
     {
         var token = await GetCurrentUserTokenAsync();
 
@@ -109,7 +100,7 @@ public partial class FulaSyncService : IFulaSyncService
             var token = await GetCurrentUserTokenAsync();
             var fulaChildArtifacts = await FulaFileClient.GetChildrenArtifactsAsync(token, fulaArtifact.FullPath).ToListAsync();
 
-            foreach(var childFulaArtifact in fulaChildArtifacts)
+            foreach (var childFulaArtifact in fulaChildArtifacts)
             {
                 var localPath = GetLocalPathBasedOnFulaPath(localArtifact.FullPath, fulaArtifact.FullPath, childFulaArtifact.FullPath);
                 var syncedArtifacts = await SyncByFulaArtifactAsync(childFulaArtifact, localPath);
@@ -122,6 +113,8 @@ public partial class FulaSyncService : IFulaSyncService
 
             foreach (var toRemoveArtifact in toRemoveArtifacts)
             {
+                //TODO: remove artifacts that status is not uploaded!
+                //TODO: add status to FsArtifact
                 var removedArtifacts = await RemoveArtifactAsync(toRemoveArtifact);
                 updatedArtifacts.AddRange(removedArtifacts);
             }
@@ -136,7 +129,7 @@ public partial class FulaSyncService : IFulaSyncService
         {
             throw new InvalidOperationException($"ArtifactType not supported for sync: {fulaArtifact.ArtifactType}");
         }
-        
+
         localArtifact.ContentHash = fulaArtifact.ContentHash;
         // Save in Db
 
@@ -150,6 +143,7 @@ public partial class FulaSyncService : IFulaSyncService
 
     private async Task<List<FulaSyncItem>> GetSyncItemsAsync()
     {
+        //TODO : Get from database
         throw new NotImplementedException();
     }
 

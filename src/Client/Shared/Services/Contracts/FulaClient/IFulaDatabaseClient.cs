@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 
 
-namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
+namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFulaDatabaseClient
 {
