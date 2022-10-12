@@ -10,30 +10,30 @@ public class FakeBloxService : IBloxService
 
     public FakeBloxService(IEnumerable<Blox> bloxs, IEnumerable<Blox> invitedBloxs, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        _bloxs.Clear();
-        _invitedBlox.Clear();
+        _bloxs?.Clear();
+        _invitedBlox?.Clear();
 
         ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
         EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
 
         foreach (var blox in bloxs)
         {
-            _bloxs.Add(blox);
+            _bloxs?.Add(blox);
         }
         foreach (var invitedBlox in invitedBloxs)
         {
-            _invitedBlox.Add(invitedBlox);
+            _invitedBlox?.Add(invitedBlox);
         }
     }
 
     public FakeBloxService(IEnumerable<Blox> bloxs, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        _bloxs.Clear();
+        _bloxs?.Clear();
         ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
         EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
         foreach (var blox in bloxs)
         {
-            _bloxs.Add(blox);
+            _bloxs?.Add(blox);
         }
     }
 
