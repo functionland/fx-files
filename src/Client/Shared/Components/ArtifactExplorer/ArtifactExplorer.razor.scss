@@ -23,7 +23,7 @@
     display: grid;
     grid-gap: 1px;
     grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fit, 188px);
+    grid-template-columns: repeat(auto-fit, minmax(174px, 1fr));
     justify-content: center;
 }
 
@@ -99,7 +99,7 @@
 }
 
 .list-view-item {
-    height: 74px;
+    height: 100px;
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
@@ -112,6 +112,24 @@
         flex-grow: 1;
         overflow: hidden;
         padding-left: 16px;
+
+        .title-text {
+            overflow: hidden;
+            font-weight: 400;
+            font-style: normal;
+            text-overflow: ellipsis;
+            font-size: $font-size-16;
+            color: color(gray-content1);
+            line-height: $line-height-28;
+            font-family: $open-sans-regular;
+            letter-spacing: $letter-spacing-02;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* number of lines to show */
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            white-space: unset;
+        }
 
         .item-sub-text {
             font-weight: 400;
