@@ -23,65 +23,65 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         throw new NotImplementedException();
     }
 
-    public Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
+    //public Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    public Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
+    //public Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
-    private void ShareArtifact(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
-    {
-        var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
-        if (artifact is null)
-            throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
+    //private void ShareArtifact(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
+    //{
+    //    var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+    //    if (artifact is null)
+    //        throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
 
-        foreach (var did in dids)
-        {
-           
-        }
-    }
-    public async Task RevokeShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
-    {
-        RevokeShareArtifact(dids, artifactFullPath, cancellationToken);
-    }
+    //    foreach (var did in dids)
+    //    {
 
-    public async Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
-    {
-        foreach(var artifactFullPath in artifactFullPaths)
-        {
-            RevokeShareArtifact(dids, artifactFullPath, cancellationToken);
-        }
-    }
+    //    }
+    //}
+    //public async Task RevokeShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
+    //{
+    //    var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+    //    var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == artifactFullPath);
+    //    var sharedFsArtifact = _SharedFsArtifacts?.FirstOrDefault(a => a.FullPath == artifactFullPath);
 
-    private void RevokeShareArtifact(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
-    {
-        var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
-        var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == artifactFullPath);
-        var sharedFsArtifact = _SharedFsArtifacts?.FirstOrDefault(a => a.FullPath == artifactFullPath);
+    //    if (artifact is null)
+    //        throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
 
-        if (artifact is null)
-            throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
+    //    if (sharedFsArtifact is null)
+    //        throw new Exception();//TODO
 
-        if (sharedFsArtifact is null)
-            throw new Exception();//TODO
+    //    foreach (var did in dids)
+    //    {
+    //        var artifactPermissionInfo = new ArtifactPermissionInfo()
+    //        {
+    //            FullPath = artifactFullPath,
+    //            DId = did,
+    //            PermissionLevel = ArtifactPermissionLevel.None
+    //        };
 
-        foreach(var did in dids)
-        {
-            var artifactPermissionInfo = new ArtifactPermissionInfo()
-            {
-                FullPath = artifactFullPath,
-                DId = did,
-                PermissionLevel = ArtifactPermissionLevel.None
-            };
+    //        _SharedFsArtifacts?.Remove(artifactPermissionInfo);
+    //    }
 
-            artifact?.PermissionedUsers?.Remove(artifactPermissionInfo);
-            _SharedFsArtifacts?.Remove(artifactPermissionInfo);
-        }
-    }
+    //    var sharesArtifacts = await GetArtifactSharesAsync(artifactFullPath, cancellationToken);
+
+
+    //}
+
+    //public async Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+    //{
+    //    foreach (var artifactFullPath in artifactFullPaths)
+    //    {
+    //        await RevokeShareArtifactAsync(dids, artifactFullPath, cancellationToken);
+    //    }
+    //}
+
+
     public async IAsyncEnumerable<FsArtifact> GetSharedByMeArtifactsAsync(CancellationToken? cancellationToken = null)
     {
         var SharedByMeArtifacts = new List<FsArtifact>();
@@ -90,7 +90,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
         foreach (var artifact in _AllFsArtifacts)
         {
-            if(artifact.IsSharedByMe == true)
+            if (artifact.IsSharedByMe == true)
             {
                 SharedByMeArtifacts.Add(artifact);
             }
@@ -121,7 +121,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
         var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
 
-        if (artifact is null) 
+        if (artifact is null)
             throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
 
         if (artifact.IsSharedByMe == true)
@@ -130,7 +130,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         return false;
     }
 
-    public async Task<List<FulaUser>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
+    public async Task<List<ArtifactUserPermission>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
         var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
         var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
@@ -138,23 +138,55 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         if (artifact is null)
             throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
 
-        var permissionedUsers = artifact?.PermissionedUsers;
 
-        if (permissionedUsers is null) throw new Exception();//TODO
+        var permissionedUsers = _SharedFsArtifacts?.Where(a => a.FullPath == path).ToList();
+        return permissionedUsers?
+            .Select(c =>
+                new ArtifactUserPermission(_FulaUsers.First(a => a.DId == c.DId))
+                {
+                    PermissionLevel = c.PermissionLevel
+                })
+            .ToList() ?? new List<ArtifactUserPermission>();
+    }
 
-        var fulaUser = new List< FulaUser >();
+    public async Task SetPermissionArtifactsAsync(IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null)
+    {
 
-        foreach (var user in permissionedUsers)
+        foreach (var permissionInfo in permissionInfos)
         {
-            var permissionedUser = _FulaUsers?.FirstOrDefault(a => a.DId == user.DId);
+            var sharedItem = _SharedFsArtifacts
+                .Where(c => c.FullPath == permissionInfo.FullPath && c.DId == permissionInfo.DId)
+                .FirstOrDefault();
 
-            if (permissionedUser is not null)
+            if (sharedItem == null)
             {
-                fulaUser.Add(permissionedUser);
-            }      
+                if (permissionInfo.PermissionLevel == ArtifactPermissionLevel.None)
+                    throw new Exception(""); //TODO: correct exception
+
+                sharedItem = new ArtifactPermissionInfo
+                {
+                    DId = permissionInfo.DId,
+                    FullPath = permissionInfo.FullPath,
+                    PermissionLevel = permissionInfo.PermissionLevel
+                };
+
+                _SharedFsArtifacts.Add(sharedItem);
+            }
+            else
+            {
+                if (permissionInfo.PermissionLevel == ArtifactPermissionLevel.None)
+                {
+                    _SharedFsArtifacts.Remove(sharedItem);
+                }
+                else
+                {
+                    sharedItem.PermissionLevel = permissionInfo.PermissionLevel;
+                }
+            }
+
+            var artifact = _AllFsArtifacts.Where(c => c.FullPath == permissionInfo.FullPath).First();
+
+            artifact.PermissionedUsers = await GetArtifactSharesAsync(permissionInfo.FullPath, cancellationToken);
         }
-
-        return fulaUser;
-    }   
-
+    }
 }
