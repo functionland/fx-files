@@ -8,11 +8,6 @@ public class BloxService : IBloxService
         throw new NotImplementedException();
     }
 
-    public Task FillBloxStatsAsync(Blox blox, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<List<Blox>> GetBloxesAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
