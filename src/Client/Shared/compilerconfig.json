@@ -250,5 +250,9 @@
   {
     "outputFile": "Pages/_Onboarding/UploadToFulaPage/UploadToFulaPage.razor.css",
     "inputFile": "Pages/_Onboarding/UploadToFulaPage/UploadToFulaPage.razor.scss"
+  },
+  {
+    "outputFile": "Pages/_Onboarding/SuccessfulLoginPage/SuccessfulLoginPage.razor.css",
+    "inputFile": "Pages/_Onboarding/SuccessfulLoginPage/SuccessfulLoginPage.razor.scss"
   }
 ]
