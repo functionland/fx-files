@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
-    public partial class Settings
+    public partial class SettingsPage
     {
         [AutoInject]
         private ThemeInterop ThemeInterop = default!;

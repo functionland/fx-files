@@ -504,4 +504,7 @@
   <data name="ReplacingFiles" xml:space="preserve">
     <value>Replacing files</value>
   </data>
+  <data name="ImportFromApps" xml:space="preserve">
+    <value>Import from apps</value>
+  </data>
 </root>
