@@ -40,7 +40,6 @@ public class FsArtifact
     public FulaUser? Owner { get; set; }
     public bool? IsAvailableOffline { get; set; }
 
-
     // For UI
     public bool? IsSharedWithMe { get; set; }
     public bool? IsSharedByMe { get; set; }
@@ -48,4 +47,9 @@ public class FsArtifact
     public bool? IsDisabled { get; set; }
     public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
     public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension?.ToLower() ?? "");
+
+    public override string ToString()
+    {
+        return $"{Name} -> {FullPath}";
+    }
 }
