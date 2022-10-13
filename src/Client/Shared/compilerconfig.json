@@ -52,8 +52,8 @@
     "inputFile": "Pages/TestExplorer.razor.scss"
   },
   {
-    "outputFile": "Pages/ThemeSettings.razor.css",
-    "inputFile": "Pages/ThemeSettings.razor.scss"
+    "outputFile": "Pages/Settings/SettingsThemePage.razor.css",
+    "inputFile": "Pages/Settings/SettingsThemePage.razor.scss"
   },
   {
     "outputFile": "Components/ArtifactExplorer/ArtifactExplorer.razor.css",

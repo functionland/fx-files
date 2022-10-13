@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Pages
 {
-    public partial class ThemeSettings
+    public partial class SettingsThemePage
     {
         [AutoInject]
         private ThemeInterop ThemeInterop = default!;
