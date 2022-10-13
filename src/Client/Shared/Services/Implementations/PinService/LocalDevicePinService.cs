@@ -6,7 +6,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 public partial class LocalDevicePinService : ILocalDevicePinService
 {
     [AutoInject] IFxLocalDbService FxLocalDbService { get; set; } = default!;
-    [AutoInject] IFileService FileService { get; set; } = default!;
+    [AutoInject] ILocalDeviceFileService FileService { get; set; } = default!;
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IThumbnailService ThumbnailService { get; set; } = default!;
@@ -50,7 +50,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                         .Where(p => string.Equals(p.FullPath, changedPinnedArtifact.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase))
                         .FirstOrDefault();
 
-                    if (pinnedArticat != null && pinnedArticat.ProviderType != FsFileProviderType.Blox && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
+                    if (pinnedArticat != null && pinnedArticat.ProviderType != FsFileProviderType.Fula && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
                     {
                         if (changedPinnedArtifact.LastModifiedDateTime > LastModyDatetime)
                         {
@@ -224,7 +224,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                     FullPath = artifactChangeEvent.FsArtifact.FullPath,
                     FsArtifactType = artifactChangeEvent.FsArtifact.ArtifactType,
                     ArtifactName = artifactChangeEvent.FsArtifact.Name,
-                    ContentHash = artifactChangeEvent.FsArtifact.ProviderType == FsFileProviderType.Blox ? artifactChangeEvent.FsArtifact.ContentHash : artifactChangeEvent.FsArtifact.LastModifiedDateTime.ToString()
+                    ContentHash = artifactChangeEvent.FsArtifact.ProviderType == FsFileProviderType.Fula ? artifactChangeEvent.FsArtifact.ContentHash : artifactChangeEvent.FsArtifact.LastModifiedDateTime.ToString()
                 };
 
                 if (ArtifactIsImage(artifactChangeEvent.FsArtifact))

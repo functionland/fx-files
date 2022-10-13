@@ -117,10 +117,9 @@
     }
 </div>
 
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" />
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" />
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
-<ToastModal @ref="_toastModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
@@ -133,3 +132,4 @@
     ProgressMax="@ProgressBarMax"
     OnCancel="ProgressBarOnCancel"
     @ref="_progressModalRef" />
+<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>

@@ -19,7 +19,6 @@ public partial class FileBrowser : IDisposable
     private List<FsArtifact> _filteredArtifacts = new();
 
     private InputModal? _inputModalRef;
-    private ToastModal? _toastModalRef;
     private ConfirmationModal? _confirmationModalRef;
     private FilterArtifactModal? _filteredArtifactModalRef;
     private SortArtifactModal? _sortedArtifactModalRef;
@@ -174,21 +173,13 @@ public partial class FileBrowser : IDisposable
 
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Success);
+            ToastModal.Show(title, message, FxToastType.Success);
 
             await NavigateToDestionation(destinationPath);
         }
-        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        catch (Exception exception)
         {
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
         finally
         {
@@ -283,20 +274,13 @@ public partial class FileBrowser : IDisposable
 
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Success);
+            ToastModal.Show(title, message, FxToastType.Success);
 
             await NavigateToDestionation(destinationPath);
         }
-        catch (DomainLogicException ex) when (ex is SameDestinationFolderException or SameDestinationFileException)
+        catch (Exception exception)
         {
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
         finally
         {
@@ -345,7 +329,7 @@ public partial class FileBrowser : IDisposable
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.RootfolderRenameException);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ToastModal.Show(title, message, FxToastType.Error);
         }
     }
 
@@ -358,12 +342,9 @@ public partial class FileBrowser : IDisposable
             await UpdatePinedArtifactsAsync(artifacts, true);
             _isLoading = false;
         }
-        catch
+        catch (Exception exception)
         {
-            _isLoading = false;
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(Title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
     }
 
@@ -377,12 +358,10 @@ public partial class FileBrowser : IDisposable
             await UpdatePinedArtifactsAsync(artifacts, false);
             _isLoading = false;
         }
-        catch
+        catch (Exception exception)
         {
             _isLoading = false;
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(Title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
     }
 
@@ -435,16 +414,10 @@ public partial class FileBrowser : IDisposable
                 }
             }
         }
-        catch (CanNotModifyOrDeleteDriveException ex)
+        catch (Exception exception)
         {
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            _toastModalRef!.Show(Title, ex.Message, FxToastType.Error);
-        }
-        catch
-        {
-            var Title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(Title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
+            _isLoading = false;
         }
     }
 
@@ -465,6 +438,9 @@ public partial class FileBrowser : IDisposable
                 break;
             case ArtifactDetailModalResultType.Pin:
                 await HandlePinArtifactsAsync(artifact);
+                break;
+            case ArtifactDetailModalResultType.Unpin:
+                await HandleUnPinArtifactsAsync(artifact);
                 break;
             case ArtifactDetailModalResultType.More:
                 if (artifact.Length > 1)
@@ -505,17 +481,9 @@ public partial class FileBrowser : IDisposable
                 FilterArtifacts();
             }
         }
-        catch (DomainLogicException ex) when (ex is ArtifactNameNullException or ArtifactInvalidNameException or ArtifactAlreadyExistsException)
+        catch (Exception exception)
         {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = ex.Message;
-            _toastModalRef!.Show(title, message, FxToastType.Error);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
     }
 
@@ -548,13 +516,11 @@ public partial class FileBrowser : IDisposable
             _allArtifacts = artifacts;
             FilterArtifacts();
         }
-        //ToDo: Needs more business-wise data to implement
-        catch (AndroidSpecialFilesUnauthorizedAccessException ex)
+        catch (Exception exception)
         {
-            _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
             _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
-        //ToDo: Add a general catch in case of other exceptions
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -575,9 +541,9 @@ public partial class FileBrowser : IDisposable
                     File = new ReadOnlyFile(artifact.FullPath)
                 });
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _toastModalRef!.Show(ex.Source, ex.Message, FxToastType.Error);
+                ExceptionHandler?.Handle(exception);
             }
 #endif
         }
@@ -784,7 +750,7 @@ public partial class FileBrowser : IDisposable
         }
         else
         {
-            artifactRenamed = _filteredArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
+            artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
         }
 
         if (artifactRenamed != null)
@@ -792,6 +758,7 @@ public partial class FileBrowser : IDisposable
             var artifactParentPath = Path.GetDirectoryName(artifact.FullPath) ?? "";
             artifactRenamed.FullPath = Path.Combine(artifactParentPath, fullNewName);
             artifactRenamed.Name = fullNewName;
+            FilterArtifacts();
         }
     }
 
@@ -806,14 +773,14 @@ public partial class FileBrowser : IDisposable
         }
         else
         {
-            foreach (var artifact in _filteredArtifacts)
+            foreach (var artifact in _allArtifacts)
             {
                 if (artifactPath.Contains(artifact.FullPath))
                 {
                     artifact.IsPinned = IsPinned;
                 }
             }
-            _allArtifacts = _filteredArtifacts;
+            FilterArtifacts();
         }
     }
 
@@ -1059,16 +1026,9 @@ public partial class FileBrowser : IDisposable
             var artifactRenamed = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
             UpdateRenamedArtifact(artifact, fullName);
         }
-        catch (DomainLogicException ex)
+        catch (Exception exception)
         {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
+            ExceptionHandler?.Handle(exception);
         }
     }
 
@@ -1079,18 +1039,9 @@ public partial class FileBrowser : IDisposable
             await FileService.RenameFolderAsync(artifact.FullPath, newName);
             UpdateRenamedArtifact(artifact, newName);
         }
-        catch (DomainLogicException ex)
+        catch (Exception exception)
         {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            _toastModalRef!.Show(title, ex.Message, FxToastType.Error);
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
-        }
-        catch
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            _toastModalRef!.Show(title, message, FxToastType.Error);
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
+            ExceptionHandler?.Handle(exception);
         }
     }
 

@@ -7,7 +7,7 @@ public class LocalDeviceShareService : ILocalDeviceShareService
         throw new NotImplementedException();
     }
 
-    public Task<List<FulaUser>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
+    public Task<List<ArtifactUserPermission>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -38,6 +38,11 @@ public class LocalDeviceShareService : ILocalDeviceShareService
     }
 
     public Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task SetPermissionArtifactsAsync(IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

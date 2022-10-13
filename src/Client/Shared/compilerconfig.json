@@ -40,10 +40,6 @@
     "inputFile": "wwwroot/app.scss"
   },
   {
-    "outputFile": "Pages/FxFolderView.razor.css",
-    "inputFile": "Pages/FxFolderView.razor.scss"
-  },
-  {
     "outputFile": "Pages/MyDevice.razor.css",
     "inputFile": "Pages/MyDevice.razor.scss"
   },
@@ -230,6 +226,10 @@
   {
     "outputFile": "Components/LoadingComponent.razor.css",
     "inputFile": "Components/LoadingComponent.razor.scss"
+  },
+  {
+    "outputFile": "Pages/FxLogin.razor.css",
+    "inputFile": "Pages/FxLogin.razor.scss"
   },
   {
     "outputFile": "Components/Modal/ProgressModal/ProgressModal.razor.css",

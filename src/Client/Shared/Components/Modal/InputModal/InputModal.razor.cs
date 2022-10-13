@@ -2,23 +2,13 @@
 {
     public partial class InputModal
     {
-        [AutoInject]
-        private IFileService _fileService = default!;
-
         private TaskCompletionSource<InputModalResult>? _tcs;
-
         private bool _isModalOpen;
-
         private string? _title;
-
         private string? _placeholder;
-
         private string? _inputValue;
-
         private string? _headTitle;
-
         private FxTextInput? _inputRef;
-
 
         public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
         {

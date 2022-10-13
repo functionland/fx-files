@@ -23,7 +23,7 @@ public static class IServiceCollectionExtensions
 
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();
-        services.AddSingleton<IFileService>(
+        services.AddSingleton<ILocalDeviceFileService>(
             serviceProvider => serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
         );
         services.AddSingleton<IFileWatchService, FakeFileWatchService>();
