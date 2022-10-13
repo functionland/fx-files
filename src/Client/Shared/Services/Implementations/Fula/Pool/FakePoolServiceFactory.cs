@@ -2,187 +2,261 @@
 
 public partial class FakePoolServiceFactory
 {
-    //public FakePoolService CreateSimpleBloxPool(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var dict = new List<KeyValuePair<string, string>>
-    //    {
-    //        new KeyValuePair<string, string>("Location", "8.2 miles"),
-    //        new KeyValuePair<string, string>("Join Date", "2022/10/12"),
-    //        new KeyValuePair<string, string>("Count", "38856 devices"),
-    //        new KeyValuePair<string, string>("L2 type", "8.2 Plkadot"),
-    //        new KeyValuePair<string, string>("Replication factor", "x10"),
-    //        new KeyValuePair<string, string>("Disk space", "100 GB"),
-    //        new KeyValuePair<string, string>("Ping speed", "0.08 sec")
-    //    };
+    public FakePoolService CreateSimpleBloxPool(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var allFulaBloxPools = new List<BloxPool>();
 
-    //    var bloxPool = new FakePoolService(
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(123457, "The long number of characters in the bloxPool name should be handled ",  
-    //                       DateTimeOffset.Now, 1500, 28000000000, 8000000000, 10000000000, 4000000000, 3000000000, 3000000000, dict)
-    //    },
-    //    actionLatency,
-    //    enumerationLatency);
+        var primaryInfos = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Location", "5.2 miles"),
+            new KeyValuePair<string, string>("Join Date", "2022/10/01"),
+            new KeyValuePair<string, string>("Count", "38856 devices"),
+            new KeyValuePair<string, string>("Disk space", "100 GB")
+        };
 
-    //    return bloxPool;
-    //}
-    //public FakePoolService CreateBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var now = DateTimeOffset.Now;
-    //    var dict = new List<KeyValuePair<string, string>>
-    //    {
-    //        new KeyValuePair<string, string>("Location", "9.3 miles"),
-    //        new KeyValuePair<string, string>("Join Date", "2022/09/11"),
-    //        new KeyValuePair<string, string>("Count", "300 devices"),
-    //        new KeyValuePair<string, string>("L2 type", "3.2 Plkadot"),
-    //        new KeyValuePair<string, string>("Replication factor", "x11"),
-    //        new KeyValuePair<string, string>("Disk space", "110 GB"),
-    //        new KeyValuePair<string, string>("Ping speed", "0.05 sec")
-    //    };
-    //    var bloxPools = new FakePoolService(
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(111 ,"BloxPool 1"),
-    //        CreateBloxPool(112 ,"BloxPool 2" ),
-    //        CreateBloxPool(113 ,"BloxPool 3" ,  now, 1450, 2000000000, 1000000000, 0, 0, 1000000000, 0),
-    //        CreateBloxPool(114 ,"BloxPool 4" ,  null, 130, 28000000000, 8000000000, 10000000000, 4000000000, 3000000000, 3000000000,dict),
+        var keyValueGroup = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Video", "40 GB"),
+            new KeyValuePair<string, string>("Audio", "20 GB")
+        };
 
-    //    },
-    //    actionLatency,
-    //    enumerationLatency);
+        var keyValueGroups = new List<KeyValuePair<string, KeyValuePair<string, string>>>
+        {
+            new KeyValuePair<string, KeyValuePair<string, string>>("X", keyValueGroup[0]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("Y", keyValueGroup[1])
+        };
 
-    //    return bloxPools;
-    //}
+        var bloxPool = new FakePoolService(
+        new List<BloxPool>
+        {
+            CreateBloxPool("1459851", primaryInfos, keyValueGroups, 500)
+        },
+        allFulaBloxPools,
+        actionLatency,
+        enumerationLatency);
 
-    //public FakePoolService CreateAllFulaBloxPool(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var now = DateTimeOffset.Now;
+        return bloxPool;
+    }
 
-    //    var bloxPools = new FakePoolService(
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(221 ,"BloxPool 2369875523"),
-    //        CreateBloxPool(222 ,"BloxPool 222"),
-    //        CreateBloxPool(223 ,"BloxPool 223" , null, null, null, null, 1000000000, 0, 0, 1000000000, 0),
-    //        CreateBloxPool(224 ,"BloxPool 224" , null, null, 100, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //        CreateBloxPool(225 ,"BloxPool 225" , null, null, 200, null, 0, 0, 0, 0, 0),
-    //        CreateBloxPool(226 ,"BloxPool 226" , null, null, null, null, 1000000000, 2000000000, 0, 0, 0),
-    //        CreateBloxPool(227 ,"BloxPool 227" , null, now, 400, 9000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(228 ,"BloxPool 228" , null, now, 13020000, 10000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(2291258 ,"The long number of characters in the bloxPool name should be handled " , null, now, 1542, 17000000000, 5000000000, 2000000000, 2000000000, 3000000000,5000000000),
-    //        CreateBloxPool(1235 ,"BloxPool 78975" , null, now, 1400, 20000000000, 5000000000, 2000000000, 5000000000, 3000000000, 5000000000),
-    //        CreateBloxPool(8965 ,"BloxPool 2587428" , null, now, 1560, 11000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(87965 ,"The long number of characters in the bloxPool name " , null, now, 1500, 14000000000, 2000000000, 2000000000, 1000000000, 4000000000,5000000000),
-    //        CreateBloxPool(1365 ,"BloxPool 875461" , null, now, 1600, 181000000000, 1000000000, 80000000000, 40000000000, 30000000000, 30000000000),
-    //        CreateBloxPool(336 ,"BloxPool 16" , null, now, 1000, 2000000000, 1000000000, 0, 0, 1000000000, 0),
-    //        CreateBloxPool(12 ,"BloxPool 17" , null, now, 2000, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //        CreateBloxPool(589 ,"BloxPool 18" , null, now, 1000, null, 0, 0, 0, 0, 0),
+    public FakePoolService CreateBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var allFulaBloxPools = new List<BloxPool>();
 
-    //    },
-    //    actionLatency,
-    //    enumerationLatency);
+        var primaryInfos = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Location", "9.3 miles"),
+            new KeyValuePair<string, string>("Ping speed", "0.05 sec")
+        };
+        var keyValueGroup = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Picture", "10GB"),
+            new KeyValuePair<string, string>("Audio", "20GB"),
+            new KeyValuePair<string, string>("Video", "50GB")
+        };
 
-    //    return bloxPools;
-    //}
+        var keyValueGroups = new List<KeyValuePair<string, KeyValuePair<string, string>>>
+        {
+            new KeyValuePair<string, KeyValuePair<string, string>>("X", keyValueGroup[0]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("Y", keyValueGroup[1]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Z", keyValueGroup[2])
+        };
 
-    //public FakePoolService CreateTypicalBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var now = DateTimeOffset.Now;
+        var bloxPools = new FakePoolService(
+        new List<BloxPool>
+        {
+            CreateBloxPool("BloxPool 1", primaryInfos,keyValueGroups, 100),
+            CreateBloxPool("BloxPool 2" , primaryInfos, null, 120),
+            CreateBloxPool("BloxPool 3", primaryInfos, null, 50 ),
+            CreateBloxPool("BloxPool 3",null, keyValueGroups,105)
+        },
+        allFulaBloxPools,
+        actionLatency,
+        enumerationLatency);
 
-    //    var bloxPools = new FakePoolService(
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(875461 ,"BloxPool 875461" ,  now, 1546, 121000000000, 1000000000, 20000000000, 40000000000, 30000000000, 30000000000),
-    //    },
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(78975 ,"BloxPool 78975" , null, now, 156, 20000000000, 5000000000, 2000000000, 5000000000, 3000000000, 5000000000),
-    //        CreateBloxPool(2587428 ,"BloxPool 2587428" , null, now, 12, 10000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(2291258 ,"The long number of characters in the bloxPool name should be handled " , null, now, 150, 14000000000, 2000000000, 2000000000, 1000000000, 4000000000,5000000000)
-    //    },
-    //    actionLatency,
-    //    enumerationLatency);
+        return bloxPools;
+    }
 
-    //    return bloxPools;
-    //}
+    public FakePoolService CreateAllFulaBloxPool(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var FullabloxPools = new List<BloxPool>();
 
-    //public FakePoolService CreateALotOfBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var now = DateTimeOffset.Now;
-    //    var dict = new List<KeyValuePair<string, string>>
-    //    {
-    //        new KeyValuePair<string, string>("Location", "100 miles"),
-    //        new KeyValuePair<string, string>("Join Date", "2022/10/01"),
-    //        new KeyValuePair<string, string>("Count", "45 devices"),
-    //        new KeyValuePair<string, string>("L2 type", "3.2 Plkadot"),
-    //        new KeyValuePair<string, string>("Replication factor", "x5"),
-    //        new KeyValuePair<string, string>("Disk space", "500 GB"),
-    //        new KeyValuePair<string, string>("Ping speed", "0.08 sec")
-    //    };
-    //    var bloxPools = new FakePoolService(
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(1111 ,"BloxPool One" ,  now, 1546, 121000000000, 1000000000, 20000000000, 40000000000, 30000000000, 30000000000,dict),
-    //        CreateBloxPool(1112 ,"BloxPool Two", PoolType.Secondary),
-    //        CreateBloxPool(1113 ,"BloxPool Three", PoolType.Secondary),
-    //        CreateBloxPool(1114 ,"BloxPool Four" ,  now, 1300, 5000000000, 1000000000,1000000000, 1000000000, 1000000000, 1000000000),
-    //        CreateBloxPool(1115,"BloxPool Five" ,  now, 87650, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //        CreateBloxPool(1116 ,"BloxPool Six" ,  null, 2100, 0, 0, 0, 0, 0, 0),
-    //        CreateBloxPool(1117 ,"BloxPool Seven" ,  null, null, 3000000000, 1000000000, 2000000000, 0, 0, 0),
-    //        CreateBloxPool(1118 ,"BloxPool Eight" ,  now, 400, 9000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(1119 ,"BloxPool Nine" ,  now, 13020000, 10000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(25875 ,"The long number of characters in the bloxPool name should be handled 1235" ,  now, 875200, 13000000000, 1000000000, 2000000000, 2000000000, 3000000000,5000000000,dict)
-    //    },
-    //    new List<BloxPool>
-    //    {
-    //        CreateBloxPool(1 ,"BloxPool 78975" , null, now, 1400, 20000000000, 5000000000, 2000000000, 5000000000, 3000000000, 5000000000),
-    //        CreateBloxPool(11 ,"BloxPool 2587428" , null, now, 1560, 11000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(12 ,"The long number of characters in the bloxPool name " , null, now, 1500, 14000000000, 2000000000, 2000000000, 1000000000, 4000000000,5000000000),
-    //        CreateBloxPool(13 ,"BloxPool 875461" , null, now, 1600, 181000000000, 1000000000, 80000000000, 40000000000, 30000000000, 30000000000),
-    //        CreateBloxPool(14 ,"BloxPool 14"),
-    //        CreateBloxPool(15 ,"BloxPool 15"),
-    //        CreateBloxPool(16 ,"BloxPool 16" , null, null, 18000, 2000000000, 1000000000, 0, 0, 1000000000, 0),
-    //        CreateBloxPool(17 ,"BloxPool 17" , null, null, 1200, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //        CreateBloxPool(18 ,"BloxPool 18" , null, null, 2100, null, 0, 0, 0, 0, 0),
-    //        CreateBloxPool(19 ,"BloxPool 19" , null, null, 25100, 3000000000, 1000000000, 2000000000, 0, 0, 0),
-    //        CreateBloxPool(20 ,"BloxPool 20" , null, now, 400, 9000000000, 5000000000, 2000000000, 0, 3000000000, 0),
-    //        CreateBloxPool(21 ,"BloxPool 21" , null, now, 13020000),
-    //        CreateBloxPool(22 ,"The long number of characters in the bloxPool name should be handled " , null, now, 89500, 17000000000, 5000000000, 2000000000, 2000000000, 3000000000,5000000000)
-    //    },
-    //    actionLatency,
-    //    enumerationLatency);
+        var primaryInfos = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Count", "100 devices"),
+            new KeyValuePair<string, string>("L2 type", "4.5 Plkadot"),
+            new KeyValuePair<string, string>("Replication factor", "x11"),
+            new KeyValuePair<string, string>("Disk space", "1000 GB"),
+        };
 
-    //    return bloxPools;
-    //}
-    //private static BloxPool CreateBloxPool(int? poolId,
-    //                               string name,
-    //                               PoolType? poolType = null,
-    //                               DateTimeOffset? lastUpdate = null,
-    //                               decimal? monthlyRate = null,
-    //                               decimal? currentUse = null,
-    //                               long? photosUsed = null,
-    //                               long? videosUsed = null,
-    //                               long? audiosUsed = null,
-    //                               long? docsUsed = null,
-    //                               long? otherUsed = null,
-    //                               List<KeyValuePair<string, string>>? additinalInformation = null)
-    //{
-    //    var bloxPool = new BloxPool()
-    //    {
-    //        Id = poolId,
-    //        Name = name,
-    //        PoolType = poolType,
-    //        LastUpdate = lastUpdate,
-    //        MonthlyRate = monthlyRate,
-    //        CurrentUse = currentUse,
-    //        PhotosUsed = photosUsed,
-    //        VideosUsed = videosUsed,
-    //        AudiosUsed = audiosUsed,
-    //        DocsUsed = docsUsed,
-    //        OtherUsed = otherUsed,
-    //        AdditinalInformation = additinalInformation
-    //    };
+        var primaryInfos1 = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Disk space", "300 GB"),
+            new KeyValuePair<string, string>("Ping speed", "0.03 sec")
+        };
 
-    //    return bloxPool;
-    //}
+        var keyValueGroup = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Picture", "100 GB"),
+            new KeyValuePair<string, string>("Document", "150 GB")
+        };
+
+        var keyValueGroups = new List<KeyValuePair<string, KeyValuePair<string, string>>>
+        {
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters X", keyValueGroup[0]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[1])
+        };
+
+        var secondaryInfos1 = new List<KeyValuePair<string, KeyValuePair<string, string>>>
+        {
+            new KeyValuePair<string, KeyValuePair<string, string>>("Test", keyValueGroup[0])
+        };
+
+        var bloxPools = new FakePoolService(
+        new List<BloxPool>
+        {
+            CreateBloxPool("BloxPool 2369875523", primaryInfos, null, 100),
+            CreateBloxPool("BloxPool 222", primaryInfos, null, 102),
+            CreateBloxPool("BloxPool 223", primaryInfos, null, 150),
+            CreateBloxPool("BloxPool 224", primaryInfos, null, 50),
+            CreateBloxPool("BloxPool 225", primaryInfos1),
+            CreateBloxPool("BloxPool 226", primaryInfos1),
+            CreateBloxPool("BloxPool 227", primaryInfos1),
+            CreateBloxPool("BloxPool 228", null, keyValueGroups, 400),
+            CreateBloxPool("The long number of characters in the bloxPool Id should be handled", null, keyValueGroups, 450),
+            CreateBloxPool("BloxPool 78975", primaryInfos1, keyValueGroups, 200),
+            CreateBloxPool("BloxPool 2587428", primaryInfos1, keyValueGroups,120),
+            CreateBloxPool("The long number of characters in the bloxPool Id ", primaryInfos, keyValueGroups, 200),
+            CreateBloxPool("BloxPool 875461", primaryInfos1, keyValueGroups, 190),
+            CreateBloxPool("BloxPool 16", primaryInfos1, keyValueGroups,130),
+            CreateBloxPool("BloxPool 17", primaryInfos1, secondaryInfos1,230),
+            CreateBloxPool("BloxPool 18", primaryInfos1, secondaryInfos1,330),
+
+        },
+        FullabloxPools,
+        actionLatency,
+        enumerationLatency);
+
+        return bloxPools;
+    }
+
+    public FakePoolService CreateTypicalBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var primaryInfos = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Disk space", "300 GB"),
+            new KeyValuePair<string, string>("Ping speed", "0.01 sec")
+        };
+
+        var keyValueGroup = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Picture", "100 GB"),
+            new KeyValuePair<string, string>("Document", "20 GB"),
+            new KeyValuePair<string, string>("Others", "150 GB")
+        };
+
+        var keyValueGroups = new List<KeyValuePair<string, KeyValuePair<string, string>>>
+        {
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters X", keyValueGroup[0]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[1]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[3])
+        };
+
+        var bloxPools = new FakePoolService(
+        new List<BloxPool>
+        {
+            CreateBloxPool("BloxPool 875461", primaryInfos, keyValueGroups),
+        },
+        new List<BloxPool>
+        {
+            CreateBloxPool("BloxPool 78975", primaryInfos, null, 150),
+            CreateBloxPool("BloxPool 2587428", primaryInfos,keyValueGroups, 350),
+            CreateBloxPool("The long number of characters in the bloxPool name should be handled ", null,keyValueGroups, 100)
+        },
+        actionLatency,
+        enumerationLatency);
+
+        return bloxPools;
+    }
+
+    public FakePoolService CreateALotOfBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var primaryInfos = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Location", "55 miles"),
+            new KeyValuePair<string, string>("Join Date", "2022/09/01"),
+            new KeyValuePair<string, string>("Count", "120 devices"),
+            new KeyValuePair<string, string>("L2 type", "3.2 Plkadot"),
+            new KeyValuePair<string, string>("Replication factor", "x5"),
+            new KeyValuePair<string, string>("Disk space", "1000 GB"),
+            new KeyValuePair<string, string>("Ping speed", "0.05 sec")
+        };
+
+        var primaryInfos1 = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("L2 type", "4.3 Plkadot"),
+            new KeyValuePair<string, string>("Replication factor", "x5")
+        };
+
+        var keyValueGroup = new List<KeyValuePair<string, string>>
+        {
+            new KeyValuePair<string, string>("Picture", "140 GB"),
+            new KeyValuePair<string, string>("Document", "130 GB")
+        };
+
+        var keyValueGroups = new List<KeyValuePair<string, KeyValuePair<string, string>>>
+        {
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Pictures", keyValueGroup[0]),
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Documents", keyValueGroup[1])
+        };
+
+        var bloxPools = new FakePoolService(
+        new List<BloxPool>
+        {
+            CreateBloxPool("BloxPool One", primaryInfos, null, 200),
+            CreateBloxPool("BloxPool Two", primaryInfos, null, 9),
+            CreateBloxPool("BloxPool Three", primaryInfos),
+            CreateBloxPool("BloxPool Four", primaryInfos1, null, 700),
+            CreateBloxPool("BloxPool Five", primaryInfos1, keyValueGroups,400),
+            CreateBloxPool("BloxPool Six", primaryInfos1),
+            CreateBloxPool("BloxPool Seven", null, keyValueGroups,60),
+            CreateBloxPool("BloxPool Eight", null, keyValueGroups),
+            CreateBloxPool("BloxPool Nine", primaryInfos, keyValueGroups, 90),
+            CreateBloxPool("The long number of characters in the bloxPool Id should be handled 1235", primaryInfos1, keyValueGroups, 50)
+        },
+        new List<BloxPool>
+        {
+            CreateBloxPool("BloxPool 78975",primaryInfos, null, 900),
+            CreateBloxPool("BloxPool 2587428",primaryInfos),
+            CreateBloxPool("The long number of characters in the bloxPool Id ",primaryInfos1, null, 900),
+            CreateBloxPool("BloxPool 875461", primaryInfos1),
+            CreateBloxPool("BloxPool 14", primaryInfos1),
+            CreateBloxPool("BloxPool 15", primaryInfos1),
+            CreateBloxPool("BloxPool 16", primaryInfos1, null, 100),
+            CreateBloxPool("BloxPool 17", primaryInfos1, keyValueGroups,1000),
+            CreateBloxPool("BloxPool 18", null, keyValueGroups,2000),
+            CreateBloxPool("BloxPool 19", null, keyValueGroups,200),
+            CreateBloxPool("BloxPool 20", null, keyValueGroups,20),
+            CreateBloxPool("BloxPool 21", null, null, 600),
+            CreateBloxPool("The long number of characters in the bloxPool Id should be handled", primaryInfos1, keyValueGroups, 400)
+        },
+        actionLatency,
+        enumerationLatency);
+
+        return bloxPools;
+    }
+    private static BloxPool CreateBloxPool(string id,
+                                   List<KeyValuePair<string, string>>? primaryInfos = null,
+                                   List<KeyValuePair<string, KeyValuePair<string, string>>>? keyValueGroups = null,
+                                   int? pingTime = null)
+
+    {
+        var bloxPool = new BloxPool(id)
+        {
+            PrimaryInfos = primaryInfos,
+            KeyValueGroups = keyValueGroups,
+            PingTime = pingTime
+        };
+
+        return bloxPool;
+    }
 }

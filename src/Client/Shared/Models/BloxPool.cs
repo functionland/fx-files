@@ -12,7 +12,7 @@ public class BloxPool
     /// </summary>
     public string Id { get; set; }
 
-    public int PingTime { get; set; }
+    public int? PingTime { get; set; }
 
     public List<KeyValuePair<string, string>>? PrimaryInfos { get; set; }
 
