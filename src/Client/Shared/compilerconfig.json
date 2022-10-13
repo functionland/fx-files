@@ -44,8 +44,8 @@
     "inputFile": "Pages/MyDevice.razor.scss"
   },
   {
-    "outputFile": "Pages/Settings.razor.css",
-    "inputFile": "Pages/Settings.razor.scss"
+    "outputFile": "Pages/Settings/SettingsPage.razor.css",
+    "inputFile": "Pages/Settings/SettingsPage.razor.scss"
   },
   {
     "outputFile": "Pages/TestExplorer.razor.css",
@@ -228,8 +228,8 @@
     "inputFile": "Components/LoadingComponent.razor.scss"
   },
   {
-    "outputFile": "Pages/FxLogin.razor.css",
-    "inputFile": "Pages/FxLogin.razor.scss"
+    "outputFile": "Pages/FxLogin/FxLogin.razor.css",
+    "inputFile": "Pages/FxLogin/FxLogin.razor.scss"
   },
   {
     "outputFile": "Components/Modal/ProgressModal/ProgressModal.razor.css",
