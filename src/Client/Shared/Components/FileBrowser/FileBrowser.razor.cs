@@ -103,7 +103,7 @@ public partial class FileBrowser : IDisposable
             {
                 if (_progressModalRef is not null)
                 {
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Copying files", true);
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles), true);
                 }
                 ProgressBarCts = new CancellationTokenSource();
 
@@ -151,7 +151,7 @@ public partial class FileBrowser : IDisposable
 
                         if (_progressModalRef is not null)
                         {
-                            await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Replacing files", true);
+                            await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
 
                             await FileService.CopyArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true,
                                 onProgress: async (progressInfo) =>
@@ -213,7 +213,7 @@ public partial class FileBrowser : IDisposable
 
                 if (_progressModalRef is not null)
                 {
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Moving files", true);
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.MovingFiles), true);
                 }
 
                 await FileService.MoveArtifactsAsync(artifacts, destinationPath, false,
@@ -253,7 +253,7 @@ public partial class FileBrowser : IDisposable
                         ProgressBarCts = new CancellationTokenSource();
                         if (_progressModalRef is not null)
                         {
-                            await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Replacing files", true);
+                            await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
                         }
 
                         await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true,
@@ -390,7 +390,7 @@ public partial class FileBrowser : IDisposable
                     ProgressBarCts = new CancellationTokenSource();
                     if (_progressModalRef is not null)
                     {
-                        await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Deleting files", true);
+                        await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.DeletingFiles), true);
 
                         await FileService.DeleteArtifactsAsync(artifacts,
                             onProgress: async (progressInfo) =>
