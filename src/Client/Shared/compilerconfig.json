@@ -234,5 +234,17 @@
   {
     "outputFile": "Components/Modal/ProgressModal/ProgressModal.razor.css",
     "inputFile": "Components/Modal/ProgressModal/ProgressModal.razor.scss"
+  },
+  {
+    "outputFile": "Pages/_Onboarding/ImportFromAppPage/ImportFromAppPage.razor.css",
+    "inputFile": "Pages/_Onboarding/ImportFromAppPage/ImportFromAppPage.razor.scss"
+  },
+  {
+    "outputFile": "Components/ImportFromApp/ImportFromApp.razor.css",
+    "inputFile": "Components/ImportFromApp/ImportFromApp.razor.scss"
+  },
+  {
+    "outputFile": "Pages/_Settings/SettingsImportFromAppPage/SettingsImportFromAppPage.razor.css",
+    "inputFile": "Pages/_Settings/SettingsImportFromAppPage/SettingsImportFromAppPage.razor.scss"
   }
 ]

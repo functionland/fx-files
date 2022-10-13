@@ -583,6 +583,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import from apps.
+        /// </summary>
+        public static string ImportFromApps {
+            get {
+                return ResourceManager.GetString("ImportFromApps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Label.
         /// </summary>
         public static string InputLabel {

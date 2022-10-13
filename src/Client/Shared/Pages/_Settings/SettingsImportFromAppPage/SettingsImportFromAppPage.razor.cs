@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Functionland.FxFiles.Client.Shared.Pages.Onboarding.ImportApp
+namespace Functionland.FxFiles.Client.Shared.Pages
 {
-    public partial class ImportApp
+    public partial class SettingsImportFromAppPage
     {
     }
 }
