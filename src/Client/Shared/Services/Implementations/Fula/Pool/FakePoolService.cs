@@ -8,40 +8,31 @@
         public TimeSpan? EnumerationLatency { get; set; }
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        public FakePoolService(IEnumerable<BloxPool> bloxPools, IEnumerable<BloxPool> allFulaBloxPools, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakePoolService(IEnumerable<BloxPool> bloxPools, IEnumerable<BloxPool>? allFulaBloxPools = null, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
-            _BloxPools.Clear();
-            _AllFulaBloxPools.Clear();
+            _BloxPools = bloxPools.ToList();
+            _AllFulaBloxPools = allFulaBloxPools?.ToList() ?? new List<BloxPool>();
 
             ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
             EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
-
-            foreach (var bloxPool in bloxPools)
-            {
-                _BloxPools.Add(bloxPool);
-            }
-            foreach (var allFulaBloxPool in allFulaBloxPools)
-            {
-                _AllFulaBloxPools.Add(allFulaBloxPool);
-            }
         }
-        public FakePoolService(IEnumerable<BloxPool> bloxPool, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-        {
-            _BloxPools.Clear();
-            ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
-            EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
-
-            foreach (var bloxPools in bloxPool)
-            {
-                _BloxPools.Add(bloxPools);
-            }
-        }
+      
         public async Task<List<BloxPool>> GetMyPoolsAsync(CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             return _BloxPools.ToList();
         }
         public async Task LeavePoolAsync(string poolId, CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             var bloxPool = _BloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
 
             if (bloxPool is null)
@@ -51,6 +42,11 @@
         }
         public async Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(string poolId, CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             return new BloxPoolPurchaseInfo()
             {
                 PerMounthPaymentRequired = 150,
@@ -59,6 +55,11 @@
         }
         public async Task<bool> JoinToPoolAsync(string poolId, CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             var bloxPool = _BloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
 
             if (bloxPool is null) return false;
@@ -69,6 +70,11 @@
         }
         public async IAsyncEnumerable<BloxPool> SearchPoolAsync(CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             var bloxPools = new List<BloxPool>();
 
             foreach (var bloxPool in bloxPools)

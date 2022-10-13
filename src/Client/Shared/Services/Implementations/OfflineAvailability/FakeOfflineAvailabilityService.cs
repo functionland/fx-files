@@ -1,5 +1,4 @@
 ﻿using Functionland.FxFiles.Client.Shared.Extensions;
-using Microsoft.Extensions.Localization;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAvailability
 {
@@ -11,17 +10,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
         public TimeSpan? EnumerationLatency { get; set; }
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        public FakeOfflineAvailabilityService(IEnumerable<FsArtifact> fsArtifacts, IEnumerable<FsArtifact> allFulaFsArtifacts, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakeOfflineAvailabilityService(IEnumerable<FsArtifact> fsArtifacts, IEnumerable<FsArtifact>? allFulaFsArtifacts = null, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             _FsArtifacts = fsArtifacts.ToList();
-            _AllFulaFsArtifacts = allFulaFsArtifacts.ToList();
-
-            ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
-            EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
-        }
-        public FakeOfflineAvailabilityService(IEnumerable<FsArtifact> fsArtifacts, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-        {
-            _FsArtifacts = fsArtifacts.ToList();
+            _AllFulaFsArtifacts = allFulaFsArtifacts?.ToList() ?? new List<FsArtifact>();
 
             ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
             EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
@@ -38,12 +30,22 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
 
         public async Task MakeAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             _FsArtifacts.Add(artifact);
         }
 
         public async Task RemoveAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
             var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
 
             if (artifact is null)
                 throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
@@ -53,6 +55,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
 
         public async Task<bool> IsAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
+            if (ActionLatency != null)
+            {
+                await Task.Delay(ActionLatency.Value);
+            }
+
             if (artifact.IsAvailableOffline == true)
                 return true;
 
