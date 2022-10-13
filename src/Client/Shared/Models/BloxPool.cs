@@ -1,18 +1,18 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Models
+﻿namespace Functionland.FxFiles.Client.Shared.Models;
+
+public class BloxPool
 {
-    public class BloxPool
+    public BloxPool(string id)
     {
-        public int? Id { get; set; }
-        public string? Name { get; set; }
-        public PoolType? PoolType { get; set; }
-        public DateTimeOffset? LastUpdate { get; set; }
-        public decimal? MonthlyRate { get; set; }
-        public decimal? CurrentUse { get; set; }
-        public long? PhotosUsed { get; set; }
-        public long? VideosUsed { get; set; }
-        public long? AudiosUsed { get; set; }
-        public long? DocsUsed { get; set; }
-        public long? OtherUsed { get; set; }
-        public List<KeyValuePair<string, string>> AdditinalInformation { get; set; } = new List<KeyValuePair<string, string>>();
+        Id = id;
     }
+
+    /// <summary>
+    /// It's a unique name
+    /// </summary>
+    public string Id { get; set; }
+
+    public List<KeyValuePair<string, string>>? PrimaryInfos { get; set; }
+
+    public List<KeyValuePair<string, KeyValuePair<string, string>>>? SecondaryInfos { get; set; }
 }

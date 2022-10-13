@@ -1,9 +1,8 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFulaBloxClient
 {
     Task<List<Blox>> GetBloxesAsync(string token, CancellationToken? cancellationToken = null);
-    Task<Blox> FillBloxStatsAsync(string token, string bloxId, CancellationToken? cancellationToken = null);
     Task<List<Blox>> GetBloxInvitationsAsync(string token, CancellationToken? cancellationToken = null);
     Task AcceptBloxInvitationAsync(string token, string bloxId, CancellationToken? cancellationToken = null);
     Task RejectBloxInvitationAsync(string token, string bloxId, CancellationToken? cancellationToken = null);

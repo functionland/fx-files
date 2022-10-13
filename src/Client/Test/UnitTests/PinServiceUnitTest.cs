@@ -29,7 +29,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
             var pinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
             var localdbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
-            var fileService = serviceProvider.GetRequiredService<IFileService>();
+            var fileService = serviceProvider.GetRequiredService<ILocalDeviceFileService>();
             await fileService.CreateFileAsync("E:\\Pic\\20170112_134108.jpg", GetSampleFileStream());
             await localdbService.InitAsync();
             await pinService.InitializeAsync();
@@ -110,7 +110,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var pinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
             var aggrigator = serviceProvider.GetRequiredService<IEventAggregator>();
             var localdbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
-            var fileService = serviceProvider.GetRequiredService<IFileService>();
+            var fileService = serviceProvider.GetRequiredService<ILocalDeviceFileService>();
 
             await localdbService.InitAsync();
             await pinService.InitializeAsync();

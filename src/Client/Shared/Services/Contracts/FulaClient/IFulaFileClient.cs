@@ -1,6 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 
-namespace Functionland.FxFiles.Client.Shared.Services.FulaClient.Contracts;
+namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFulaFileClient
 {
@@ -126,15 +126,7 @@ public interface IFulaFileClient
     /// <returns></returns>
     Task<FsArtifact> GetArtifactAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
 
-    /// <summary>
-    /// Set permission to user for access to an artifact with specific accessibility
-    /// </summary>
-    /// <param name="token"></param>
-    /// <param name="permissionInfos"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task SetPermissionArtifactsAsync(string token, IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null);
-   
+  
     /// <summary>
     /// Get all artifacts that I share.
     /// </summary>

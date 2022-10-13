@@ -28,7 +28,7 @@ namespace Functionland.FxFiles.Client.Shared.Services
                 {
                     CreateFolder("/images"),
                     CreateFolder("/docs"),
-                    CreateFile("/images/image summer.jpg"),
+                    CreateFile("/images/image summer[size:120mb][latency:100ms].jpg"),
                     CreateFile("/images/image germany.jpg"),
                     CreateFile("/docs/proposal v1-2.pdf"),
                 },
