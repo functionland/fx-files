@@ -438,7 +438,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     }
                 }
 
-                await Task.Delay(2000);
                 if (onProgress is not null && shouldProgress)
                 {
                     progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
