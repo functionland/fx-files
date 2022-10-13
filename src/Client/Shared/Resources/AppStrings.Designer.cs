@@ -313,6 +313,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copying files.
+        /// </summary>
+        public static string CopyFiles {
+            get {
+                return ResourceManager.GetString("CopyFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy here.
         /// </summary>
         public static string CopyHere {
@@ -381,6 +390,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string DeleteItemsDescription {
             get {
                 return ResourceManager.GetString("DeleteItemsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting files.
+        /// </summary>
+        public static string DeletingFiles {
+            get {
+                return ResourceManager.GetString("DeletingFiles", resourceCulture);
             }
         }
         
@@ -700,6 +718,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Moving files.
+        /// </summary>
+        public static string MovingFiles {
+            get {
+                return ResourceManager.GetString("MovingFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My Device.
         /// </summary>
         public static string MyDevice {
@@ -840,6 +867,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ReplaceOrSkipTitleModal {
             get {
                 return ResourceManager.GetString("ReplaceOrSkipTitleModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replacing files.
+        /// </summary>
+        public static string ReplacingFiles {
+            get {
+                return ResourceManager.GetString("ReplacingFiles", resourceCulture);
             }
         }
         
