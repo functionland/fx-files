@@ -7,7 +7,7 @@ public class FulaShareService : IFulaShareService
         throw new NotImplementedException();
     }
 
-    public Task<List<ArtifactUserPermission>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
+    public Task<List<ArtifactPermissionInfo>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
