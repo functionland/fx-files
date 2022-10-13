@@ -104,24 +104,32 @@ public partial class FileBrowser : IDisposable
             {
                 if (_progressModalRef is not null)
                 {
-                    await _progressModalRef.ShowAsync(ProgressMode.Infinite, "Copying files", true);
-                    ProgressBarCts = new CancellationTokenSource();
-
-                    await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
-                        , onProgress: async (progressInfo) =>
-                        {
-                            ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
-                            ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                            ProgressBarMax = progressInfo.MaxValue ?? 100;
-                            await InvokeAsync(() => StateHasChanged());
-                        },
-                        ProgressBarCts.Token);
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Copying files", true);
                 }
+                ProgressBarCts = new CancellationTokenSource();
+
+                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
+                    , onProgress: async (progressInfo) =>
+                    {
+                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                        await InvokeAsync(() => StateHasChanged());
+                    },
+                    ProgressBarCts.Token);
+
             }
             catch (CanNotOperateOnFilesException ex)
             {
                 existArtifacts = ex.FsArtifacts;
+            }
+            finally
+            {
+                if (_progressModalRef is not null)
+                {
+                    await _progressModalRef.CloseAsync();
+                }
             }
 
             if (_progressModalRef is not null)
@@ -137,12 +145,30 @@ public partial class FileBrowser : IDisposable
                 if (_confirmationReplaceOrSkipModalRef != null)
                 {
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
-                    ChangeDeviceBackFunctionality(_artifactExplorerMode);
 
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        await FileService.CopyArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
+                        ProgressBarCts = new CancellationTokenSource();
+
+                        if (_progressModalRef is not null)
+                        {
+                            await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Replacing files", true);
+
+                            await FileService.CopyArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true,
+                                onProgress: async (progressInfo) =>
+                                {
+                                    ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                                    ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                                    ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                                    ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                                    await InvokeAsync(() => StateHasChanged());
+                                },
+                                ProgressBarCts.Token);
+
+                            await _progressModalRef.CloseAsync();
+                        }
                     }
+                    ChangeDeviceBackFunctionality(_artifactExplorerMode);
                 }
             }
 
@@ -163,6 +189,13 @@ public partial class FileBrowser : IDisposable
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Error);
+        }
+        finally
+        {
+            if (_progressModalRef is not null)
+            {
+                await _progressModalRef.CloseAsync();
+            }
         }
     }
 
@@ -185,11 +218,34 @@ public partial class FileBrowser : IDisposable
 
             try
             {
-                await FileService.MoveArtifactsAsync(artifacts, destinationPath, false);
+                ProgressBarCts = new CancellationTokenSource();
+
+                if (_progressModalRef is not null)
+                {
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Moving files", true);
+                }
+
+                await FileService.MoveArtifactsAsync(artifacts, destinationPath, false,
+                    onProgress: async (progressInfo) =>
+                    {
+                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                        await InvokeAsync(() => StateHasChanged());
+                    },
+                    ProgressBarCts.Token);
             }
             catch (CanNotOperateOnFilesException ex)
             {
                 existArtifacts = ex.FsArtifacts;
+            }
+            finally
+            {
+                if (_progressModalRef is not null)
+                {
+                    await _progressModalRef.CloseAsync();
+                }
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
@@ -203,7 +259,22 @@ public partial class FileBrowser : IDisposable
 
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true);
+                        ProgressBarCts = new CancellationTokenSource();
+                        if (_progressModalRef is not null)
+                        {
+                            await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Replacing files", true);
+                        }
+
+                        await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true,
+                            onProgress: async (progressInfo) =>
+                            {
+                                ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                                await InvokeAsync(() => StateHasChanged());
+                            },
+                            ProgressBarCts.Token);
                     }
                 }
             }
@@ -226,6 +297,13 @@ public partial class FileBrowser : IDisposable
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.TheOpreationFailedMessage);
             _toastModalRef!.Show(title, message, FxToastType.Error);
+        }
+        finally
+        {
+            if (_progressModalRef is not null)
+            {
+                await _progressModalRef.CloseAsync();
+            }
         }
     }
 
@@ -330,10 +408,30 @@ public partial class FileBrowser : IDisposable
 
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
                 {
-                    _isLoading = true;
-                    await FileService.DeleteArtifactsAsync(artifacts);
-                    await UpdateRemovedArtifactsAsync(artifacts);
-                    _isLoading = false;
+                    ProgressBarCts = new CancellationTokenSource();
+                    if (_progressModalRef is not null)
+                    {
+                        await _progressModalRef.ShowAsync(ProgressMode.Progressive, "Deleting files", true);
+
+                        await FileService.DeleteArtifactsAsync(artifacts,
+                            onProgress: async (progressInfo) =>
+                            {
+                                ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                                var deletedArtifact = artifacts.FirstOrDefault(a => a.Name == ProgressBarCurrentText);
+                                if (deletedArtifact != null)
+                                {
+                                    await UpdateRemovedArtifactsAsync(deletedArtifact);
+                                }
+                                await InvokeAsync(() => StateHasChanged());
+                            },
+                            ProgressBarCts.Token);
+
+                        await _progressModalRef.CloseAsync();
+
+                    }
                 }
             }
         }
@@ -719,15 +817,15 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    private async Task UpdateRemovedArtifactsAsync(IEnumerable<FsArtifact> artifacts)
+    private async Task UpdateRemovedArtifactsAsync(FsArtifact artifact)
     {
-        if (artifacts.Count() == 1 && artifacts.SingleOrDefault()?.FullPath == _currentArtifact?.FullPath)
+        if (artifact.FullPath == _currentArtifact?.FullPath)
         {
             await HandleToolbarBackClick();
             return;
         }
-        _filteredArtifacts = _filteredArtifacts.Except(artifacts).ToList();
-        _allArtifacts = _filteredArtifacts;
+        _allArtifacts.Remove(artifact);
+        FilterArtifacts();
     }
 
     private async Task HandleCancelSearchAsync()

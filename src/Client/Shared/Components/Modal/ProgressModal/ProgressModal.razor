@@ -13,7 +13,7 @@
             {
                 <BitProgressIndicator BarHeight="4"
                                   Label="@CurrentText"
-                                  PercentComplete="@ProgressCurrentValue" />
+                                  PercentComplete="@(GetPrecentComplete())" />
             }
             else
             {
@@ -22,7 +22,7 @@
             }
             <div class="progress-dsc">
                 <p>@CurrentSubText</p>
-                <p>@(ProgressCurrentValue + "%")</p>
+                <p>@(GetPrecentComplete() + "%")</p>
             </div>
         </div>
 
