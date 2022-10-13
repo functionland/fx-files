@@ -246,5 +246,9 @@
   {
     "outputFile": "Pages/_Settings/SettingsImportFromAppPage/SettingsImportFromAppPage.razor.css",
     "inputFile": "Pages/_Settings/SettingsImportFromAppPage/SettingsImportFromAppPage.razor.scss"
+  },
+  {
+    "outputFile": "Pages/_Onboarding/UploadToFulaPage/UploadToFulaPage.razor.css",
+    "inputFile": "Pages/_Onboarding/UploadToFulaPage/UploadToFulaPage.razor.scss"
   }
 ]
