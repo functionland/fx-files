@@ -2,15 +2,14 @@
 
 public class Blox
 {
-    public Blox(string id, string name, string ownerName)
+    public Blox(string id, string name, string ownerDId)
     {
         Id = id;
         Name = name;
-        OwnerName = ownerName;
+        OwnerDId = ownerDId;
     }
 
     public string Id { get; set; }
     public string Name { get; set; }
-    public string OwnerName { get; set; }
-    public string? PoolId { get; set; }
+    public string OwnerDId { get; set; }
 }

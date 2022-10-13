@@ -130,7 +130,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         return false;
     }
 
-    public async Task<List<ArtifactUserPermission>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
+    public async Task<List<ArtifactPermissionInfo>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
         var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
         var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
@@ -140,13 +140,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
 
         var permissionedUsers = _SharedFsArtifacts?.Where(a => a.FullPath == path).ToList();
-        return permissionedUsers?
-            .Select(c =>
-                new ArtifactUserPermission(_FulaUsers.First(a => a.DId == c.DId))
-                {
-                    PermissionLevel = c.PermissionLevel
-                })
-            .ToList() ?? new List<ArtifactUserPermission>();
+        return permissionedUsers ?? new List<ArtifactPermissionInfo>();
     }
 
     public async Task SetPermissionArtifactsAsync(IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null)

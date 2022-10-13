@@ -68,7 +68,7 @@
 
             return true;
         }
-        public async IAsyncEnumerable<BloxPool> SearchPoolAsync(PoolSearchType filter, double? distance, CancellationToken? cancellationToken = null)
+        public async IAsyncEnumerable<BloxPool> SearchPoolAsync(CancellationToken? cancellationToken = null)
         {
             if (ActionLatency != null)
             {
@@ -76,25 +76,6 @@
             }
 
             var bloxPools = new List<BloxPool>();
-
-            if (filter == PoolSearchType.InMyCity)
-            {
-                for (int i = 0; i <= 2; i++)
-                {
-                    bloxPools.Add(_AllFulaBloxPools[i]);
-                }
-            }
-            else if (filter == PoolSearchType.InMyState)
-            {
-                for (int i = 0; i <= 6; i++)
-                {
-                    bloxPools.Add(_AllFulaBloxPools[i]);
-                }
-            }
-            else if (filter == PoolSearchType.WithinDistance || distance >= 50)
-            {
-                bloxPools = _AllFulaBloxPools;
-            }
 
             foreach (var bloxPool in bloxPools)
             {

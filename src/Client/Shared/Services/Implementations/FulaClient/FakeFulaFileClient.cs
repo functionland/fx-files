@@ -89,6 +89,11 @@ public class FakeFulaFileClient : IFulaFileClient
         throw new NotImplementedException();
     }
 
+    public Task UpdateFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task UploadFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
