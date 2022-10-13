@@ -8,7 +8,7 @@
         public TimeSpan? EnumerationLatency { get; set; }
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        public FakePoolService(IEnumerable<BloxPool> bloxPool, IEnumerable<BloxPool> allFulaBloxPools, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakePoolService(IEnumerable<BloxPool> bloxPools, IEnumerable<BloxPool> allFulaBloxPools, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
             _BloxPools.Clear();
             _AllFulaBloxPools.Clear();
@@ -16,9 +16,9 @@
             ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
             EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
 
-            foreach (var bloxPools in bloxPool)
+            foreach (var bloxPool in bloxPools)
             {
-                _BloxPools.Add(bloxPools);
+                _BloxPools.Add(bloxPool);
             }
             foreach (var allFulaBloxPool in allFulaBloxPools)
             {
