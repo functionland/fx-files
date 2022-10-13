@@ -36,13 +36,16 @@ public class FsArtifact
     public DateTimeOffset LastModifiedDateTime { get; set; }
     public string? WhoMadeLastEdit { get; set; }
     public List<FsArtifactActivity>? FsArtifactActivity { get; set; }
-    public List<ArtifactUserPermission>? PermissionedUsers { get; set; }
+    public List<ArtifactPermissionInfo>? PermissionedUsers { get; set; }
     public FulaUser? Owner { get; set; }
-    public bool? IsAvailableOffline { get; set; }
+    public ArtifactPermissionLevel ArtifactPermissionLevel { get; set; }
 
-    // For UI
+    public bool? IsAvailableOffline { get; set; }
     public bool? IsSharedWithMe { get; set; }
     public bool? IsSharedByMe { get; set; }
+
+    // For UI
+
     public bool? IsPinned { get; set; }
     public bool? IsDisabled { get; set; }
     public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);

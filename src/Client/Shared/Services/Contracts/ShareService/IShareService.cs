@@ -51,5 +51,5 @@ public interface IShareService
     /// <param name="path"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<ArtifactUserPermission>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null);
+    Task<List<ArtifactPermissionInfo>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null);
 }
