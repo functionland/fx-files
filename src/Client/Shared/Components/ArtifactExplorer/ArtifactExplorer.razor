@@ -4,24 +4,23 @@
 
 
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
-	@if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
-	{
-		<EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
-				   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-				   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsLoading)" />
-	}
-	else
-	{
-		@foreach (var artifact in Artifacts)
-		{
-			<div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "") "
-		 @onpointerup="(() => PointerUp(artifact))"
-		 @onpointerdown="(() =>PointerDown(artifact))"
-		 @onpointercancel="PointerCancel">
-				@if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-				{
-					<BitCheckbox @bind-Value="artifact.IsSelected" />
-				}
+    @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
+    {
+        <EmptyListView 
+            OnAddFolderButtonClick="OnAddFolderButtonClick"
+            Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
+            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsLoading)" />
+    }
+    @foreach (var artifact in Artifacts)
+    {
+        <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "") "
+         @onpointerup="(() => PointerUp(artifact))"
+         @onpointerdown="((e)=> PointerDown(e,artifact))"
+         @onpointercancel="PointerCancel">
+            @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
+            {
+                <BitCheckbox @bind-Value="artifact.IsSelected" />
+            }
 
 				@if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid)
 				{

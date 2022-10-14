@@ -56,27 +56,43 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return artifact is null ? true : false;
         }
 
-        public void PointerDown(FsArtifact artifact)
+        public async Task PointerDown(PointerEventArgs args, FsArtifact artifact)
         {
-            _timer = new(500);
-            _timer.Enabled = true;
-            _timer.Start();
-
-            _timer.Elapsed += async (sender, e) =>
+            if (args.Button == 0)
             {
-                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+                _timer = new(500);
+                _timer.Enabled = true;
+                _timer.Start();
+
+                _timer.Elapsed += async (sender, e) =>
                 {
+                    if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+                    {
+                        _timer.Enabled = false;
+                        _timer.Stop();
+                        ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+
+                        await InvokeAsync(() =>
+                        {
+                            ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                            StateHasChanged();
+                        });
+
+                        //await InvokeAsync(async () =>
+                        //{
+                        //    await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                        //    await OnSelectionChanged(artifact);
+                        //});
+                    }
+
                     _timer.Enabled = false;
                     _timer.Stop();
-                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-
-                    await InvokeAsync(async () =>
-                    {
-                        await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                        await OnSelectionChanged(artifact);
-                    });
-                }
-            };
+                };
+            }
+            else if (args.Button == 2 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                await HandleArtifactOptionsClick(artifact);
+            }
             StateHasChanged();
         }
 
