@@ -106,13 +106,13 @@ public partial class FileBrowser : IDisposable
                 }
                 ProgressBarCts = new CancellationTokenSource();
 
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
+                await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false
                     , onProgress: async (progressInfo) =>
                     {
                         ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                         ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
                         ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                         await InvokeAsync(() => StateHasChanged());
                     },
                     ProgressBarCts.Token);
@@ -158,7 +158,7 @@ public partial class FileBrowser : IDisposable
                                     ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                                     ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
                                     ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                                    ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                                    ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                                     await InvokeAsync(() => StateHasChanged());
                                 },
                                 ProgressBarCts.Token);
@@ -215,13 +215,13 @@ public partial class FileBrowser : IDisposable
                     await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.MovingFiles), true);
                 }
 
-                await FileService.MoveArtifactsAsync(artifacts, destinationPath, false,
+                await FileService.MoveArtifactsAsync(artifacts.ToArray(), destinationPath, false,
                     onProgress: async (progressInfo) =>
                     {
                         ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                         ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
                         ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                         await InvokeAsync(() => StateHasChanged());
                     },
                     ProgressBarCts.Token);
@@ -261,7 +261,7 @@ public partial class FileBrowser : IDisposable
                                 ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                                 ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
                                 ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                                 await InvokeAsync(() => StateHasChanged());
                             },
                             ProgressBarCts.Token);
@@ -391,13 +391,13 @@ public partial class FileBrowser : IDisposable
                     {
                         await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.DeletingFiles), true);
 
-                        await FileService.DeleteArtifactsAsync(artifacts,
+                        await FileService.DeleteArtifactsAsync(artifacts.ToArray(),
                             onProgress: async (progressInfo) =>
                             {
                                 ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                                 ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
                                 ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Length;
+                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                                 var deletedArtifact = artifacts.FirstOrDefault(a => a.Name == ProgressBarCurrentText);
                                 if (deletedArtifact != null)
                                 {
