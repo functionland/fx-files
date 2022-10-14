@@ -73,20 +73,22 @@ namespace Functionland.FxFiles.Client.Shared.Components
                         _timer.Stop();
                         ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
 
-                    await InvokeAsync(async () =>
-                    {
-                        await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                        artifact.IsSelected = true;
-                        await ArtifactsChanged.InvokeAsync(Artifacts);
-                        //await OnSelectionChanged(artifact);
-                    });
+                        await InvokeAsync(async () =>
+                        {
+                            await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                            artifact.IsSelected = true;
+                            await ArtifactsChanged.InvokeAsync(Artifacts);
+                            //await OnSelectionChanged(artifact);
+                        });
+                    };
                 };
-            }else if (args.Button == 2 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
-                {
-                    await HandleArtifactOptionsClick(artifact);
-                }
                 //StateHasChanged();
             }
+            else if (args.Button == 2 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                await HandleArtifactOptionsClick(artifact);
+            }
+        }
 
         public async Task PointerUp(FsArtifact artifact)
         {
