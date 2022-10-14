@@ -102,7 +102,7 @@
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        <ArtifactExplorer @bind-Artifacts="_filteredArtifacts"
+        <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactsOptionsClick="HandleOptionsArtifact"
