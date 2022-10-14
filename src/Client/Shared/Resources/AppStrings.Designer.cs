@@ -313,6 +313,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copying files.
+        /// </summary>
+        public static string CopyFiles {
+            get {
+                return ResourceManager.GetString("CopyFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy here.
         /// </summary>
         public static string CopyHere {
@@ -381,6 +390,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string DeleteItemsDescription {
             get {
                 return ResourceManager.GetString("DeleteItemsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting files.
+        /// </summary>
+        public static string DeletingFiles {
+            get {
+                return ResourceManager.GetString("DeletingFiles", resourceCulture);
             }
         }
         
@@ -565,6 +583,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import from apps.
+        /// </summary>
+        public static string ImportFromApps {
+            get {
+                return ResourceManager.GetString("ImportFromApps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Label.
         /// </summary>
         public static string InputLabel {
@@ -696,6 +723,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string MoveHere {
             get {
                 return ResourceManager.GetString("MoveHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moving files.
+        /// </summary>
+        public static string MovingFiles {
+            get {
+                return ResourceManager.GetString("MovingFiles", resourceCulture);
             }
         }
         
@@ -840,6 +876,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ReplaceOrSkipTitleModal {
             get {
                 return ResourceManager.GetString("ReplaceOrSkipTitleModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replacing files.
+        /// </summary>
+        public static string ReplacingFiles {
+            get {
+                return ResourceManager.GetString("ReplacingFiles", resourceCulture);
             }
         }
         
