@@ -68,3 +68,9 @@ h6 {
 p {
     margin: 0;
 }
+
+input[type=checkbox] {
+    scale: 1.6;
+    pointer-events: none;
+    accent-color: $green-dark-base;
+}

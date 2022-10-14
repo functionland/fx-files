@@ -12,17 +12,21 @@
     }
     else
     {
-        @foreach (var artifact in Artifacts)
+        @foreach (var a in Artifacts)
         {
+            var artifact = a;
+
             <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-         @onpointerup="(() => PointerUp(artifact))"
-         @onpointerdown="((e) =>PointerDown(e, artifact))"
-         @onpointercancel="PointerCancel">
-                <div>ss: @artifact.IsSelected</div>
+                 @onpointerup="(() => PointerUp(artifact))"
+                 @onpointerdown="((e) =>PointerDown(e, artifact))"
+                 @onpointercancel="PointerCancel">
+
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
                 {
-                    <BitCheckbox @bind-Value="artifact.IsSelected" OnClick="@(() => artifact.IsSelected = !artifact.IsSelected)" />
-                    //<input type="checkbox" @bind="@artifact.IsSelected" @onclick="@(() => artifact.IsSelected = !artifact.IsSelected)"/>
+                    <input class="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "" : "disable-item")"
+                    @onclick="@(() => artifact.IsSelected = !artifact.IsSelected)"
+                    @bind="@artifact.IsSelected" 
+                    type="checkbox" />
                 }
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid)
@@ -31,7 +35,6 @@
                 }
 
                 <div class="item-content">
-
                     <div class="item-title">
                         @if (artifact.IsPinned == true)
                         {
@@ -41,14 +44,15 @@
                     </div>
                     <div class="item-sub-text"></div>
                 </div>
+
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
                 {
                     <div class="options-btn"
-             @onclick="() => HandleArtifactOptionsClick(artifact)"
-             @onpointerup:preventDefault="true"
-             @onpointerup:stopPropagation="true"
-             @onpointerdown:preventDefault="true"
-             @onpointerdown:stopPropagation="true">
+                     @onclick="() => HandleArtifactOptionsClick(artifact)"
+                     @onpointerup:preventDefault="true"
+                     @onpointerup:stopPropagation="true"
+                     @onpointerdown:preventDefault="true"
+                     @onpointerdown:stopPropagation="true">
                     </div>
                 }
             </div>
