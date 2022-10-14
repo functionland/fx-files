@@ -2,7 +2,7 @@
 
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
-    public partial class MyDevice
+    public partial class MyDevicePage
     {
         private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
