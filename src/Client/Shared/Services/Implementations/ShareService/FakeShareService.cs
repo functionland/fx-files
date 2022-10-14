@@ -139,7 +139,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
             if (sharedItem == null)
             {
                 if (permissionInfo.PermissionLevel == ArtifactPermissionLevel.None)
-                    throw new Exception(""); //TODO: correct exception
+                    throw new HasNotBeenSharedException(StringLocalizer.GetString(AppStrings.HasNotBeenSharedException));
 
                 sharedItem = new ArtifactPermissionInfo
                 {
