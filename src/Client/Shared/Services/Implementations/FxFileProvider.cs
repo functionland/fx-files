@@ -22,10 +22,15 @@ public class FxFileProvider : IFileProvider
 
     public IFileInfo GetFileInfo(string subpath)
     {
-        if (subpath.StartsWith("fula://"))
+
+        if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/fula://"))
+        {
             return new FulaFileInfo(PreparePath(subpath));
-        else if (subpath.StartsWith("storage://"))
+        }
+        else if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/storage://"))
+        {
             return new StorageFileInfo(PreparePath(subpath));
+        }
 
         return _fileProvider.GetFileInfo(subpath);
     }
@@ -37,6 +42,7 @@ public class FxFileProvider : IFileProvider
 
     private string PreparePath(string path)
     {
+        path = path.Replace("_content/Functionland.FxFiles.Client.Shared/", string.Empty);
         path = path.Replace("fula://", string.Empty);
         path = path.Replace("storage://", string.Empty);
         path = WebUtility.UrlDecode(path);

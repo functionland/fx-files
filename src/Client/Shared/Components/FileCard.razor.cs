@@ -42,7 +42,7 @@
         {
             if(path != null)
             {
-                var resultPath = "_content/Functionland.FxFiles.Client.Shared/" + path + ".HandleByApp=true";
+                var resultPath = "_content/Functionland.FxFiles.Client.Shared/storage://" + path;
                 return resultPath;
             }
 
