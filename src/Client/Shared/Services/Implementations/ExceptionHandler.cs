@@ -12,8 +12,6 @@ public partial class ExceptionHandler : IExceptionHandler
 
     public void Handle(Exception exception, IDictionary<string, object?>? parameters = null)
     {
-        Crashes.TrackError(exception);
-
 #if DEBUG
         var title = _localizer.GetString(AppStrings.ToastErrorTitle);
         var message = (exception as KnownException)?.Message ?? exception.ToString(); ;
@@ -29,6 +27,7 @@ public partial class ExceptionHandler : IExceptionHandler
         }
         else
         {
+            Crashes.TrackError(exception);
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
             var message = _localizer.GetString(AppStrings.TheOpreationFailedMessage);
             ToastModal.Show(title, message, FxToastType.Error);
