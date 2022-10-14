@@ -40,13 +40,13 @@ public partial class FakeBloxServiceFactory
     {
         var bloxs = new List<Blox>();
         var invitedBloxs = new FakeBloxService(
+            bloxs,
             new List<Blox>
             {
                 CreateBlox("Fifth one", "Fifth Blox", "The long number of characters in the OwnerDId should be handled"),
                 CreateBlox("Second Blox", "Second Blox","Second Blox OwnerDId"),
                 CreateBlox("The long number of characters in the blox id should be handled", "Third Blox","Third Blox OwnerDId")
             },
-            bloxs,
             actionLatency,
             enumerationLatency);
 
