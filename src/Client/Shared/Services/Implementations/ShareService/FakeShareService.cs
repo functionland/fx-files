@@ -1,18 +1,53 @@
 ﻿using Functionland.FxFiles.Client.Shared.Extensions;
-using Microsoft.Extensions.Localization;
-using System.IO;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 {
-    private readonly List<FulaUser>? _FulaUsers;
-    private readonly List<FsArtifact>? _AllFsArtifacts;
-    private readonly List<ArtifactPermissionInfo>? _SharedFsArtifacts;
+    private readonly List<ArtifactPermissionInfo> _sharedByMeArtifactPermissionInfos = new();
+    private readonly List<ArtifactPermissionInfo> _sharedWithMeArtifactPermissionInfos = new();
+    public IFulaFileService FulaFileService { get; set; }
     public TimeSpan? ActionLatency { get; set; }
     public TimeSpan? EnumerationLatency { get; set; }
     public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
+    public FakeShareService(IFulaFileService FulaFileService,
+                            IEnumerable<ArtifactPermissionInfo>? sharedByMeArtifactPermissionInfos = null,
+                            IEnumerable<ArtifactPermissionInfo>? sharedWithMeArtifactPermissionInfos = null,
+                            TimeSpan? actionLatency = null,
+                            TimeSpan? enumerationLatency = null)
+    {
+        this.FulaFileService = FulaFileService;
+        _sharedByMeArtifactPermissionInfos.Clear();
+        _sharedWithMeArtifactPermissionInfos.Clear();
+
+        ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
+        EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
+
+        if (sharedByMeArtifactPermissionInfos is not null)
+        {
+            foreach (var sharedByMeArtifact in sharedByMeArtifactPermissionInfos)
+            {
+                _sharedByMeArtifactPermissionInfos.Add(sharedByMeArtifact);
+            }
+        }
+        else
+        {
+            _sharedByMeArtifactPermissionInfos = new List<ArtifactPermissionInfo>();
+        }
+
+        if (sharedWithMeArtifactPermissionInfos is not null)
+        {
+            foreach (var sharedWithMeArtifact in sharedWithMeArtifactPermissionInfos)
+            {
+                _sharedWithMeArtifactPermissionInfos.Add(sharedWithMeArtifact);
+            }
+        }
+        else
+        {
+            _sharedWithMeArtifactPermissionInfos = new List<ArtifactPermissionInfo>();
+        }
+    }
     public Task InitAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
@@ -23,108 +58,52 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
         throw new NotImplementedException();
     }
 
-    //public Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //private void ShareArtifact(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
-    //{
-    //    var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
-    //    if (artifact is null)
-    //        throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
-
-    //    foreach (var did in dids)
-    //    {
-
-    //    }
-    //}
-    //public async Task RevokeShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
-    //{
-    //    var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
-    //    var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == artifactFullPath);
-    //    var sharedFsArtifact = _SharedFsArtifacts?.FirstOrDefault(a => a.FullPath == artifactFullPath);
-
-    //    if (artifact is null)
-    //        throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
-
-    //    if (sharedFsArtifact is null)
-    //        throw new Exception();//TODO
-
-    //    foreach (var did in dids)
-    //    {
-    //        var artifactPermissionInfo = new ArtifactPermissionInfo()
-    //        {
-    //            FullPath = artifactFullPath,
-    //            DId = did,
-    //            PermissionLevel = ArtifactPermissionLevel.None
-    //        };
-
-    //        _SharedFsArtifacts?.Remove(artifactPermissionInfo);
-    //    }
-
-    //    var sharesArtifacts = await GetArtifactSharesAsync(artifactFullPath, cancellationToken);
-
-
-    //}
-
-    //public async Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
-    //{
-    //    foreach (var artifactFullPath in artifactFullPaths)
-    //    {
-    //        await RevokeShareArtifactAsync(dids, artifactFullPath, cancellationToken);
-    //    }
-    //}
-
-
     public async IAsyncEnumerable<FsArtifact> GetSharedByMeArtifactsAsync(CancellationToken? cancellationToken = null)
     {
-        var SharedByMeArtifacts = new List<FsArtifact>();
+        if (_sharedByMeArtifactPermissionInfos is null || !_sharedByMeArtifactPermissionInfos.Any()) yield break;
 
-        if (_AllFsArtifacts is null) yield break;
-
-        foreach (var artifact in _AllFsArtifacts)
+        foreach (var artifactPermissionInfo in _sharedByMeArtifactPermissionInfos)
         {
-            if (artifact.IsSharedByMe == true)
+            if (EnumerationLatency is not null)
             {
-                SharedByMeArtifacts.Add(artifact);
+                await Task.Delay(EnumerationLatency.Value);
             }
 
-            yield return artifact;
+            var fsArtifacts = FulaFileService.GetArtifactAsync(artifactPermissionInfo.FullPath).GetAwaiter().GetResult();
+
+            yield return fsArtifacts;
+
         }
     }
 
     public async IAsyncEnumerable<FsArtifact> GetSharedWithMeArtifactsAsync(CancellationToken? cancellationToken = null)
     {
-        var SharedWithMeArtifacts = new List<FsArtifact>();
+        if (_sharedWithMeArtifactPermissionInfos is null || !_sharedByMeArtifactPermissionInfos.Any()) yield break;
 
-        if (_AllFsArtifacts is null) yield break;
-
-        foreach (var artifact in _AllFsArtifacts)
+        foreach (var artifactPermissionInfo in _sharedWithMeArtifactPermissionInfos)
         {
-            if (artifact.IsSharedWithMe == true)
+            if (EnumerationLatency is not null)
             {
-                SharedWithMeArtifacts.Add(artifact);
+                await Task.Delay(EnumerationLatency.Value);
             }
 
-            yield return artifact;
+            var fsArtifacts = FulaFileService.GetArtifactAsync(artifactPermissionInfo.FullPath).GetAwaiter().GetResult();
+
+            yield return fsArtifacts;
+
         }
     }
 
     public async Task<bool> IsSahredByMeAsync(string path, CancellationToken? cancellationToken = null)
     {
-        var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
-        var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
+        if (ActionLatency != null)
+        {
+            await Task.Delay(ActionLatency.Value);
+        }
 
-        if (artifact is null)
-            throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
+        var artifact = _sharedByMeArtifactPermissionInfos?.FirstOrDefault(a => a.FullPath == path);
 
-        if (artifact.IsSharedByMe == true)
+        if (artifact is not null)
             return true;
 
         return false;
@@ -132,14 +111,19 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
     public async Task<List<ArtifactPermissionInfo>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
+        if (ActionLatency != null)
+        {
+            await Task.Delay(ActionLatency.Value);
+        }
+
         var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
-        var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
+        var artifact = FulaFileService.GetArtifactsAsync(path);
 
         if (artifact is null)
-            throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));
+            throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, lowerCaseArtifact));
 
 
-        var permissionedUsers = _SharedFsArtifacts?.Where(a => a.FullPath == path).ToList();
+        var permissionedUsers = _sharedByMeArtifactPermissionInfos?.Where(a => a.FullPath == path).ToList();
         return permissionedUsers ?? new List<ArtifactPermissionInfo>();
     }
 
@@ -148,7 +132,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
         foreach (var permissionInfo in permissionInfos)
         {
-            var sharedItem = _SharedFsArtifacts
+            var sharedItem = _sharedByMeArtifactPermissionInfos?
                 .Where(c => c.FullPath == permissionInfo.FullPath && c.DId == permissionInfo.DId)
                 .FirstOrDefault();
 
@@ -164,13 +148,13 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
                     PermissionLevel = permissionInfo.PermissionLevel
                 };
 
-                _SharedFsArtifacts.Add(sharedItem);
+                _sharedByMeArtifactPermissionInfos?.Add(sharedItem);
             }
             else
             {
                 if (permissionInfo.PermissionLevel == ArtifactPermissionLevel.None)
                 {
-                    _SharedFsArtifacts.Remove(sharedItem);
+                    _sharedByMeArtifactPermissionInfos?.Remove(sharedItem);
                 }
                 else
                 {
@@ -178,7 +162,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
                 }
             }
 
-            var artifact = _AllFsArtifacts.Where(c => c.FullPath == permissionInfo.FullPath).First();
+            var artifact = FulaFileService.GetArtifactAsync(permissionInfo.FullPath).GetAwaiter().GetResult();
 
             artifact.PermissionedUsers = await GetArtifactSharesAsync(permissionInfo.FullPath, cancellationToken);
         }
