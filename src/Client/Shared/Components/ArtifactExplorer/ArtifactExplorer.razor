@@ -18,9 +18,11 @@
 		 @onpointerup="(() => PointerUp(artifact))"
 		 @onpointerdown="(() =>PointerDown(artifact))"
 		 @onpointercancel="PointerCancel">
+		 <div>ss: @artifact.IsSelected</div>
 				@if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
 				{
-					<BitCheckbox @bind-Value="artifact.IsSelected" />
+					<BitCheckbox @bind-Value="artifact.IsSelected" OnClick="@(() => artifact.IsSelected = !artifact.IsSelected)"/>
+						//<input type="checkbox" @bind="@artifact.IsSelected" @onclick="@(() => artifact.IsSelected = !artifact.IsSelected)"/>
 				}
 
 				@if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid)

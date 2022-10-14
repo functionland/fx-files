@@ -10,7 +10,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-        [Parameter] public IEnumerable<FsArtifact> Artifacts { get; set; } = default!;
+        [Parameter] public List<FsArtifact> Artifacts { get; set; } = default!;
+        [Parameter] public EventCallback<List<FsArtifact>> ArtifactsChanged { get; set; }
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
         [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
         [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
@@ -37,14 +38,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
             await OnArtifactsOptionsClick.InvokeAsync(artifact);
         }
 
-        protected override Task OnParamsSetAsync()
-        {
-            if (Artifacts is null)
-            {
-                Artifacts = Array.Empty<FsArtifact>();
-            }
-            return base.OnParamsSetAsync();
-        }
+        //protected override Task OnParamsSetAsync()
+        //{
+        //    if (Artifacts is null)
+        //    {
+        //        Artifacts = Array.Empty<FsArtifact>();
+        //    }
+        //    return base.OnParamsSetAsync();
+        //}
 
         private async Task HandleArtifactClick(FsArtifact artifact)
         {
@@ -73,11 +74,13 @@ namespace Functionland.FxFiles.Client.Shared.Components
                     await InvokeAsync(async () =>
                     {
                         await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                        await OnSelectionChanged(artifact);
+                        artifact.IsSelected = true;
+                        await ArtifactsChanged.InvokeAsync(Artifacts);
+                        //await OnSelectionChanged(artifact);
                     });
                 }
             };
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         public async Task PointerUp(FsArtifact artifact)
@@ -108,22 +111,22 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
-        public async Task OnSelectionChanged(FsArtifact artifact)
-        {
-            if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
-            {
-                artifact.IsSelected = false;
-                SelectedArtifacts.Remove(artifact);
-            }
-            else
-            {
-                artifact.IsSelected = true;
-                SelectedArtifacts.Add(artifact);
-            }
+        //public async Task OnSelectionChanged(FsArtifact artifact)
+        //{
+        //    if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+        //    {
+        //        artifact.IsSelected = false;
+        //        SelectedArtifacts.Remove(artifact);
+        //    }
+        //    else
+        //    {
+        //        artifact.IsSelected = true;
+        //        SelectedArtifacts.Add(artifact);
+        //    }
 
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            StateHasChanged();
-        }
+        //    await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+        //    StateHasChanged();
+        //}
 
         public void OnCreateFolder()
         {
