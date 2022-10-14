@@ -25,6 +25,8 @@
         }
         public FakeOfflineAvailabilityService CreateOfflineAvailabilityFsArtifacts(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
+            var fsArtifacts = new List<FsArtifact>();
+
             return new FakeOfflineAvailabilityService(
                 new List<FsArtifact>
                 {
@@ -37,11 +39,14 @@
                     CreateFile("/Docs/File.txt", true),
                     CreateFile("/Docs/proposal.pdf", true),
                 },
+                fsArtifacts,
                 actionLatency,
                 enumerationLatency);
         }
         public FakeOfflineAvailabilityService CreateOnlineAvailabilityFsArtifacts(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
         {
+            var fsArtifacts = new List<FsArtifact>();
+
             return new FakeOfflineAvailabilityService(
                 new List<FsArtifact>
                 {
@@ -52,6 +57,7 @@
                     CreateFile("/MyPicture/Uni/image1"),
                     CreateFile("/MyPicture/Uni/image2"),
                 },
+                fsArtifacts,
                 actionLatency,
                 enumerationLatency);
         }

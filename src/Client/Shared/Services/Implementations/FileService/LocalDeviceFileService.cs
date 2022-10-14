@@ -1,5 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
+using Functionland.FxFiles.Client.Shared.Models;
+
 using System.IO;
 using System.Text;
 
@@ -17,7 +19,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, onProgress, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, ignoredList, onProgress, true, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -105,33 +107,23 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
-            var progressCount = 0;
+            int? progressCount = null;
 
             foreach (var artifact in artifacts)
             {
+                if (onProgress is not null && progressCount == null)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
+
                 if (cancellationToken?.IsCancellationRequested == true)
                     break;
 
                 DeleteArtifactAsync(artifact);
 
-                progressCount++;
                 if (onProgress is not null)
                 {
-                    int? totalCount = null;
-                    var subText = progressCount.ToString();
-                    if (artifacts is IList<FsArtifact> list)
-                    {
-                        totalCount = list.Count;
-                        subText += $" / {totalCount}";
-                    }
-
-                    onProgress(new ProgressInfo
-                    {
-                        CurrentText = artifact.Name,
-                        CurrentSubText = subText,
-                        CurrentValue = progressCount,
-                        MaxValue = totalCount
-                    });
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
                 }
             }
         }
@@ -248,7 +240,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, onProgress, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, ignoredList, onProgress, true, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -340,12 +332,25 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(IEnumerable<FsArtifact> artifacts, string destination, bool mustDeleteSource = false, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        private async Task<List<FsArtifact>> CopyAllAsync(
+            IEnumerable<FsArtifact> artifacts,
+            string destination,
+            bool mustDeleteSource = false,
+            bool overwrite = false,
+            List<FsArtifact>? ignoredList = null,
+            Action<ProgressInfo>? onProgress = null,
+            bool shouldProgress = true,
+            CancellationToken? cancellationToken = null)
         {
-            var ignoredList = new List<FsArtifact>();
-            var progressCount = 0;
+            int? progressCount = null;
+
             foreach (var artifact in artifacts)
             {
+                if (onProgress is not null && shouldProgress && progressCount == null)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
+
                 if (cancellationToken?.IsCancellationRequested == true) break;
 
                 if (artifact.ArtifactType == FsArtifactType.File)
@@ -424,34 +429,18 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName, mustDeleteSource, overwrite, onProgress, cancellationToken);
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName,
+                        mustDeleteSource, overwrite, ignoredList, onProgress, false, cancellationToken);
 
                     if (!childIgnoredList.Any() && mustDeleteSource)
                     {
                         DeleteArtifactAsync(artifact, cancellationToken);
                     }
-
-                    ignoredList.AddRange(childIgnoredList);
                 }
 
-                progressCount++;
-                if (onProgress is not null)
+                if (onProgress is not null && shouldProgress)
                 {
-                    int? totalCount = null;
-                    var subText = progressCount.ToString();
-                    if (artifacts is IList<FsArtifact> list)
-                    {
-                        totalCount = list.Count;
-                        subText += $" / {totalCount}";
-                    }
-
-                    onProgress(new ProgressInfo
-                    {
-                        CurrentText = artifact.Name,
-                        CurrentSubText = subText,
-                        CurrentValue = progressCount,
-                        MaxValue = totalCount
-                    });
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
                 }
             }
 
@@ -467,7 +456,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
             var drives = await GetDrivesAsync();
-            if (drives.Any(drive=> drive.FullPath == path))
+            if (drives.Any(drive => drive.FullPath == path))
             {
                 return FsArtifactType.Drive;
             }
@@ -742,6 +731,30 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
         {
             throw new NotImplementedException();
+        }
+
+        private int HandleProgressBar(string artifactName, int totalCount, int? progressCount, Action<ProgressInfo> onProgress)
+        {
+            if (progressCount != null)
+            {
+                progressCount++;
+            }
+            else
+            {
+                progressCount = 0;
+            }
+
+            var subText = $"{progressCount} of {totalCount}";
+            
+            onProgress(new ProgressInfo
+            {
+                CurrentText = artifactName,
+                CurrentSubText = subText,
+                CurrentValue = progressCount,
+                MaxValue = totalCount
+            });
+
+            return progressCount.Value;
         }
     }
 }
