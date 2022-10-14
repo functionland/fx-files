@@ -57,30 +57,37 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return artifact is null ? true : false;
         }
 
-        public void PointerDown()
+        public async Task PointerDown(PointerEventArgs args, FsArtifact artifact)
         {
-            _timer = new(500);
-            _timer.Enabled = true;
-            _timer.Start();
-
-            _timer.Elapsed += async (sender, e) =>
+            if (args.Button == 0)
             {
-                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+                _timer = new(500);
+                _timer.Enabled = true;
+                _timer.Start();
+
+                _timer.Elapsed += async (sender, e) =>
                 {
-                    IsSelected = false;
-                    SelectedArtifacts = Array.Empty<FsArtifact>();
-                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-
-                    await InvokeAsync(() =>
+                    if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                     {
-                        ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                        StateHasChanged();
-                    });
-                }
+                        IsSelected = false;
+                        SelectedArtifacts = Array.Empty<FsArtifact>();
+                        ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
 
-                _timer.Enabled = false;
-                _timer.Stop();
-            };
+                        await InvokeAsync(() =>
+                        {
+                            ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                            StateHasChanged();
+                        });
+                    }
+
+                    _timer.Enabled = false;
+                    _timer.Stop();
+                };
+            }
+            else if (args.Button == 2 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                await HandleArtifactOptionsClick(artifact);
+            }
 
         }
 
