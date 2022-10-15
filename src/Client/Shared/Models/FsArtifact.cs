@@ -46,6 +46,9 @@ public class FsArtifact
     public bool? IsSharedWithMe { get; set; }
     public bool? IsSharedByMe { get; set; }
 
+    public ArtifactUploadStatus ArtifactUploadStatus { get; set; }
+    public string? UserToken { get; set; }
+
     // For UI
 
     public bool? IsPinned { get; set; }
