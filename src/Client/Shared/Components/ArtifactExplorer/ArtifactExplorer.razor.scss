@@ -52,7 +52,6 @@
 
     .item-icon-position {
         font-size: $icon-24;
-        margin-right: 1px;
     }
 }
 
@@ -199,6 +198,7 @@
         color: color(gray-border);
     }
 }
+
 .selected-item {
     background-color: color(gray-bg-primary);
 }
@@ -317,4 +317,35 @@
         bottom: 95px;
         right: calc(#{$a} - #{$b});
     }
+}
+
+.checkbox {
+    margin-right: 4px;
+    border: $border-size-1 solid;
+    border-radius: $border-radius-4;
+    background-color: color(app-bg);
+    border-color: color(gray-border);
+    height: 20px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-checked {
+    border-color: none;
+    background-color: $green-dark-base;
+    border: none;
+    &::before {
+        @include Icon($select-filled, #fff, $Icons-Filled);
+        font-size: $font-size-16;
+    }
+}
+
+.checkbox-display-none{
+    display:none;
+}
+
+::deep .icon-space-in-desktop {
+    margin-right: $spacing-16 !important;
 }

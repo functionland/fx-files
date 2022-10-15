@@ -3,6 +3,6 @@
     public class ArtifactActionResult
     {
         public ArtifactActionType ActionType { get; set; }
-        public FsArtifact[]? Artifacts { get; set; }
+        public List<FsArtifact>? Artifacts { get; set; }
     }
 }
