@@ -2,7 +2,7 @@
 
 @inherits AppComponentBase;
 
-<div class="@(IsChecked ? "checkbox-checked" : "") @(IsEnable ? "" : "checkbox-disable") @(IsChecked && !IsEnable ? "checkbox-checked-disable" : "") checkbox">
+<div class="@(IsChecked ? "checkbox-checked" : string.Empty) @(IsEnable ? string.Empty : "checkbox-disable") @(IsChecked && !IsEnable ? "checkbox-checked-disable" : string.Empty) checkbox @(Class)">
 </div>
 <input class="checkbox-display-none"
        @onclick="@(() => OnChange())"

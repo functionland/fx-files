@@ -21,9 +21,9 @@
                  @onpointerdown="((e) =>PointerDown(e, artifact))"
                  @onpointercancel="PointerCancel">
 
-                @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone)
                 {
-                    <FxCheckBox IsChecked="@artifact.IsSelected" />
+                    <FxCheckBox IsChecked="@artifact.IsSelected" Class="icon-space-in-desktop" />
                 }
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid)

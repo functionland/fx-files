@@ -11,6 +11,9 @@
         [Parameter]
         public bool IsEnable { get; set; } = true;
 
+        [Parameter]
+        public string Class { get; set; } = string.Empty;
+
         private void OnChange()
         {
             IsChecked = !IsChecked;
