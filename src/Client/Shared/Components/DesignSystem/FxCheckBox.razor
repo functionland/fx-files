@@ -2,4 +2,9 @@
 
 @inherits AppComponentBase;
 
-<h3>FxCheckBox</h3>
+<div class="@(IsChecked ? "checkbox-checked" : "") @(IsEnable ? "" : "checkbox-disable") @(IsChecked && !IsEnable ? "checkbox-checked-disable" : "") checkbox">
+</div>
+<input class="checkbox-display-none"
+       @onclick="@(() => OnChange())"
+       @bind="@IsChecked"
+       type="checkbox" />

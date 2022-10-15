@@ -192,6 +192,7 @@
         color: color(gray-border);
     }
 }
+
 .selected-item {
     background-color: color(gray-bg-primary);
 }
@@ -310,4 +311,91 @@
         bottom: 95px;
         right: calc(#{$a} - #{$b});
     }
+}
+
+.checkbox {
+    margin: 0 .5px;
+    border: $border-size-1 solid;
+    border-radius: $border-radius-4;
+    background-color: color(app-bg);
+    border-color: color(gray-border);
+    height: 20px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-checked {
+    border-color: none;
+    background-color: $green-dark-base;
+    border: none;
+    &::before {
+        @include Icon($select-filled, #fff, $Icons-Filled);
+        font-size: $font-size-16;
+    }
+}
+
+.checkbox-display-none{
+    display:none;
+}
+
+::deep .bit-chb-checked-fluent .bit-chb-checkbox {
+    background: $green-dark-base;
+    border: none;
+}
+
+::deep .bit-chb-checked-disabled-fluent .bit-chb-checkmark {
+    background: $green-dark-border;
+    color: $gray-dark-border;
+    border: none;
+}
+
+::deep .bit-chb-disabled-fluent .bit-chb-checkbox {
+    background: color(gray-bg-secondary);
+    color: color(gray-bg-secondary);
+}
+
+::deep .bit-chb-disabled-fluent .bit-chb-checkmark {
+    background: color(gray-bg-secondary);
+    color: color(gray-bg-secondary);
+}
+
+::deep .bit-chb-indeterminate-fluent .bit-chb-checkmark {
+    opacity: 1;
+    display: inline-block;
+    width: $line-height-10;
+    height: $border-size-2;
+    background-color: $pure-white;
+    border-radius: $border-size-1;
+}
+
+::deep .bit-chb-fluent .bit-chb-checkmark {
+    font-size: 17px;
+}
+
+::deep .bit-chb-enabled-unchecked-fluent div button {
+    background: $gray-dark-border;
+    border: none;
+}
+
+::deep .bit-chb-disabled-checked-fluent div button {
+    background: $green-dark-border;
+    border: none;
+}
+
+::deep .bit-chb-disabled-checked-fluent div button span {
+    background-color: $gray-dark-border;
+}
+
+::deep .bit-chb-enabled-unchecked-fluent div button span {
+    background-color: $gray-dark-content1;
+}
+
+::deep .bit-chb-disabled-unchecked-fluent div button span {
+    background-color: $gray-dark-border;
+}
+
+::deep .bit-icon--Accept:before {
+    @include Icon($select-filled, #fff, $Icons-Filled);
 }
