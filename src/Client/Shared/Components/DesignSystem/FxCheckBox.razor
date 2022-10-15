@@ -4,7 +4,17 @@
 
 <div class="@(IsChecked ? "checkbox-checked" : string.Empty) @(IsEnable ? string.Empty : "checkbox-disable") @(IsChecked && !IsEnable ? "checkbox-checked-disable" : string.Empty) checkbox @(Class)">
 </div>
-<input class="checkbox-display-none"
-       @onclick="@(() => OnChange())"
+@if (!OnClick.HasDelegate)
+{
+    <input class="checkbox-display-none"
+       @onclick="OnChange"
        @bind="@IsChecked"
        type="checkbox" />
+}
+else
+{
+<input class="checkbox-display-none"
+       @onclick="OnClick"
+       @bind="@IsChecked"
+       type="checkbox" />
+}

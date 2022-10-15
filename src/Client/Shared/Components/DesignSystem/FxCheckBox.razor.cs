@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Microsoft.AspNetCore.Components.Web;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class FxCheckBox
     {
@@ -13,6 +15,9 @@
 
         [Parameter]
         public string Class { get; set; } = string.Empty;
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         private void OnChange()
         {

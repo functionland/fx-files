@@ -23,10 +23,12 @@
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone)
                 {
-                    <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                    <div @onpointerup:stopPropagation="true" @onclick:preventDefault="true">
+                        <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                    </div>
                 }
 
-                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid)
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid || !IsPhone)
                 {
                     <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
                 }

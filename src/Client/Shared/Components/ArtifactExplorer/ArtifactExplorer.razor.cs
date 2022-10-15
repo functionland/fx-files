@@ -17,7 +17,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
-        [Parameter] public EventCallback<bool> IsSelectedChanged { get; set; }
         [Parameter] public List<FsArtifact> SelectedArtifacts { get; set; } = new();
         [Parameter] public EventCallback<List<FsArtifact>> SelectedArtifactsChanged { get; set; }
         [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
