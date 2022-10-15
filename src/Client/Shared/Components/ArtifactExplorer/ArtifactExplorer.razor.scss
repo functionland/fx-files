@@ -340,6 +340,6 @@
     display:none;
 }
 
-.checkbox .icon-space-in-desktop {
-    margin-right: $spacing-16;
+::deep .icon-space-in-desktop {
+    margin-right: $spacing-16 !important;
 }
