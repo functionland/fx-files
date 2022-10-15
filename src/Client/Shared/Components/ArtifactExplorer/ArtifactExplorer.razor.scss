@@ -84,7 +84,7 @@
             text-overflow: ellipsis;
             font-size: $font-size-16;
             color: color(gray-content1);
-            line-height: $line-height-28;
+            line-height: $line-height-20;
             font-family: $open-sans-regular;
             letter-spacing: $letter-spacing-02;
         }
@@ -169,6 +169,7 @@
             flex-flow: row nowrap;
             justify-content: center;
             max-width: 160px;
+            margin-bottom: 2px;
         }
 
         .item-sub-text {
