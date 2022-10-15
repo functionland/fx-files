@@ -47,7 +47,7 @@
 .item-container {
     cursor: pointer;
     position: relative;
-    padding: $spacing-16 21px;
+    padding: $spacing-4 $spacing-21;
     border-radius: $border-radius-3;
 
     .item-icon-position {
@@ -99,7 +99,7 @@
 }
 
 .list-view-item {
-    height: 100px;
+    height: 74px;
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
@@ -120,7 +120,7 @@
             text-overflow: ellipsis;
             font-size: $font-size-16;
             color: color(gray-content1);
-            line-height: $line-height-28;
+            line-height: $line-height-24;
             font-family: $open-sans-regular;
             letter-spacing: $letter-spacing-02;
             word-wrap: break-word;
@@ -145,9 +145,15 @@
 
 .grid-view-item {
     height: 120px;
+    max-width: 187.5px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
 
     .options-btn::before {
         @include Icon($options-horizontal);
+        line-height: 27px;
     }
 
     .item-icon-position {
@@ -163,6 +169,7 @@
             align-items: center;
             flex-flow: row nowrap;
             justify-content: center;
+            max-width: 160px;
         }
 
         .item-sub-text {
