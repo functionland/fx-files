@@ -23,7 +23,7 @@
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone)
                 {
-                    <FxCheckBox IsChecked="@artifact.IsSelected" Class="icon-space-in-desktop" />
+                    <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
                 }
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid)
