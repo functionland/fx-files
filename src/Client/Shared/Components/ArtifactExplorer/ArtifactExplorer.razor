@@ -23,8 +23,8 @@
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone)
                 {
-                    <div>
-                        <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                    <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="false" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
+                        <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)"/>
                     </div>
                 }
 
