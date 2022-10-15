@@ -1,0 +1,20 @@
+﻿CREATE TABLE FsArtifactTable (
+    Id INTEGER PRIMARY KEY NOT NULL,
+    FullPath TEXT NOT NULL,
+    LocalFullPath TEXT NOT NULL,
+    Name TEXT NOT NULL,
+    FileExtension TEXT NULL,
+    ArtifactType INTEGER NOT NULL,
+    ProviderType INTEGER NOT NULL,
+    Size INTEGER NULL,
+    Capacity INTEGER NULL,
+    ContentHash TEXT NULL,
+    ParentFullPath TEXT NULL,
+    OriginDevice TEXT NULL,
+    CreateDateTime TEXT NOT NULL,
+    LastModifiedDateTime TEXT NOT NULL,
+    WhoMadeLastEdit TEXT NULL,
+    ThumbnailPath TEXT NULL,
+    ArtifactUploadStatus INTEGER NOT NULL,
+    UserToken TEXT NOT NULL
+)
