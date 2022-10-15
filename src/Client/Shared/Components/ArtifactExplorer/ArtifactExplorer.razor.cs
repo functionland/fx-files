@@ -75,19 +75,24 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+            if (_timer != null)
             {
-                DisposeTimer();
-                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-
-                InvokeAsync(async () =>
+                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
-                    await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                    _longPressedArtifact.IsSelected = true;
-                    await OnSelectionChanged(_longPressedArtifact);
-                    StateHasChanged();
-                });
-            };
+                    DisposeTimer();
+                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+
+                    InvokeAsync(async () =>
+                    {
+                        await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                        _longPressedArtifact.IsSelected = true;
+                        await OnSelectionChanged(_longPressedArtifact);
+                        _longPressedArtifact = null;
+                        StateHasChanged();
+                    });
+                };
+            }
+            DisposeTimer();
         }
 
         private void DisposeTimer()
@@ -105,15 +110,19 @@ namespace Functionland.FxFiles.Client.Shared.Components
         {
             if (_timer != null)
             {
-                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                DisposeTimer();
+                if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                 {
-                    DisposeTimer();
                     await OnSelectArtifact.InvokeAsync(artifact);
                     await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 }
                 else
                 {
-                    await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                    if (_longPressedArtifact != null)
+                    {
+                        await OnSelectionChanged(artifact);
+                        await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                    }
                 }
             }
             StateHasChanged();
