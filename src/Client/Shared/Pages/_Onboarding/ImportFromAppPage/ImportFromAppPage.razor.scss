@@ -1,1 +1,26 @@
-﻿
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.import-app {
+    padding: 16px 21px;
+    position: relative;
+
+    .title {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+        color: color(gray-content1);
+        margin-bottom: $spacing-64;
+    }
+
+    .account-sync {
+        background-color: color(gray-bg-primary);
+        color: color(gray-content1);
+        font-family: $open-sans-regular;
+        font-size: $font-size-16;
+        line-height: $line-height-28;
+        letter-spacing: $letter-spacing-02;
+        padding: $spacing-16;
+    }
+}

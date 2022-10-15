@@ -507,4 +507,7 @@
   <data name="ImportFromApps" xml:space="preserve">
     <value>Import from apps</value>
   </data>
+  <data name="GoogleDrive" xml:space="preserve">
+    <value>Google Drive</value>
+  </data>
 </root>

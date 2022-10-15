@@ -565,6 +565,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Google Drive.
+        /// </summary>
+        public static string GoogleDrive {
+            get {
+                return ResourceManager.GetString("GoogleDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is a simple message in home.
         /// </summary>
         public static string HomeMessage {
