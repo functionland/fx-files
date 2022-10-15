@@ -43,7 +43,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
 
         public async Task RemoveAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+            var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
 
             if (artifact is null)
                 throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, artifact?.ArtifactType.ToString() ?? lowerCaseArtifact));

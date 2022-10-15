@@ -118,7 +118,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
     public async Task<bool> IsSahredByMeAsync(string path, CancellationToken? cancellationToken = null)
     {
-        var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+        var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
         var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
 
         if (artifact is null)
@@ -132,7 +132,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
     public async Task<List<ArtifactPermissionInfo>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
-        var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+        var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
         var artifact = _AllFsArtifacts?.FirstOrDefault(a => a.FullPath == path);
 
         if (artifact is null)
