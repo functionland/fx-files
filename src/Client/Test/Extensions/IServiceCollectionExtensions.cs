@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Functionland.FxFiles.Client.Shared.Services.Contracts.Db;
 using Functionland.FxFiles.Client.Shared.Services.Implementations;
 using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
@@ -16,7 +17,9 @@ public static class IServiceCollectionExtensions
     {
         string connectionString = $"DataSource={Path.Combine(testContext.TestDir, "FxDB.db")}";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
-
+        services.AddSingleton<ILocalDbPinnedService, LocalDbPinnedService>();
+        services.AddSingleton<ILocalDbArtifactService, LocalDbArtifactService>();
+        services.AddSingleton<ILocalDbFulaSyncItemService, LocalDbFulaSyncItemService>();
 
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
