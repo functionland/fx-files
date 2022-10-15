@@ -7,6 +7,7 @@ public class FakeIdentityService : IIdentityService
     private FulaUser? _currentUser;
     public TimeSpan? ActionLatency { get; set; }
     public TimeSpan? EnumerationLatency { get; set; }
+    public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
     public FakeIdentityService(IEnumerable<KeyValuePair<FulaUser, List<FulaUser>?>>? fulaUsers = null,
                                FulaUser? currentUser = null,
@@ -43,7 +44,7 @@ public class FakeIdentityService : IIdentityService
         var children = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dIdDocument.DId).Value;
 
         if (parent is null)
-            throw new Exception(""); //TODO
+            throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
 
         List<FulaUser> fulaUsers = new()
         {
@@ -73,7 +74,7 @@ public class FakeIdentityService : IIdentityService
         }
 
         if (_currentUser is null)
-            throw new Exception(""); //TODO
+            throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
 
         return _currentUser;
     }
@@ -85,10 +86,10 @@ public class FakeIdentityService : IIdentityService
             await Task.Delay(ActionLatency.Value);
         }
 
-        var user = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dIdDocument.DId).Key; //?????????
+        var user = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dIdDocument.DId).Key; 
 
         if (user is null)
-            throw new Exception(""); //TODO
+            throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
 
         return user;
     }
@@ -121,7 +122,7 @@ public class FakeIdentityService : IIdentityService
         var fulaUser = GetUser(dId);
 
         if (fulaUser is null)
-            throw new Exception(""); //TODO
+            throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
 
         return fulaUser;
     }
@@ -151,7 +152,7 @@ public class FakeIdentityService : IIdentityService
     private FulaUser? GetUser(string dId, CancellationToken? cancellationToken = null)
     {
         if (_fulaUsers is null)
-            throw new Exception(""); //TODO
+            throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
 
         var fulaUser = _fulaUsers?.Where(a => a.Key.DId == dId).FirstOrDefault().Key;
 
