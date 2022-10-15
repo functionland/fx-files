@@ -135,6 +135,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public async Task OnSelectionChanged(FsArtifact artifact)
         {
+            DisposeTimer();
+            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+            }
             if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
             {
                 artifact.IsSelected = false;
