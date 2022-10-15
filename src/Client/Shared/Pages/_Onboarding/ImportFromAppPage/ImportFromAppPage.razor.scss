@@ -3,8 +3,9 @@
 @import '../../../Styles/abstracts/_functions.scss';
 
 .import-app {
-    padding: 16px 21px;
+    padding: $spacing-16 $spacing-21;
     position: relative;
+    height: 100vh;
 
     .title {
         font-family: $montserrat-semi-bold;
