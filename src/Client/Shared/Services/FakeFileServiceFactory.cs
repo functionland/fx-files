@@ -28,7 +28,7 @@ namespace Functionland.FxFiles.Client.Shared.Services
                 {
                     CreateFolder("/images"),
                     CreateFolder("/docs"),
-                    CreateFile("/images/image summer.jpg"),
+                    CreateFile("/images/image summer[size:120mb][latency:100ms].jpg"),
                     CreateFile("/images/image germany.jpg"),
                     CreateFile("/docs/proposal v1-2.pdf"),
                 },
@@ -90,7 +90,40 @@ namespace Functionland.FxFiles.Client.Shared.Services
                 actionLatency,
                 enumerationLatency);
         }
-
+        public FakeFileService CreateIsSharedWithMeArtifacts(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        {
+            return new FakeFileService(
+                ServiceProvider,
+                new List<FsArtifact>
+                {
+                    CreateFolder("/shared"),
+                    CreateFolder("/shared/Document"),
+                    CreateFolder("/shared/pictures"),
+                    CreateFile("/shared/Document/docs.pdf"),
+                    CreateFile("/shared/Document/docs.txt"),
+                    CreateFile("/shared/Document/Thesis.pdf"),
+                },
+                actionLatency,
+                enumerationLatency
+            );
+        }
+        public FakeFileService CreateIsSharedByMeArtifacts(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        {
+            return new FakeFileService(
+                ServiceProvider,
+                new List<FsArtifact>
+                {
+                    CreateFolder("/Files"),
+                    CreateFolder("/Files/video"),
+                    CreateFolder("/Files/Audio"),
+                    CreateFolder("/Files/Document"),
+                    CreateFolder("/Files/others"),
+                    CreateFile("/Files/Document/docs.pdf"),
+                },
+                actionLatency,
+                enumerationLatency
+            );
+        }
         public static FsArtifact CreateFile(string filePath)
         {
             var fileName = Path.GetFileName(filePath);

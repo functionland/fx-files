@@ -2,43 +2,56 @@
 
 public class FakeBloxService : IBloxService
 {
-    private readonly List<Blox> _bloxs;
-    private readonly List<Blox> _invitedBlox;
+    private readonly List<Blox> _bloxs = new();
+    private readonly List<Blox> _invitedBlox = new();
     public TimeSpan? ActionLatency { get; set; }
     public TimeSpan? EnumerationLatency { get; set; }
     public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-    public FakeBloxService(IEnumerable<Blox> bloxs, IEnumerable<Blox> invitedBloxs, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    public FakeBloxService(IEnumerable<Blox>? bloxs = null,
+                           IEnumerable<Blox>? invitedBloxs = null,
+                           TimeSpan? actionLatency = null,
+                           TimeSpan? enumerationLatency = null)
     {
-        _bloxs?.Clear();
-        _invitedBlox?.Clear();
+        _bloxs.Clear();
+        _invitedBlox.Clear();
 
         ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
         EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
 
-        foreach (var blox in bloxs)
+        if(bloxs is not null)
         {
-            _bloxs?.Add(blox);
+            foreach (var blox in bloxs)
+            {
+                _bloxs.Add(blox);
+            }
         }
-        foreach (var invitedBlox in invitedBloxs)
+        else
         {
-            _invitedBlox?.Add(invitedBlox);
+            _bloxs = new List<Blox>();
+        }
+
+        if(invitedBloxs is not null)
+        {
+            foreach (var invitedBlox in invitedBloxs)
+            {
+                _invitedBlox.Add(invitedBlox);
+            }
+        }
+        else
+        {
+            _invitedBlox = new List<Blox>();
         }
     }
 
-    public FakeBloxService(IEnumerable<Blox> bloxs, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    {
-        _bloxs?.Clear();
-        ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
-        EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
-        foreach (var blox in bloxs)
-        {
-            _bloxs?.Add(blox);
-        }
-    }
 
     public async Task AcceptBloxInvitationAsync(string bloxId, CancellationToken? cancellationToken = null)
     {
+        if (ActionLatency != null)
+        {
+            await Task.Delay(ActionLatency.Value);
+        }
+
         var blox = _invitedBlox.FirstOrDefault(b => b.Id == bloxId);
 
         if (blox is null)
@@ -48,32 +61,34 @@ public class FakeBloxService : IBloxService
         _bloxs.Add(blox);
     }
 
-    public async Task FillBloxStatsAsync(Blox blox, CancellationToken? cancellationToken = null)
-    {
-        blox.TotalSpace = 100000000000; 
-
-        blox.VideosUsed = 35000000000;
-        blox.AudiosUsed = 16000000000;
-        blox.DocsUsed = 3000000000;
-        blox.PhotosUsed = 10000000000;
-        blox.OtherUsed = 5000000000;
-
-        blox.FreeSpace = 31000000000;
-        blox.UsedSpace = 69000000000;
-    }
 
     public async Task<List<Blox>> GetBloxesAsync(CancellationToken? cancellationToken = null)
     {
+        if (ActionLatency != null)
+        {
+            await Task.Delay(ActionLatency.Value);
+        }
+
         return _bloxs.ToList();
     }
 
     public async Task<List<Blox>> GetBloxInvitationsAsync(CancellationToken? cancellationToken = null)
     {
+        if (ActionLatency != null)
+        {
+            await Task.Delay(ActionLatency.Value);
+        }
+
         return _invitedBlox.ToList();
     }
 
     public async Task RejectBloxInvitationAsync(string bloxId, CancellationToken? cancellationToken = null)
     {
+        if (ActionLatency != null)
+        {
+            await Task.Delay(ActionLatency.Value);
+        }
+
         var blox = _invitedBlox.FirstOrDefault(b => b.Id == bloxId);
 
         if (blox is null)

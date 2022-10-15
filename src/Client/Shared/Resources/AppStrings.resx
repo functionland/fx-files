@@ -492,4 +492,22 @@
   <data name="BloxPoolIsNotFoundException" xml:space="preserve">
     <value>Blox pool is not found</value>
   </data>
+  <data name="CopyFiles" xml:space="preserve">
+    <value>Copying files</value>
+  </data>
+  <data name="DeletingFiles" xml:space="preserve">
+    <value>Deleting files</value>
+  </data>
+  <data name="MovingFiles" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
+  <data name="ReplacingFiles" xml:space="preserve">
+    <value>Replacing files</value>
+  </data>
+  <data name="ImportFromApps" xml:space="preserve">
+    <value>Import from apps</value>
+  </data>
+  <data name="HasNotBeenSharedException" xml:space="preserve">
+    <value>The artifact not been shared</value>
+  </data>
 </root>

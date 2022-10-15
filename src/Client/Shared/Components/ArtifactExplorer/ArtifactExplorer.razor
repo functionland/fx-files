@@ -15,7 +15,7 @@
     {
         <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "") "
          @onpointerup="(() => PointerUp(artifact))"
-         @onpointerdown="PointerDown"
+         @onpointerdown="((e)=> PointerDown(e,artifact))"
          @onpointercancel="PointerCancel">
             @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
             {

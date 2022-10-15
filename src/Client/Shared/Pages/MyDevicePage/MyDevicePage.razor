@@ -1,0 +1,6 @@
+﻿@page "/MyDevice"
+@namespace Functionland.FxFiles.Client.Shared.Pages
+@inherits AppComponentBase;
+<PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
+
+<FileBrowser FileService="_fileService" PinService="_pinService"></FileBrowser>
