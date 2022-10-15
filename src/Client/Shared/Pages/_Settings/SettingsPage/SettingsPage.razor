@@ -1,6 +1,7 @@
 ﻿@page "/Settings"
-
+@namespace Functionland.FxFiles.Client.Shared.Pages
 @inherits AppComponentBase;
+
 <PageTitle>@Localizer[nameof(AppStrings.Settings)]</PageTitle>
 
 
@@ -21,6 +22,9 @@
                   ButtonStyle="FxButtonStyle.MenuLine" />
         <FxButton Text="@Localizer[nameof(AppStrings.Pools)]"
                   ButtonStyle="FxButtonStyle.MenuLine" />
+        <FxButton Text="@Localizer[nameof(AppStrings.ImportFromApps)]"
+                  ButtonStyle="FxButtonStyle.MenuLine"
+                  OnClick="@(() => NavigationManager.NavigateTo("settings/import-from-app", false, true))" />
         <FxButton Text="@Localizer[nameof(AppStrings.About)]"
                   ButtonStyle="FxButtonStyle.MenuLine" />
 

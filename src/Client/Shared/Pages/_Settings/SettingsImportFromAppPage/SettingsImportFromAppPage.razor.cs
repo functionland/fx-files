@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
-    public partial class FxLogin
+    public partial class SettingsImportFromAppPage
     {
     }
 }

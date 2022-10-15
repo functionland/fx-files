@@ -565,6 +565,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The artifact not been shared.
+        /// </summary>
+        public static string HasNotBeenSharedException {
+            get {
+                return ResourceManager.GetString("HasNotBeenSharedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is a simple message in home.
         /// </summary>
         public static string HomeMessage {
@@ -579,6 +588,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string HomeTitle {
             get {
                 return ResourceManager.GetString("HomeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import from apps.
+        /// </summary>
+        public static string ImportFromApps {
+            get {
+                return ResourceManager.GetString("ImportFromApps", resourceCulture);
             }
         }
         

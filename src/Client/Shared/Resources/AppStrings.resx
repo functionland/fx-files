@@ -504,4 +504,10 @@
   <data name="ReplacingFiles" xml:space="preserve">
     <value>Replacing files</value>
   </data>
+  <data name="ImportFromApps" xml:space="preserve">
+    <value>Import from apps</value>
+  </data>
+  <data name="HasNotBeenSharedException" xml:space="preserve">
+    <value>The artifact not been shared</value>
+  </data>
 </root>
