@@ -563,7 +563,17 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("ForbiddenException", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The artifact not been shared.
+        /// </summary>
+        public static string HasNotBeenSharedException
+        {
+            get {
+                return ResourceManager.GetString("HasNotBeenSharedException", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Google Drive.
         /// </summary>

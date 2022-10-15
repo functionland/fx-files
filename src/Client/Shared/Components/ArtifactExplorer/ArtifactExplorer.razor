@@ -6,57 +6,63 @@
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
-        <EmptyListView 
-            OnAddFolderButtonClick="OnAddFolderButtonClick"
-            Title="@Localizer[nameof(AppStrings.EmptyListTitle)]" 
-            IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsLoading)" />
+        <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
+                   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
+                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsLoading)" />
     }
-    @foreach (var artifact in Artifacts)
+    else
     {
-        <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "") "
-         @onpointerup="(() => PointerUp(artifact))"
-         @onpointerdown="((e)=> PointerDown(e,artifact))"
-         @onpointercancel="PointerCancel">
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-            {
-                <BitCheckbox Value="IsSelected" ValueChanged="(() => OnSelectionChanged(artifact))" />
-            }
+        @foreach (var a in Artifacts)
+        {
+            var artifact = a;
 
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid) 
-            {
-                <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
-            }
+            <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+                 @onpointerup="(() => PointerUp(artifact))"
+                 @onpointerdown="((e) =>PointerDown(e, artifact))"
+                 @onpointercancel="PointerCancel">
 
-            <div class="item-content">
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone)
+                {
+                    <div @onpointerup:stopPropagation="true" @onclick:preventDefault="true">
+                        <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                    </div>
+                }
 
-                <div class="item-title">
-                    @if (artifact.IsPinned == true)
-                    {
-                        <div class="pin-badge"></div>
-                    }
-                    <div class="title-text">@artifact.Name</div>
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid || !IsPhone)
+                {
+                    <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
+                }
+
+                <div class="item-content">
+                    <div class="item-title">
+                        @if (artifact.IsPinned == true)
+                        {
+                            <div class="pin-badge"></div>
+                        }
+                        <div class="title-text">@artifact.Name</div>
+                    </div>
+                    <div class="item-sub-text"></div>
                 </div>
-                <div class="item-sub-text"></div>
+
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
+                {
+                    <div class="options-btn"
+                     @onclick="() => HandleArtifactOptionsClick(artifact)"
+                     @onpointerup:preventDefault="true"
+                     @onpointerup:stopPropagation="true"
+                     @onpointerdown:preventDefault="true"
+                     @onpointerdown:stopPropagation="true">
+                    </div>
+                }
             </div>
-            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
-            {
-                <div class="options-btn"
-                    @onclick="() => HandleArtifactOptionsClick(artifact)"
-                    @onpointerup:preventDefault="true"
-                    @onpointerup:stopPropagation="true"
-                    @onpointerdown:preventDefault="true"
-                    @onpointerdown:stopPropagation="true">
-                </div>
-            }
-        </div>
+        }
     }
-</div>
-<div class="position-scroll-btn">
-    <FxButton 
-        Width="60px"
-        Height="60px"
-        BorderRadius="100px"
-        OnClick="OnGoToTopPage"
-        ButtonStyle="FxButtonStyle.IconOnly"
-        RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
+    <div class="position-scroll-btn">
+        <FxButton Width="60px"
+                  Height="60px"
+                  BorderRadius="100px"
+                  OnClick="OnGoToTopPage"
+                  ButtonStyle="FxButtonStyle.IconOnly"
+                  RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
+    </div>
 </div>

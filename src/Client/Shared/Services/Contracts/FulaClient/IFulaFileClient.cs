@@ -11,11 +11,12 @@ public interface IFulaFileClient
     /// <remarks>ToDo: Resume Upload Support</remarks>
     /// <param name="token"></param>
     /// <param name="path"></param>
+    /// <param name="originDevice"></param>
     /// <param name="stream"></param>
     /// <param name="onProgress"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UploadFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
+    Task UploadFileAsync(string token, string path, string originDevice, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Update file content
@@ -36,9 +37,10 @@ public interface IFulaFileClient
     /// <param name="token"></param>
     /// <param name="path"></param>
     /// <param name="folderName"></param>
+    /// <param name="originDevice"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AddFolderAsync(string token, string path, string folderName, CancellationToken? cancellationToken = null);
+    Task AddFolderAsync(string token, string path, string folderName, string originDevice, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Get a file stream
