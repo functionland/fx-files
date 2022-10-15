@@ -2,19 +2,46 @@
 {
     public class FakePoolService : IFulaPoolSevice
     {
-        private readonly List<BloxPool> _BloxPools;
-        private readonly List<BloxPool> _AllFulaBloxPools;
+        private readonly List<BloxPool> _BloxPools = new();
+        private readonly List<BloxPool> _AllFulaBloxPools = new();
         public TimeSpan? ActionLatency { get; set; }
         public TimeSpan? EnumerationLatency { get; set; }
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        public FakePoolService(IEnumerable<BloxPool> bloxPools, IEnumerable<BloxPool>? allFulaBloxPools = null, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+        public FakePoolService(IEnumerable<BloxPool>? bloxPools = null,
+                               IEnumerable<BloxPool>? allFulaBloxPools = null,
+                               TimeSpan? actionLatency = null,
+                               TimeSpan? enumerationLatency = null)
         {
-            _BloxPools = bloxPools.ToList();
-            _AllFulaBloxPools = allFulaBloxPools?.ToList() ?? new List<BloxPool>();
+            _BloxPools.Clear();
+            _AllFulaBloxPools.Clear();
 
             ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
             EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
+
+            if (bloxPools is not null)
+            {
+                foreach (var bloxPool in bloxPools)
+                {
+                    _BloxPools.Add(bloxPool);
+                }
+            }
+            else
+            {
+                _BloxPools = new List<BloxPool>();
+            }
+
+            if (allFulaBloxPools is not null)
+            {
+                foreach (var bloxPool in allFulaBloxPools)
+                {
+                    _AllFulaBloxPools.Add(bloxPool);
+                }
+            }
+            else
+            {
+                _AllFulaBloxPools = new List<BloxPool>();
+            }
         }
       
         public async Task<List<BloxPool>> GetMyPoolsAsync(CancellationToken? cancellationToken = null)

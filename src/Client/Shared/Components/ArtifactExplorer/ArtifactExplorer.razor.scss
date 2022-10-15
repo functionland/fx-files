@@ -52,7 +52,6 @@
 
     .item-icon-position {
         font-size: $icon-24;
-        margin-right: 3px;
     }
 }
 
@@ -314,7 +313,7 @@
 }
 
 .checkbox {
-    margin: 0 .5px;
+    margin-right: 4px;
     border: $border-size-1 solid;
     border-radius: $border-radius-4;
     background-color: color(app-bg);

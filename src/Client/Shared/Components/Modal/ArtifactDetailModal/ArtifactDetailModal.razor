@@ -11,7 +11,7 @@
                 <FileDetailView FileName="@_artifacts[_currentArtifactForShowNumber].Name" FileCategoryType="@_artifacts[_currentArtifactForShowNumber].FileCategory" FsArtifactType="_artifacts[_currentArtifactForShowNumber].ArtifactType">
                     <FileDetailItemFragment>
                         <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                        <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
+                        <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].ArtifactType == FsArtifactType.File ? _artifacts[_currentArtifactForShowNumber].SizeStr : "N/A")"></FileDetailViewItem>
                         <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].OriginDevice)"></FileDetailViewItem>
                         <div class="modal-slider">
                             <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="@(_currentArtifactForShowNumber != 0 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(false))"></FxLink>
