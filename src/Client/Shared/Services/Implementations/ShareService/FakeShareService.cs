@@ -116,7 +116,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
             await Task.Delay(ActionLatency.Value);
         }
 
-        var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+        var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
         var artifact = FulaFileService.GetArtifactsAsync(path);
 
         if (artifact is null)

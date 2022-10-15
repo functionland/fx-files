@@ -30,7 +30,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFile = AppStrings.File.ToLowerText();
+            var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(stream?.ToString()))
                 throw new StreamNullException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
@@ -77,7 +77,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFolder = AppStrings.Folder.ToLowerText();
+            var lowerCaseFolder = AppStrings.Folder.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
@@ -130,7 +130,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private void DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+            var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(artifact.FullPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
@@ -225,7 +225,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFile = AppStrings.File.ToLowerText();
+            var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
@@ -251,7 +251,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFile = AppStrings.File.ToLowerText();
+            var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
@@ -290,7 +290,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFolder = AppStrings.Folder.ToLowerText();
+            var lowerCaseFolder = AppStrings.Folder.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
@@ -549,7 +549,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private async IAsyncEnumerable<FsArtifact> GetChildArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseArtifact = AppStrings.Artifact.ToLowerText();
+            var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(path))
             {
