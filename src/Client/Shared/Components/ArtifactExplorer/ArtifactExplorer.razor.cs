@@ -62,7 +62,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
             if (args.Button == 0)
             {
                 _longPressedArtifact = artifact;
-                _timer = new(500);
+                _timer = new(1000);
                 _timer.Enabled = true;
                 _timer.Start();
                 _timer.Elapsed += TimerElapsed;
