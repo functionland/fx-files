@@ -10,7 +10,7 @@ public static class IServiceCollectionExtensions
         // Shared between all platforms
         string connectionString = $"DataSource={Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "FxDB.db")};";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
-        services.AddSingleton<ILocalDbPinnedService, LocalDbPinnedService>();
+        services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
         services.AddSingleton<ILocalDbArtifactService, LocalDbArtifactService>();
         services.AddSingleton<ILocalDbFulaSyncItemService, LocalDbFulaSyncItemService>();
 
