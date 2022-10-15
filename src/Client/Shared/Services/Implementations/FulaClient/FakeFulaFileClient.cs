@@ -31,7 +31,12 @@ public class FakeFulaFileClient : IFulaFileClient
         }
     }
 
-    public async Task AddFolderAsync(string token, string path, string folderName, string originDevice, CancellationToken? cancellationToken = null)
+    public async Task AddFolderAsync(
+        string token,
+        string path,
+        string folderName,
+        string originDevice,
+        CancellationToken? cancellationToken = null)
     {
         var dtNow = DateTimeOffset.Now;
         var lowerCaseFolder = StringLocalizer[nameof(AppStrings.Folder)].Value.ToLowerFirstChar();
@@ -65,7 +70,11 @@ public class FakeFulaFileClient : IFulaFileClient
         await AddArtifactAsync(token, newFolder, null, cancellationToken);
     }
 
-    public async Task DeleteArtifactsAsync(string token, IEnumerable<string> sourcesPath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public async Task DeleteArtifactsAsync(
+        string token,
+        IEnumerable<string> sourcesPath,
+        Action<ProgressInfo>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         FulaUser user = GetFulaUser(token);
@@ -86,7 +95,13 @@ public class FakeFulaFileClient : IFulaFileClient
         toRemove.ForEach(c => node.Remove(c));
     }
 
-    public async Task<List<string>> CopyArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public async Task<List<string>> CopyArtifactsAsync(
+        string token,
+        IEnumerable<string> sourcePaths,
+        string destinationPath,
+        bool overwrite = false,
+        Action<ProgressInfo>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         FulaUser user = GetFulaUser(token);
@@ -136,14 +151,25 @@ public class FakeFulaFileClient : IFulaFileClient
         return ignoreCopy;
     }
 
-    public async Task<List<string>> MoveArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public async Task<List<string>> MoveArtifactsAsync(
+        string token,
+        IEnumerable<string> sourcePaths,
+        string destinationPath,
+        bool overwrite = false,
+        Action<ProgressInfo>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         var ignored = await CopyArtifactsAsync(token, sourcePaths, destinationPath, overwrite, onProgress, cancellationToken);
         await DeleteArtifactsAsync(token, sourcePaths, onProgress, cancellationToken);
         return ignored;
     }
 
-    public async Task<List<FsArtifactActivity>> GetActivityHistoryAsync(string token, string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+    public async Task<List<FsArtifactActivity>> GetActivityHistoryAsync(
+        string token,
+        string path,
+        long? page = null,
+        long? pageSize = null,
+        CancellationToken? cancellationToken = null)
     {
         var artifact = await GetArtifactAsync(token, path);
         if (artifact?.FsArtifactActivity is null) throw new NullReferenceException(nameof(artifact));
@@ -196,7 +222,10 @@ public class FakeFulaFileClient : IFulaFileClient
         return artifacts.Where(c => c.Key.FullPath == path).FirstOrDefault().Key;
     }
 
-    public async IAsyncEnumerable<FsArtifact> GetChildrenArtifactsAsync(string token, string? path = null, CancellationToken? cancellationToken = null)
+    public async IAsyncEnumerable<FsArtifact> GetChildrenArtifactsAsync(
+        string token,
+        string? path = null,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
@@ -216,7 +245,11 @@ public class FakeFulaFileClient : IFulaFileClient
         }
     }
 
-    public async Task<Stream> GetFileStreamAsync(string token, string filePath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public async Task<Stream> GetFileStreamAsync(
+        string token,
+        string filePath,
+        Action<ProgressInfo>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         var lowerCasefile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
         await LatencyActionAsync();
@@ -236,7 +269,6 @@ public class FakeFulaFileClient : IFulaFileClient
 
         return result;
     }
-
 
     public async Task<string> GetLinkForShareAsync(string token, string path, CancellationToken? cancellationToken = null)
     {
@@ -323,7 +355,11 @@ public class FakeFulaFileClient : IFulaFileClient
 
     }
 
-    public async IAsyncEnumerable<FsArtifact> SearchArtifactsAsync(string token, string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public async IAsyncEnumerable<FsArtifact> SearchArtifactsAsync(
+        string token,
+        string? path = null,
+        string? searchText = null,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         var artifacts = GetUserArtifacts(token).Select(c => c.Key).ToList();
@@ -341,7 +377,10 @@ public class FakeFulaFileClient : IFulaFileClient
         }
     }
 
-    public async Task SetPermissionArtifactsAsync(string token, IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null)
+    public async Task SetPermissionArtifactsAsync(
+        string token,
+        IEnumerable<ArtifactPermissionInfo> permissionInfos,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         var artifacts = GetUserArtifacts(token)
@@ -360,7 +399,12 @@ public class FakeFulaFileClient : IFulaFileClient
         }
     }
 
-    public async Task UpdateFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public async Task UpdateFileAsync(
+        string token,
+        string path,
+        Stream stream,
+        Action<ProgressInfo>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         var lowerCasefile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
         await LatencyActionAsync();
@@ -381,7 +425,13 @@ public class FakeFulaFileClient : IFulaFileClient
         await UpdateParentContentHashAsync(artifact.Key, artifacts.Select(c => c.Key), cancellationToken);
     }
 
-    public async Task UploadFileAsync(string token, string path, string originDevice, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public async Task UploadFileAsync(
+        string token,
+        string path,
+        string originDevice,
+        Stream stream,
+        Action<ProgressInfo>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         var dtNow = DateTimeOffset.Now;
         var lowerCasefile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
@@ -414,6 +464,7 @@ public class FakeFulaFileClient : IFulaFileClient
         await UpdateSizeOfArtifactAsync(newFile, stream, fulaUserNode, cancellationToken);
     }
 
+
     private static bool CheckIfNameHasInvalidChars(string name)
     {
         var invalidChars = Path.GetInvalidFileNameChars();
@@ -430,7 +481,11 @@ public class FakeFulaFileClient : IFulaFileClient
         return userArtifacts.Any(f => comparer.Compare(f.Key.FullPath, path) == 0);
     }
 
-    private async Task AddArtifactAsync(string token, FsArtifact fsArtifact, Stream? stream, CancellationToken? cancellationToken = null)
+    private async Task AddArtifactAsync(
+        string token,
+        FsArtifact fsArtifact,
+        Stream? stream,
+        CancellationToken? cancellationToken = null)
     {
         var user = GetFulaUser(token);
         var fulaUserNode = GetUserArtifacts(token);
@@ -490,7 +545,11 @@ public class FakeFulaFileClient : IFulaFileClient
             await Task.Delay(EnumerationLatency.Value);
     }
 
-    private async Task UpdateParentFullPathAsync(string parentPath, string newParentPath, List<FsArtifact> artifacts, CancellationToken? cancellationToken = null)
+    private async Task UpdateParentFullPathAsync(
+        string parentPath,
+        string newParentPath,
+        List<FsArtifact> artifacts,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         var fsArtifacts = artifacts.Where(c => c.ParentFullPath.Equals(parentPath)).ToList();
@@ -507,7 +566,10 @@ public class FakeFulaFileClient : IFulaFileClient
         }
     }
 
-    private async Task UpdateParentContentHashAsync(FsArtifact artifact, IEnumerable<FsArtifact> fsArtifacts, CancellationToken? cancellationToken = null)
+    private async Task UpdateParentContentHashAsync(
+        FsArtifact artifact,
+        IEnumerable<FsArtifact> fsArtifacts,
+        CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
         var parent = fsArtifacts.Where(c => c.FullPath == artifact.ParentFullPath).FirstOrDefault();
@@ -517,7 +579,11 @@ public class FakeFulaFileClient : IFulaFileClient
         await UpdateParentContentHashAsync(parent, fsArtifacts, cancellationToken);
     }
 
-    private async Task UpdateSizeOfArtifactAsync(FsArtifact fsArtifact, Stream? stream, List<KeyValuePair<FsArtifact, Stream?>> fsArtifacts, CancellationToken? cancellationToken)
+    private async Task UpdateSizeOfArtifactAsync(
+        FsArtifact fsArtifact,
+        Stream? stream,
+        List<KeyValuePair<FsArtifact, Stream?>> fsArtifacts,
+        CancellationToken? cancellationToken)
     {
         if (fsArtifact.ArtifactType == FsArtifactType.File)
         {
