@@ -47,7 +47,7 @@
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
                 {
                     <div class="options-btn"
-                     @onclick="() => HandleArtifactOptionsClick(artifact)"
+                     @onclick="() => HandleArtifactOptionClick(artifact)"
                      @onpointerup:preventDefault="true"
                      @onpointerup:stopPropagation="true"
                      @onpointerdown:preventDefault="true"

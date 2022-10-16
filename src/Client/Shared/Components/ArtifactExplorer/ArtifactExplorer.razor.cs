@@ -12,8 +12,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public List<FsArtifact> Artifacts { get; set; } = default!;
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
-        [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
+        [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
+        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
@@ -33,19 +34,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return base.OnInitAsync();
         }
 
-        private async Task HandleArtifactOptionsClick(FsArtifact artifact)
+        private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
-            await OnArtifactsOptionsClick.InvokeAsync(artifact);
+            await OnArtifactOptionClick.InvokeAsync(artifact);
         }
 
-        //protected override Task OnParamsSetAsync()
-        //{
-        //    if (Artifacts is null)
-        //    {
-        //        Artifacts = Array.Empty<FsArtifact>();
-        //    }
-        //    return base.OnParamsSetAsync();
-        //}
+        private async Task HandleArtifactsOptionClick(List<FsArtifact> artifacts)
+        {
+            await OnArtifactsOptionClick.InvokeAsync(artifacts);
+        }
 
         private async Task HandleArtifactClick(FsArtifact artifact)
         {
@@ -127,7 +124,18 @@ namespace Functionland.FxFiles.Client.Shared.Components
             else if (args.Button == 2)
             {
                 DisposeTimer();
-                await HandleArtifactOptionsClick(artifact);
+                if (SelectedArtifacts.Count == 0 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+                {
+                    await HandleArtifactOptionClick(artifact);
+                }
+                else if (SelectedArtifacts.Count == 1)
+                {
+                    await HandleArtifactOptionClick(SelectedArtifacts[0]);
+                }
+                else if (SelectedArtifacts.Count > 1)
+                {
+                    await HandleArtifactsOptionClick(SelectedArtifacts);
+                }
             }
             StateHasChanged();
         }
