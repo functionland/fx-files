@@ -510,4 +510,16 @@
   <data name="HasNotBeenSharedException" xml:space="preserve">
     <value>The artifact not been shared</value>
   </data>
+  <data name="GoogleDrive" xml:space="preserve">
+    <value>Google Drive</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>CONGRATULATIONS</value>
+  </data>
+  <data name="LetsGo" xml:space="preserve">
+    <value>Let’s go</value>
+  </data>
+  <data name="SetupComplete" xml:space="preserve">
+    <value>Setup complete</value>
+  </data>
 </root>

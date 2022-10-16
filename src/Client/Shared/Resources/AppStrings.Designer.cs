@@ -313,6 +313,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CONGRATULATIONS.
+        /// </summary>
+        public static string Congratulations {
+            get {
+                return ResourceManager.GetString("Congratulations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copying files.
         /// </summary>
         public static string CopyFiles {
@@ -563,17 +572,25 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("ForbiddenException", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Drive.
+        /// </summary>
+        public static string GoogleDrive {
+            get {
+                return ResourceManager.GetString("GoogleDrive", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to The artifact not been shared.
         /// </summary>
-        public static string HasNotBeenSharedException
-        {
+        public static string HasNotBeenSharedException {
             get {
                 return ResourceManager.GetString("HasNotBeenSharedException", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to This is a simple message in home.
         /// </summary>
@@ -661,6 +678,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string LastModified {
             get {
                 return ResourceManager.GetString("LastModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let’s go.
+        /// </summary>
+        public static string LetsGo {
+            get {
+                return ResourceManager.GetString("LetsGo", resourceCulture);
             }
         }
         
@@ -976,6 +1002,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup complete.
+        /// </summary>
+        public static string SetupComplete {
+            get {
+                return ResourceManager.GetString("SetupComplete", resourceCulture);
             }
         }
         
