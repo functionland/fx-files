@@ -17,13 +17,13 @@
             var artifact = a;
 
             <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                 @onpointerup="(() => PointerUp(artifact))"
-                 @onpointerdown="((e) =>PointerDown(e, artifact))"
+                 @onpointerup="((e) => PointerUp(e,artifact))"
+                 @onpointerdown="(() =>PointerDown(artifact))"
                  @onpointercancel="PointerCancel">
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone)
                 {
-                    <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="false" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
+                    <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
                         <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)"/>
                     </div>
                 }
@@ -47,7 +47,7 @@
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
                 {
                     <div class="options-btn"
-                     @onclick="() => HandleArtifactOptionsClick(artifact)"
+                     @onclick="() => HandleArtifactOptionClick(artifact)"
                      @onpointerup:preventDefault="true"
                      @onpointerup:stopPropagation="true"
                      @onpointerdown:preventDefault="true"
