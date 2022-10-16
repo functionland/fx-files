@@ -2,3 +2,33 @@
 @import '../../../Styles/abstracts/_functions.scss';
 @import '../../../Styles/components/_bit-toggle.scss';
 @import '../../../Styles/components/_bit-checkbox.scss';
+
+
+.about-container {
+    padding: $spacing-16 $spacing-21;
+
+    .about-content {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+        color: color(gray-content1);
+        margin-bottom: $spacing-32;
+    }
+
+    .about-app-container {
+        font-family: $open-sans-light;
+        font-size: $font-size-14;
+        line-height: $line-height-24;
+        letter-spacing: $letter-spacing-02;
+        color: color(gray-content1);
+        word-break: break-all;
+
+        .part-one {
+            margin-bottom: $spacing-21;
+        }
+
+        .important-contents {
+            font-family: $open-sans-semi-bold;
+        }
+    }
+}
