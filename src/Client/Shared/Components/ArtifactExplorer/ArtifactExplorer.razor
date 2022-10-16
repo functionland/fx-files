@@ -12,10 +12,8 @@
     }
     else
     {
-        @foreach (var a in Artifacts)
+        @foreach (var artifact in Artifacts)
         {
-            var artifact = a;
-
             <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
                  @onpointerup="((e) => PointerUp(e,artifact))"
                  @onpointerdown="(() =>PointerDown(artifact))"
