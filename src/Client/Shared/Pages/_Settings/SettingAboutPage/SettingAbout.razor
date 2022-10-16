@@ -3,12 +3,14 @@
 @namespace Functionland.FxFiles.Client.Shared.Pages
 
 
-<section class="about-container">
-@*    <FxToolBar IsInRoot="false"
+<div class="fxtoolbar-wrapper">
+    <FxToolBar IsInRoot="false"
                IsBackButtonVisible="true"
                IsAddButtonVisible="false"
-               IsOverflowButtonVisible="false"
-               OnBackClick="HandleToolbarBack" />*@
+               IsOverflowButtonVisible="false" />
+</div>
+
+<section class="about-container">
 
     <div class="about-content">@Localizer[nameof(AppStrings.About)]</div>
 

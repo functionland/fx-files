@@ -3,9 +3,12 @@
 @import '../../../Styles/components/_bit-toggle.scss';
 @import '../../../Styles/components/_bit-checkbox.scss';
 
+.fxtoolbar-wrapper {
+    padding-top: $spacing-16;
+}
 
 .about-container {
-    padding: $spacing-16 $spacing-21;
+    padding: $spacing-0 $spacing-21;
 
     .about-content {
         font-family: $montserrat-semi-bold;
