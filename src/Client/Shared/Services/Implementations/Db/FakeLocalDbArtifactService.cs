@@ -22,7 +22,7 @@ public class FakeLocalDbArtifactService : ILocalDbArtifactService
 
     public async Task<FsArtifact> GetArtifactAsync(string localPath, string userToken)
     {
-        var result = _allArtifacts.FirstOrDefault(f => f.FullPath == localPath);
+        var result = _allArtifacts.FirstOrDefault(f => f.LocalFullPath == localPath);
 
         //if (result is null)
         //    throw new Exception();
@@ -49,8 +49,11 @@ public class FakeLocalDbArtifactService : ILocalDbArtifactService
         throw new NotImplementedException();
     }
 
-    public Task UpdateFolderAsync(FsArtifact fsArtifact, string localPath, string userToken)
+    public async Task UpdateFolderAsync(FsArtifact fsArtifact, string localPath, string userToken)
     {
-        throw new NotImplementedException();
+        var toBeRemoved = _allArtifacts.FirstOrDefault(a => a.LocalFullPath == localPath);
+        _allArtifacts.Remove(toBeRemoved);
+        fsArtifact.LocalFullPath = localPath;
+        _allArtifacts.Add(fsArtifact);
     }
 }

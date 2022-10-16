@@ -202,7 +202,10 @@ public class FakeFulaFileClient : IFulaFileClient
 
         return new FsArtifact(artifact.FullPath, artifact.Name, artifact.ArtifactType, artifact.ProviderType)
         {
-            ParentFullPath = artifact.ParentFullPath
+            ParentFullPath = artifact.ParentFullPath,
+            ContentHash = artifact.ContentHash,
+            LocalFullPath = artifact.LocalFullPath,
+            ArtifactUploadStatus = artifact.ArtifactUploadStatus
         };
     }
 

@@ -27,7 +27,7 @@ public partial class FakeFulaFileClientFactory
                     CreateFolder("\\MyFiles\\Pictures"),
                     CreateFile("\\MyFiles\\Pictures\\p1.jpg"),
                     CreateFolder("\\MyFiles\\Pictures\\Winter"),
-                    CreateFolder("\\MyFiles\\Prictures\\Spring"),
+                    CreateFolder("\\MyFiles\\Pictures\\Spring"),
                     CreateFile("\\MyFiles\\Pictures\\Winter\\w1.jpg"),
                     CreateFile("\\MyFiles\\Pictures\\Spring\\s1.jpg"),
                 }
@@ -38,7 +38,21 @@ public partial class FakeFulaFileClientFactory
 
     public FakeFulaFileClient CreateSyncScenario02()
     {
-        return new FakeFulaFileClient(null, StringLocalizer);
+        var fsArtifacts = new Dictionary<FulaUser, List<KeyValuePair<FsArtifact, Stream?>>>
+        {
+            {
+                new FulaUser("x"),
+                new List<KeyValuePair<FsArtifact, Stream?>>
+                {
+                    CreateFolder($"{FulaConvention.FulaRootPath}"),
+                    CreateFolder($"{FulaConvention.FulaRootPath}{FulaConvention.FulaFilesRootPath}"),
+
+                    CreateFolder("\\MyFiles\\Documents"),
+                    CreateFolder("\\MyFiles\\Music")
+                }
+            }
+        };
+        return new FakeFulaFileClient(fsArtifacts, StringLocalizer);
     }
 
     //ToDo: Cover create root folder and Shared/MyFiles.

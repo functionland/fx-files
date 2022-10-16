@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations.IdentityService;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class FakeIdentityService : IIdentityService
 {
