@@ -87,7 +87,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
                 await Task.Delay(ActionLatency.Value);
             }
 
-            if (artifact.IsAvailableOffline == true)
+            if (_FsArtifacts is null) return false;
+
+            var item = _FsArtifacts.FirstOrDefault(a => a.Id == artifact.Id);
+
+            if (item is not null)
                 return true;
 
             return false;
