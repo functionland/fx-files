@@ -52,6 +52,30 @@
     }
 }
 
+.system-theme-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .system-theme-info {
+        margin-right: $spacing-16;
+        font-family: $open-sans-regular;
+        letter-spacing: $letter-spacing-02;
+
+        .system-theme-option {
+            font-size: $font-size-14;
+            line-height: $line-height-24;
+            color: color(gray-content1);
+        }
+
+        .system-theme-desc {
+            font-size: $font-size-12;
+            line-height: $line-height-16;
+            color: color(gray-content2);
+        }
+    }
+}
+
 
 .theme-options {
     gap: 10px;
