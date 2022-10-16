@@ -123,7 +123,8 @@ public partial class FulaSyncService : IFulaSyncService
         // syncItem.LocalPath: C:\Users\Mehran\Fula\Documents
         // fulaArtifact.FullPath: fula://Documents/Telegram
         // fula://Documents/Telegram    -----> C:\Users\Mehran\Fula\Documents\Telegram
-        return Path.Combine(rootLocalPath, fulaPath.Replace(rootFulaPath, string.Empty));
+
+        return Path.Combine(rootLocalPath, fulaPath.Replace(rootFulaPath, string.Empty).TrimStart(Path.DirectorySeparatorChar));
     }   
 
     private Task RemoveArtifactAsync(FsArtifact toRemoveArtifact)
@@ -162,7 +163,7 @@ public partial class FulaSyncService : IFulaSyncService
 
             foreach (var childFulaArtifact in fulaChildArtifacts)
             {
-                var localPath = GetLocalPathBasedOnFulaPath(localArtifact.FullPath, fulaArtifact.FullPath, childFulaArtifact.FullPath);
+                var localPath = GetLocalPathBasedOnFulaPath(localArtifact.LocalFullPath, fulaArtifact.FullPath, childFulaArtifact.FullPath);
                 var syncedArtifacts = await SyncByFulaArtifactAsync(childFulaArtifact, localPath);
                 updatedArtifacts.AddRange(syncedArtifacts);
             }
@@ -221,11 +222,9 @@ public partial class FulaSyncService : IFulaSyncService
                 foreach (var childFulaArtifact in fulaChildArtifacts)
                 {
                     var childLocalPathBasedOnFulaPath = GetLocalPathBasedOnFulaPath(localPath, fulaArtifact.FullPath, childFulaArtifact.FullPath);
-                    var syncedArtifacts = await CreateLocalArtifactByFulaArtifactAsync(childFulaArtifact, childLocalPathBasedOnFulaPath, addedArtifacts);
+                    await CreateLocalArtifactByFulaArtifactAsync(childFulaArtifact, childLocalPathBasedOnFulaPath, addedArtifacts);
                 }
 
-                // TODO: This should test properly.
-                var localPathBasedOnFulaPath = GetLocalPathBasedOnFulaPath(localPath, fulaArtifact.FullPath, fulaArtifact.FullPath);
                 var localArtifact = 
                     await LocalDbArtifactService.CreateArtifactAsync(fulaArtifact, ArtifactUploadStatus.Uploaded, localPath, CurrentToken);
                 addedArtifacts.Add(localArtifact);
