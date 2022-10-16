@@ -3,9 +3,20 @@
 @import '../../../Styles/components/_bit-toggle.scss';
 @import '../../../Styles/components/_bit-checkbox.scss';
 
-.theme-content {
-    padding-top: 16px;
+.theme-mode {
+    padding: $spacing-16 $spacing-21;
+
+    .mode-content {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+        color: color(gray-content1);
+        margin-bottom: $spacing-34;
+    }
 }
+
+
+
 
 .theme-options {
     gap: 10px;
