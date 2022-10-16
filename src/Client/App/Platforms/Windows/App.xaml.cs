@@ -1,8 +1,10 @@
 ﻿using Microsoft.UI.Xaml;
+using System.Drawing;
+using Windows.UI;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows;
 
-public partial class App
+public partial class App 
 {
     public App()
     {

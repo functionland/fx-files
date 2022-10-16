@@ -1,10 +1,17 @@
-﻿using System.Text.Json.Nodes;
-
-
-namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFulaDatabaseClient
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name">Must be unique. like a guid or application environment...</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task CreateInstanceAsync(string name, CancellationToken? cancellationToken = null);
+
+
     /// <summary>
     /// Every query operation takes a GraphQl query for <b>reading</b> operation. 
     /// </summary>
@@ -26,7 +33,7 @@ public interface IFulaDatabaseClient
     /// </param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<T>> QueryAsync<T>(string token, string query, CancellationToken? cancellationToken = null);
+    Task<List<T>> QueryAsync<T>(string token, string query, string instance, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// Every mutation operation takes a query an values for create, update or delete operation
@@ -36,12 +43,11 @@ public interface IFulaDatabaseClient
     ///  mutation addProfile($values:JSON)
     ///  {
     ///      create(input:{
-    ///      collection: "profile",
+    ///      collection: "PinedArtifact",
     ///    values: $values
     ///      }){
     ///          id
-    ///          name
-    ///    isActive
+    ///          path
     ///  }
     ///  }
     /// </param>
@@ -49,8 +55,7 @@ public interface IFulaDatabaseClient
     ///     {
     ///        values: [{
     ///         id: 1,
-    ///            name: 'Mehdi',
-    ///            isActive: false
+    ///         path:"fula://home/1.jpg"
     ///          }]
     ///     }
     /// </param>

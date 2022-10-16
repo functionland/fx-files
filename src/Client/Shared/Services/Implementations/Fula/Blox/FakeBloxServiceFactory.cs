@@ -4,132 +4,111 @@ public partial class FakeBloxServiceFactory
 {
     public FakeBloxService CreateTypical(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        var bloxs = new List<Blox>
-        {
-            new Blox("Blox 1","Blox 1","Blox 1")
-        };
-
-        var invitedBloxs = new List<Blox>
-        {
-            new Blox("My Friend Blox 1","My Friend Blox 1","My Friend Blox 1"),
-            new Blox("My Friend Blox 2","My Friend Blox 2","My Friend Blox 2"),
-        };
-
-        return new FakeBloxService(bloxs, invitedBloxs);
+        var blox = new FakeBloxService(
+                new List<Blox>
+                {
+                    CreateBlox("Blox 1","Blox 1","Blox 1")
+                },
+                new List<Blox>
+                {
+                    CreateBlox("My Friend Blox 1","My Friend Blox 1","My Friend Blox 1"),
+                    CreateBlox("My Friend Blox 2","My Friend Blox 2","My Friend Blox 2")
+                },
+                actionLatency,
+                enumerationLatency);
+      
+        return blox;
     }
 
-    //public Blox CreateSimpleBlox(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var blox = CreateBlox("The long number of characters in the blox name should be handled ", "Blox 1");
-    //    return blox;
-    //}
+    public FakeBloxService CreateSimpleBlox(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var invitedBloxs = new List<Blox>();
 
-    //public FakeBloxService CreateInvitedBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var fulaUser = new FulaUser("FulaUserDID")
-    //    {
-    //        Username = "NewFulaUser",
-    //        IsParent = false
-    //    };
+        var blox = new FakeBloxService(
+                new List<Blox>
+                {
+                    CreateBlox("My Blox","The long number of characters in the blox id should be handled ", "OwnerDId")
+                },
+                invitedBloxs,
+                actionLatency,
+                enumerationLatency);
 
-    //    var invitedBloxs = new FakeBloxService(
-    //        new List<Blox>
-    //        {
-    //            CreateBlox("Fifth one", "Fifth Blox"),
-    //            CreateBlox("Second Blox", "Second Blox",10000000000, 6000000000, 4000000000, fulaUser, "Second Pool", "Second"),
-    //            CreateBlox("Third Blox", "Third Blox",20000000000, 0, 20000000000, fulaUser, null, null, 0, 0, 0, 0, 0),
-    //            CreateBlox("Fourth Blox", "Fourth Blox",20000000000, 20000000000, 0, fulaUser, null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //        },
-    //        actionLatency,
-    //        enumerationLatency);
+        return blox;
+    }
 
-    //    return invitedBloxs;
-    //}
+    public FakeBloxService CreateInvitedBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var bloxs = new List<Blox>();
+        var invitedBloxs = new FakeBloxService(
+            bloxs,
+            new List<Blox>
+            {
+                CreateBlox("Fifth one", "Fifth Blox", "The long number of characters in the OwnerDId should be handled"),
+                CreateBlox("Second Blox", "Second Blox","Second Blox OwnerDId"),
+                CreateBlox("The long number of characters in the blox id should be handled", "Third Blox","Third Blox OwnerDId")
+            },
+            actionLatency,
+            enumerationLatency);
 
-    //public FakeBloxService CreateBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var bloxs = new FakeBloxService(
-    //        new List<Blox>
-    //        {
-    //            CreateBlox("The long number of characters in the blox name should be handled", "My Blox",10000000000, 2000000000, 8000000000, null, null, null, 1000000000, 0, 0, 1000000000, 0),
-    //            CreateBlox("Home Blox", "Home Blox",20000000000, 20000000000, 0,null , null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //            CreateBlox("Company Blox", "Company Blox",20000000000, 20000000000, 0,null , null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000)
-    //        },
-    //        actionLatency,
-    //        enumerationLatency);
+        return invitedBloxs;
+    }
 
-    //    return bloxs;
-    //}
-    //public FakeBloxService CreateALotOfBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
-    //{
-    //    var fulaUser = new FulaUser("DID")
-    //    {
-    //        Username = "FulaUser",
-    //        IsParent = true
-    //    };
+    public FakeBloxService CreateBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var invitedBloxs = new List<Blox>();
 
-    //    var bloxs = new FakeBloxService(
-    //        new List<Blox>
-    //        {
-    //            CreateBlox("First Blox", "First Blox"),
-    //            CreateBlox("Second Blox", "Second Blox",null, null, null,fulaUser),
-    //            CreateBlox("Third Blox", "Third Blox",null, null, null,fulaUser),
-    //            CreateBlox("Fourth Blox", "Fourth Blox",20000000000, 8000000000, 12000000000,fulaUser),
-    //            CreateBlox("Fifth Blox", "Fifth Blox",20000000000, 0, 20000000000,fulaUser, null, null, 0, 0, 0, 0, 0),
-    //            CreateBlox("Sixth Blox", "Sixth Blox",20000000000, 20000000000, 0,fulaUser, null, null, 8000000000, 2000000000, 4000000000, 3000000000, 3000000000),
-    //            CreateBlox("Seventh Blox", "Seventh Blox",30000000000, 23000000000, 7000000000,fulaUser, null, null, 11000000000, 5000000000, 4000000000, 1000000000, 2000000000),
-    //            CreateBlox("Eighth Blox", "Eighth Blox",null, null, null,fulaUser, "Eighth Pool", "Eighth"),
-    //            CreateBlox("Canada Blox", "Canada Blox",null, null, null, null, "Canada Pool", "Canada"),
-    //            CreateBlox("Germany Blox", "Germany Blox",10000000000, 3000000000, 7000000000, null, "Germany Pool", "Germany"),
-    //            CreateBlox("China Blox", "China Blox",10000000000, 0, 10000000000, fulaUser, "China Pool", "China"),
-    //            CreateBlox("Home Blox", "Home Blox",10000000000, 6000000000, 4000000000, fulaUser, "Home Pool", "Home"),
-    //            CreateBlox("Company Blox", "Company Blox",10000000000, 10000000000, 0, fulaUser, "Company Pool", "Company"),
-    //            CreateBlox("My City Blox", "My City Blox",30000000000, 22000000000, 8000000000,fulaUser, null, null, 10000000000, 5000000000, 4000000000, 1000000000, 2000000000)
-    //        },
-    //        new List<Blox>
-    //        {
-    //            CreateBlox("My City InvitedBloxs", "My City Blox",10000000000, 0, 0, fulaUser, "My City", "My City Pool"),
-    //            CreateBlox("My Father InvitedBloxs", "My Father Blox",10000000000, 5000000000, 5000000000, fulaUser, "12364"),
-    //            CreateBlox("My Friend InvitedBloxs", "My Friend Blox",10000000000, 2000000000, 8000000000,fulaUser, null, null, 1000000000, 0, 0, 1000000000, 0),
-    //            CreateBlox("The long number of characters in the InvitedBloxs name should be handled ", "InvitedBloxs")
-    //        },
-    //        actionLatency,
-    //        enumerationLatency);
+        var bloxs = new FakeBloxService(
+            new List<Blox>
+            {
+                CreateBlox("The long number of characters in the blox id should be handled", "The long number of characters in the Blox name should be handled","Blox OwnerDId"),
+                CreateBlox("Home Blox Id", "Home Blox Name", "Home Blox Owner"),
+                CreateBlox("Company Blox", "Company Blox","Company Blox OwnerDId")
+            },
+            invitedBloxs,
+            actionLatency,
+            enumerationLatency);
 
-    //    return bloxs;
-    //}
+        return bloxs;
+    }
 
-    //private static Blox CreateBlox(string bloxId,
-    //                              string name,
-    //                              long? totalSpace = null,
-    //                              long? usedSpace = null,
-    //                              long? freeSpace = null,
-    //                              FulaUser owner = null,
-    //                              string? poolName = null,
-    //                              string? poolId = null,
-    //                              long? photosUsed = null,
-    //                              long? videosUsed = null,
-    //                              long? audiosUsed = null,
-    //                              long? docsUsed = null,
-    //                              long? otherUsed = null)
-    //{
-    //    var blox = new Blox()
-    //    {
-    //        Id = bloxId,
-    //        Name = name,
-    //        TotalSpace = totalSpace,
-    //        UsedSpace = usedSpace,
-    //        FreeSpace = freeSpace,
-    //        Owner = owner,
-    //        PoolName = poolName,
-    //        PoolId = poolId,
-    //        PhotosUsed = photosUsed,
-    //        VideosUsed = videosUsed,
-    //        AudiosUsed = audiosUsed,
-    //        DocsUsed = docsUsed,
-    //        OtherUsed = otherUsed
-    //    };
+    public FakeBloxService CreateALotOfBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    {
+        var bloxs = new FakeBloxService(
+            new List<Blox>
+            {
+                CreateBlox("My Country Blox One", "First Blox", "First Blox OwnerDId"),
+                CreateBlox("My Country Blox Two", "Second Blox","Second Blox OwnerDId"),
+                CreateBlox("My Country Blox Three", "Third Blox","Third Blox OwnerDId"),
+                CreateBlox("My City Blox1", "My City  Blox1", "My City  Blox OwnerDId"),
+                CreateBlox("Eighth Blox One", "Eighth Blox One", "Eighth OwnerDId"),
+                CreateBlox("Eighth Blox Two", "Eighth Blox Two", "Eighth OwnerDId"),
+                CreateBlox("Canada Blox", "Canada Blox", "Canada OwnerDId"),
+                CreateBlox("Germany Blox", "Germany Blox", "Germany OwnerDId"),
+                CreateBlox("China Blox", "China Blox", "China OwnerDId"),
+                CreateBlox("Home Blox", "Home Blox", "Home OwnerDId"),
+                CreateBlox("Company Blox", "Company Blox", "Company OwnerDId")
+            },
+            new List<Blox>
+            {
+                CreateBlox("My City InvitedBloxs", "My City Blox", "My City"),
+                CreateBlox("My Father InvitedBloxs", "My Father Blox","OwnerDId"),
+                CreateBlox("My Friend InvitedBloxs", "My Friend Blox", "1452Canada"),
+                CreateBlox("The long number of characters in the InvitedBloxs name should be handled ", "InvitedBloxs", "Germany"),
+                CreateBlox("Company InvitedBloxs", "Company InvitedBloxs", "Company"),
+                CreateBlox("China InvitedBloxs", "China InvitedBloxs", "ChinaInvitedBloxs"),
+            },
+            actionLatency,
+            enumerationLatency);
 
-    //    return blox;
-    //}
+        return bloxs;
+    }
+
+    private static Blox CreateBlox(string bloxId,
+                                   string name,
+                                   string ownerDId)
+    {
+        var blox = new Blox(bloxId, name, ownerDId);
+
+        return blox;
+    }
 }

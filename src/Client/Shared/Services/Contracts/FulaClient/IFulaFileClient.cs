@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
@@ -10,22 +11,37 @@ public interface IFulaFileClient
     /// <remarks>ToDo: Resume Upload Support</remarks>
     /// <param name="token"></param>
     /// <param name="path"></param>
+    /// <param name="originDevice"></param>
     /// <param name="stream"></param>
     /// <param name="onProgress"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task UploadFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    
+    Task UploadFileAsync(string token, string path, string originDevice, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
+
+    /// <summary>
+    /// Update file content
+    /// </summary>
+    /// <remarks>ToDo: Resume Upload Support</remarks>
+    /// <param name="token"></param>
+    /// <param name="path"></param>
+    /// <param name="stream"></param>
+    /// <param name="onProgress"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task UpdateFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
+
+
     /// <summary>
     /// Add new folder
     /// </summary>
     /// <param name="token"></param>
     /// <param name="path"></param>
     /// <param name="folderName"></param>
+    /// <param name="originDevice"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task AddFolderAsync(string token, string path, string folderName, CancellationToken? cancellationToken = null);
-    
+    Task AddFolderAsync(string token, string path, string folderName, string originDevice, CancellationToken? cancellationToken = null);
+
     /// <summary>
     /// Get a file stream
     /// </summary>
@@ -35,7 +51,7 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<Stream> GetFileStreamAsync(string token, string filePath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    
+
     /// <summary>
     /// move some artifacts to another place.
     /// </summary>
@@ -50,7 +66,6 @@ public interface IFulaFileClient
     /// <returns>The failed moved artifacts</returns>
     Task<List<string>> MoveArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
 
-
     /// <summary>
     /// copy some artifacts to another place.
     /// </summary>
@@ -64,7 +79,7 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns>The failed copied artifacts</returns>
     Task<List<string>> CopyArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-   
+
     /// <summary>
     /// Rename a file
     /// </summary>
@@ -74,7 +89,7 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RenameFileAsync(string token, string filePath, string newName, CancellationToken? cancellationToken = null);
-    
+
     /// <summary>
     /// Rename a folder
     /// </summary>
@@ -84,7 +99,7 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task RenameFolderAsync(string token, string folderPath, string newName, CancellationToken? cancellationToken = null);
-    
+
     /// <summary>
     /// Delete some artifacts
     /// </summary>
@@ -94,17 +109,19 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task DeleteArtifactsAsync(string token, IEnumerable<string> sourcesPath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    
+
     /// <summary>
     /// AsyncEnumerable or Async?
     /// </summary>
-    /// <remarks>ToDo: Specifiy the required fields to return.</remarks>
+    /// <remarks>
+    /// ToDo: Specifiy the required fields to return.
+    /// </remarks>
     /// <param name="token"></param>
     /// <param name="path"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     IAsyncEnumerable<FsArtifact> GetChildrenArtifactsAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
-   
+
     /// <summary>
     /// AsyncEnumerable or Async?
     /// </summary>
@@ -126,7 +143,16 @@ public interface IFulaFileClient
     /// <returns></returns>
     Task<FsArtifact> GetArtifactAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
 
-  
+    /// <summary>
+    /// Set permission to user for access to an artifact with specific accessibility
+    /// </summary>
+    /// <param name="token"></param>
+    /// <param name="permissionInfos"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task SetPermissionArtifactsAsync(string token, IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null);
+
+
     /// <summary>
     /// Get all artifacts that I share.
     /// </summary>
@@ -134,14 +160,7 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     IAsyncEnumerable<FsArtifact> GetSharedByMeArtifacsAsync(string token, CancellationToken? cancellationToken = null);
-    
-    /// <summary>
-    /// Get all artifacts that have been shared with me.
-    /// </summary>
-    /// <param name="token"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    IAsyncEnumerable<FsArtifact> GetSharedWithMeArtifacsAsync(string token, CancellationToken? cancellationToken = null);
+
 
     /// <summary>
     /// Get meta of an artifac.
@@ -152,7 +171,8 @@ public interface IFulaFileClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<FsArtifact> GetArtifactMetaAsync(string token, string path, CancellationToken? cancellationToken = null);
-    
+
+
     /// <summary>
     /// Get activity history of an artifact
     /// </summary>
@@ -164,7 +184,7 @@ public interface IFulaFileClient
     /// <returns></returns>
     Task<List<FsArtifactActivity>> GetActivityHistoryAsync(string token, string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
 
-    
+
     /// <summary>
     /// Get an artifact link for share.
     /// </summary>

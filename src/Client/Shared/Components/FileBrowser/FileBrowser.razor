@@ -15,7 +15,7 @@
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
                IsPinned="@(_currentArtifact?.IsPinned ?? false)"
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
-               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact.FullPath))"
+               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
@@ -73,13 +73,13 @@
                 <div class="info-selection">
                     <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
                     <div class="item-selected">
-                        <span class="item-selected-count">@_selectedArtifacts?.Length</span>
+                        <span class="item-selected-count">@_selectedArtifacts?.Count</span>
                         <span class="item-selected-text">items selected</span>
                     </div>
                 </div>
 
                 <div class="right-part">
-                    @if (_selectedArtifacts?.Length>0)
+                    @if (_selectedArtifacts?.Count > 0)
                     {
                         <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
                     }
@@ -105,13 +105,13 @@
         <ArtifactExplorer Artifacts="_filteredArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
-                      OnArtifactsOptionsClick="HandleOptionsArtifact"
+                      OnArtifactOptionClick="HandleOptionsArtifact"
+                      OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="_viewMode"
                       FileCategoryFilter="_fileCategoryFilter"
                       IsLoading="_isLoading"
                       HandleBack="HandleToolbarBackClick"
-                      @bind-IsSelected="_isSelected"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />
     }
