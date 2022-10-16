@@ -1,1 +1,56 @@
-﻿
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_mixins.scss';
+
+.welcome-page {
+    padding: $spacing-72 $spacing-21 $spacing-16;
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+}
+
+.welcome-desc-container {
+    text-align: center;
+    color: color(gray-content1);
+    margin-bottom: $spacing-18;
+
+    .welcome-text {
+        font-family: $montserrat-medium;
+        font-size: $font-size-10;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-2;
+    }
+
+    .connect-text {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-36;
+        line-height: $line-height-48;
+        max-width: 269px;
+        margin: $spacing-16 auto;
+    }
+
+    .connect-desc {
+        font-family: $open-sans-regular;
+        font-size: $font-size-14;
+        line-height: $line-height-24;
+        letter-spacing: $letter-spacing-02;
+        max-width: 333px;
+        margin: $spacing-0 auto;
+    }
+}
+
+.file-sync-logo {
+    max-width: 224px;
+    width: 100%;
+    height: 224px;
+    margin: $spacing-0 auto $spacing-18;
+    align-self: center;
+
+    background: {
+        image: url(images/Files/file-sync-logo-test.svg);
+        size: 100% 224px;
+        repeat: no-repeat;
+        position: center;
+    }
+}
