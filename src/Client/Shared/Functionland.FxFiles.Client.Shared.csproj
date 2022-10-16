@@ -111,9 +111,5 @@
         <DesignTime>True</DesignTime>
       </Compile>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Components\FxLoading\" />
-    </ItemGroup>
 	
 </Project>
