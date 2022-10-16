@@ -51,9 +51,9 @@
             StateHasChanged();
         }
 
-        private async Task OnThemeChangedAsync(bool isTheme)
+        private async Task OnThemeChangedAsync(bool isDark)
         {
-            IsDarkMode = isTheme;
+            IsDarkMode = isDark;
             await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
             StateHasChanged();
         }

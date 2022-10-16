@@ -47,13 +47,17 @@
         </div>
     </div>
 
+    <BitRadioButtonGroup Name="ThemeGroup">
+        <BitRadioButtonOption IsChecked="@(!IsDarkMode)" IsCheckedChanged="@OnThemeChangedAsync" Text="Light" />
+        <BitRadioButtonOption IsChecked="@(IsDarkMode)" IsCheckedChanged="@OnThemeChangedAsync" Text="Dark" />
+    </BitRadioButtonGroup>
+
     <div class="system-theme-setting">
         <div class="system-theme-info">
             <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)] <span class="system-mode">@Localizer[nameof(AppStrings.DarkMode)]</span> <span class="mode-text">@Localizer[nameof(AppStrings.Mode)]</span></div>
             <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
         </div>
-
-        <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
+        <BitToggle @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
     </div>
 
 </section>

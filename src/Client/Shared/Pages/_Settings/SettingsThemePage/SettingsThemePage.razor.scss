@@ -2,10 +2,10 @@
 @import '../../../Styles/abstracts/_functions.scss';
 @import '../../../Styles/components/_bit-toggle.scss';
 @import '../../../Styles/components/_bit-checkbox.scss';
+@import '../../../Styles/components/_bit-radriobutton.scss';
 
 .theme-mode {
     padding: $spacing-16 $spacing-21;
-
 }
 
 .mode-content {
@@ -81,7 +81,6 @@
         }
     }
 }
-
 
 .theme-options {
     gap: 10px;
