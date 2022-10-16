@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Functionland.FxFiles.Client.Shared.Services.Implementations;
+using Functionland.FxFiles.Client.Shared.Utils;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,19 +19,38 @@ namespace Functionland.FxFiles.Client.Test.IntegrationTests
                {
                    services.AddClientSharedServices();
                    services.AddClientTestServices(TestContext);
+                   services.AddSingleton<IFulaSyncService, FulaSyncService>();
                    services.AddSingleton<IFulaFileClient>(s => s.GetRequiredService<FakeFulaFileClientFactory>().CreateSyncScenario01());
                    services.AddSingleton<ILocalDbArtifactService>(s => s.GetRequiredService<FakeLocalDbArtifactServiceFactory>().CreateSyncScenario01());
+                   services.AddSingleton<ILocalDbFulaSyncItemService, FakeLocalDbFulaSyncItemService>();
                }
             ).Build();
 
             var serviceScope = testHost.Services.CreateScope();
             var serviceProvider = serviceScope.ServiceProvider;
 
-            var syncService = serviceProvider.GetRequiredService<IFulaSyncService>();
+            var syncService = serviceProvider.GetService<IFulaSyncService>();
+            var localDatabase = serviceProvider.GetService<ILocalDbArtifactService>();
+            var fulaService = serviceProvider.GetService<IFulaFileClient>();
 
-            await syncService.SyncItemsAsync();
+            var localRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-            // Assertions
+            var localPath = Path.Combine(localRootPath, "MyFiles\\Music");
+            var beforeSyncLocalDb = await localDatabase.GetArtifactAsync(localPath, "token,01");
+            Assert.IsNull(beforeSyncLocalDb);
+
+            var fulaRootPath = FulaConvention.FulaRootPath;
+            var fulaPath = Path.Combine(fulaRootPath, "MyFiles\\Music");
+            var beforeSyncFula = await fulaService.GetArtifactAsync("token,01", fulaPath);
+            Assert.IsNotNull(beforeSyncFula);
+
+            await syncService.InitAsync();
+
+            var afterSyncLocalDb = await localDatabase.GetArtifactAsync(localPath, "token,01");
+            Assert.IsNotNull(afterSyncLocalDb);
+
+            var fulaAfterSync = await fulaService.GetArtifactAsync("token,01", fulaPath);
+            Assert.IsNotNull(fulaAfterSync);
         }
 
         [TestMethod]

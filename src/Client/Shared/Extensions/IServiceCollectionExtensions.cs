@@ -29,6 +29,11 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
         services.AddSingleton<IGoBackService, GoBackService>();
+
+        services.AddSingleton<FakeFulaFileClientFactory>();
+        services.AddSingleton<ILocalDbArtifactService, FakeLocalDbArtifactService>();
+        services.AddSingleton<FakeLocalDbArtifactServiceFactory>();
+
         return services;
     }
 
