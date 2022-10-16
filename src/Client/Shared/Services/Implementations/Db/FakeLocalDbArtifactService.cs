@@ -24,8 +24,8 @@ public class FakeLocalDbArtifactService : ILocalDbArtifactService
     {
         var result = _allArtifacts.FirstOrDefault(f => f.FullPath == localPath);
 
-        if (result is null)
-            throw new Exception();
+        //if (result is null)
+        //    throw new Exception();
 
         return result;
     }

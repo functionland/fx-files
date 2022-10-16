@@ -10,8 +10,8 @@ public class FakeLocalDbArtifactServiceFactory
         {
             CreateFolder(FulaConvention.FulaFilesRootPath),
             CreateFolder(FulaConvention.FulaSharedRootPath),
-            CreateFolder($"{FulaConvention.FulaFilesRootPath}/Documents"),
-            CreateFolder($"{FulaConvention.FulaFilesRootPath}/Pictures"),
+            CreateFolder($"{FulaConvention.FulaFilesRootPath}\\Documents"),
+            CreateFolder($"{FulaConvention.FulaFilesRootPath}\\Pictures"),
 
         };
 
@@ -30,12 +30,11 @@ public class FakeLocalDbArtifactServiceFactory
 
         return new FsArtifact(filePath, fileName, FsArtifactType.File, FsFileProviderType.InternalMemory)
         {
-            ParentFullPath = filePath.Replace($"/{fileName}", ""),
+            ParentFullPath = Path.GetDirectoryName(filePath),
             FileExtension = extension,
             ContentHash = DateTimeOffset.UtcNow.ToString(),
             LastModifiedDateTime = DateTimeOffset.UtcNow,
-            CreateDateTime = DateTimeOffset.UtcNow,
-            LocalFullPath = filePath,
+            CreateDateTime = DateTimeOffset.UtcNow
 
         };
     }
@@ -46,11 +45,10 @@ public class FakeLocalDbArtifactServiceFactory
 
         return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
         {
-            ParentFullPath = folderPath.Replace($"/{folderName}", ""),
+            ParentFullPath = Path.GetDirectoryName(folderPath),
             ContentHash = DateTimeOffset.UtcNow.ToString(),
             LastModifiedDateTime = DateTimeOffset.UtcNow,
-            CreateDateTime = DateTimeOffset.UtcNow,
-            LocalFullPath = folderPath,
+            CreateDateTime = DateTimeOffset.UtcNow
 
         };
     }
