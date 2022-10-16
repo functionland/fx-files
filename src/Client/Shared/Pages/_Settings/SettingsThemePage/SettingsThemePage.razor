@@ -29,28 +29,28 @@
     OnBackClick="HandleToolbarBack" />
 
 <section class="theme-mode">
-    <div class="mode-content">Mode</div>
+    <div class="mode-content">@Localizer[nameof(AppStrings.Mode)]</div>
 
     <div class="select-theme-mode">
         <div class="light-mode-part">
             <div class="mode-img light-mode-img"></div>
             <label class="mode-content" id="light-mode">
-                Light 
+                @Localizer[nameof(AppStrings.LightMode)]
             </label>
         </div>
 
         <div class="dark-mode-part">
             <div class="mode-img dark-mode-img"></div>
             <label class="mode-content" id="light-mode">
-                Dark
+                @Localizer[nameof(AppStrings.DarkMode)]
             </label>
         </div>
     </div>
 
     <div class="system-theme-setting">
         <div class="system-theme-info">
-            <div class="system-theme-option">Automatic dark mode</div>
-            <div class="system-theme-desc">Use system light/dark mode setting.</div>
+            <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)]<span class="system-mode">@Localizer[nameof(AppStrings.DarkMode)]</span><span class="mode-content">@Localizer[nameof(AppStrings.Mode)]</span></div>
+            <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
         </div>
 
         <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />

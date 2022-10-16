@@ -21,6 +21,7 @@
     align-items: center;
     flex-flow: row wrap;
     gap: $spacing-24;
+    cursor: pointer;
     margin-bottom: $spacing-48;
 
     .mode-img {
@@ -66,6 +67,11 @@
             font-size: $font-size-14;
             line-height: $line-height-24;
             color: color(gray-content1);
+
+            .system-mode,
+            mode-content {
+                text-transform: lowercase;
+            }
         }
 
         .system-theme-desc {
