@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Extensions;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class FakePinService : ILocalDevicePinService, IFulaPinService
 {
@@ -6,7 +8,7 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
     private List<FsArtifact> _allArtifacts { get; } = new();
     public TimeSpan? ActionLatency { get; set; }
     public TimeSpan? EnumerationLatency { get; set; }
-
+    public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
     public FakePinService(IEnumerable<FsArtifact>? allArtifacts = null,
                           IEnumerable<FsArtifact>? pinnedArtifacts = null,
                           TimeSpan? actionLatency = null,
@@ -70,12 +72,14 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
     {
         await LatencyActionAsync();
 
+        var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
+
         foreach (var item in artifact)
         {
             var pinnedItem = _pinnedArtifacts?.FirstOrDefault(a => a.FullPath == item.FullPath);
 
             if (pinnedItem is not null)
-                throw new Exception("");//TODO
+                throw new ArtifactAlreadyPinnedException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyPinnedException, pinnedItem?.ArtifactType.ToString() ?? lowerCaseArtifact));
 
             _pinnedArtifacts?.Add(item);
         }
@@ -85,8 +89,10 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
     {
         await LatencyActionAsync();
 
+        var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
+
         if (!_pinnedArtifacts.Any())
-            throw new Exception("");//TODO
+            throw new ArtifactAlreadyDoseNotPinnedException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyDoseNotPinnedException));
 
         foreach (var itemPath in path)
         {
