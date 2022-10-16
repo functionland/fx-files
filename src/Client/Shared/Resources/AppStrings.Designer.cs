@@ -1274,5 +1274,32 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("Upload", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WELCOME.
+        /// </summary>
+        public static string Welcome {
+            get {
+                return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect to Fula.
+        /// </summary>
+        public static string WelcomePageConnectContent {
+            get {
+                return ResourceManager.GetString("WelcomePageConnectContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui..
+        /// </summary>
+        public static string WelcomePageDesc {
+            get {
+                return ResourceManager.GetString("WelcomePageDesc", resourceCulture);
+            }
+        }
     }
 }

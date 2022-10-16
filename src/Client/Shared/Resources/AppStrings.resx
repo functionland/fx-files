@@ -522,4 +522,13 @@
   <data name="SetupComplete" xml:space="preserve">
     <value>Setup complete</value>
   </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>WELCOME</value>
+  </data>
+  <data name="WelcomePageConnectContent" xml:space="preserve">
+    <value>Connect to Fula</value>
+  </data>
+  <data name="WelcomePageDesc" xml:space="preserve">
+    <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
+  </data>
 </root>
