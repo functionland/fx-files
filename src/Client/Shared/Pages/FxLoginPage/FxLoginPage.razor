@@ -1,8 +1,14 @@
 ﻿@page "/login"
 @inherits AppComponentBase;
 @namespace Functionland.FxFiles.Client.Shared.Pages
+@layout OnboardingMainLayout
 
 <PageTitle>@Localizer[nameof(AppStrings.Login)]</PageTitle>
+
+@if (_isLoading)
+{
+    <LoadingComponent ZIndex="999"/>
+}
 
 <section class="welcome-page">
     <div class="welcome-desc-container">
