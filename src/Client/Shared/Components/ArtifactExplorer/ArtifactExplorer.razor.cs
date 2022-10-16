@@ -12,8 +12,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
         [Parameter] public List<FsArtifact> Artifacts { get; set; } = default!;
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
-        [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
+        [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
+        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
@@ -33,19 +34,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return base.OnInitAsync();
         }
 
-        private async Task HandleArtifactOptionsClick(FsArtifact artifact)
+        private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
-            await OnArtifactsOptionsClick.InvokeAsync(artifact);
+            await OnArtifactOptionClick.InvokeAsync(artifact);
         }
 
-        //protected override Task OnParamsSetAsync()
-        //{
-        //    if (Artifacts is null)
-        //    {
-        //        Artifacts = Array.Empty<FsArtifact>();
-        //    }
-        //    return base.OnParamsSetAsync();
-        //}
+        private async Task HandleArtifactsOptionClick(List<FsArtifact> artifacts)
+        {
+            await OnArtifactsOptionClick.InvokeAsync(artifacts);
+        }
 
         private async Task HandleArtifactClick(FsArtifact artifact)
         {
@@ -57,37 +54,38 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return artifact is null ? true : false;
         }
 
-        public async Task PointerDown(PointerEventArgs args, FsArtifact artifact)
+        public void PointerDown(FsArtifact artifact)
         {
-            if (args.Button == 0)
-            {
-                _longPressedArtifact = artifact;
-                _timer = new(1000);
-                _timer.Enabled = true;
-                _timer.Start();
-                _timer.Elapsed += TimerElapsed;
-            }
-            else if (args.Button == 2 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
-            {
-                await HandleArtifactOptionsClick(artifact);
-            }
+            _longPressedArtifact = artifact;
+            _timer = new(1000);
+            _timer.Enabled = true;
+            _timer.Start();
+            _timer.Elapsed += TimerElapsed;
         }
 
         private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+            if (_timer != null)
             {
-                DisposeTimer();
-                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-
-                InvokeAsync(async () =>
+                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
-                    await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                    _longPressedArtifact.IsSelected = true;
-                    await OnSelectionChanged(_longPressedArtifact);
-                    StateHasChanged();
-                });
-            };
+                    DisposeTimer();
+                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+
+                    InvokeAsync(async () =>
+                    {
+                        if (_longPressedArtifact != null)
+                        {
+                            await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                            _longPressedArtifact.IsSelected = true;
+                            await OnSelectionChanged(_longPressedArtifact);
+                            _longPressedArtifact = null;
+                        }
+                        StateHasChanged();
+                    });
+                };
+            }
+            DisposeTimer();
         }
 
         private void DisposeTimer()
@@ -101,19 +99,42 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
-        public async Task PointerUp(FsArtifact artifact)
+        public async Task PointerUp(PointerEventArgs args, FsArtifact artifact)
         {
-            if (_timer != null)
+            if (args.Button == 0)
             {
-                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                if (_timer != null)
                 {
                     DisposeTimer();
-                    await OnSelectArtifact.InvokeAsync(artifact);
-                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                    if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                    {
+                        await OnSelectArtifact.InvokeAsync(artifact);
+                        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                    }
+                    else
+                    {
+                        if (_longPressedArtifact != null)
+                        {
+                            await OnSelectionChanged(artifact);
+                            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                        }
+                    }
                 }
-                else
+            }
+            else if (args.Button == 2)
+            {
+                DisposeTimer();
+                if (SelectedArtifacts.Count == 0 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
                 {
-                    await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                    await HandleArtifactOptionClick(artifact);
+                }
+                else if (SelectedArtifacts.Count == 1)
+                {
+                    await HandleArtifactOptionClick(SelectedArtifacts[0]);
+                }
+                else if (SelectedArtifacts.Count > 1)
+                {
+                    await HandleArtifactsOptionClick(SelectedArtifacts);
                 }
             }
             StateHasChanged();
@@ -126,19 +147,28 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         public async Task OnSelectionChanged(FsArtifact artifact)
         {
-            if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+            DisposeTimer();
+            if (true)
             {
-                artifact.IsSelected = false;
-                SelectedArtifacts.Remove(artifact);
-            }
-            else
-            {
-                artifact.IsSelected = true;
-                SelectedArtifacts.Add(artifact);
-            }
+                if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+                {
+                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                    await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                }
+                if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+                {
+                    artifact.IsSelected = false;
+                    SelectedArtifacts.Remove(artifact);
+                }
+                else
+                {
+                    artifact.IsSelected = true;
+                    SelectedArtifacts.Add(artifact);
+                }
 
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            StateHasChanged();
+                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                StateHasChanged();
+            }
         }
 
         public void OnCreateFolder()
