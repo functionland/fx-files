@@ -6,16 +6,51 @@
 .theme-mode {
     padding: $spacing-16 $spacing-21;
 
-    .mode-content {
-        font-family: $montserrat-semi-bold;
-        font-size: $font-size-18;
-        line-height: $line-height-24;
-        color: color(gray-content1);
-        margin-bottom: $spacing-34;
-    }
 }
 
+.mode-content {
+    font-family: $montserrat-semi-bold;
+    font-size: $font-size-18;
+    line-height: $line-height-24;
+    color: color(gray-content1);
+    margin-bottom: $spacing-34;
+}
 
+.select-theme-mode {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+    gap: $spacing-24;
+    margin-bottom: $spacing-48;
+
+    .mode-img {
+        width: 154.5px;
+        height: 96px;
+        background: {
+            repeat: no-repeat;
+            size: 154.5px 96px;
+            position: center;
+        }
+
+        margin-bottom: $spacing-16;
+    }
+
+    .light-mode-img {
+        background-image: url('images/settings/light-mode.svg');
+    }
+
+    .dark-mode-img {
+        background-image: url('images/settings/dark-mode.svg');
+    }
+
+    .mode-content {
+        font-family: $open-sans-regular;
+        font-size: $font-size-14;
+        line-height: $line-height-24;
+        letter-spacing: $letter-spacing-02;
+        color: color(gray-content1);
+    }
+}
 
 
 .theme-options {
