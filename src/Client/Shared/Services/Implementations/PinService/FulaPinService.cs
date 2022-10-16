@@ -22,12 +22,12 @@ public partial class FulaPinService : IFulaPinService
         throw new NotImplementedException();
     }
 
-    public Task SetArtifactsPinAsync(FsArtifact[] artifact, CancellationToken? cancellationToken = null)
+    public Task SetArtifactsPinAsync(IEnumerable<FsArtifact> artifact, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task SetArtifactsUnPinAsync(string[] path, CancellationToken? cancellationToken = null)
+    public Task SetArtifactsUnPinAsync(IEnumerable<string> path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

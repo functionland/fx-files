@@ -94,7 +94,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     }
 
-    public async Task SetArtifactsPinAsync(FsArtifact[] artifacts, CancellationToken? cancellationToken = null)
+    public async Task SetArtifactsPinAsync(IEnumerable<FsArtifact> artifacts, CancellationToken? cancellationToken = null)
     {
         foreach (var artifact in artifacts)
         {
@@ -127,7 +127,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
         }
     }
 
-    public async Task SetArtifactsUnPinAsync(string[] paths, CancellationToken? cancellationToken = null)
+    public async Task SetArtifactsUnPinAsync(IEnumerable<string> paths, CancellationToken? cancellationToken = null)
     {
         foreach (var path in paths)
         {
