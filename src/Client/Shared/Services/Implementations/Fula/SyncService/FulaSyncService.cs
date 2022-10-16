@@ -59,7 +59,7 @@ public partial class FulaSyncService : IFulaSyncService
             var fulaSyncItem = new FulaSyncItem()
             {
                 LocalPath = GetLocalRootPath(),
-                FulaPath = GetFulaRootPath(),
+                FulaPath = FulaConvention.FulaRootPath,
                 LastSyncStatus = SyncStatus.Inprogress,
                 SyncType = FulaSyncType.FullSync,
                 UserToken = CurrentToken
@@ -254,7 +254,7 @@ public partial class FulaSyncService : IFulaSyncService
     {
         // TODO: How to get token?
 
-        return "token01";
+        return "token,01";
     }
     
     private async Task<List<FsArtifact>> SyncLocalToFulaJustAddAsync(string localRootPath, string fulaRootPath, List<FsArtifact> addedArtifacts)
