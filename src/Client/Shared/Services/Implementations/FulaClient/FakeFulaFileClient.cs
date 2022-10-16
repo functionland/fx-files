@@ -24,7 +24,7 @@ public class FakeFulaFileClient : IFulaFileClient
 
         foreach (var artifact in artifacts)
         {
-            if (_fulaUserNodes.TryAdd(artifact.Key, artifact.Value))
+            if (!_fulaUserNodes.TryAdd(artifact.Key, artifact.Value))
             {
                 throw new InvalidOperationException("Can not fill _artifacts");
             }
