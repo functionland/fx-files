@@ -44,7 +44,7 @@ public class FakeLocalDbArtifactServiceFactory
             ContentHash = filePath + DateTimeOffset.UtcNow.ToString(),
             LastModifiedDateTime = DateTimeOffset.UtcNow,
             CreateDateTime = DateTimeOffset.UtcNow,
-            LocalFullPath = GetLocalPathBasedOnFulaPath(GetLocalRootPath(), FulaConvention.FulaRootPath, filePath)
+            LocalFullPath = GetLocalPathBasedOnFulaPath(GetLocalRootPath(), filePath)
         };
     }
 
