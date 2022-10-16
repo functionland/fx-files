@@ -4,6 +4,10 @@
 @import '../../../Styles/components/_bit-checkbox.scss';
 @import '../../../Styles/components/_bit-radriobutton.scss';
 
+.fxtoolbar-wrapper {
+    padding-top: $spacing-16;
+}
+
 .theme-mode {
     padding: $spacing-16 $spacing-21;
 }
