@@ -29,6 +29,9 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
         services.AddSingleton<IGoBackService, GoBackService>();
+
+        services.AddTransient<IThumbnailPlugin, ImageThumbnailPlugin>();
+        services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         return services;
     }
 

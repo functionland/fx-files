@@ -2,6 +2,6 @@
 {
     public interface IThumbnailService
     {
-        Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
+
     }
 }

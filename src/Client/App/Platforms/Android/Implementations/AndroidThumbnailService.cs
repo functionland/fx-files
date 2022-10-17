@@ -3,6 +3,7 @@
 using AndroidX.ExifInterface.Media;
 
 using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.Thumbnail;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Java.IO;
@@ -19,7 +20,7 @@ using Size = Microsoft.Maui.Graphics.Size;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
-public class AndroidThumbnailService : LocalThumbnailService
+public class AndroidThumbnailService : ThumbnailService
 {
     public override async Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
     {

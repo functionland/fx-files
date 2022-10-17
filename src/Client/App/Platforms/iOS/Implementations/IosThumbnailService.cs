@@ -1,9 +1,10 @@
 ﻿using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.Thumbnail;
 
 namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations
 {
-    public partial class IosThumbnailService : LocalThumbnailService
+    public partial class IosThumbnailService : ThumbnailService
     {
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 

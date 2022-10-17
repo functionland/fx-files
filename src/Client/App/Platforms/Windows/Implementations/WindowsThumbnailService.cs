@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.Thumbnail;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using System.Drawing;
@@ -8,7 +9,7 @@ using Windows.System;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 
-public partial class WindowsThumbnailService : LocalThumbnailService
+public partial class WindowsThumbnailService : ThumbnailService
 {
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
@@ -37,7 +38,7 @@ public partial class WindowsThumbnailService : LocalThumbnailService
         return thumbPath;
     }
 
-    public override string GetAppCacheDirectory()
+    protected override string GetAppCacheDirectory()
     {
         return FileSystem.CacheDirectory;
     }
