@@ -2,27 +2,26 @@
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public class ArtifactThumbnailService<TFileService> : ThumbnailService
+public class ArtifactThumbnailService<TFileService> : ThumbnailService, IArtifactThumbnailService<TFileService>
     where TFileService : IFileService
 {
     TFileService FileServcie { get; set; }
     public ArtifactThumbnailService(
         IFileCacheService fileCacheService,
         IThumbnailPlugin[] thumbnailPlugins,
-        TFileService fileService
-        )
-        : base(fileCacheService, thumbnailPlugins)
+        TFileService fileService) : base(fileCacheService, thumbnailPlugins)
     {
         FileServcie = fileService;
     }
 
-    protected async Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+    public async Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
     {
         var uniqueName = GetUniqueName(artifact);
-        return await GetOrCreateThumbnailAsync("Artifacts", uniqueName, async () => await FileServcie.GetFileContentAsync(artifact.FullPath));
+        return await GetOrCreateThumbnailAsync(CacheCategoryType.Artifact, uniqueName,
+            async () => await FileServcie.GetFileContentAsync(artifact.FullPath, cancellationToken), cancellationToken);
     }
 
-    private string GetUniqueName(FsArtifact fsArtifact)
+    private static string GetUniqueName(FsArtifact fsArtifact)
     {
         var imagePath = fsArtifact.FullPath;
         var extension = Path.GetExtension(imagePath);

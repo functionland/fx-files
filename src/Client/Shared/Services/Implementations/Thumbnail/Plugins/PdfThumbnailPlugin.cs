@@ -1,8 +1,8 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public abstract class PdfThumbnailPlugin : IThumbnailPlugin
+public class PdfThumbnailPlugin : IThumbnailPlugin
 {
-    public Task<Stream> CreateThumbnailAsync(Stream input)
+    public Task<Stream> CreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

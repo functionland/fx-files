@@ -1,8 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Models;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
-
-public abstract class ThumbnailService : IThumbnailService
+public abstract class ThumbnailService
 {
     public IFileCacheService FileCacheService { get; set; } = default!;
     public IThumbnailPlugin[] ThumbnailPlugins { get; set; }
@@ -20,11 +18,11 @@ public abstract class ThumbnailService : IThumbnailService
     /// <param name="fileStream"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>{cache}/adfadgfasdfasdf52465s4fd6as5f4fa6sd5f4as6d5f.jpg</returns>
-    protected async Task<string?> GetOrCreateThumbnailAsync(string categoryFolder, string uniqueName, Func<Task<Stream>> getFileStreamFunc, CancellationToken? cancellationToken = null)
+    protected async Task<string?> GetOrCreateThumbnailAsync(CacheCategoryType cacheCategoryType, string uniqueName, Func<Task<Stream>> getFileStreamFunc, CancellationToken? cancellationToken = null)
     {
         var cacheUniqueName = Path.ChangeExtension(uniqueName, "jpg");
         return await FileCacheService.GetOrCreateCachedFileAsync(
-            categoryFolder,
+            cacheCategoryType,
             cacheUniqueName,
             async (cacheFilePath) => await OnCreateThumbnailAsync(uniqueName, cacheFilePath, await getFileStreamFunc(), cancellationToken),
             cancellationToken);
@@ -36,7 +34,7 @@ public abstract class ThumbnailService : IThumbnailService
         if (plugin is null)
             return false;
 
-        var thumbnailStream = await plugin.CreateThumbnailAsync(stream);
+        var thumbnailStream = await plugin.CreateThumbnailAsync(stream, cancellationToken);
 
         // write stream
         using (var fileStream = File.Create(thumbnailFilePath))
@@ -54,10 +52,4 @@ public abstract class ThumbnailService : IThumbnailService
         var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsExtensionSupported(extension));
         return plugin;
     }
-
-    //public abstract Task<string> MakeThumbnailAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null);
-
-    //protected abstract string GetAppCacheDirectory();
-
-
 }

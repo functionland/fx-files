@@ -1,7 +1,5 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-// ToDo: Make platform-specific implementations
-// Move classes and interfaces to proper files.
 public abstract class FileCacheService : IFileCacheService
 {
     public async Task InitAsync()
@@ -13,26 +11,26 @@ public abstract class FileCacheService : IFileCacheService
             Directory.CreateDirectory(destinationDirectory);
         }
 
-        // ToDo: Add folders based on enums.
+        var cacheCategoryTypes = Enum.GetNames<CacheCategoryType>();
+        foreach (var cacheCategoryType in cacheCategoryTypes)
+        {
+            var categoryDestinationDirectory = Path.Combine(GetAppCacheDirectory(), "FxThumbs", cacheCategoryType);
+
+            if (!Directory.Exists(categoryDestinationDirectory))
+            {
+                Directory.CreateDirectory(categoryDestinationDirectory);
+            }
+        }
     }
 
-    public async Task<string?> GetOrCreateCachedFileAsync(string categoryFolder, string cacheKey, Func<string, Task<bool>> onCreateFileAsync, CancellationToken? cancellationToken = null)
+    public async Task<string?> GetOrCreateCachedFileAsync(CacheCategoryType cacheCategoryType, string cacheKey, Func<string, Task<bool>> onCreateFileAsync, CancellationToken? cancellationToken = null)
     {
-        var cacheFolder = Path.Combine(GetAppCacheDirectory(), categoryFolder);
-        if (!Directory.Exists(cacheFolder))
-        {
-            Directory.CreateDirectory(cacheFolder);
-        }
+        var filePath = Path.Combine(GetAppCacheDirectory(), cacheCategoryType.ToString(), cacheKey);
 
-        var filePath = Path.Combine(cacheFolder, cacheKey);
+        if (File.Exists(filePath)) return filePath;
 
-        if (!File.Exists(filePath))
-        {
-            var isCreated = await onCreateFileAsync(filePath);
-
-            if (!isCreated)
-                return null;
-        }
+        var isCreated = await onCreateFileAsync(filePath);
+        if (!isCreated) return null;
 
         return filePath;
     }

@@ -3,5 +3,5 @@
 public interface IThumbnailPlugin
 {
     bool IsExtensionSupported(string extension);
-    Task<Stream> CreateThumbnailAsync(Stream input);
+    Task<Stream> CreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null);
 }

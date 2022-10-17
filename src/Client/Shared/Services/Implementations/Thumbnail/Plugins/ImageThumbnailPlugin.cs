@@ -2,12 +2,12 @@
 
 public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 {
-    public Task<Stream> CreateThumbnailAsync(Stream input)
+    public Task<Stream> CreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
     {
-        return OnCreateThumbnailAsync(input);
+        return OnCreateThumbnailAsync(input, cancellationToken);
     }
 
-    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream input);
+    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null);
 
     public bool IsExtensionSupported(string extension)
     {

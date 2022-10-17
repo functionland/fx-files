@@ -13,8 +13,8 @@ public static class IAndroidServiceCollectionExtensions
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
-        services.AddSingleton<IThumbnailService, AndroidThumbnailService>();
         services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
+        services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
 
         return services;
     }

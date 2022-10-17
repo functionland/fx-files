@@ -1,5 +1,6 @@
 ﻿
 using Functionland.FxFiles.Client.Shared.Services;
+using Functionland.FxFiles.Client.Shared.Services.Implementations;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -24,14 +25,15 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IFulaPinService, FulaPinService>();
 
         services.AddSingleton<IEventAggregator, EventAggregator>();
-        services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         services.AddSingleton<FakeFileServiceFactory>();
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
         services.AddSingleton<IGoBackService, GoBackService>();
 
-        services.AddTransient<IThumbnailPlugin, ImageThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
+        services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
+        services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
+
         return services;
     }
 
