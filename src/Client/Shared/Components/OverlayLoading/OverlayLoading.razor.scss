@@ -8,15 +8,13 @@
     background-color: color(app-bg);
 }
 
-body {
-    overflow: @(ZIndex != "0" ? "hidden" : "scroll");
-}
+
 
 .loading-container {
     height: 100%;
     max-width: 600px;
     width: 100%;
-    z-index: @ZIndex;
+    z-index: 50;
     position: fixed;
     display: flex;
     justify-content: center;
@@ -38,7 +36,7 @@ body {
     position: absolute;
     width: 6px;
     height: 6px;
-    background: @Color;
+    background: #808080;
     border-radius: 50%;
     animation: fx-loading-dots-ring 1.2s linear infinite;
 }
@@ -117,7 +115,7 @@ body {
     left: 62px;
 }
 
-@@keyframes fx-loading-dots-ring {
+@keyframes fx-loading-dots-ring {
     0%, 20%, 80%, 100% {
         transform: scale(1);
     }
