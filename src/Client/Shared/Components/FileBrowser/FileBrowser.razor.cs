@@ -891,7 +891,8 @@ public partial class FileBrowser : IDisposable
         if (text != null)
         {
             _searchText = text;
-            _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
+            _allArtifacts = _allArtifacts.Where(a => a.Name.ToLower().Contains(text.ToLower())).ToList();
+            FilterArtifacts();
         }
     }
 
