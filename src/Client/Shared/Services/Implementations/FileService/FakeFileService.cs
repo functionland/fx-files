@@ -33,7 +33,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 await Task.Delay(EnumerationLatency.Value);
         }
 
-        public async Task CopyArtifactsAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             foreach (var artifact in artifacts)
             {
@@ -176,7 +176,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             return artifact;
         }
 
-        public async Task DeleteArtifactsAsync(IEnumerable<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             var finalBag = new ConcurrentBag<FsArtifact>();
             var excludedPaths = new List<string>();
@@ -249,7 +249,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         }
 
-        public async Task MoveArtifactsAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             await CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
             await DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
