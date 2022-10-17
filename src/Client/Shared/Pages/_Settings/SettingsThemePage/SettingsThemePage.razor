@@ -67,7 +67,7 @@
             <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)] <span class="system-mode">@Localizer[nameof(AppStrings.DarkMode)]</span> <span class="mode-text">@Localizer[nameof(AppStrings.Mode)]</span></div>
             <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
         </div>
-        <BitToggle @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
+        <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
     </div>
 
 </section>
