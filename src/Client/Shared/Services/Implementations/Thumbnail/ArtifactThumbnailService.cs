@@ -8,7 +8,7 @@ public class ArtifactThumbnailService<TFileService> : ThumbnailService, IArtifac
     TFileService FileServcie { get; set; }
     public ArtifactThumbnailService(
         IFileCacheService fileCacheService,
-        IThumbnailPlugin[] thumbnailPlugins,
+        IEnumerable<IThumbnailPlugin> thumbnailPlugins,
         TFileService fileService) : base(fileCacheService, thumbnailPlugins)
     {
         FileServcie = fileService;

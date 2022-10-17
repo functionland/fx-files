@@ -3,9 +3,9 @@
 public abstract class ThumbnailService
 {
     public IFileCacheService FileCacheService { get; set; } = default!;
-    public IThumbnailPlugin[] ThumbnailPlugins { get; set; }
+    public IEnumerable<IThumbnailPlugin> ThumbnailPlugins { get; set; }
 
-    public ThumbnailService(IFileCacheService fileCacheService, IThumbnailPlugin[] thumbnailPlugins)
+    public ThumbnailService(IFileCacheService fileCacheService, IEnumerable<IThumbnailPlugin> thumbnailPlugins)
     {
         FileCacheService = fileCacheService;
         ThumbnailPlugins = thumbnailPlugins;
