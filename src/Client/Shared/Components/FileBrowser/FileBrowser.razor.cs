@@ -106,7 +106,7 @@ public partial class FileBrowser : IDisposable
                 }
                 ProgressBarCts = new CancellationTokenSource();
 
-                await FileService.CopyArtifactsAsync(artifacts.ToArray(), destinationPath, false
+                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
                     , onProgress: async (progressInfo) =>
                     {
                         ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
@@ -152,7 +152,7 @@ public partial class FileBrowser : IDisposable
                         {
                             await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
 
-                            await FileService.CopyArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true,
+                            await FileService.CopyArtifactsAsync(overwriteArtifacts, destinationPath, true,
                                 onProgress: async (progressInfo) =>
                                 {
                                     ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
@@ -215,7 +215,7 @@ public partial class FileBrowser : IDisposable
                     await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.MovingFiles), true);
                 }
 
-                await FileService.MoveArtifactsAsync(artifacts.ToArray(), destinationPath, false,
+                await FileService.MoveArtifactsAsync(artifacts, destinationPath, false,
                     onProgress: async (progressInfo) =>
                     {
                         ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
@@ -255,7 +255,7 @@ public partial class FileBrowser : IDisposable
                             await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
                         }
 
-                        await FileService.MoveArtifactsAsync(overwriteArtifacts.ToArray(), destinationPath, true,
+                        await FileService.MoveArtifactsAsync(overwriteArtifacts, destinationPath, true,
                             onProgress: async (progressInfo) =>
                             {
                                 ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
@@ -337,7 +337,7 @@ public partial class FileBrowser : IDisposable
         try
         {
             _isLoading = true;
-            await PinService.SetArtifactsPinAsync(artifacts.ToArray());
+            await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
             _isLoading = false;
         }
@@ -352,7 +352,7 @@ public partial class FileBrowser : IDisposable
         try
         {
             _isLoading = true;
-            var pathArtifacts = artifacts.Select(a => a.FullPath).ToArray();
+            var pathArtifacts = artifacts.Select(a => a.FullPath);
             await PinService.SetArtifactsUnPinAsync(pathArtifacts);
             await UpdatePinedArtifactsAsync(artifacts, false);
             _isLoading = false;
@@ -391,7 +391,7 @@ public partial class FileBrowser : IDisposable
                     {
                         await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.DeletingFiles), true);
 
-                        await FileService.DeleteArtifactsAsync(artifacts.ToArray(),
+                        await FileService.DeleteArtifactsAsync(artifacts,
                             onProgress: async (progressInfo) =>
                             {
                                 ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;

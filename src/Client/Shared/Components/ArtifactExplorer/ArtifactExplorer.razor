@@ -22,7 +22,7 @@
                 @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
                     <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
-                        <FxCheckBox IsChecked="@artifact.IsSelected" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)"/>
+                        <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)"/>
                     </div>
                 }
 

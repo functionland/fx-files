@@ -33,15 +33,15 @@ public class FakeIdentityService : IIdentityService
         }
     }
 
-    public async Task<List<FulaUser>> LoginAsync(DIdDocument dIdDocument, string securityKey, CancellationToken? cancellationToken = null)
+    public async Task<List<FulaUser>> LoginAsync(string dId, string securityKey, CancellationToken? cancellationToken = null)
     {
         if (ActionLatency != null)
         {
             await Task.Delay(ActionLatency.Value);
         }
 
-        var parent = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dIdDocument.DId && a.Key.IsParent == true).Key;
-        var children = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dIdDocument.DId).Value;
+        var parent = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dId && a.Key.IsParent == true).Key;
+        var children = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dId).Value;
 
         if (parent is null)
             throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
@@ -79,14 +79,14 @@ public class FakeIdentityService : IIdentityService
         return _currentUser;
     }
 
-    public async Task<FulaUser> RefreshUserAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null)
+    public async Task<FulaUser> RefreshUserAsync(string dId, CancellationToken? cancellationToken = null)
     {
         if (ActionLatency != null)
         {
             await Task.Delay(ActionLatency.Value);
         }
 
-        var user = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dIdDocument.DId).Key; 
+        var user = _fulaUsers?.FirstOrDefault(a => a.Key.DId == dId).Key; 
 
         if (user is null)
             throw new UnauthorizedException(StringLocalizer.GetString(AppStrings.UnauthorizedException));
@@ -105,11 +105,6 @@ public class FakeIdentityService : IIdentityService
             return true;
 
         return false;
-    }
-
-    public Task<DIdDocument> ConnectToWalletAsync(Uri uri, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<FulaUser> GetUserAsync(string dId, CancellationToken? cancellationToken = null)

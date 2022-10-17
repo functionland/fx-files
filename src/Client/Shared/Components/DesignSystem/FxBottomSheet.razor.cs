@@ -23,12 +23,22 @@
         [Parameter]
         public bool IsOpen { get; set; } = true;
 
+        [Parameter]
+        public bool CanClose { get; set; } = true;
+
 
         public async Task Close()
         {
-            IsOpen = false;
-            await IsOpenChanged.InvokeAsync(IsOpen);
-            await OnClose.InvokeAsync();
+            if (CanClose)
+            {
+                IsOpen = false;
+                await IsOpenChanged.InvokeAsync(IsOpen);
+                await OnClose.InvokeAsync();
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }
