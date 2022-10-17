@@ -30,7 +30,7 @@ $success-dark: #37B24D;
 $info-dark: #1C7ED6;
 $warning-dark: #FCC419;
 $error-dark: #FA5252;
-$input-dark-disable: $gray-dark-border; 
+$input-dark-disable: $gray-dark-border;
 
 //light colors
 $gray-light-content1: #343A40;
@@ -53,35 +53,35 @@ $success-light: $success-dark;
 $input-light-disable: $gray-dark-content3;
 
 $colors-light: (
-  "app-bg": $pure-white,
-  "error": $error-light,
-  "warning": $warning-light,
-  "green-bg": $green-light-bg,
-  "gray-border": $gray-light-border,
-  "gray-hover": $gray-light-hover,
-  "green-border": $green-light-border,
-  "gray-content1": $gray-light-content1,
-  "gray-content2": $gray-light-content2,
-  "gray-content3": $gray-light-content3,
-  "gray-bg-primary": $gray-light-bg-primary,
-  "gray-bg-secondary": $gray-light-bg-secondary,
-  "input-disable": $input-light-disable
+    "app-bg": $pure-white,
+    "error": $error-light,
+    "warning": $warning-light,
+    "green-bg": $green-light-bg,
+    "gray-border": $gray-light-border,
+    "gray-hover": $gray-light-hover,
+    "green-border": $green-light-border,
+    "gray-content1": $gray-light-content1,
+    "gray-content2": $gray-light-content2,
+    "gray-content3": $gray-light-content3,
+    "gray-bg-primary": $gray-light-bg-primary,
+    "gray-bg-secondary": $gray-light-bg-secondary,
+    "input-disable": $input-light-disable
 );
 
 $colors-dark: (
-  "app-bg": $main-dark,
-  "error": $error-dark,
-  "warning": $warning-dark,
-  "green-bg": $green-dark-bg,
-  "gray-border": $gray-dark-border,
-  "gray-hover": $gray-dark-hover,
-  "green-border": $green-dark-border,
-  "gray-content1": $gray-dark-content1,
-  "gray-content2": $gray-dark-content2,
-  "gray-content3": $gray-dark-content3,
-  "gray-bg-primary": $gray-dark-bg-primary,
-  "gray-bg-secondary": $gray-dark-bg-secondary,
-  "input-disable": $input-dark-disable
+    "app-bg": $main-dark,
+    "error": $error-dark,
+    "warning": $warning-dark,
+    "green-bg": $green-dark-bg,
+    "gray-border": $gray-dark-border,
+    "gray-hover": $gray-dark-hover,
+    "green-border": $green-dark-border,
+    "gray-content1": $gray-dark-content1,
+    "gray-content2": $gray-dark-content2,
+    "gray-content3": $gray-dark-content3,
+    "gray-bg-primary": $gray-dark-bg-primary,
+    "gray-bg-secondary": $gray-dark-bg-secondary,
+    "input-disable": $input-dark-disable
 );
 
 
@@ -165,7 +165,7 @@ $progress-download: $icon-base-url + "progress-download.svg";
 $progress-download-disabled: $icon-base-url + "progress-download-disabled.svg";
 
 $down-arrow: $icon-base-url + "down-arrow.svg";
-$down-arrow-disable: $icon-base-url + "down-arrow-disable.svg"; 
+$down-arrow-disable: $icon-base-url + "down-arrow-disable.svg";
 $down-arrow-pressed: $icon-base-url + "down-arrow-pressed.svg";
 $crumbs-right-arrow: $icon-base-url + "crumbs-right-arrow.svg";
 
@@ -376,6 +376,7 @@ $spacing-16: 16 + $base-unit;
 $spacing-18: 18 + $base-unit;
 $spacing-21: 21 + $base-unit;
 $spacing-24: 24 + $base-unit;
+$spacing-28: 28 + $base-unit;
 $spacing-32: 32 + $base-unit;
 $spacing-30: 30 + $base-unit;
 $spacing-31: 31 + $base-unit;
