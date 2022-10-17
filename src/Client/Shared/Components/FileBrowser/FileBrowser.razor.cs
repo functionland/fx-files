@@ -62,7 +62,8 @@ public partial class FileBrowser : IDisposable
 
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _isAscOrder = true;
-    private bool _isLoading = false;
+    private bool _isArtifactExplorerLoading = true;
+    private bool _isPinBoxLoading = true;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
 
@@ -70,14 +71,12 @@ public partial class FileBrowser : IDisposable
 
     protected override async Task OnInitAsync()
     {
-        _isLoading = true;
-        await LoadPinsAsync();
+        LoadPinsAsync();
 
-        await LoadChildrenArtifactsAsync();
+        LoadChildrenArtifactsAsync();
 
         GoBackService.GoBackAsync = HandleToolbarBackClick;
 
-        _isLoading = false;
         await base.OnInitAsync();
     }
 
@@ -336,10 +335,10 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            _isLoading = true;
+            //_isLoading = true;
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
-            _isLoading = false;
+            //_isLoading = false;
         }
         catch (Exception exception)
         {
@@ -351,15 +350,15 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            _isLoading = true;
+            //_isLoading = true;
             var pathArtifacts = artifacts.Select(a => a.FullPath);
             await PinService.SetArtifactsUnPinAsync(pathArtifacts);
             await UpdatePinedArtifactsAsync(artifacts, false);
-            _isLoading = false;
+            //_isLoading = false;
         }
         catch (Exception exception)
         {
-            _isLoading = false;
+            //_isLoading = false;
             ExceptionHandler?.Handle(exception);
         }
     }
@@ -416,7 +415,7 @@ public partial class FileBrowser : IDisposable
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
-            _isLoading = false;
+            //_isLoading = false;
         }
     }
 
@@ -498,6 +497,7 @@ public partial class FileBrowser : IDisposable
         }
 
         _pins = pins;
+        _isPinBoxLoading = false;
     }
 
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
@@ -514,11 +514,13 @@ public partial class FileBrowser : IDisposable
 
             _allArtifacts = artifacts;
             FilterArtifacts();
+            _isArtifactExplorerLoading = false;
         }
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
             _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
+            //todo: loading state?
         }
     }
 
@@ -549,9 +551,9 @@ public partial class FileBrowser : IDisposable
         else
         {
             _currentArtifact = artifact;
-            _isLoading = true;
+            //_isLoading = true;
             await LoadChildrenArtifactsAsync(_currentArtifact);
-            _isLoading = false;
+            //_isLoading = false;
         }
     }
 
@@ -572,9 +574,9 @@ public partial class FileBrowser : IDisposable
         switch (result?.ResultType)
         {
             case ArtifactOverflowResultType.Details:
-                _isLoading = true;
+                //_isLoading = true;
                 await HandleShowDetailsArtifact(new List<FsArtifact> { artifact });
-                _isLoading = false;
+                //_isLoading = false;
                 break;
             case ArtifactOverflowResultType.Rename:
                 await HandleRenameArtifactAsync(artifact);
@@ -645,9 +647,9 @@ public partial class FileBrowser : IDisposable
             switch (result?.ResultType)
             {
                 case ArtifactOverflowResultType.Details:
-                    _isLoading = true;
+                    //_isLoading = true;
                     await HandleShowDetailsArtifact(artifacts);
-                    _isLoading = false;
+                    //_isLoading = false;
                     break;
                 case ArtifactOverflowResultType.Rename when (!isMultiple):
                     var singleArtifact = artifacts.SingleOrDefault();
@@ -802,12 +804,12 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleCancelSearchAsync()
     {
-        _isLoading = true;
+        //_isLoading = true;
         _isInSearchMode = false;
         cancellationTokenSource?.Cancel();
         _searchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
-        _isLoading = false;
+        //_isLoading = false;
     }
 
     private void HandleSearchFocused()
@@ -819,7 +821,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleDeepSearchAsync(string? text)
     {
-        _isLoading = true;
+        //_isLoading = true;
         _searchText = text;
         _allArtifacts.Clear();
         _filteredArtifacts.Clear();
@@ -854,10 +856,10 @@ public partial class FileBrowser : IDisposable
                         FilterArtifacts();
                         await InvokeAsync(() =>
                         {
-                            if (_isLoading)
-                            {
-                                _isLoading = false;
-                            }
+                            //if (_isLoading)
+                            //{
+                            //    _isLoading = false;
+                            //}
                             StateHasChanged();
                         });
                         sw.Restart();
@@ -880,7 +882,7 @@ public partial class FileBrowser : IDisposable
             }
             finally
             {
-                _isLoading = false;
+                //_isLoading = false;
             }
 
         });
@@ -1068,10 +1070,10 @@ public partial class FileBrowser : IDisposable
     private async Task NavigateToDestionation(string? destinationPath)
     {
         _currentArtifact = await FileService.GetArtifactAsync(destinationPath);
-        _isLoading = true;
+        //_isLoading = true;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         await LoadPinsAsync();
-        _isLoading = false;
+        //_isLoading = false;
     }
 
     private void ChangeDeviceBackFunctionality(ArtifactExplorerMode mode)
