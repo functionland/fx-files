@@ -79,11 +79,29 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The artifact already dose not pinned .
+        /// </summary>
+        public static string ArtifactAlreadyDoseNotPinnedException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyDoseNotPinnedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name.
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
                 return ResourceManager.GetString("ArtifactAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} already pinned.
+        /// </summary>
+        public static string ArtifactAlreadyPinnedException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyPinnedException", resourceCulture);
             }
         }
         
@@ -563,7 +581,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("ForbiddenException", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The artifact not been shared.
         /// </summary>
@@ -573,7 +591,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("HasNotBeenSharedException", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to This is a simple message in home.
         /// </summary>

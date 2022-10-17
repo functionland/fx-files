@@ -510,4 +510,10 @@
   <data name="HasNotBeenSharedException" xml:space="preserve">
     <value>The artifact not been shared</value>
   </data>
+  <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
+    <value>The artifact already dose not pinned </value>
+  </data>
+  <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
+    <value>The {0} already pinned</value>
+  </data>
 </root>

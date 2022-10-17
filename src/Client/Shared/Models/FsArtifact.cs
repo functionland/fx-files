@@ -57,5 +57,5 @@ public class FsArtifact
     {
         return $"{Name} -> {FullPath}";
     }
-    public bool IsSelected { get; set; }
+    public bool? IsSelected { get; set; }
 }

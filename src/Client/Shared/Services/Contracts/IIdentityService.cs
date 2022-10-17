@@ -5,11 +5,11 @@ public interface IIdentityService
     /// <summary>
     /// Authorize user
     /// </summary>
-    /// <param name="dIdDocument"></param>
+    /// <param name="dId"></param>
     /// <param name="securityKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<FulaUser>> LoginAsync(DIdDocument dIdDocument, string securityKey, CancellationToken? cancellationToken = null);
+    Task<List<FulaUser>> LoginAsync(string dId, string securityKey, CancellationToken? cancellationToken = null);
 
     void SetCurrentUser(FulaUser user);
     /// <summary>
@@ -19,21 +19,9 @@ public interface IIdentityService
     /// <returns></returns>
     Task<FulaUser> GetCurrentUserAsync(CancellationToken? cancellationToken = null);
 
-    Task<FulaUser> RefreshUserAsync(DIdDocument dIdDocument, CancellationToken? cancellationToken = null);
+    Task<FulaUser> RefreshUserAsync(string dId, CancellationToken? cancellationToken = null);
 
     Task<bool> IsLoggedInAsync(CancellationToken? cancellationToken = null);
-
-
-    // Todo: What is it?
-
-    /// <summary>
-    /// Connect to wallet
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <param name="uri"></param>
-    /// <returns></returns>
-    Task<DIdDocument> ConnectToWalletAsync(Uri uri, CancellationToken? cancellationToken = null);
-
 
     /// <summary>
     /// Get other user by did
