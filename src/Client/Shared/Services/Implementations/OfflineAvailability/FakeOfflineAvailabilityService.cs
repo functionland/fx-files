@@ -4,8 +4,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
 {
     public class FakeOfflineAvailabilityService : IOfflineAvailabilityService
     {
-        private readonly List<FsArtifact>? _FsArtifacts= new();
-        private readonly List<FsArtifact>? _AllFulaFsArtifacts = new();
+        private readonly List<FsArtifact> _FsArtifacts= new();
+        private readonly List<FsArtifact> _AllFulaFsArtifacts = new();
         public TimeSpan? ActionLatency { get; set; }
         public TimeSpan? EnumerationLatency { get; set; }
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
@@ -45,14 +45,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
                 _AllFulaFsArtifacts = new List<FsArtifact>();
             }
         }
-        public async Task InitAsync(CancellationToken? cancellationToken = null)
+        public Task InitAsync(CancellationToken? cancellationToken = null)
         {
-
+            return Task.CompletedTask;
         }
 
-        public async Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
+        public Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
         {
-
+            return Task.CompletedTask;
         }
 
         public async Task MakeAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
@@ -87,7 +87,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.OfflineAva
                 await Task.Delay(ActionLatency.Value);
             }
 
-            if (artifact.IsAvailableOffline == true)
+            if (_FsArtifacts is null) return false;
+
+            var item = _FsArtifacts.FirstOrDefault(a => a.Id == artifact.Id);
+
+            if (item is not null)
                 return true;
 
             return false;

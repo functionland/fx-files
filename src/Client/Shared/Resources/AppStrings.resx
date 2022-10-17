@@ -522,4 +522,10 @@
   <data name="SystemThemeDescription" xml:space="preserve">
     <value>Use system light/dark mode setting.</value>
   </data>
+  <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
+    <value>The artifact already dose not pinned </value>
+  </data>
+  <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
+    <value>The {0} already pinned</value>
+  </data>
 </root>
