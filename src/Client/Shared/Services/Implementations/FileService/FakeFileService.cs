@@ -32,11 +32,40 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             if (EnumerationLatency is not null)
                 await Task.Delay(EnumerationLatency.Value);
         }
+        private int HandleProgressBar(string artifactName, int totalCount, int? progressCount, Action<ProgressInfo> onProgress)
+        {
+            if (progressCount != null)
+            {
+                progressCount++;
+            }
+            else
+            {
+                progressCount = 0;
+            }
 
+            var subText = $"{progressCount} of {totalCount}";
+
+            onProgress(new ProgressInfo
+            {
+                CurrentText = artifactName,
+                CurrentSubText = subText,
+                CurrentValue = progressCount,
+                MaxValue = totalCount
+            });
+
+            return progressCount.Value;
+        }
         public async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            int? progressCount = null;
+            bool shouldProgress = true;
+
             foreach (var artifact in artifacts)
             {
+                if (onProgress is not null && shouldProgress && progressCount == null)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
                 await LatencyEnumerationAsync();
                 var newPath = Path.Combine(destination, artifact.Name);
                 if (!overwrite)
@@ -55,6 +84,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                     //    await DeleteArtifactsAsync(new[] { newArtifact }, cancellationToken);
                     if (!_files.Any(c => c.FullPath == newArtifact.FullPath))
                         _files.Add(newArtifact);
+                }
+
+                if (onProgress is not null && shouldProgress)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
                 }
             }
         }
@@ -178,15 +212,27 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         public async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            int? progressCount = 0;
             var finalBag = new ConcurrentBag<FsArtifact>();
             var excludedPaths = new List<string>();
+
             foreach (var artifact in artifacts)
             {
+                if (onProgress is not null && progressCount == null)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
+
                 foreach (var file in _files)
                 {
                     if (file.FullPath.StartsWith(artifact.FullPath))
                     {
                         excludedPaths.Add(file.FullPath);
+
+                        if (onProgress is not null)
+                        {
+                            progressCount = HandleProgressBar(file.Name, artifacts.Count(), progressCount, onProgress);
+                        }
                     }
                 }
 
@@ -196,6 +242,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 if (!excludedPaths.Contains(file.FullPath))
                     finalBag.Add(file);
             }
+
             _files = finalBag;
         }
 
@@ -251,8 +298,27 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         public async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            var finalBag = new ConcurrentBag<FsArtifact>();
+            var excludedPaths = new List<string>();
+
             await CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
-            await DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
+
+            foreach (var artifact in artifacts)
+            {
+                foreach (var file in _files)
+                {
+                    if (file.FullPath.StartsWith(artifact.FullPath))
+                    {
+                        excludedPaths.Add(file.FullPath);
+                    }
+                }
+            }
+            foreach (var file in _files)
+            {
+                if (!excludedPaths.Contains(file.FullPath))
+                    finalBag.Add(file);
+            }
+            _files = finalBag;
         }
 
         public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
