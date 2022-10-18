@@ -45,7 +45,6 @@ public partial class FileBrowser : IDisposable
 
     private string? _searchText;
     private bool _isInSearchMode;
-    private ViewModeEnum _viewMode = ViewModeEnum.list;
     private FileCategoryType? _fileCategoryFilter;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
@@ -68,6 +67,8 @@ public partial class FileBrowser : IDisposable
     [Parameter] public IPinService PinService { get; set; } = default!;
 
     [Parameter] public IFileService FileService { get; set; } = default!;
+
+    [Parameter] public ArtifactState ArtifactState { get; set; } = default!;
 
     protected override async Task OnInitAsync()
     {
@@ -607,9 +608,10 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public void ChangeViewMode(ViewModeEnum mode)
+    public void ChangeViewMode(ViewModeEnum viewMode)
     {
-        _viewMode = mode;
+        ArtifactState.SetViewMode(viewMode);
+        StateHasChanged();
     }
 
     public void CancelSelectionMode()
