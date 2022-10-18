@@ -30,9 +30,16 @@
 
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-ios'))">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-mac'))">14.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-android'))">23.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-android'))">30.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+
+		<Environment Condition="'$(Environment)' == ''">Local</Environment>
+		<DefineConstants Condition=" '$(Environment)' == 'Local' ">$(DefineConstants);Local</DefineConstants>
+		<DefineConstants Condition=" '$(Environment)' == 'Dev' ">$(DefineConstants);Dev</DefineConstants>
+		<DefineConstants Condition=" '$(Environment)' == 'QA' ">$(DefineConstants);QA</DefineConstants>
+		<DefineConstants Condition=" '$(Environment)' == 'Production' ">$(DefineConstants);Production</DefineConstants>
+		
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -2,19 +2,46 @@
 
 public class FakeBloxService : IBloxService
 {
-    private readonly List<Blox> _bloxs;
-    private readonly List<Blox> _invitedBlox;
+    private readonly List<Blox> _bloxs = new();
+    private readonly List<Blox> _invitedBlox = new();
     public TimeSpan? ActionLatency { get; set; }
     public TimeSpan? EnumerationLatency { get; set; }
     public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-    public FakeBloxService(IEnumerable<Blox> bloxs, IEnumerable<Blox>? invitedBloxs = null, TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
+    public FakeBloxService(IEnumerable<Blox>? bloxs = null,
+                           IEnumerable<Blox>? invitedBloxs = null,
+                           TimeSpan? actionLatency = null,
+                           TimeSpan? enumerationLatency = null)
     {
-        _bloxs = bloxs.ToList();
-        _invitedBlox = invitedBloxs?.ToList() ?? new List<Blox>();
+        _bloxs.Clear();
+        _invitedBlox.Clear();
 
         ActionLatency = actionLatency ?? TimeSpan.FromSeconds(2);
         EnumerationLatency = enumerationLatency ?? TimeSpan.FromMilliseconds(10);
+
+        if(bloxs is not null)
+        {
+            foreach (var blox in bloxs)
+            {
+                _bloxs.Add(blox);
+            }
+        }
+        else
+        {
+            _bloxs = new List<Blox>();
+        }
+
+        if(invitedBloxs is not null)
+        {
+            foreach (var invitedBlox in invitedBloxs)
+            {
+                _invitedBlox.Add(invitedBlox);
+            }
+        }
+        else
+        {
+            _invitedBlox = new List<Blox>();
+        }
     }
 
 

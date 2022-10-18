@@ -1,4 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using System.Collections.Generic;
+
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Models;
 
@@ -55,4 +57,5 @@ public class FsArtifact
     {
         return $"{Name} -> {FullPath}";
     }
+    public bool? IsSelected { get; set; }
 }

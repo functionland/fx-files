@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
     public partial class ArtifactDetailModal
     {
-        private FsArtifact[] _artifacts = Array.Empty<FsArtifact>();
+        private List<FsArtifact> _artifacts = new();
         private string _artifactsSize = string.Empty;
         private int _currentArtifactForShowNumber = 0;
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
@@ -94,7 +94,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }
         }
 
-        public async Task<ArtifactDetailModalResult> ShowAsync(FsArtifact[] artifacts, bool isMultiple = false)
+        public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false)
         {
             GoBackService.GoBackAsync = (Task () =>
             {
@@ -132,13 +132,16 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            _artifacts = Array.Empty<FsArtifact>();
+            _artifacts.Clear();
             await InvokeAsync(() =>
              {
                  StateHasChanged();
              });
-            _timer.Enabled = false;
-            _timer.Stop();
+            if (_timer != null)
+            {
+                _timer.Enabled = false;
+                _timer.Stop();
+            }
         }
 
         public void Dispose()

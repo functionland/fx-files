@@ -24,7 +24,12 @@
     grid-gap: 1px;
     grid-auto-flow: row;
     grid-template-columns: repeat(auto-fit, minmax(174px, 1fr));
+    grid-template-rows: repeat(auto-fit, 134px);
     justify-content: center;
+
+    .item-container {
+        padding: $spacing-28 $spacing-21 $spacing-18;
+    }
 }
 
 
@@ -47,12 +52,11 @@
 .item-container {
     cursor: pointer;
     position: relative;
-    padding: $spacing-16 21px;
+    padding: $spacing-4 $spacing-21;
     border-radius: $border-radius-3;
 
     .item-icon-position {
         font-size: $icon-24;
-        margin-right: 1px;
     }
 }
 
@@ -85,7 +89,7 @@
             text-overflow: ellipsis;
             font-size: $font-size-16;
             color: color(gray-content1);
-            line-height: $line-height-28;
+            line-height: $line-height-20;
             font-family: $open-sans-regular;
             letter-spacing: $letter-spacing-02;
         }
@@ -99,7 +103,7 @@
 }
 
 .list-view-item {
-    height: 100px;
+    height: 74px;
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
@@ -120,12 +124,13 @@
             text-overflow: ellipsis;
             font-size: $font-size-16;
             color: color(gray-content1);
-            line-height: $line-height-28;
+            line-height: $line-height-24;
             font-family: $open-sans-regular;
             letter-spacing: $letter-spacing-02;
             word-wrap: break-word;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* number of lines to show */
+            -webkit-line-clamp: 3;
+            /* number of lines to show */
             line-clamp: 3;
             -webkit-box-orient: vertical;
             white-space: unset;
@@ -144,10 +149,13 @@
 }
 
 .grid-view-item {
-    height: 120px;
+    height: 134px;
+    max-width: 187.5px;
+
 
     .options-btn::before {
         @include Icon($options-horizontal);
+        line-height: 27px;
     }
 
     .item-icon-position {
@@ -163,6 +171,8 @@
             align-items: center;
             flex-flow: row nowrap;
             justify-content: center;
+            max-width: 160px;
+            margin-bottom: 2px;
         }
 
         .item-sub-text {
@@ -192,6 +202,7 @@
         color: color(gray-border);
     }
 }
+
 .selected-item {
     background-color: color(gray-bg-primary);
 }
@@ -310,4 +321,36 @@
         bottom: 95px;
         right: calc(#{$a} - #{$b});
     }
+}
+
+.checkbox {
+    margin-right: 4px;
+    border: $border-size-1 solid;
+    border-radius: $border-radius-4;
+    background-color: color(app-bg);
+    border-color: color(gray-border);
+    height: 20px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-checked {
+    border-color: none;
+    background-color: $green-dark-base;
+    border: none;
+
+    &::before {
+        @include Icon($select-filled, #fff, $Icons-Filled);
+        font-size: $font-size-16;
+    }
+}
+
+.checkbox-display-none {
+    display: none;
+}
+
+::deep .icon-space-in-desktop {
+    margin-right: $spacing-16 !important;
 }
