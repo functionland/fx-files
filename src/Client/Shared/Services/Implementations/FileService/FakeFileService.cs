@@ -55,7 +55,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
             return progressCount.Value;
         }
-        public async Task CopyArtifactsAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             int? progressCount = null;
             bool shouldProgress = true;
@@ -210,7 +210,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             return artifact;
         }
 
-        public async Task DeleteArtifactsAsync(IEnumerable<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             int? progressCount = 0;
             var finalBag = new ConcurrentBag<FsArtifact>();
@@ -242,7 +242,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 if (!excludedPaths.Contains(file.FullPath))
                     finalBag.Add(file);
             }
-            
+
             _files = finalBag;
         }
 
@@ -296,7 +296,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         }
 
-        public async Task MoveArtifactsAsync(IEnumerable<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             var finalBag = new ConcurrentBag<FsArtifact>();
             var excludedPaths = new List<string>();
@@ -320,7 +320,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             }
             _files = finalBag;
         }
-       
+
         public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
             filePath = filePath.Replace("/", "\\");
