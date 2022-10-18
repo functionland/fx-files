@@ -5,7 +5,7 @@ public class AvatarThumbnailService : ThumbnailService, IAvatarThumbnailService
     IIdentityService IdentityService { get; set; }
     public AvatarThumbnailService(
         IFileCacheService fileCacheService,
-        IThumbnailPlugin[] thumbnailPlugins,
+        IEnumerable<IThumbnailPlugin> thumbnailPlugins,
         IIdentityService identityService) : base(fileCacheService, thumbnailPlugins)
     {
         IdentityService = identityService;
