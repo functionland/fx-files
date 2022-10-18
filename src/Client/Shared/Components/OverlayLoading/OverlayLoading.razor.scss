@@ -24,10 +24,10 @@
 
 .fx-loading-dots-ring {
     display: inline-block;
-    position: fixed;
+    position: absolute;
     width: 80px;
     height: 80px;
-    top: 50%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
