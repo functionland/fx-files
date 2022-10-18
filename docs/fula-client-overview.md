@@ -150,7 +150,7 @@ class FulaBloxClient {
 ### FulaBloxClient
 To work with Bloxes in the Fula network there is a `FulaBloxClient` which implements following interface.
 
-```
+```csharp
 public interface IFulaBloxClient
 {
     Task<List<Blox>> GetBloxesAsync(string token, CancellationToken? cancellationToken = null);
@@ -168,7 +168,7 @@ public interface IFulaBloxClient
 ### FulaFileClient
 To work with files in the Fula network there is a `FulaBloxClient` which implements following interface.
 
-```
+```csharp
 public interface IFulaFileClient
 {
     Task UploadFileAsync(string token, string path, string originDevice, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
@@ -224,7 +224,7 @@ The rest of the `FsArtifact` properties will be provided by `GetArtifactMetaAsyn
 ### FulaIdentityClient
 To work with users and everything related to identity of the suers in the Fula network there is a `FulaIdentityClient` which implements following interface.
 
-```
+```csharp
 public interface IFulaIdentityClient
 {
     Task<UserToken> LoginAsync(string dId, string securityKey, CancellationToken? cancellationToken = null);
@@ -237,7 +237,7 @@ public interface IFulaIdentityClient
 ### FulaDatabaseClient
 To work with the GraphQL database provided by Fula network there is a `FulaDatabaseClient` which implements following interface.
 
-```
+```csharp
 public interface IFulaDatabaseClient
 {
 
