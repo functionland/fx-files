@@ -13,13 +13,8 @@ public static class IServiceCollectionExtensions
         string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
 
-
         services.AddClientSharedServices();
 
-        services.AddSingleton<IFileService>(
-            (serviceProvider) =>
-            serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
-            );
         services.AddSingleton<IFulaFileService>(
            (serviceProvider) =>
            serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
