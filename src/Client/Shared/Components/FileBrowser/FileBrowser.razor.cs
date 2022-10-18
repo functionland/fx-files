@@ -1,13 +1,5 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-
-using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Models;
-
-using Microsoft.VisualBasic;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -45,7 +37,6 @@ public partial class FileBrowser : IDisposable
 
     private string? _searchText;
     private bool _isInSearchMode;
-    private ViewModeEnum _viewMode = ViewModeEnum.list;
     private FileCategoryType? _fileCategoryFilter;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
@@ -68,6 +59,8 @@ public partial class FileBrowser : IDisposable
     [Parameter] public IPinService PinService { get; set; } = default!;
 
     [Parameter] public IFileService FileService { get; set; } = default!;
+
+    [Parameter] public ArtifactState ArtifactState { get; set; } = default!;
 
     protected override async Task OnInitAsync()
     {
@@ -607,9 +600,10 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public void ChangeViewMode(ViewModeEnum mode)
+    public void ChangeViewMode(ViewModeEnum viewMode)
     {
-        _viewMode = mode;
+        ArtifactState.SetViewMode(viewMode);
+        StateHasChanged();
     }
 
     public void CancelSelectionMode()
@@ -829,7 +823,7 @@ public partial class FileBrowser : IDisposable
 
         cancellationTokenSource = new CancellationTokenSource();
         var token = cancellationTokenSource.Token;
-        var sw = Stopwatch.StartNew();
+        var sw = System.Diagnostics.Stopwatch.StartNew();
 
         await Task.Run(async () =>
         {
@@ -887,12 +881,13 @@ public partial class FileBrowser : IDisposable
         if (text != null)
         {
             _searchText = text;
-            _filteredArtifacts = _allArtifacts.Where(a => a.Name.ToUpper().Contains(text.ToUpper())).ToList();
+            FilterArtifacts();
         }
     }
 
     private async Task HandleToolbarBackClick()
     {
+        _searchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
@@ -909,8 +904,7 @@ public partial class FileBrowser : IDisposable
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 StateHasChanged();
             }
-
-            if (_isInSearchMode)
+            else
             {
                 cancellationTokenSource?.Cancel();
                 _isInSearchMode = false;
@@ -935,7 +929,9 @@ public partial class FileBrowser : IDisposable
 
     private void FilterArtifacts()
     {
-        _filteredArtifacts = _allArtifacts;
+        _filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
+            ? _allArtifacts 
+            : _allArtifacts.Where(a => a.Name.ToLower().Contains(_searchText.ToLower())).ToList();
 
         _filteredArtifacts = _fileCategoryFilter is null
             ? _filteredArtifacts
