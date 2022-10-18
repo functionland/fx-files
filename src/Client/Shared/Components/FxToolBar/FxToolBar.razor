@@ -20,7 +20,7 @@
                        DebounceInterval="1000"
                        OnSearch="HandleSearch"
                        OnFocus="HandleSearchFocused"
-                       @ref="_searchInputRef"/>
+                       @ref="_searchInputRef" />
 
             @if (IsInSearchMode is false)
             {
@@ -50,22 +50,22 @@
                     <div class="artifact-title @(IsPinned ? "pinned-icon" : "")">
                         @Title
                     </div>
-@*                    <div class="artifact-subtext">
-                        @SubTitle
-                    </div>*@
+                    @*                    <div class="artifact-subtext">
+                @SubTitle
+                </div>*@
                 </div>
                 <div class="action-box">
                     @if (!IsInRoot)
                     {
                         <FxButton Margin="0 8px"
                           OnClick="OnAddButtonClick"
-                          IsVisible="IsAddButtonVisible"
+                          IsVisible="IsInRootDestinationFolder == true ? false : IsAddButtonVisible"
                           ButtonStyle="FxButtonStyle.IconOnly"
-                          LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
+                          LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg"/>
 
                         @if (!IsInSelectMode)
                         {
-                          <FxButton Class="overflow-button"
+                            <FxButton Class="overflow-button"
                           Padding="0 0 0 10px"
                           BackgroundColor="transparent"
                           OnClick="OnOverflowButtonClick"

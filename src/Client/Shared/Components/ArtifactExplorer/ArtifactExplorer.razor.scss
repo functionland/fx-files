@@ -24,7 +24,12 @@
     grid-gap: 1px;
     grid-auto-flow: row;
     grid-template-columns: repeat(auto-fit, minmax(174px, 1fr));
+    grid-template-rows: repeat(auto-fit, 134px);
     justify-content: center;
+
+    .item-container {
+        padding: $spacing-28 $spacing-21 $spacing-18;
+    }
 }
 
 
@@ -124,7 +129,8 @@
             letter-spacing: $letter-spacing-02;
             word-wrap: break-word;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* number of lines to show */
+            -webkit-line-clamp: 3;
+            /* number of lines to show */
             line-clamp: 3;
             -webkit-box-orient: vertical;
             white-space: unset;
@@ -143,12 +149,9 @@
 }
 
 .grid-view-item {
-    height: 120px;
+    height: 134px;
     max-width: 187.5px;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
+
 
     .options-btn::before {
         @include Icon($options-horizontal);
@@ -337,14 +340,15 @@
     border-color: none;
     background-color: $green-dark-base;
     border: none;
+
     &::before {
         @include Icon($select-filled, #fff, $Icons-Filled);
         font-size: $font-size-16;
     }
 }
 
-.checkbox-display-none{
-    display:none;
+.checkbox-display-none {
+    display: none;
 }
 
 ::deep .icon-space-in-desktop {
