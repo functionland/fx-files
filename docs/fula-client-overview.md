@@ -2,21 +2,24 @@
 ## Enums
 ```mermaid
 classDiagram
+
 class FsArtifactType{
-File
-Folder
-Drive
+    <<Enum>>
+    File
+    Folder
+    Drive
 }
 
 class ArtifactPermissionLevel{
-<<Flags>>
-None = 0
-Read = 1
-Write = 2
-Delegate = 4
+    <<Flags>>
+    None = 0
+    Read = 1
+    Write = 2
+    Delegate = 4
 }
 
 class ActionType{
+    <<Enum>>
     Created
     Modified
     Shared
@@ -29,22 +32,23 @@ class ActionType{
 ### Blox and Pool
 ```mermaid
 classDiagram
+
 class Blox{
-string Id,
-string Name,
-string OwnerId
+    + string Id
+    + string Name
+    + string OwnerId
 }
 
 class BloxPool{
-string Id,
-int? PingTime,
-[string, string]? PrimaryInfos,
-[string, [string, string]]? KeyValueGroups
+    + string Id
+    + int? PingTime
+    + KeyValuePair~string, string~[]? PrimaryInfos
+    + KeyValuePair~string,KeyValuePair[]~[]? KeyValueGroups
 }
 
 class BloxPoolPurchaseInfo{
-double? DueNowPaymentRequired,
-double? PerMounthPaymentRequired
+    + double? DueNowPaymentRequired
+    + double? PerMounthPaymentRequired
 }
 
 ```
@@ -53,62 +57,63 @@ double? PerMounthPaymentRequired
 classDiagram
 
 class FulaUser{
-string DId,
-string? Username,
-bool IsParent,
-[string, string] Claims
+    + string DId
+    + string? Username
+    + bool IsParent
+    + KeyValuePair~string, string~[] Claims
 }
 
 class UserToken{
-string Token,
-[string,string] Claims
+    string Token,
+    KeyValuePair~string, string~[] Claims
 }
 ```
 ### File and Folder
 ```mermaid
 classDiagram
+
 class FsArtifact{
-long?  Id,
-string Name,
-string FullPath, 
-string? ParentFullPath
-FsArtifactType ArtifactType,
-long? Size,
-string? OriginDevice,
-DateTimeOffset CreateDateTime,
-DateTimeOffset LastModifiedDateTime,
-string? WhoMadeLastEdit,
-[FsArtifactActivity]? FsArtifactActivity,
-[ArtifactPermissionInfo]? PermissionedUsers ,
-string OwerDid,
-ArtifactPermissionLevel ArtifactPermissionLevel,
-bool? IsSharedWithMe,
-bool? IsSharedByMe,
-String ContentHash
+    + long?  Id
+    + string Name
+    + string FullPath,
+    + string? ParentFullPat
+    + FsArtifactType ArtifactType
+    + long? Size
+    + string? OriginDevice
+    + DateTimeOffset CreateDateTime
+    + DateTimeOffset LastModifiedDateTime
+    + string? WhoMadeLastEdit
+    + FsArtifactActivity[]? FsArtifactActivity
+    + ArtifactPermissionInfo[]? PermissionedUsers 
+    + string OwerDid
+    + ArtifactPermissionLevel ArtifactPermissionLevel
+    + bool? IsSharedWithMe
+    + bool? IsSharedByMe
+    + string ContentHas
 }
 
-
 class FsArtifactActivity{
-FulaUser? Performer,
-DateTimeOffset? ActionDateTime,
-ActionType? ActionType,
-[string,string]? Properties
+    + FulaUser? Performer
+    + DateTimeOffset? ActionDateTime
+    + ActionType? ActionType
+    + KeyValuePair~string,string~[]? Properties
 }
 
 class ArtifactPermissionInfo{
-string FullPath,
-string DId,
-ArtifactPermissionLevel PermissionLevel
+    + string FullPath
+    + string DId
+    + ArtifactPermissionLevel PermissionLevel
 }
 ```
 ### Actions
 ```mermaid
 classDiagram
+
 class ProgressInfo{
-string? CurrentText,
-string? CurrentSubText,
-int? CurrentValue,
-int? MaxValue
+    + string? CurrentText
+    + string? CurrentSubText
+    + int? CurrentValue
+    + int? MaxValue
 }
 ```
 
