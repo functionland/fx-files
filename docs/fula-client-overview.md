@@ -247,7 +247,7 @@ IsSharedWithMe
 IsSharedByMe
 ContentHash
 ```
-The rest of the properties are returened in ```GetArtifactMetaAsync```
+The rest of the properties are returned in ```GetArtifactMetaAsync```
 
 ### FulaIdentityClient
 Work with users and authentication.
