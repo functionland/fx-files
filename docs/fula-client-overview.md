@@ -172,37 +172,21 @@ To work with files in the Fula network there is a `FulaBloxClient` which impleme
 public interface IFulaFileClient
 {
     Task UploadFileAsync(string token, string path, string originDevice, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-
     Task UpdateFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-
     Task AddFolderAsync(string token, string path, string folderName, string originDevice, CancellationToken? cancellationToken = null);
-
     Task<Stream> GetFileStreamAsync(string token, string filePath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-
     Task<List<string>> MoveArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-
     Task<List<string>> CopyArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-
     Task RenameFileAsync(string token, string filePath, string newName, CancellationToken? cancellationToken = null);
-
     Task RenameFolderAsync(string token, string folderPath, string newName, CancellationToken? cancellationToken = null);
-
     Task DeleteArtifactsAsync(string token, IEnumerable<string> sourcesPath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-
     IAsyncEnumerable<FsArtifact> GetChildrenArtifactsAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
-
     IAsyncEnumerable<FsArtifact> SearchArtifactsAsync(string token, string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
-
     Task<FsArtifact> GetArtifactAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
-
     Task SetPermissionArtifactsAsync(string token, IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null);
-
     IAsyncEnumerable<FsArtifact> GetSharedByMeArtifacsAsync(string token, CancellationToken? cancellationToken = null);
-
     Task<FsArtifact> GetArtifactMetaAsync(string token, string path, CancellationToken? cancellationToken = null);
-
     Task<List<FsArtifactActivity>> GetActivityHistoryAsync(string token, string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
-
     Task<string> GetLinkForShareAsync(string token, string path, CancellationToken? cancellationToken = null);
 }
 ```
@@ -240,7 +224,6 @@ To work with the GraphQL database provided by Fula network there is a `FulaDatab
 ```csharp
 public interface IFulaDatabaseClient
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -248,7 +231,6 @@ public interface IFulaDatabaseClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task CreateInstanceAsync(string name, CancellationToken? cancellationToken = null);
-
 
     /// <summary>
     /// Every query operation takes a GraphQl query for <b>reading</b> operation. 
@@ -300,6 +282,5 @@ public interface IFulaDatabaseClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<List<T>> MutateAsync<T>(string token, string instance, string query, IEnumerable<T> values, CancellationToken? cancellationToken = null);
-    
 }
 ```
