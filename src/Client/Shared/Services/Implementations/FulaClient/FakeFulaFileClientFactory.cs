@@ -92,13 +92,19 @@ public partial class FakeFulaFileClientFactory
 
     private static Stream CreateSimpleStream()
     {
-        //var outPutDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "_content/Functionland.FxFiles.Client.Shared", "images", "Files");
-        //var a = File.ReadAllText(Path.Combine(outPutDirectory, "test.txt"));
+        var sampleFilePath = GetSampleFileLocalPath();
 
-        var tempRoot = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-        using FileStream fs = File.Open(Path.Combine(tempRoot, "fake-pic.png"), FileMode.Open);
+        using FileStream fs = File.Open(Path.Combine(sampleFilePath, "fake-pic.jpg"), FileMode.Open);
         return fs;
+    }
+
+    private static string GetSampleFileLocalPath()
+    {
+        var baseAddress = AppDomain.CurrentDomain.BaseDirectory;
+        var toRemove = $"Test\\bin\\Debug\\net6.0\\";
+        var imgLocalAddress = $"Shared\\wwwroot\\images\\Files\\";
+
+        return baseAddress.Replace(toRemove, imgLocalAddress);
     }
 
 }
