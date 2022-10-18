@@ -1,13 +1,5 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-
-using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Models;
-
-using Microsoft.VisualBasic;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -831,7 +823,7 @@ public partial class FileBrowser : IDisposable
 
         cancellationTokenSource = new CancellationTokenSource();
         var token = cancellationTokenSource.Token;
-        var sw = Stopwatch.StartNew();
+        var sw = System.Diagnostics.Stopwatch.StartNew();
 
         await Task.Run(async () =>
         {
@@ -889,13 +881,13 @@ public partial class FileBrowser : IDisposable
         if (text != null)
         {
             _searchText = text;
-            _allArtifacts = _allArtifacts.Where(a => a.Name.ToLower().Contains(text.ToLower())).ToList();
             FilterArtifacts();
         }
     }
 
     private async Task HandleToolbarBackClick()
     {
+        _searchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
@@ -912,8 +904,7 @@ public partial class FileBrowser : IDisposable
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 StateHasChanged();
             }
-
-            if (_isInSearchMode)
+            else
             {
                 cancellationTokenSource?.Cancel();
                 _isInSearchMode = false;
@@ -938,7 +929,9 @@ public partial class FileBrowser : IDisposable
 
     private void FilterArtifacts()
     {
-        _filteredArtifacts = _allArtifacts;
+        _filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
+            ? _allArtifacts 
+            : _allArtifacts.Where(a => a.Name.ToLower().Contains(_searchText.ToLower())).ToList();
 
         _filteredArtifacts = _fileCategoryFilter is null
             ? _filteredArtifacts
