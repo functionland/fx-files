@@ -60,7 +60,7 @@ public partial class FileBrowser : IDisposable
 
     [Parameter] public IFileService FileService { get; set; } = default!;
 
-    [Parameter] public ArtifactState ArtifactState { get; set; } = default!;
+    [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
 
     protected override async Task OnInitAsync()
     {
@@ -411,8 +411,15 @@ public partial class FileBrowser : IDisposable
 
     public async Task HandleShowDetailsArtifact(List<FsArtifact> artifact)
     {
-        var isMultiple = artifact.Count > 1 ? true : false;
-        var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple);
+        bool isMultiple = artifact.Count > 1 ? true : false;
+        bool isDrive = false;
+
+        if (isMultiple is false)
+        {
+            isDrive = artifact.SingleOrDefault()?.ArtifactType == FsArtifactType.Drive;
+        }
+
+        var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
 
         switch (result.ResultType)
