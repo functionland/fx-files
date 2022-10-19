@@ -9,7 +9,7 @@ public partial class FileBrowser : IDisposable
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _allArtifacts = new();
     private List<FsArtifact> _filteredArtifacts = new();
-    private List<FsArtifact> _selectedArtifacts { get; set; } = new();
+    private List<FsArtifact> _selectedArtifacts = new();
 
     private InputModal? _inputModalRef;
     private ConfirmationModal? _confirmationModalRef;
@@ -22,8 +22,6 @@ public partial class FileBrowser : IDisposable
     private ProgressModal? _progressModalRef;
     private FxSearchInput? _fxSearchInputRef;
 
-    private ArtifactActionResult _artifactActionResult { get; set; } = new();
-
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
     private string ProgressBarCurrentSubText { get; set; } = default!;
@@ -35,7 +33,8 @@ public partial class FileBrowser : IDisposable
         ProgressBarCts?.Cancel();
     }
 
-    private string? _searchText;
+    private string _currentListSearchText = string.Empty;
+    private string _deepSearchText = string.Empty;
     private bool _isInSearchMode;
     private FileCategoryType? _fileCategoryFilter;
 
@@ -64,15 +63,30 @@ public partial class FileBrowser : IDisposable
 
     protected override async Task OnInitAsync()
     {
-        _isLoading = true;
-        await LoadPinsAsync();
+        try
+        {
+            _isLoading = true;
 
-        await LoadChildrenArtifactsAsync();
+            _ = Task.Run(async () =>
+            {
+                await LoadPinsAsync();
+                await InvokeAsync(() => StateHasChanged());
+            });
 
-        GoBackService.GoBackAsync = HandleToolbarBackClick;
+            _ = Task.Run(async () =>
+            {
+                await LoadChildrenArtifactsAsync();
+                await InvokeAsync(() => StateHasChanged());
+            });
 
-        _isLoading = false;
-        await base.OnInitAsync();
+            GoBackService.GoBackAsync = HandleToolbarBackClick;
+
+            await base.OnInitAsync();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
@@ -477,16 +491,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task LoadPinsAsync()
     {
-        var allPins = await PinService.GetPinnedArtifactsAsync();
-
-        var pins = new List<FsArtifact>();
-
-        foreach (var item in allPins)
-        {
-            pins.Add(item);
-        }
-
-        _pins = pins;
+        _pins = await PinService.GetPinnedArtifactsAsync();
     }
 
     private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
@@ -504,11 +509,13 @@ public partial class FileBrowser : IDisposable
             _allArtifacts = artifacts;
             FilterArtifacts();
         }
-        catch (Exception exception)
+        catch (ArtifactUnauthorizedAccessException exception)
         {
             ExceptionHandler?.Handle(exception);
             _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
+
+        //TODO: Implement logic for general exception handling (Hootan)
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -790,27 +797,27 @@ public partial class FileBrowser : IDisposable
         FilterArtifacts();
     }
 
-    private async Task HandleCancelSearchAsync()
+    private async Task HandleCancelCurrentListSearchAsync()
     {
         _isLoading = true;
         _isInSearchMode = false;
         cancellationTokenSource?.Cancel();
-        _searchText = string.Empty;
+        _currentListSearchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         _isLoading = false;
     }
 
-    private void HandleSearchFocused()
+    private void HandleDeepSearchFocused()
     {
         _isInSearchMode = true;
     }
 
     CancellationTokenSource? cancellationTokenSource;
 
-    private async Task HandleDeepSearchAsync(string? text)
+    private async Task HandleDeepSearchAsync(string text)
     {
         _isLoading = true;
-        _searchText = text;
+        _deepSearchText = text;
         _allArtifacts.Clear();
         _filteredArtifacts.Clear();
 
@@ -830,7 +837,7 @@ public partial class FileBrowser : IDisposable
             var buffer = new List<FsArtifact>();
             try
             {
-                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
+                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _deepSearchText, token))
                 {
                     if (token.IsCancellationRequested)
                         return;
@@ -876,18 +883,19 @@ public partial class FileBrowser : IDisposable
         });
     }
 
-    private void HandleSearch(string? text)
+    private void HandleCurrentListSearch(string text)
     {
         if (text != null)
         {
-            _searchText = text;
+            _currentListSearchText = text;
             FilterArtifacts();
         }
     }
 
     private async Task HandleToolbarBackClick()
     {
-        _searchText = string.Empty;
+        _deepSearchText = string.Empty;
+        _currentListSearchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
@@ -929,9 +937,9 @@ public partial class FileBrowser : IDisposable
 
     private void FilterArtifacts()
     {
-        _filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
-            ? _allArtifacts 
-            : _allArtifacts.Where(a => a.Name.ToLower().Contains(_searchText.ToLower())).ToList();
+        _filteredArtifacts = (string.IsNullOrEmpty(_currentListSearchText) || string.IsNullOrWhiteSpace(_currentListSearchText))
+            ? _allArtifacts
+            : _allArtifacts.Where(a => a.Name.ToLower().Contains(_currentListSearchText.ToLower())).ToList();
 
         _filteredArtifacts = _fileCategoryFilter is null
             ? _filteredArtifacts
