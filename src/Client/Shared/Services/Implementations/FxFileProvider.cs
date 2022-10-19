@@ -4,6 +4,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
 using System.Net;
+using System.Text.RegularExpressions;
+
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class FxFileProvider : IFileProvider
@@ -20,17 +22,36 @@ public class FxFileProvider : IFileProvider
         return _fileProvider.GetDirectoryContents(subpath);
     }
 
+    Regex pathRegex = new Regex(@"^\*(?<protocol>\w+)\*(?<address>.*)");
+
+    enum Protocols { Fula, Storage, Thumb}
+
     public IFileInfo GetFileInfo(string subpath)
     {
+        var match = pathRegex.Match(subpath);
 
-        if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/fula://"))
+        if (match.Success)
         {
-            return new FulaFileInfo(PreparePath(subpath));
+            var protocol = match.Groups["protocol"].Value;
+            var address = match.Groups["address"].Value;
+
+            return protocol switch
+            {
+                "storage" => new StorageFileInfo(PreparePath(subpath)),
+                "fula" => new FulaFileInfo(PreparePath(subpath)),
+                "wwwroot" => new FulaFileInfo(PreparePath(Regex.Replace(subpath, @"^\*(?<protocol>\w+)\*", "_content/Functionland.FxFiles.Client.Shared"))),
+                _ => throw new InvalidOperationException($"Protocol not supported: {protocol}")
+            };
         }
-        else if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/storage://"))
-        {
-            return new StorageFileInfo(PreparePath(subpath));
-        }
+
+        //    if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/fula://"))
+        //{
+        //    return new FulaFileInfo(PreparePath(subpath));
+        //}
+        //else if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/storage://"))
+        //{
+        //    return new StorageFileInfo(PreparePath(subpath));
+        //}
 
         return _fileProvider.GetFileInfo(subpath);
     }
