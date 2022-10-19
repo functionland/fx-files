@@ -11,7 +11,7 @@ public static class IServiceCollectionExtensions
         services.AddLocalization();
 
         services.AddScoped<ThemeInterop>();
-        services.AddScoped<ArtifactState>();
+        services.AddSingleton<InMemoryAppStateStore>();
 
         services.AddAuthorizationCore();
 
