@@ -10,7 +10,7 @@
         private bool IsSystemTheme { get; set; }
 
         private FxTheme SystemTheme { get; set; }
-        private FxTheme DesiredTheme { get; set; }
+        private FxTheme CurrentTheme { get; set; }
 
         protected override Task OnInitAsync()
         {
@@ -24,39 +24,44 @@
             return base.OnInitAsync();
         }
 
+        private bool _isSystemThemeDark;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                _isSystemThemeDark = await ThemeInterop.GetSystemThemeAsync() is FxTheme.Dark;
                 _isLoaded = true;
+                ThemeInterop.SystemThemeChanged = async (FxTheme theme) =>
+                {
+                    _isSystemThemeDark = theme is FxTheme.Dark;
+                    StateHasChanged();
+                };
 
-                DesiredTheme = await ThemeInterop.GetThemeAsync();
-                SystemTheme = await ThemeInterop.GetSystemThemeAsync();
+                CurrentTheme = await ThemeInterop.GetThemeAsync();
 
-                IsSystemTheme = SystemTheme == DesiredTheme;
-                IsDarkMode = DesiredTheme is FxTheme.Dark;
+                //SystemTheme = await ThemeInterop.GetSystemThemeAsync();
+                //IsSystemTheme = SystemTheme == DesiredTheme;
+                //IsDarkMode = DesiredTheme is FxTheme.Dark;
+                //await ChangeThemeAsync();
+                //await OnUseSystemThemeAsync(IsSystemTheme);
 
-                await OnThemeChangedAsync(IsDarkMode);
-                await OnUseSystemThemeAsync(IsSystemTheme);
                 await ThemeInterop.RegisterForSystemThemeChangedAsync();
 
                 StateHasChanged();
             }
         }
 
-        private async Task OnUseSystemThemeAsync(bool isSystemTheme)
-        {
-            IsSystemTheme = isSystemTheme;
-            await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
-            IsDarkMode = DesiredTheme is FxTheme.Dark;
-            StateHasChanged();
-        }
+        //private async Task OnUseSystemThemeAsync(bool isSystemTheme)
+        //{
+        //    IsSystemTheme = isSystemTheme;
+        //    await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
+        //    IsDarkMode = DesiredTheme is FxTheme.Dark;
+        //    StateHasChanged();
+        //}
 
-        private async Task OnThemeChangedAsync(bool isTheme)
+        private async Task ChangeThemeAsync()
         {
-            IsDarkMode = isTheme;
-            await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
-            StateHasChanged();
+            await ThemeInterop.SetThemeAsync(CurrentTheme);
         }
 
         private void HandleToolbarBack()
