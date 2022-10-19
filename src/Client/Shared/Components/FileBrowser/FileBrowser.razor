@@ -21,9 +21,7 @@
         {
             <BitAccordion Title="Pinned" DefaultIsExpanded="true">
                 <ContentTemplate>
-                    
                     <div class="items">
-                        <OverlayLoading />
                         @foreach (var pin in _pins)
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
