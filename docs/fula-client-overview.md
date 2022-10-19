@@ -123,7 +123,7 @@ class ArtifactPermissionInfo{
 ```
 ### Actions
 Source codes:
-- [ProgressInfo](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Components/Modal/ProgressModal/ProgressInfo.cs)
+- [ProgressInfo](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Components/Modal/ProgressModal/ProgressInfo.cs).
 ```mermaid
 classDiagram
 
@@ -165,10 +165,10 @@ class FulaBloxClient {
 ```
 
 ### FulaBloxClient
-To work with Bloxes in the Fula network there is a [FulaBloxClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaBloxClient.cs)
+To work with Bloxes in the Fula network there is a [FulaBloxClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaBloxClient.cs).
 
 ### FulaFileClient
-To work with files in the Fula network there is a [FulaFileClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaFileClient.cs)
+To work with files in the Fula network there is a [FulaFileClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaFileClient.cs).
 
 **Note:** These methods `GetChildrenArtifactsAsync`, `SearchArtifactsAsync`,`GetArtifactAsync` and `GetSharedByMeArtifacsAsync` which return `FsArtifact` should fill the following properies to keep the contract.
  - `Id `
@@ -186,8 +186,8 @@ To work with files in the Fula network there is a [FulaFileClient](https://githu
 The rest of the `FsArtifact` properties will be provided by `GetArtifactMetaAsync`.
 
 ### FulaIdentityClient
-To work with users and everything related to identity of the suers in the Fula network there is a [FulaIdentityClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaIdentityClient.cs)
+To work with users and everything related to identity of the suers in the Fula network there is a [FulaIdentityClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaIdentityClient.cs).
 
 ### FulaDatabaseClient
-To work with the GraphQL database provided by Fula network there is a [FulaDatabaseClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaDatabaseClient.cs)
+To work with the GraphQL database provided by Fula network there is a [FulaDatabaseClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaDatabaseClient.cs).
 
