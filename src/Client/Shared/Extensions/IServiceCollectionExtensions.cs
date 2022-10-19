@@ -46,9 +46,13 @@ public static class IServiceCollectionExtensions
         {
             var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
             var PinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
+            var FileCacheService = serviceProvider.GetRequiredService<IFileCacheService>();
 
             await FxLocalDbService.InitAsync();
-            await PinService.InitializeAsync();
+            var pinTask = PinService.InitializeAsync();
+            var cacheTask = FileCacheService.InitAsync();
+
+            await Task.WhenAll(pinTask, cacheTask);
         }
         catch (Exception ex)
         {
