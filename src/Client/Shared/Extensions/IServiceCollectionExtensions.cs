@@ -34,7 +34,6 @@ public static class IServiceCollectionExtensions
         services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
-        services.AddTransient<ImageThumbnailPluginPlatformTest>();
 
         return services;
     }

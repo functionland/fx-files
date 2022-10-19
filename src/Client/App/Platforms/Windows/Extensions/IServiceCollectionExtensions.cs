@@ -12,8 +12,12 @@ public static class IWindowsServiceCollectionExtensions
         services.AddSingleton<ILocalDeviceFileService, WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
+        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<IFulaFileService>>();
         services.AddSingleton<IFileWatchService, WindowsFileWatchService>();
         services.AddSingleton<IFileCacheService, WindowsFileCacheService>();
+
+        services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
 
         return services;
     }
