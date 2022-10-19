@@ -1,9 +1,10 @@
-﻿using Android.Widget;
+﻿using Microsoft.Extensions.FileProviders;
+using Functionland.FxFiles.Client.Shared.Resources;
+using Microsoft.Maui;
 
-using Functionland.FxFiles.Client.App.Platforms.Android;
-
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.FileProviders;
+#if ANDROID
+using Android.Widget;
+#endif
 
 namespace Functionland.FxFiles.Client.App;
 
@@ -53,7 +54,7 @@ public partial class MainPage
             long currentTime = DateTimeOffset.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
             if (currentTime - lastPress > 5000)
             {
-                var context = MainApplication.Current.ApplicationContext;
+                var context = MauiApplication.Current.ApplicationContext;
                 Toast.MakeText(context, "Press back again to exit", ToastLength.Long)?.Show();
                 lastPress = currentTime;
                 return true;
