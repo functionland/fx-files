@@ -86,12 +86,12 @@
 
         public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 Close();
                 StateHasChanged();
                 return Task.CompletedTask;
-            });
+            }), true, false);
 
             _tcs?.SetCanceled();
             _isMultiple = isMultiple;

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Android.Widget;
+
+using Functionland.FxFiles.Client.App.Platforms.Android;
+
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.FileProviders;
 
 namespace Functionland.FxFiles.Client.App;
@@ -35,15 +39,30 @@ public partial class MainPage
 
 
 #if ANDROID
+    long lastPress;
     protected override bool OnBackButtonPressed()
     {
         var backButtonService = MauiApplication.Current.Services.GetRequiredService<IGoBackService>();
-        if (backButtonService?.GoBackAsync != null)
+        if (backButtonService?.CanGoBack is true && backButtonService?.GoBackAsync is not null)
         {
             backButtonService.GoBackAsync().GetAwaiter();
+            return true;
+        }
+        else if (backButtonService?.CanGoBack is true && backButtonService?.CanExitApp is true)
+        {
+            long currentTime = DateTimeOffset.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+            if (currentTime - lastPress > 5000)
+            {
+                var context = MainApplication.Current.ApplicationContext;
+                Toast.MakeText(context, "Press back again to exit", ToastLength.Long)?.Show();
+                lastPress = currentTime;
+                return true;
+            }
+
+            return false;
         }
 
-        return backButtonService?.CanGoBack ?? base.OnBackButtonPressed();
+        return true;
     }
 #endif
 

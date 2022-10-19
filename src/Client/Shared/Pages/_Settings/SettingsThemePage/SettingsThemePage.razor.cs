@@ -14,11 +14,12 @@
 
         protected override Task OnInitAsync()
         {
-            GoBackService.GoBackAsync = (Task()=>
+            GoBackService.OnInit((Task () =>
             {
                 HandleToolbarBack();
-                return Task.CompletedTask; 
-            });
+                StateHasChanged();
+                return Task.CompletedTask;
+            }), true, false);
 
             return base.OnInitAsync();
         }
