@@ -15,6 +15,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 
         protected override async Task OnInitAsync()
         {
+            GoBackService.OnInit(null, true, true);
             DesiredTheme = await ThemeInterop.GetThemeAsync();
 
             if (DesiredTheme == FxTheme.Dark)

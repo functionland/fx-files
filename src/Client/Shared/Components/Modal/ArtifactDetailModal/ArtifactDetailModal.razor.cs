@@ -96,12 +96,12 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 Close();
                 StateHasChanged();
                 return Task.CompletedTask;
-            });
+            }), true, false);
 
             _tcs?.SetCanceled();
             _currentArtifactForShowNumber = 0;

@@ -3,7 +3,7 @@ using Functionland.FxFiles.Client.Shared.Components.Modal;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
-public partial class FileBrowser : IDisposable
+public partial class FileBrowser
 {
     private FsArtifact? _currentArtifact;
     private List<FsArtifact> _pins = new();
@@ -66,11 +66,7 @@ public partial class FileBrowser : IDisposable
     {
         _isLoading = true;
         await LoadPinsAsync();
-
         await LoadChildrenArtifactsAsync();
-
-        GoBackService.GoBackAsync = HandleToolbarBackClick;
-
         _isLoading = false;
         await base.OnInitAsync();
     }
@@ -489,11 +485,20 @@ public partial class FileBrowser : IDisposable
         _pins = pins;
     }
 
-    private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
+    private async Task LoadChildrenArtifactsAsync(FsArtifact? artifact = null)
     {
-        var allFiles = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
         try
         {
+            if (artifact is null)
+            {
+                GoBackService.OnInit(null, true, true);
+            }
+            else
+            {
+                GoBackService.OnInit(HandleToolbarBackClick, true, false);
+            }
+
+            var allFiles = FileService.GetArtifactsAsync(artifact?.FullPath);
             var artifacts = new List<FsArtifact>();
             await foreach (var item in allFiles)
             {
@@ -507,7 +512,6 @@ public partial class FileBrowser : IDisposable
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
-            _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
     }
 
@@ -931,7 +935,7 @@ public partial class FileBrowser : IDisposable
     private void FilterArtifacts()
     {
         _filteredArtifacts = string.IsNullOrWhiteSpace(_searchText)
-            ? _allArtifacts 
+            ? _allArtifacts
             : _allArtifacts.Where(a => a.Name.ToLower().Contains(_searchText.ToLower())).ToList();
 
         _filteredArtifacts = _fileCategoryFilter is null
@@ -1071,20 +1075,27 @@ public partial class FileBrowser : IDisposable
     {
         if (mode == ArtifactExplorerMode.SelectArtifact)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 CancelSelectionMode();
                 return Task.CompletedTask;
-            });
+            }), true, false);
         }
         else if (mode == ArtifactExplorerMode.Normal)
         {
-            GoBackService.GoBackAsync = HandleToolbarBackClick;
-        }
-    }
+            if (_currentArtifact == null)
+            {
+                GoBackService.OnInit(null, true, true);
+            }
+            else
+            {
+                GoBackService.OnInit((Task () =>
+                {
+                    CancelSelectionMode();
+                    return Task.CompletedTask;
+                }), true, false);
+            }
 
-    public void Dispose()
-    {
-        GoBackService.GoBackAsync = null;
+        }
     }
 }
