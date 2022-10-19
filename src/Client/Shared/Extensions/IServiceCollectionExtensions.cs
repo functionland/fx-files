@@ -1,6 +1,7 @@
 ﻿
 using Functionland.FxFiles.Client.Shared.Services;
 using Functionland.FxFiles.Client.Shared.Services.Implementations;
+using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,7 @@ public static class IServiceCollectionExtensions
         services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
+        services.AddTransient<ImageThumbnailPluginPlatformTest>();
 
         return services;
     }
