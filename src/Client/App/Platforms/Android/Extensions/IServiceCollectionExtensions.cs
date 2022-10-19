@@ -15,6 +15,7 @@ public static class IAndroidServiceCollectionExtensions
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
         services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
         services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
+        services.AddSingleton<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
 
         return services;
     }
