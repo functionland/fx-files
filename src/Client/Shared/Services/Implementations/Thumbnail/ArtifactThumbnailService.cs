@@ -33,6 +33,6 @@ public class ArtifactThumbnailService<TFileService> : ThumbnailService, IArtifac
             );
 
         var fullPathHash = MakeHashData.ComputeSha256Hash(fullPath);
-        return $"{fullPathHash}.{extension}";
+        return Path.ChangeExtension(fullPathHash, extension);
     }
 }

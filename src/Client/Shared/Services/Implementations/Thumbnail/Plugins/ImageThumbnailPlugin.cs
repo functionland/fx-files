@@ -13,8 +13,8 @@ public abstract class ImageThumbnailPlugin : IThumbnailPlugin
     {
         return new string[]
         {
-            "jpg",
-            "png"
+            ".jpg",
+            ".png"
         }.Contains(extension.ToLower());
     }
 }
