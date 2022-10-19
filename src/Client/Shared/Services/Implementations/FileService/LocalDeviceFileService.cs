@@ -1,9 +1,9 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using System.IO;
+using System.Text;
+
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
 using Functionland.FxFiles.Client.Shared.Models;
-
-using System.IO;
-using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -13,7 +13,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
@@ -105,7 +105,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return newFsArtifact;
         }
 
-        public virtual async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             int? progressCount = null;
 
@@ -113,7 +113,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (onProgress is not null && progressCount == null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
 
                 if (cancellationToken?.IsCancellationRequested == true)
@@ -123,7 +123,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 if (onProgress is not null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
@@ -333,7 +333,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         }
 
         private async Task<List<FsArtifact>> CopyAllAsync(
-            IEnumerable<FsArtifact> artifacts,
+            IList<FsArtifact> artifacts,
             string destination,
             bool mustDeleteSource = false,
             bool overwrite = false,
@@ -348,7 +348,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (onProgress is not null && shouldProgress && progressCount == null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
 
                 if (cancellationToken?.IsCancellationRequested == true) break;
@@ -745,7 +745,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
             var subText = $"{progressCount} of {totalCount}";
-            
+
             onProgress(new ProgressInfo
             {
                 CurrentText = artifactName,

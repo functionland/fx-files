@@ -10,6 +10,7 @@ To understand the architecture of the code and underlying services check this do
 Here is an overview of its structure:
  - [Technology Overview](https://github.com/functionland/fx-files/blob/main/docs/technology-overview.md)
  - [Understanding Services](https://github.com/functionland/fx-files/blob/main/docs/class-diagram-overview.md)
+ - [FulaClient Overview](https://github.com/functionland/fx-files/blob/main/docs/fula-client-overview.md)
 
 # Contribution
 If you want to contribute to this project this is how you can setup your environment and start development.

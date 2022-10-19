@@ -11,9 +11,9 @@ public static class MauiProgram
 {
     public static MauiAppBuilder CreateMauiAppBuilder()
     {
-
-#if Release
-
+       
+#if RELEASE
+       
         AppCenter.Start(
             $"windowsdesktop={Configuration.AppCenterWindowsAppSecret};"+
             $"ios={Configuration.AppCenteriOSAppSecret};" +

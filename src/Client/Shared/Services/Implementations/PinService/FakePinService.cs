@@ -68,7 +68,7 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
         return _pinnedArtifacts.Any(a => a.FullPath == artifact.FullPath);
     }
 
-    public async Task SetArtifactsPinAsync(FsArtifact[] artifact, CancellationToken? cancellationToken = null)
+    public async Task SetArtifactsPinAsync(IEnumerable<FsArtifact> artifact, CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
 
@@ -85,7 +85,7 @@ public class FakePinService : ILocalDevicePinService, IFulaPinService
         }
     }
 
-    public async Task SetArtifactsUnPinAsync(string[] path, CancellationToken? cancellationToken = null)
+    public async Task SetArtifactsUnPinAsync(IEnumerable<string> path, CancellationToken? cancellationToken = null)
     {
         await LatencyActionAsync();
 
