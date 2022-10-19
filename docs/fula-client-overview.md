@@ -1,5 +1,9 @@
 # FulaClient
 ## Enums
+Source codes:
+- [FsArtifactType](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Enums/FsArtifactType.cs)
+- [ArtifactPermissionLevel](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Enums/ArtifactPermissionLevel.cs)
+- [ActionType](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Enums/ActionType.cs)
 ```mermaid
 classDiagram
 
@@ -31,6 +35,10 @@ class ActionType{
 ## Models
 There are different models declared to use while working with FulaClient libraries. Here is a brief description about these models.
 ### Blox and Pool
+Source codes:
+- [Blox](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/Blox.cs)
+- [BloxPool](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/BloxPool.cs)
+- [BloxPoolPurchaseInfo](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/BloxPoolPurchaseInfo.cs)
 ```mermaid
 classDiagram
 
@@ -54,6 +62,9 @@ class BloxPoolPurchaseInfo{
 
 ```
 ### User
+Source codes:
+- [FulaUser](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/FulaUser.cs)
+- [UserToken](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/UserToken.cs)
 ```mermaid
 classDiagram
 
@@ -70,6 +81,10 @@ class UserToken{
 }
 ```
 ### File and Folder
+Source codes:
+- [FsArtifact](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/FsArtifact.cs)
+- [FsArtifactActivity](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/FsArtifactActivity.cs)
+- [ArtifactPermissionInfo](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Models/ArtifactPermissionInfo.cs)
 ```mermaid
 classDiagram
 
@@ -77,7 +92,7 @@ class FsArtifact{
     + long?  Id
     + string Name
     + string FullPath,
-    + string? ParentFullPat
+    + string? ParentFullPath
     + FsArtifactType ArtifactType
     + long? Size
     + string? OriginDevice
@@ -107,6 +122,8 @@ class ArtifactPermissionInfo{
 }
 ```
 ### Actions
+Source codes:
+- [ProgressInfo](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Components/Modal/ProgressModal/ProgressInfo.cs)
 ```mermaid
 classDiagram
 
@@ -148,48 +165,11 @@ class FulaBloxClient {
 ```
 
 ### FulaBloxClient
-To work with Bloxes in the Fula network there is a `FulaBloxClient` which implements following interface.
-
-```csharp
-public interface IFulaBloxClient
-{
-    Task<List<Blox>> GetBloxesAsync(string token, CancellationToken? cancellationToken = null);
-    Task<List<Blox>> GetBloxInvitationsAsync(string token, CancellationToken? cancellationToken = null);
-    Task AcceptBloxInvitationAsync(string token, string bloxId, CancellationToken? cancellationToken = null);
-    Task RejectBloxInvitationAsync(string token, string bloxId, CancellationToken? cancellationToken = null);
-    Task<List<BloxPool>> GetMyPoolsAsync(string token, CancellationToken? cancellationToken = null);
-    Task JoinToPoolAsync(string token, string poolId, PoolRole poolRole = PoolRole.Secondary, CancellationToken? cancellationToken = null);
-    Task LeavePoolAsync(string token, string poolId, CancellationToken? cancellationToken = null);
-    Task<BloxPoolPurchaseInfo> GetPoolPurchaseInfoAsync(string token, string poolId, CancellationToken? cancellationToken = null);
-    IAsyncEnumerable<BloxPool> SearchPoolAsync(string token, CancellationToken? cancellationToken = null);
-}
-```
+To work with Bloxes in the Fula network there is a [FulaBloxClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaBloxClient.cs)
 
 ### FulaFileClient
-To work with files in the Fula network there is a `FulaBloxClient` which implements following interface.
+To work with files in the Fula network there is a [FulaFileClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaFileClient.cs)
 
-```csharp
-public interface IFulaFileClient
-{
-    Task UploadFileAsync(string token, string path, string originDevice, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    Task UpdateFileAsync(string token, string path, Stream stream, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    Task AddFolderAsync(string token, string path, string folderName, string originDevice, CancellationToken? cancellationToken = null);
-    Task<Stream> GetFileStreamAsync(string token, string filePath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    Task<List<string>> MoveArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    Task<List<string>> CopyArtifactsAsync(string token, IEnumerable<string> sourcePaths, string destinationPath, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    Task RenameFileAsync(string token, string filePath, string newName, CancellationToken? cancellationToken = null);
-    Task RenameFolderAsync(string token, string folderPath, string newName, CancellationToken? cancellationToken = null);
-    Task DeleteArtifactsAsync(string token, IEnumerable<string> sourcesPath, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-    IAsyncEnumerable<FsArtifact> GetChildrenArtifactsAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
-    IAsyncEnumerable<FsArtifact> SearchArtifactsAsync(string token, string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
-    Task<FsArtifact> GetArtifactAsync(string token, string? path = null, CancellationToken? cancellationToken = null);
-    Task SetPermissionArtifactsAsync(string token, IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null);
-    IAsyncEnumerable<FsArtifact> GetSharedByMeArtifacsAsync(string token, CancellationToken? cancellationToken = null);
-    Task<FsArtifact> GetArtifactMetaAsync(string token, string path, CancellationToken? cancellationToken = null);
-    Task<List<FsArtifactActivity>> GetActivityHistoryAsync(string token, string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
-    Task<string> GetLinkForShareAsync(string token, string path, CancellationToken? cancellationToken = null);
-}
-```
 **Note:** These methods `GetChildrenArtifactsAsync`, `SearchArtifactsAsync`,`GetArtifactAsync` and `GetSharedByMeArtifacsAsync` which return `FsArtifact` should fill the following properies to keep the contract.
  - `Id `
  - `Name`
@@ -206,81 +186,8 @@ public interface IFulaFileClient
 The rest of the `FsArtifact` properties will be provided by `GetArtifactMetaAsync`.
 
 ### FulaIdentityClient
-To work with users and everything related to identity of the suers in the Fula network there is a `FulaIdentityClient` which implements following interface.
-
-```csharp
-public interface IFulaIdentityClient
-{
-    Task<UserToken> LoginAsync(string dId, string securityKey, CancellationToken? cancellationToken = null);
-    Task<List<FulaUser>> GetUsersAsync(string token, IEnumerable<string> otherDids, CancellationToken? cancellationToken = null);
-    Task<Stream> GetAvatarAsync(string token, string did, CancellationToken? cancellationToken = null);
-}
-```
-
+To work with users and everything related to identity of the suers in the Fula network there is a [FulaIdentityClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaIdentityClient.cs)
 
 ### FulaDatabaseClient
-To work with the GraphQL database provided by Fula network there is a `FulaDatabaseClient` which implements following interface.
+To work with the GraphQL database provided by Fula network there is a [FulaDatabaseClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaDatabaseClient.cs)
 
-```csharp
-public interface IFulaDatabaseClient
-{
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="name">Must be unique. like a guid or application environment...</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task CreateInstanceAsync(string name, CancellationToken? cancellationToken = null);
-
-    /// <summary>
-    /// Every query operation takes a GraphQl query for <b>reading</b> operation. 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="query">
-    /// query {
-    ///         read(input:{
-    ///         collection: "profile",
-    ///           filter:
-    ///             {
-    ///             age: { gt: 50}
-    ///             }
-    ///         }){
-    ///           id
-    ///           name
-    ///           age
-    ///         }
-    ///       } 
-    /// </param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<List<T>> QueryAsync<T>(string token, string instance,string query,  CancellationToken? cancellationToken = null);
-
-    /// <summary>
-    /// Every mutation operation takes a query an values for create, update or delete operation
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="query">
-    ///  mutation addProfile($values:JSON)
-    ///  {
-    ///      create(input:{
-    ///      collection: "PinedArtifact",
-    ///    values: $values
-    ///      }){
-    ///          id
-    ///          path
-    ///  }
-    ///  }
-    /// </param>
-    /// <param name="values">
-    ///     {
-    ///        values: [{
-    ///         id: 1,
-    ///         path:"fula://home/1.jpg"
-    ///          }]
-    ///     }
-    /// </param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<List<T>> MutateAsync<T>(string token, string instance, string query, IEnumerable<T> values, CancellationToken? cancellationToken = null);
-}
-```
