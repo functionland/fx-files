@@ -79,7 +79,7 @@
                 </div>
 
                 <div class="right-part">
-                    @if (_selectedArtifacts?.Count > 0)
+                    @if (_selectedArtifacts?.Count > 0 && IsInRoot(_currentArtifact) is false)
                     {
                         <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
                     }

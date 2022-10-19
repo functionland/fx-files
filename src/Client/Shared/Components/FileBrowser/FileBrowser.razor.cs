@@ -554,7 +554,8 @@ public partial class FileBrowser : IDisposable
                 IsVisible = true,
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
-            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult);
+            var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
+            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isDrive);
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -628,7 +629,7 @@ public partial class FileBrowser : IDisposable
             {
                 _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 var pinOptionResult = GetPinOptionResult(artifacts);
-                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult);
+                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, IsInRoot(_currentArtifact));
                 ChangeDeviceBackFunctionality(_artifactExplorerMode);
             }
 
