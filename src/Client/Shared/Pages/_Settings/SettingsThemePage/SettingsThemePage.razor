@@ -2,32 +2,6 @@
 @inherits AppComponentBase;
 @namespace Functionland.FxFiles.Client.Shared.Pages
 
-@*<div class="theme-content">
-    <FxToolBar
-        IsInRoot="false"
-        IsBackButtonVisible="true" 
-        IsAddButtonVisible="false"
-        IsOverflowButtonVisible="false"
-        OnBackClick="HandleToolbarBack"/>
-
-    @if(_isLoaded)
-    {
-        <div class="theme-options">
-            @($"Use System Theme ({SystemTheme})")
-            <BitCheckbox @bind-Value="@IsSystemTheme" OnChange="@OnUseSystemThemeAsync" />
-            Dark Theme
-            <BitToggle @bind-Value="@IsDarkMode" IsEnabled="@(!IsSystemTheme)" OnChange="@OnThemeChangedAsync" />
-        </div>
-    }
-
-</div>
-*@
-
-@*    <BitRadioButtonGroup Name="ThemeGroup">
-        <BitRadioButtonOption IsChecked="@(!IsDarkMode)" IsCheckedChanged="@OnThemeChangedAsync" Text="Light" />
-        <BitRadioButtonOption IsChecked="@(IsDarkMode)" IsCheckedChanged="@OnThemeChangedAsync" Text="Dark" />
-    </BitRadioButtonGroup>*@
-
 <div class="fxtoolbar-wrapper">
     <FxToolBar IsInRoot="false"
         IsBackButtonVisible="true"
@@ -70,12 +44,12 @@
             </label>
         </div>
     </div>
-
+@*
     <div class="system-theme-setting">
         <div class="system-theme-info">
             <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)] <span class="system-mode">@Localizer[nameof(AppStrings.DarkMode)]</span> <span class="mode-text">@Localizer[nameof(AppStrings.Mode)]</span></div>
             <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
         </div>
-    </div>
+    </div>*@
 
 </section>

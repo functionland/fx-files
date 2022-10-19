@@ -10,26 +10,7 @@ public partial class App
     private List<Assembly> _lazyLoadedAssemblies = new();
     [AutoInject] private Microsoft.AspNetCore.Components.WebAssembly.Services.LazyAssemblyLoader _assemblyLoader = default!;
 #endif
-
-    [AutoInject] private IJSRuntime _jsRuntime = default!;
-
-    [AutoInject] private ThemeInterop ThemeInterop = default!;
-
-    private FxTheme CurrentTheme;
-
     private bool _isLoading = true;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            CurrentTheme = await ThemeInterop.GetThemeAsync();
-            await ThemeInterop.ApplyThemeAsync(CurrentTheme);
-            StateHasChanged();
-        }
-
-        await base.OnAfterRenderAsync(firstRender);
-    }
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
