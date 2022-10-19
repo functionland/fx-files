@@ -5,6 +5,7 @@
         private TaskCompletionSource<ArtifactOverflowResult>? _tcs;
         private bool _isModalOpen;
         private bool _isMultiple;
+        private bool _isInRoot;
         private PinOptionResult? _pinOptionResult;
 
         public void Details()
@@ -84,7 +85,7 @@
             _isModalOpen = false;
         }
 
-        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult)
+        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult, bool isInRoot = false)
         {
             GoBackService.GoBackAsync = (Task () =>
             {
@@ -94,6 +95,7 @@
             });
 
             _tcs?.SetCanceled();
+            _isInRoot = isInRoot;
             _isMultiple = isMultiple;
             _pinOptionResult = pinOptionResult;
             _isModalOpen = true;
