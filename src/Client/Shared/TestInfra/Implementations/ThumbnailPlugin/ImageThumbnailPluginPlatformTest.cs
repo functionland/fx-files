@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,21 +7,18 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 
-public class ImageThumbnailPluginPlatformTest : ThumbnailPluginPlatformTest
+public partial class ImageThumbnailPluginPlatformTest : PlatformTest
 {
     public override string Title => "ImageThumbnailPluginTest";
 
     public override string Description => "Test image thumbnail ";
 
-    IThumbnailPlugin ThumbnailPlugin { get; set; } = default!;
+    [AutoInject] IEnumerable<IThumbnailPlugin> ThumbnailPlugins { get; set; } = default!;
 
-    public ImageThumbnailPluginPlatformTest(IEnumerable<IThumbnailPlugin> thumbnailPlugins)
-    {
-        ThumbnailPlugin = thumbnailPlugins.FirstOrDefault(t => t.IsExtensionSupported("jpg"));
-    }
+    [AutoInject] ILocalDeviceFileService LocalDeviceFileService { get; set; } = default!;
 
-    protected override IThumbnailPlugin OnGetThumbnailPlugin()
+    protected override Task OnRunAsync()
     {
-        return ThumbnailPlugin;
+        throw new NotImplementedException();
     }
 }
