@@ -528,4 +528,7 @@
   <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
     <value>The {0} already pinned</value>
   </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
 </root>

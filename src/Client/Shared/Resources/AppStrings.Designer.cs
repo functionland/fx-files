@@ -1060,6 +1060,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        public static string System {
+            get {
+                return ResourceManager.GetString("System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use system light/dark mode setting..
         /// </summary>
         public static string SystemThemeDescription {

@@ -13,43 +13,29 @@ public partial class App
 
     [AutoInject] private IJSRuntime _jsRuntime = default!;
 
-    private bool _cultureHasNotBeenSet = true;
-    private bool _themeHasNotBeenSet = true;
-
-
     [AutoInject] private ThemeInterop ThemeInterop = default!;
 
-    private bool IsSystemTheme;
-    private bool IsDarkMode;
-
-    private FxTheme DesiredTheme;
-    private FxTheme SystemTheme;
-
-
+    private FxTheme CurrentTheme;
 
     private bool _isLoading = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CurrentTheme = await ThemeInterop.GetThemeAsync();
+            await ThemeInterop.ApplyThemeAsync(CurrentTheme);
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
         // Blazor Server & Pre Rendering use created cultures in UseRequestLocalization middleware
         // Android, windows and iOS have to set culture programmatically.
         // Browser is gets handled in Web project's Program.cs\
-        if (_themeHasNotBeenSet)
-        {
-            DesiredTheme = await ThemeInterop.GetThemeAsync();
-            SystemTheme = await ThemeInterop.GetSystemThemeAsync();
-
-            IsDarkMode = DesiredTheme is FxTheme.Dark;
-            IsSystemTheme = DesiredTheme is FxTheme.System;
-
-            if (IsSystemTheme)
-                await ThemeInterop.SetThemeAsync(IsSystemTheme ? SystemTheme : DesiredTheme);
-            else
-                await ThemeInterop.SetThemeAsync(IsDarkMode ? FxTheme.Dark : FxTheme.Light);
-
-            await ThemeInterop.RegisterForSystemThemeChangedAsync();
-            StateHasChanged();
-        }
         // Browser is gets handled in Web project's Program.cs
 #if BlazorHybrid && MultilingualEnabled
         if (_cultureHasNotBeenSet)

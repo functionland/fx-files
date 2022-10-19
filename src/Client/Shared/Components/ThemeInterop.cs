@@ -46,6 +46,12 @@
             await module.InvokeVoidAsync("setTheme", theme.ToString());
         }
 
+        public async Task ApplyThemeAsync(FxTheme theme)
+        {
+            var module = await _moduleTask.Value;
+            await module.InvokeVoidAsync("applyTheme", theme.ToString());
+        }
+
         public async ValueTask DisposeAsync()
         {
             if (_moduleTask.IsValueCreated)

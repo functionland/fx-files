@@ -21,6 +21,8 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 CurrentTheme = Localizer.GetString(nameof(AppStrings.Night));
             else if (DesiredTheme == FxTheme.Light)
                 CurrentTheme = Localizer.GetString(nameof(AppStrings.Day));
+            else
+                CurrentTheme = Localizer.GetString(nameof(AppStrings.System));
 
             GetAppVersion();
         }

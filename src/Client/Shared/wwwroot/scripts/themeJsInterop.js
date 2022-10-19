@@ -10,7 +10,11 @@ export const registerForSystemThemeChanged = (dotnetObj, callbackMethodName) => 
     const media = matchMedia('(prefers-color-scheme: dark)');
     if (media && dotnetObj) {
         media.onchange = args => {
-            dotnetObj.invokeMethod(callbackMethodName, args.matches);
+            const isDark = args.matches;
+            if (getTheme() = Theme.system) {
+                applyTheme(Theme.system);
+            }
+            dotnetObj.invokeMethod(callbackMethodName, isDark);
         }
     }
 }
@@ -20,21 +24,23 @@ export const getSystemTheme = () =>
         ? Theme.dark : Theme.light;
 
 export const getTheme = () => {
-    const savedTheme = localStorage.getItem(themeKey);
-    if (savedTheme && savedTheme !== Theme.system) {
-        return savedTheme;
-    }
-    return getSystemTheme();
+    return localStorage.getItem(themeKey);
 }
 
-const applyTheme = (theme) => {
+export const applyTheme = (theme) => {
+
+    if (theme === Theme.system) {
+        theme = getSystemTheme();
+    }
+
     if (theme === Theme.dark) {
         document.body.setAttribute(dataThemeKey, theme);
     } else {
         document.body.removeAttribute(dataThemeKey);
     }
-    return theme;
 }
 
-export const setTheme = (theme) =>
-    localStorage.setItem(themeKey, applyTheme(theme));
+export const setTheme = (theme) => {
+    applyTheme(theme);
+    localStorage.setItem(themeKey, theme);
+}
