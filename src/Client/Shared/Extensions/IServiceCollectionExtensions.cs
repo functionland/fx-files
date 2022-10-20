@@ -35,7 +35,6 @@ public static class IServiceCollectionExtensions
         services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
         services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
 
-        services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
 

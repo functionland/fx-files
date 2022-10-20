@@ -14,21 +14,31 @@ public class ArtifactThumbnailService<TFileService> : ThumbnailService, IArtifac
         FileServcie = fileService;
     }
 
-    public async Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+    public async Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        var uniqueName = GetUniqueName(artifact);
-        return await GetOrCreateThumbnailAsync(CacheCategoryType.Artifact, uniqueName,
-            async () => await FileServcie.GetFileContentAsync(artifact.FullPath, cancellationToken), cancellationToken);
+        if (artifact.ProviderType == FsFileProviderType.Fula && artifact.IsAvailableOffline != true) return null;
+
+        var uniqueName = GetUniqueName(artifact, thumbnailScale);
+
+        var getStreamFunc = async () => await FileServcie.GetFileContentAsync(artifact.FullPath, cancellationToken);
+
+        return await GetOrCreateThumbnailAsync(
+            CacheCategoryType.Artifact,
+            thumbnailScale,
+            uniqueName,
+            getStreamFunc,
+            artifact.LocalFullPath,
+            cancellationToken);
     }
 
-    private static string GetUniqueName(FsArtifact fsArtifact)
+    private static string GetUniqueName(FsArtifact fsArtifact, ThumbnailScale thumbnailScale)
     {
         var imagePath = fsArtifact.FullPath;
         var extension = Path.GetExtension(imagePath);
         var lastModifiedDateTimeTicksStr = fsArtifact.LastModifiedDateTime.UtcTicks.ToString();
         var fullPath = Path.Combine(
             Path.GetDirectoryName(imagePath) ?? string.Empty,
-            Path.GetFileName(imagePath) + lastModifiedDateTimeTicksStr,
+            Path.GetFileName(imagePath) + lastModifiedDateTimeTicksStr + thumbnailScale,
             extension
             );
 

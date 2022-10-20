@@ -1,29 +1,38 @@
 ﻿using Android.Graphics;
 using Android.Media;
+using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Utils;
-using Stream = System.IO.Stream;
 using Bitmap = Android.Graphics.Bitmap;
 using ExifInterface = AndroidX.ExifInterface.Media.ExifInterface;
-using Functionland.FxFiles.Client.Shared.Models;
+using Stream = System.IO.Stream;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 {
-    protected override async Task<Stream> OnCreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
+    protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        var bitmap = BitmapFactory.DecodeStream(input);
+        // Todo: Exception
+        if (filePath is null && stream is null)
+            throw new InvalidOperationException($"{nameof(filePath)} and {nameof(stream)}");
 
-        //ToDo: Null check for bitmap
-        bitmap = CorrectRotationIfNeeded(input, bitmap);
-        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
-        var imageThumbnail = await ThumbnailUtils.ExtractThumbnailAsync(bitmap, imageWidth, imageHeight);
+        if (stream is not null)
+        {
+            var bitmap = BitmapFactory.DecodeStream(stream);
 
-        //ToDo: Null check for imageThumbnail
-        var outputStream = new MemoryStream();
-        await imageThumbnail.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
+            //ToDo: Null check for bitmap
+            bitmap = CorrectRotationIfNeeded(stream, bitmap);
+            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
+            var imageThumbnail = await ThumbnailUtils.ExtractThumbnailAsync(bitmap, imageWidth, imageHeight);
 
-        return outputStream;
+            var outputStream = new MemoryStream();
+            await imageThumbnail.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
+
+            return outputStream;
+        }
+
+        return null;
+        //TODO: impliment for stream
     }
 
     private Bitmap? CorrectRotationIfNeeded(Stream input, Bitmap? bitmap)
@@ -53,5 +62,4 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         matrix.PostRotate(angle);
         return Bitmap.CreateBitmap(source, 0, 0, source.Width, source.Height, matrix, true);
     }
-
 }
