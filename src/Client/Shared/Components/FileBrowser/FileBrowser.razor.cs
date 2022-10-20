@@ -66,8 +66,6 @@ public partial class FileBrowser
         {
             _isLoading = true;
 
-            GoBackService.GoBackAsync = HandleToolbarBackClick;
-
             _ = Task.Run(async () =>
             {
                 try
@@ -521,9 +519,9 @@ public partial class FileBrowser
         _pins = await PinService.GetPinnedArtifactsAsync();
     }
 
-    private async Task LoadChildrenArtifactsAsync(FsArtifact? parentArtifact = null)
+    private async Task LoadChildrenArtifactsAsync(FsArtifact? artifact = null)
     {
-        var childrenArtifacts = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
+        var childrenArtifacts = FileService.GetArtifactsAsync(artifact?.FullPath);
         try
         {
             if (artifact is null)
