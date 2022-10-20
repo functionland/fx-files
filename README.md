@@ -5,6 +5,8 @@
 # About Fx Files
 Want to own your files, literally? This is something won't happen ever on traditional cloud services. But from now on, it definitely happens at a glance with "Fx Files". It is a file manager which stores everything on FULA blockchain network of Bloxes.
 
+<img src="https://user-images.githubusercontent.com/17250443/189410320-8536a82e-7abf-4b53-bab2-1f6b8d79d65a.gif" />
+
 # Understanding the code
 To understand the architecture of the code and underlying services check this document: [Understanding the code](https://github.com/functionland/fx-files/blob/main/docs/README.md).
 Here is an overview of its structure:
