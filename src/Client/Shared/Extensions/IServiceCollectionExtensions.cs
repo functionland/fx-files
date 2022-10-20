@@ -31,6 +31,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IGoBackService, GoBackService>();
 
         services.AddTransient<IFileViewer, TextFileViewer>();
+        services.AddTransient<IFileViewer, ZipFileViewer>();
         services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
         services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
 
