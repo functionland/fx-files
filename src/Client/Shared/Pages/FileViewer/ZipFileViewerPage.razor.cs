@@ -1,18 +1,17 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Implementations;
-using System.Net;
+﻿using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Pages.FileViewer;
 
-public partial class TextFileViewerPage : IFileViewerPage
+public partial class ZipFileViewerPage : IFileViewerPage
 {
-    [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }=default!;
+    [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; } = default!;
     [AutoInject] public IFulaFileService FulaFileService { get; set; } = default!;
 
     [Parameter] public string EncodedFullPath { get; set; } = default!;
     [Parameter] public string EncodedReturnUrl { get; set; } = default!;
     [Parameter] public string FileServiceProvider { get; set; } = default!;
 
-    private string Text { get; set; } = string.Empty;
+    private string ZipPath { get; set; } = string.Empty;
     private IFileService FileService { get; set; } = default!;
 
 
@@ -28,10 +27,8 @@ public partial class TextFileViewerPage : IFileViewerPage
         }
         var decodedPath = WebUtility.UrlDecode(EncodedFullPath);
 
-        using var stream = await FileService.GetFileContentAsync(decodedPath);
-        using var sr = new StreamReader(stream);
+        ZipPath = decodedPath;
 
-        Text = sr.ReadToEnd();
 
         await base.OnInitAsync();
     }

@@ -2,12 +2,12 @@
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
 
-public class TextFileViewer : BlazorFileViewer<TextFileViewerPage>
+public class ZipFileViewer : BlazorFileViewer<ZipFileViewerPage>
 {
-    public TextFileViewer(NavigationManager navigationManager) : base(navigationManager)
+    public ZipFileViewer(NavigationManager navigationManager) : base(navigationManager)
     {
     }
 
     protected override bool OnIsExtenstionSupported(string artrifactPath, IFileService fileService) 
-        => new string[] { ".txt" }.Contains(Path.GetExtension(artrifactPath));
+        => new string[] { ".zip", ".rar" }.Contains(Path.GetExtension(artrifactPath));
 }

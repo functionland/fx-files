@@ -10,15 +10,15 @@ public abstract class BlazorFileViewer<TViewrPage> : IFileViewer
     {
         NavigationManager = navigationManager;
     }
-    public bool IsExtenstionSupported(FsArtifact fsArtifact)
+    public bool IsExtenstionSupported(string artrifactPath, IFileService fileService)
     {
-        return OnIsExtenstionSupported(fsArtifact);
+        return OnIsExtenstionSupported(artrifactPath, fileService);
     }
 
-    public async Task ViewAsync(FsArtifact artrifact, IFileService fileService, string returnUrl)
+    public async Task ViewAsync(string artrifactPath, IFileService fileService, string returnUrl)
     {
         var pageName = typeof(TViewrPage).Name;
-        var encodedPath = WebUtility.UrlEncode(artrifact.FullPath);
+        var encodedPath = WebUtility.UrlEncode(artrifactPath);
 
         var encodedReturnUrl = WebUtility.UrlEncode(returnUrl);
         var fileServiceName = fileService.GetType().Name;
@@ -27,5 +27,5 @@ public abstract class BlazorFileViewer<TViewrPage> : IFileViewer
         NavigationManager.NavigateTo(rout);
     }
 
-    protected abstract bool OnIsExtenstionSupported(FsArtifact fsArtifact);
+    protected abstract bool OnIsExtenstionSupported(string artrifactPath, IFileService fileService);
 }

@@ -9,7 +9,7 @@
         [AutoInject] IExceptionHandler ExceptionHandler { get; set; }
         public async Task ViewFile(FsArtifact artifact, string returnUrl)
         {
-            var fileViewer = FileViewers.FirstOrDefault(fv => fv.IsExtenstionSupported(artifact));
+            var fileViewer = FileViewers.FirstOrDefault(fv => fv.IsExtenstionSupported(artifact.FullPath,FileService));
 
             if (fileViewer is null)
             {
@@ -29,7 +29,7 @@
                 return;
             }
 
-            await fileViewer.ViewAsync(artifact, FileService, returnUrl);
+            await fileViewer.ViewAsync(artifact.FullPath, FileService, returnUrl);
         }
     }
 }
