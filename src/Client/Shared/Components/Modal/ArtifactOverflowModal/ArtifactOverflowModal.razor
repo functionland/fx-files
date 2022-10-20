@@ -11,11 +11,13 @@
         <FxButton Class="rename-button"
                   Text="Rename"
                   OnClick="Rename"
+                  IsEnabled="!_isInRoot"
                   IsVisible="!_isMultiple"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="copy-button"
                   Text="Make a copy"
                   OnClick="Copy"
+                  IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         @if (_pinOptionResult?.IsVisible == true)
         {
@@ -24,6 +26,7 @@
                 <FxButton Class="pin-button"
                   Text="Add to pinned items"
                   OnClick="Pin"
+                  IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
             }
             else if (_pinOptionResult?.Type == PinOptionResultType.Remove)
@@ -31,16 +34,19 @@
                 <FxButton Class="pin-button"
                   Text="Remove from pinned items"
                   OnClick="UnPin"
+                  IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
             }      
         }
         <FxButton Class="move-button"
                   Text="Move to"
                   OnClick="Move"
+                  IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="delete-button"
                   Text="Delete"
                   OnClick="Delete"
+                  IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
     </div>
 </FxBottomSheet>

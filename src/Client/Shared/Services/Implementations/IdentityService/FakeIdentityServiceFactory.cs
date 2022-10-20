@@ -59,7 +59,8 @@ public partial class FakeIdentityServiceFactory
         var fulaUser = new FulaUser(dId)
         {
             Username = username,
-            IsParent = isParent
+            IsParent = isParent,
+            //HasAceessToFula = hasAceessToFula,
         };
         return fulaUser;
     }

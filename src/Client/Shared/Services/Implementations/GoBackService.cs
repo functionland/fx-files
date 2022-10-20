@@ -2,5 +2,14 @@
 
 public class GoBackService : IGoBackService
 {
-    public EventCallback? GoBack{ get; set; } = null;
+    public bool CanGoBack { get; set; } = true;
+    public bool CanExitApp { get; set; } = false;
+    public Func<Task>? GoBackAsync { get;  set; }
+
+    public void OnInit(Func<Task> goBackAsynFunc, bool canGoBack, bool canExitApp)
+    {
+        CanExitApp = canExitApp;
+        CanGoBack = canGoBack;
+        GoBackAsync = goBackAsynFunc;
+    }
 }

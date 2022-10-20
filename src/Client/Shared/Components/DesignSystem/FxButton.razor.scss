@@ -126,6 +126,11 @@
     pointer-events: none !important;
 }
 
+.fully-disabled {
+    opacity: .5;
+    pointer-events: none !important;
+}
+
 .fxbutton-icononly:hover {
     background: $green-dark-hover !important;
 }
