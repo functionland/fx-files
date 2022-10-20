@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="right-part">
-                                <div class="icons-action move-icon" @onclick="Move"></div>
+                                <div class="icons-action move-icon @(!_isInRoot ? "" : "disabled-icon")" @onclick="Move"></div>
                             </div>
                         </div>
                     </FileDetailItemFragment>

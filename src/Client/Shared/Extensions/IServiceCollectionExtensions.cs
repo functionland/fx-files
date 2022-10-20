@@ -1,7 +1,5 @@
-﻿
-using Functionland.FxFiles.Client.Shared.Services;
-using Functionland.FxFiles.Client.Shared.Services.Implementations;
-using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Services;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -32,13 +30,18 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IBloxService, FakeBloxService>();
         services.AddSingleton<IGoBackService, GoBackService>();
 
+        services.AddTransient<IFileViewer, TextFileViewer>();
+        services.AddTransient<IFileViewer, ZipFileViewer>();
+        services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
+        services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
+
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
 
         return services;
     }
 
-    public static async Task RunAppEvents(this IServiceProvider serviceProvider, AppEventOption? option = null)
+    public static async Task RunAppEvents(this IServiceProvider serviceProvider)
     {
         var exceptionHandler = serviceProvider.GetRequiredService<IExceptionHandler>();
         try
@@ -58,9 +61,4 @@ public static class IServiceCollectionExtensions
             exceptionHandler.Handle(ex);
         }
     }
-}
-
-public class AppEventOption
-{
-    //TODO: Put something that you need in your app events.
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using Functionland.FxFiles.Client.Shared.Resources;
 using Microsoft.Maui;
+using System.Drawing;
 
 #if ANDROID
 using Android.Widget;
@@ -16,7 +17,15 @@ public partial class MainPage
 
         BlazorWebViewHandler.BlazorWebViewMapper.AppendToMapping("CustomBlazorWebViewMapper", (handler, view) =>
         {
+
+#if IOS
+            handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
+            handler.PlatformView.Opaque = false;
+#endif
+
 #if ANDROID
+            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+
             Android.Webkit.WebSettings settings = handler.PlatformView.Settings;
 
             settings.AllowFileAccessFromFileURLs =
@@ -32,7 +41,7 @@ public partial class MainPage
 #endif
 
             settings.BlockNetworkLoads =
-                settings.BlockNetworkImage = false;
+            settings.BlockNetworkImage = false;
 #endif
         });
 

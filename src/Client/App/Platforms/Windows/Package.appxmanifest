@@ -4,11 +4,12 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  IgnorableNamespaces="uap rescap mp">
 
 	<Identity
-	  Name="maui-package-name-placeholder"
-	  Publisher="CN=Functionland"
+	  Name="Functionland.FxFiles"
+	  Publisher="CN=E9FEC2DC-DBBE-45BA-A112-26EFEA253DB5"
 	  Version="0.0.0.0" />
 
 	<Properties>
