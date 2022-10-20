@@ -1,8 +1,9 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using System.Net;
+using System.Reflection.Emit;
+
+using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using System.Net;
-using System.Reflection.Emit;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -76,6 +77,7 @@ public partial class FileBrowser
             {
                 try
                 {
+                    _isPinBoxLoading = true;
                     await LoadPinsAsync();
                 }
                 catch (Exception exception)
@@ -93,6 +95,7 @@ public partial class FileBrowser
             {
                 try
                 {
+                    _isArtifactExplorerLoading = true;
                     if (string.IsNullOrWhiteSpace(DefaultPath))
                     {
                         await LoadChildrenArtifactsAsync();
@@ -110,8 +113,8 @@ public partial class FileBrowser
                 }
                 finally
                 {
-                    await InvokeAsync(() => StateHasChanged());
                     _isArtifactExplorerLoading = false;
+                    await InvokeAsync(() => StateHasChanged());
                 }
             });
 
@@ -378,11 +381,14 @@ public partial class FileBrowser
             _isPinBoxLoading = true;
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
-            _isPinBoxLoading = false;
         }
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
+        }
+        finally
+        {
+            _isPinBoxLoading = false;
         }
     }
 
@@ -394,12 +400,11 @@ public partial class FileBrowser
             var pathArtifacts = artifacts.Select(a => a.FullPath);
             await PinService.SetArtifactsUnPinAsync(pathArtifacts);
             await UpdatePinedArtifactsAsync(artifacts, false);
-            _isPinBoxLoading = false;
         }
         catch (Exception exception)
         {
-            _isPinBoxLoading = false;
             ExceptionHandler?.Handle(exception);
+            _isPinBoxLoading = false;
         }
     }
 
@@ -454,7 +459,6 @@ public partial class FileBrowser
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
-            _isArtifactExplorerLoading = false;
         }
     }
 
@@ -592,10 +596,20 @@ public partial class FileBrowser
         }
         else
         {
-            _currentArtifact = artifact;
-            _isArtifactExplorerLoading = true;
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            _isArtifactExplorerLoading = false;
+            try
+            {
+                _currentArtifact = artifact;
+                _isArtifactExplorerLoading = true;
+                await LoadChildrenArtifactsAsync(_currentArtifact);
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandler?.Handle(exception);
+            }
+            finally
+            {
+                _isArtifactExplorerLoading = false;
+            }
         }
     }
 
@@ -617,9 +631,19 @@ public partial class FileBrowser
         switch (result?.ResultType)
         {
             case ArtifactOverflowResultType.Details:
-                _isArtifactExplorerLoading = true;
-                await HandleShowDetailsArtifact(new List<FsArtifact> { artifact });
-                _isArtifactExplorerLoading = false;
+                try
+                {
+                    _isArtifactExplorerLoading = true;
+                    await HandleShowDetailsArtifact(new List<FsArtifact> { artifact });
+                }
+                catch (Exception exception)
+                {
+                    ExceptionHandler?.Handle(exception);
+                }
+                finally
+                {
+                    _isArtifactExplorerLoading = false;
+                }
                 break;
             case ArtifactOverflowResultType.Rename:
                 await HandleRenameArtifactAsync(artifact);
@@ -691,9 +715,19 @@ public partial class FileBrowser
             switch (result?.ResultType)
             {
                 case ArtifactOverflowResultType.Details:
-                    _isArtifactExplorerLoading = true;
-                    await HandleShowDetailsArtifact(artifacts);
-                    _isArtifactExplorerLoading = false;
+                    try
+                    {
+                        _isArtifactExplorerLoading = true;
+                        await HandleShowDetailsArtifact(artifacts);
+                    }
+                    catch (Exception exception)
+                    {
+                        ExceptionHandler?.Handle(exception);
+                    }
+                    finally
+                    {
+                        _isArtifactExplorerLoading = false;
+                    }
                     break;
                 case ArtifactOverflowResultType.Rename when (!isMultiple):
                     var singleArtifact = artifacts.SingleOrDefault();
@@ -1055,7 +1089,8 @@ public partial class FileBrowser
         {
             var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
             _displayedArtifacts = sortedDisplayArtifact.ToList();
-        } catch(Exception exception)
+        }
+        catch (Exception exception)
         {
             ExceptionHandler.Handle(exception);
         }
@@ -1077,7 +1112,7 @@ public partial class FileBrowser
             var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
             _displayedArtifacts = sortedDisplayArtifact.ToList();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             ExceptionHandler.Handle(exception);
         }

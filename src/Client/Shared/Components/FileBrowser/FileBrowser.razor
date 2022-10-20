@@ -107,8 +107,8 @@
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="ArtifactState.ViewMode"
                       FileCategoryFilter="_fileCategoryFilter"
-                      IsLoading="_isArtifactExplorerLoading"
                       HandleBack="HandleToolbarBackClick"
+                      IsLoading="_isArtifactExplorerLoading"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />
     }
