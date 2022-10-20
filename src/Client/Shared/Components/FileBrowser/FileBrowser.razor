@@ -6,49 +6,46 @@
 }
 <div class="file-browser-container">
 
-    <div class="sticky-content">
-        <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
-                   OnSearch="HandleDeepSearchAsync"
-                   OnSearchFocused="HandleSearchFocused"
-                   IsInSearchMode="_isInSearchMode"
-                   OnBackClick="HandleToolbarBackClick"
-                   Title="@(_currentArtifact?.Name)"
-                   SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
-                   IsPinned="@(_currentArtifact?.IsPinned ?? false)"
-                   OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
-                   OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
-                   IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
+    <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+               OnSearch="HandleDeepSearchAsync"
+               OnSearchFocused="HandleDeepSearchFocused"
+               IsInSearchMode="_isInSearchMode"
+               OnBackClick="HandleToolbarBackClick"
+               Title="@(_currentArtifact?.Name)"
+               SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
+               IsPinned="@(_currentArtifact?.IsPinned ?? false)"
+               OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
+               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
+               IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-        @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
+    @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
+    {
+        @if (_pins?.Count > 0)
         {
-            <div class="pin-artifacts">
-                @if (_pins?.Count > 0)
-                {
-                    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-                        <ContentTemplate>
-                            <div class="items">
-                                @foreach (var pin in _pins)
-                                {
-                                    <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                        <FileCard ArtifactType="@pin.ArtifactType"
-                                      FileName="@pin.Name"
-                                      FileSize="@pin.SizeStr"
-                                      FileImage="@pin.ThumbnailPath"
-                                      FileType="@pin.FileCategory"
-                                      ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
-                                    </div>
-                                }
+            <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+                <ContentTemplate>
+                    <div class="items">
+                        @foreach (var pin in _pins)
+                        {
+                            <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                <FileCard ArtifactType="@pin.ArtifactType"
+                                          FileName="@pin.Name"
+                                          FileSize="@pin.SizeStr"
+                                          FileImage="@pin.ThumbnailPath"
+                                          FileType="@pin.FileCategory"
+                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
-                        </ContentTemplate>
-                    </BitAccordion>
-                }
-                else
-                {
-                    <div class="disable-pinned">
-                        Pinned (empty)
+                        }
                     </div>
-                }
+                </ContentTemplate>
+            </BitAccordion>
+        }
+        else
+        {
+            <div class="disable-pinned">
+                Pinned (empty)
             </div>
+        }
 
             <div class="root-title">My device files</div>
         }
@@ -91,22 +88,21 @@
                 </div>
             }
 
-            @if (!IsInRoot(_currentArtifact))
-            {
-                <FxSearchInput Placeholder="@_currentArtifact?.Name"
-                       @ref="_fxSearchInputRef"
-                       OnCancel="HandleCancelSearchAsync"
-                       DebounceInterval="300"
-                       OnSearch="HandleSearch"
-                       IsPartial="false" />
-            }
+        @if (!IsInRoot(_currentArtifact))
+        {
+            <FxSearchInput Placeholder="@_currentArtifact?.Name"
+                   @ref="_fxSearchInputRef"
+                   OnCancel="HandleCancelCurrentListSearchAsync"
+                   DebounceInterval="300"
+                   OnSearch="HandleCurrentListSearch"
+                   IsPartial="false" />
         }
-    </div>
+    }
 
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        <ArtifactExplorer Artifacts="_filteredArtifacts"
+        <ArtifactExplorer Artifacts="_displayedArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactOptionClick="HandleOptionsArtifact"
@@ -114,7 +110,7 @@
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                       ViewMode="ArtifactState.ViewMode"
                       FileCategoryFilter="_fileCategoryFilter"
-                      IsLoading="_isLoading"
+                      IsLoading="_isArtifactExplorerLoading"
                       HandleBack="HandleToolbarBackClick"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />
