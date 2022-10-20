@@ -24,6 +24,8 @@ public partial class MainPage
 #endif
 
 #if ANDROID
+            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+
             Android.Webkit.WebSettings settings = handler.PlatformView.Settings;
 
             settings.AllowFileAccessFromFileURLs =

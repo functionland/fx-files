@@ -2,7 +2,7 @@
 {
     public enum ViewModeEnum
     {
-        list,
-        grid
+        List,
+        Grid
     }
 }
