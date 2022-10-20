@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -62,14 +63,24 @@ public partial class FileBrowser
     [Parameter] public IFileService FileService { get; set; } = default!;
 
     [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
-    [Parameter] public IViewFileService<ILocalDeviceFileService> ViewFileService { get; set; } = default!;
+    [Parameter] public IViewFileService<IFileService> ViewFileService { get; set; } = default!;
+    [Parameter] public string? DefaultPath { get; set; }
 
 
     protected override async Task OnInitAsync()
     {
         _isLoading = true;
         await LoadPinsAsync();
-        await LoadChildrenArtifactsAsync();
+        if (string.IsNullOrWhiteSpace(DefaultPath))
+        {
+            await LoadChildrenArtifactsAsync();
+        }
+        else
+        {
+            var defaultArtifact = await FileService.GetArtifactAsync(DefaultPath);
+            _currentArtifact = defaultArtifact;
+            await LoadChildrenArtifactsAsync(defaultArtifact);
+        }
         _isLoading = false;
         await base.OnInitAsync();
     }
@@ -535,7 +546,8 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            await ViewFileService.ViewFile(artifact);
+            var encodedArtifactPath = WebUtility.UrlEncode(_currentArtifact?.FullPath);
+            await ViewFileService.ViewFile(artifact, $"{NavigationManager.Uri}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {

@@ -2,6 +2,6 @@
 
 public interface IFileViewer
 {
-    Task ViewAsync(FsArtifact artrifact, IFileService fileService);
+    Task ViewAsync(FsArtifact artrifact, IFileService fileService, string returnUrl);
     bool IsExtenstionSupported(FsArtifact fsArtifact);
 }

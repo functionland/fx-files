@@ -9,6 +9,7 @@ public partial class TextFileViewerPage : IFileViewerPage
     [AutoInject] public IFulaFileService FulaFileService { get; set; } = default!;
 
     [Parameter] public string EncodedFullPath { get; set; } = default!;
+    [Parameter] public string EncodedReturnUrl { get; set; } = default!;
     [Parameter] public string FileServiceProvider { get; set; } = default!;
 
     private string Text { get; set; } = string.Empty;
@@ -33,5 +34,15 @@ public partial class TextFileViewerPage : IFileViewerPage
         Text = sr.ReadToEnd();
 
         await base.OnInitAsync();
+    }
+
+    private void Close()
+    {
+        var decodedReturnUrl = WebUtility.UrlDecode(EncodedReturnUrl);
+
+        var uri = new Uri(decodedReturnUrl);
+        var query = WebUtility.UrlEncode(uri.Query);
+        var redirectUrl = $"{uri.AbsolutePath}{query}";
+        NavigationManager.NavigateTo(decodedReturnUrl);
     }
 }

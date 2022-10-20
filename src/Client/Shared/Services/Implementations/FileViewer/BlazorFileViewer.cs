@@ -15,13 +15,15 @@ public abstract class BlazorFileViewer<TViewrPage> : IFileViewer
         return OnIsExtenstionSupported(fsArtifact);
     }
 
-    public async Task ViewAsync(FsArtifact artrifact, IFileService fileService)
+    public async Task ViewAsync(FsArtifact artrifact, IFileService fileService, string returnUrl)
     {
         var pageName = typeof(TViewrPage).Name;
         var encodedPath = WebUtility.UrlEncode(artrifact.FullPath);
+
+        var encodedReturnUrl = WebUtility.UrlEncode(returnUrl);
         var fileServiceName = fileService.GetType().Name;
 
-        var rout = $"FileViewers/{pageName}/{encodedPath}/{fileServiceName}";
+        var rout = $"FileViewers/{pageName}/{encodedPath}/{fileServiceName}/{encodedReturnUrl}";
         NavigationManager.NavigateTo(rout);
     }
 

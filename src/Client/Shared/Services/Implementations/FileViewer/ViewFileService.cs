@@ -7,7 +7,7 @@
 
         [AutoInject] TFileService FileService { get; set; }
         [AutoInject] IExceptionHandler ExceptionHandler { get; set; }
-        public async Task ViewFile(FsArtifact artifact)
+        public async Task ViewFile(FsArtifact artifact, string returnUrl)
         {
             var fileViewer = FileViewers.FirstOrDefault(fv => fv.IsExtenstionSupported(artifact));
 
@@ -29,7 +29,7 @@
                 return;
             }
 
-            await fileViewer.ViewAsync(artifact, FileService);
+            await fileViewer.ViewAsync(artifact, FileService, returnUrl);
         }
     }
 }

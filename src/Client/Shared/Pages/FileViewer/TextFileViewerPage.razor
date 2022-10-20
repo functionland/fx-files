@@ -1,5 +1,7 @@
-﻿@page "/FileViewers/TextFileViewerPage/{EncodedFullPath}/{FileServiceProvider}"
+﻿@page "/FileViewers/TextFileViewerPage/{EncodedFullPath}/{FileServiceProvider}/{EncodedReturnUrl}"
 @inherits AppComponentBase
 
 <p>@Text</p>
+<br />
+<BitButton OnClick="Close">Close</BitButton>
 

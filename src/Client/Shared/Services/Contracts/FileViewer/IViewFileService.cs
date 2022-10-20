@@ -1,7 +1,7 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
-public interface IViewFileService<TFileService>
+public interface IViewFileService<out TFileService>
     where TFileService : IFileService
 {
-    Task ViewFile(FsArtifact artifact);
+    Task ViewFile(FsArtifact artifact, string returnUrl);
 }
