@@ -61,8 +61,8 @@
                 </div>
                 <div class="right-actions">
                     <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
-                    <div class="action-btn list-view-btn @(_viewMode == ViewModeEnum.list ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.list))"></div>
-                    <div class="action-btn grid-view-btn @(_viewMode == ViewModeEnum.grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.grid))"></div>
+                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.list ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.list))"></div>
+                    <div class="action-btn grid-view-btn @(ArtifactState.ViewMode == ViewModeEnum.grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.grid))"></div>
                     <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
                 </div>
 
                 <div class="right-part">
-                    @if (_selectedArtifacts?.Count > 0)
+                    @if (_selectedArtifacts?.Count > 0 && IsInRoot(_currentArtifact) is false)
                     {
                         <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
                     }
@@ -108,7 +108,7 @@
                       OnArtifactOptionClick="HandleOptionsArtifact"
                       OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                       OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
-                      ViewMode="_viewMode"
+                      ViewMode="ArtifactState.ViewMode"
                       FileCategoryFilter="_fileCategoryFilter"
                       IsLoading="_isLoading"
                       HandleBack="HandleToolbarBackClick"
