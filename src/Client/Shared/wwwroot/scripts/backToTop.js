@@ -1,16 +1,37 @@
 ﻿function OnScrollEvent() {
-    document.documentElement.scrollTop = 0;
+    const artifactListDiv = document.querySelector('.list-container');
+    artifactListDiv.scrollTop = 0;
 }
 
-window.onscroll = function () { OnScrollCheck() };
+window.OnScrollCheck = OnScrollCheck;
 
 function OnScrollCheck() {
-    if (document.documentElement.scrollTop > 85) {
-        var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
+    const artifactListDiv = document.querySelector('.list-container');
+    const pinListDiv = document.querySelector('.pin-artifacts');
+    let oldScrollY = artifactListDiv.scrollTop;
+    artifactListDiv.addEventListener("scroll", () => {
+        if (oldScrollY < artifactListDiv.scrollTop) {
+            CheckBackToTopButtonDisplay();
+            pinListDiv.classList.remove('pin-artifacts-show');
+            pinListDiv.classList.remove('pin-artifacts-animation-down');
+        } else {
+            CheckBackToTopButtonDisplay();
+            pinListDiv.classList.add('pin-artifacts-show');
+            pinListDiv.classList.remove('pin-artifacts-animation-up');
+        }
+        oldScrollY = artifactListDiv.scrollTop;
+    });
+    
+}
+
+function CheckBackToTopButtonDisplay() {
+    const artifactListDiv = document.querySelector('.list-container');
+    if (artifactListDiv.scrollTop > 15) {
+        let scrollButton = document.querySelector('.position-scroll-btn');
         scrollButton.style.display = 'block';
     }
     else {
-        var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
+        let scrollButton = document.querySelector('.position-scroll-btn');
         scrollButton.style.display = 'none';
     }
 }

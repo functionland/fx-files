@@ -21,32 +21,34 @@
 
         @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
         {
-            @if (_pins?.Count > 0)
-            {
-                <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-                    <ContentTemplate>
-                        <div class="items">
-                            @foreach (var pin in _pins)
-                            {
-                                <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                    <FileCard ArtifactType="@pin.ArtifactType"
-                                  FileName="@pin.Name"
-                                  FileSize="@pin.SizeStr"
-                                  FileImage="@pin.ThumbnailPath"
-                                  FileType="@pin.FileCategory"
-                                  ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
-                                </div>
-                            }
-                        </div>
-                    </ContentTemplate>
-                </BitAccordion>
-            }
-            else
-            {
-                <div class="disable-pinned">
-                    Pinned (empty)
-                </div>
-            }
+            <div class="pin-artifacts">
+                @if (_pins?.Count > 0)
+                {
+                    <BitAccordion Title="Pinned" DefaultIsExpanded="true">
+                        <ContentTemplate>
+                            <div class="items">
+                                @foreach (var pin in _pins)
+                                {
+                                    <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                        <FileCard ArtifactType="@pin.ArtifactType"
+                                      FileName="@pin.Name"
+                                      FileSize="@pin.SizeStr"
+                                      FileImage="@pin.ThumbnailPath"
+                                      FileType="@pin.FileCategory"
+                                      ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                    </div>
+                                }
+                            </div>
+                        </ContentTemplate>
+                    </BitAccordion>
+                }
+                else
+                {
+                    <div class="disable-pinned">
+                        Pinned (empty)
+                    </div>
+                }
+            </div>
 
             <div class="root-title">My device files</div>
         }

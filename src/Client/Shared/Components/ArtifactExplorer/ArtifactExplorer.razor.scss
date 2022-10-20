@@ -5,6 +5,8 @@
 
 .list-container {
     flex-grow: 2;
+    overflow: auto;
+    height: 200px;
 }
 
 .list-title {
