@@ -6,26 +6,25 @@ using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations.Test;
 
-public partial class ExternalAndroidFileServicePlatformTest : FileServicePlatformTest
+public class AndroidExternalArtifactThumbnailPlatformTest<TFileService> : ArtifactThumbnailPlatformTest<TFileService>
+    where TFileService : IFileService
 {
-    public ILocalDeviceFileService FileService { get; set; }
     public IStringLocalizer<AppStrings> StringLocalizer { get; set; }
 
-    public ExternalAndroidFileServicePlatformTest(ILocalDeviceFileService fileService, IStringLocalizer<AppStrings> stringLocalizer)
+    public override string Title => $"AndroidExternalArtifactThumbnailPlatformTest {typeof(TFileService).Name}";
+
+    public override string Description => "Test for create artifact thumbnail on android in external storage";
+
+    public AndroidExternalArtifactThumbnailPlatformTest(IArtifactThumbnailService<TFileService> artifactThumbnailService,
+                                                           TFileService fileService,
+                                                           IStringLocalizer<AppStrings> stringLocalizer) : base(artifactThumbnailService, fileService)
     {
-        FileService = fileService;
         StringLocalizer = stringLocalizer;
     }
-    public override string Title => "External AndroidFileService Test";
 
-    public override string Description => "Tests the common features of this FileService external storage of Android.";
 
-    protected override IFileService OnGetFileService()
-    {
-        return FileService;
-    }
 
-    protected override string OnGetTestsRootPath()
+    protected override string OnGetRootPath()
     {
         var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
         if (storageManager is null)
@@ -40,6 +39,5 @@ public partial class ExternalAndroidFileServicePlatformTest : FileServicePlatfor
             throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "external drive"));
         }
         else return externalRootPath;
-
     }
 }
