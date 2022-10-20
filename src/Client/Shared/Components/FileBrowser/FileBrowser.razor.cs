@@ -31,11 +31,10 @@ public partial class FileBrowser : IDisposable
     private FsArtifact? _currentArtifact;
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _allArtifacts = new();
-    // Rename to _displayedArtifacts
-    private List<FsArtifact> _filteredArtifacts = new();
+    private List<FsArtifact> _displayedArtifacts = new();
     private List<FsArtifact> _selectedArtifacts = new();
-    private string _currentListSearchText = string.Empty;
-    private string _deepSearchText = string.Empty;
+    private string _inlineSearchText = string.Empty;
+    private string _searchText = string.Empty;
     private bool _isInSearchMode;
     private FileCategoryType? _fileCategoryFilter;
 
@@ -65,29 +64,39 @@ public partial class FileBrowser : IDisposable
         try
         {
             _isLoading = true;
-            
-            // ToDo: Check if it is ok
+
             GoBackService.GoBackAsync = HandleToolbarBackClick;
 
-            // ToDo: Check exception management.
             _ = Task.Run(async () =>
             {
                 try
                 {
                     await LoadPinsAsync();
-                    await InvokeAsync(() => StateHasChanged());
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     ExceptionHandler.Handle(exception);
                 }
+                finally
+                {
+                    await InvokeAsync(() => StateHasChanged());
+                }
             });
 
-            // ToDo: Add exception management.
             _ = Task.Run(async () =>
             {
-                await LoadChildrenArtifactsAsync();
-                await InvokeAsync(() => StateHasChanged());
+                try
+                {
+                    await LoadChildrenArtifactsAsync();
+                }
+                catch (Exception exception)
+                {
+                    ExceptionHandler.Handle(exception);
+                }
+                finally
+                {
+                    await InvokeAsync(() => StateHasChanged());
+                }
             });
 
 
@@ -812,7 +821,7 @@ public partial class FileBrowser : IDisposable
         _isLoading = true;
         _isInSearchMode = false;
         cancellationTokenSource?.Cancel();
-        _currentListSearchText = string.Empty;
+        _inlineSearchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         _isLoading = false;
     }
@@ -827,9 +836,9 @@ public partial class FileBrowser : IDisposable
     private async Task HandleDeepSearchAsync(string text)
     {
         _isLoading = true;
-        _deepSearchText = text;
+        _searchText = text;
         _allArtifacts.Clear();
-        _filteredArtifacts.Clear();
+        _displayedArtifacts.Clear();
 
         RefreshDisplayedArtifacts();
 
@@ -847,7 +856,7 @@ public partial class FileBrowser : IDisposable
             var buffer = new List<FsArtifact>();
             try
             {
-                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _deepSearchText, token))
+                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
                 {
                     if (token.IsCancellationRequested)
                         return;
@@ -897,15 +906,15 @@ public partial class FileBrowser : IDisposable
     {
         if (text != null)
         {
-            _currentListSearchText = text;
+            _inlineSearchText = text;
             RefreshDisplayedArtifacts();
         }
     }
 
     private async Task HandleToolbarBackClick()
     {
-        _deepSearchText = string.Empty;
-        _currentListSearchText = string.Empty;
+        _searchText = string.Empty;
+        _inlineSearchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
         if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
@@ -971,15 +980,14 @@ public partial class FileBrowser : IDisposable
             displayingArtifacts = ApplySort(displayingArtifacts);
         }
 
-        // ToDo: direct assign or Clear and AddRange?
-        _filteredArtifacts = displayingArtifacts.ToList();
+        _displayedArtifacts = displayingArtifacts.ToList();
     }
 
     private IEnumerable<FsArtifact> ApplyInlineSearch(IEnumerable<FsArtifact> artifacts)
     {
-        return (string.IsNullOrEmpty(_currentListSearchText) || string.IsNullOrWhiteSpace(_currentListSearchText))
+        return (string.IsNullOrEmpty(_inlineSearchText) || string.IsNullOrWhiteSpace(_inlineSearchText))
             ? artifacts
-            : artifacts.Where(a => a.Name.ToLower().Contains(_currentListSearchText.ToLower()));
+            : artifacts.Where(a => a.Name.ToLower().Contains(_inlineSearchText.ToLower()));
     }
 
     private IEnumerable<FsArtifact> ApplyFilters(IEnumerable<FsArtifact> artifacts)
@@ -1000,7 +1008,7 @@ public partial class FileBrowser : IDisposable
 
     private IEnumerable<FsArtifact> ApplySort(IEnumerable<FsArtifact> artifacts)
     {
-        throw new NotImplementedException();
+        return SortDisplayedArtifacts(artifacts);
     }
 
     private async Task HandleFilterClick()
@@ -1014,60 +1022,58 @@ public partial class FileBrowser : IDisposable
     private void HandleSortOrderClick()
     {
         _isAscOrder = !_isAscOrder;
-        SortFilteredArtifacts();
+        var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+        _displayedArtifacts = sortedDisplayArtifact.ToList();
     }
 
     private async Task HandleSortClick()
     {
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
-        SortFilteredArtifacts();
+        var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+        _displayedArtifacts = sortedDisplayArtifact.ToList();
     }
 
-    private void SortFilteredArtifacts()
+    private IEnumerable<FsArtifact> SortDisplayedArtifacts(IEnumerable<FsArtifact> artifacts)
     {
         if (_currentSortType is SortTypeEnum.LastModified)
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime).ToList();
-                return;
+                artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.LastModifiedDateTime);
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.LastModifiedDateTime).ToList();
-                return;
+                artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.LastModifiedDateTime);
             }
 
         }
 
-        if (_currentSortType is SortTypeEnum.Size)
+        else if (_currentSortType is SortTypeEnum.Size)
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size).ToList();
-                return;
+                artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Size);
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.Size).ToList();
-                return;
+                artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.Size);
             }
         }
 
-        if (_currentSortType is SortTypeEnum.Name)
+        else if (_currentSortType is SortTypeEnum.Name)
         {
             if (_isAscOrder)
             {
-                _filteredArtifacts = _filteredArtifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name).ToList();
-                return;
+                artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder).ThenBy(artifact => artifact.Name);
             }
             else
             {
-                _filteredArtifacts = _filteredArtifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.Name).ToList();
-                return;
+                artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder).ThenByDescending(artifact => artifact.Name);
             }
         }
+
+        return artifacts;
     }
 
     private async Task RenameFileAsync(FsArtifact? artifact, string? newName)

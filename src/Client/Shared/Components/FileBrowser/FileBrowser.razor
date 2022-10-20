@@ -50,7 +50,7 @@
         <div class="root-title">My device files</div>
     }
 
-    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_deepSearchText) is false)
+    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
@@ -100,9 +100,9 @@
     }
 
 
-    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_deepSearchText) is false)
+    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        <ArtifactExplorer Artifacts="_filteredArtifacts"
+        <ArtifactExplorer Artifacts="_displayedArtifacts"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactOptionClick="HandleOptionsArtifact"
