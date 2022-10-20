@@ -4,10 +4,10 @@
 
 
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode.ToString().ToLower()}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
-    @if (isLoading)
-        {
-            <OverlayLoading />
-        }
+    @if (IsLoading)
+    {
+        <OverlayLoading />
+    }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
         <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
@@ -19,53 +19,61 @@
         @foreach (var artifact in Artifacts)
         {
             <div class="item-container @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                 @onpointerup="((e) => PointerUp(e,artifact))"
-                 @onpointerdown="(() =>PointerDown(artifact))"
-                 @onpointercancel="PointerCancel">
+         @onpointerup="((e) => PointerUp(e,artifact))"
+         @onpointerdown="(() =>PointerDown(artifact))"
+         @onpointercancel="PointerCancel">
 
-                            @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
-                            {
-                                <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
-                                    <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
-                                </div>
-                            }
+
+
+                @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+                {
+                    <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
+                        <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                    </div>
+                }
+
+
 
                 @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.Grid || !IsPhone)
                 {
                     <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
                 }
 
-                            <div class="item-content">
-                                <div class="item-title">
-                                    @if (artifact.IsPinned == true)
-                                    {
-                                        <div class="pin-badge"></div>
-                                    }
-                                    <div class="title-text">@artifact.Name</div>
-                                </div>
-                                <div class="item-sub-text"></div>
-                            </div>
 
-                            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
-                            {
-                                <div class="options-btn"
-                 @onclick="() => HandleArtifactOptionClick(artifact)"
-                 @onpointerup:preventDefault="true"
-                 @onpointerup:stopPropagation="true"
-                 @onpointerdown:preventDefault="true"
-                 @onpointerdown:stopPropagation="true">
-                                </div>
-                            }
-                        </div>
-                    }
-                }
-                <div class="position-scroll-btn">
-                    <FxButton Width="60px"
-                      Height="60px"
-                      BorderRadius="100px"
-                      OnClick="OnGoToTopPage"
-                      ButtonStyle="FxButtonStyle.IconOnly"
-                      RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
+
+                <div class="item-content">
+                    <div class="item-title">
+                        @if (artifact.IsPinned == true)
+                        {
+                            <div class="pin-badge"></div>
+                        }
+                        <div class="title-text">@artifact.Name</div>
+                    </div>
+                    <div class="item-sub-text"></div>
                 </div>
+
+
+
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
+                {
+                    <div class="options-btn"
+             @onclick="() => HandleArtifactOptionClick(artifact)"
+             @onpointerup:preventDefault="true"
+             @onpointerup:stopPropagation="true"
+             @onpointerdown:preventDefault="true"
+             @onpointerdown:stopPropagation="true">
+                    </div>
+                }
             </div>
+        }
+    }
+    <div class="position-scroll-btn">
+        <FxButton Width="60px"
+                  Height="60px"
+                  BorderRadius="100px"
+                  OnClick="OnGoToTopPage"
+                  ButtonStyle="FxButtonStyle.IconOnly"
+                  RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
     </div>
+</div>
+d
