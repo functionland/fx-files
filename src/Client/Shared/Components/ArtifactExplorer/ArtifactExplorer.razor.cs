@@ -20,7 +20,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
         [Parameter] public List<FsArtifact> SelectedArtifacts { get; set; } = new();
         [Parameter] public EventCallback<List<FsArtifact>> SelectedArtifactsChanged { get; set; }
-        [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
+        [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.List;
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
         [Parameter] public EventCallback HandleBack { get; set; }
