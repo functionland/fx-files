@@ -86,8 +86,8 @@ public partial class FileBrowser
                 }
                 finally
                 {
-                    await InvokeAsync(() => StateHasChanged());
                     _isPinBoxLoading = false;
+                    await InvokeAsync(() => StateHasChanged());
                 }
             });
 
