@@ -1,6 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
-    public class ArtifactState
+    public class InMemoryAppStateStore
     {
         public ViewModeEnum ViewMode { get; private set; } = ViewModeEnum.list;
 

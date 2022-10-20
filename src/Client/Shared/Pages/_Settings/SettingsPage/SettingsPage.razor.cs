@@ -1,36 +1,33 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿namespace Functionland.FxFiles.Client.Shared.Pages;
 
-namespace Functionland.FxFiles.Client.Shared.Pages
+public partial class SettingsPage
 {
-    public partial class SettingsPage
+    [AutoInject] private ThemeInterop ThemeInterop = default!;
+
+    private FxTheme DesiredTheme { get; set; }
+    private string? CurrentTheme { get; set; }
+    private string? CurrentVersion { get; set; }
+
+    protected override async Task OnInitAsync()
     {
-        [AutoInject]
-        private ThemeInterop ThemeInterop = default!;
+        GoBackService.OnInit(null, true, true);
 
-        private FxTheme DesiredTheme { get; set; }
-        private string? CurrentTheme { get; set; }
+        DesiredTheme = await ThemeInterop.GetThemeAsync();
 
-        private string? CurrentVersion { get; set; }
+        if (DesiredTheme == FxTheme.Dark)
+            CurrentTheme = Localizer.GetString(nameof(AppStrings.Night));
+        else if (DesiredTheme == FxTheme.Light)
+            CurrentTheme = Localizer.GetString(nameof(AppStrings.Day));
+        else
+            CurrentTheme = Localizer.GetString(nameof(AppStrings.System));
 
-        protected override async Task OnInitAsync()
-        {
-            GoBackService.OnInit(null, true, true);
-            DesiredTheme = await ThemeInterop.GetThemeAsync();
+        GetAppVersion();
+    }
 
-            if (DesiredTheme == FxTheme.Dark)
-                CurrentTheme = Localizer.GetString(nameof(AppStrings.Night));
-            else if (DesiredTheme == FxTheme.Light)
-                CurrentTheme = Localizer.GetString(nameof(AppStrings.Day));
-
-            GetAppVersion();
-        }
-
-        private void GetAppVersion()
-        {
+    private void GetAppVersion()
+    {
 #if BlazorHybrid
-            CurrentVersion = AppInfo.Current.VersionString;
+        CurrentVersion = AppInfo.Current.VersionString;
 #endif
-        }
     }
 }
