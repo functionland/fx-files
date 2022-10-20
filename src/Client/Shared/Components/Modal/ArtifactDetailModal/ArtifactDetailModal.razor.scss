@@ -68,6 +68,11 @@
             font-size: 24px;
             @include Icon($create-folder, $pure-white);
         }
+
+        .disabled-icon {
+            opacity: .5;
+            pointer-events: none;
+        }
     }
 }
 
