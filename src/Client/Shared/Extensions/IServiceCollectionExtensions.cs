@@ -1,5 +1,8 @@
 ﻿
+using Functionland.FxFiles.Client.Shared.Pages.FileViewer;
 using Functionland.FxFiles.Client.Shared.Services;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -30,6 +33,10 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
         services.AddSingleton<IGoBackService, GoBackService>();
+
+        services.AddTransient<IFileViewer, TextFileViewer>();
+        services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
+        services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
         return services;
     }
 

@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -61,6 +62,8 @@ public partial class FileBrowser
     [Parameter] public IFileService FileService { get; set; } = default!;
 
     [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
+    [Parameter] public IViewFileService<ILocalDeviceFileService> ViewFileService { get; set; } = default!;
+
 
     protected override async Task OnInitAsync()
     {
@@ -532,19 +535,7 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-#if BlazorHybrid
-            try
-            {
-                await Launcher.OpenAsync(new OpenFileRequest
-                {
-                    File = new ReadOnlyFile(artifact.FullPath)
-                });
-            }
-            catch (Exception exception)
-            {
-                ExceptionHandler?.Handle(exception);
-            }
-#endif
+            await ViewFileService.ViewFile(artifact);
         }
         else
         {
