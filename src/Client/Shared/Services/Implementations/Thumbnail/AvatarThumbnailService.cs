@@ -14,13 +14,12 @@ public class AvatarThumbnailService : ThumbnailService, IAvatarThumbnailService
     public Task<string?> GetOrCreateThumbnailAsync(string dId, CancellationToken? cancellationToken = null)
     {
         var uniqueKey = dId;
-        return GetOrCreateThumbnailAsync(CacheCategoryType.FulaAvatars, uniqueKey, async () => await IdentityService.GetAvatarAsync(dId, cancellationToken), cancellationToken: cancellationToken);
+        return GetOrCreateThumbnailAsync(CacheCategoryType.FulaAvatars, uniqueKey, async () => await IdentityService.GetAvatarAsync(dId, cancellationToken), cancellationToken);
     }
 
-    protected override IThumbnailPlugin? GetRelatedPlugin(string uri, Stream? stream, string? filePath)
+    protected override IThumbnailPlugin? GetRelatedPlugin(string uri)
     {
-        return ThumbnailPlugins.FirstOrDefault(plugin =>
-        plugin.IsExtensionSupported("jpg", stream, filePath));
+        return ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsSupported("jpg"));
     }
 
 }

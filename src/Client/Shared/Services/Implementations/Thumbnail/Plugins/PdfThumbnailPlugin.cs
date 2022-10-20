@@ -1,30 +1,20 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public class PdfThumbnailPlugin : IThumbnailPlugin
+public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 {
-    private static List<ThumbnailPluginSupportType> ThumbnailPluginSupportTypes
-        => new()
-        {
-            ThumbnailPluginSupportType.FilePath,
-            ThumbnailPluginSupportType.Stream
-        };
-
     public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public bool IsExtensionSupported(string extension, Stream? stream, string? filePath)
+    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null);
+
+    public virtual bool IsSupported(string extension, ThumbnailSourceType sourceType)
     {
-        var isExtentionSupported = new string[]
+        return new string[]
         {
-            ".pdf",
+            "jpg",
+            "png"
         }.Contains(extension.ToLower());
-
-        if (!isExtentionSupported) return false;
-
-        return (ThumbnailPluginSupportTypes.Contains(ThumbnailPluginSupportType.Stream) && stream is not null) ||
-               (ThumbnailPluginSupportTypes.Contains(ThumbnailPluginSupportType.FilePath) && !string.IsNullOrWhiteSpace(filePath));
-
     }
 }

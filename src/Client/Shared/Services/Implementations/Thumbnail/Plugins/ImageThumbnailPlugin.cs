@@ -2,26 +2,19 @@
 
 public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 {
-    private static List<ThumbnailPluginSupportType> ThumbnailPluginSupportTypes
-      => new()
-      {
-            ThumbnailPluginSupportType.FilePath,
-            ThumbnailPluginSupportType.Stream
-      };
-    public Task<Stream> CreateThumbnailAsync(Stream? input, string? filePath, CancellationToken? cancellationToken = null)
+    public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
     {
-        return OnCreateThumbnailAsync(input, filePath, cancellationToken);
+        return OnCreateThumbnailAsync(stream, filePath, cancellationToken);
     }
 
-    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? input, string? filePath, CancellationToken? cancellationToken = null);
+    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null);
 
-    public virtual bool IsExtensionSupported(string extension, Stream? stream, string? filePath)
+    public bool IsSupported(string extension, ThumbnailSourceType sourceType)
     {
-        var isExtentionSupported = new string[] { ".jpg", ".png" }.Contains(extension.ToLower());
-
-        if (!isExtentionSupported) return false;
-
-        return (ThumbnailPluginSupportTypes.Contains(ThumbnailPluginSupportType.Stream) && stream is not null) ||
-               (ThumbnailPluginSupportTypes.Contains(ThumbnailPluginSupportType.FilePath) && !string.IsNullOrWhiteSpace(filePath));
+        return new string[]
+        {
+            "jpg",
+            "png"
+        }.Contains(extension.ToLower());
     }
 }

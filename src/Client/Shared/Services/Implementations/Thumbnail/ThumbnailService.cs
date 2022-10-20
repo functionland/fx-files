@@ -18,22 +18,52 @@ public abstract class ThumbnailService
     /// <param name="fileStream"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>{cache}/adfadgfasdfasdf52465s4fd6as5f4fa6sd5f4as6d5f.jpg</returns>
-    protected async Task<string?> GetOrCreateThumbnailAsync(CacheCategoryType cacheCategoryType, string uniqueName, Func<Task<Stream>> getFileStreamFunc, string? filePath = null, CancellationToken? cancellationToken = null)
+    protected async Task<string?> GetOrCreateThumbnailAsync(
+        CacheCategoryType cacheCategoryType, 
+        string uniqueName, 
+        Func<Task<Stream>>? getFileStreamFunc,
+        string? filePath, CancellationToken? cancellationToken = null)
     {
         var cacheUniqueName = Path.ChangeExtension(uniqueName, "jpg");
         return await FileCacheService.GetOrCreateCachedFileAsync(
             cacheCategoryType,
             cacheUniqueName,
-            async (cacheFilePath) => await OnCreateThumbnailAsync(uniqueName, cacheFilePath, await getFileStreamFunc(), filePath, cancellationToken),
+            async (cacheFilePath) => await OnCreateThumbnailAsync(
+                                                uniqueName, 
+                                                cacheFilePath, 
+                                                getFileStreamFunc, 
+                                                filePath,
+                                                cancellationToken),
             cancellationToken);
     }
 
-    private async Task<bool> OnCreateThumbnailAsync(string uniqueFileName, string thumbnailFilePath, Stream stream, string? filePath, CancellationToken? cancellationToken = null)
+    private async Task<bool> OnCreateThumbnailAsync(
+        string uniqueFileName, 
+        string thumbnailFilePath, 
+        Func<Task<Stream>>? getFileStreamFunc, 
+        string? filePath, 
+        CancellationToken? cancellationToken = null)
     {
-        var plugin = GetRelatedPlugin(uniqueFileName, stream, filePath);
+        ThumbnailSourceType sourceType;
+
+        if (getFileStreamFunc is not null)
+            sourceType = ThumbnailSourceType.Stream;
+        else if (filePath is not null)
+            sourceType = ThumbnailSourceType.FilePath;
+        else
+            throw new InvalidOperationException("Both stream and filePath are null, which is not valid to create a thumbnail.");
+
+        var plugin = GetRelatedPlugin(uniqueFileName, sourceType);
+        
+        if (plugin is null && (sourceType == ThumbnailSourceType.Stream && filePath is not null))
+            plugin = GetRelatedPlugin(uniqueFileName, ThumbnailSourceType.FilePath);
+
         if (plugin is null)
             return false;
 
+        Stream? stream = null;
+        if (getFileStreamFunc is not null)
+            stream = await getFileStreamFunc();
         var thumbnailStream = await plugin.CreateThumbnailAsync(stream, filePath, cancellationToken);
 
         // write stream
@@ -46,10 +76,10 @@ public abstract class ThumbnailService
         return true;
     }
 
-    protected virtual IThumbnailPlugin? GetRelatedPlugin(string uri, Stream? stream, string? filePath)
+    protected virtual IThumbnailPlugin? GetRelatedPlugin(string uri, ThumbnailSourceType sourceType)
     {
         var extension = Path.GetExtension(uri);
-        var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsExtensionSupported(extension, stream, filePath));
+        var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsSupported(extension, sourceType));
         return plugin;
     }
 }

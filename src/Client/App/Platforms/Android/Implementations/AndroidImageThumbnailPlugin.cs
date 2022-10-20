@@ -11,8 +11,9 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 {
     protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
     {
-        if (string.IsNullOrWhiteSpace(filePath) && stream is null)
-            throw new ArgumentNullException($"{nameof(filePath)} and {nameof(stream)}");
+        // Todo: Exception
+        if (filePath is null && stream is null)
+            throw new InvalidOperationException($"{nameof(filePath)} and {nameof(stream)}");
 
         if (stream is not null)
         {
@@ -23,7 +24,6 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
             (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
             var imageThumbnail = await ThumbnailUtils.ExtractThumbnailAsync(bitmap, imageWidth, imageHeight);
 
-            //ToDo: Null check for imageThumbnail
             var outputStream = new MemoryStream();
             await imageThumbnail.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
 

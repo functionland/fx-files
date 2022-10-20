@@ -7,14 +7,22 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
     {
         protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
         {
-            if (stream is null && string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentNullException($"{nameof(stream)},{nameof(filePath)}");
+            if (stream == null && filePath == null)
+                throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");
 
-            if (stream is not null)
+            Stream? fileStream = null;
+            if (stream is null && filePath != null)
+                fileStream = File.OpenRead(filePath);
+
+            try
             {
-                return await Task.Run(async () =>
+                var outStream = await Task.Run(async () =>
                 {
-                    var image = System.Drawing.Image.FromStream(stream);
+                    var imageStream = stream ?? fileStream;
+                    if (imageStream is null)
+                        throw new InvalidOperationException("No stream available for the image.");
+                    
+                    var image = System.Drawing.Image.FromStream(imageStream);
                     image = CorrectRotation(image);
 
                     (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
@@ -28,8 +36,16 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
                 }, cancellationToken ?? CancellationToken.None);
             }
+            finally
+            {
+                // Todo: Check the async mode
+                fileStream?.Dispose();
+            }
+            
 
-            return null;
+
+
+            return outStream;
         }
 
         private static System.Drawing.Image? CorrectRotation(System.Drawing.Image? image)
