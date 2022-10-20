@@ -10,6 +10,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 
         [AutoInject] private ILocalDevicePinService _pinService { get; set; } = default!;
 
-        [AutoInject] private ArtifactState _artifactState { get; set; } = default!;
+        [AutoInject] private InMemoryAppStateStore _artifactState { get; set; } = default!;
     }
 }

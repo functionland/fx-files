@@ -3,7 +3,7 @@ using Functionland.FxFiles.Client.Shared.Components.Modal;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
-public partial class FileBrowser : IDisposable
+public partial class FileBrowser
 {
     // Modals
     private InputModal? _inputModalRef;
@@ -57,7 +57,8 @@ public partial class FileBrowser : IDisposable
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
-    [Parameter] public ArtifactState ArtifactState { get; set; } = default!;
+
+    [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
 
     protected override async Task OnInitAsync()
     {
@@ -444,8 +445,15 @@ public partial class FileBrowser : IDisposable
 
     public async Task HandleShowDetailsArtifact(List<FsArtifact> artifact)
     {
-        var isMultiple = artifact.Count > 1 ? true : false;
-        var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple);
+        bool isMultiple = artifact.Count > 1 ? true : false;
+        bool isDrive = false;
+
+        if (isMultiple is false)
+        {
+            isDrive = artifact.SingleOrDefault()?.ArtifactType == FsArtifactType.Drive;
+        }
+
+        var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
 
         switch (result.ResultType)
@@ -518,6 +526,16 @@ public partial class FileBrowser : IDisposable
         var childrenArtifacts = FileService.GetArtifactsAsync(parentArtifact?.FullPath);
         try
         {
+            if (artifact is null)
+            {
+                GoBackService.OnInit(null, true, true);
+            }
+            else
+            {
+                GoBackService.OnInit(HandleToolbarBackClick, true, false);
+            }
+
+            var allFiles = FileService.GetArtifactsAsync(artifact?.FullPath);
             var artifacts = new List<FsArtifact>();
             await foreach (var item in childrenArtifacts)
             {
@@ -531,10 +549,7 @@ public partial class FileBrowser : IDisposable
         catch (ArtifactUnauthorizedAccessException exception)
         {
             ExceptionHandler?.Handle(exception);
-            _currentArtifact = await FileService.GetArtifactAsync(parentArtifact?.ParentFullPath);
         }
-
-        //TODO: Implement logic for general exception handling (Hootan)
     }
 
     private bool IsInRoot(FsArtifact? artifact)
@@ -580,7 +595,8 @@ public partial class FileBrowser : IDisposable
                 IsVisible = true,
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
-            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult);
+            var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
+            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isDrive);
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -654,7 +670,7 @@ public partial class FileBrowser : IDisposable
             {
                 _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 var pinOptionResult = GetPinOptionResult(artifacts);
-                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult);
+                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, IsInRoot(_currentArtifact));
                 ChangeDeviceBackFunctionality(_artifactExplorerMode);
             }
 
@@ -1132,20 +1148,27 @@ public partial class FileBrowser : IDisposable
     {
         if (mode == ArtifactExplorerMode.SelectArtifact)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 CancelSelectionMode();
                 return Task.CompletedTask;
-            });
+            }), true, false);
         }
         else if (mode == ArtifactExplorerMode.Normal)
         {
-            GoBackService.GoBackAsync = HandleToolbarBackClick;
-        }
-    }
+            if (_currentArtifact == null)
+            {
+                GoBackService.OnInit(null, true, true);
+            }
+            else
+            {
+                GoBackService.OnInit((Task () =>
+                {
+                    CancelSelectionMode();
+                    return Task.CompletedTask;
+                }), true, false);
+            }
 
-    public void Dispose()
-    {
-        GoBackService.GoBackAsync = null;
+        }
     }
 }

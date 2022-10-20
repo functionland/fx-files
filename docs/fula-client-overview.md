@@ -99,7 +99,6 @@ class FsArtifact{
     + DateTimeOffset CreateDateTime
     + DateTimeOffset LastModifiedDateTime
     + string? WhoMadeLastEdit
-    + FsArtifactActivity[]? FsArtifactActivity
     + ArtifactPermissionInfo[]? PermissionedUsers 
     + string OwerDid
     + ArtifactPermissionLevel ArtifactPermissionLevel
@@ -183,7 +182,24 @@ To work with files in the Fula network there is a [FulaFileClient](https://githu
  - `IsSharedByMe`
  - `ContentHash`
 
-The rest of the `FsArtifact` properties will be provided by `GetArtifactMetaAsync`.
+All of the `FsArtifact` properties will be provided by `GetArtifactMetaAsync`.
+- `Id`
+- `Name`
+- `FullPath`
+- `ParentFullPath`
+- `ArtifactType`
+- `Size`
+- `OriginDevice`
+- `CreateDateTime`
+- `LastModifiedDateTime`
+- `WhoMadeLastEdit`
+- `PermissionedUsers`
+- `OwerDId`
+- `ArtifactPermissionLevel`
+- `IsSharedWithMe`
+- `IsSharedByMe`
+- `ContentHas`
+
 
 ### FulaIdentityClient
 To work with users and everything related to identity of the suers in the Fula network there is a [FulaIdentityClient](https://github.com/functionland/fx-files/blob/main/src/Client/Shared/Services/Contracts/FulaClient/IFulaIdentityClient.cs).

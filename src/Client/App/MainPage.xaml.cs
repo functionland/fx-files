@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.FileProviders;
+using Functionland.FxFiles.Client.Shared.Resources;
+using Microsoft.Maui;
+using System.Drawing;
+
+#if ANDROID
+using Android.Widget;
+#endif
 
 namespace Functionland.FxFiles.Client.App;
 
@@ -11,6 +17,12 @@ public partial class MainPage
 
         BlazorWebViewHandler.BlazorWebViewMapper.AppendToMapping("CustomBlazorWebViewMapper", (handler, view) =>
         {
+
+#if IOS
+            handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
+            handler.PlatformView.Opaque = false;
+#endif
+
 #if ANDROID
             Android.Webkit.WebSettings settings = handler.PlatformView.Settings;
 
@@ -27,7 +39,7 @@ public partial class MainPage
 #endif
 
             settings.BlockNetworkLoads =
-                settings.BlockNetworkImage = false;
+            settings.BlockNetworkImage = false;
 #endif
         });
 
@@ -35,15 +47,30 @@ public partial class MainPage
 
 
 #if ANDROID
+    long lastPress;
     protected override bool OnBackButtonPressed()
     {
         var backButtonService = MauiApplication.Current.Services.GetRequiredService<IGoBackService>();
-        if (backButtonService?.GoBackAsync != null)
+        if (backButtonService?.CanGoBack is true && backButtonService?.GoBackAsync is not null)
         {
             backButtonService.GoBackAsync().GetAwaiter();
+            return true;
+        }
+        else if (backButtonService?.CanGoBack is true && backButtonService?.CanExitApp is true)
+        {
+            long currentTime = DateTimeOffset.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+            if (currentTime - lastPress > 5000)
+            {
+                var context = MauiApplication.Current.ApplicationContext;
+                Toast.MakeText(context, "Press back again to exit", ToastLength.Long)?.Show();
+                lastPress = currentTime;
+                return true;
+            }
+
+            return false;
         }
 
-        return backButtonService?.CanGoBack ?? base.OnBackButtonPressed();
+        return true;
     }
 #endif
 
