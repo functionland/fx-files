@@ -2,6 +2,8 @@
 
 public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 {
+    public virtual bool IsJustFilePathSupported => false;
+
     public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
@@ -9,12 +11,8 @@ public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 
     protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null);
 
-    public virtual bool IsSupported(string extension, ThumbnailSourceType sourceType)
+    public bool IsSupported(string extension)
     {
-        return new string[]
-        {
-            "jpg",
-            "png"
-        }.Contains(extension.ToLower());
+        return new string[] { ".pdf" }.Contains(extension.ToLower());
     }
 }

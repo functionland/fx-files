@@ -61,5 +61,4 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         matrix.PostRotate(angle);
         return Bitmap.CreateBitmap(source, 0, 0, source.Width, source.Height, matrix, true);
     }
-
 }

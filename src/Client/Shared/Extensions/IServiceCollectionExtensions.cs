@@ -32,7 +32,6 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IBloxService, FakeBloxService>();
         services.AddSingleton<IGoBackService, GoBackService>();
 
-        services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
 

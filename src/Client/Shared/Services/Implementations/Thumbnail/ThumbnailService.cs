@@ -19,8 +19,8 @@ public abstract class ThumbnailService
     /// <param name="cancellationToken"></param>
     /// <returns>{cache}/adfadgfasdfasdf52465s4fd6as5f4fa6sd5f4as6d5f.jpg</returns>
     protected async Task<string?> GetOrCreateThumbnailAsync(
-        CacheCategoryType cacheCategoryType, 
-        string uniqueName, 
+        CacheCategoryType cacheCategoryType,
+        string uniqueName,
         Func<Task<Stream>>? getFileStreamFunc,
         string? filePath, CancellationToken? cancellationToken = null)
     {
@@ -29,57 +29,61 @@ public abstract class ThumbnailService
             cacheCategoryType,
             cacheUniqueName,
             async (cacheFilePath) => await OnCreateThumbnailAsync(
-                                                uniqueName, 
-                                                cacheFilePath, 
-                                                getFileStreamFunc, 
+                                                uniqueName,
+                                                cacheFilePath,
+                                                getFileStreamFunc,
                                                 filePath,
                                                 cancellationToken),
             cancellationToken);
     }
 
     private async Task<bool> OnCreateThumbnailAsync(
-        string uniqueFileName, 
-        string thumbnailFilePath, 
-        Func<Task<Stream>>? getFileStreamFunc, 
-        string? filePath, 
+        string uniqueFileName,
+        string thumbnailFilePath,
+        Func<Task<Stream>>? getFileStreamFunc,
+        string? filePath,
         CancellationToken? cancellationToken = null)
     {
-        ThumbnailSourceType sourceType;
 
-        if (getFileStreamFunc is not null)
-            sourceType = ThumbnailSourceType.Stream;
-        else if (filePath is not null)
-            sourceType = ThumbnailSourceType.FilePath;
-        else
+        if (getFileStreamFunc is null && filePath is null)
             throw new InvalidOperationException("Both stream and filePath are null, which is not valid to create a thumbnail.");
 
-        var plugin = GetRelatedPlugin(uniqueFileName, sourceType);
-        
-        if (plugin is null && (sourceType == ThumbnailSourceType.Stream && filePath is not null))
-            plugin = GetRelatedPlugin(uniqueFileName, ThumbnailSourceType.FilePath);
+        var plugin = GetRelatedPlugin(uniqueFileName);
 
         if (plugin is null)
             return false;
 
         Stream? stream = null;
-        if (getFileStreamFunc is not null)
-            stream = await getFileStreamFunc();
-        var thumbnailStream = await plugin.CreateThumbnailAsync(stream, filePath, cancellationToken);
 
-        // write stream
-        using (var fileStream = File.Create(thumbnailFilePath))
+        try
         {
-            thumbnailStream.Seek(0, SeekOrigin.Begin);
-            thumbnailStream.CopyTo(fileStream);
+            if (getFileStreamFunc is not null && !plugin.IsJustFilePathSupported)
+                stream = await getFileStreamFunc();
+
+            var thumbnailStream = await plugin.CreateThumbnailAsync(stream, filePath, cancellationToken);
+
+            // write stream
+            using (var fileStream = File.Create(thumbnailFilePath))
+            {
+                thumbnailStream.Seek(0, SeekOrigin.Begin);
+                thumbnailStream.CopyTo(fileStream);
+            }
+        }
+        finally
+        {
+            if (stream is not null)
+            {
+                await stream.DisposeAsync().AsTask();
+            }
         }
 
         return true;
     }
 
-    protected virtual IThumbnailPlugin? GetRelatedPlugin(string uri, ThumbnailSourceType sourceType)
+    protected virtual IThumbnailPlugin? GetRelatedPlugin(string uri)
     {
         var extension = Path.GetExtension(uri);
-        var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsSupported(extension, sourceType));
+        var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsSupported(extension));
         return plugin;
     }
 }

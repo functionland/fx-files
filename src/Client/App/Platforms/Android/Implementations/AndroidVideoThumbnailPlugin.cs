@@ -10,12 +10,12 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public class AndroidVideoThumbnailPlugin : PdfThumbnailPlugin
 {
+    public override bool IsJustFilePathSupported => true;
     protected override async Task<Stream> OnCreateThumbnailAsync(
         Stream? inputVideoStream,
         string? filePath,
         CancellationToken? cancellationToken = null)
     {
-        // Todo: Exception
         if (inputVideoStream is not null)
             throw new InvalidOperationException($"Stream is not supported by this plugin.");
 
@@ -30,13 +30,4 @@ public class AndroidVideoThumbnailPlugin : PdfThumbnailPlugin
 
         return outputStream;
     }
-
-    public override bool IsSupported(string extension, ThumbnailSourceType sourceType)
-    {
-        if (sourceType == ThumbnailSourceType.Stream)
-            return false;
-
-        return base.IsSupported(extension, sourceType);
-    }
-
 }

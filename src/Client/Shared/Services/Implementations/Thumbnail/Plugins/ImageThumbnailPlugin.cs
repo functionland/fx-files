@@ -2,6 +2,8 @@
 
 public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 {
+    public bool IsJustFilePathSupported => false;
+
     public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
     {
         return OnCreateThumbnailAsync(stream, filePath, cancellationToken);
@@ -9,12 +11,12 @@ public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 
     protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null);
 
-    public bool IsSupported(string extension, ThumbnailSourceType sourceType)
+    public bool IsSupported(string extension)
     {
         return new string[]
         {
-            "jpg",
-            "png"
+            ".jpg",
+            ".png"
         }.Contains(extension.ToLower());
     }
 }

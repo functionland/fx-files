@@ -12,16 +12,18 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
             Stream? fileStream = null;
             if (stream is null && filePath != null)
+            {
                 fileStream = File.OpenRead(filePath);
+            }
 
             try
             {
-                var outStream = await Task.Run(async () =>
+                var outStream = await Task.Run(() =>
                 {
                     var imageStream = stream ?? fileStream;
                     if (imageStream is null)
                         throw new InvalidOperationException("No stream available for the image.");
-                    
+
                     var image = System.Drawing.Image.FromStream(imageStream);
                     image = CorrectRotation(image);
 
@@ -32,20 +34,19 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
                     thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                    return memoryStream;
+                    return Task.FromResult(memoryStream);
 
                 }, cancellationToken ?? CancellationToken.None);
+                return outStream;
+
             }
             finally
             {
-                // Todo: Check the async mode
-                fileStream?.Dispose();
+                if (fileStream is not null)
+                {
+                    await fileStream.DisposeAsync().AsTask();
+                }
             }
-            
-
-
-
-            return outStream;
         }
 
         private static System.Drawing.Image? CorrectRotation(System.Drawing.Image? image)
