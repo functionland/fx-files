@@ -1,7 +1,4 @@
-﻿
-using Functionland.FxFiles.Client.Shared.Pages.FileViewer;
-using Functionland.FxFiles.Client.Shared.Services;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
+﻿using Functionland.FxFiles.Client.Shared.Services;
 using Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
 using Prism.Events;
 
@@ -28,7 +25,6 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IFulaPinService, FulaPinService>();
 
         services.AddSingleton<IEventAggregator, EventAggregator>();
-        services.AddSingleton<IThumbnailService, FakeThumbnailService>();
         services.AddSingleton<FakeFileServiceFactory>();
         services.AddSingleton<FakeBloxServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
@@ -37,28 +33,32 @@ public static class IServiceCollectionExtensions
         services.AddTransient<IFileViewer, TextFileViewer>();
         services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
         services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
+
+        services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
+        services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
+        services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
+
         return services;
     }
 
-    public static async Task RunAppEvents(this IServiceProvider serviceProvider, AppEventOption? option = null)
+    public static async Task RunAppEvents(this IServiceProvider serviceProvider)
     {
         var exceptionHandler = serviceProvider.GetRequiredService<IExceptionHandler>();
         try
         {
             var FxLocalDbService = serviceProvider.GetRequiredService<IFxLocalDbService>();
             var PinService = serviceProvider.GetRequiredService<ILocalDevicePinService>();
+            var FileCacheService = serviceProvider.GetRequiredService<IFileCacheService>();
 
             await FxLocalDbService.InitAsync();
-            await PinService.InitializeAsync();
+            var pinTask = PinService.InitializeAsync();
+            var cacheTask = FileCacheService.InitAsync();
+
+            await Task.WhenAll(pinTask, cacheTask);
         }
         catch (Exception ex)
         {
             exceptionHandler.Handle(ex);
         }
     }
-}
-
-public class AppEventOption
-{
-    //TODO: Put something that you need in your app events.
 }

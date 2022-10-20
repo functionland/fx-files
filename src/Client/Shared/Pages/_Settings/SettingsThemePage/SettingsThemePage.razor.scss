@@ -31,6 +31,7 @@
     .mode-img {
         width: 154.5px;
         height: 96px;
+
         background: {
             repeat: no-repeat;
             size: 154.5px 96px;
@@ -53,17 +54,18 @@
         font-size: $font-size-14;
         line-height: $line-height-24;
         letter-spacing: $letter-spacing-02;
+        padding: 0 $spacing-28;
         color: color(gray-content1);
     }
 }
 
 .system-theme-setting {
     display: flex;
-    justify-content: space-between;
+    cursor: pointer;
     align-items: center;
 
     .system-theme-info {
-        margin-right: $spacing-16;
+        margin-left: $spacing-8;
         font-family: $open-sans-regular;
         letter-spacing: $letter-spacing-02;
 
