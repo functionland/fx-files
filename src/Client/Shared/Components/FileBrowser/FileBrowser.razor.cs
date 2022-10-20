@@ -1,5 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -59,6 +61,9 @@ public partial class FileBrowser
     [Parameter] public IFileService FileService { get; set; } = default!;
 
     [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
+    [Parameter] public IViewFileService<IFileService> ViewFileService { get; set; } = default!;
+    [Parameter] public string? DefaultPath { get; set; }
+
 
     protected override async Task OnInitAsync()
     {
@@ -86,7 +91,16 @@ public partial class FileBrowser
             {
                 try
                 {
-                    await LoadChildrenArtifactsAsync();
+                    if (string.IsNullOrWhiteSpace(DefaultPath))
+                    {
+                        await LoadChildrenArtifactsAsync();
+                    }
+                    else
+                    {
+                        var defaultArtifact = await FileService.GetArtifactAsync(DefaultPath);
+                        _currentArtifact = defaultArtifact;
+                        await LoadChildrenArtifactsAsync(defaultArtifact);
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -560,19 +574,18 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-#if BlazorHybrid
-            try
+            var encodedArtifactPath = WebUtility.UrlEncode(_currentArtifact?.FullPath);
+            var uri = new Uri(NavigationManager.Uri);
+
+            var baseUrl = uri.AbsoluteUri;
+            var query = uri.Query;
+
+            if (!string.IsNullOrWhiteSpace(query))
             {
-                await Launcher.OpenAsync(new OpenFileRequest
-                {
-                    File = new ReadOnlyFile(artifact.FullPath)
-                });
+                baseUrl = baseUrl.Replace(query, "");
             }
-            catch (Exception exception)
-            {
-                ExceptionHandler?.Handle(exception);
-            }
-#endif
+
+            await ViewFileService.ViewFile(artifact, $"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {
