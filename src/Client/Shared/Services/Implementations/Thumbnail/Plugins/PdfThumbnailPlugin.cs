@@ -2,17 +2,29 @@
 
 public class PdfThumbnailPlugin : IThumbnailPlugin
 {
-    public Task<Stream> CreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
+    private static List<ThumbnailPluginSupportType> ThumbnailPluginSupportTypes
+        => new()
+        {
+            ThumbnailPluginSupportType.FilePath,
+            ThumbnailPluginSupportType.Stream
+        };
+
+    public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public bool IsExtensionSupported(string extension)
+    public bool IsExtensionSupported(string extension, Stream? stream, string? filePath)
     {
-        return new string[]
+        var isExtentionSupported = new string[]
         {
-            "jpg",
-            "png"
+            ".pdf",
         }.Contains(extension.ToLower());
+
+        if (!isExtentionSupported) return false;
+
+        return (ThumbnailPluginSupportTypes.Contains(ThumbnailPluginSupportType.Stream) && stream is not null) ||
+               (ThumbnailPluginSupportTypes.Contains(ThumbnailPluginSupportType.FilePath) && !string.IsNullOrWhiteSpace(filePath));
+
     }
 }

@@ -18,7 +18,7 @@ public class ArtifactThumbnailService<TFileService> : ThumbnailService, IArtifac
     {
         var uniqueName = GetUniqueName(artifact);
         return await GetOrCreateThumbnailAsync(CacheCategoryType.Artifact, uniqueName,
-            async () => await FileServcie.GetFileContentAsync(artifact.FullPath, cancellationToken), cancellationToken);
+            async () => await FileServcie.GetFileContentAsync(artifact.FullPath, cancellationToken), artifact.LocalFullPath, cancellationToken);
     }
 
     private static string GetUniqueName(FsArtifact fsArtifact)

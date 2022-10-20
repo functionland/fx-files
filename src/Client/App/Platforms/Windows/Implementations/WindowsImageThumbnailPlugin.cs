@@ -1,34 +1,35 @@
-﻿using Functionland.FxFiles.Client.Shared.Models;
-using Functionland.FxFiles.Client.Shared.Utils;
-using System;
-using System.Collections.Generic;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 {
     public class WindowsImageThumbnailPlugin : ImageThumbnailPlugin
     {
-        protected override async Task<Stream> OnCreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
+        protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
         {
-            return await Task.Run(async () =>
+            if (stream is null && string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentNullException($"{nameof(stream)},{nameof(filePath)}");
+
+            if (stream is not null)
             {
-                var image = System.Drawing.Image.FromStream(input);
-                image = CorrectRotation(image);
+                return await Task.Run(async () =>
+                {
+                    var image = System.Drawing.Image.FromStream(stream);
+                    image = CorrectRotation(image);
 
-                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
+                    (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
 
-                var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
-                var memoryStream = new MemoryStream();
+                    var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
+                    var memoryStream = new MemoryStream();
 
-                thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                return memoryStream;
+                    return memoryStream;
 
-            }, cancellationToken ?? CancellationToken.None);
+                }, cancellationToken ?? CancellationToken.None);
+            }
+
+            return null;
         }
 
         private static System.Drawing.Image? CorrectRotation(System.Drawing.Image? image)

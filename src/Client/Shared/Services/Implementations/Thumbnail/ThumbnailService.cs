@@ -18,23 +18,23 @@ public abstract class ThumbnailService
     /// <param name="fileStream"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>{cache}/adfadgfasdfasdf52465s4fd6as5f4fa6sd5f4as6d5f.jpg</returns>
-    protected async Task<string?> GetOrCreateThumbnailAsync(CacheCategoryType cacheCategoryType, string uniqueName, Func<Task<Stream>> getFileStreamFunc, CancellationToken? cancellationToken = null)
+    protected async Task<string?> GetOrCreateThumbnailAsync(CacheCategoryType cacheCategoryType, string uniqueName, Func<Task<Stream>> getFileStreamFunc, string? filePath = null, CancellationToken? cancellationToken = null)
     {
         var cacheUniqueName = Path.ChangeExtension(uniqueName, "jpg");
         return await FileCacheService.GetOrCreateCachedFileAsync(
             cacheCategoryType,
             cacheUniqueName,
-            async (cacheFilePath) => await OnCreateThumbnailAsync(uniqueName, cacheFilePath, await getFileStreamFunc(), cancellationToken),
+            async (cacheFilePath) => await OnCreateThumbnailAsync(uniqueName, cacheFilePath, await getFileStreamFunc(), filePath, cancellationToken),
             cancellationToken);
     }
 
-    private async Task<bool> OnCreateThumbnailAsync(string uniqueFileName, string thumbnailFilePath, Stream stream, CancellationToken? cancellationToken = null)
+    private async Task<bool> OnCreateThumbnailAsync(string uniqueFileName, string thumbnailFilePath, Stream stream, string? filePath, CancellationToken? cancellationToken = null)
     {
-        var plugin = GetRelatedPlugin(uniqueFileName);
+        var plugin = GetRelatedPlugin(uniqueFileName, stream, filePath);
         if (plugin is null)
             return false;
 
-        var thumbnailStream = await plugin.CreateThumbnailAsync(stream, cancellationToken);
+        var thumbnailStream = await plugin.CreateThumbnailAsync(stream, filePath, cancellationToken);
 
         // write stream
         using (var fileStream = File.Create(thumbnailFilePath))
@@ -46,10 +46,10 @@ public abstract class ThumbnailService
         return true;
     }
 
-    protected virtual IThumbnailPlugin? GetRelatedPlugin(string uri)
+    protected virtual IThumbnailPlugin? GetRelatedPlugin(string uri, Stream? stream, string? filePath)
     {
         var extension = Path.GetExtension(uri);
-        var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsExtensionSupported(extension));
+        var plugin = ThumbnailPlugins.FirstOrDefault(plugin => plugin.IsExtensionSupported(extension, stream, filePath));
         return plugin;
     }
 }

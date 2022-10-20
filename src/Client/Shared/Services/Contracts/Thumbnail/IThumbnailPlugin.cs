@@ -2,6 +2,6 @@
 
 public interface IThumbnailPlugin
 {
-    bool IsExtensionSupported(string extension);
-    Task<Stream> CreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null);
+    bool IsExtensionSupported(string extension, Stream? stream, string? filePath);
+    Task<Stream> CreateThumbnailAsync(Stream? input, string? filePath, CancellationToken? cancellationToken = null);
 }
