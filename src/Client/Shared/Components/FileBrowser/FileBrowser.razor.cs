@@ -989,10 +989,6 @@ public partial class FileBrowser
         bool applyFilters = true,
         bool applySort = true)
     {
-        // SearchText
-        // InlineSearchText
-        // Filters
-
         IEnumerable<FsArtifact> displayingArtifacts = _allArtifacts;
 
         if (applyInlineSearch)
@@ -1051,17 +1047,44 @@ public partial class FileBrowser
 
     private void HandleSortOrderClick()
     {
+        if (_isArtifactExplorerLoading) return;
+
+        _isArtifactExplorerLoading = true;
         _isAscOrder = !_isAscOrder;
-        var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-        _displayedArtifacts = sortedDisplayArtifact.ToList();
+        try
+        {
+            var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+            _displayedArtifacts = sortedDisplayArtifact.ToList();
+        } catch(Exception exception)
+        {
+            ExceptionHandler.Handle(exception);
+        }
+        finally
+        {
+            _isArtifactExplorerLoading = false;
+        }
     }
 
     private async Task HandleSortClick()
     {
+        if (_isArtifactExplorerLoading) return;
+
+        _isArtifactExplorerLoading = true;
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
-        var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-        _displayedArtifacts = sortedDisplayArtifact.ToList();
+        try
+        {
+            var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+            _displayedArtifacts = sortedDisplayArtifact.ToList();
+        }
+        catch(Exception exception)
+        {
+            ExceptionHandler.Handle(exception);
+        }
+        finally
+        {
+            _isArtifactExplorerLoading = false;
+        }
     }
 
     private IEnumerable<FsArtifact> SortDisplayedArtifacts(IEnumerable<FsArtifact> artifacts)
