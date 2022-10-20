@@ -6,16 +6,13 @@
 
 //Shared==============================================
 
-html {
+
+html, body {
+    margin: 0;
+    padding: 0;
     user-select: none;
     -webkit-user-select: none;
     overscroll-behavior: none;
-    background-color: $main-dark;
-}
-
-body {
-    margin: 0;
-    padding: 0;
     font-family: $open-sans-regular;
     -webkit-tap-highlight-color: transparent;
 
@@ -26,7 +23,7 @@ body {
     background-color: $gray-light-bg-primary;
 }
 
-body[data-theme="Dark"] {
+html, body[data-theme="Dark"] {
     @each $key, $value in $colors-dark {
         --#{$key}: #{$value};
     }

@@ -2,26 +2,26 @@
 
 @inherits AppComponentBase
 
-    <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
-        @if (true)
+
+<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode.ToString().ToLower()}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+    @if (isLoading)
         {
             <OverlayLoading />
         }
-            <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
-        @if ((Artifacts == null || !Artifacts.Any()) && !IsLoading)
-                {
-                    <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
-                       Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-                       IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
-                }
-                else
-                {
-                    @foreach (var artifact in Artifacts)
-                    {
-                        <div class="item-container @ViewMode-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-             @onpointerup="((e) => PointerUp(e,artifact))"
-             @onpointerdown="(() =>PointerDown(artifact))"
-             @onpointercancel="PointerCancel">
+    @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
+    {
+        <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
+                   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
+                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+    }
+    else
+    {
+        @foreach (var artifact in Artifacts)
+        {
+            <div class="item-container @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+                 @onpointerup="((e) => PointerUp(e,artifact))"
+                 @onpointerdown="(() =>PointerDown(artifact))"
+                 @onpointercancel="PointerCancel">
 
                             @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                             {
@@ -30,10 +30,10 @@
                                 </div>
                             }
 
-                            @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.grid || !IsPhone)
-                            {
-                                <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
-                            }
+                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.Grid || !IsPhone)
+                {
+                    <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
+                }
 
                             <div class="item-content">
                                 <div class="item-title">

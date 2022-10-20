@@ -42,7 +42,7 @@
                   Class="back-button"
                   Margin="0 0 16px 0"
                   BackgroundColor="transparent"
-                  IsVisible="IsBackButtonVisible"
+                  IsVisible="IsInRootDestinationFolder == true ? false : IsBackButtonVisible"
                   ButtonStyle="@(IsInSelectMode? FxButtonStyle.Disabled : FxButtonStyle.None)" />
 
             <div class="action-row">
