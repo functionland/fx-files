@@ -1,11 +1,12 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
 using System.Drawing;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 {
     public class WindowsImageThumbnailPlugin : ImageThumbnailPlugin
     {
-        protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
+        protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
         {
             if (stream == null && filePath == null)
                 throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");

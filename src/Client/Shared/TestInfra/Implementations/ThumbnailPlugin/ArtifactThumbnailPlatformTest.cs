@@ -44,7 +44,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
 
             var createdImage = await FileService.CreateFileAsync($@"{testRoot}\1.jpg", fs);
 
-            var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(createdImage);
+            var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(createdImage, ThumbnailScale.Medium);
 
             Assert.IsNotNull(thumbnailPath, "Image thumbnail created");
 

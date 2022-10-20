@@ -4,5 +4,5 @@ public interface IThumbnailPlugin
 {
     bool IsJustFilePathSupported { get;  }
     bool IsSupported(string extension);
-    Task<Stream> CreateThumbnailAsync(Stream? inputStream, string? filePath, CancellationToken? cancellationToken = null);
+    Task<Stream> CreateThumbnailAsync(Stream? inputStream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 }

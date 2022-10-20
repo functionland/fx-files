@@ -13,7 +13,8 @@ public class AndroidVideoThumbnailPlugin : PdfThumbnailPlugin
     public override bool IsJustFilePathSupported => true;
     protected override async Task<Stream> OnCreateThumbnailAsync(
         Stream? inputVideoStream,
-        string? filePath,
+        string? filePath, 
+        ThumbnailScale thumbnailScale,
         CancellationToken? cancellationToken = null)
     {
         if (inputVideoStream is not null)

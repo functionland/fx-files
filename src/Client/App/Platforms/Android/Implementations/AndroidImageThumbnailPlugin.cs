@@ -1,5 +1,6 @@
 ﻿using Android.Graphics;
 using Android.Media;
+using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Bitmap = Android.Graphics.Bitmap;
 using ExifInterface = AndroidX.ExifInterface.Media.ExifInterface;
@@ -9,7 +10,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 {
-    protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
+    protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
         // Todo: Exception
         if (filePath is null && stream is null)

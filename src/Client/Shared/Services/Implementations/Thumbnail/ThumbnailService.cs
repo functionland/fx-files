@@ -20,6 +20,7 @@ public abstract class ThumbnailService
     /// <returns>{cache}/adfadgfasdfasdf52465s4fd6as5f4fa6sd5f4as6d5f.jpg</returns>
     protected async Task<string?> GetOrCreateThumbnailAsync(
         CacheCategoryType cacheCategoryType,
+        ThumbnailScale thumbnailScale,
         string uniqueName,
         Func<Task<Stream>>? getFileStreamFunc,
         string? filePath, CancellationToken? cancellationToken = null)
@@ -30,6 +31,7 @@ public abstract class ThumbnailService
             cacheUniqueName,
             async (cacheFilePath) => await OnCreateThumbnailAsync(
                                                 uniqueName,
+                                                thumbnailScale,
                                                 cacheFilePath,
                                                 getFileStreamFunc,
                                                 filePath,
@@ -39,6 +41,7 @@ public abstract class ThumbnailService
 
     private async Task<bool> OnCreateThumbnailAsync(
         string uniqueFileName,
+        ThumbnailScale thumbnailScale,
         string thumbnailFilePath,
         Func<Task<Stream>>? getFileStreamFunc,
         string? filePath,
@@ -60,7 +63,7 @@ public abstract class ThumbnailService
             if (getFileStreamFunc is not null && !plugin.IsJustFilePathSupported)
                 stream = await getFileStreamFunc();
 
-            var thumbnailStream = await plugin.CreateThumbnailAsync(stream, filePath, cancellationToken);
+            var thumbnailStream = await plugin.CreateThumbnailAsync(stream, filePath, thumbnailScale, cancellationToken);
 
             // write stream
             using (var fileStream = File.Create(thumbnailFilePath))

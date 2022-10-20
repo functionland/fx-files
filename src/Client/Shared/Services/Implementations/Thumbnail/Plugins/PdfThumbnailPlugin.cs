@@ -4,12 +4,12 @@ public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 {
     public virtual bool IsJustFilePathSupported => false;
 
-    public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null)
+    public async Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        throw new NotImplementedException();
+        return await OnCreateThumbnailAsync(stream, filePath, thumbnailScale, cancellationToken);
     }
 
-    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, CancellationToken? cancellationToken = null);
+    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 
     public bool IsSupported(string extension)
     {
