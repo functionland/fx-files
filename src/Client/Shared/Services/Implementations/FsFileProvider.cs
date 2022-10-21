@@ -1,4 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Implementations.FxFileInfo;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.FsFileInfo;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.FxFileInfo;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Microsoft.Extensions.FileProviders;
@@ -14,13 +16,22 @@ public class FsFileProvider : IFileProvider
     private readonly IFileProvider _fileProvider;
     private ILocalDeviceFileService _localDeviceFileService;
     private IFulaFileService _fulaFileService;
+    private IArtifactThumbnailService<ILocalDeviceFileService> _localArtifactThumbnailService;
+    private IArtifactThumbnailService<IFulaFileService> _fulaArtifactThumbnailService;
 
 
-    public FsFileProvider(IFileProvider fileProvider, ILocalDeviceFileService localDeviceFileService, IFulaFileService fulaFileService)
+    public FsFileProvider(
+        IFileProvider fileProvider,
+        ILocalDeviceFileService localDeviceFileService,
+        IFulaFileService fulaFileService,
+        IArtifactThumbnailService<ILocalDeviceFileService> localArtifactThumbnailService,
+        IArtifactThumbnailService<IFulaFileService> fulaArtifactThumbnailService)
     {
         _fileProvider = fileProvider;
         _localDeviceFileService = localDeviceFileService;
         _fulaFileService = fulaFileService;
+        _localArtifactThumbnailService = localArtifactThumbnailService;
+        _fulaArtifactThumbnailService = fulaArtifactThumbnailService;
     }
 
     public IDirectoryContents GetDirectoryContents(string subpath)
@@ -36,9 +47,11 @@ public class FsFileProvider : IFileProvider
 
             return protocol switch
             {
-                PathProtocol.Storage => new PreviewFileInfo(PreparePath(address), _localDeviceFileService),
-                PathProtocol.Fula => new PreviewFileInfo(PreparePath(address), _fulaFileService),
-                PathProtocol.Wwwroot => _fileProvider.GetFileInfo(PreparePath(Regex.Replace(subpath, @"^\*(?<protocol>\w+)\*\/", "_content/Functionland.FxFiles.Client.Shared"))),
+                PathProtocol.Storage => new PreviewFileInfo<ILocalDeviceFileService>(PreparePath(address), _localDeviceFileService),
+                PathProtocol.Fula => new PreviewFileInfo<IFulaFileService>(PreparePath(address), _fulaFileService),
+                PathProtocol.ThumbnailStorage => new ThumbFileInfo<ILocalDeviceFileService>(PreparePath(address), _localArtifactThumbnailService, _localDeviceFileService),
+                PathProtocol.ThumbnailFula => new ThumbFileInfo<IFulaFileService>(PreparePath(address), _fulaArtifactThumbnailService, _fulaFileService),
+                PathProtocol.Wwwroot => _fileProvider.GetFileInfo(PreparePath("_content/Functionland.FxFiles.Client.Shared/" + address)),
                 _ => throw new InvalidOperationException($"Protocol not supported: {protocol}")
             };
         }

@@ -28,7 +28,7 @@
                                 <FileCard ArtifactType="@pin.ArtifactType"
                                           Name="@pin.Name"
                                           Size="@pin.SizeStr"
-                                          Path="@pin.ThumbnailPath"
+                                          Path="@pin.FullPath"
                                           Protocol="@(FileService is ILocalDeviceFileService? PathProtocol.ThumbnailStorage : PathProtocol.ThumbnailFula)"
                                           FileType="@pin.FileCategory"
                                           ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />

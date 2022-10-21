@@ -2,12 +2,13 @@
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FxFileInfo;
 
-public class PreviewFileInfo : IFileInfo
+public class PreviewFileInfo<TFileService> : IFileInfo
+    where TFileService : IFileService
 {
     private readonly string _path;
-    private readonly IFileService _fileService;
+    private readonly TFileService _fileService;
 
-    public PreviewFileInfo(string path, IFileService fileService)
+    public PreviewFileInfo(string path, TFileService fileService)
     {
         _path = path;
         _fileService = fileService;

@@ -83,7 +83,9 @@ public class FsBlazorWebView : BlazorWebView
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
         var fulaFileService = FsResolver.Resolve<IFulaFileService>(); ;
         var localDeviceFileService = FsResolver.Resolve<ILocalDeviceFileService>();
+        var localArtifactThumbnailService = FsResolver.Resolve<IArtifactThumbnailService<ILocalDeviceFileService>>();
+        var fulaArtifactThumbnailService = FsResolver.Resolve<IArtifactThumbnailService<IFulaFileService>>();
 
-        return new FsFileProvider(baseFileProvider, localDeviceFileService, fulaFileService);
+        return new FsFileProvider(baseFileProvider, localDeviceFileService, fulaFileService, localArtifactThumbnailService, fulaArtifactThumbnailService);
     }
 }
