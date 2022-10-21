@@ -28,5 +28,5 @@ public partial class App
         e.Handled = true;
     }
 
-    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiAppBuilder().Build();
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiAppBuilder();
 }

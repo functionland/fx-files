@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Shared;
+using Functionland.FxFiles.Client.Shared.Utils;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
@@ -9,7 +10,7 @@ namespace Functionland.FxFiles.Client.App;
 
 public static class MauiProgram
 {
-    public static MauiAppBuilder CreateMauiAppBuilder()
+    public static MauiApp CreateMauiAppBuilder()
     {
 #if Windows
   AppCenter.Start("7f2ed707-46a6-480d-bf29-d6f027eaed61",typeof(Analytics), typeof(Crashes));
@@ -40,6 +41,10 @@ public static class MauiProgram
         services.AddClientSharedServices();
         services.AddClientAppServices();
 
-        return builder;
+        var app = builder.Build();
+
+        app.Services.UseResolver();
+
+        return app;
     }
 }

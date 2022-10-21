@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
 using Microsoft.Extensions.FileProviders;
 
 namespace Functionland.FxFiles.Client.App;
@@ -53,6 +53,7 @@ public class FxBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
+        var fileService = FsResolver.Resolve<ILocalDeviceFileService>();
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
         return new FxFileProvider(baseFileProvider);
     }
