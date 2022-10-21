@@ -10,41 +10,38 @@ namespace Functionland.FxFiles.Client.Shared.Components
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-        [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
+        [Parameter] public List<FsArtifact> Artifacts { get; set; } = default!;
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
-        [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
+        [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
+        [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
+        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
         [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
         [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
         [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
-        [Parameter] public bool IsSelected { get; set; }
-        [Parameter] public EventCallback<bool> IsSelectedChanged { get; set; }
-        [Parameter] public FsArtifact[] SelectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
-        [Parameter] public EventCallback<FsArtifact[]> SelectedArtifactsChanged { get; set; }
-        [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
+        [Parameter] public List<FsArtifact> SelectedArtifacts { get; set; } = new();
+        [Parameter] public EventCallback<List<FsArtifact>> SelectedArtifactsChanged { get; set; }
+        [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.List;
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
         [Parameter] public EventCallback HandleBack { get; set; }
 
         private System.Timers.Timer? _timer;
 
+        private FsArtifact? _longPressedArtifact;
+
         protected override Task OnInitAsync()
         {
             return base.OnInitAsync();
         }
 
-        private async Task HandleArtifactOptionsClick(FsArtifact artifact)
+        private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
-            await OnArtifactsOptionsClick.InvokeAsync(artifact);
+            await OnArtifactOptionClick.InvokeAsync(artifact);
         }
 
-        protected override Task OnParamsSetAsync()
+        private async Task HandleArtifactsOptionClick(List<FsArtifact> artifacts)
         {
-            if (Artifacts is null)
-            {
-                Artifacts = Array.Empty<FsArtifact>();
-            }
-            return base.OnParamsSetAsync();
+            await OnArtifactsOptionClick.InvokeAsync(artifacts);
         }
 
         private async Task HandleArtifactClick(FsArtifact artifact)
@@ -57,69 +54,121 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return artifact is null ? true : false;
         }
 
-        public void PointerDown()
+        public void PointerDown(FsArtifact artifact)
         {
-            _timer = new(500);
+            _longPressedArtifact = artifact;
+            _timer = new(1000);
             _timer.Enabled = true;
             _timer.Start();
+            _timer.Elapsed += TimerElapsed;
+        }
 
-            _timer.Elapsed += async (sender, e) =>
+        private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (_timer != null)
             {
                 if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                 {
-                    IsSelected = false;
-                    SelectedArtifacts = Array.Empty<FsArtifact>();
+                    DisposeTimer();
                     ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
 
-                    await InvokeAsync(() =>
+                    InvokeAsync(async () =>
                     {
-                        ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                        if (_longPressedArtifact != null)
+                        {
+                            await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                            _longPressedArtifact.IsSelected = true;
+                            await OnSelectionChanged(_longPressedArtifact);
+                            _longPressedArtifact = null;
+                        }
                         StateHasChanged();
                     });
-                }
-
-                _timer.Enabled = false;
-                _timer.Stop();
-            };
-
+                };
+            }
+            DisposeTimer();
         }
 
-        public async Task PointerUp(FsArtifact artifact)
+        private void DisposeTimer()
         {
-            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+            if (_timer != null)
             {
-                _timer.Stop();
                 _timer.Enabled = false;
+                _timer.Stop();
+                _timer.Elapsed -= TimerElapsed;
+                _timer.Dispose();
+            }
+        }
 
-                await OnSelectArtifact.InvokeAsync(artifact);
-                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            }
-            else
+        public async Task PointerUp(PointerEventArgs args, FsArtifact artifact)
+        {
+            if (args.Button == 0)
             {
-                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                if (_timer != null)
+                {
+                    DisposeTimer();
+                    if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                    {
+                        await OnSelectArtifact.InvokeAsync(artifact);
+                        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                    }
+                    else
+                    {
+                        if (_longPressedArtifact != null)
+                        {
+                            await OnSelectionChanged(artifact);
+                            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                        }
+                    }
+                }
             }
+            else if (args.Button == 2)
+            {
+                DisposeTimer();
+                if (SelectedArtifacts.Count == 0 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+                {
+                    await HandleArtifactOptionClick(artifact);
+                }
+                else if (SelectedArtifacts.Count == 1)
+                {
+                    await HandleArtifactOptionClick(SelectedArtifacts[0]);
+                }
+                else if (SelectedArtifacts.Count > 1)
+                {
+                    await HandleArtifactsOptionClick(SelectedArtifacts);
+                }
+            }
+            StateHasChanged();
         }
 
         public void PointerCancel()
         {
-            _timer.Stop();
+            DisposeTimer();
         }
 
-        public async Task OnSelectionChanged(FsArtifact selectedArtifact)
+        public async Task OnSelectionChanged(FsArtifact artifact)
         {
-            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
+            DisposeTimer();
+            if (true)
             {
-                IsSelected = false;
-                SelectedArtifacts = SelectedArtifacts.Where(s => s.FullPath != selectedArtifact.FullPath).ToArray();
-            }
-            else
-            {
-                IsSelected = true;
-                SelectedArtifacts = SelectedArtifacts.Append(selectedArtifact).ToArray();
-            }
+                if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+                {
+                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                    await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                }
+                if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+                {
+                    artifact.IsSelected = false;
+                    SelectedArtifacts.Remove(artifact);
+                }
+                else
+                {
+                    artifact.IsSelected = true;
+                    SelectedArtifacts.Add(artifact);
+                }
 
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            await IsSelectedChanged.InvokeAsync(IsSelected);
+                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                StateHasChanged();
+            }
         }
 
         public void OnCreateFolder()

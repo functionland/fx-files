@@ -6,7 +6,8 @@
 
 //Shared==============================================
 
-body {
+
+html, body {
     margin: 0;
     padding: 0;
     user-select: none;
@@ -22,7 +23,7 @@ body {
     background-color: $gray-light-bg-primary;
 }
 
-body[data-theme="Dark"] {
+html, body[data-theme="Dark"] {
     @each $key, $value in $colors-dark {
         --#{$key}: #{$value};
     }
@@ -67,4 +68,10 @@ h6 {
 
 p {
     margin: 0;
+}
+
+input[type=checkbox] {
+    scale: 1.6;
+    pointer-events: none;
+    accent-color: $green-dark-base;
 }

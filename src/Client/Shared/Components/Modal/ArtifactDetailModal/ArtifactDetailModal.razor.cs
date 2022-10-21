@@ -5,13 +5,14 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
     public partial class ArtifactDetailModal
     {
-        private FsArtifact[] _artifacts = Array.Empty<FsArtifact>();
+        private List<FsArtifact> _artifacts = new();
         private string _artifactsSize = string.Empty;
         private int _currentArtifactForShowNumber = 0;
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
-        private bool _isModalOpen;
         private System.Timers.Timer? _timer;
+        private bool _isModalOpen;
         private bool _isMultiple;
+        private bool _isInRoot;
 
         [Parameter] public IFileService FileService { get; set; } = default!;
 
@@ -94,20 +95,21 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }
         }
 
-        public async Task<ArtifactDetailModalResult> ShowAsync(FsArtifact[] artifacts, bool isMultiple = false)
+        public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false, bool isInRoot = false)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 Close();
                 StateHasChanged();
                 return Task.CompletedTask;
-            });
+            }), true, false);
 
             _tcs?.SetCanceled();
             _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;
             CalculateArtifactsSize();
             _isMultiple = isMultiple;
+            _isInRoot = isInRoot;
             _isModalOpen = true;
             StateHasChanged();
 
@@ -132,13 +134,16 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            _artifacts = Array.Empty<FsArtifact>();
+            _artifacts.Clear();
             await InvokeAsync(() =>
              {
                  StateHasChanged();
              });
-            _timer.Enabled = false;
-            _timer.Stop();
+            if (_timer != null)
+            {
+                _timer.Enabled = false;
+                _timer.Stop();
+            }
         }
 
         public void Dispose()

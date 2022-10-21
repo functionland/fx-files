@@ -1,4 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using System.Collections.Generic;
+
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Models;
 
@@ -21,7 +23,7 @@ public class FsArtifact
     public string Name { get; set; }
 
     public string FullPath { get; set; }
-    public string LocalFullPath { get; set; }
+    public string? LocalFullPath { get; set; }
     public string? ParentFullPath { get; set; }
     public string? ThumbnailPath { get; set; }
 
@@ -55,4 +57,5 @@ public class FsArtifact
     {
         return $"{Name} -> {FullPath}";
     }
+    public bool? IsSelected { get; set; }
 }

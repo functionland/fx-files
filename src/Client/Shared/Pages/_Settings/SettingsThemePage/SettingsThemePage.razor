@@ -1,0 +1,49 @@
+﻿@page "/Settings/Theme"
+@inherits AppComponentBase;
+@namespace Functionland.FxFiles.Client.Shared.Pages
+
+<div class="fxtoolbar-wrapper">
+    <FxToolBar IsInRoot="false"
+        IsBackButtonVisible="true"
+        IsAddButtonVisible="false"
+        IsOverflowButtonVisible="false"
+        OnBackClick="HandleToolbarBack" />
+</div>
+
+<section class="theme-mode">
+    <div class="mode-content">@Localizer[nameof(AppStrings.Mode)]</div>
+
+    <div class="select-theme-mode">
+        <div class="light-mode-part" @onclick="() => { CurrentTheme = FxTheme.Light; ChangeThemeAsync(); }">
+            <div class="mode-img light-mode-img"></div>
+            <label id="lightMode" class="container mode-content">
+                @Localizer[nameof(AppStrings.LightMode)]
+                <input type="radio" checked="@(CurrentTheme == FxTheme.Light)" id="lightMode">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <div class="dark-mode-part" @onclick="() => { CurrentTheme = FxTheme.Dark; ChangeThemeAsync(); }">
+            <div class="mode-img dark-mode-img"></div>
+            <label id="darkMode" class="container mode-content">
+                @Localizer[nameof(AppStrings.DarkMode)]
+                <input type="radio" checked="@(CurrentTheme == FxTheme.Dark)" id="darkMode">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="system-theme-setting" @onclick="() => { CurrentTheme = FxTheme.System; ChangeThemeAsync(); }">
+        <div class="system-mode-part">
+            <label id="system" class="container mode-content">
+                <input type="radio" checked="@(CurrentTheme == FxTheme.System)" id="system">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div class="system-theme-info">
+            <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)] <span class="system-mode">@Localizer[nameof(AppStrings.DarkMode)]</span> <span class="mode-text">@Localizer[nameof(AppStrings.Mode)]</span></div>
+            <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
+        </div>
+    </div>
+
+</section>

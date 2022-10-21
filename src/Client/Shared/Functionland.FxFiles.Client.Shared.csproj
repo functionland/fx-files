@@ -22,8 +22,6 @@
 
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.0-preview.1" />
 
-		<PackageReference Include="Microsoft.AppCenter.Distribute" Version="5.0.0-preview.1" />
-
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
 
 		<PackageReference Include="Prism.Core" Version="8.1.97" />
@@ -43,7 +41,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
         <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
-        <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.3">
+        <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -75,6 +73,12 @@
 		<Using Include="Functionland.FxFiles.Client.Shared.Exceptions" />
 		<Using Include="Functionland.FxFiles.Client.Shared.Enums" />
 		<Using Include="Functionland.FxFiles.Client.Shared.Models" />
+		<Compile Remove="Components\FxLoading\**" />
+		<Content Remove="Components\FxLoading\**" />
+		<EmbeddedResource Remove="Components\FxLoading\**" />
+		<None Remove="Components\FxLoading\**" />
+		<SassFile Remove="Components\FxLoading\**" />
+		<TypeScriptCompile Remove="Components\FxLoading\**" />
 
         <Watch Remove="*.scss" />
     </ItemGroup>

@@ -56,3 +56,8 @@
         font-size: $open-sans-regular;
     }
 }
+
+.bottom-action-disabled {
+    opacity: .5 !important;
+    pointer-events: none;
+}
