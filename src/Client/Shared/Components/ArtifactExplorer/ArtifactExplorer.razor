@@ -6,7 +6,7 @@
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode.ToString().ToLower()}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (IsLoading)
     {
-        <OverlayLoading />
+        <OverlayLoading LoadingType="LoadingType.Overlay" />
     }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
