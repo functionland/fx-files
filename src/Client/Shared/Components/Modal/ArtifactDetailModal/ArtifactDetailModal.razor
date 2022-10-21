@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="right-part">
-                                <div class="icons-action move-icon" @onclick="Move"></div>
+                                <div class="icons-action move-icon @(!_isInRoot ? "" : "disabled-icon")" @onclick="Move"></div>
                             </div>
                         </div>
                     </FileDetailItemFragment>
@@ -39,15 +39,15 @@
                     <FileDetailItemActionsFragment>
                         <FileDetailViewBottomActionBar>
                             <FileDetailActionBarItemFragment>
-                                <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
-                                <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
                                 @if (_artifacts[_currentArtifactForShowNumber].IsPinned == true)
                                 {
-                                    <FileDetailViewBottomActionItem OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
+                                    <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
                                 }
                                 else
                                 {
-                                    <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                                    <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
                                 }
                                 <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
                             </FileDetailActionBarItemFragment>
@@ -74,15 +74,15 @@
                 <FileDetailItemActionsFragment>
                     <FileDetailViewBottomActionBar>
                         <FileDetailActionBarItemFragment>
-                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
-                            <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
                             @if (_artifacts[0].IsPinned == true)
                             {
-                                <FileDetailViewBottomActionItem OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
                             }
                             else
                             {
-                                <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
                             }
                             <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
                         </FileDetailActionBarItemFragment>

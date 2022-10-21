@@ -17,8 +17,9 @@ public static class IiOSServiceCollectionExtensions
         services.AddSingleton<IPlatformTestService, IosPlatformTestService>();
         services.AddTransient<IosFileServicePlatformTest>();
 
-        services.AddSingleton<IThumbnailService, IosThumbnailService>();
         services.AddSingleton<IFileWatchService, IosFileWatchService>();
+
+        services.AddSingleton<IFileCacheService, IosFileCacheService>();
         return services;
     }
 }

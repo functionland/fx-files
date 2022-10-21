@@ -19,8 +19,7 @@ public partial class TestExplorer
     protected override Task OnInitAsync()
     {
         PlatformTests = PlatformTestService.GetTests().ToList();
-        GoBackService.GoBackAsync = HandleBack;
-
+        GoBackService.OnInit(HandleBack, true, false);
         return base.OnInitAsync();
     }
 
