@@ -12,12 +12,12 @@
 
         public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 Close();
                 StateHasChanged();
                 return Task.CompletedTask;
-            });
+            }), true, false);
 
             _headTitle = headTitle;
             _inputValue = inputValue;

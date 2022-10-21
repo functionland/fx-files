@@ -59,6 +59,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public bool IsVisible { get; set; } = true;
 
         [Parameter]
+        public bool IsEnabled { get; set; } = true;
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]

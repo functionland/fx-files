@@ -19,10 +19,6 @@ public static class IServiceCollectionExtensions
 
         services.AddClientSharedServices();
 
-        services.AddSingleton<IFileService>(
-            (serviceProvider) =>
-            serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
-            );
         services.AddSingleton<IFulaFileService>(
            (serviceProvider) =>
            serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()

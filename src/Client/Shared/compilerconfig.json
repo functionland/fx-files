@@ -254,5 +254,9 @@
   {
     "outputFile": "Pages/_Onboarding/SuccessfulLoginPage/SuccessfulLoginPage.razor.css",
     "inputFile": "Pages/_Onboarding/SuccessfulLoginPage/SuccessfulLoginPage.razor.scss"
+  },
+  {
+    "outputFile": "Components/OverlayLoading/OverlayLoading.razor.css",
+    "inputFile": "Components/OverlayLoading/OverlayLoading.razor.scss"
   }
 ]

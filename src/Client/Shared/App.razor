@@ -12,7 +12,7 @@
                     <Authorizing>
                         @if (_isLoading)
                         {
-                            <LoadingComponent />
+                            <OverlayLoading />
                         }
                     </Authorizing>
                 </AuthorizeRouteView>
@@ -23,7 +23,7 @@
             <Navigating>
                 @if (_isLoading)
                 {
-                    <LoadingComponent />
+                    <OverlayLoading />
                 }
             </Navigating>
         </Router>

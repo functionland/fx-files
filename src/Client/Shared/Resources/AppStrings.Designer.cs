@@ -79,11 +79,29 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The artifact already dose not pinned .
+        /// </summary>
+        public static string ArtifactAlreadyDoseNotPinnedException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyDoseNotPinnedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name.
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
                 return ResourceManager.GetString("ArtifactAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} already pinned.
+        /// </summary>
+        public static string ArtifactAlreadyPinnedException {
+            get {
+                return ResourceManager.GetString("ArtifactAlreadyPinnedException", resourceCulture);
             }
         }
         
@@ -156,6 +174,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ArtifactUnauthorizedAccessException {
             get {
                 return ResourceManager.GetString("ArtifactUnauthorizedAccessException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatic.
+        /// </summary>
+        public static string AutomaticContent {
+            get {
+                return ResourceManager.GetString("AutomaticContent", resourceCulture);
             }
         }
         
@@ -345,6 +372,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Current {
             get {
                 return ResourceManager.GetString("Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dark.
+        /// </summary>
+        public static string DarkMode {
+            get {
+                return ResourceManager.GetString("DarkMode", resourceCulture);
             }
         }
         
@@ -563,17 +599,16 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
                 return ResourceManager.GetString("ForbiddenException", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The artifact not been shared.
         /// </summary>
-        public static string HasNotBeenSharedException
-        {
+        public static string HasNotBeenSharedException {
             get {
                 return ResourceManager.GetString("HasNotBeenSharedException", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to This is a simple message in home.
         /// </summary>
@@ -661,6 +696,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string LastModified {
             get {
                 return ResourceManager.GetString("LastModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        public static string LightMode {
+            get {
+                return ResourceManager.GetString("LightMode", resourceCulture);
             }
         }
         
@@ -1012,6 +1056,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        public static string System {
+            get {
+                return ResourceManager.GetString("System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use system light/dark mode setting..
+        /// </summary>
+        public static string SystemThemeDescription {
+            get {
+                return ResourceManager.GetString("SystemThemeDescription", resourceCulture);
             }
         }
         

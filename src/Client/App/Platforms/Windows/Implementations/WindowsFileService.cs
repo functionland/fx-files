@@ -11,7 +11,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 
 public partial class WindowsFileService : LocalDeviceFileService
 {
-    public override Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         return base.CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
@@ -31,7 +31,7 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.CreateFolderAsync(path, folderName, cancellationToken);
     }
 
-    public override Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         return base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
@@ -56,7 +56,7 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         return base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }

@@ -510,4 +510,25 @@
   <data name="HasNotBeenSharedException" xml:space="preserve">
     <value>The artifact not been shared</value>
   </data>
+  <data name="AutomaticContent" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="LightMode" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SystemThemeDescription" xml:space="preserve">
+    <value>Use system light/dark mode setting.</value>
+  </data>
+  <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
+    <value>The artifact already dose not pinned </value>
+  </data>
+  <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
+    <value>The {0} already pinned</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
 </root>
