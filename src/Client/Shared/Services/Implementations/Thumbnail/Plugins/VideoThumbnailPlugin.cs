@@ -18,7 +18,7 @@ public abstract class VideoThumbnailPlugin : IThumbnailPlugin
         return FsArtifactUtils.FileExtentionsType
                         .Where(e => e.Value == FileCategoryType.Video)
                         .Select(f => f.Key)
-                        .Any(c => c.Equals(extension));
+                        .Any(c => c.Equals(extension.ToLower()));
 
     }
 }
