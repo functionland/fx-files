@@ -33,7 +33,6 @@ public class PreviewFileInfo : IFileInfo
                     _name = Path.GetFileName(_physicalPath);
                     _lastModified = artifact?.LastModifiedDateTime ?? DateTimeOffset.FromUnixTimeSeconds(0);
                     _isDirectory = (artifact?.ArtifactType == FsArtifactType.Folder);
-                    _stream = _fileService.GetFileContentAsync(_path).GetAwaiter().GetResult();
 
                     IsMetaDataLoaded = true;
                 }
@@ -101,13 +100,11 @@ public class PreviewFileInfo : IFileInfo
         }
     }
 
-    public Stream _stream;
     public Stream CreateReadStream()
     {
         try
         {
-            EnsureLoadMetadata();
-            return _stream;
+            return _fileService.GetFileContentAsync(_path).GetAwaiter().GetResult();
         }
         catch
         {

@@ -18,7 +18,7 @@
         public string? TagTitle { get; set; }
 
         [Parameter]
-        public string? FileName { get; set; }
+        public string? Name { get; set; }
 
         [Parameter]
         public string? FileFormat { get; set; }
@@ -27,13 +27,13 @@
         public string? ModifiedDate { get; set; }
 
         [Parameter]
-        public string? FileSize { get; set; }
-
-        private string? _path;
+        public string? Size { get; set; }
 
         [Parameter]
-        public string? FileImage { get; set; }
-        
+        public string? Path { get; set; }
+
+        [Parameter]
+        public PathProtocol Protocol { get; set; }
 
         public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
         {

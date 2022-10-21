@@ -12,6 +12,9 @@
         public string? FilePath { get; set; }
 
         [Parameter]
+        public PathProtocol Protocol { get; set; }
+
+        [Parameter]
         public string? FileDetailAreaClass { get; set; }
 
         [Parameter]

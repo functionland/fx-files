@@ -1,14 +1,15 @@
-﻿@inherits AppComponentBase;
+﻿@using Functionland.FxFiles.Client.Shared.Utils
+@inherits AppComponentBase;
 
 <!-- Body of the sheet -->
 <main class="content-body @ContentBodyClass fill column">
     @if (IsImageFile)
     {
         <div class="image-icon-row">
-            
+
             <div class="image-container">
                 <div class="image-file-icon"></div>
-                <img class="file-image-preview" src="@("*storage*/" + FilePath)">
+                <img class="file-image-preview" src="@(FilePath is not null? PathProtocolUtils.GetPath(FilePath, Protocol) : null)">
             </div>
         </div>
     }

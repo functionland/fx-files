@@ -61,7 +61,10 @@
     else
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
-            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)" FilePath="@_artifacts[0].FullPath" FileCategoryType="@_artifacts[0].FileCategory" FsArtifactType="@_artifacts[0].ArtifactType">
+            <FileDetailView FileName="@_artifacts[0].Name"
+                    IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)"
+                    FilePath="@_artifacts[0].FullPath" Protocol="@(FileService is ILocalDeviceFileService? PathProtocol.Storage : PathProtocol.Fula)"
+                    FileCategoryType="@_artifacts[0].FileCategory" FsArtifactType="@_artifacts[0].ArtifactType">
                 <FileDetailItemFragment>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
                     <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>

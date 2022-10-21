@@ -49,7 +49,7 @@ public partial class MainPage
 
 }
 
-public class FxBlazorWebView : BlazorWebView
+public class FsBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
@@ -57,6 +57,6 @@ public class FxBlazorWebView : BlazorWebView
         var fulaFileService = FsResolver.Resolve<IFulaFileService>(); ;
         var localDeviceFileService = FsResolver.Resolve<ILocalDeviceFileService>();
 
-        return new FxFileProvider(baseFileProvider, localDeviceFileService, fulaFileService);
+        return new FsFileProvider(baseFileProvider, localDeviceFileService, fulaFileService);
     }
 }
