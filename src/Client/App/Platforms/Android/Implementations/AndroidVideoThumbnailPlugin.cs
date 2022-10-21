@@ -8,7 +8,7 @@ using Stream = System.IO.Stream;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
-public class AndroidVideoThumbnailPlugin : PdfThumbnailPlugin
+public class AndroidVideoThumbnailPlugin : VideoThumbnailPlugin
 {
     public override bool IsJustFilePathSupported => true;
     protected override async Task<Stream> OnCreateThumbnailAsync(
