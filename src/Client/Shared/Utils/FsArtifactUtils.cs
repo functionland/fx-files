@@ -31,6 +31,23 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             };
         }
 
+        public static long ConvertToByte(string sizeValueStr, string sizeUnit)
+        {
+
+            if (long.TryParse(sizeValueStr, out var sizeValue))
+            {
+                if (sizeUnit == "kb")
+                    sizeValue *= OneKB;
+                if (sizeUnit == "mb")
+                    sizeValue *= OneMB;
+                if (sizeUnit == "gb")
+                    sizeValue *= OneGB;
+                if (sizeUnit == "tb")
+                    sizeValue *= OneTB;
+            }
+
+            return sizeValue;
+        }
         public static IDictionary<string, FileCategoryType> FileExtentionsType = new Dictionary<string, FileCategoryType>()
         {
             //Image

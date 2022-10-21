@@ -1,4 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Utils;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileService
 {
@@ -111,15 +114,37 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         private static FsArtifact CreateArtifact(string path, string? contentHash)
         {
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, FsFileProviderType.InternalMemory)
+            var fileName = Path.GetFileName(path);
+            string pattern = @"[[a-z]*=[0-9]*[a-z]b]";
+            Match match = Regex.Match(fileName, pattern, RegexOptions.None);
+            long size = 20;
+            if (match.Success)
+            {
+                string found = match.Value;
+                //fileName = fileName.Replace(found, String.Empty);
+                size = GetArtifactSize(found);
+            }
+
+            return new FsArtifact(path, fileName, FsArtifactType.File, FsFileProviderType.InternalMemory)
             {
                 FileExtension = Path.GetExtension(path),
                 OriginDevice = originDevice,
                 ThumbnailPath = path,
                 ContentHash = contentHash,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                Size = 20
+                Size = size
             };
+        }
+
+        private static long GetArtifactSize(string sizeStr)
+        {
+      
+            sizeStr = sizeStr.TrimStart('[').TrimEnd(']').Replace("size=", "");
+            var sizeValueStr = Regex.Match(sizeStr, @"\d+").Value;
+            var sizeUnit = sizeStr.Replace(sizeValueStr, "");
+            long sizeValue = FsArtifactUtils.ConvertToByte(sizeValueStr, sizeUnit);
+            return sizeValue;
+
         }
 
         public async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
@@ -229,23 +254,24 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
+            var fileName = Path.GetFileName(filePath);
+            string pattern = @"[[a-z]*=[0-9]*[a-z]b]";
+            Match match = Regex.Match(fileName, pattern, RegexOptions.None);
+            long size = 20;
+            if (match.Success)
+            {
+                string found = match.Value;
+                size = GetArtifactSize(found);
+            }
+
+            
             await LatencyActionAsync();
-            string streamPath;
-            if (Path.GetExtension(filePath).ToLower() == ".jpg" ||
-                Path.GetExtension(filePath).ToLower() == ".png" ||
-                Path.GetExtension(filePath).ToLower() == ".jpeg"
-                )
-            {
-                streamPath = "/Files/fake-pic.jpg";
-            }
-            else
-            {
-                streamPath = "/Files/test.txt";
-            }
+            var sampleText = "Hello streamer!" + size * '-'; ;
 
+            byte[] byteArray = Encoding.ASCII.GetBytes(sampleText);
 
-            using FileStream fs = File.Open(streamPath, FileMode.Open);
-            return fs;
+            MemoryStream stream = new(byteArray);
+            return stream;
 
         }
 
