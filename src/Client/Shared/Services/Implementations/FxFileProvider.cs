@@ -11,10 +11,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 public class FxFileProvider : IFileProvider
 {
     private readonly IFileProvider _fileProvider;
+    private ILocalDeviceFileService _localDeviceFileService;
+    private IFulaFileService _fulaFileService;
 
-    public FxFileProvider(IFileProvider fileProvider)
+
+    public FxFileProvider(IFileProvider fileProvider, ILocalDeviceFileService localDeviceFileService, IFulaFileService fulaFileService)
     {
         _fileProvider = fileProvider;
+        _localDeviceFileService = localDeviceFileService;
+        _fulaFileService = fulaFileService;
     }
 
     public IDirectoryContents GetDirectoryContents(string subpath)
@@ -22,10 +27,7 @@ public class FxFileProvider : IFileProvider
         return _fileProvider.GetDirectoryContents(subpath);
     }
 
-    Regex pathRegex = new Regex(@"^\*(?<protocol>\w+)\*(?<address>.*)");
-
-    enum Protocols { Fula, Storage, Thumb}
-
+    Regex pathRegex = new Regex(@"^\*(?<protocol>\w+)\*\/(?<address>.*)");
     public IFileInfo GetFileInfo(string subpath)
     {
         var match = pathRegex.Match(subpath);
@@ -37,21 +39,12 @@ public class FxFileProvider : IFileProvider
 
             return protocol switch
             {
-                "storage" => new StorageFileInfo(PreparePath(subpath)),
-                "fula" => new FulaFileInfo(PreparePath(subpath)),
-                "wwwroot" => new FulaFileInfo(PreparePath(Regex.Replace(subpath, @"^\*(?<protocol>\w+)\*", "_content/Functionland.FxFiles.Client.Shared"))),
+                "storage" => new PreviewFileInfo(PreparePath(address), _localDeviceFileService),
+                "fula" => new PreviewFileInfo(PreparePath(address), _fulaFileService),
+                "wwwroot" => _fileProvider.GetFileInfo(PreparePath(Regex.Replace(subpath, @"^\*(?<protocol>\w+)\*\/", "_content/Functionland.FxFiles.Client.Shared"))),
                 _ => throw new InvalidOperationException($"Protocol not supported: {protocol}")
             };
         }
-
-        //    if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/fula://"))
-        //{
-        //    return new FulaFileInfo(PreparePath(subpath));
-        //}
-        //else if (subpath.StartsWith("_content/Functionland.FxFiles.Client.Shared/storage://"))
-        //{
-        //    return new StorageFileInfo(PreparePath(subpath));
-        //}
 
         return _fileProvider.GetFileInfo(subpath);
     }
@@ -63,9 +56,6 @@ public class FxFileProvider : IFileProvider
 
     private string PreparePath(string path)
     {
-        path = path.Replace("_content/Functionland.FxFiles.Client.Shared/", string.Empty);
-        path = path.Replace("fula://", string.Empty);
-        path = path.Replace("storage://", string.Empty);
         path = WebUtility.UrlDecode(path);
         return path;
     }

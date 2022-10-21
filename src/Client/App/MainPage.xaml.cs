@@ -53,8 +53,10 @@ public class FxBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
-        var fileService = FsResolver.Resolve<ILocalDeviceFileService>();
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
-        return new FxFileProvider(baseFileProvider);
+        var fulaFileService = FsResolver.Resolve<IFulaFileService>(); ;
+        var localDeviceFileService = FsResolver.Resolve<ILocalDeviceFileService>();
+
+        return new FxFileProvider(baseFileProvider, localDeviceFileService, fulaFileService);
     }
 }

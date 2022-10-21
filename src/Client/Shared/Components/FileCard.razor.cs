@@ -32,22 +32,8 @@
         private string? _path;
 
         [Parameter]
-        public string? FileImage
-        {
-            get => getFileImage(_path);
-            set => _path = value;
-        }
-
-        private string getFileImage(string? path)
-        {
-            if(path != null)
-            {
-                var resultPath = "_content/Functionland.FxFiles.Client.Shared/storage://" + path;
-                return resultPath;
-            }
-
-            return string.Empty;
-        }
+        public string? FileImage { get; set; }
+        
 
         public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
         {
