@@ -23,7 +23,7 @@ public class FsArtifact
     public string Name { get; set; }
 
     public string FullPath { get; set; }
-    public string LocalFullPath { get; set; }
+    public string? LocalFullPath { get; set; }
     public string? ParentFullPath { get; set; }
     public string? ThumbnailPath { get; set; }
 
@@ -57,5 +57,5 @@ public class FsArtifact
     {
         return $"{Name} -> {FullPath}";
     }
-    public bool IsSelected { get; set; }
+    public bool? IsSelected { get; set; }
 }

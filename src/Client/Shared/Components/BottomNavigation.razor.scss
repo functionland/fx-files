@@ -51,7 +51,7 @@ footer {
 }
 
 @media(hover: hover) and (pointer: fine) {
-    ::deep .navbarApp-link:hover {
-        color: $green-dark-hover;
+    ::deep .navbarApp-item:hover {
+        cursor: pointer;
     }
 }

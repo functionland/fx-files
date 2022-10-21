@@ -13,8 +13,13 @@ public static class IAndroidServiceCollectionExtensions
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
-        services.AddSingleton<IThumbnailService, AndroidThumbnailService>();
+        services.AddTransient<AndroidInternalArtifactThumbnailPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<AndroidExternalArtifactThumbnailPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<AndroidInternalArtifactThumbnailPlatformTest<IFulaFileService>>();
+        services.AddTransient<AndroidExternalArtifactThumbnailPlatformTest<IFulaFileService>>();
         services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
+        services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
+        services.AddSingleton<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
 
         return services;
     }

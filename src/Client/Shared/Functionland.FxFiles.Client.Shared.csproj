@@ -22,8 +22,6 @@
 
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.0-preview.1" />
 
-		<PackageReference Include="Microsoft.AppCenter.Distribute" Version="5.0.0-preview.1" />
-
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
 
 		<PackageReference Include="Prism.Core" Version="8.1.97" />
@@ -75,6 +73,12 @@
 		<Using Include="Functionland.FxFiles.Client.Shared.Exceptions" />
 		<Using Include="Functionland.FxFiles.Client.Shared.Enums" />
 		<Using Include="Functionland.FxFiles.Client.Shared.Models" />
+		<Compile Remove="Components\FxLoading\**" />
+		<Content Remove="Components\FxLoading\**" />
+		<EmbeddedResource Remove="Components\FxLoading\**" />
+		<None Remove="Components\FxLoading\**" />
+		<SassFile Remove="Components\FxLoading\**" />
+		<TypeScriptCompile Remove="Components\FxLoading\**" />
 
         <Watch Remove="*.scss" />
     </ItemGroup>
@@ -110,10 +114,6 @@
       <Compile Update="Resources\AppStrings.Designer.cs">
         <DesignTime>True</DesignTime>
       </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Components\FxLoading\" />
     </ItemGroup>
 	
 </Project>
