@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿using Functionland.FxFiles.Client.Shared.Utils;
+
+namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class FileCard
     {
@@ -33,7 +35,7 @@
         public string? Path { get; set; }
 
         [Parameter]
-        public PathProtocol Protocol { get; set; }
+        public IFileService? FileService { get; set; }
 
         public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
         {
@@ -60,5 +62,13 @@
 
             return "folder-icon";
         }
+
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorage,
+                IFulaFileService => PathProtocol.ThumbnailFula,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
     }
 }

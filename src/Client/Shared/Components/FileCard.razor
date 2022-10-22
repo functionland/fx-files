@@ -12,7 +12,7 @@
 
         @if (!string.IsNullOrEmpty(Path))
         {
-            <img src="@(PathProtocolUtils.GetPath(Path, Protocol))" draggable="false" class="file-card-image" />
+            <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-image" />
         }
         else
         {

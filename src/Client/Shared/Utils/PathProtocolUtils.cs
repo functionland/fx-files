@@ -19,6 +19,11 @@ public static class PathProtocolUtils
         };
     }
 
+    public static string InProtocol(this string address, PathProtocol protocol)
+    {
+        return GetPath(protocol, address);
+    }
+
     public static PathProtocol GetPathProtocol(string protocol)
     {
         return protocol switch
@@ -32,7 +37,7 @@ public static class PathProtocolUtils
         };
     }
 
-    public static string GetPath(string address, PathProtocol protocol)
+    public static string GetPath(PathProtocol protocol, string address)
     {
         var protocolStr = GetPathProtocol(protocol);
         return $"*{protocolStr}*/{address}";

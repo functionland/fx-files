@@ -29,7 +29,7 @@
                                           Name="@pin.Name"
                                           Size="@pin.SizeStr"
                                           Path="@pin.FullPath"
-                                          Protocol="@(FileService is ILocalDeviceFileService? PathProtocol.ThumbnailStorage : PathProtocol.ThumbnailFula)"
+                                          FileService = "@FileService"
                                           FileType="@pin.FileCategory"
                                           ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
