@@ -7,9 +7,10 @@
 
         [AutoInject] TFileService FileService { get; set; }
         [AutoInject] IExceptionHandler ExceptionHandler { get; set; }
+        [AutoInject] IStringLocalizer<AppStrings> StringLocalizer { get; set; }
         public async Task ViewFile(FsArtifact artifact, string returnUrl)
         {
-            var fileViewer = FileViewers.FirstOrDefault(fv => fv.IsExtenstionSupported(artifact.FullPath,FileService));
+            var fileViewer = FileViewers.FirstOrDefault(fv => fv.IsExtenstionSupported(artifact.FullPath, FileService));
 
             if (fileViewer is null)
             {
@@ -20,6 +21,10 @@
                     {
                         File = new ReadOnlyFile(artifact.FullPath)
                     });
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    ExceptionHandler?.Handle(new DomainLogicException(StringLocalizer.GetString(nameof(AppStrings.ArtifactUnauthorizedAccessException))));
                 }
                 catch (Exception exception)
                 {

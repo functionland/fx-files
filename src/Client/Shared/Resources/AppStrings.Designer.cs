@@ -754,6 +754,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Let’s go.
+        /// </summary>
+        public static string LetsGo {
+            get {
+                return ResourceManager.GetString("LetsGo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {
@@ -1371,6 +1380,33 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Upload {
             get {
                 return ResourceManager.GetString("Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WELCOME.
+        /// </summary>
+        public static string Welcome {
+            get {
+                return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect to Fula.
+        /// </summary>
+        public static string WelcomePageConnectContent {
+            get {
+                return ResourceManager.GetString("WelcomePageConnectContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui..
+        /// </summary>
+        public static string WelcomePageDesc {
+            get {
+                return ResourceManager.GetString("WelcomePageDesc", resourceCulture);
             }
         }
     }
