@@ -6,6 +6,8 @@
 .list-container {
     position: relative;
     flex-grow: 2;
+    height: 200px;
+    overflow: auto;
 }
 
 .list-title {
@@ -306,6 +308,8 @@
     bottom: 95px;
     right: 15px;
     display: none;
+    z-index: 1;
+
 }
 
 ::deep .fxbutton-content img {

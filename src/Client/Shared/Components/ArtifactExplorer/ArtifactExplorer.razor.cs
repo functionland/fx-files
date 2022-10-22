@@ -29,9 +29,18 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private FsArtifact? _longPressedArtifact;
 
-        protected override Task OnInitAsync()
+        protected override async Task OnInitAsync()
         {
-            return base.OnInitAsync();
+            
+            await base.OnInitAsync();
+        }
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await OnScrollCheck();
+            }
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task HandleArtifactOptionClick(FsArtifact artifact)
