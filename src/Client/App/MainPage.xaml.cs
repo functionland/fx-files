@@ -1,5 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
-using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.FileProviders;
 
 #if ANDROID
 using Android.Widget;
@@ -81,11 +80,7 @@ public class FsBlazorWebView : BlazorWebView
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
-        var fulaFileService = FsResolver.Resolve<IFulaFileService>(); ;
-        var localDeviceFileService = FsResolver.Resolve<ILocalDeviceFileService>();
-        var localArtifactThumbnailService = FsResolver.Resolve<IArtifactThumbnailService<ILocalDeviceFileService>>();
-        var fulaArtifactThumbnailService = FsResolver.Resolve<IArtifactThumbnailService<IFulaFileService>>();
 
-        return new FsFileProvider(baseFileProvider, localDeviceFileService, fulaFileService, localArtifactThumbnailService, fulaArtifactThumbnailService);
+        return new FsFileProvider(baseFileProvider);
     }
 }

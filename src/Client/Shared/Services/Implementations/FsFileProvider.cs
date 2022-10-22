@@ -20,18 +20,13 @@ public class FsFileProvider : IFileProvider
     private IArtifactThumbnailService<IFulaFileService> _fulaArtifactThumbnailService;
 
 
-    public FsFileProvider(
-        IFileProvider fileProvider,
-        ILocalDeviceFileService localDeviceFileService,
-        IFulaFileService fulaFileService,
-        IArtifactThumbnailService<ILocalDeviceFileService> localArtifactThumbnailService,
-        IArtifactThumbnailService<IFulaFileService> fulaArtifactThumbnailService)
+    public FsFileProvider(IFileProvider fileProvider)
     {
         _fileProvider = fileProvider;
-        _localDeviceFileService = localDeviceFileService;
-        _fulaFileService = fulaFileService;
-        _localArtifactThumbnailService = localArtifactThumbnailService;
-        _fulaArtifactThumbnailService = fulaArtifactThumbnailService;
+        _localDeviceFileService = FsResolver.Resolve<ILocalDeviceFileService>();
+        _fulaFileService = FsResolver.Resolve<IFulaFileService>();
+        _localArtifactThumbnailService =FsResolver.Resolve<IArtifactThumbnailService<ILocalDeviceFileService>>();
+        _fulaArtifactThumbnailService = FsResolver.Resolve<IArtifactThumbnailService<IFulaFileService>>();
     }
 
     public IDirectoryContents GetDirectoryContents(string subpath)
