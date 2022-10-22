@@ -1,7 +1,6 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
-
-using Functionland.FxFiles.App.Platforms.Android;
+using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
@@ -14,9 +13,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 {
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -30,9 +29,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -46,9 +45,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -62,9 +61,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -101,9 +100,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -117,9 +116,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -133,9 +132,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -149,9 +148,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -165,9 +164,9 @@ public partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
+        if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermissionAsync();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
