@@ -510,6 +510,27 @@
   <data name="HasNotBeenSharedException" xml:space="preserve">
     <value>The artifact not been shared</value>
   </data>
+  <data name="GoogleDrive" xml:space="preserve">
+    <value>Google Drive</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>CONGRATULATIONS</value>
+  </data>
+  <data name="LetsGo" xml:space="preserve">
+    <value>Let’s go</value>
+  </data>
+  <data name="SetupComplete" xml:space="preserve">
+    <value>Setup complete</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>WELCOME</value>
+  </data>
+  <data name="WelcomePageConnectContent" xml:space="preserve">
+    <value>Connect to Fula</value>
+  </data>
+  <data name="WelcomePageDesc" xml:space="preserve">
+    <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
+  </data>
   <data name="AutomaticContent" xml:space="preserve">
     <value>Automatic</value>
   </data>
