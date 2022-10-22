@@ -158,7 +158,7 @@ public partial class FakePoolServiceFactory
         {
             new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters X", keyValueGroup[0]),
             new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[1]),
-            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[3])
+            new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[2])
         };
 
         var bloxPools = new FakePoolService(
@@ -225,6 +225,7 @@ public partial class FakePoolServiceFactory
         },
         new List<BloxPool>
         {
+            CreateBloxPool("BloxPool One", primaryInfos, null, 200),
             CreateBloxPool("BloxPool 78975",primaryInfos, null, 900),
             CreateBloxPool("BloxPool 2587428",primaryInfos),
             CreateBloxPool("The long number of characters in the bloxPool Id ",primaryInfos1, null, 900),
