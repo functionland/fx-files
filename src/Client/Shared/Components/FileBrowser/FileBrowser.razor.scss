@@ -45,7 +45,7 @@
     margin-bottom: $spacing-16;
 
     &::before {
-        @include Icon($chevron-right, color(input-disable) );
+        @include Icon($chevron-right, color(input-disable));
     }
 }
 
