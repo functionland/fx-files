@@ -205,6 +205,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to | Modified 09/30/22.
+        /// </summary>
+        public static string BloxModified {
+            get {
+                return ResourceManager.GetString("BloxModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Home Blox Setup.
+        /// </summary>
+        public static string BloxName {
+            get {
+                return ResourceManager.GetString("BloxName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blox pool is not found.
         /// </summary>
         public static string BloxPoolIsNotFoundException {
@@ -718,20 +736,20 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Light.
-        /// </summary>
-        public static string LightMode {
-            get {
-                return ResourceManager.GetString("LightMode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Let’s go.
         /// </summary>
         public static string LetsGo {
             get {
                 return ResourceManager.GetString("LetsGo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        public static string LightMode {
+            get {
+                return ResourceManager.GetString("LightMode", resourceCulture);
             }
         }
         
@@ -1092,6 +1110,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your data will be backedup in following:.
+        /// </summary>
+        public static string SuccessfullLoginBloxBackup {
+            get {
+                return ResourceManager.GetString("SuccessfullLoginBloxBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Login was successful To Fula.
+        /// </summary>
+        public static string SuccessfulLoginMessage {
+            get {
+                return ResourceManager.GetString("SuccessfulLoginMessage", resourceCulture);
             }
         }
         
