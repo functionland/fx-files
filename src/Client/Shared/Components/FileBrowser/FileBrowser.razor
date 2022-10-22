@@ -21,6 +21,8 @@
         {
             <BitAccordion Title="Pinned" DefaultIsExpanded="true">
                 <ContentTemplate>
+                    @*loading *@
+                    <OverlayLoading LoadingType="LoadingType.Overlay"/>
                     <div class="items">
                         @foreach (var pin in _pins)
                         {
