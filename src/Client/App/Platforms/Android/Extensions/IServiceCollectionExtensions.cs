@@ -29,6 +29,7 @@ public static class IAndroidServiceCollectionExtensions
         // Thumbnail Plugins
         services.AddSingleton<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
         services.AddSingleton<IThumbnailPlugin, AndroidVideoThumbnailPlugin>();
+        services.AddSingleton<IThumbnailPlugin, AndroidPdfThumbnailPlugin>();
 
         return services;
     }
