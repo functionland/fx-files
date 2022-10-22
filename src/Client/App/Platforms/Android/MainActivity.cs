@@ -33,7 +33,6 @@ public class MainActivity : MauiAppCompatActivity
     {
         try
         {
-            throw new NotImplementedException();
             if (requestCode == PermissionUtils.StoragePermissionRequestCode)
             {
                 if (!await PermissionUtils.CheckStoragePermissionAsync())

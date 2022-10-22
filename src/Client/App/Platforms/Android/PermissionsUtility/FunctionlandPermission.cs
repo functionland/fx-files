@@ -13,10 +13,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility
                 (Permission.Internet, true),
                 (Permission.AccessNetworkState, true),
                 (Permission.WriteExternalStorage, true),
-                (Permission.ReadExternalStorage, true),
-                (Permission.ManageExternalStorage, true),
-                (Permission.MediaContentControl, true),
-                (Permission.ManageDocuments, true)
+                (Permission.ReadExternalStorage, true)
 
         }.ToArray();
 
