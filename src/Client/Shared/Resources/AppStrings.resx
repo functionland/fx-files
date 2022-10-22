@@ -543,4 +543,16 @@
   <data name="System" xml:space="preserve">
     <value>System</value>
   </data>
+  <data name="BloxModified" xml:space="preserve">
+    <value>| Modified 09/30/22</value>
+  </data>
+  <data name="BloxName" xml:space="preserve">
+    <value>Home Blox Setup</value>
+  </data>
+  <data name="SuccessfullLoginBloxBackup" xml:space="preserve">
+    <value>Your data will be backedup in following:</value>
+  </data>
+  <data name="SuccessfulLoginMessage" xml:space="preserve">
+    <value>Your Login was successful To Fula</value>
+  </data>
 </root>
