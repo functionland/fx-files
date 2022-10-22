@@ -205,6 +205,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to | Modified 09/30/22.
+        /// </summary>
+        public static string BloxModified {
+            get {
+                return ResourceManager.GetString("BloxModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Home Blox Setup.
+        /// </summary>
+        public static string BloxName {
+            get {
+                return ResourceManager.GetString("BloxName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blox pool is not found.
         /// </summary>
         public static string BloxPoolIsNotFoundException {
@@ -336,6 +354,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ConflicException {
             get {
                 return ResourceManager.GetString("ConflicException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CONGRATULATIONS.
+        /// </summary>
+        public static string Congratulations {
+            get {
+                return ResourceManager.GetString("Congratulations", resourceCulture);
             }
         }
         
@@ -601,6 +628,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Google Drive.
+        /// </summary>
+        public static string GoogleDrive {
+            get {
+                return ResourceManager.GetString("GoogleDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The artifact not been shared.
         /// </summary>
         public static string HasNotBeenSharedException {
@@ -696,6 +732,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string LastModified {
             get {
                 return ResourceManager.GetString("LastModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Let’s go.
+        /// </summary>
+        public static string LetsGo {
+            get {
+                return ResourceManager.GetString("LetsGo", resourceCulture);
             }
         }
         
@@ -1024,6 +1069,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Setup complete.
+        /// </summary>
+        public static string SetupComplete {
+            get {
+                return ResourceManager.GetString("SetupComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shared.
         /// </summary>
         public static string SharedFileCardTag {
@@ -1056,6 +1110,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your data will be backedup in following:.
+        /// </summary>
+        public static string SuccessfullLoginBloxBackup {
+            get {
+                return ResourceManager.GetString("SuccessfullLoginBloxBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Login was successful To Fula.
+        /// </summary>
+        public static string SuccessfulLoginMessage {
+            get {
+                return ResourceManager.GetString("SuccessfulLoginMessage", resourceCulture);
             }
         }
         
@@ -1299,6 +1371,33 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Upload {
             get {
                 return ResourceManager.GetString("Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WELCOME.
+        /// </summary>
+        public static string Welcome {
+            get {
+                return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect to Fula.
+        /// </summary>
+        public static string WelcomePageConnectContent {
+            get {
+                return ResourceManager.GetString("WelcomePageConnectContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui..
+        /// </summary>
+        public static string WelcomePageDesc {
+            get {
+                return ResourceManager.GetString("WelcomePageDesc", resourceCulture);
             }
         }
     }

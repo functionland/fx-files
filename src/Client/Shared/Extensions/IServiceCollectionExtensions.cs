@@ -31,10 +31,10 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IGoBackService, GoBackService>();
 
         services.AddTransient<IFileViewer, TextFileViewer>();
+        services.AddTransient<IFileViewer, ZipFileViewer>();
         services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
         services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
 
-        services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
 

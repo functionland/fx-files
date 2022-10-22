@@ -39,10 +39,6 @@ public partial class TextFileViewerPage : IFileViewerPage
     private void Close()
     {
         var decodedReturnUrl = WebUtility.UrlDecode(EncodedReturnUrl);
-
-        var uri = new Uri(decodedReturnUrl);
-        var query = WebUtility.UrlEncode(uri.Query);
-        var redirectUrl = $"{uri.AbsolutePath}{query}";
         NavigationManager.NavigateTo(decodedReturnUrl);
     }
 }
