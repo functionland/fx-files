@@ -8,6 +8,8 @@ public class TextFileViewer : BlazorFileViewer<TextFileViewerPage>
     {
     }
 
-    protected override bool OnIsExtenstionSupported(string artrifactPath, IFileService fileService) 
+    protected override async Task<bool> OnIsSupportedAsync(string artrifactPath,
+                                                           IFileService fileService,
+                                                           CancellationToken? cancellationToken = null)
         => new string[] { ".txt" }.Contains(Path.GetExtension(artrifactPath));
 }

@@ -3,5 +3,5 @@
 public interface IViewFileService<out TFileService>
     where TFileService : IFileService
 {
-    Task ViewFile(FsArtifact artifact, string returnUrl);
+    Task ViewFileAsync(string filePath, string returnUrl, CancellationToken? cancellationToken = null);
 }
