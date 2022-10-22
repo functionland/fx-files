@@ -754,15 +754,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Let’s go.
-        /// </summary>
-        public static string LetsGo {
-            get {
-                return ResourceManager.GetString("LetsGo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {
