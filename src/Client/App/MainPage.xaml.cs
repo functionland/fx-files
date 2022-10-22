@@ -32,6 +32,7 @@ public partial class MainPage
             var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             var appWindow = AppWindow.GetFromWindowId(windowId);
             var titleBar = appWindow.TitleBar;
+            appWindow.Title = "FxFiles";
 
             if (AppInfo.Current.RequestedTheme == AppTheme.Dark)
             {
