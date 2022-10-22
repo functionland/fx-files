@@ -21,18 +21,16 @@
 
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+		<DefaultLanguage>en-US</DefaultLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
-		<EnableLLVM>true</EnableLLVM>
+		<EnableLLVM>false</EnableLLVM>
 		<MauiUseDefaultAotProfile Condition="Exists('custom.aprof')">false</MauiUseDefaultAotProfile>
+		<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release' and $(Environment) != 'Production'">	
-		<AndroidPackageFormat>apk</AndroidPackageFormat>
-		<RuntimeIdentifiers>android-arm</RuntimeIdentifiers>
-	</PropertyGroup>
-	
+		
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
 		<LinkDescription Include="Platforms\Android\Linker.xml" />
 		<AndroidAotProfile Condition="Exists('custom.aprof')" Include="custom.aprof" />

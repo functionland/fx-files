@@ -21,6 +21,7 @@
         draggable="false"
         @onclick="@OnClick"
         class="fxbutton
+        @(IsEnabled ? "" : "fully-disabled")
         @Class
         @(string.Format(" fxbutton-{0}", ButtonStyle).ToLower())
         @(string.Format(" fxbutton-{0}", ButtonSize).ToLower())">

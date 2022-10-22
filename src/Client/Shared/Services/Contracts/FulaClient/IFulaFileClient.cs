@@ -114,7 +114,6 @@ public interface IFulaFileClient
     /// AsyncEnumerable or Async?
     /// </summary>
     /// <remarks>
-    /// ToDo: Specifiy the required fields to return.
     /// </remarks>
     /// <param name="token"></param>
     /// <param name="path"></param>
@@ -125,7 +124,6 @@ public interface IFulaFileClient
     /// <summary>
     /// AsyncEnumerable or Async?
     /// </summary>
-    /// <remarks>ToDo: Specifiy the required fields to return.</remarks>
     /// <param name="token"></param>
     /// <param name="path"></param>
     /// <param name="searchText"></param>
@@ -136,7 +134,6 @@ public interface IFulaFileClient
     /// <summary>
     /// Get first information of an artifact.
     /// </summary>
-    /// <remarks>ToDo: Specifiy the required fields to return.</remarks>
     /// <param name="token"></param>
     /// <param name="path"></param>
     /// <param name="cancellationToken"></param>

@@ -1,0 +1,63 @@
+﻿@import '../abstracts/_mixins.scss';
+@import '../abstracts/_variables.scss';
+@import '../abstracts/_functions.scss';
+
+
+::deep .choice-field-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+::deep .bit-rbo-lbl:before {
+    background-color: color(app-bg);
+    border: 1px solid color(gray-border);
+}
+
+::deep .bit-rbo-lbl:hover:after {
+    background-color: color(gray-border);
+}
+
+::deep .bit-rbo-checked-fluent .bit-rbo-lbl:before {
+    background-color: $green-dark-base;
+    border-color: $green-dark-base;
+    border: none;
+}
+
+::deep .bit-rbo-checked-fluent .bit-rbo-lbl:after {
+    border-color: white;
+    background-color: white;
+}
+
+::deep .bit-rbo-checked-fluent .bit-rbo-lbl:hover:after {
+    border: 5px solid white;
+    background-color: white;
+}
+
+::deep .bit-rbo-lbl .bit-rbo-txt {
+    color: color(gray-content1);
+}
+
+::deep .bit-rbg-label-fluent {
+    color: color(gray-content1);
+}
+
+::deep .bit-rbo-disabled-fluent {
+    .bit-rbo-lbl:before {
+        background-color: color(gray-bg-secondary);
+        border: 1px solid color(gray-border);
+    }
+
+    .bit-rbo-lbl:after {
+        border-color: color(gray-border);
+        background-color: color(gray-border);
+    }
+
+    .bit-rbo-lbl .bit-rbo-txt {
+        color: color(gray-border);
+    }
+
+    .bit-rbg-label-fluent {
+        color: color(gray-border);
+    }
+}
