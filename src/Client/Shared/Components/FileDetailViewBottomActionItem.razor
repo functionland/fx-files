@@ -1,7 +1,7 @@
 ﻿@inherits AppComponentBase;
 
 <!-- Sheet bottom item -->
-<div class="bottom-action" @onclick="OnClick">
+<div class="bottom-action @(IsEnabled? "" : "bottom-action-disabled")" @onclick="OnClick">
     <button class="action-button">
         <div class="@(ActionIcon.ToString().ToLower())-action-icon"></div>
         <div class="action-text">

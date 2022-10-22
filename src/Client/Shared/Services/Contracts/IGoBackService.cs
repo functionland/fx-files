@@ -1,8 +1,10 @@
 ﻿using System;
 namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
-public class IGoBackService
+public interface IGoBackService
 {
-    public bool CanGoBack { get; set; } = true;
-    public Func<Task>? GoBackAsync { get; set; }
+    public bool CanGoBack { get; protected set; }
+    public bool CanExitApp { get; protected set; }
+    public Func<Task>? GoBackAsync { get; protected set; }
+    public void OnInit(Func<Task>? goBackAsynFunc, bool canGoBack, bool canExitApp);
 }

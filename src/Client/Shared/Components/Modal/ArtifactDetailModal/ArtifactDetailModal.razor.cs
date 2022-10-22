@@ -9,9 +9,10 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private string _artifactsSize = string.Empty;
         private int _currentArtifactForShowNumber = 0;
         private TaskCompletionSource<ArtifactDetailModalResult>? _tcs;
-        private bool _isModalOpen;
         private System.Timers.Timer? _timer;
+        private bool _isModalOpen;
         private bool _isMultiple;
+        private bool _isInRoot;
 
         [Parameter] public IFileService FileService { get; set; } = default!;
 
@@ -94,20 +95,21 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }
         }
 
-        public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false)
+        public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false, bool isInRoot = false)
         {
-            GoBackService.GoBackAsync = (Task () =>
+            GoBackService.OnInit((Task () =>
             {
                 Close();
                 StateHasChanged();
                 return Task.CompletedTask;
-            });
+            }), true, false);
 
             _tcs?.SetCanceled();
             _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;
             CalculateArtifactsSize();
             _isMultiple = isMultiple;
+            _isInRoot = isInRoot;
             _isModalOpen = true;
             StateHasChanged();
 

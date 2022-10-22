@@ -12,12 +12,12 @@ public partial class SortArtifactModal
 
     public async Task<SortTypeEnum> ShowAsync()
     {
-        GoBackService.GoBackAsync = (Task () =>
+        GoBackService.OnInit((Task () =>
         {
             HandleClose();
             StateHasChanged();
             return Task.CompletedTask;
-        });
+        }), true, false);
 
         _tcs?.SetCanceled();
 

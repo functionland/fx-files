@@ -258,5 +258,9 @@
   {
     "outputFile": "Pages/_Settings/SettingAbout/SettingAbout.razor.css",
     "inputFile": "Pages/_Settings/SettingAbout/SettingAbout.razor.scss"
+  },
+  {
+    "outputFile": "Components/OverlayLoading/OverlayLoading.razor.css",
+    "inputFile": "Components/OverlayLoading/OverlayLoading.razor.scss"
   }
 ]

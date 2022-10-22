@@ -8,6 +8,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public ActionIcon ActionIcon { get; set; }
 
         [Parameter]
+        public bool IsEnabled { get; set; } = true;
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
     }
 
