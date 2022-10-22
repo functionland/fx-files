@@ -223,6 +223,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The user is already a member of this poolblox.
+        /// </summary>
+        public static string BloxPoolAlreadyExistsException {
+            get {
+                return ResourceManager.GetString("BloxPoolAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blox pool is not found.
         /// </summary>
         public static string BloxPoolIsNotFoundException {

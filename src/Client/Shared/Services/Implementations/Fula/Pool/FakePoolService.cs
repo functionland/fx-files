@@ -63,7 +63,7 @@
             var bloxPool = _BloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
 
             if (bloxPool is null)
-                throw new BloxPoolIsNotFoundException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
+                throw new BloxPoolIsNotFoundException(StringLocalizer.GetString(AppStrings.BloxPoolIsNotFoundException));
 
             _BloxPools.Remove(bloxPool);
         }
@@ -76,8 +76,8 @@
 
             return new BloxPoolPurchaseInfo()
             {
-                PerMounthPaymentRequired = 150,
-                DueNowPaymentRequired = 5
+                PerMounthPaymentRequired = 1250.45,
+                DueNowPaymentRequired = 41.681
             };
         }
         public async Task<bool> JoinToPoolAsync(string poolId, CancellationToken? cancellationToken = null)
@@ -87,9 +87,15 @@
                 await Task.Delay(ActionLatency.Value);
             }
 
-            var bloxPool = _BloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
+            var bloxPool = _AllFulaBloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
 
-            if (bloxPool is null) return false;
+            if (bloxPool is null)
+                throw new BloxPoolIsNotFoundException(StringLocalizer.GetString(AppStrings.BloxPoolIsNotFoundException));
+
+            var pool = _BloxPools.FirstOrDefault(a => a.Id.ToString() == poolId);
+
+            if (pool is not null)
+                 throw new BloxPoolAlreadyExistsException(StringLocalizer.GetString(AppStrings.BloxPoolAlreadyExistsException));
 
             _BloxPools.Add(bloxPool);
 
@@ -102,9 +108,7 @@
                 await Task.Delay(ActionLatency.Value);
             }
 
-            var bloxPools = new List<BloxPool>();
-
-            foreach (var bloxPool in bloxPools)
+            foreach (var bloxPool in _AllFulaBloxPools)
             {
                 yield return bloxPool;
             }
