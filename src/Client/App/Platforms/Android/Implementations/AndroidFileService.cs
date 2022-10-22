@@ -6,6 +6,7 @@ using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
+using android = Android;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
@@ -196,16 +197,35 @@ public partial class AndroidFileService : LocalDeviceFileService
         var drives = new List<FsArtifact>();
         foreach (var storage in storageVolumes)
         {
-            if (storage is null || storage?.Directory is null)
+
+            if (storage is null || !string.Equals(storage.State, android.OS.Environment.MediaMounted, StringComparison.InvariantCultureIgnoreCase))
                 continue;
 
-            var lastModifiedUnixFormat = storage.Directory?.LastModified() ?? 0;
+            Java.IO.File storageDirectory;
+
+            if (android.OS.Build.VERSION.SdkInt >= android.OS.BuildVersionCodes.R)
+            {
+                storageDirectory = storage.Directory;
+            }
+            else
+            {
+                if (storage.IsPrimary)
+                {
+                    storageDirectory = android.OS.Environment.ExternalStorageDirectory;
+                }
+                else
+                {
+                    storageDirectory = new Java.IO.File($@"/storage/{storage.Uuid}");
+                }
+            }
+
+            var lastModifiedUnixFormat = storageDirectory.LastModified();
             var lastModifiedDateTime = lastModifiedUnixFormat == 0
                                                         ? DateTimeOffset.Now
                                                         : DateTimeOffset.FromUnixTimeMilliseconds(lastModifiedUnixFormat);
-            var fullPath = storage.Directory?.Path;
-            var capacity = storage.Directory?.FreeSpace;
-            var size = storage.Directory?.TotalSpace;
+            var fullPath = storageDirectory.Path;
+            var capacity = storageDirectory.FreeSpace;
+            var size = storageDirectory.TotalSpace;
 
             if (storage.IsPrimary)
             {
@@ -219,8 +239,18 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
             else
             {
-                var sDCardName = storage.MediaStoreVolumeName ?? string.Empty;
-                var externalFileName = StringLocalizer.GetString(AppStrings.SDCardName, sDCardName);
+                string sdCardName;
+
+                if (android.OS.Build.VERSION.SdkInt >= android.OS.BuildVersionCodes.R)
+                {
+                    sdCardName = storage.MediaStoreVolumeName ?? string.Empty;
+                }
+                else
+                {
+                    sdCardName = storage.Uuid ?? string.Empty;
+                }
+
+                var externalFileName = StringLocalizer.GetString(AppStrings.SDCardName, sdCardName);
                 drives.Add(new FsArtifact(fullPath, externalFileName, FsArtifactType.Drive, FsFileProviderType.ExternalMemory)
                 {
                     Capacity = capacity,
