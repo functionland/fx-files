@@ -19,6 +19,22 @@
     z-index: 2;
 }
 
+::deep .bit-acd .content.expanded {
+    height: 232px !important;
+    overflow: unset !important;
+
+    .items {
+        overflow-x: overlay !important;
+        margin-bottom: -24px;
+
+        &::-webkit-scrollbar {
+            height: 6px;
+        }
+    }
+}
+
+
+
 .root-title {
     font-family: $montserrat-semi-bold;
     font-size: $font-size-18;
