@@ -3,5 +3,5 @@
 public interface IFileViewer
 {
     Task ViewAsync(string artrifactPath, IFileService fileService, string returnUrl);
-    bool IsExtenstionSupported(string artrifactPath, IFileService fileService);
+    Task<bool> IsSupportedAsync(string artrifactPath, IFileService fileService, CancellationToken? cancellationToken = null);
 }

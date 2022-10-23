@@ -72,7 +72,6 @@ public partial class FileBrowser
     {
         try
         {
-
             _ = Task.Run(async () =>
             {
                 try
@@ -602,7 +601,7 @@ public partial class FileBrowser
                 baseUrl = baseUrl.Replace(query, "");
             }
 
-            await ViewFileService.ViewFile(artifact, $"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
+            await ViewFileService.ViewFileAsync(artifact.FullPath,$"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {
