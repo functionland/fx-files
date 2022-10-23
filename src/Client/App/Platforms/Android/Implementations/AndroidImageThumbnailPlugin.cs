@@ -5,6 +5,7 @@ using Functionland.FxFiles.Client.Shared.Utils;
 using Bitmap = Android.Graphics.Bitmap;
 using ExifInterface = AndroidX.ExifInterface.Media.ExifInterface;
 using Stream = System.IO.Stream;
+using Size = Android.Util.Size;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
@@ -37,9 +38,25 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 
             return outputStream;
         }
+        else //if (filePath is not null)
+        {
+            var file = new Java.IO.File(filePath); // We'll be here ONLY WHEN filePath IS NOT NULL! I don't understand you!
 
-        return null;
-        //TODO: impliment for stream
+            var bitmap = await BitmapFactory.DecodeFileAsync(filePath);
+
+            if (bitmap is null)
+                throw new InvalidOperationException("Unable to create bitmap thumbnail.");
+
+            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
+
+            var size = new Size(imageWidth, imageHeight);
+            var imageThumbnail = ThumbnailUtils.CreateImageThumbnail(file, size, null);
+
+            var outputStream = new MemoryStream();
+            await imageThumbnail.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
+
+            return outputStream;
+        }
     }
 
     private Bitmap CorrectRotationIfNeeded(Stream? inputStream, Bitmap bitmap)
