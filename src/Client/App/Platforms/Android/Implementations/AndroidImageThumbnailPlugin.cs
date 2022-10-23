@@ -35,18 +35,19 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         //TODO: impliment for stream
     }
 
-    private Bitmap? CorrectRotationIfNeeded(Stream input, Bitmap? bitmap)
+    private Bitmap CorrectRotationIfNeeded(Stream? inputStream, Bitmap bitmap)
     {
-        if (bitmap == null) return null;
+        if (inputStream is null)
+            throw new InvalidOperationException("InputStream can not be null");
 
         //The cast wast needed in order to access to Name property.
         //absolutePath is needed here, to be able to work with ExifInterface. Only FileStram provides the absolutePath through Name property.
         //ToDo: Check if FileStream is OK here.
-        var ei = new ExifInterface(((FileStream)input).Name);
+        var ei = new ExifInterface(((FileStream)inputStream).Name);
+
         int orientation = ei.GetAttributeInt(ExifInterface.TagOrientation, ExifInterface.OrientationUndefined);
 
-        Bitmap? rotatedBitmap = null;
-        rotatedBitmap = orientation switch
+        var rotatedBitmap = orientation switch
         {
             ExifInterface.OrientationRotate90 => RotateImage(bitmap, 90),
             ExifInterface.OrientationRotate180 => RotateImage(bitmap, 180),
