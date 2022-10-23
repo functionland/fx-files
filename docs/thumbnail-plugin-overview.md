@@ -24,7 +24,7 @@ We are going to create a thumbnail plugin for images called `ImageThumbnailPlugi
 The first step is to indicate what types of files does this pluggin support. This should be done by implementing `IsSupported` method.
 
 ```csharp
-public class ImageThumbnailPlugin
+public class ImageThumbnailPlugin : IThumbnailPlugin
 {
     bool IsSupported(string extenstion) 
         => new string[] {"jpg", "png", "bmp"}.Contains(extension);
@@ -35,7 +35,7 @@ public class ImageThumbnailPlugin
 Then we should write the thumbnail creation logic. To create a thumbnail, the pluggin accepts whether a *stream* or a *filename* as input. Normally your plugin should support both, but in some cases, some plugins can not work with streams. They just work with a file stored on disk. For this kind of plugins you should indicate this restriction by implementing `IsJustFilePathSupported`:
 
 ```csharp
-public class ImageThumbnailPlugin
+public class ImageThumbnailPlugin : IThumbnailPlugin
 {
     // Just do this if your plugin has a restriction for working with streams. Otherwise left it false.
     bool IsJustFilePathSupported => true;
@@ -45,7 +45,7 @@ public class ImageThumbnailPlugin
 Finally you should write the logic of thumbail creation by implementing the `CreateThumbnailAsync`:
 
 ```csharp
-public class ImageThumbnailPlugin
+public class ImageThumbnailPlugin : IThumbnailPlugin
 {
     // ...
     Task<Stream> CreateThumbnailAsync(
