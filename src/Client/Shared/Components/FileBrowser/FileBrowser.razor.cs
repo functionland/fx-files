@@ -151,8 +151,8 @@ public partial class FileBrowser
                 }
                 ProgressBarCts = new CancellationTokenSource();
 
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false
-, onProgress: async (progressInfo) =>
+                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false,
+                    onProgress: async (progressInfo) =>
                     {
                         ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                         ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
@@ -196,7 +196,8 @@ public partial class FileBrowser
                         {
                             await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
 
-                            await FileService.CopyArtifactsAsync(overwriteArtifacts, destinationPath, true, onProgress: async (progressInfo) =>
+                            await FileService.CopyArtifactsAsync(overwriteArtifacts, destinationPath, true,
+                                onProgress: async (progressInfo) =>
                                 {
                                     ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
                                     ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
@@ -329,22 +330,6 @@ public partial class FileBrowser
                 await _progressModalRef.CloseAsync();
             }
         }
-    }
-
-    public async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
-    {
-        var result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
-
-        string? destinationPath = null;
-
-        if (result?.ResultType == ArtifactSelectionResultType.Ok)
-        {
-            var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
-            destinationPath = destinationFsArtifact?.FullPath;
-        }
-
-        return destinationPath;
     }
 
     public async Task HandleRenameArtifactAsync(FsArtifact? artifact)
@@ -534,6 +519,31 @@ public partial class FileBrowser
         }
     }
 
+    public async Task HandleShareFiles(List<FsArtifact> artifacts)
+    {
+        var files = GetShareFiles(artifacts);
+
+        await Share.Default.RequestAsync(new ShareMultipleFilesRequest
+        {
+            Title = "Share with app",
+            Files = files
+        });
+    }
+
+    private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
+    {
+        var files = new List<ShareFile>();
+        foreach (var artifact in artifacts)
+        {
+            if (artifact.ArtifactType == FsArtifactType.File)
+            {
+                files.Add(new ShareFile(artifact.FullPath));
+            }
+        }
+
+        return files;
+    }
+
     private async Task LoadPinsAsync()
     {
         _pins = await PinService.GetPinnedArtifactsAsync();
@@ -623,7 +633,8 @@ public partial class FileBrowser
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
             var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
-            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isDrive);
+            var isVisibleShareWithApp = artifact?.ArtifactType == FsArtifactType.File;
+            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isVisibleShareWithApp, isDrive);
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -658,6 +669,9 @@ public partial class FileBrowser
                 break;
             case ArtifactOverflowResultType.Move:
                 await HandleMoveArtifactsAsync(new List<FsArtifact> { artifact });
+                break;
+            case ArtifactOverflowResultType.ShareWithApp:
+                await HandleShareFiles(new List<FsArtifact> { artifact });
                 break;
             case ArtifactOverflowResultType.Delete:
                 await HandleDeleteArtifactsAsync(new List<FsArtifact> { artifact });
@@ -707,7 +721,8 @@ public partial class FileBrowser
             {
                 _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
                 var pinOptionResult = GetPinOptionResult(artifacts);
-                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, IsInRoot(_currentArtifact));
+                var isVisibleSahreWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
+                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, IsInRoot(_currentArtifact));
                 ChangeDeviceBackFunctionality(_artifactExplorerMode);
             }
 
@@ -746,6 +761,9 @@ public partial class FileBrowser
                     break;
                 case ArtifactOverflowResultType.Delete:
                     await HandleDeleteArtifactsAsync(artifacts);
+                    break;
+                case ArtifactOverflowResultType.ShareWithApp:
+                    await HandleShareFiles(artifacts);
                     break;
                 case ArtifactOverflowResultType.Cancel:
                     _artifactExplorerMode = ArtifactExplorerMode.Normal;
@@ -822,6 +840,22 @@ public partial class FileBrowser
         }
 
         return result;
+    }
+
+    private async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
+    {
+        var result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
+        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+
+        string? destinationPath = null;
+
+        if (result?.ResultType == ArtifactSelectionResultType.Ok)
+        {
+            var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
+            destinationPath = destinationFsArtifact?.FullPath;
+        }
+
+        return destinationPath;
     }
 
     private void UpdateRenamedArtifact(FsArtifact artifact, string fullNewName)
