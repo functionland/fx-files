@@ -1,0 +1,22 @@
+﻿@page "/Settings/About"
+@inherits AppComponentBase;
+@namespace Functionland.FxFiles.Client.Shared.Pages
+
+
+<div class="fxtoolbar-wrapper">
+    <FxToolBar IsInRoot="false"
+               IsBackButtonVisible="true"
+               IsAddButtonVisible="false"
+               IsOverflowButtonVisible="false"
+               OnBackClick="HandleToolbarBack" />
+</div>
+
+<section class="about-container">
+
+    <div class="about-content">@Localizer[nameof(AppStrings.About)]</div>
+
+    <div class="about-app-container">
+        <div class="part-one">Open Sans 18/30 - Private, payless, cloud storage alternative. First blockchain attached storage solution. Get a peace of mind with Box. Our proprietary <span class="important-contents">AES-256</span>encryption software hacker-proofs your data. Even if the world’s most talented hacker were able to bring the power of all world’s computers to bear on your Box, it would still take (literally!) billions of years to break into your files. Only you can access your data. Only you can share it.</div>
+        <div class="part-two">Open Sans 18/30 - Private, payless, cloud storage alternative. <span class="important-contents">First blockchain</span> attached storage solution. Get a peace of mind with Box. Our proprietary AES-256 encryption software hacker-proofs your data. Even if the world’s most talented hacker were able to bring the power of all world’s computers to bear on your Box, it would still take (literally!) billions of years to break into your files. <span class="important-contents">Only you can access your data</span>. Only you can share it.</div>
+    </div>
+</section>

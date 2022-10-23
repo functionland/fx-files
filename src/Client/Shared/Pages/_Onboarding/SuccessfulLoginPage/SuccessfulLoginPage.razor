@@ -1,5 +1,39 @@
-﻿<h3>SuccessfulLoginPage</h3>
+﻿@page "/onboarding/successful-login"
+@namespace Functionland.FxFiles.Client.Shared.Pages
+@inherits AppComponentBase;
+@layout OnboardingMainLayout;
 
-@code {
+<section class="successful-login">
+    <div class="login-messages-container">
+        <div class="welcome-text">@Localizer[nameof(AppStrings.Welcome)]</div>
+        <div class="login-message">@Localizer[nameof(AppStrings.SuccessfulLoginMessage)]</div>
+        <div class="login-subtext">@Localizer[nameof(AppStrings.SuccessfullLoginBloxBackup)]</div>
+    </div>
 
-}
+    <div class="file-items-container">
+        <FxDivider FxDividerSize="FxDividerSize.Thin"
+                   FxDividerMode="FxDividerMode.Solid"
+                   FxDividerType="FxDividerType.Horizontal" />
+        <div class="file-item">
+            <div class="file-name">@Localizer[nameof(AppStrings.BloxName)]</div>
+            <div class="file-last-modified">@Localizer[nameof(AppStrings.BloxModified)]</div>
+        </div>
+        <FxDivider FxDividerSize="FxDividerSize.Thin"
+                   FxDividerMode="FxDividerMode.Solid"
+                   FxDividerType="FxDividerType.Horizontal" />
+        <div class="file-item">
+            <div class="file-name">@Localizer[nameof(AppStrings.BloxName)]</div>
+            <div class="file-last-modified">@Localizer[nameof(AppStrings.BloxModified)]</div>
+        </div>
+        <FxDivider FxDividerSize="FxDividerSize.Thin"
+                   FxDividerMode="FxDividerMode.Solid"
+                   FxDividerType="FxDividerType.Horizontal" />
+        <div class="file-item">
+            <div class="file-name">@Localizer[nameof(AppStrings.BloxName)]</div>
+            <div class="file-last-modified">@Localizer[nameof(AppStrings.BloxModified)]</div>
+        </div>
+        <FxDivider FxDividerSize="FxDividerSize.Thin"
+                   FxDividerMode="FxDividerMode.Solid"
+                   FxDividerType="FxDividerType.Horizontal" />
+    </div>
+</section>
