@@ -510,10 +510,73 @@
   <data name="HasNotBeenSharedException" xml:space="preserve">
     <value>The artifact not been shared</value>
   </data>
+  <data name="AutomaticContent" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="LightMode" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SystemThemeDescription" xml:space="preserve">
+    <value>Use system light/dark mode setting.</value>
+  </data>
+  <data name="GoogleDrive" xml:space="preserve">
+    <value>Google Drive</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>CONGRATULATIONS</value>
+  </data>
+  <data name="LetsGo" xml:space="preserve">
+    <value>Let’s go</value>
+  </data>
+  <data name="SetupComplete" xml:space="preserve">
+    <value>Setup complete</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>WELCOME</value>
+  </data>
+  <data name="WelcomePageConnectContent" xml:space="preserve">
+    <value>Connect to Fula</value>
+  </data>
+  <data name="WelcomePageDesc" xml:space="preserve">
+    <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
+  </data>
+  <data name="AutomaticContent" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="LightMode" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SystemThemeDescription" xml:space="preserve">
+    <value>Use system light/dark mode setting.</value>
+  </data>
   <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
     <value>The artifact already dose not pinned </value>
   </data>
   <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
     <value>The {0} already pinned</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="BloxModified" xml:space="preserve">
+    <value>| Modified 09/30/22</value>
+  </data>
+  <data name="BloxName" xml:space="preserve">
+    <value>Home Blox Setup</value>
+  </data>
+  <data name="SuccessfullLoginBloxBackup" xml:space="preserve">
+    <value>Your data will be backedup in following:</value>
+  </data>
+  <data name="SuccessfulLoginMessage" xml:space="preserve">
+    <value>Your Login was successful To Fula</value>
+  </data>
+  <data name="BloxPoolAlreadyExistsException" xml:space="preserve">
+    <value>The user is already a member of this poolblox</value>
   </data>
 </root>

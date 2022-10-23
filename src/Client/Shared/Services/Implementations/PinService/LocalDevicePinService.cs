@@ -1,4 +1,5 @@
 using Functionland.FxFiles.Client.Shared.Services.Common;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
@@ -9,7 +10,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     [AutoInject] ILocalDeviceFileService FileService { get; set; } = default!;
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
-    [AutoInject] public IThumbnailService ThumbnailService { get; set; } = default!;
+    [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ArtifactThumbnailService { get; set; } = default!;
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; }
@@ -57,7 +58,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                             var artifact = await GetPinnedFsArtifact(pinnedArticat);
                             if (ArtifactIsImage(artifact))
                             {
-                                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
+                                var thumbnailAddress = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(artifact, ThumbnailScale.Medium, cancellationToken);
                                 artifact.ThumbnailPath = thumbnailAddress;
                             }
 
@@ -104,7 +105,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
             }
             if (ArtifactIsImage(artifact))
             {
-                var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifact);
+                var thumbnailAddress = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(artifact, ThumbnailScale.Medium, cancellationToken);
                 artifact.ThumbnailPath = thumbnailAddress;
 
             }
@@ -229,7 +230,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
                 if (ArtifactIsImage(artifactChangeEvent.FsArtifact))
                 {
-                    var thumbnailAddress = await ThumbnailService.MakeThumbnailAsync(artifactChangeEvent.FsArtifact);
+                    var thumbnailAddress = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(artifactChangeEvent.FsArtifact, ThumbnailScale.Medium);
                     editedArtifact.ThumbnailPath = thumbnailAddress;
                     artifactChangeEvent.FsArtifact.ThumbnailPath = thumbnailAddress;
 
@@ -287,7 +288,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
     private async Task CreateNewThumbnailAsync(PinnedArtifact artifact, FsArtifact fsArtifact)
     {
-        var newThumbnailPath = await ThumbnailService.MakeThumbnailAsync(fsArtifact);
+        var newThumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(fsArtifact, ThumbnailScale.Medium);
         artifact.ThumbnailPath = newThumbnailPath;
         fsArtifact.ThumbnailPath = newThumbnailPath;
 

@@ -23,7 +23,7 @@ public class FsArtifact
     public string Name { get; set; }
 
     public string FullPath { get; set; }
-    public string LocalFullPath { get; set; }
+    public string? LocalFullPath { get; set; }
     public string? ParentFullPath { get; set; }
     public string? ThumbnailPath { get; set; }
 

@@ -21,12 +21,12 @@
 
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+		<DefaultLanguage>en-US</DefaultLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
-		<EnableLLVM>true</EnableLLVM>
-		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-		<MauiUseDefaultAotProfile>true</MauiUseDefaultAotProfile>
+		<EnableLLVM>false</EnableLLVM>
+		<MauiUseDefaultAotProfile Condition="Exists('custom.aprof')">false</MauiUseDefaultAotProfile>
 		<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
 	</PropertyGroup>
 

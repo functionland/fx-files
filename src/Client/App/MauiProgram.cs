@@ -3,6 +3,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Maui.LifecycleEvents;
 using System.Reflection;
 
 namespace Functionland.FxFiles.Client.App;
@@ -11,9 +12,9 @@ public static class MauiProgram
 {
     public static MauiAppBuilder CreateMauiAppBuilder()
     {
-
-#if Release
-
+       
+#if RELEASE
+       
         AppCenter.Start(
             $"windowsdesktop={Configuration.AppCenterWindowsAppSecret};"+
             $"ios={Configuration.AppCenteriOSAppSecret};" +
@@ -33,6 +34,15 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .Configuration.AddJsonFile(new EmbeddedFileProvider(assembly), "wwwroot.appsettings.json", optional: false, false);
+        
+        builder.ConfigureLifecycleEvents(lifecycle => {
+#if WINDOWS
+            lifecycle.AddWindows(windows => windows.OnWindowCreated((del) => {
+                del.ExtendsContentIntoTitleBar = false;
+                del.Title = "FxFiles";
+            }));
+#endif
+        });
 
         var services = builder.Services;
 
