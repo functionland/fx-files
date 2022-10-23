@@ -3,7 +3,7 @@
 ## What is a Thumbnail?
 When using FxFiles app, you see that some files has thumbnails. For example pictures are of those files that you will see a thumbnail for each one in the list and grid mode.
 
-The question of which file will show like a thumbnail and which one is not, is the question we will explain in this document.
+But which file will show like a thumbnail and which one is not, this is the question we will explain in this document.
 
 ## Thumbnail Plugin
 Essentialy, for a file type (like *.jpg* or *.pdf*), you need to have a **Thumbnail Plugin** so it can be convertible it to a thumbnail picture.
@@ -32,13 +32,13 @@ public class ImageThumbnailPlugin
 }
 ```
 
-Then we should write the thumbnail creation logic. To create a thumbnail, the pluggin accepts whether a *stream* or a *filename* as input. Normally your plugin should support both, but in some cases, some plugins can not work with streams. They just work with a file stored on disk. For this kind of plugins you should indicate this restriction by:
+Then we should write the thumbnail creation logic. To create a thumbnail, the pluggin accepts whether a *stream* or a *filename* as input. Normally your plugin should support both, but in some cases, some plugins can not work with streams. They just work with a file stored on disk. For this kind of plugins you should indicate this restriction by implementing `IsJustFilePathSupported`:
 
 ```csharp
 public class ImageThumbnailPlugin
 {
-    // Just do this if your plugin has a restriction for working with streams. Otherwise return true normally.
-    bool IsJustFilePathSupported => false;
+    // Just do this if your plugin has a restriction for working with streams. Otherwise left it false.
+    bool IsJustFilePathSupported => true;
     // ...
 }
 ```
@@ -73,3 +73,22 @@ services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>
 ```
 
 Congratulations! All done. You have added a new plugin to FxFiles now. Form now on, the appliation supports thubmails for images.
+
+You can design the hierarchy of plugins to utilize as much as code sharing you want.
+
+```mermaid
+classDiagram
+
+IThumbnailPlugin <-- ImageThumbnailPlugin
+ImageThumbnailPlugin <-- AndroidImageThumbnailPlugin
+ImageThumbnailPlugin <-- WindowsImageThumbnailPlugin
+IThumbnailPlugin <-- VideoThumbnailPlugin
+IThumbnailPlugin <-- PdfThumbnailPlugin
+
+class IThumbnailPlugin {
+    <<Interface>>
+}
+ 
+```
+
+In this example we have two platform-agnostic plugins: `VideoThumbailPlugin` and `PdfThumbnailPlugin` and the platform-specific plugin for images which are implemented in 3 classes: `ImageThumbailPlugin`, `AndroidThumbailPlugin` and `WindowImageThumbailPlugin`.
