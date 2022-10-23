@@ -69,7 +69,7 @@ or for the platform specific plugins:
 // In the android folder
 services.AddTransient<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
 // In the windows folder
-services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>
+services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
 ```
 
 Congratulations! All done. You have added a new plugin to FxFiles now. Form now on, the appliation supports thubmails for images.
