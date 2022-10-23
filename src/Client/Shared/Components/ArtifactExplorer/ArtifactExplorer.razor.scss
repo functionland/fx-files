@@ -103,6 +103,10 @@
     text-align: center;
 }
 
+.list-view {
+    padding: 16px 0;
+}
+
 .list-view-item {
     height: 74px;
     display: flex;
@@ -125,7 +129,7 @@
             text-overflow: ellipsis;
             font-size: $font-size-16;
             color: color(gray-content1);
-            line-height: $line-height-24;
+            line-height: $line-height-20;
             font-family: $open-sans-regular;
             letter-spacing: $letter-spacing-02;
             word-wrap: break-word;
