@@ -81,10 +81,15 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         return rotatedBitmap;
     }
 
-    private static Bitmap? RotateImage(Bitmap source, float angle)
+    private Bitmap RotateImage(Bitmap source, float angle)
     {
         var matrix = new Matrix();
         matrix.PostRotate(angle);
-        return Bitmap.CreateBitmap(source, 0, 0, source.Width, source.Height, matrix, true);
+        var rotatedBitmap = Bitmap.CreateBitmap(source, 0, 0, source.Width, source.Height, matrix, true);
+
+        if (rotatedBitmap is null)
+            throw new Exception("Unable to create the bitmap.");
+
+        return rotatedBitmap;
     }
 }
