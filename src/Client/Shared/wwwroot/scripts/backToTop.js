@@ -36,3 +36,16 @@ function ShowBackToTopButton() {
     var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
     scrollButton.style.display = 'block';
 }
+
+// array for store scroll top value for back button
+let savePositionScroll = [];
+
+function getLastScrollPossition() {
+    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
+    document.documentElement.scrollTop = lastScrollPosition;
+    savePositionScroll.pop();
+}
+
+function saveScrollPosition() {
+    savePositionScroll.push(document.documentElement.scrollTop);
+}
