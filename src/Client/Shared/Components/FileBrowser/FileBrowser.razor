@@ -17,8 +17,48 @@
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
+        //this is filter in deep search part TODO: replace it in correct palce in code 
+
+        <section class="filter-deep-seach">
+            <div class="filter-content">
+                <div class="filter-text">Filters</div>
+                <div class="chaveron-up-icon"></div>
+                <div class="chaveron-down-icon"></div>
+            </div>
+            <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
+
+            <div class="filters-options">
+                <div class="time-options-container">
+                    <div class="time-title">Time</div>
+
+                    <div class="time-options">
+                        <div class="yesterday-option option-selected-mode">Yesterday</div>
+                        <div class="past-seven-days-option">Past 7 days</div>
+                        <div class="past-seven-days-option">Past 30 days</div>
+                    </div>
+                </div>
+
+                <div class="type-options-container">
+                    <div class="type-title">Type</div>
+
+                    <div class="type-options">
+                        <div class="image-option option-selected-mode">Image</div>
+                        <div class="video-option">Video</div>
+                        <div class="audio-option">Audio</div>
+                        <div class="document-option option-selected-mode">Document</div>
+                        <div class="folder-option">Folder</div>
+                        <div class="pdf-option">PDF</div>
+                    </div>
+                </div>
+            </div>
+
+            <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
+        </section>
+
+        //end of filter in deep search
         @if (_pins?.Count > 0)
         {
+
             <BitAccordion Title="Pinned" DefaultIsExpanded="true">
                 <ContentTemplate>
                     <div class="items">
