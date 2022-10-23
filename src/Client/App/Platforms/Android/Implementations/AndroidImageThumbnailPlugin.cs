@@ -16,14 +16,21 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         if (filePath is null && stream is null)
             throw new InvalidOperationException($"{nameof(filePath)} and {nameof(stream)}");
 
+        //ToDo: Ask about which one should come first; stream or filePath. Any prioroties?
         if (stream is not null)
         {
-            var bitmap = BitmapFactory.DecodeStream(stream);
+            var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
 
-            //ToDo: Null check for bitmap
+            if (bitmap is null)
+                throw new InvalidDataException("Input stream must be in its correct format for image thumbnails in order to be able to create bitmap out of it.");
+
             bitmap = CorrectRotationIfNeeded(stream, bitmap);
+
             (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
             var imageThumbnail = await ThumbnailUtils.ExtractThumbnailAsync(bitmap, imageWidth, imageHeight);
+
+            if (imageThumbnail is null)
+                throw new InvalidOperationException("Unable to create bitmap thumbnail.");
 
             var outputStream = new MemoryStream();
             await imageThumbnail.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
