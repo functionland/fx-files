@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
-    public partial class FxLoginPage
+    public partial class SettingAbout
     {
-        private bool _isLoading = false;
+        private void HandleToolbarBack()
+        {
+            NavigationManager.NavigateTo("settings", false, true);
+        }
     }
 }

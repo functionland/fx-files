@@ -1,1 +1,53 @@
-﻿
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.login-messages-container {
+    padding: $spacing-16 $spacing-21 $spacing-0;
+    margin-bottom: $spacing-16;
+    color: color(gray-content1);
+
+    .welcome-text {
+        font-family: $montserrat-medium;
+        font-size: $font-size-10;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-2;
+    }
+
+    .login-message {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+    }
+
+    .login-subtext {
+        font-family: $open-sans-regular;
+        font-size: $font-size-14;
+        line-height: $line-height-24;
+        letter-spacing: $letter-spacing-02;
+        color: color(gray-content3);
+    }
+}
+
+.file-items-container {
+    overflow-y: auto;
+
+    .file-item {
+        padding: $spacing-8 $spacing-21 $spacing-16;
+        letter-spacing: $letter-spacing-02;
+
+        .file-name {
+            font-family: $open-sans-regular;
+            font-size: $font-size-16;
+            line-height: $line-height-28;
+            color: color(gray-content1);
+        }
+
+        .file-last-modified {
+            font-family: $open-sans-regular;
+            font-size: $font-size-10;
+            line-height: $line-height-10;
+            color: color(gray-content3);
+        }
+    }
+}

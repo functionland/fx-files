@@ -8,6 +8,6 @@ public class ZipFileViewer : BlazorFileViewer<ZipFileViewerPage>
     {
     }
 
-    protected override bool OnIsExtenstionSupported(string artrifactPath, IFileService fileService) 
+    protected override async Task<bool> OnIsSupportedAsync(string artrifactPath, IFileService fileService, CancellationToken? cancellationToken = null)
         => new string[] { ".zip", ".rar" }.Contains(Path.GetExtension(artrifactPath));
 }
