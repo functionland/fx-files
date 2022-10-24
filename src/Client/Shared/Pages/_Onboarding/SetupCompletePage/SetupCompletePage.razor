@@ -1,6 +1,16 @@
 ﻿@page "/onboarding/setup-complete"
 @inherits AppComponentBase;
-
+@namespace Functionland.FxFiles.Client.Shared.Components
+@layout OnboardingMainLayout
 <PageTitle>@Localizer[nameof(AppStrings.Onboarding)]</PageTitle>
 
-<h3>SetupComplete</h3>
+<div class="setup-complete-page">
+
+    <div class="congratulation-massage">@Localizer[nameof(AppStrings.Congratulations)]</div>
+    <div class="complete-setup-massage">@Localizer[nameof(AppStrings.SetupComplete)]</div>
+    <div class="file-sync-logo"></div>
+    <div class="lets-go-btn">
+        <FxButton ButtonStyle="FxButtonStyle.Normal" Width="100%" Text="@Localizer[nameof(AppStrings.LetsGo)]"></FxButton>
+    </div>
+
+</div>
