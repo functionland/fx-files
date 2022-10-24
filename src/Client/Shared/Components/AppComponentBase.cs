@@ -16,6 +16,18 @@ public partial class AppComponentBase : ComponentBase
 
     [AutoInject] protected IGoBackService GoBackService { get; set; } = default!;
 
+    public bool IsDebug
+    {
+        get
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
+
     public bool IsDesktop
     {
         get

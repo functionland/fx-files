@@ -262,5 +262,9 @@
   {
     "outputFile": "Components/OverlayLoading/OverlayLoading.razor.css",
     "inputFile": "Components/OverlayLoading/OverlayLoading.razor.scss"
+  },
+  {
+    "outputFile": "Pages/FileViewer/VideoFileViewerPage.razor.css",
+    "inputFile": "Pages/FileViewer/VideoFileViewerPage.razor.scss"
   }
 ]
