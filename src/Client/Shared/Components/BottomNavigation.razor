@@ -3,7 +3,7 @@
 <footer>
     <div class="navbarApp">
         <nav class="navbarApp__wrapper">
-            @if (IsiOS)
+            @if (IsiOS && !IsDebug)
             {
                 <div class="navbarApp-item" @onclick="@(() => NavigationManager.NavigateTo("settings", false, true))">
                     <NavLink draggable="false" class="navbarApp-link" href="settings">

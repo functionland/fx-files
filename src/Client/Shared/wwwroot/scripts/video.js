@@ -12,6 +12,8 @@
         videoProgress = document.getElementById("fxVideoProgressElement");
         videoCurrentTime = document.getElementById("fxVideoCurrentTimeText");
 
+        video.play();
+
         video.addEventListener('durationchange', () => {
             videoProgress.setAttribute('max', Math.round(video.duration));
         });

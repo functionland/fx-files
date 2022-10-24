@@ -34,6 +34,13 @@ input[type="range"] {
     accent-color: white;
 }
 
+input[type=range]::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+}
+
 video {
     width: 100%;
     height: 100%;
