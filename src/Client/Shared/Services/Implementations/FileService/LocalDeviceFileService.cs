@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -49,13 +48,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (File.Exists(path))
                 throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
 
-            using FileStream outPutFileStream = new(path, FileMode.Create);
-            await stream.CopyToAsync(outPutFileStream);
+            await LocalStorageCreateFile(path, stream);
 
             var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
             {
                 FileExtension = Path.GetExtension(path),
-                Size = outPutFileStream.Length,
+                Size = stream.Length,
                 LastModifiedDateTime = File.GetLastWriteTime(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName,
             };
@@ -94,7 +92,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (Directory.Exists(newPath))
                 throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
 
-            Directory.CreateDirectory(newPath);
+            LocalStorageCreateDirectory(newPath);
 
             var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, await GetFsFileProviderTypeAsync(newPath))
             {
@@ -144,11 +142,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
-                Directory.Delete(artifact.FullPath, true);
+                LocalStorageDeleteDirectory(artifact.FullPath);
             }
             else if (artifact.ArtifactType == FsArtifactType.File)
             {
-                File.Delete(artifact.FullPath);
+                LocalStorageDeleteFile(artifact.FullPath);
             }
             else if (artifact.ArtifactType == FsArtifactType.Drive)
             {
@@ -273,7 +271,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(() =>
             {
-
                 var directory = Path.GetDirectoryName(filePath);
                 var isExtentionExsit = Path.HasExtension(newName);
                 var newFileName = isExtentionExsit ? newName : Path.ChangeExtension(newName, Path.GetExtension(filePath));
@@ -284,7 +281,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (isFileExist)
                     throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
 
-                File.Move(filePath, newPath);
+                LocalStorageMoveFile(filePath, newPath);
             });
         }
 
@@ -327,8 +324,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 if (isExist)
                     throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
-
-                Directory.Move(folderPath, newPath);
+                LocalStorageMoveDirectory(folderPath, newPath);
             });
         }
 
@@ -374,7 +370,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                             destinationDirectory.Create();
                         }
 
-                        fileInfo.CopyTo(destinationInfo.FullName, true);
+                        LocalStorageCopyFile(fileInfo, destinationInfo);
 
                         if (mustDeleteSource)
                         {
@@ -536,6 +532,41 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
             return fsArtifactList;
+        }
+
+        protected virtual void LocalStorageDeleteFile(string path)
+        {
+            File.Delete(path);
+        }
+
+        protected virtual void LocalStorageDeleteDirectory(string path)
+        {
+            Directory.Delete(path, true);
+        }
+
+        protected virtual void LocalStorageMoveFile(string filePath, string newPath)
+        {
+            File.Move(filePath, newPath);
+        }
+        protected virtual void LocalStorageCopyFile(FileInfo fileInfo, FileInfo destinationInfo)
+        {
+            fileInfo.CopyTo(destinationInfo.FullName, true);
+        }
+
+        protected virtual async Task LocalStorageCreateFile(string path, Stream stream)
+        {
+            using FileStream outPutFileStream = new(path, FileMode.Create);
+            await stream.CopyToAsync(outPutFileStream);
+        }
+
+        protected virtual void LocalStorageMoveDirectory(string folderPath, string newPath)
+        {
+            Directory.Move(folderPath, newPath);
+        }
+
+        protected virtual void LocalStorageCreateDirectory(string newPath)
+        {
+            Directory.CreateDirectory(newPath);
         }
 
         private static bool CheckIfNameHasInvalidChars(string name)
