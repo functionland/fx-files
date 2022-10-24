@@ -27,7 +27,9 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<FakeFileServiceFactory>();
         services.AddSingleton<FakeBloxServiceFactory>();
+        services.AddSingleton<FakePoolServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
+        services.AddSingleton<IFulaPoolSevice, FakePoolService>();
         services.AddSingleton<IGoBackService, GoBackService>();
 
         services.AddTransient<IFileViewer, TextFileViewer>();

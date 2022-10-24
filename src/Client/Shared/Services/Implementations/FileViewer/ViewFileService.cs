@@ -8,9 +8,18 @@
         [AutoInject] TFileService FileService { get; set; }
         [AutoInject] IExceptionHandler ExceptionHandler { get; set; }
         [AutoInject] IStringLocalizer<AppStrings> StringLocalizer { get; set; }
-        public async Task ViewFile(FsArtifact artifact, string returnUrl)
+        public async Task ViewFileAsync(string filePath, string returnUrl,  CancellationToken? cancellationToken = null)
         {
-            var fileViewer = FileViewers.FirstOrDefault(fv => fv.IsExtenstionSupported(artifact.FullPath, FileService));
+            IFileViewer? fileViewer = null;
+
+            foreach (var viewer in FileViewers)
+            {
+                if (await viewer.IsSupportedAsync(filePath, FileService, cancellationToken))
+                {
+                    fileViewer = viewer;
+                    break;
+                }
+            }
 
             if (fileViewer is null)
             {
@@ -19,7 +28,7 @@
                 {
                     await Launcher.OpenAsync(new OpenFileRequest
                     {
-                        File = new ReadOnlyFile(artifact.FullPath)
+                        File = new ReadOnlyFile(filePath)
                     });
                 }
                 catch (UnauthorizedAccessException)
@@ -34,7 +43,7 @@
                 return;
             }
 
-            await fileViewer.ViewAsync(artifact.FullPath, FileService, returnUrl);
+            await fileViewer.ViewAsync(filePath, FileService, returnUrl);
         }
     }
 }
