@@ -36,7 +36,7 @@ public static class ImageUtils
         return (thumbWidth, thumbHeight);
     }
 
-    private static (int width, int height) GetHeightAndWidthFromThumbnailScale(ThumbnailScale thumbnailScale)
+    public static (int width, int height) GetHeightAndWidthFromThumbnailScale(ThumbnailScale thumbnailScale)
     {
         int width = 0;
         int height = 0;
@@ -65,7 +65,7 @@ public static class ImageUtils
         return (width, height);
     }
 
-    private static float CalculateRatio(int orginalWidth, int orgianlHeight, int targetWidth, int targetHeight)
+    public static float CalculateRatio(int orginalWidth, int orgianlHeight, int targetWidth, int targetHeight)
     {
         float originalAspectRatio = (float)orginalWidth / (float)orgianlHeight;
         float targetAspectRatio = (float)targetWidth / (float)targetHeight;

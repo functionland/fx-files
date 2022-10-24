@@ -15,11 +15,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter]
         public string? Link { get; set; }
 
+        [Parameter]
+        public string? Class { get; set; }
+
         [Parameter, EditorRequired]
         public string? LinkText { get; set; }
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnHandelClick { get; set; } = default!;
+
 
     }
 

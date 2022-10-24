@@ -26,7 +26,8 @@
                   ButtonStyle="FxButtonStyle.MenuLine"
                   OnClick="@(() => NavigationManager.NavigateTo("settings/import-from-app", false, true))" />
         <FxButton Text="@Localizer[nameof(AppStrings.About)]"
-                  ButtonStyle="FxButtonStyle.MenuLine" />
+                  ButtonStyle="FxButtonStyle.MenuLine" 
+                  OnClick="@(() => NavigationManager.NavigateTo("settings/about", false, true))" />
 
         <FxButton Text="@Localizer[nameof(AppStrings.TestExplorer)]"
                   ButtonStyle="FxButtonStyle.MenuLine"

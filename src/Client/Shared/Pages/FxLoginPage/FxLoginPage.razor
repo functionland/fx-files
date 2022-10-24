@@ -1,8 +1,30 @@
 ﻿@page "/login"
 @inherits AppComponentBase;
 @namespace Functionland.FxFiles.Client.Shared.Pages
+@layout OnboardingMainLayout
 
 <PageTitle>@Localizer[nameof(AppStrings.Login)]</PageTitle>
 
-<h3>FxLogin</h3>
+@if (_isLoading)
+{
+    <LoadingComponent ZIndex="999"/>
+}
+
+<section class="welcome-page">
+    <div class="welcome-desc-container">
+        <div class="welcome-text">@Localizer[nameof(AppStrings.Welcome)]</div>
+        <div class="connect-text">@Localizer[nameof(AppStrings.WelcomePageConnectContent)]</div>
+        <div class="connect-desc">@Localizer[nameof(AppStrings.WelcomePageDesc)]</div>
+    </div>
+
+    <div class="file-sync-logo"></div>
+
+    <FxButton 
+        ButtonStyle="FxButtonStyle.Normal"
+        HorizontalTextAlignment="FxButtonTextAlignment.Center"
+        Text="Get started (Connect to wallet)"
+        Height="60px"
+        Width="100%"
+        Class="get-started-btn"/>
+</section>
 
