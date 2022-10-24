@@ -36,7 +36,7 @@ public class AndroidPdfThumbnailPlugin : PdfThumbnailPlugin
         //ToDo: ScaleImage needs some changes in order to get the proper size for the output image.
         (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(page.Width, page.Height, 252, 146);
 
-        //ToDo: Bitmap.Config nullability check (seems nonsense though).
+        //ToDo: Check Bitmap.Config nullability (although it seems nonsense at the moment).
         Bitmap? bmp = Bitmap.CreateBitmap(imageWidth, imageHeight, Bitmap.Config.Argb8888);
 
         if (bmp is null)

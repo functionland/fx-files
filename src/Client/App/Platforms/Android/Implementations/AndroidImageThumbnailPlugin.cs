@@ -36,7 +36,7 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 
             return outputStream;
         }
-        else  // When filePath is not provided and we're forced to work with stream (in Avatar thumbnail case).
+        else  //When filePath is not provided and we're forced to work with stream (in Avatar thumbnail case).
         {
             var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
 
