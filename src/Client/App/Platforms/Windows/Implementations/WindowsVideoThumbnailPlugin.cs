@@ -11,15 +11,40 @@ public class WindowsVideoThumbnailPlugin : VideoThumbnailPlugin
 {
     protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        var (width, height) = ImageUtils.GetHeightAndWidthFromThumbnailScale(thumbnailScale);
+        if (stream == null && filePath == null)
+            throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");
 
-        Bitmap thumbnail = WindowsThumbnailProvider.GetThumbnail(
-           filePath, width, height, ThumbnailOptions.None);
+        Stream? fileStream = null;
+        if (stream is null && filePath != null)
+        {
+            fileStream = File.OpenRead(filePath);
+        }
 
-        MemoryStream ms = new MemoryStream();
-        thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-        return ms;
-    }        
+        try
+        {
+            var outStream = await Task.Run(() =>
+            {
+                var (width, height) = ImageUtils.GetHeightAndWidthFromThumbnailScale(thumbnailScale);
+
+                Bitmap thumbnail = WindowsThumbnailProvider.GetThumbnail(
+                   filePath, width, height, ThumbnailOptions.None);
+
+                MemoryStream ms = new MemoryStream();
+                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return ms;
+
+            }, cancellationToken ?? CancellationToken.None);
+
+            return outStream;
+        }
+        finally
+        {
+            if (fileStream is not null)
+            {
+                await fileStream.DisposeAsync().AsTask();
+            }
+        }
+    }
 }
 
 [Flags]
