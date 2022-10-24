@@ -31,8 +31,8 @@ public class AndroidVideoThumbnailPlugin : VideoThumbnailPlugin
         if (firstFrame is null)
             throw new InvalidOperationException("Unable to retrieve the first frame of the video input.");
 
-        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(firstFrame.Width, firstFrame.Height, 252, 146);
-        var size = new Size(imageWidth, imageHeight);
+        (int frameWidth, int frameHeight) = ImageUtils.ScaleImage(firstFrame.Width, firstFrame.Height, 252, 146);
+        var size = new Size(frameWidth, frameHeight);
 
         var bitmap = await ThumbnailUtils.CreateVideoThumbnailAsync(new Java.IO.File(filePath), size, null);
         var outputStream = new MemoryStream();
