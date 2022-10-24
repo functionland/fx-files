@@ -28,7 +28,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
                     var image = System.Drawing.Image.FromStream(imageStream);
                     image = CorrectRotation(image);
 
-                    (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
+                    (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
 
                     var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
                     var memoryStream = new MemoryStream();

@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
 using Spire.Pdf;
 using System;
 using System.Collections.Generic;
@@ -37,9 +38,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
                     System.Drawing.Image image = document.SaveAsImage(0);
 
-                    // ToDo : Scale the thumbnail.
+                    (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
 
-                    var thumb = image.GetThumbnailImage(image.Width, image.Height, () => false, IntPtr.Zero);
+                    var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
 
                     var memoryStream = new MemoryStream();
 

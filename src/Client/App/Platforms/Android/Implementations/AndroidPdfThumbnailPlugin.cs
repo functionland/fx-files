@@ -34,7 +34,7 @@ public class AndroidPdfThumbnailPlugin : PdfThumbnailPlugin
             throw new InvalidOperationException("Page can not be null.");
 
         //ToDo: ScaleImage needs some changes in order to get the proper size for the output image.
-        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(page.Width, page.Height, 252, 146);
+        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(page.Width, page.Height, thumbnailScale);
 
         //ToDo: Bitmap.Config nullability check (seems nonsense though).
         Bitmap? bmp = Bitmap.CreateBitmap(imageWidth, imageHeight, Bitmap.Config.Argb8888);
