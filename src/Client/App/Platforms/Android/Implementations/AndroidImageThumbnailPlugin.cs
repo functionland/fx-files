@@ -11,11 +11,14 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 {
-    protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
+    protected override async Task<Stream> OnCreateThumbnailAsync(
+        Stream? stream,
+        string? filePath,
+        ThumbnailScale thumbnailScale,
+        CancellationToken? cancellationToken = null)
     {
-        // Todo: Exception
         if (filePath is null && stream is null)
-            throw new InvalidOperationException($"{nameof(filePath)} and {nameof(stream)}");
+            throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");
 
         if (filePath is not null)
         {
