@@ -46,8 +46,6 @@ public static class MauiProgram
 
         var app = builder.Build();
 
-        app.Services.UseResolver();
-
         return app;
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Functionland.FxFiles.Client.App.Extensions;
+
+using Microsoft.Extensions.FileProviders;
 
 #if ANDROID
 using Android.Widget;
@@ -80,7 +82,8 @@ public class FsBlazorWebView : BlazorWebView
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
-
-        return new FsFileProvider(baseFileProvider);
+        var fsFileProviderDependency = ServiceExtention.GetRequiredService<FsFileProviderDependency>();
+        
+        return new FsFileProvider(baseFileProvider, fsFileProviderDependency);
     }
 }

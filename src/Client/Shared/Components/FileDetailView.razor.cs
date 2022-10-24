@@ -12,9 +12,6 @@
         public string? FilePath { get; set; }
 
         [Parameter]
-        public PathProtocol Protocol { get; set; }
-
-        [Parameter]
         public string? FileDetailAreaClass { get; set; }
 
         [Parameter]
@@ -34,5 +31,16 @@
 
         [Parameter]
         public RenderFragment? FileDetailBottomActionFragment { get; set; } = default!;
+
+        [Parameter]
+        public IFileService? FileService { get; set; }
+
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.Storage,
+                IFulaFileService => PathProtocol.Fula,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
     }
 }

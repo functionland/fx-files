@@ -9,7 +9,7 @@
 
             <div class="image-container">
                 <div class="image-file-icon"></div>
-                <img class="file-image-preview" src="@(FilePath is not null? PathProtocolUtils.GetPath(FilePath, Protocol) : null)">
+                <img class="file-image-preview" src="@(FilePath?.InProtocol(Protocol))">
             </div>
         </div>
     }

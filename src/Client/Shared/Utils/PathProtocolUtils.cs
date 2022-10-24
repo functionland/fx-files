@@ -4,7 +4,7 @@ namespace Functionland.FxFiles.Client.Shared.Utils;
 
 public static class PathProtocolUtils
 {
-    public static Regex PathRegex { get; set; } = new Regex(@"^\*(?<protocol>\w+)\*\/(?<address>.*)");
+    public static Regex PathRegex { get; set; } = new Regex(@"^(./)?\*(?<protocol>\w+)\*(?<address>.*)");
 
     public static string GetPathProtocol(PathProtocol protocol)
     {
@@ -13,8 +13,8 @@ public static class PathProtocolUtils
             PathProtocol.Storage => "storage",
             PathProtocol.Fula => "fula",
             PathProtocol.Wwwroot => "wwwroot",
-            PathProtocol.ThumbnailStorage => "thumbnailStorage",
-            PathProtocol.ThumbnailFula => "thumbnailFula",
+            PathProtocol.ThumbnailStorage => "thumbnail-storage",
+            PathProtocol.ThumbnailFula => "thumbnail-fula",
             _ => throw new ArgumentOutOfRangeException(nameof(protocol), protocol, null)
         };
     }
@@ -31,8 +31,8 @@ public static class PathProtocolUtils
             "storage" => PathProtocol.Storage,
             "fula" => PathProtocol.Fula,
             "wwwroot" => PathProtocol.Wwwroot,
-            "thumbnailStorage" => PathProtocol.ThumbnailStorage,
-            "thumbnailFula" => PathProtocol.ThumbnailFula,
+            "thumbnail-storage" => PathProtocol.ThumbnailStorage,
+            "thumbnail-fula" => PathProtocol.ThumbnailFula,
             _ => throw new ArgumentOutOfRangeException(nameof(protocol), protocol, null)
         };
     }
@@ -40,7 +40,7 @@ public static class PathProtocolUtils
     public static string GetPath(PathProtocol protocol, string address)
     {
         var protocolStr = GetPathProtocol(protocol);
-        return $"*{protocolStr}*/{address}";
+        return $"*{protocolStr}*{address}";
     }
 
     public static bool IsMatch(string path)

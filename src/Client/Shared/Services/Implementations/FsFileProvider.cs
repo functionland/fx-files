@@ -14,19 +14,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 public class FsFileProvider : IFileProvider
 {
     private readonly IFileProvider _fileProvider;
-    private ILocalDeviceFileService _localDeviceFileService;
-    private IFulaFileService _fulaFileService;
-    private IArtifactThumbnailService<ILocalDeviceFileService> _localArtifactThumbnailService;
-    private IArtifactThumbnailService<IFulaFileService> _fulaArtifactThumbnailService;
+    private FsFileProviderDependency _fsFileProviderDependency;
 
 
-    public FsFileProvider(IFileProvider fileProvider)
+    public FsFileProvider(IFileProvider fileProvider, FsFileProviderDependency fsFileProviderDependency)
     {
         _fileProvider = fileProvider;
-        _localDeviceFileService = FsResolver.Resolve<ILocalDeviceFileService>();
-        _fulaFileService = FsResolver.Resolve<IFulaFileService>();
-        _localArtifactThumbnailService =FsResolver.Resolve<IArtifactThumbnailService<ILocalDeviceFileService>>();
-        _fulaArtifactThumbnailService = FsResolver.Resolve<IArtifactThumbnailService<IFulaFileService>>();
+        _fsFileProviderDependency = fsFileProviderDependency;
     }
 
     public IDirectoryContents GetDirectoryContents(string subpath)
@@ -42,10 +36,10 @@ public class FsFileProvider : IFileProvider
 
             return protocol switch
             {
-                PathProtocol.Storage => new PreviewFileInfo<ILocalDeviceFileService>(PreparePath(address), _localDeviceFileService),
-                PathProtocol.Fula => new PreviewFileInfo<IFulaFileService>(PreparePath(address), _fulaFileService),
-                PathProtocol.ThumbnailStorage => new ThumbFileInfo<ILocalDeviceFileService>(PreparePath(address), _localArtifactThumbnailService, _localDeviceFileService),
-                PathProtocol.ThumbnailFula => new ThumbFileInfo<IFulaFileService>(PreparePath(address), _fulaArtifactThumbnailService, _fulaFileService),
+                PathProtocol.Storage => new PreviewFileInfo<ILocalDeviceFileService>(PreparePath(address), _fsFileProviderDependency.LocalDeviceFileService),
+                PathProtocol.Fula => new PreviewFileInfo<IFulaFileService>(PreparePath(address), _fsFileProviderDependency.FulaFileService),
+                PathProtocol.ThumbnailStorage => new ThumbFileInfo<ILocalDeviceFileService>(PreparePath(address), _fsFileProviderDependency.LocalArtifactThumbnailService, _fsFileProviderDependency.LocalDeviceFileService),
+                PathProtocol.ThumbnailFula => new ThumbFileInfo<IFulaFileService>(PreparePath(address), _fsFileProviderDependency.FulaArtifactThumbnailService, _fsFileProviderDependency.FulaFileService),
                 PathProtocol.Wwwroot => _fileProvider.GetFileInfo(PreparePath("_content/Functionland.FxFiles.Client.Shared/" + address)),
                 _ => throw new InvalidOperationException($"Protocol not supported: {protocol}")
             };
