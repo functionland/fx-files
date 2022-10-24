@@ -1,5 +1,6 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
+using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
 using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
@@ -10,13 +11,14 @@ using android = Android;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
-public partial class AndroidFileService : LocalDeviceFileService
+public abstract partial class AndroidFileService : LocalDeviceFileService
 {
+    [AutoInject] public IPermissionUtils PermissionUtils { get; set; } = default!;
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -32,7 +34,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -48,7 +50,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -64,7 +66,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -103,7 +105,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -119,7 +121,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -135,7 +137,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -151,7 +153,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -167,7 +169,7 @@ public partial class AndroidFileService : LocalDeviceFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            await PermissionUtils.RequestStoragePermissionAsync();
+            PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)
@@ -201,23 +203,8 @@ public partial class AndroidFileService : LocalDeviceFileService
             if (storage is null || !string.Equals(storage.State, android.OS.Environment.MediaMounted, StringComparison.InvariantCultureIgnoreCase))
                 continue;
 
-            Java.IO.File storageDirectory;
 
-            if (android.OS.Build.VERSION.SdkInt >= android.OS.BuildVersionCodes.R)
-            {
-                storageDirectory = storage.Directory;
-            }
-            else
-            {
-                if (storage.IsPrimary)
-                {
-                    storageDirectory = android.OS.Environment.ExternalStorageDirectory;
-                }
-                else
-                {
-                    storageDirectory = new Java.IO.File($@"/storage/{storage.Uuid}");
-                }
-            }
+            var storageDirectory = storage.Directory;
 
             var lastModifiedUnixFormat = storageDirectory.LastModified();
             var lastModifiedDateTime = lastModifiedUnixFormat == 0
@@ -241,14 +228,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             {
                 string sdCardName;
 
-                if (android.OS.Build.VERSION.SdkInt >= android.OS.BuildVersionCodes.R)
-                {
-                    sdCardName = storage.MediaStoreVolumeName ?? string.Empty;
-                }
-                else
-                {
-                    sdCardName = storage.Uuid ?? string.Empty;
-                }
+                sdCardName = storage.MediaStoreVolumeName ?? string.Empty;
 
                 var externalFileName = StringLocalizer.GetString(AppStrings.SDCardName, sdCardName);
                 drives.Add(new FsArtifact(fullPath, externalFileName, FsArtifactType.Drive, FsFileProviderType.ExternalMemory)

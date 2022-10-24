@@ -1,42 +1,43 @@
-﻿using Android.Content;
-
+﻿using Android.App;
+using Android.Content;
+using Android.OS.Storage;
+using Android.Widget;
+using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
 using android = Android;
 
-namespace Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility
+namespace Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
+
+public abstract class PermissionUtils : IPermissionUtils
 {
-    public static class PermissionUtils
+    public TaskCompletionSource<bool>? GetPermissionTask { get; set; }
+
+    public abstract int StoragePermissionRequestCode { get; set; }
+
+    public virtual void RequestStoragePermission(bool isSdCard = false)
     {
-        public static TaskCompletionSource<bool>? GetPermissionTask { get; set; }
-        public static int StoragePermissionRequestCode { get; set; } = 2296;
-        public static async Task RequestStoragePermissionAsync()
+        GetPermissionTask = new TaskCompletionSource<bool>();
+        Intent intent = new Intent(android.Provider.Settings.ActionManageAppAllFilesAccessPermission);
+        intent.AddCategory("android.intent.category.DEFAULT");
+        intent.SetData(android.Net.Uri.Parse($"package:{MauiApplication.Current.OpPackageName}"));
+        Platform.CurrentActivity?.StartActivityForResult(intent, StoragePermissionRequestCode);
+    }
+
+    public virtual async Task<bool> CheckStoragePermissionAsync(string filepath = null)
+    {
+        return android.OS.Environment.IsExternalStorageManager;
+    }
+
+    public virtual async Task OnPermissionResult(Result resultCode, Intent? data)
+    {
+        if (!await CheckStoragePermissionAsync())
         {
-            if (android.OS.Build.VERSION.SdkInt >= android.OS.BuildVersionCodes.R)
-            {
-                GetPermissionTask = new TaskCompletionSource<bool>();
-                Intent intent = new Intent(android.Provider.Settings.ActionManageAppAllFilesAccessPermission);
-                intent.AddCategory("android.intent.category.DEFAULT");
-                intent.SetData(android.Net.Uri.Parse($"package:{MauiApplication.Current.OpPackageName}"));
-                Platform.CurrentActivity?.StartActivityForResult(intent, StoragePermissionRequestCode);
-            }
-            else
-            {
-                GetPermissionTask = new TaskCompletionSource<bool>();
-                await Permissions.RequestAsync<FunctionlandPermission>();
-                GetPermissionTask.SetResult(await CheckStoragePermissionAsync());
-            }
+            GetPermissionTask?.SetResult(false);
+            Toast.MakeText(MauiApplication.Context, "Allow permission for storage access!", ToastLength.Long)?.Show();
         }
-
-        public static async Task<bool> CheckStoragePermissionAsync()
+        else
         {
-
-            if (android.OS.Build.VERSION.SdkInt >= android.OS.BuildVersionCodes.R)
-            {
-                return android.OS.Environment.IsExternalStorageManager;
-            }
-            else
-            {
-                return await Permissions.CheckStatusAsync<FunctionlandPermission>() == PermissionStatus.Granted;
-            }
+            GetPermissionTask?.SetResult(true);
         }
     }
 }
+

@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
+using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
 using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
@@ -11,16 +12,20 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
 public class MainActivity : MauiAppCompatActivity
 {
 
+    private IPermissionUtils permissionUtils;
 
     protected override async void OnCreate(Bundle? savedInstanceState)
     {
         try
         {
+
             base.OnCreate(savedInstanceState);
 
-            if (!await PermissionUtils.CheckStoragePermissionAsync())
+            var permissionUtils = MauiApplication.Current.Services.GetRequiredService<IPermissionUtils>();
+
+            if (!await permissionUtils.CheckStoragePermissionAsync())
             {
-                await PermissionUtils.RequestStoragePermissionAsync();
+                permissionUtils.RequestStoragePermission();
             }
         }
         catch (Exception ex)
@@ -33,17 +38,9 @@ public class MainActivity : MauiAppCompatActivity
     {
         try
         {
-            if (requestCode == PermissionUtils.StoragePermissionRequestCode)
+            if (requestCode == permissionUtils.StoragePermissionRequestCode)
             {
-                if (!await PermissionUtils.CheckStoragePermissionAsync())
-                {
-                    PermissionUtils.GetPermissionTask?.SetResult(false);
-                    Toast.MakeText(this, "Allow permission for storage access!", ToastLength.Long)?.Show();
-                }
-                else
-                {
-                    PermissionUtils.GetPermissionTask?.SetResult(true);
-                }
+                await permissionUtils.OnPermissionResult(resultCode, data);
             }
 
             base.OnActivityResult(requestCode, resultCode, data);
@@ -51,7 +48,7 @@ public class MainActivity : MauiAppCompatActivity
         }
         catch (Exception ex)
         {
-            PermissionUtils.GetPermissionTask?.SetResult(false);
+            
         }
     }
 
