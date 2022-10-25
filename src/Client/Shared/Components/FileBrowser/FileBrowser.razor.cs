@@ -486,7 +486,6 @@ public partial class FileBrowser
     {
         _isArtifactExplorerLoading = true;
         StateHasChanged();
-        Task.Delay(3000);
         var files = GetShareFiles(artifacts);
 
         await Share.Default.RequestAsync(new ShareMultipleFilesRequest
