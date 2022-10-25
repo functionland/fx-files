@@ -9,41 +9,24 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 
 public class WindowsVideoThumbnailPlugin : VideoThumbnailPlugin
 {
+    public override bool IsJustFilePathSupported => true;
+
     protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        if (stream == null && filePath == null)
-            throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");
+        if (stream is not null)
+            throw new InvalidOperationException($"Stream is not supported by this plugin.");
 
-        Stream? fileStream = null;
-        if (stream is null && filePath != null)
-        {
-            fileStream = File.OpenRead(filePath);
-        }
+        if (filePath is null)
+            throw new InvalidOperationException("FilePath should be provided for this plugin.");
 
-        try
-        {
-            var outStream = await Task.Run(() =>
-            {
-                var (width, height) = ImageUtils.GetHeightAndWidthFromThumbnailScale(thumbnailScale);
+        var (width, height) = ImageUtils.GetHeightAndWidthFromThumbnailScale(thumbnailScale);
 
-                Bitmap thumbnail = WindowsThumbnailProvider.GetThumbnail(
-                   filePath, width, height, ThumbnailOptions.None);
+        Bitmap thumbnail = WindowsThumbnailProvider.GetThumbnail(filePath, width, height, ThumbnailOptions.None);
 
-                MemoryStream ms = new MemoryStream();
-                thumbnail.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                return ms;
+        MemoryStream memoryStream = new();
+        thumbnail.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
 
-            }, cancellationToken ?? CancellationToken.None);
-
-            return outStream;
-        }
-        finally
-        {
-            if (fileStream is not null)
-            {
-                await fileStream.DisposeAsync().AsTask();
-            }
-        }
+        return memoryStream;
     }
 }
 
