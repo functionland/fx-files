@@ -11,11 +11,14 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 {
-    protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
+    protected override async Task<Stream> OnCreateThumbnailAsync(
+        Stream? stream,
+        string? filePath,
+        ThumbnailScale thumbnailScale,
+        CancellationToken? cancellationToken = null)
     {
-        // Todo: Exception
         if (filePath is null && stream is null)
-            throw new InvalidOperationException($"{nameof(filePath)} and {nameof(stream)}");
+            throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");
 
         if (filePath is not null)
         {
@@ -26,7 +29,7 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
             if (bitmap is null)
                 throw new InvalidOperationException("Unable to create bitmap out of given filePath.");
 
-            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
+            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, thumbnailScale);
 
             var size = new Size(imageWidth, imageHeight);
             var imageThumbnail = ThumbnailUtils.CreateImageThumbnail(file, size, null);
@@ -45,7 +48,7 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 
             bitmap = CorrectRotationIfNeeded(stream, bitmap);
 
-            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, 252, 146);
+            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, thumbnailScale);
             var imageThumbnail = await ThumbnailUtils.ExtractThumbnailAsync(bitmap, imageWidth, imageHeight);
 
             if (imageThumbnail is null)
