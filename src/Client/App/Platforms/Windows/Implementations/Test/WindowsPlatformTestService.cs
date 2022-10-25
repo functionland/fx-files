@@ -8,6 +8,8 @@ public partial class WindowsPlatformTestService : PlatformTestService
     [AutoInject] WindowsFileServicePlatformTest WindowsFileServicePlatformTest { get; set; }
     [AutoInject] WindowsImageThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalWindowsImageThumbnailPluginPlatformTest { get; set; }
     [AutoInject] WindowsImageThumbnailPluginPlatformTest<IFulaFileService> FulaWindowsImageThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] WindowsVideoThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalWindowsVideoThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] WindowsPdfThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalWindowsPdfThumbnailPluginPlatformTest { get; set; }
 
     protected override List<IPlatformTest> OnGetTests()
     {
@@ -15,7 +17,9 @@ public partial class WindowsPlatformTestService : PlatformTestService
         {
             WindowsFileServicePlatformTest,
             LocalWindowsImageThumbnailPluginPlatformTest,
-            FulaWindowsImageThumbnailPluginPlatformTest
+            FulaWindowsImageThumbnailPluginPlatformTest,
+            LocalWindowsVideoThumbnailPluginPlatformTest,
+            LocalWindowsPdfThumbnailPluginPlatformTest
         };
     }  
 }

@@ -39,19 +39,8 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
             var artifacts = await FileService.GetArtifactsAsync(testRoot).ToListAsync();
 
             Assert.AreEqual(0, artifacts.Count, "new folder must be empty");
-            
-            using FileStream fs = File.Open(Path.Combine(GetSampleFileLocalPath(), "fake-pic.jpg"), FileMode.Open);
 
-            var createdImage = await FileService.CreateFileAsync($@"{testRoot}\1.jpg", fs);
-
-            var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(createdImage, ThumbnailScale.Medium);
-
-            Assert.IsNotNull(thumbnailPath, "Image thumbnail created");
-
-            var imageThumbnailArtifact = await FileService.GetArtifactAsync(thumbnailPath);
-
-            Assert.IsNotNull(imageThumbnailArtifact, "Image thumbnail artifact founded!");
-
+            await OnRunThumbnailPluginAsync(testRoot);         
         }
         catch (Exception ex)
         {
@@ -60,7 +49,9 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         }
     }
 
-    private static string GetSampleFileLocalPath() =>
+    protected abstract Task OnRunThumbnailPluginAsync(string testRootPath);
+
+    protected static string GetSampleFileLocalPath() =>
        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "_content/Functionland.FxFiles.Client.Shared", "images", "Files");
 
     protected abstract string OnGetRootPath();
