@@ -6,7 +6,7 @@ using SharpCompress.Readers;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public abstract partial class ZipService : IZipService
+public class ZipService : IZipService
 {
     public virtual Task<List<FsArtifact>> GetZippedFsArtifactsAsync(string zipFilePath, string subDirectoriesPath, CancellationToken? cancellationToken = null)
     {
