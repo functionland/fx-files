@@ -9,17 +9,21 @@ public static class IAndroidServiceCollectionExtensions
     public static IServiceCollection AddClientAndroidServices(this IServiceCollection services)
     {
         // Services being registered here can get injected in Android.
+
         services.AddSingleton<ILocalDeviceFileService, AndroidFileService>();
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
+
+        // FileService Platform Tests
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
-        services.AddTransient<AndroidInternalArtifactThumbnailPlatformTest<ILocalDeviceFileService>>();
-        services.AddTransient<AndroidExternalArtifactThumbnailPlatformTest<ILocalDeviceFileService>>();
-        services.AddTransient<AndroidInternalArtifactThumbnailPlatformTest<IFulaFileService>>();
-        services.AddTransient<AndroidExternalArtifactThumbnailPlatformTest<IFulaFileService>>();
+
         services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
         services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
+
+        // Thumbnail Plugins
         services.AddSingleton<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
+        services.AddSingleton<IThumbnailPlugin, AndroidVideoThumbnailPlugin>();
+        services.AddSingleton<IThumbnailPlugin, AndroidPdfThumbnailPlugin>();
 
         return services;
     }
