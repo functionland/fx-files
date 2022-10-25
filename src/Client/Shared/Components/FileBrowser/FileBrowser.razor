@@ -4,8 +4,8 @@
 <div class="file-browser-container">
 
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
-               OnSearch="HandleDeepSearchAsync"
-               OnSearchFocused="HandleDeepSearchFocused"
+               OnSearch="HandleSearchAsync"
+               OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearchMode"
                OnBackClick="HandleToolbarBackClick"
                Title="@(_currentArtifact?.Name)"
@@ -129,9 +129,9 @@
         {
             <FxSearchInput Placeholder="@_currentArtifact?.Name"
                    @ref="_fxSearchInputRef"
-                   OnCancel="HandleCancelCurrentListSearchAsync"
+                   OnCancel="HandleCancelInLineSearchAsync"
                    DebounceInterval="300"
-                   OnSearch="HandleCurrentListSearch"
+                   OnSearch="HandleInLineSearch"
                    IsPartial="false" />
         }
     }
