@@ -121,7 +121,6 @@
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" />
 <ProgressModal
     CurrentText="@ProgressBarCurrentText"
     CurrentSubText="@ProgressBarCurrentSubText"
@@ -130,3 +129,4 @@
     OnCancel="ProgressBarOnCancel"
     @ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>
+<FileViewer @ref="_fileViewer" FileService="FileService"/>
