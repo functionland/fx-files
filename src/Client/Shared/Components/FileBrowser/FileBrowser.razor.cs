@@ -39,8 +39,10 @@ public partial class FileBrowser
     private List<FsArtifact> _selectedArtifacts = new();
     private string _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
-    private bool _isInSearchMode;
     private FileCategoryType? _fileCategoryFilter;
+    private bool _isFileCategoryFilterModeOpen = false;
+    private ArtifactsSearchFilterDateEnum _artifactsSearchFilterDate;
+    private ArtifactsSearchFilterTypeEnum _artifactsSearchFilterType;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
@@ -541,9 +543,9 @@ public partial class FileBrowser
 
     private async Task LoadChildrenArtifactsAsync(FsArtifact? artifact = null)
     {
-        var childrenArtifacts = FileService.GetArtifactsAsync(artifact?.FullPath);
         try
         {
+            var childrenArtifacts = FileService.GetArtifactsAsync(artifact?.FullPath);
             if (artifact is null)
             {
                 GoBackService.OnInit(null, true, true);
@@ -882,16 +884,17 @@ public partial class FileBrowser
     private async Task HandleCancelInLineSearchAsync()
     {
         //_isLoading = true;
-        _isInSearchMode = false;
+        _artifactExplorerMode = ArtifactExplorerMode.Normal;
         cancellationTokenSource?.Cancel();
         _inlineSearchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         //_isLoading = false;
     }
 
-    private void HandleSearchFocused()
+    private async Task HandleSearchFocused()
     {
-        _isInSearchMode = true;
+        _artifactExplorerMode = ArtifactExplorerMode.Search;
+        await JSRuntime.InvokeVoidAsync("RemoveBottomNavigation");
     }
 
     CancellationTokenSource? cancellationTokenSource;
@@ -980,28 +983,36 @@ public partial class FileBrowser
         _inlineSearchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
-        if (_artifactExplorerMode != ArtifactExplorerMode.Normal)
+        switch (_artifactExplorerMode)
         {
-            _artifactExplorerMode = ArtifactExplorerMode.Normal;
-        }
-        else
-        {
-            if (!_isInSearchMode)
-            {
+            case ArtifactExplorerMode.Normal:
                 _fxSearchInputRef?.HandleClearInputText();
                 await UpdateCurrentArtifactForBackButton(_currentArtifact);
                 await LoadChildrenArtifactsAsync(_currentArtifact);
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 StateHasChanged();
-            }
-            else
-            {
+                break;
+
+            case ArtifactExplorerMode.SelectArtifact:
+                _artifactExplorerMode = ArtifactExplorerMode.Normal;
+                break;
+
+            case ArtifactExplorerMode.SelectDestionation:
+                _artifactExplorerMode = ArtifactExplorerMode.Normal;
+                break;
+
+            case ArtifactExplorerMode.Search:
                 cancellationTokenSource?.Cancel();
-                _isInSearchMode = false;
+                _artifactExplorerMode = ArtifactExplorerMode.Normal;
                 _fxSearchInputRef?.HandleClearInputText();
+                _displayedArtifacts.Clear();
+                await JSRuntime.InvokeVoidAsync("AddBottomNavigation");
                 await LoadChildrenArtifactsAsync();
                 StateHasChanged();
-            }
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -1241,5 +1252,22 @@ public partial class FileBrowser
             }
 
         }
+    }
+
+    private void ChangeFileCategoryFilterMode()
+    {
+        _isFileCategoryFilterModeOpen = !_isFileCategoryFilterModeOpen;
+    }
+
+    private void ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum date)
+    {
+        _artifactsSearchFilterDate = date;
+        // TODO: Add search filter date to search filter. Call search method from service and update displayed artifacts.
+    }
+
+    private void ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum type)
+    {
+        _artifactsSearchFilterType = type;
+        // TODO: Add search filter type to search filter. Call search method from service and update displayed artifacts.
     }
 }

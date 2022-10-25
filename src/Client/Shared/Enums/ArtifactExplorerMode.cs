@@ -4,6 +4,7 @@
     {
         Normal,
         SelectArtifact,
-        SelectDestionation
+        SelectDestionation,
+        Search
     }
 }

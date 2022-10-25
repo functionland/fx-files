@@ -6,7 +6,7 @@
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
                OnSearch="HandleSearchAsync"
                OnSearchFocused="HandleSearchFocused"
-               IsInSearchMode="_isInSearchMode"
+               IsInSearchMode="@(_artifactExplorerMode == ArtifactExplorerMode.Search)"
                OnBackClick="HandleToolbarBackClick"
                Title="@(_currentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
@@ -15,45 +15,11 @@
                OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-    @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
+    @if (IsInRoot(_currentArtifact) && _artifactExplorerMode != ArtifactExplorerMode.Search)
     {
         //this is filter in deep search part TODO: replace it in correct palce in code 
 
-        <section class="filter-deep-search">
-            <div class="filter-content">
-                <div class="filter-text">Filters</div>
-                <div class="chaveron-up-icon"></div>
-                <div class="chaveron-down-icon"></div>
-            </div>
-            <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
-
-            <div class="filters-options">
-                <div class="time-options-container">
-                    <div class="time-title">Time</div>
-
-                    <div class="time-options">
-                        <div class="yesterday-option option-selected-mode">Yesterday</div>
-                        <div class="past-seven-days-option">Past 7 days</div>
-                        <div class="past-seven-days-option">Past 30 days</div>
-                    </div>
-                </div>
-
-                <div class="type-options-container">
-                    <div class="type-title">Type</div>
-
-                    <div class="type-options">
-                        <div class="image-option option-selected-mode">Image</div>
-                        <div class="video-option">Video</div>
-                        <div class="audio-option">Audio</div>
-                        <div class="document-option option-selected-mode">Document</div>
-                        <div class="folder-option">Folder</div>
-                        <div class="pdf-option">PDF</div>
-                    </div>
-                </div>
-            </div>
-
-            <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
-        </section>
+        
 
         //end of filter in deep search
         @if (_pins?.Count > 0)
@@ -87,11 +53,11 @@
         <div class="root-title">My device files</div>
     }
 
-    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
+    @if (_artifactExplorerMode != ArtifactExplorerMode.Search)
     {
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            <div class="@(_isInSearchMode ? "action-bar-search" : "") action-bar">
+            <div class="@(_artifactExplorerMode == ArtifactExplorerMode.Search ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
                     <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
@@ -106,7 +72,7 @@
         }
         else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
-            <div class="@(_isInSearchMode ? "select-action-search" : "") select-action">
+            <div class="@(_artifactExplorerMode == ArtifactExplorerMode.Search ? "select-action-search" : "") select-action">
                 <div class="info-selection">
                     <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
                     <div class="item-selected">
@@ -136,8 +102,46 @@
         }
     }
 
+    @if (_artifactExplorerMode == ArtifactExplorerMode.Search)
+    {
+        <section class="filter-deep-search @(_isFileCategoryFilterModeOpen ? "expanded" : "")">
+            <div class="filter-content">
+                <div class="filter-text">Filters</div>
+                <div class="chaveron-up-icon" @onclick="ChangeFileCategoryFilterMode"></div>
+                <div class="chaveron-down-icon" @onclick="ChangeFileCategoryFilterMode"></div>
+            </div>
+            <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
 
-    @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
+            <div class="filters-options">
+                <div class="time-options-container">
+                    <div class="time-title">Time</div>
+
+                    <div class="time-options">
+                        <div class="yesterday-option @(_artifactsSearchFilterDate == ArtifactsSearchFilterDateEnum.Yesterday ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum.Yesterday))">Yesterday</div>
+                        <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactsSearchFilterDateEnum.Past7Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum.Past7Days))">Past 7 days</div>
+                        <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactsSearchFilterDateEnum.Past30Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum.Past30Days))">Past 30 days</div>
+                    </div>
+                </div>
+
+                <div class="type-options-container">
+                    <div class="type-title">Type</div>
+
+                    <div class="type-options">
+                        <div class="image-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Image ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Image))">Image</div>
+                        <div class="video-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Video ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Video))">Video</div>
+                        <div class="audio-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Audio ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Audio))">Audio</div>
+                        <div class="document-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Document ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Document))">Document</div>
+                        <div class="folder-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.PDF ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.PDF))">PDF</div>
+                        <div class="pdf-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.App))">App</div>
+                    </div>
+                </div>
+            </div>
+
+            <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
+        </section>
+    }
+    
+    @if (_artifactExplorerMode != ArtifactExplorerMode.Search || string.IsNullOrWhiteSpace(_searchText) is false)
     {
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       CurrentArtifact="_currentArtifact"
@@ -151,6 +155,22 @@
                       IsLoading="_isArtifactExplorerLoading"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />
+    }
+
+    @if (_artifactExplorerMode == ArtifactExplorerMode.Search && string.IsNullOrWhiteSpace(_searchText) is false && _artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
+    {
+        <div class="navbarApp-item">
+            <NavLink>
+                <div class="show-location-icon"></div>
+                <span class="navbarApp-linkLabel">@Localizer[nameof(AppStrings.ShowInLocation)]</span>
+            </NavLink>
+        </div>
+        <div class="navbarApp-item">
+            <NavLink>
+                <div class="copy-btn"></div>
+                <span class="navbarApp-linkLabel">@Localizer[nameof(AppStrings.Copy)]</span>
+            </NavLink>
+        </div>
     }
 </div>
 
