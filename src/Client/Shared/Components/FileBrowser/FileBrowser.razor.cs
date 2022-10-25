@@ -18,7 +18,7 @@ public partial class FileBrowser
     private ArtifactDetailModal? _artifactDetailModalRef;
     private ProgressModal? _progressModalRef;
     private FxSearchInput? _fxSearchInputRef;
-    private FileViewer? _fileViewer;
+    private FileViewer? _fileViewerRef;
 
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
@@ -600,7 +600,7 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            var isOpened = _fileViewer?.OpenArtifactAsync(artifact);
+            var isOpened = _fileViewerRef?.OpenArtifact(artifact);
 
             if (isOpened == false)
             {
