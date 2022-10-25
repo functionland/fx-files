@@ -1,5 +1,7 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_mixins.scss';
+
 
 footer {
     bottom: 0;
@@ -21,6 +23,12 @@ footer {
 .navbarApp__wrapper {
     display: flex;
     justify-content: space-around;
+}
+
+.navbarApp-item {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
 }
 
 ::deep .navbarApp-link {
@@ -49,6 +57,35 @@ footer {
     display: none;
     margin-right: 8px;
 }
+
+.copy-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    ::deep &::before {
+        font-size: 24px;
+        margin-right: 8px;
+        vertical-align: middle;
+        @include Icon($detail);
+    }
+}
+
+.show-location-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &::before {
+        content: "";
+        color: red;
+        font-size: 24px;
+        @include Icon($folder,$color:color(gray-content1));
+    }
+}
+
 
 @media(hover: hover) and (pointer: fine) {
     ::deep .navbarApp-item:hover {
