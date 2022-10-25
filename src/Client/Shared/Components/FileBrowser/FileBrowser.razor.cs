@@ -591,7 +591,7 @@ public partial class FileBrowser
                 baseUrl = baseUrl.Replace(query, "");
             }
 
-            await ViewFileService.ViewFileAsync(artifact.FullPath,$"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
+            await ViewFileService.ViewFileAsync(artifact.FullPath, $"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {
@@ -879,7 +879,7 @@ public partial class FileBrowser
         RefreshDisplayedArtifacts();
     }
 
-    private async Task HandleCancelCurrentListSearchAsync()
+    private async Task HandleCancelInLineSearchAsync()
     {
         //_isLoading = true;
         _isInSearchMode = false;
@@ -889,14 +889,14 @@ public partial class FileBrowser
         //_isLoading = false;
     }
 
-    private void HandleDeepSearchFocused()
+    private void HandleSearchFocused()
     {
         _isInSearchMode = true;
     }
 
     CancellationTokenSource? cancellationTokenSource;
 
-    private async Task HandleDeepSearchAsync(string text)
+    private async Task HandleSearchAsync(string text)
     {
         //_isLoading = true;
         _searchText = text;
@@ -965,7 +965,7 @@ public partial class FileBrowser
         });
     }
 
-    private void HandleCurrentListSearch(string text)
+    private void HandleInLineSearch(string text)
     {
         if (text != null)
         {
