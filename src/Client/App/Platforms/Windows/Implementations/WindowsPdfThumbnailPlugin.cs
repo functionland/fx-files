@@ -24,33 +24,27 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
             try
             {
-                var outStream = await Task.Run(() =>
+                PdfDocument document = new();
+
+                try
                 {
-                    PdfDocument document = new();
+                    // This try-catch is because of the limitaion of reading the 10 pages of pdf file due to free edition.
+                    // And this will convert only 3 pages of those 10 pages to image.
+                    document.LoadFromStream(stream);
+                }
+                catch { }
 
-                    try
-                    {
-                        // This try-catch is because of the limitaion of reading the 10 pages of pdf file due to free edition.
-                        // And this will convert only 3 pages of those 10 pages to image.
-                        document.LoadFromStream(stream);
-                    }
-                    catch { }
+                System.Drawing.Image image = document.SaveAsImage(0);
 
-                    System.Drawing.Image image = document.SaveAsImage(0);
+                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
 
-                    (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
+                var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
 
-                    var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
+                var memoryStream = new MemoryStream();
 
-                    var memoryStream = new MemoryStream();
+                thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                    thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                    return Task.FromResult(memoryStream);
-
-                }, cancellationToken ?? CancellationToken.None);
-
-                return outStream;
+                return memoryStream;
             }
             finally
             {
