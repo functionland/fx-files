@@ -2,7 +2,11 @@
 
 public static class ServiceExtention
 {
-    public static TService GetRequiredService<TService>() => Current().GetRequiredService<TService>(); //TODo:
+    public static TService GetRequiredService<TService>()
+        where TService: class
+    {
+        return Current().GetRequiredService<TService>();
+    }
 
     private static IServiceProvider Current()
     {

@@ -8,6 +8,4 @@ public partial class FsFileProviderDependency
     [AutoInject] public IFulaFileService FulaFileService { get; set; }
     [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> LocalArtifactThumbnailService { get; set; }
     [AutoInject] public IArtifactThumbnailService<IFulaFileService> FulaArtifactThumbnailService { get; set; }
-
-
 }

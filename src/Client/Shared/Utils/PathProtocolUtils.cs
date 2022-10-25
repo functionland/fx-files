@@ -13,8 +13,8 @@ public static class PathProtocolUtils
             PathProtocol.Storage => "storage",
             PathProtocol.Fula => "fula",
             PathProtocol.Wwwroot => "wwwroot",
-            PathProtocol.ThumbnailStorage => "thumbnail-storage",
-            PathProtocol.ThumbnailFula => "thumbnail-fula",
+            PathProtocol.ThumbnailStorage => "thumbnailStorage",
+            PathProtocol.ThumbnailFula => "thumbnailFula",
             _ => throw new ArgumentOutOfRangeException(nameof(protocol), protocol, null)
         };
     }
@@ -31,8 +31,8 @@ public static class PathProtocolUtils
             "storage" => PathProtocol.Storage,
             "fula" => PathProtocol.Fula,
             "wwwroot" => PathProtocol.Wwwroot,
-            "thumbnail-storage" => PathProtocol.ThumbnailStorage,
-            "thumbnail-fula" => PathProtocol.ThumbnailFula,
+            "thumbnailStorage" => PathProtocol.ThumbnailStorage,
+            "thumbnailFula" => PathProtocol.ThumbnailFula,
             _ => throw new ArgumentOutOfRangeException(nameof(protocol), protocol, null)
         };
     }
