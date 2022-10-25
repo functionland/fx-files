@@ -28,7 +28,7 @@ public class ZipService : IZipService
             {
                 using (var archive = ZipArchive.Open(fullPath, new ReaderOptions() { Password = password }))
                 {
-                    foreach (var entry in archive.Entries)
+                    foreach (var entry in archive.Entries.ToList())
                     {
                         entry.WriteToDirectory(destinationPath, new ExtractionOptions()
                         {
@@ -54,7 +54,7 @@ public class ZipService : IZipService
             {
                 using (var archive = RarArchive.Open(fullPath, new ReaderOptions() { Password = password }))
                 {
-                    foreach (var entry in archive.Entries)
+                    foreach (var entry in archive.Entries.ToList())
                     {
                         entry.WriteToDirectory(destinationPath, new ExtractionOptions()
                         {
