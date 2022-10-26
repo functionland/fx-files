@@ -1,4 +1,5 @@
-﻿@inherits AppComponentBase;
+﻿@using Functionland.FxFiles.Client.Shared.Utils
+@inherits AppComponentBase;
 
 <div class="file-card-container @(IsPinned ? "favorite" : "") @(IsEnable ? "disabled-card" : "")">
     <div class="file-card-media">
@@ -9,9 +10,9 @@
             </div>
         }
 
-        @if (!string.IsNullOrEmpty(FileImage))
+        @if (!string.IsNullOrEmpty(Path))
         {
-            <img src="@FileImage" draggable="false" class="file-card-image" />
+            <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-image" />
         }
         else
         {
@@ -25,11 +26,11 @@
             <div class="file-icon @GetArtifactIcon(ArtifactType, FileType)"></div>
 
             <div class="file-name-container">
-                <span class="file-name">@FileName</span>
+                <span class="file-name">@Name</span>
             </div>
         </div>
         <div class="file-info @(ArtifactType != FsArtifactType.File ? "visibility-hidden": "")">
-            <div class="modified-date">@ModifiedDate</div> | <span class="file-size">@FileSize</span>
+            <div class="modified-date">@ModifiedDate</div> | <span class="file-size">@Size</span>
         </div>
     </div>
 </div>
