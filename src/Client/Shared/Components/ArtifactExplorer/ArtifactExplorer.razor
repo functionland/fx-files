@@ -1,6 +1,7 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components
 
 @inherits AppComponentBase
+@using Functionland.FxFiles.Client.Shared.Utils
 
 
 <div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : $"{ViewMode.ToString().ToLower()}-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
@@ -34,6 +35,9 @@
 
                     @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.Grid || !IsPhone)
                     {
+                        <div class="thumbnail-box">
+                            <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))">
+                        </div>
                         <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
                     }
                 </div>

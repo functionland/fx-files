@@ -117,6 +117,33 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
+
+        .item-icon-position {
+            background-color: color(gray-bg-primary);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .thumbnail-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 36px;
+            text-align: center;
+            height: 42px;
+            width: 42px;
+
+            .thumbnail-img {
+                object-fit: contain;
+                height: 42px;
+                width: 42px;
+            }
+        }
     }
 
     .footer-box {
@@ -175,7 +202,7 @@
     .icon-box {
         background-color: color(gray-bg-primary);
         height: 86px;
-        width: 100%;
+        width: 161px;
         position: relative;
 
         .check-box-position {
@@ -189,6 +216,20 @@
 
             &::before {
                 color: color(gray-content3);
+            }
+        }
+
+        .thumbnail-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            text-align: center;
+
+            .thumbnail-img {
+                object-fit: contain;
+                width: 161px;
+                height: 86px;
             }
         }
     }
