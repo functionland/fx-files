@@ -357,11 +357,27 @@
     align-items: center;
     padding: $spacing-10 $spacing-21;
     border-top: 1px solid color(gray-bg-secondary);
+    position: fixed;
+    bottom: 0;
+    max-width: 600px;
+    width: 100%;
+
+    & div {
+        cursor: pointer;
+    }
 
     .option-item {
         min-width: 70px;
         height: 46px;
         text-align: center;
+    }
+
+    .title-item {
+        color: color(gray-content1);
+        font-size: $font-size-12;
+        font-family: $open-sans-regular;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-02;
     }
 
     .detail-icon {
@@ -382,14 +398,10 @@
         }
     }
 
-    .show-location-text {
-        white-space: nowrap;
-    }
-
-    .copy-btn {
+    .copy-btn-icon {
 
 
-        ::deep &::before {
+        &::before {
             font-size: 24px;
             @include Icon($copy);
         }
