@@ -7,7 +7,7 @@ public class ThumbFileInfo<TFileService> : IFileInfo
 {
     private IArtifactThumbnailService<TFileService> _artifactThumbnailService;
     private TFileService _fileService;
-    private FileInfo _fileInfo;
+    private FileInfo? _fileInfo;
     private readonly string _path;
     private readonly ThumbnailScale _scale;
 
@@ -50,6 +50,9 @@ public class ThumbFileInfo<TFileService> : IFileInfo
         get
         {
             EnsureLoadThumbnail();
+            if(_fileInfo is null)
+                return false;
+
             return _fileInfo.Exists;
         }
     }
@@ -59,6 +62,9 @@ public class ThumbFileInfo<TFileService> : IFileInfo
         get
         {
             EnsureLoadThumbnail();
+            if (_fileInfo is null)
+                return 0;
+
             return _fileInfo.Length;
         }
     }
@@ -80,6 +86,9 @@ public class ThumbFileInfo<TFileService> : IFileInfo
         get
         {
             EnsureLoadThumbnail();
+            if (_fileInfo is null)
+                return DateTimeOffset.FromUnixTimeSeconds(0);
+
             return _fileInfo.LastWriteTime;
         }
     }
