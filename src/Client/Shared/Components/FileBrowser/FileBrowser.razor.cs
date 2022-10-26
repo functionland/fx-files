@@ -1,9 +1,7 @@
 ﻿using System.Net;
-using System.Reflection.Emit;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -61,6 +59,7 @@ public partial class FileBrowser
     private bool _isAscOrder = true;
     private bool _isArtifactExplorerLoading = true;
     private bool _isPinBoxLoading = true;
+    private DeepSearchFilter? SearchFilter { get; set; }
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
@@ -891,10 +890,9 @@ public partial class FileBrowser
         //_isLoading = false;
     }
 
-    private async Task HandleSearchFocused()
+    private void HandleSearchFocused()
     {
         _artifactExplorerMode = ArtifactExplorerMode.Search;
-        await JSRuntime.InvokeVoidAsync("RemoveBottomNavigation");
     }
 
     CancellationTokenSource? cancellationTokenSource;
@@ -903,6 +901,7 @@ public partial class FileBrowser
     {
         //_isLoading = true;
         _searchText = text;
+        ApplySearchFilter(text);
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
@@ -916,13 +915,13 @@ public partial class FileBrowser
         cancellationTokenSource = new CancellationTokenSource();
         var token = cancellationTokenSource.Token;
         var sw = System.Diagnostics.Stopwatch.StartNew();
-        
+
         await Task.Run(async () =>
         {
             var buffer = new List<FsArtifact>();
             try
             {
-                await foreach (var item in FileService.GetArtifactsAsync(_currentArtifact?.FullPath, _searchText, token))
+                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token))
                 {
                     if (token.IsCancellationRequested)
                         return;
@@ -968,6 +967,46 @@ public partial class FileBrowser
         });
     }
 
+    private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null, ArtifactCategorySearchType? type = null)
+    {
+        if (SearchFilter == null)
+        {
+            SearchFilter = new();
+            if (!string.IsNullOrEmpty(searchText) && !string.IsNullOrWhiteSpace(searchText))
+            {
+                SearchFilter.SearchText = searchText;
+            }
+
+            if (date != null)
+            {
+                SearchFilter.ArtifactDateSearchType = date;
+            }
+
+            if (type != null)
+            {
+                SearchFilter.ArtifactCategorySearchType = type;
+            }
+            return;
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(searchText) && !string.IsNullOrWhiteSpace(searchText))
+            {
+                SearchFilter.SearchText = searchText;
+            }
+            if (date != null)
+            {
+                SearchFilter.ArtifactDateSearchType = date;
+            }
+
+            if (type != null)
+            {
+                SearchFilter.ArtifactCategorySearchType = type;
+            }
+            return;
+        }
+    }
+
     private void HandleInLineSearch(string text)
     {
         if (text != null)
@@ -1006,7 +1045,6 @@ public partial class FileBrowser
                 _artifactExplorerMode = ArtifactExplorerMode.Normal;
                 _fxSearchInputRef?.HandleClearInputText();
                 _displayedArtifacts.Clear();
-                await JSRuntime.InvokeVoidAsync("AddBottomNavigation");
                 await LoadChildrenArtifactsAsync();
                 StateHasChanged();
                 break;
