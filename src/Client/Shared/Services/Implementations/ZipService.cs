@@ -1,4 +1,5 @@
-﻿using SharpCompress.Archives;
+﻿using Functionland.FxFiles.Client.Shared.Extensions;
+using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
@@ -6,13 +7,14 @@ using SharpCompress.Readers;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public class ZipService : IZipService
+public partial class ZipService : IZipService
 {
-    public virtual Task<List<FsArtifact>> GetZippedFsArtifactsAsync(string zipFilePath, string subDirectoriesPath, CancellationToken? cancellationToken = null)
+    [AutoInject]public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+
+    public virtual Task<List<FsArtifact>> GetZippedArtifactsAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
-
     public virtual Task ExtractZippedArtifactAsync(string zipFullPath, string destinationPath, List<string> fileNames, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
@@ -20,11 +22,12 @@ public class ZipService : IZipService
 
     public virtual async Task ExtractZipAsync(string fullPath, string destinationPath, string? password = null, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
-        var extention = Path.GetExtension(fullPath);
+        var extension = Path.GetExtension(fullPath);
+        var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
 
-        if(extention == ".zip")
+        try
         {
-            try
+            if (extension == ".zip")
             {
                 using (var archive = ZipArchive.Open(fullPath, new ReaderOptions() { Password = password }))
                 {
@@ -38,20 +41,9 @@ public class ZipService : IZipService
                     }
                 }
             }
-            catch (CryptographicException)
+            else if (extension == ".rar")
             {
-                throw new Exception("The password did not match.");
-            }
-            catch (IOException) //TODO: This should be more specific
-            {
-                throw new Exception("The artifact already exists.");
-            }
 
-        }
-        else if(extention == ".rar")
-        {
-            try
-            {
                 using (var archive = RarArchive.Open(fullPath, new ReaderOptions() { Password = password }))
                 {
                     foreach (var entry in archive.Entries.ToList())
@@ -64,19 +56,20 @@ public class ZipService : IZipService
                     }
                 }
             }
-            catch (CryptographicException)
-            {
-                throw new Exception("The password did not match.");
-            }
-            catch (IOException) //TODO: This should be more specific
-            {
-                throw new Exception("The artifact already exists.");
-            }
-
         }
-        else
+
+        catch (CryptographicException ex) when (ex.Message == "The password did not match.")
         {
-            throw new Exception(""); //TODO
-        } 
+            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+        }
+        catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
+        {
+            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
+        }
+        catch
+        {
+            throw new DomainLogicException(StringLocalizer.GetString(AppStrings.TheOpreationFailedMessage));
+        }
     }
+
 }

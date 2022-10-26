@@ -543,16 +543,16 @@
   <data name="WelcomePageDesc" xml:space="preserve">
     <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
   </data>
-  <data name="AutomaticContent" xml:space="preserve">
+	<data name="AutomaticContent" xml:space="preserve">
     <value>Automatic</value>
   </data>
-  <data name="DarkMode" xml:space="preserve">
+	<data name="DarkMode" xml:space="preserve">
     <value>Dark</value>
   </data>
-  <data name="LightMode" xml:space="preserve">
+	<data name="LightMode" xml:space="preserve">
     <value>Light</value>
   </data>
-  <data name="SystemThemeDescription" xml:space="preserve">
+	<data name="SystemThemeDescription" xml:space="preserve">
     <value>Use system light/dark mode setting.</value>
   </data>
   <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
@@ -578,5 +578,8 @@
   </data>
   <data name="BloxPoolAlreadyExistsException" xml:space="preserve">
     <value>The user is already a member of this poolblox</value>
+  </data>
+  <data name="PasswordDidNotMatchedException" xml:space="preserve">
+    <value>The password did not match.</value>
   </data>
 </root>
