@@ -60,9 +60,11 @@
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">
-                    <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
                     <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.List))"></div>
-                    <div class="action-btn grid-view-btn @(ArtifactState.ViewMode == ViewModeEnum.Grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.Grid))"></div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
+                    <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
+                    @*<div class="action-btn grid-view-btn @(ArtifactState.ViewMode == ViewModeEnum.Grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.Grid))"></div>*@
                     <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
                 </div>
             </div>

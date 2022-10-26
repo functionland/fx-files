@@ -62,6 +62,10 @@
     top: 128px;
     z-index: 2;
 
+    .specter {
+        color: color(gray-border);
+    }
+
     .left-actions {
         display: flex;
         flex-flow: row nowrap;
@@ -81,7 +85,7 @@
 
             .sort-type {
                 color: $green-dark-base;
-        }
+            }
         }
 
         .sort-order {
@@ -111,14 +115,14 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
 
         .action-btn {
             cursor: pointer;
         }
 
         .select-all-btn {
-            margin-right: $spacing-8;
+            margin: $spacing-0 $spacing-4;
 
             &::before {
                 @include Icon($select, color(gray-content3));
@@ -132,7 +136,7 @@
         }
 
         .list-view-btn {
-            margin-right: $spacing-8;
+            margin-right: $spacing-4;
 
             &::before {
                 font-size: 24px;
@@ -146,7 +150,7 @@
         }
 
         .grid-view-btn {
-            margin-right: $spacing-8;
+            margin: $spacing-0 $spacing-4;
 
             &::before {
                 font-size: 24px;
@@ -159,9 +163,13 @@
             @include Icon($grid, $green-dark-base);
         }
 
-        .filter-btn::before {
-            font-size: 24px;
-            @include Icon($filter, color(gray-content3));
+        .filter-btn {
+            margin-left: $spacing-4;
+
+            &:before {
+                font-size: 24px;
+                @include Icon($filter, color(gray-content3));
+            }
         }
 
         .filter-btn-selected::before {
