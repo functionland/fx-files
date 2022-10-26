@@ -10,7 +10,8 @@
         }
 
         @if (!string.IsNullOrEmpty(FileImage))
-        {
+        {  
+            <img src="@FileImage" draggable="false" class="file-card-blur" />
             <img src="@FileImage" draggable="false" class="file-card-image" />
         }
         else
