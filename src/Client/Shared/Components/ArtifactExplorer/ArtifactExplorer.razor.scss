@@ -133,15 +133,43 @@
             position: absolute;
             top: 0;
             right: 0;
-            left: 36px;
+            left: 0;
             text-align: center;
             height: 42px;
             width: 42px;
 
-            .thumbnail-img {
-                object-fit: contain;
-                height: 42px;
-                width: 42px;
+            .img-box {
+                position: relative;
+
+                .thumbnail-background {
+                    object-fit: cover;
+                    height: 42px;
+                    width: 42px;
+                    filter: blur(2.5px);
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .thumbnail-img {
+                    object-fit: contain;
+                    height: 42px;
+                    width: 42px;
+                    position: absolute;
+                    left: 0;
+                }
+            }
+
+            .icon-play {
+                background-image: url($play-circle);
+                background-repeat: no-repeat;
+                background-size: 24px;
+                background-position: center;
+                width: 24px;
+                height: 24px;
+                position: absolute;
+                top: 9px;
+                left: 9px;
             }
         }
     }
@@ -199,17 +227,16 @@
     max-width: 187px;
     padding: 8px;
 
+    .check-box-position {
+        position: absolute;
+        z-index: 1;
+    }
+
     .icon-box {
         background-color: color(gray-bg-primary);
         height: 86px;
         width: 161px;
         position: relative;
-
-        .check-box-position {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
 
         .item-icon-position {
             font-size: $icon-56;
@@ -226,10 +253,38 @@
             left: 0;
             text-align: center;
 
-            .thumbnail-img {
-                object-fit: contain;
-                width: 161px;
-                height: 86px;
+            .img-box {
+                position: relative;
+
+                .thumbnail-background {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    object-fit: cover;
+                    width: 161px;
+                    height: 86px;
+                    filter: blur(2.5px);
+                }
+
+                .thumbnail-img {
+                    object-fit: contain;
+                    width: 161px;
+                    height: 86px;
+                    position: absolute;
+                    left: 0;
+                }
+            }
+
+            .icon-play {
+                background-image: url($play-circle);
+                background-repeat: no-repeat;
+                background-size: 32px;
+                background-position: center;
+                width: 32px;
+                height: 32px;
+                position: absolute;
+                top: 27px;
+                left: 62px;
             }
         }
     }
@@ -238,6 +293,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-top: 8px;
 
         .item-content {
 
