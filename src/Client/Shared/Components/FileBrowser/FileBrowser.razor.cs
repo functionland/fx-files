@@ -57,7 +57,7 @@ public partial class FileBrowser
 
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _isAscOrder = true;
-    private bool _isArtifactExplorerLoading = true;
+    private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
@@ -665,9 +665,8 @@ public partial class FileBrowser
         }
     }
 
-    public void ToggleSelectedAll()
+    public async Task ToggleSelectedAll()
     {
-        _isArtifactExplorerLoading = true;
         if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
             _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
@@ -678,8 +677,6 @@ public partial class FileBrowser
                 _selectedArtifacts.Add(artifact);
             }
         }
-        _isArtifactExplorerLoading = false;
-        StateHasChanged();
     }
 
     public void ChangeViewMode(ViewModeEnum viewMode)
@@ -1102,23 +1099,27 @@ public partial class FileBrowser
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         _isArtifactExplorerLoading = true;
-        StateHasChanged();
-        RefreshDisplayedArtifacts();
+        await Task.Run(() =>
+        {
+            RefreshDisplayedArtifacts();
+        });
         _isArtifactExplorerLoading = false;
   
     }
 
-    private void HandleSortOrderClick()
+    private async Task HandleSortOrderClick()
     {
         if (_isArtifactExplorerLoading) return;
         
         _isAscOrder = !_isAscOrder;
         _isArtifactExplorerLoading = true;
-        StateHasChanged();
         try
         {
-            var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-            _displayedArtifacts = sortedDisplayArtifact.ToList();
+            await Task.Run(() =>
+            {
+                var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+                _displayedArtifacts = sortedDisplayArtifact.ToList();
+            });
         }
         catch (Exception exception)
         {
