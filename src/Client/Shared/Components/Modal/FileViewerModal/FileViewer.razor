@@ -8,7 +8,10 @@
             <button onclick="@(() =>Back())">Back</button>     
         }
 
-        <ImageViewer @ref="_imageRef" CurrentArtifact="@_currentArtifact" FileService="FileService" />
+        @if (IsSupported<ImageViewer>(_currentArtifact))
+        {
+            <ImageViewer @ref="_imageRef" CurrentArtifact="@_currentArtifact" FileService="FileService" />
+        }
         <VideoViewer @ref="_videoRef" CurrentArtifact="_currentArtifact"  FileService="FileService" />
     </div>
 </div>

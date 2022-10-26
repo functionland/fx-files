@@ -50,4 +50,20 @@ public partial class FileViewer
     {
         _fileViewers.ForEach(fv => fv.Visibility = false);
     }
+
+    private bool IsSupported<TComponent>(FsArtifact? artifact)
+        where TComponent : IFileViewerComponent
+    {
+        if (artifact is null)
+            return false;
+
+        var extension = artifact.FileExtension;
+
+        if (new string[] { ""}.Contains(extension) &&  typeof(TComponent) == typeof(ImageViewer))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
