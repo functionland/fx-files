@@ -350,3 +350,70 @@
 .time-options-container {
     margin-bottom: $spacing-16;
 }
+
+.footer-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-10 $spacing-21;
+    border-top: 1px solid color(gray-bg-secondary);
+    position: fixed;
+    bottom: 0;
+    max-width: 600px;
+    width: 100%;
+
+    & div {
+        cursor: pointer;
+    }
+
+    .option-item {
+        min-width: 70px;
+        height: 46px;
+        text-align: center;
+    }
+
+    .title-item {
+        color: color(gray-content1);
+        font-size: $font-size-12;
+        font-family: $open-sans-regular;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .detail-icon {
+        text-align: center;
+
+        &::before {
+            font-size: 24px;
+            @include Icon($detail);
+        }
+    }
+
+    .show-location-icon {
+        text-align: center;
+
+        &::before {
+            font-size: 24px;
+            @include Icon($folder,$color:color(gray-content1));
+        }
+    }
+
+    .copy-btn-icon {
+
+
+        &::before {
+            font-size: 24px;
+            @include Icon($copy);
+        }
+    }
+
+    .pin-icon::before {
+        font-size: 24px;
+        @include Icon($pin-outline);
+    }
+
+    .more-option-icon::before {
+        @include Icon($options-horizontal);
+        font-size: 24px;
+    }
+}
