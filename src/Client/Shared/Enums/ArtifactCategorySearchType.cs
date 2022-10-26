@@ -12,7 +12,6 @@ namespace Functionland.FxFiles.Client.Shared.Enums
         Video = 2,
         Audio = 3,
         Document = 4,
-        PDF = 5,
-        App = 6
+        App = 5
     }
 }
