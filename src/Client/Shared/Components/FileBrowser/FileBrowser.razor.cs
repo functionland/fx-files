@@ -706,8 +706,9 @@ public partial class FileBrowser
         }
     }
 
-    public void ChangeViewMode(ViewModeEnum viewMode)
+    public void ChangeViewMode()
     {
+        var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
         ArtifactState.SetViewMode(viewMode);
         StateHasChanged();
     }
