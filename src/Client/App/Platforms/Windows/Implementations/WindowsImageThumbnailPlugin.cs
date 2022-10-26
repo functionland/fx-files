@@ -19,27 +19,21 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
             try
             {
-                var outStream = await Task.Run(() =>
-                {
-                    var imageStream = stream ?? fileStream;
-                    if (imageStream is null)
-                        throw new InvalidOperationException("No stream available for the image.");
+                var imageStream = stream ?? fileStream;
+                if (imageStream is null)
+                    throw new InvalidOperationException("No stream available for the image.");
 
-                    var image = System.Drawing.Image.FromStream(imageStream);
-                    image = CorrectRotation(image);
+                var image = System.Drawing.Image.FromStream(imageStream);
+                image = CorrectRotation(image);
 
-                    (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
+                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
 
-                    var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
-                    var memoryStream = new MemoryStream();
+                var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
+                var memoryStream = new MemoryStream();
 
-                    thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                    return Task.FromResult(memoryStream);
-
-                }, cancellationToken ?? CancellationToken.None);
-                return outStream;
-
+                return memoryStream;
             }
             finally
             {

@@ -59,6 +59,7 @@ public partial class FileBrowser
     private bool _isAscOrder = true;
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
+    private bool _isGoingBack;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
@@ -87,6 +88,16 @@ public partial class FileBrowser
 
         await base.OnInitAsync();
 
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isGoingBack)
+        {
+            _isGoingBack = false;
+            await JSRuntime.InvokeVoidAsync("getLastScrollPossition");
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
@@ -593,6 +604,8 @@ public partial class FileBrowser
         {
             try
             {
+                await JSRuntime.InvokeVoidAsync("saveScrollPosition");
+                _isGoingBack = false;
                 _currentArtifact = artifact;
                 _isArtifactExplorerLoading = true;
                 await LoadChildrenArtifactsAsync(_currentArtifact);
@@ -1011,7 +1024,7 @@ public partial class FileBrowser
                 _fxSearchInputRef?.HandleClearInputText();
                 await UpdateCurrentArtifactForBackButton(_currentArtifact);
                 await LoadChildrenArtifactsAsync(_currentArtifact);
-                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                _isGoingBack = true;
                 StateHasChanged();
             }
             else

@@ -15,7 +15,7 @@ public partial class WindowsPlatformTestService : PlatformTestService
         {
             WindowsFileServicePlatformTest,
             LocalWindowsImageThumbnailPluginPlatformTest,
-            FulaWindowsImageThumbnailPluginPlatformTest
+            FulaWindowsImageThumbnailPluginPlatformTest,
         };
     }  
 }

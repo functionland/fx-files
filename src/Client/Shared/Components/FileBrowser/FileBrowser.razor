@@ -30,11 +30,12 @@
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                 <FileCard ArtifactType="@pin.ArtifactType"
-                              FileName="@pin.Name"
-                              FileSize="@pin.SizeStr"
-                              FileImage="@pin.ThumbnailPath"
-                              FileType="@pin.FileCategory"
-                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                          Name="@pin.Name"
+                                          Size="@pin.SizeStr"
+                                          Path="@pin.FullPath"
+                                          FileService = "@FileService"
+                                          FileType="@pin.FileCategory"
+                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
                         }
                     </div>

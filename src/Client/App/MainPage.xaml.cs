@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.FileProviders;
-using Functionland.FxFiles.Client.Shared.Resources;
-using Microsoft.Maui;
-using System.Drawing;
-using Microsoft.Maui.Platform;
+﻿using Functionland.FxFiles.Client.App.Extensions;
+
+using Microsoft.Extensions.FileProviders;
 
 #if WINDOWS
 using Microsoft.UI;
@@ -139,11 +137,13 @@ public partial class MainPage
 
 }
 
-public class FxBlazorWebView : BlazorWebView
+public class FsBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
-        return new FxFileProvider(baseFileProvider);
+        var fsFileProviderDependency = ServiceExtention.GetRequiredService<FsFileProviderDependency>();
+        
+        return new FsFileProvider(baseFileProvider, fsFileProviderDependency);
     }
 }
