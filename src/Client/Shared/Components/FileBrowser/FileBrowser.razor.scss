@@ -70,7 +70,7 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: center;
 
         .selected-sort {
             font-family: $open-sans-regular;
@@ -122,58 +122,58 @@
         }
 
         .select-all-btn {
-            margin: $spacing-0 $spacing-4;
+            margin: $spacing-0 $spacing-8;
 
             &::before {
                 @include Icon($select, color(gray-content3));
-                font-size: 24px;
+                font-size: $icon-24;
             }
         }
 
         .select-all-filled::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($selected, $green-dark-base, $Icons-Filled);
         }
 
         .list-view-btn {
-            margin-right: $spacing-4;
+            margin-right: $spacing-8;
 
             &::before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($list, color(gray-content3));
             }
         }
 
         .list-view-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($list, $green-dark-base);
         }
 
         .grid-view-btn {
-            margin: $spacing-0 $spacing-4;
+            margin: $spacing-0 $spacing-8;
 
             &::before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($grid, color(gray-content3));
             }
         }
 
         .grid-view-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($grid, $green-dark-base);
         }
 
         .filter-btn {
-            margin-left: $spacing-4;
+            margin-left: $spacing-8;
 
             &:before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($filter, color(gray-content3));
             }
         }
 
         .filter-btn-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($fill, $green-dark-base, $Icons-Filled);
         }
     }
