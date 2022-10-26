@@ -1,20 +1,23 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 {
-    public Task<Stream> CreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
+    public bool IsJustFilePathSupported => false;
+
+    public Task<Stream> CreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        return OnCreateThumbnailAsync(input, cancellationToken);
+        return OnCreateThumbnailAsync(stream, filePath, thumbnailScale, cancellationToken);
     }
 
-    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null);
+    protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 
-    public bool IsExtensionSupported(string extension)
+    public bool IsSupported(string extension)
     {
-        return new string[]
-        {
-            ".jpg",
-            ".png"
-        }.Contains(extension.ToLower());
+        return FsArtifactUtils.FileExtentionsType
+                        .Where(e => e.Value == FileCategoryType.Image)
+                        .Select(f => f.Key)
+                        .Any(c => c.Equals(extension.ToLower()));
     }
 }

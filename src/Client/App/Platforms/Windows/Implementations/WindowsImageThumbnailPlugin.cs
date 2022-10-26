@@ -1,25 +1,32 @@
-﻿using Functionland.FxFiles.Client.Shared.Models;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Utils;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 {
     public class WindowsImageThumbnailPlugin : ImageThumbnailPlugin
     {
-        protected override async Task<Stream> OnCreateThumbnailAsync(Stream input, CancellationToken? cancellationToken = null)
+        protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
         {
-            return await Task.Run(async () =>
+            if (stream == null && filePath == null)
+                throw new InvalidOperationException($"Both can not be null: {nameof(stream)},{nameof(filePath)}");
+
+            Stream? fileStream = null;
+            if (stream is null && filePath != null)
             {
-                var image = System.Drawing.Image.FromStream(input);
+                fileStream = File.OpenRead(filePath);
+            }
+
+            try
+            {
+                var imageStream = stream ?? fileStream;
+                if (imageStream is null)
+                    throw new InvalidOperationException("No stream available for the image.");
+
+                var image = System.Drawing.Image.FromStream(imageStream);
                 image = CorrectRotation(image);
 
-                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, 252, 146);
+                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
 
                 var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
                 var memoryStream = new MemoryStream();
@@ -27,8 +34,14 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
                 thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                 return memoryStream;
-
-            }, cancellationToken ?? CancellationToken.None);
+            }
+            finally
+            {
+                if (fileStream is not null)
+                {
+                    await fileStream.DisposeAsync().AsTask();
+                }
+            }
         }
 
         private static System.Drawing.Image? CorrectRotation(System.Drawing.Image? image)

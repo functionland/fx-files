@@ -37,6 +37,13 @@
     @include Icon($move);
 }
 
+::deep .share-with-app-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($app);
+}
+
 ::deep .delete-button .fxbutton-text {
     color: color(error);
     line-height: 24px;

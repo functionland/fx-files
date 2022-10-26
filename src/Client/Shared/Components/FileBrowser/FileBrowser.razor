@@ -17,35 +17,34 @@
 
     @if (IsInRoot(_currentArtifact) && _isInSearchMode is false)
     {
-        @if (_pins?.Count > 0)
-        {
-            <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-                <ContentTemplate>
+        <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+            <ContentTemplate>
+                @if (_isPinBoxLoading)
+                {
+                    <OverlayLoading LoadingType="LoadingType.Overlay" />
+                }
+                @if (_pins?.Count > 0)
+                {
                     <div class="items">
                         @foreach (var pin in _pins)
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                 <FileCard ArtifactType="@pin.ArtifactType"
-                                          FileName="@pin.Name"
-                                          FileSize="@pin.SizeStr"
-                                          FileImage="@pin.ThumbnailPath"
+                                          Name="@pin.Name"
+                                          Size="@pin.SizeStr"
+                                          Path="@pin.FullPath"
+                                          FileService = "@FileService"
                                           FileType="@pin.FileCategory"
                                           ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
                         }
                     </div>
-                </ContentTemplate>
-            </BitAccordion>
-        }
-        else
-        {
-            <div class="disable-pinned">
-                Pinned (empty)
-            </div>
-        }
-
-        <div class="root-title">My device files</div>
+                }
+            </ContentTemplate>
+        </BitAccordion>
     }
+
+    <div class="root-title">My device files</div>
 
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
@@ -122,11 +121,10 @@
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
-<ProgressModal
-    CurrentText="@ProgressBarCurrentText"
-    CurrentSubText="@ProgressBarCurrentSubText"
-    ProgressCurrentValue="@ProgressBarCurrentValue"
-    ProgressMax="@ProgressBarMax"
-    OnCancel="ProgressBarOnCancel"
-    @ref="_progressModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>
+<ProgressModal CurrentText="@ProgressBarCurrentText"
+               CurrentSubText="@ProgressBarCurrentSubText"
+               ProgressCurrentValue="@ProgressBarCurrentValue"
+               ProgressMax="@ProgressBarMax"
+               OnCancel="ProgressBarOnCancel"
+               @ref="_progressModalRef" />
+<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />

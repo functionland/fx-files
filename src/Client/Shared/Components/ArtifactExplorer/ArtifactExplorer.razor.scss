@@ -24,12 +24,12 @@
     display: grid;
     grid-gap: 1px;
     grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fit, minmax(174px, 1fr));
-    grid-template-rows: repeat(auto-fit, 134px);
-    justify-content: center;
+    grid-template-columns: repeat(auto-fit, 177px);
+    grid-template-rows: repeat(auto-fit, 148px);
+    justify-content: flex-start;
 
-    .item-container {
-        padding: $spacing-28 $spacing-21 $spacing-18;
+    .selected-item {
+        background-color: color(gray-bg-primary);
     }
 }
 
@@ -103,11 +103,29 @@
     text-align: center;
 }
 
+.list-view {
+    padding: 16px 0;
+}
+
 .list-view-item {
     height: 74px;
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
+
+    .icon-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-grow: 1;
+        overflow: hidden;
+    }
 
     .options-btn::before {
         @include Icon($options-vertical);
@@ -125,7 +143,7 @@
             text-overflow: ellipsis;
             font-size: $font-size-16;
             color: color(gray-content1);
-            line-height: $line-height-24;
+            line-height: $line-height-20;
             font-family: $open-sans-regular;
             letter-spacing: $letter-spacing-02;
             word-wrap: break-word;
@@ -150,12 +168,53 @@
 }
 
 .grid-view-item {
-    height: 134px;
-    max-width: 187.5px;
+    height: 148px;
+    max-width: 187px;
+    padding: 8px;
+
+    .icon-box {
+        background-color: color(gray-bg-primary);
+        height: 86px;
+        width: 100%;
+        position: relative;
+
+        .check-box-position {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .item-icon-position {
+            font-size: $icon-56;
+
+            &::before {
+                color: color(gray-content3);
+            }
+        }
+    }
+
+    .footer-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .item-content {
+
+            .item-title {
+                .disable-space-pinned {
+                    width: 137px;
+                }
+
+                .space-pinned {
+                    width: 109px;
+                }
+            }
+        }
+    }
 
 
     .options-btn::before {
-        @include Icon($options-horizontal);
+        @include Icon($options-vertical);
         line-height: 27px;
     }
 
@@ -235,7 +294,6 @@
 .app-file-icon::before {
     @include Icon($app);
 }
-
 /*.select-action {
     display: flex;
     height: 40px;

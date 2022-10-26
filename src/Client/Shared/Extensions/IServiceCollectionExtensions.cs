@@ -27,17 +27,21 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<FakeFileServiceFactory>();
         services.AddSingleton<FakeBloxServiceFactory>();
+        services.AddSingleton<FakePoolServiceFactory>();
         services.AddSingleton<IBloxService, FakeBloxService>();
+        services.AddSingleton<IFulaPoolSevice, FakePoolService>();
         services.AddSingleton<IGoBackService, GoBackService>();
+        services.AddSingleton<IZipService, ZipService>();
 
         services.AddTransient<IFileViewer, TextFileViewer>();
         services.AddTransient<IFileViewer, ZipFileViewer>();
         services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
         services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
 
-        services.AddTransient<IThumbnailPlugin, PdfThumbnailPlugin>();
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
+
+        services.AddSingleton<FsFileProviderDependency>();
 
         return services;
     }

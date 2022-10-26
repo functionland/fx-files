@@ -3,5 +3,5 @@
 public interface IArtifactThumbnailService<TFileService>
     where TFileService : IFileService
 {
-    Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, CancellationToken? cancellationToken = null);
+    Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 }

@@ -21,7 +21,7 @@
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         @if (_pinOptionResult?.IsVisible == true)
         {
-            @if(_pinOptionResult?.Type == PinOptionResultType.Add)
+            @if (_pinOptionResult?.Type == PinOptionResultType.Add)
             {
                 <FxButton Class="pin-button"
                   Text="Add to pinned items"
@@ -36,13 +36,21 @@
                   OnClick="UnPin"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
-            }      
+            }
         }
         <FxButton Class="move-button"
                   Text="Move to"
                   OnClick="Move"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
+        @if (_isVisibleShareWithAppOption)
+        {
+            <FxButton Class="share-with-app-button"
+                  Text="Share with app"
+                  OnClick="ShareWithApp"
+                  IsEnabled="!_isInRoot"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+        }
         <FxButton Class="delete-button"
                   Text="Delete"
                   OnClick="Delete"

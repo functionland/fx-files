@@ -1,2 +1,21 @@
-﻿body {
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+
+
+
+.footer-app-view {
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    left: 0;
+    padding: $spacing-16 $spacing-21;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    ::deep .skip {
+        flex-grow: 1;
+    }
 }
+

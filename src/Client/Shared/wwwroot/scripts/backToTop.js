@@ -4,13 +4,48 @@
 
 window.onscroll = function () { OnScrollCheck() };
 
+let timeoutID;
 function OnScrollCheck() {
     if (document.documentElement.scrollTop > 85) {
-        var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
-        scrollButton.style.display = 'block';
+        ShowBackToTopButton();
+        if (typeof timeoutID === "undefined") {
+            timeoutID = setTimeout(HideBackToTopButton, 3000);
+        }
     }
     else {
+        HideBackToTopButton();
+        if (typeof timeoutID !== "undefined") {
+            clearTimeout(timeoutID);
+            timeoutID = undefined;
+        }
+    }
+}
+
+function HideBackToTopButton() {
+    {
         var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
         scrollButton.style.display = 'none';
+        if (typeof timeoutID !== "undefined") {
+            clearTimeout(timeoutID);
+            timeoutID = undefined;
+        }
     }
+}
+
+function ShowBackToTopButton() {
+    var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
+    scrollButton.style.display = 'block';
+}
+
+// array for store scroll top value for back button
+let savePositionScroll = [];
+
+function getLastScrollPossition() {
+    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
+    document.documentElement.scrollTop = lastScrollPosition;
+    savePositionScroll.pop();
+}
+
+function saveScrollPosition() {
+    savePositionScroll.push(document.documentElement.scrollTop);
 }

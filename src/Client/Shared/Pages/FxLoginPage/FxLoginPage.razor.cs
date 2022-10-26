@@ -8,5 +8,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 {
     public partial class FxLoginPage
     {
+        private bool _isLoading = false;
     }
 }
