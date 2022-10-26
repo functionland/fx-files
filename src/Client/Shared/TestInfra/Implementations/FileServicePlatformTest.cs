@@ -76,7 +76,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 await fileService.MoveArtifactsAsync(movingFiles, Path.Combine(testRoot, "Folder 2"));
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(1, artifacts.Count, "Move a file to a folder. Created on destination");
-
+                 
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Move a file to a folder. Removed from source");
                 artifacts.Clear();
