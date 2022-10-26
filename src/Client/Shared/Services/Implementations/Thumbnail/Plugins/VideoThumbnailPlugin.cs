@@ -2,7 +2,7 @@
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public abstract class PdfThumbnailPlugin : IThumbnailPlugin
+public abstract class VideoThumbnailPlugin : IThumbnailPlugin
 {
     public virtual bool IsJustFilePathSupported => false;
 
@@ -16,8 +16,9 @@ public abstract class PdfThumbnailPlugin : IThumbnailPlugin
     public bool IsSupported(string extension)
     {
         return FsArtifactUtils.FileExtentionsType
-                        .Where(e => e.Value == FileCategoryType.Pdf)
+                        .Where(e => e.Value == FileCategoryType.Video)
                         .Select(f => f.Key)
                         .Any(c => c.Equals(extension.ToLower()));
+
     }
 }

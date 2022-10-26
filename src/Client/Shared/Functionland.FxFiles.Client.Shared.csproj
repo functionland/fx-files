@@ -18,6 +18,8 @@
 
 		<EmbeddedResource Include="Migrations\*.sql" />
 
+		<PackageReference Include="FreeSpire.PDF" Version="8.6.0" />
+
 		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.0-preview.1" />
 
 		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.0-preview.1" />
