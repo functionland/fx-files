@@ -10,7 +10,7 @@
             </div>
         }
 
-        @if (!string.IsNullOrEmpty(Path))
+        @if (ArtifactType == FsArtifactType.File && FileType == FileCategoryType.Image)
         {
             <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-image" />
         }
