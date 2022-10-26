@@ -14,14 +14,11 @@
 
         video.play();
 
-        video.addEventListener('durationchange', () => {
-            videoProgress.setAttribute('max', Math.round(video.duration));
-        });
-
         video.addEventListener("timeupdate", () => {
             videoProgress.value = video.currentTime;
-            videoDuration.innerHTML = fancyTimeFormat(video.duration);
-            videoCurrentTime.innerHTML = fancyTimeFormat(video.currentTime);
+            videoProgress.setAttribute('max', Math.round(video.duration));
+            videoDuration.innerHTML = videoTimeFormat(video.duration - 1);
+            videoCurrentTime.innerHTML = videoTimeFormat(video.currentTime);
         });
 
         videoProgress.addEventListener("input", (event) => {
@@ -30,13 +27,11 @@
         });
     }
 
-    function fancyTimeFormat(duration) {
-        // Hours, minutes and seconds
+    function videoTimeFormat(duration) {
         var hrs = ~~(Math.round(duration) / 3600);
         var mins = ~~((Math.round(duration) % 3600) / 60);
         var secs = ~~Math.round(duration) % 60;
 
-        // Output like "1:01" or "4:03:59" or "123:03:59"
         var ret = "";
 
         if (hrs > 0) {
@@ -57,12 +52,10 @@
         }
     }
 
-    // backward the current time
     function backward() {
         video.currentTime = video.currentTime - 15;
     }
 
-    // forward the current time
     function forward() {
         video.currentTime = video.currentTime + 15;
     }
