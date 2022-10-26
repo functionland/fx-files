@@ -13,10 +13,10 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 public partial class Android10PermissionUtils : PermissionUtils
 {
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
-    
+
     public override int StoragePermissionRequestCode { get; set; } = 2020;
 
-    public override void RequestStoragePermission(string filepath = null)
+    public override async Task RequestStoragePermission(string filepath = null)
     {
         GetPermissionTask = new TaskCompletionSource<bool>();
 
@@ -24,11 +24,8 @@ public partial class Android10PermissionUtils : PermissionUtils
 
         if (isInternal)
         {
-            _ = Task.Run(async () =>
-            {
-                await Permissions.RequestAsync<Android10StoragePermission>();
-                GetPermissionTask.SetResult(await CheckStoragePermissionAsync());
-            });
+            await Permissions.RequestAsync<Android10StoragePermission>();
+            GetPermissionTask.SetResult(await CheckStoragePermissionAsync());
         }
         else
         {
@@ -52,26 +49,14 @@ public partial class Android10PermissionUtils : PermissionUtils
             var permission = MauiApplication.Context?.ContentResolver?.PersistedUriPermissions.ToList();
             var permissionList = new List<(UriPermission Permission, string SepmentPath)>();
             foreach (var p in permission)
-            {
+            { 
                 var segmentpath = System.IO.Path.Combine(p.Uri.PathSegments.Skip(1).Select(r => r.TrimEnd(':')).ToArray());
-                if (segmentpath.Contains('/'))
-                {
-                    segmentpath = ReverseString(segmentpath);
-                    var index = segmentpath.IndexOf('/');
-                    segmentpath = ReverseString(segmentpath);
-                    segmentpath = segmentpath.Substring(segmentpath.Length - index);
-                }
-                else if (segmentpath.Contains(':'))
-                {
-                    var index = segmentpath.IndexOf(":");
-                    segmentpath = segmentpath.Substring(index + 1);
-                }
-
+                segmentpath = segmentpath.Replace(":", Java.IO.File.Separator);
                 permissionList.Add((Permission: p, SepmentPath: segmentpath));
             };
 
             var check = permissionList.Any(r => r.Permission.IsWritePermission && filepath.StartsWith($"/storage/{r.SepmentPath}"));
-            
+
             return check;
 
         }
@@ -97,13 +82,5 @@ public partial class Android10PermissionUtils : PermissionUtils
         var storage = android.OS.Environment.ExternalStorageDirectory;
         return filepath.StartsWith(storage.AbsolutePath);
     }
-
-    private static string ReverseString(string s)
-    {
-        char[] charArray = s.ToCharArray();
-        Array.Reverse(charArray);
-        return new string(charArray);
-    }
-
 }
 

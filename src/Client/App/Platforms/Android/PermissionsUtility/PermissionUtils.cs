@@ -13,7 +13,7 @@ public abstract class PermissionUtils : IPermissionUtils
 
     public abstract int StoragePermissionRequestCode { get; set; }
 
-    public virtual void RequestStoragePermission(string filepath = null)
+    public virtual async Task RequestStoragePermission(string filepath = null)
     {
         GetPermissionTask = new TaskCompletionSource<bool>();
         Intent intent = new Intent(android.Provider.Settings.ActionManageAppAllFilesAccessPermission);

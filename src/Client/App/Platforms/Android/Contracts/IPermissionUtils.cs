@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Contracts
 
         Task<bool> CheckStoragePermissionAsync(string filepath = null);
         Task OnPermissionResult(Result resultCode, Intent? data);
-        void RequestStoragePermission(string filepath = null);
+        Task RequestStoragePermission(string filepath = null);
 
     }
 }

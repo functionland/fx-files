@@ -12,7 +12,7 @@ public partial class Android11andAboveFileService : AndroidFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync())
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermission();
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult)

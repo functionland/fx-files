@@ -91,7 +91,7 @@ public partial class Android10FileService : AndroidFileService
     {
         if (!await PermissionUtils.CheckStoragePermissionAsync(path))
         {
-            PermissionUtils.RequestStoragePermission();
+            await PermissionUtils.RequestStoragePermission(path);
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
             if (!StoragePermissionResult || !await PermissionUtils.CheckStoragePermissionAsync(path))
@@ -103,7 +103,7 @@ public partial class Android10FileService : AndroidFileService
 
     protected override async Task GetPermission(IEnumerable<string> paths = null)
     {
-        if (paths == null || paths.Any())
+        if (paths == null || !paths.Any())
         {
             await GetPermission(String.Empty);
         }

@@ -21,11 +21,11 @@ public class MainActivity : MauiAppCompatActivity
 
             base.OnCreate(savedInstanceState);
 
-            var permissionUtils = MauiApplication.Current.Services.GetRequiredService<IPermissionUtils>();
+            permissionUtils = MauiApplication.Current.Services.GetRequiredService<IPermissionUtils>();
 
             if (!await permissionUtils.CheckStoragePermissionAsync())
             {
-                permissionUtils.RequestStoragePermission();
+               await permissionUtils.RequestStoragePermission();
             }
         }
         catch (Exception ex)
