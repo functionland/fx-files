@@ -18,52 +18,51 @@
     {
         @foreach (var artifact in Artifacts)
         {
-            <div class="item-container @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+            <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
          @onpointerup="((e) => PointerUp(e,artifact))"
          @onpointerdown="(() =>PointerDown(artifact))"
          @onpointercancel="PointerCancel">
 
+                <div class="icon-box">
 
+                    @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+                    {
+                        <div class="check-box-position" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
+                            <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                        </div>
+                    }
 
-                @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
-                {
-                    <div @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
-                        <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
-                    </div>
-                }
-
-
-
-                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.Grid || !IsPhone)
-                {
-                    <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
-                }
-
-
-
-                <div class="item-content">
-                    <div class="item-title">
-                        @if (artifact.IsPinned == true)
-                        {
-                            <div class="pin-badge"></div>
-                        }
-                        <div class="title-text">@artifact.Name</div>
-                    </div>
-                    <div class="item-sub-text"></div>
+                    @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.Grid || !IsPhone)
+                    {
+                        <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
+                    }
                 </div>
+                <div class="footer-box">
 
-
-
-                @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
-                {
-                    <div class="options-btn"
-             @onclick="() => HandleArtifactOptionClick(artifact)"
-             @onpointerup:preventDefault="true"
-             @onpointerup:stopPropagation="true"
-             @onpointerdown:preventDefault="true"
-             @onpointerdown:stopPropagation="true">
+                    <div class="item-content">
+                        <div class="item-title">
+                            @if (artifact.IsPinned == true)
+                            {
+                                <div class="pin-badge"></div>
+                            }
+                            <div class="title-text @(artifact.IsPinned == true ? "space-pinned" : "disable-space-pinned")">@artifact.Name</div>
+                        </div>
+                        <div class="item-sub-text"></div>
                     </div>
-                }
+
+
+
+                    @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
+                    {
+                        <div class="options-btn"
+                 @onclick="() => HandleArtifactOptionClick(artifact)"
+                 @onpointerup:preventDefault="true"
+                 @onpointerup:stopPropagation="true"
+                 @onpointerdown:preventDefault="true"
+                 @onpointerdown:stopPropagation="true">
+                        </div>
+                    }
+                </div>
             </div>
         }
     }
