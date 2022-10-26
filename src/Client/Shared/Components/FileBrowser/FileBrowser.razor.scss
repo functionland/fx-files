@@ -3,6 +3,7 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-accordion.scss';
 
+
 .file-browser-container {
     min-height: calc(100vh - 81px);
     display: flex;
@@ -17,6 +18,22 @@
     top: 0;
     z-index: 2;
 }
+
+::deep .bit-acd .content.expanded {
+    height: 232px !important;
+    overflow: unset !important;
+
+    .items {
+        overflow-x: overlay !important;
+        margin-bottom: -24px;
+
+        &::-webkit-scrollbar {
+            height: 6px;
+        }
+    }
+}
+
+
 
 .root-title {
     font-family: $montserrat-semi-bold;
@@ -44,11 +61,13 @@
     margin-bottom: $spacing-16;
 
     &::before {
-        @include Icon($chevron-right, color(input-disable) );
+        @include Icon($chevron-right, color(input-disable));
     }
 }
 
-
+::deep .bit-acd .content {
+    position: relative;
+}
 
 .action-bar {
     display: flex;

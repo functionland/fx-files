@@ -31,5 +31,16 @@
 
         [Parameter]
         public RenderFragment? FileDetailBottomActionFragment { get; set; } = default!;
+
+        [Parameter]
+        public IFileService? FileService { get; set; }
+
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
+                IFulaFileService => PathProtocol.ThumbnailFulaMedium,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
     }
 }
