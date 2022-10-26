@@ -76,9 +76,9 @@ public partial class AndroidFileService : LocalDeviceFileService
         return await base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null && string.IsNullOrWhiteSpace(searchText))
+        if (path is null && string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
         {
             var drives = await GetDrivesAsync();
             foreach (var drive in drives)
@@ -88,7 +88,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             yield break;
         }
 
-        await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
+        await foreach (var artifact in base.GetArtifactsAsync(path, deepSearchFilter, cancellationToken))
         {
             yield return artifact;
         }

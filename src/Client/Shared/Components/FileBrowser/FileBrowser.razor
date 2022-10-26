@@ -117,9 +117,9 @@
                     <div class="time-title">Time</div>
 
                     <div class="time-options">
-                        <div class="yesterday-option @(_artifactsSearchFilterDate == ArtifactsSearchFilterDateEnum.Yesterday ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum.Yesterday))">Yesterday</div>
-                        <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactsSearchFilterDateEnum.Past7Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum.Past7Days))">Past 7 days</div>
-                        <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactsSearchFilterDateEnum.Past30Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum.Past30Days))">Past 30 days</div>
+                        <div class="yesterday-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Yesterday ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Yesterday))">Yesterday</div>
+                        <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Past7Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Past7Days))">Past 7 days</div>
+                        <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Past30Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Past30Days))">Past 30 days</div>
                     </div>
                 </div>
 
@@ -127,12 +127,12 @@
                     <div class="type-title">Type</div>
 
                     <div class="type-options">
-                        <div class="image-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Image ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Image))">Image</div>
-                        <div class="video-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Video ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Video))">Video</div>
-                        <div class="audio-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Audio ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Audio))">Audio</div>
-                        <div class="document-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.Document ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.Document))">Document</div>
-                        <div class="folder-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.PDF ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.PDF))">PDF</div>
-                        <div class="pdf-option @(_artifactsSearchFilterType == ArtifactsSearchFilterTypeEnum.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum.App))">App</div>
+                        <div class="image-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Image ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Image))">Image</div>
+                        <div class="video-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Video ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Video))">Video</div>
+                        <div class="audio-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Audio ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Audio))">Audio</div>
+                        <div class="document-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Document ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Document))">Document</div>
+                        <div class="folder-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.PDF ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.PDF))">PDF</div>
+                        <div class="pdf-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">App</div>
                     </div>
                 </div>
             </div>

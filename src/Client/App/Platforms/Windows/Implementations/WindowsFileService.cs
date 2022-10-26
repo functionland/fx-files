@@ -36,9 +36,9 @@ public partial class WindowsFileService : LocalDeviceFileService
         return base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
 
-    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
     {
-        return base.GetArtifactsAsync(path, searchText, cancellationToken);
+        return base.GetArtifactsAsync(path, deepSearchFilter, cancellationToken);
     }
 
     public override Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)

@@ -1,9 +1,6 @@
-﻿using System.IO;
-using System.Text;
-
+﻿using System.Text;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
-using Functionland.FxFiles.Client.Shared.Models;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -156,10 +153,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        public virtual async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+        public virtual async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
         {
 
-            if (string.IsNullOrWhiteSpace(searchText) && string.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText) && string.IsNullOrWhiteSpace(path))
             {
                 await foreach (var item in GetChildArtifactsAsync(path, cancellationToken))
                 {
@@ -169,14 +166,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 yield break;
             }
-            else if (!string.IsNullOrWhiteSpace(searchText) && string.IsNullOrWhiteSpace(path))
+            else if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText) && string.IsNullOrWhiteSpace(path))
             {
                 var drives = await GetDrivesAsync();
 
                 foreach (var drive in drives)
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    await foreach (var item in GetAllFileAndFoldersAsync(drive.FullPath, searchText, cancellationToken))
+                    await foreach (var item in GetAllFileAndFoldersAsync(drive.FullPath, deepSearchFilter, cancellationToken))
                     {
                         if (cancellationToken?.IsCancellationRequested == true) yield break;
                         yield return item;
@@ -636,7 +633,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        private async IAsyncEnumerable<FsArtifact> GetAllFileAndFoldersAsync(string path, string searchText, CancellationToken? cancellationToken = null)
+        private async IAsyncEnumerable<FsArtifact> GetAllFileAndFoldersAsync(string path, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
         {
             var files = new List<(string fullPath, FileInfo fileInfo)>();
             var folders = new List<(string fullPath, DirectoryInfo directoryInfo)>();
@@ -652,7 +649,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                             !c.Item2.Attributes.HasFlag(FileAttributes.Hidden) &&
                             !c.Item2.Attributes.HasFlag(FileAttributes.System) &&
                             !c.Item2.Attributes.HasFlag(FileAttributes.Temporary) &&
-                             c.Item2.Name.ToLower().Contains(searchText.ToLower())
+                             c.Item2.Name.ToLower().Contains(deepSearchFilter?.SearchText.ToLower())
                         )
                     .ToList();
 
@@ -703,7 +700,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 var providerType = await GetFsFileProviderTypeAsync(fullPath);
 
-                if (directoryInfo.Name.ToLower().Contains(searchText.ToLower()))
+                if (directoryInfo.Name.ToLower().Contains(deepSearchFilter?.SearchText.ToLower()))
                 {
                     yield return new FsArtifact(fullPath, Path.GetFileName(fullPath), FsArtifactType.Folder, providerType)
                     {
@@ -712,7 +709,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     };
                 }
 
-                await foreach (var item in GetAllFileAndFoldersAsync(fullPath, searchText, cancellationToken))
+                await foreach (var item in GetAllFileAndFoldersAsync(fullPath, deepSearchFilter, cancellationToken))
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     yield return item;

@@ -271,7 +271,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             _files = finalBag;
         }
 
-        public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+        public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
         {
             if (!string.IsNullOrWhiteSpace(path))
                 path = path.Replace("/", "\\");
@@ -281,8 +281,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                     f => string.Equals(Path.GetDirectoryName(f.FullPath), path, StringComparison.CurrentCultureIgnoreCase)
                     && !string.Equals(f.FullPath, path, StringComparison.CurrentCultureIgnoreCase));
 
-            if (!string.IsNullOrWhiteSpace(searchText))
-                files = files.Where(f => f.Name.Contains(searchText));
+            if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
+                files = files.Where(f => f.Name.Contains(deepSearchFilter.SearchText));
 
 
             foreach (var file in files)

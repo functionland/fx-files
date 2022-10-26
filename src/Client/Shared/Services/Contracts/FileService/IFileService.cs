@@ -13,7 +13,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Contracts
         Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null);
         Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null);
         Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null);
-        IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null);
+        IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null);
         Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null);
         Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null);
         Task FillArtifactMetaAsync(FsArtifact artifact, CancellationToken? cancellationToken = null);

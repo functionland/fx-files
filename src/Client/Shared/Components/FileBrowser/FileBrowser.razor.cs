@@ -41,8 +41,8 @@ public partial class FileBrowser
     private string _searchText = string.Empty;
     private FileCategoryType? _fileCategoryFilter;
     private bool _isFileCategoryFilterModeOpen = false;
-    private ArtifactsSearchFilterDateEnum _artifactsSearchFilterDate;
-    private ArtifactsSearchFilterTypeEnum _artifactsSearchFilterType;
+    private ArtifactDateSearchType _artifactsSearchFilterDate;
+    private ArtifactCategorySearchType _artifactsSearchFilterType;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
@@ -916,7 +916,7 @@ public partial class FileBrowser
         cancellationTokenSource = new CancellationTokenSource();
         var token = cancellationTokenSource.Token;
         var sw = System.Diagnostics.Stopwatch.StartNew();
-
+        
         await Task.Run(async () =>
         {
             var buffer = new List<FsArtifact>();
@@ -1259,13 +1259,13 @@ public partial class FileBrowser
         _isFileCategoryFilterModeOpen = !_isFileCategoryFilterModeOpen;
     }
 
-    private void ChangeArtifactsSearchFilterDate(ArtifactsSearchFilterDateEnum date)
+    private void ChangeArtifactsSearchFilterDate(ArtifactDateSearchType date)
     {
         _artifactsSearchFilterDate = date;
         // TODO: Add search filter date to search filter. Call search method from service and update displayed artifacts.
     }
 
-    private void ChangeArtifactsSearchFilterType(ArtifactsSearchFilterTypeEnum type)
+    private void ChangeArtifactsSearchFilterType(ArtifactCategorySearchType type)
     {
         _artifactsSearchFilterType = type;
         // TODO: Add search filter type to search filter. Call search method from service and update displayed artifacts.
