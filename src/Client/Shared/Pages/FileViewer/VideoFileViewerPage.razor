@@ -1,4 +1,5 @@
 ﻿@page "/VideoFileViewer"
+@using Functionland.FxFiles.Client.Shared.Utils
 @inherits AppComponentBase
 
 <div>
@@ -8,8 +9,8 @@
                IsOverflowButtonVisible="false"
                OnBackClick="HandleToolbarBack" />
 
-    <video id="fxVideoElement" >
-        <source src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4" type="video/mp4" />
+    <video id="fxVideoElement" controls>
+        <source src="@(Path.InProtocol(PathProtocol.Storage))" type="video/mp4" />
     </video>
 
     <input id="fxVideoProgressElement" type="range" min="0" value="0" step=".1"/>

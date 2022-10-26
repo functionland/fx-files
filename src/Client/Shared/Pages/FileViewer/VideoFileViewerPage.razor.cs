@@ -2,6 +2,7 @@
 
 public partial class VideoFileViewerPage : IFileViewerPage
 {
+    public string Path { get; set; } = "D:\\test.mp4";
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

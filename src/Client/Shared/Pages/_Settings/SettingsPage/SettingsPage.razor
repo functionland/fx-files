@@ -21,7 +21,8 @@
                   MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
                   ButtonStyle="FxButtonStyle.MenuLine" />
         <FxButton Text="@Localizer[nameof(AppStrings.Pools)]"
-                  ButtonStyle="FxButtonStyle.MenuLine" />
+                  ButtonStyle="FxButtonStyle.MenuLine"
+                  OnClick="@(() => NavigationManager.NavigateTo("VideoFileViewer", false, true))" />
         <FxButton Text="@Localizer[nameof(AppStrings.ImportFromApps)]"
                   ButtonStyle="FxButtonStyle.MenuLine"
                   OnClick="@(() => NavigationManager.NavigateTo("settings/import-from-app", false, true))" />
