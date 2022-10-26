@@ -24,6 +24,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
         [Parameter] public EventCallback HandleBack { get; set; }
+        [Parameter] public bool IsInSearchMode { get; set; }
 
         private System.Timers.Timer? _timer;
 

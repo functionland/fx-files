@@ -54,7 +54,7 @@
 
 
 
-                @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || ArtifactExplorerMode == ArtifactExplorerMode.Search)
+                @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
                 {
                     <div class="options-btn"
              @onclick="() => HandleArtifactOptionClick(artifact)"

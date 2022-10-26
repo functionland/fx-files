@@ -6,7 +6,7 @@
     <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
                OnSearch="HandleSearchAsync"
                OnSearchFocused="HandleSearchFocused"
-               IsInSearchMode="@(_artifactExplorerMode == ArtifactExplorerMode.Search)"
+               IsInSearchMode="_isInSearch"
                OnBackClick="HandleToolbarBackClick"
                Title="@(_currentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
@@ -15,7 +15,7 @@
                OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-    @if (IsInRoot(_currentArtifact) && _artifactExplorerMode != ArtifactExplorerMode.Search)
+    @if (IsInRoot(_currentArtifact) && _isInSearch is false)
     {
         //this is filter in deep search part TODO: replace it in correct palce in code
 
@@ -53,11 +53,11 @@
         <div class="root-title">My device files</div>
     }
 
-    @if (_artifactExplorerMode != ArtifactExplorerMode.Search)
+    @if (_isInSearch is false)
     {
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            <div class="@(_artifactExplorerMode == ArtifactExplorerMode.Search ? "action-bar-search" : "") action-bar">
+            <div class="@(_isInSearch ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
                     <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
@@ -72,7 +72,7 @@
         }
         else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
-            <div class="@(_artifactExplorerMode == ArtifactExplorerMode.Search ? "select-action-search" : "") select-action">
+            <div class="@(_isInSearch ? "select-action-search" : "") select-action">
                 <div class="info-selection">
                     <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
                     <div class="item-selected">
@@ -102,7 +102,7 @@
         }
     }
 
-    @if (_artifactExplorerMode == ArtifactExplorerMode.Search)
+    @if (_isInSearch)
     {
         <section class="filter-deep-search @(_isFileCategoryFilterModeOpen ? "expanded" : "")">
             <div class="filter-content">
@@ -140,7 +140,7 @@
         </section>
     }
 
-    @if (_artifactExplorerMode != ArtifactExplorerMode.Search || string.IsNullOrWhiteSpace(_searchText) is false)
+    @if (_isInSearch is false)
     {
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       CurrentArtifact="_currentArtifact"
@@ -152,38 +152,59 @@
                       FileCategoryFilter="_fileCategoryFilter"
                       HandleBack="HandleToolbarBackClick"
                       IsLoading="_isArtifactExplorerLoading"
+                      IsInSearchMode="_isInSearch"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="_artifactExplorerMode" />
     }
 
-    @if (_artifactExplorerMode == ArtifactExplorerMode.Search && string.IsNullOrWhiteSpace(_searchText) is false && _artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
+    @if (_isInSearch && string.IsNullOrWhiteSpace(_searchText) is false)
     {
-        <div class="footer-option">
-            <div class="btn-detail">
-                <div class="detail-icon"></div>
-                <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
-            </div>
-            <div class="option-item">
-                <NavLink>
-                    <div class="show-location-icon"></div>
-                    <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
-                </NavLink>
-            </div>
-            <div class="option-item">
-                <div class="copy-btn-icon"></div>
-                <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
-            </div>
-            <div class="option-item">
-                <div class="pin-icon"></div>
-                <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
-            </div>
-            <div class="option-item">
-                <div class="more-option-icon"></div>
-                <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
-            </div>
-        </div>
+        <div class="search-container">
+            <ArtifactExplorer Artifacts="_displayedArtifacts"
+                          CurrentArtifact="_currentArtifact"
+                          OnSelectArtifact="HandleSelectArtifactAsync"
+                          OnArtifactOptionClick="HandleOptionsArtifact"
+                          OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
+                          OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
+                          ViewMode="ArtifactState.ViewMode"
+                          FileCategoryFilter="_fileCategoryFilter"
+                          HandleBack="HandleToolbarBackClick"
+                          IsLoading="_isArtifactExplorerLoading"
+                          IsInSearchMode="_isInSearch"
+                          @bind-SelectedArtifacts="_selectedArtifacts"
+                          @bind-ArtifactExplorerMode="_artifactExplorerMode" />
 
+            @if (_isInSearch && string.IsNullOrWhiteSpace(_searchText) is false && _selectedArtifacts?.Count>=1)
+            {
+                <div class="footer-option">
+                    <div class="btn-detail">
+                        <div class="detail-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
+                    </div>
+                    <div class="option-item">
+                        <NavLink>
+                            <div class="show-location-icon"></div>
+                            <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
+                        </NavLink>
+                    </div>
+                    <div class="option-item">
+                        <div class="copy-btn-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="pin-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
+                    </div>
+                    <div class="option-item">
+                        <div class="more-option-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
+                    </div>
+                </div>
+
+            }
+        </div>
     }
+
 </div>
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" />

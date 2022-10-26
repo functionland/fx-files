@@ -35,12 +35,8 @@ public partial class FileBrowser
     private List<FsArtifact> _allArtifacts = new();
     private List<FsArtifact> _displayedArtifacts = new();
     private List<FsArtifact> _selectedArtifacts = new();
-    private string _inlineSearchText = string.Empty;
-    private string _searchText = string.Empty;
     private FileCategoryType? _fileCategoryFilter;
     private bool _isFileCategoryFilterModeOpen = false;
-    private ArtifactDateSearchType _artifactsSearchFilterDate;
-    private ArtifactCategorySearchType _artifactsSearchFilterType;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
@@ -59,7 +55,14 @@ public partial class FileBrowser
     private bool _isAscOrder = true;
     private bool _isArtifactExplorerLoading = true;
     private bool _isPinBoxLoading = true;
+
+    // Search
     private DeepSearchFilter? SearchFilter { get; set; }
+    private bool _isInSearch;
+    private string _inlineSearchText = string.Empty;
+    private string _searchText = string.Empty;
+    private ArtifactDateSearchType? _artifactsSearchFilterDate;
+    private ArtifactCategorySearchType? _artifactsSearchFilterType;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
@@ -892,7 +895,7 @@ public partial class FileBrowser
 
     private void HandleSearchFocused()
     {
-        _artifactExplorerMode = ArtifactExplorerMode.Search;
+        _isInSearch = true;
     }
 
     CancellationTokenSource? cancellationTokenSource;
@@ -901,7 +904,7 @@ public partial class FileBrowser
     {
         //_isLoading = true;
         _searchText = text;
-        ApplySearchFilter(text);
+        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
@@ -1040,17 +1043,17 @@ public partial class FileBrowser
                 _artifactExplorerMode = ArtifactExplorerMode.Normal;
                 break;
 
-            case ArtifactExplorerMode.Search:
-                cancellationTokenSource?.Cancel();
-                _artifactExplorerMode = ArtifactExplorerMode.Normal;
-                _fxSearchInputRef?.HandleClearInputText();
-                _displayedArtifacts.Clear();
-                await LoadChildrenArtifactsAsync();
-                StateHasChanged();
-                break;
-
             default:
                 break;
+        }
+        if (_isInSearch)
+        {
+            cancellationTokenSource?.Cancel();
+            _artifactExplorerMode = ArtifactExplorerMode.Normal;
+            _fxSearchInputRef?.HandleClearInputText();
+            _displayedArtifacts.Clear();
+            await LoadChildrenArtifactsAsync();
+            StateHasChanged();
         }
     }
 
@@ -1297,15 +1300,31 @@ public partial class FileBrowser
         _isFileCategoryFilterModeOpen = !_isFileCategoryFilterModeOpen;
     }
 
-    private void ChangeArtifactsSearchFilterDate(ArtifactDateSearchType date)
+    private async Task ChangeArtifactsSearchFilterDate(ArtifactDateSearchType date)
     {
-        _artifactsSearchFilterDate = date;
-        // TODO: Add search filter date to search filter. Call search method from service and update displayed artifacts.
+        if (_artifactsSearchFilterDate == date)
+        {
+            _artifactsSearchFilterDate = null;
+        }
+        else
+        {
+            _artifactsSearchFilterDate = date;
+        }
+        cancellationTokenSource?.Cancel();
+        await HandleSearchAsync(_searchText);
     }
 
-    private void ChangeArtifactsSearchFilterType(ArtifactCategorySearchType type)
+    private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType type)
     {
-        _artifactsSearchFilterType = type;
-        // TODO: Add search filter type to search filter. Call search method from service and update displayed artifacts.
+        if (_artifactsSearchFilterType == type)
+        {
+            _artifactsSearchFilterType = null;
+        }
+        else
+        {
+            _artifactsSearchFilterType = type;
+        }
+        cancellationTokenSource?.Cancel();
+        await HandleSearchAsync(_searchText);
     }
 }
