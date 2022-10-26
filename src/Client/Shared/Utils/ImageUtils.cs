@@ -2,21 +2,84 @@
 
 public static class ImageUtils
 {
-    public static (int width, int height) ScaleImage(int width, int height, int targetWidth, int targetHeight)
+    public static (int width, int height) ScaleImage(int imageWidth, int imageHeight, ThumbnailScale thumbnailScale)
     {
-        var imageWidth = width / 2;
-        var imageHeight = height / 2;
+        int thumbWidth;
+        int thumbHeight;
 
-        if (imageWidth <= targetWidth)
+        var (scaleWidth, scaleHeight) = GetHeightAndWidthFromThumbnailScale(thumbnailScale);
+
+        if (scaleWidth >= imageWidth && scaleHeight >= imageHeight)
         {
-            imageWidth = width;
+            thumbWidth = imageWidth;
+            thumbHeight = imageHeight;
+        }
+        else if (scaleWidth >= imageWidth && scaleHeight <= imageHeight)
+        {
+            thumbWidth = imageWidth;
+            var ratio = CalculateRatio(imageWidth, imageHeight, scaleWidth, scaleHeight);
+            thumbHeight = (int)Math.Round(imageHeight * ratio);
+        }
+        else if (scaleHeight >= imageHeight && scaleWidth <= imageWidth)
+        {
+            thumbHeight = imageHeight;
+            var ratio = CalculateRatio(imageWidth, imageHeight, scaleWidth, scaleHeight);
+            thumbWidth = (int)Math.Round(imageWidth * ratio);
+        }
+        else
+        {
+            var ratio = CalculateRatio(imageWidth, imageHeight, scaleWidth, scaleHeight);
+            thumbWidth = (int)Math.Round(imageWidth * ratio);
+            thumbHeight = (int)Math.Round(imageHeight * ratio);
         }
 
-        if (imageHeight <= targetHeight)
+        return (thumbWidth, thumbHeight);
+    }
+
+    public static (int width, int height) GetHeightAndWidthFromThumbnailScale(ThumbnailScale thumbnailScale)
+    {
+        int width = 0;
+        int height = 0;
+
+        if (thumbnailScale == ThumbnailScale.XXSmall)
         {
-            imageHeight = height;
+            width = 50;
+            height = 50;
+        }
+        else if (thumbnailScale == ThumbnailScale.XSmall)
+        {
+            width = 175;
+            height = 90;
+        }
+        else if(thumbnailScale == ThumbnailScale.Small)
+        {
+            width = 260;
+            height = 150;
+        }
+        else if (thumbnailScale == ThumbnailScale.Medium)
+        {
+            width = 380;
+            height = 260;
         }
 
-        return (imageWidth, imageHeight);
+        return (width, height);
+    }
+
+    public static float CalculateRatio(int orginalWidth, int orgianlHeight, int targetWidth, int targetHeight)
+    {
+        float originalAspectRatio = (float)orginalWidth / (float)orgianlHeight;
+        float targetAspectRatio = (float)targetWidth / (float)targetHeight;
+        float scalingRatio;
+
+        if (targetAspectRatio >= originalAspectRatio)
+        {
+            scalingRatio = (float)targetWidth / (float)orginalWidth;
+        }
+        else
+        {
+            scalingRatio = (float)targetHeight / (float)orgianlHeight;
+        }
+
+        return scalingRatio;
     }
 }
