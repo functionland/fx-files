@@ -10,11 +10,13 @@ public static class PathProtocolUtils
     {
         return protocol switch
         {
-            PathProtocol.Storage => "storage",
-            PathProtocol.Fula => "fula",
-            PathProtocol.Wwwroot => "wwwroot",
-            PathProtocol.ThumbnailStorage => "thumbnailStorage",
-            PathProtocol.ThumbnailFula => "thumbnailFula",
+            PathProtocol.Storage                => nameof(PathProtocol.Storage),
+            PathProtocol.Fula                   => nameof(PathProtocol.Fula),
+            PathProtocol.Wwwroot                => nameof(PathProtocol.Wwwroot),
+            PathProtocol.ThumbnailStorageSmall  => nameof(PathProtocol.ThumbnailStorageSmall),
+            PathProtocol.ThumbnailStorageMedium => nameof(PathProtocol.ThumbnailStorageMedium),
+            PathProtocol.ThumbnailFulaSmall     => nameof(PathProtocol.ThumbnailFulaSmall),
+            PathProtocol.ThumbnailFulaMedium    => nameof(PathProtocol.ThumbnailFulaMedium),
             _ => throw new ArgumentOutOfRangeException(nameof(protocol), protocol, null)
         };
     }
@@ -28,11 +30,13 @@ public static class PathProtocolUtils
     {
         return protocol switch
         {
-            "storage" => PathProtocol.Storage,
-            "fula" => PathProtocol.Fula,
-            "wwwroot" => PathProtocol.Wwwroot,
-            "thumbnailStorage" => PathProtocol.ThumbnailStorage,
-            "thumbnailFula" => PathProtocol.ThumbnailFula,
+            nameof(PathProtocol.Storage)                => PathProtocol.Storage,
+            nameof(PathProtocol.Fula)                   => PathProtocol.Fula,
+            nameof(PathProtocol.Wwwroot)                => PathProtocol.Wwwroot,
+            nameof(PathProtocol.ThumbnailStorageSmall)  => PathProtocol.ThumbnailStorageSmall,
+            nameof(PathProtocol.ThumbnailStorageMedium) => PathProtocol.ThumbnailStorageMedium,
+            nameof(PathProtocol.ThumbnailFulaSmall)     => PathProtocol.ThumbnailFulaSmall,
+            nameof(PathProtocol.ThumbnailFulaMedium)    => PathProtocol.ThumbnailFulaMedium,
             _ => throw new ArgumentOutOfRangeException(nameof(protocol), protocol, null)
         };
     }

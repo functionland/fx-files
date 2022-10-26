@@ -1,9 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
-
-using Microsoft.Extensions.FileProviders;
-
-using System.Threading;
-using System.Xml.Linq;
+﻿using Microsoft.Extensions.FileProviders;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FsFileInfo;
 
@@ -14,10 +9,12 @@ public class ThumbFileInfo<TFileService> : IFileInfo
     private TFileService _fileService;
     private FileInfo _fileInfo;
     private readonly string _path;
+    private readonly ThumbnailScale _scale;
 
-    public ThumbFileInfo(string path, IArtifactThumbnailService<TFileService> artifactThumbnailService, TFileService fileService)
+    public ThumbFileInfo(string path, ThumbnailScale scale, IArtifactThumbnailService<TFileService> artifactThumbnailService, TFileService fileService)
     {
         _path = path;
+        _scale = scale;
         _artifactThumbnailService = artifactThumbnailService;
         _fileService = fileService;
     }
@@ -36,8 +33,8 @@ public class ThumbFileInfo<TFileService> : IFileInfo
                     var artifact = _fileService.GetArtifactAsync(_path)?.GetAwaiter().GetResult();
                     if (artifact != null)
                     {
-                        var thumbnailAddress = _artifactThumbnailService.GetOrCreateThumbnailAsync(artifact, ThumbnailScale.Medium).GetAwaiter().GetResult();
-                        if(thumbnailAddress != null)
+                        var thumbnailAddress = _artifactThumbnailService.GetOrCreateThumbnailAsync(artifact, _scale).GetAwaiter().GetResult();
+                        if (thumbnailAddress != null)
                         {
                             _physicalPath = thumbnailAddress;
                             _fileInfo = new FileInfo(thumbnailAddress);

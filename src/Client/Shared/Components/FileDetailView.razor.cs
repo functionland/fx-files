@@ -38,8 +38,8 @@
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.Storage,
-                IFulaFileService => PathProtocol.Fula,
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
+                IFulaFileService => PathProtocol.ThumbnailFulaMedium,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
     }

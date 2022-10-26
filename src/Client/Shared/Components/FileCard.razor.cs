@@ -1,6 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
-
-namespace Functionland.FxFiles.Client.Shared.Components
+﻿namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class FileCard
     {
@@ -66,8 +64,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.ThumbnailStorage,
-                IFulaFileService => PathProtocol.ThumbnailFula,
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
+                IFulaFileService => PathProtocol.ThumbnailStorageMedium,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
     }

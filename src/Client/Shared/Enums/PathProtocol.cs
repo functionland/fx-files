@@ -6,6 +6,8 @@ public enum PathProtocol
     Wwwroot,
     Storage,
     Fula,
-    ThumbnailStorage,
-    ThumbnailFula,
+    ThumbnailStorageSmall,
+    ThumbnailStorageMedium,
+    ThumbnailFulaSmall,
+    ThumbnailFulaMedium,
 }
