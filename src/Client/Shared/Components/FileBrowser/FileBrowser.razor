@@ -53,7 +53,10 @@
         {
             <div class="@(_isInSearchMode ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
-                    <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
+                    <div class="selected-sort" @onclick="HandleSortClick">
+                        @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
+                    </div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">

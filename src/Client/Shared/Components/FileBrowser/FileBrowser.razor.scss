@@ -66,7 +66,7 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
 
         .selected-sort {
             font-family: $open-sans-regular;
@@ -75,17 +75,22 @@
             font-size: $font-size-14;
             line-height: $line-height-24;
             letter-spacing: $letter-spacing-02;
-            margin-right: $spacing-4;
-            color: color(gray-content1);
+            margin-right: $spacing-8;
+            color: color(gray-content3);
             cursor: pointer;
+
+            .sort-type {
+                color: $green-dark-base;
+        }
         }
 
         .sort-order {
             cursor: pointer;
+            margin: $spacing-2 $spacing-8 $spacing-0;
 
             &::before {
-                font-size: $icon-16;
-                @include Icon($chevron-up);
+                font-size: $icon-20;
+                @include Icon($arrow-up);
             }
         }
 
@@ -93,12 +98,12 @@
             transform: rotate(180deg);
 
             &::before {
-                @include Icon($chevron-up);
+                @include Icon($arrow-up);
             }
         }
 
         .asc-order::before {
-            @include Icon($chevron-up);
+            @include Icon($arrow-up);
         }
     }
 
