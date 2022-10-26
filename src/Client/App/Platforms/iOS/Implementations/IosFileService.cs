@@ -7,14 +7,14 @@ namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations;
 
 public partial class IosFileService : LocalDeviceFileService
 {
-    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
+    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
             path = "./";
         }
 
-        return base.GetArtifactsAsync(path, deepSearchFilter, cancellationToken);
+        return base.GetArtifactsAsync(path, cancellationToken);
     }
 
     public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)

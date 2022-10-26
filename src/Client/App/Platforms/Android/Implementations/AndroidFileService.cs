@@ -1,6 +1,5 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
-
 using Functionland.FxFiles.App.Platforms.Android;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
@@ -76,9 +75,9 @@ public partial class AndroidFileService : LocalDeviceFileService
         return await base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
+    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null && string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
+        if (path is null)
         {
             var drives = await GetDrivesAsync();
             foreach (var drive in drives)
@@ -88,7 +87,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             yield break;
         }
 
-        await foreach (var artifact in base.GetArtifactsAsync(path, deepSearchFilter, cancellationToken))
+        await foreach (var artifact in base.GetArtifactsAsync(path, cancellationToken))
         {
             yield return artifact;
         }

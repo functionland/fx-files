@@ -271,7 +271,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             _files = finalBag;
         }
 
-        public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
+        public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
             if (!string.IsNullOrWhiteSpace(path))
                 path = path.Replace("/", "\\");
@@ -280,10 +280,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 files = files.Where(
                     f => string.Equals(Path.GetDirectoryName(f.FullPath), path, StringComparison.CurrentCultureIgnoreCase)
                     && !string.Equals(f.FullPath, path, StringComparison.CurrentCultureIgnoreCase));
-
-            if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
-                files = files.Where(f => f.Name.Contains(deepSearchFilter.SearchText));
-
 
             foreach (var file in files)
             {
@@ -445,6 +441,23 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
         {
             throw new NotImplementedException();
+        }
+
+        public async IAsyncEnumerable<FsArtifact> GetSearchArtifactAsync(DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
+        {
+            if (deepSearchFilter is null)
+                throw new DomainLogicException("Search filter in empty."); // TODO: return proper exception.
+            // TODO : Implement deep search 
+            IEnumerable<FsArtifact> files = _files;
+
+            if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
+                files = files.Where(f => f.Name.Contains(deepSearchFilter.SearchText));
+
+            foreach (var file in files)
+            {
+                await LatencyEnumerationAsync();
+                yield return file;
+            }
         }
     }
 }

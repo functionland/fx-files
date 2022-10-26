@@ -153,10 +153,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        public virtual async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
+        public virtual async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
-
-            if (string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText) && string.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 await foreach (var item in GetChildArtifactsAsync(path, cancellationToken))
                 {
@@ -164,21 +163,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     yield return item;
                 }
 
-                yield break;
-            }
-            else if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText) && string.IsNullOrWhiteSpace(path))
-            {
-                var drives = await GetDrivesAsync();
-
-                foreach (var drive in drives)
-                {
-                    if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    await foreach (var item in GetAllFileAndFoldersAsync(drive.FullPath, deepSearchFilter, cancellationToken))
-                    {
-                        if (cancellationToken?.IsCancellationRequested == true) yield break;
-                        yield return item;
-                    }
-                }
                 yield break;
             }
 
@@ -752,6 +736,22 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
 
             return progressCount.Value;
+        }
+
+        public virtual async IAsyncEnumerable<FsArtifact> GetSearchArtifactAsync(DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
+        {
+            var drives = await GetDrivesAsync();
+
+            foreach (var drive in drives)
+            {
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
+                await foreach (var item in GetAllFileAndFoldersAsync(drive.FullPath, deepSearchFilter, cancellationToken))
+                {
+                    if (cancellationToken?.IsCancellationRequested == true) yield break;
+                    yield return item;
+                }
+            }
+            yield break;
         }
     }
 }
