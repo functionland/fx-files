@@ -17,9 +17,9 @@
 
     @if (IsInRoot(_currentArtifact) && _artifactExplorerMode != ArtifactExplorerMode.Search)
     {
-        //this is filter in deep search part TODO: replace it in correct palce in code 
+        //this is filter in deep search part TODO: replace it in correct palce in code
 
-        
+
 
         //end of filter in deep search
         @if (_pins?.Count > 0)
@@ -32,11 +32,11 @@
                         {
                             <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                 <FileCard ArtifactType="@pin.ArtifactType"
-                                          FileName="@pin.Name"
-                                          FileSize="@pin.SizeStr"
-                                          FileImage="@pin.ThumbnailPath"
-                                          FileType="@pin.FileCategory"
-                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                              FileName="@pin.Name"
+                              FileSize="@pin.SizeStr"
+                              FileImage="@pin.ThumbnailPath"
+                              FileType="@pin.FileCategory"
+                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
                             </div>
                         }
                     </div>
@@ -140,7 +140,7 @@
             <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
         </section>
     }
-    
+
     @if (_artifactExplorerMode != ArtifactExplorerMode.Search || string.IsNullOrWhiteSpace(_searchText) is false)
     {
         <ArtifactExplorer Artifacts="_displayedArtifacts"
@@ -159,18 +159,33 @@
 
     @if (_artifactExplorerMode == ArtifactExplorerMode.Search && string.IsNullOrWhiteSpace(_searchText) is false && _artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
     {
-        <div class="navbarApp-item">
-            <NavLink>
-                <div class="show-location-icon"></div>
-                <span class="navbarApp-linkLabel">@Localizer[nameof(AppStrings.ShowInLocation)]</span>
-            </NavLink>
-        </div>
-        <div class="navbarApp-item">
-            <NavLink>
+        <div class="footer-option">
+            <div class="btn-detail">
+                <div class="detail-icon"></div>
+                <div class="detail-text">@Localizer[nameof(AppStrings.Details)]</div>
+            </div>
+            <div class="option-item">
+                <NavLink>
+                    <div class="show-location-icon"></div>
+                    <span class="show-location-text">@Localizer[nameof(AppStrings.ShowInLocation)]</span>
+                </NavLink>
+            </div>
+            <div class="option-item">
+
                 <div class="copy-btn"></div>
                 <span class="navbarApp-linkLabel">@Localizer[nameof(AppStrings.Copy)]</span>
-            </NavLink>
+
+            </div>
+            <div class="option-item">
+                <div class="pin-icon"></div>
+                <div class="pin-text">@Localizer[nameof(AppStrings.Pin)]</div>
+            </div>
+            <div class="option-item">
+                <div class="more-option-icon"></div>
+                <div class="more-option-text">@Localizer[nameof(AppStrings.More)]</div>
+            </div>
         </div>
+
     }
 </div>
 
@@ -182,11 +197,10 @@
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
-<ProgressModal
-    CurrentText="@ProgressBarCurrentText"
-    CurrentSubText="@ProgressBarCurrentSubText"
-    ProgressCurrentValue="@ProgressBarCurrentValue"
-    ProgressMax="@ProgressBarMax"
-    OnCancel="ProgressBarOnCancel"
-    @ref="_progressModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>
+<ProgressModal CurrentText="@ProgressBarCurrentText"
+               CurrentSubText="@ProgressBarCurrentSubText"
+               ProgressCurrentValue="@ProgressBarCurrentValue"
+               ProgressMax="@ProgressBarMax"
+               OnCancel="ProgressBarOnCancel"
+               @ref="_progressModalRef" />
+<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
