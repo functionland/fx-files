@@ -718,6 +718,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The password is invalid..
+        /// </summary>
+        public static string InvalidPasswordException {
+            get {
+                return ResourceManager.GetString("InvalidPasswordException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to items selected.
         /// </summary>
         public static string ItemsSelected {

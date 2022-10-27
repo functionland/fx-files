@@ -32,9 +32,9 @@ public partial class ZipService : IZipService
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch
-    {
+        {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.TheOpreationFailedMessage));
-    }
+        }
 
         return fsArtifacts;
     }
@@ -119,14 +119,18 @@ public partial class ZipService : IZipService
             Directory.Delete(deletedPath, true);
             throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
         }
-        catch (CryptographicException ex)
+        catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch
-    {
+        {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.TheOpreationFailedMessage));
-    }
+        }
 
     }
 
@@ -168,13 +172,21 @@ public partial class ZipService : IZipService
             }
         }
 
-        catch (CryptographicException ex) when (ex.Message == "The password did not match.")
+        catch (CryptographicException ex) when (ex.Message == "The password did not match." || ex.Message.StartsWith("Unknown Rar Header:"))
+        {
+            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+        }
+        catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
         {
             throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
+        }
+        catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch
         {
