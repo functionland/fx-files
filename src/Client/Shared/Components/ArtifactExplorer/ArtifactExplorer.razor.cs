@@ -6,6 +6,7 @@ using Functionland.FxFiles.Client.Shared.Models;
 using Microsoft.AspNetCore.Components.Web;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -28,23 +29,35 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback HandleBack { get; set; }
         [Parameter] public IFileService FileService { get; set; }
 
+        [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
+
         private System.Timers.Timer? _timer;
 
         private FsArtifact? _longPressedArtifact;
+
+        private Virtualize<FsArtifact>? _virtualizeRef;
 
         protected override Task OnInitAsync()
         {
             return base.OnInitAsync();
         }
 
+        protected override async Task OnParamsSetAsync()
+        {
+            if (_virtualizeRef is not null)
+            {
+                await _virtualizeRef?.RefreshDataAsync();
+            }
+            await base.OnParamsSetAsync();
+        }
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.ThumbnailStorageSmall,
-                IFulaFileService => PathProtocol.ThumbnailStorageSmall,
+                ILocalDeviceFileService => PathProtocol.Storage,
+                IFulaFileService => PathProtocol.Fula,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
-        
+
         private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
             await OnArtifactOptionClick.InvokeAsync(artifact);
@@ -277,6 +290,28 @@ namespace Functionland.FxFiles.Client.Shared.Components
                     return;
                 }
             }
+        }
+
+        private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifacts(ItemsProviderRequest request)
+        {
+            await Task.Delay(300);
+            if (request.CancellationToken.IsCancellationRequested)
+            {
+                return default;
+            }
+
+            List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(request.Count).ToList();
+
+            foreach (var item in items)
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                {
+                    return default;
+                }
+                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+            }
+
+            return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: items.Count);
         }
     }
 }
