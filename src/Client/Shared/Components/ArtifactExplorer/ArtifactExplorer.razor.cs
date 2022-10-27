@@ -35,7 +35,10 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private FsArtifact? _longPressedArtifact;
 
-        private Virtualize<FsArtifact>? _virtualizeRef;
+        private Virtualize<FsArtifact>? _virtualizeListRef;
+        private Virtualize<FsArtifact[]>? _virtualizeGridRef;
+
+        private int _gridColumn = 2;
 
         protected override Task OnInitAsync()
         {
@@ -44,10 +47,15 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         protected override async Task OnParamsSetAsync()
         {
-            if (_virtualizeRef is not null)
+            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
             {
-                await _virtualizeRef.RefreshDataAsync();
+                await _virtualizeListRef.RefreshDataAsync();
             }
+            else if (ViewMode == ViewModeEnum.List && _virtualizeGridRef is not null)
+            {
+                await _virtualizeGridRef.RefreshDataAsync();
+            }
+
             await base.OnParamsSetAsync();
         }
         public PathProtocol Protocol =>
@@ -292,7 +300,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
-        private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifacts(ItemsProviderRequest request)
+        private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
         {
             await Task.Delay(300);
             if (request.CancellationToken.IsCancellationRequested)
@@ -313,5 +321,41 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
             return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
         }
+
+        private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
+        {
+            await Task.Delay(300);
+            if (request.CancellationToken.IsCancellationRequested)
+            {
+                return default;
+            }
+            var count = request.Count * 2;
+            var start = request.StartIndex * 2;
+            var requestCount = Math.Min(count, Artifacts.Count - start);
+
+            List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
+
+            foreach (var item in items)
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                {
+                    return default;
+                }
+                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+            }
+            var result = new List<FsArtifact[]>();
+            for (int i = 0; i < items.Count; i += 2)
+            {
+                if ((i + 1) < items.Count)
+                {
+                    result.Add(new FsArtifact[2] { items[i], items[i + 1] });
+                    continue;
+                }
+                result.Add(new FsArtifact[1] { items[i] });
+            }
+
+            return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / 2));
+        }
+
     }
 }
