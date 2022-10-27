@@ -9,7 +9,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
     {
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        public abstract Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath);
+        public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
         public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
         {
@@ -50,7 +50,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             using FileStream outPutFileStream = new(path, FileMode.Create);
             await stream.CopyToAsync(outPutFileStream);
 
-            var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
+            var providerType = GetFsFileProviderType(path);
+            var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, providerType)
             {
                 FileExtension = Path.GetExtension(path),
                 Size = outPutFileStream.Length,
@@ -94,7 +95,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             Directory.CreateDirectory(newPath);
 
-            var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, await GetFsFileProviderTypeAsync(newPath))
+            var providerType = GetFsFileProviderType(newPath);
+            var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, providerType)
             {
                 ParentFullPath = Directory.GetParent(newPath)?.FullName,
                 LastModifiedDateTime = Directory.GetLastWriteTime(newPath)
@@ -179,9 +181,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, ""));
 
-            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+            var fsArtifactType = GetFsArtifactType(path);
 
-            var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType.Value, await GetFsFileProviderTypeAsync(path))
+            var providerType = GetFsFileProviderType(path);
+            var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType.Value, providerType)
             {
                 FileExtension = Path.GetExtension(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName
@@ -198,7 +201,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
             else if (fsArtifactType == FsArtifactType.Drive)
             {
-                var drives = await GetDrivesAsync();
+                var drives = GetDrives();
                 fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
             }
 
@@ -238,7 +241,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
 
-            var artifactType = GetFsArtifactTypeAsync(filePath);
+            var artifactType = GetFsArtifactType(filePath);
 
             if (string.IsNullOrWhiteSpace(newName))
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
@@ -277,7 +280,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
-            var artifactType = GetFsArtifactTypeAsync(folderPath);
+            var artifactType = GetFsArtifactType(folderPath);
 
             if (artifactType is null)
                 throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
@@ -295,7 +298,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (!isExistOld)
                 throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, lowerCaseFolder));
 
-            var fsArtifactType = await GetFsArtifactTypeAsync(folderPath);
+            var fsArtifactType = GetFsArtifactType(folderPath);
 
             if (fsArtifactType is FsArtifactType.Drive)
                 throw new CanNotModifyOrDeleteDriveException(StringLocalizer.GetString(AppStrings.DriveRenameFailed));
@@ -385,8 +388,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         if (cancellationToken?.IsCancellationRequested == true) break;
 
-                        var providerType = await GetFsFileProviderTypeAsync(file.FullName);
-
+                        var providerType = GetFsFileProviderType(file.FullName);
                         children.Add(new FsArtifact(file.FullName, file.Name, FsArtifactType.File, providerType)
                         {
                             FileExtension = file.Extension,
@@ -402,7 +404,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         if (cancellationToken?.IsCancellationRequested == true) break;
 
-                        var providerType = await GetFsFileProviderTypeAsync(subDirectory.FullName);
+                        var providerType = GetFsFileProviderType(subDirectory.FullName);
 
                         children.Add(new FsArtifact(subDirectory.FullName, subDirectory.Name, FsArtifactType.Folder, providerType)
                         {
@@ -429,7 +431,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return ignoredList;
         }
 
-        public virtual async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
+        public virtual FsArtifactType? GetFsArtifactType(string path)
         {
             var artifactIsFile = File.Exists(path);
             if (artifactIsFile)
@@ -437,7 +439,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 return FsArtifactType.File;
             }
 
-            var drives = await GetDrivesAsync();
+            var drives = GetDrives();
             if (drives.Any(drive => drive.FullPath == path))
             {
                 return FsArtifactType.Drive;
@@ -452,7 +454,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return null;
         }
 
-        public virtual async Task<List<FsArtifact>> GetDrivesAsync()
+        public virtual List<FsArtifact> GetDrives()
         {
             var drives = Directory.GetLogicalDrives();
             var artifacts = new List<FsArtifact>();
@@ -467,8 +469,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var drivePath = drive.TrimEnd(Path.DirectorySeparatorChar);
                 var driveName = !string.IsNullOrWhiteSpace(lable) ? $"{lable} ({drivePath})" : drivePath;
 
+                var providerType = GetFsFileProviderType(drive);
                 artifacts.Add(
-                    new FsArtifact(drive, driveName, FsArtifactType.Drive, await GetFsFileProviderTypeAsync(drive)));
+                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType));
             }
 
             return artifacts;
@@ -535,7 +538,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (string.IsNullOrWhiteSpace(path))
             {
-                var drives = await GetDrivesAsync();
+                var drives = GetDrives();
 
                 foreach (var drive in drives)
                 {
@@ -546,7 +549,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 yield break;
             }
 
-            var fsArtifactType = await GetFsArtifactTypeAsync(path);
+            var fsArtifactType = GetFsArtifactType(path);
 
             if (fsArtifactType is null)
                 throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? lowerCaseArtifact));
@@ -576,7 +579,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         directoryInfo.Attributes.HasFlag(FileAttributes.System) ||
                         directoryInfo.Attributes.HasFlag(FileAttributes.Temporary)) continue;
 
-                    var providerType = await GetFsFileProviderTypeAsync(folder);
+                    var providerType = GetFsFileProviderType(folder);
 
                     yield return new FsArtifact(folder, Path.GetFileName(folder), FsArtifactType.Folder, providerType)
                     {
@@ -594,7 +597,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         fileinfo.Attributes.HasFlag(FileAttributes.System) ||
                         fileinfo.Attributes.HasFlag(FileAttributes.Temporary)) continue;
 
-                    var providerType = await GetFsFileProviderTypeAsync(file);
+                    var providerType = GetFsFileProviderType(file);
 
                     yield return new FsArtifact(file, Path.GetFileName(file), FsArtifactType.File, providerType)
                     {
@@ -608,7 +611,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             else
             {
                 var fileinfo = new FileInfo(path);
-                yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, await GetFsFileProviderTypeAsync(path))
+                var providerType = GetFsFileProviderType(path);
+                yield return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, providerType)
                 {
                     ParentFullPath = Directory.GetParent(path)?.FullName,
                     LastModifiedDateTime = File.GetLastWriteTime(path),
@@ -625,7 +629,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-            var GetAllFileAndFolders = Directory.EnumerateFileSystemEntries(path,
+            var allFileAndFolders = Directory.EnumerateFileSystemEntries(path,
                 !string.IsNullOrWhiteSpace(deepSearchFilter.SearchText) ? $"*{deepSearchFilter.SearchText}*" : "*",
                 new EnumerationOptions
                 {
@@ -642,7 +646,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (deepSearchFilter.ArtifactCategorySearchType is not null)
             {
-                GetAllFileAndFolders = GetAllFileAndFolders.Where(f =>
+                allFileAndFolders = allFileAndFolders.Where(f =>
                     FsArtifactUtils.GetSearchCategoryTypeExtentions(deepSearchFilter.ArtifactCategorySearchType.Value)
                                    .Contains(f.ArtifactInfo.Extension.ToLower()));
             }
@@ -657,15 +661,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     _ => 0
                 };
 
-                GetAllFileAndFolders = GetAllFileAndFolders.Where(f => f.ArtifactInfo.LastWriteTime >= DateTimeOffset.Now.AddDays(-dateDiff));
+                allFileAndFolders = allFileAndFolders.Where(f => f.ArtifactInfo.LastWriteTime >= DateTimeOffset.Now.AddDays(-dateDiff));
             }
 
-            foreach (var artifact in GetAllFileAndFolders)
+            foreach (var artifact in allFileAndFolders)
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-                var providerType = await GetFsFileProviderTypeAsync(artifact.FullPath);
-                var artifactType = await GetFsArtifactTypeAsync(artifact.FullPath);
+                var providerType = GetFsFileProviderType(artifact.FullPath);
+                var artifactType = GetFsArtifactType(artifact.FullPath);
 
                 yield return new FsArtifact(artifact.FullPath, Path.GetFileName(artifact.FullPath), artifactType.Value, providerType)
                 {
@@ -714,7 +718,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async IAsyncEnumerable<FsArtifact> GetSearchArtifactAsync(DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
         {
-            var drives = await GetDrivesAsync();
+            var drives = GetDrives();
 
             foreach (var drive in drives)
             {

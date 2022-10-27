@@ -17,13 +17,13 @@ public partial class IosFileService : LocalDeviceFileService
         return base.GetArtifactsAsync(path, cancellationToken);
     }
 
-    public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
+    public override FsFileProviderType GetFsFileProviderType(string filePath)
     {
         return FsFileProviderType.InternalMemory;
     }
 
-    public override Task<List<FsArtifact>> GetDrivesAsync()
+    public override List<FsArtifact> GetDrives()
     {
-        return Task.FromResult(new List<FsArtifact>());
+        return new List<FsArtifact>();
     }
 }
