@@ -37,7 +37,7 @@
                     {
                         <div class="thumbnail-box">
                             <div class="img-box">
-                                <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))" onerror="this.style.opacity='0'">
+                                <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))" >
                             </div>
                             @if (artifact?.FileCategory == FileCategoryType.Video)
                             {
