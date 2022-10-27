@@ -86,12 +86,15 @@ $colors-dark: (
 
 
 //svg icons
+
+
 $back: $icon-base-url + "back.svg";
 $copy: $icon-base-url + "copy.svg";
 $delete: $icon-base-url + "delete.svg";
 $details: $icon-base-url + "details.svg";
 $rename-file: $icon-base-url + "rename.svg";
 $close-btn: $icon-base-url + "close-btn.svg";
+$play-circle: $icon-base-url + "play-circle.svg";
 $tag-label: $icon-base-url + "tag-label.svg";
 $chevron-up: $icon-base-url + "chevron-up.svg";
 
@@ -366,6 +369,7 @@ $border-size-4: 4 + $base-unit;
 
 //spacing
 $spacing-0: 0 + $base-unit;
+$spacing-2: 2 + $base-unit;
 $spacing-4: 4 + $base-unit;
 $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;

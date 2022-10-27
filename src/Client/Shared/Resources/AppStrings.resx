@@ -582,6 +582,12 @@
   <data name="PasswordDidNotMatchedException" xml:space="preserve">
     <value>The password did not match.</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by:</value>
+  </data>
+  <data name="Specter" xml:space="preserve">
+    <value>|</value>
+  </data>
   <data name="InvalidPasswordException" xml:space="preserve">
     <value>The password is invalid.</value>
   </data>

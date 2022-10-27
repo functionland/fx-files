@@ -52,13 +52,17 @@
         {
             <div class="@(_isInSearchMode ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
-                    <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
+                    <div class="selected-sort" @onclick="HandleSortClick">
+                        @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
+                    </div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">
+                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
-                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.List))"></div>
-                    <div class="action-btn grid-view-btn @(ArtifactState.ViewMode == ViewModeEnum.Grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.Grid))"></div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
                 </div>
             </div>
@@ -99,6 +103,7 @@
     @if (_isInSearchMode is false || string.IsNullOrWhiteSpace(_searchText) is false)
     {
         <ArtifactExplorer Artifacts="_displayedArtifacts"
+                      FileService="FileService"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactOptionClick="HandleOptionsArtifact"
@@ -120,11 +125,12 @@
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" />
-<ProgressModal CurrentText="@ProgressBarCurrentText"
-               CurrentSubText="@ProgressBarCurrentSubText"
-               ProgressCurrentValue="@ProgressBarCurrentValue"
-               ProgressMax="@ProgressBarMax"
-               OnCancel="ProgressBarOnCancel"
-               @ref="_progressModalRef" />
-<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
+<ProgressModal
+    CurrentText="@ProgressBarCurrentText"
+    CurrentSubText="@ProgressBarCurrentSubText"
+    ProgressCurrentValue="@ProgressBarCurrentValue"
+    ProgressMax="@ProgressBarMax"
+    OnCancel="ProgressBarOnCancel"
+    @ref="_progressModalRef" />
+<ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService"/>
+<FileViewer @ref="_fileViewerRef" FileService="FileService" />

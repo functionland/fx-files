@@ -1,9 +1,7 @@
 ﻿using System.Net;
-using System.Reflection.Emit;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -20,6 +18,7 @@ public partial class FileBrowser
     private ArtifactDetailModal? _artifactDetailModalRef;
     private ProgressModal? _progressModalRef;
     private FxSearchInput? _fxSearchInputRef;
+    private FileViewer? _fileViewerRef;
 
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
@@ -587,18 +586,28 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            var encodedArtifactPath = WebUtility.UrlEncode(_currentArtifact?.FullPath);
-            var uri = new Uri(NavigationManager.Uri);
+            var isOpened = _fileViewerRef?.OpenArtifact(artifact);
 
-            var baseUrl = uri.AbsoluteUri;
-            var query = uri.Query;
-
-            if (!string.IsNullOrWhiteSpace(query))
+            if (isOpened == false)
             {
-                baseUrl = baseUrl.Replace(query, "");
+#if BlazorHybrid
+                try
+                {
+                    await Launcher.OpenAsync(new OpenFileRequest
+                    {
+                        File = new ReadOnlyFile(artifact?.FullPath)
+                    });
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    ExceptionHandler?.Handle(new DomainLogicException(Localizer.GetString(nameof(AppStrings.ArtifactUnauthorizedAccessException))));;
+                }
+                catch (Exception exception)
+                {
+                    ExceptionHandler?.Handle(exception);
+                }
+#endif
             }
-
-            await ViewFileService.ViewFileAsync(artifact.FullPath, $"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {
@@ -692,8 +701,9 @@ public partial class FileBrowser
         }
     }
 
-    public void ChangeViewMode(ViewModeEnum viewMode)
+    public void ChangeViewMode()
     {
+        var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
         ArtifactState.SetViewMode(viewMode);
         StateHasChanged();
     }
