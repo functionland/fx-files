@@ -16,9 +16,9 @@
 
         video.addEventListener("timeupdate", () => {
             videoProgress.value = video.currentTime;
-            videoProgress.setAttribute('max', Math.round(video.duration));
-            videoDuration.innerHTML = videoTimeFormat(video.duration - 1);
-            videoCurrentTime.innerHTML = videoTimeFormat(video.currentTime);
+            videoDuration.innerHTML = timeFormat(video.duration);
+            videoCurrentTime.innerHTML = timeFormat(video.currentTime);
+            videoProgress.setAttribute('max', Math.floor(video.duration));
         });
 
         videoProgress.addEventListener("input", (event) => {
@@ -27,21 +27,17 @@
         });
     }
 
-    function videoTimeFormat(duration) {
-        var hrs = ~~(Math.round(duration) / 3600);
-        var mins = ~~((Math.round(duration) % 3600) / 60);
-        var secs = ~~Math.round(duration) % 60;
+    function timeFormat(seconds) {
+        var result = ""
 
-        var ret = "";
-
-        if (hrs > 0) {
-            ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        if (seconds > 3600) {
+            result = new Date(seconds * 1000).toISOString().slice(11, 19);
+        }
+        else {
+            result = new Date(seconds * 1000).toISOString().slice(14, 19);
         }
 
-        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-        ret += "" + secs;
-
-        return ret;
+        return result;
     }
 
     function togglePlay() {
