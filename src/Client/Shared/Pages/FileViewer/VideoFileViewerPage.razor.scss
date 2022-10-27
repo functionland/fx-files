@@ -2,6 +2,34 @@
 @import "../../Styles/abstracts/_functions.scss";
 @import "../../Styles/abstracts/_mixins.scss";
 
+.video-toolbar {
+    display: flex;
+    padding: 16px 21px;
+    justify-content: space-between;
+}
+
+.right-side-toolbar {
+    display: flex;
+}
+
+::deep .back-button::after {
+    font-size: 24px;
+    vertical-align: middle;
+    @include Icon($arrow-left);
+}
+
+::deep .overflow-button::after {
+    font-size: 24px;
+    vertical-align: middle;
+    @include Icon($options-vertical);
+}
+
+::deep .pin-button::after {
+    font-size: 24px;
+    vertical-align: middle;
+    @include Icon($pin, color(gray-content1), $Icons-Filled);
+}
+
 input[type="range"] {
     width: 98%;
     border: none;

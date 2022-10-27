@@ -2,12 +2,26 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 @inherits AppComponentBase
 
-<div>
-    <FxToolBar IsInRoot="false"
-               IsBackButtonVisible="true"
-               IsAddButtonVisible="false"
-               IsOverflowButtonVisible="false"
-               OnBackClick="HandleToolbarBack" />
+<div class="video-viewer">
+    <div class="video-toolbar">
+        <FxButton Padding="0"
+                  Class="back-button"
+                  OnClick="HandleToolbarBack"
+                  BackgroundColor="transparent"
+                  ButtonStyle="FxButtonStyle.None" />
+        <div class="right-side-toolbar">
+            <FxButton Padding="0"
+                      Class="pin-button"
+                      Margin="0 16px"
+                      BackgroundColor="transparent"
+                      ButtonStyle="FxButtonStyle.None" />
+            <FxButton Padding="0"
+                      Class="overflow-button"
+                      BackgroundColor="transparent"
+                      ButtonStyle="FxButtonStyle.None" />
+
+        </div>
+    </div>
 
     <video id="fxVideoElement">
         <source src="@(Path.InProtocol(PathProtocol.Storage))" type="video/mp4" />
