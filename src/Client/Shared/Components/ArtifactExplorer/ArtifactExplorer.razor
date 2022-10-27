@@ -10,9 +10,12 @@
     }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
-        <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
+        if (!IsInSearchMode)
+        {
+            <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
                    Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
                    IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+        }
     }
     else
     {
