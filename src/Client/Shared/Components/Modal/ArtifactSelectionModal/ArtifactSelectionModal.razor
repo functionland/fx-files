@@ -42,6 +42,7 @@
         @if (_artifacts is not null)
         {
             <ArtifactExplorer Artifacts="_artifacts"
+                          FileService="FileService"
                           ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
                           CurrentArtifact="_currentArtifact"
                           OnSelectArtifact="SelectArtifact"

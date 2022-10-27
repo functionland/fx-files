@@ -4,6 +4,8 @@ using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Models;
 
 using Microsoft.AspNetCore.Components.Web;
+using Functionland.FxFiles.Client.Shared.Utils;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -24,6 +26,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
         [Parameter] public bool IsLoading { get; set; }
         [Parameter] public EventCallback HandleBack { get; set; }
+        [Parameter] public IFileService FileService { get; set; }
 
         private System.Timers.Timer? _timer;
 
@@ -34,6 +37,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
             return base.OnInitAsync();
         }
 
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageSmall,
+                IFulaFileService => PathProtocol.ThumbnailStorageSmall,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
+        
         private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
             await OnArtifactOptionClick.InvokeAsync(artifact);
