@@ -2,8 +2,21 @@
 @import "../../Styles/abstracts/_functions.scss";
 @import "../../Styles/abstracts/_mixins.scss";
 
+.video-viewer {
+    display: grid;
+    min-height: inherit;
+}
+
 .video-toolbar {
+    height: 72px;
     display: flex;
+    padding: 16px 21px;
+    justify-content: space-between;
+}
+
+.video-commandbar {
+    height: 104px;
+    align-self: end;
     padding: 16px 21px;
     justify-content: space-between;
 }
@@ -15,23 +28,30 @@
 ::deep .back-button::after {
     font-size: 24px;
     vertical-align: middle;
-    @include Icon($arrow-left);
+    @include Icon($arrow-left, white);
 }
 
 ::deep .overflow-button::after {
     font-size: 24px;
     vertical-align: middle;
-    @include Icon($options-vertical);
+    @include Icon($options-vertical, white);
 }
 
 ::deep .pin-button::after {
     font-size: 24px;
     vertical-align: middle;
-    @include Icon($pin, color(gray-content1), $Icons-Filled);
+    @include Icon($pin, white, $Icons-Filled);
+}
+
+::deep .picture-in-picture-button::after {
+    font-size: 24px;
+    vertical-align: middle;
+    @include Icon($external-link, white);
 }
 
 input[type="range"] {
-    width: 98%;
+    margin: 0;
+    width: 100%;
     border: none;
     outline: none;
     accent-color: white;
@@ -49,7 +69,16 @@ video {
     height: 100%;
 }
 
-#fxVideoControls {
+.fxVideo-controls {
     display: flex;
-    justify-content: space-around;
+    font-size: 12px;
+    font-family: $open-sans-light;
+    justify-content: space-between;
+}
+
+.fxVideo-control-buttons {
+    width: 152px;
+    height: 24px;
+    display: flex;
+    justify-content: space-between;
 }
