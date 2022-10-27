@@ -48,12 +48,16 @@
                 -ms-filter: blur(2px);
             }
 
-            .image-file-icon::before {
-                position: absolute;
-                top: $spacing-8;
-                left: $spacing-21;
-                font-size: $font-size-32;
-                @include Icon($image);
+            .image-file-icon {
+                z-index: 1;
+
+                &:before {
+                    position: absolute;
+                    top: $spacing-8;
+                    left: $spacing-21;
+                    font-size: $font-size-32;
+                    @include Icon($image);
+                }
             }
         }
     }
