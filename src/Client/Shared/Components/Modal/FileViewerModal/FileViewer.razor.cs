@@ -1,6 +1,8 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
 
+using System.Reflection.Metadata.Ecma335;
+
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class FileViewer
@@ -10,32 +12,12 @@ public partial class FileViewer
     private FsArtifact? _currentArtifact;
     private bool _isModalOpen { get; set; } = false;
 
-    private List<IFileViewerComponent> _fileViewers = default!;
-    private ImageViewer? _imageRef;
-    private VideoViewer? _videoRef;
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        _fileViewers = new()
-        {
-            _imageRef,
-            _videoRef
-        };
-
-        base.OnAfterRender(firstRender);
-    }
-
     public bool OpenArtifact(FsArtifact artifact)
     {
-        SetFileViewersVisibilty(false);
-        var fileviewer = _fileViewers.FirstOrDefault(fv => fv is not null && fv.IsSupported(artifact));
-
-        if (fileviewer is null)
+        if (!CanOpen(artifact))
             return false;
 
-        fileviewer.Visibility = true;
         _isModalOpen = true;
-
         _currentArtifact = artifact;
         return true;
     }
@@ -43,12 +25,20 @@ public partial class FileViewer
     public void Back()
     {
         _isModalOpen = false;
-        SetFileViewersVisibilty(false);
     }
 
-    private void SetFileViewersVisibilty(bool visibilty)
+    public bool CanOpen(FsArtifact artifact)
     {
-        _fileViewers.ForEach(fv => fv.Visibility = false);
+        if (IsSupported<ImageViewer>(artifact))
+        {
+            return true;
+        }
+        else if (IsSupported<VideoViewer>(artifact))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private bool IsSupported<TComponent>(FsArtifact? artifact)
@@ -56,13 +46,11 @@ public partial class FileViewer
     {
         if (artifact is null)
             return false;
-
-        var extension = artifact.FileExtension;
-
-        if (new string[] { ""}.Contains(extension) &&  typeof(TComponent) == typeof(ImageViewer))
-        {
-            return true;
-        }
+ 
+        //if (artifact.FileCategory == FileCategoryType.Image && typeof(TComponent) == typeof(ImageViewer))
+        //{
+        //    return true;
+        //}
 
         return false;
     }
