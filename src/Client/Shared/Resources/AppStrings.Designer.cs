@@ -898,6 +898,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The password did not match..
+        /// </summary>
+        public static string PasswordDidNotMatchedException {
+            get {
+                return ResourceManager.GetString("PasswordDidNotMatchedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the path is null.
         /// </summary>
         public static string PathIsNull {
