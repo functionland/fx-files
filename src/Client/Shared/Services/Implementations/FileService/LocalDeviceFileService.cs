@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
+using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
@@ -617,90 +618,63 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        private async IAsyncEnumerable<FsArtifact> GetAllFileAndFoldersAsync(string path, DeepSearchFilter? deepSearchFilter = null, CancellationToken? cancellationToken = null)
+        private async IAsyncEnumerable<FsArtifact> GetAllFileAndFoldersAsync(string path, DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
         {
-            var files = new List<(string fullPath, FileInfo fileInfo)>();
-            var folders = new List<(string fullPath, DirectoryInfo directoryInfo)>();
+            if (deepSearchFilter is null)
+                throw new InvalidOperationException("The search filter is empty.");
 
             if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-            try
-            {
-                files = Directory
-                    .GetFiles(path)
-                    .Select(c => (c, new FileInfo(c)))
-                    .Where(c =>
-                            !c.Item2.Attributes.HasFlag(FileAttributes.Hidden) &&
-                            !c.Item2.Attributes.HasFlag(FileAttributes.System) &&
-                            !c.Item2.Attributes.HasFlag(FileAttributes.Temporary) &&
-                             c.Item2.Name.ToLower().Contains(deepSearchFilter?.SearchText.ToLower())
-                        )
-                    .ToList();
-
-                if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-
-                folders = Directory
-                        .GetDirectories(path)
-                        .Select(c => (c, new DirectoryInfo(c)))
-                        .Where(c =>
-                                !c.Item2.Attributes.HasFlag(FileAttributes.Hidden) &&
-                                !c.Item2.Attributes.HasFlag(FileAttributes.System) &&
-                                !c.Item2.Attributes.HasFlag(FileAttributes.Temporary)
-                            )
-                        .ToList();
-
-                if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-            }
-            catch { }
-
-            var filesCount = files.Count;
-
-            for (int i = 0; i < filesCount; i++)
-            {
-                var (fullPath, fileInfo) = files[i];
-                if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-                var providerType = await GetFsFileProviderTypeAsync(fullPath);
-
-                yield return new FsArtifact(fullPath, Path.GetFileName(fullPath), FsArtifactType.File, providerType)
+            var GetAllFileAndFolders = Directory.EnumerateFileSystemEntries(path,
+                !string.IsNullOrWhiteSpace(deepSearchFilter.SearchText) ? $"*{deepSearchFilter.SearchText}*" : "*",
+                new EnumerationOptions
                 {
-                    ParentFullPath = Directory.GetParent(fullPath)?.FullName,
-                    LastModifiedDateTime = File.GetLastWriteTime(fullPath),
-                    FileExtension = Path.GetExtension(fullPath),
-                    Size = fileInfo.Length
+                    IgnoreInaccessible = true,
+                    AttributesToSkip = FileAttributes.Hidden | FileAttributes.System | FileAttributes.Temporary,
+                    MatchCasing = MatchCasing.CaseInsensitive,
+                    RecurseSubdirectories = true
+                })
+                .Select(c => new 
+                {
+                    FullPath = c,
+                    ArtifactInfo = new DirectoryInfo(c)
+                });
+
+            if (deepSearchFilter.ArtifactCategorySearchType is not null)
+            {
+                GetAllFileAndFolders = GetAllFileAndFolders.Where(f =>
+                    FsArtifactUtils.GetSearchCategoryTypeExtentions(deepSearchFilter.ArtifactCategorySearchType.Value)
+                                   .Contains(f.ArtifactInfo.Extension.ToLower()));
+            }
+
+            if (deepSearchFilter.ArtifactDateSearchType is not null)
+            {
+                var dateDiff = deepSearchFilter.ArtifactDateSearchType switch
+                {
+                    ArtifactDateSearchType.Yesterday => 1,
+                    ArtifactDateSearchType.Past7Days => 7,
+                    ArtifactDateSearchType.Past30Days => 30,
+                    _ => 0
+                };
+
+                GetAllFileAndFolders = GetAllFileAndFolders.Where(f => f.ArtifactInfo.LastWriteTime >= DateTimeOffset.Now.AddDays(-dateDiff));
+            }
+
+            foreach (var artifact in GetAllFileAndFolders)
+            {
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
+
+                var providerType = await GetFsFileProviderTypeAsync(artifact.FullPath);
+                var artifactType = await GetFsArtifactTypeAsync(artifact.FullPath);
+
+                yield return new FsArtifact(artifact.FullPath, Path.GetFileName(artifact.FullPath), artifactType.Value, providerType)
+                {
+                    ParentFullPath = artifact.ArtifactInfo?.Parent?.FullName,
+                    LastModifiedDateTime = artifact.ArtifactInfo?.LastWriteTime ?? default,
+                    FileExtension = artifactType == FsArtifactType.File ? artifact.ArtifactInfo?.Extension : null,
+                    Size = artifactType == FsArtifactType.File ? new FileInfo(artifact.FullPath).Length : null
                 };
             }
-
-            files.Clear();
-
-            var foldersCount = folders.Count;
-
-            for (int i = 0; i < foldersCount; i++)
-            {
-                var (fullPath, directoryInfo) = folders[i];
-                if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-                var providerType = await GetFsFileProviderTypeAsync(fullPath);
-
-                if (directoryInfo.Name.ToLower().Contains(deepSearchFilter?.SearchText.ToLower()))
-                {
-                    yield return new FsArtifact(fullPath, Path.GetFileName(fullPath), FsArtifactType.Folder, providerType)
-                    {
-                        ParentFullPath = Directory.GetParent(fullPath)?.FullName,
-                        LastModifiedDateTime = Directory.GetLastWriteTime(fullPath)
-                    };
-                }
-
-                await foreach (var item in GetAllFileAndFoldersAsync(fullPath, deepSearchFilter, cancellationToken))
-                {
-                    if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    yield return item;
-                }
-            }
-
-            folders.Clear();
         }
 
         public Task FillArtifactMetaAsync(FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
