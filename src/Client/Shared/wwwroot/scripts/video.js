@@ -41,10 +41,14 @@
     }
 
     function togglePlay() {
+        const playButton = document.getElementById("fxVideoPlayButton");
+
         if (video.paused || video.ended) {
             video.play();
+            playButton.src = "_content/Functionland.FxFiles.Client.Shared/images/icons/videoViewer/pause.svg";
         } else {
             video.pause();
+            playButton.src = "_content/Functionland.FxFiles.Client.Shared/images/icons/videoViewer/play.svg";
         }
     }
 

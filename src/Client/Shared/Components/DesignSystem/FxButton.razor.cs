@@ -8,6 +8,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public string? Text { get; set; }
 
         [Parameter]
+        public string? Id { get; set; }
+
+        [Parameter]
+        public string? LeftIconId { get; set; }
+
+        [Parameter]
         public string? Class { get; set; }
 
         [Parameter]

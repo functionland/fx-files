@@ -3,7 +3,6 @@
 public partial class VideoFileViewerPage : IFileViewerPage
 {
     public string Path { get; set; } = "D:\\test.mp4";
-    public string PlayIcon { get; set; } = "_content/Functionland.FxFiles.Client.Shared/images/icons/videoViewer/pause.svg";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -25,15 +24,6 @@ public partial class VideoFileViewerPage : IFileViewerPage
 
     private async Task OnTogglePlayClick()
     {
-        if (PlayIcon.Contains("play"))
-        {
-            PlayIcon = "_content/Functionland.FxFiles.Client.Shared/images/icons/videoViewer/pause.svg";
-        }
-        else
-        {
-            PlayIcon = "_content/Functionland.FxFiles.Client.Shared/images/icons/videoViewer/play.svg";
-        }
-
         await JSRuntime.InvokeVoidAsync("FxVideo.togglePlay");
     }
 

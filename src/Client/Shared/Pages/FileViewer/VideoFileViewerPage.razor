@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <video id="fxVideoElement">
+    <video controls id="fxVideoElement">
         <source src="@(Path.InProtocol(PathProtocol.Storage))" type="video/mp4" />
     </video>
 
@@ -47,7 +47,8 @@
                           OnClick="OnTogglePlayClick"
                           BackgroundColor="transparent"
                           ButtonStyle="FxButtonStyle.None"
-                          LeftIcon="@(PlayIcon)" />
+                          LeftIconId="fxVideoPlayButton"
+                          LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/videoViewer/pause.svg" />
                 <FxButton Padding="0"
                           OnClick="OnForwardClick"
                           BackgroundColor="transparent"

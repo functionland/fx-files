@@ -19,6 +19,7 @@
         href="@Link"
         ontouchstart
         draggable="false"
+        id="@Id"
         @onclick="@OnClick"
         class="fxbutton
         @(IsEnabled ? "" : "fully-disabled")
@@ -29,7 +30,7 @@
             <div>
                 @if (!string.IsNullOrEmpty(LeftIcon) || !string.IsNullOrWhiteSpace(LeftIcon))
                 {
-                    <img class="fxbutton-lefticon" src="@LeftIcon" />
+                    <img id="@LeftIconId" class="fxbutton-lefticon" src="@LeftIcon" />
                 }
 
                 @if (!string.IsNullOrEmpty(Text) || !string.IsNullOrWhiteSpace(Text))
