@@ -30,32 +30,23 @@ public class ThumbFileInfo<TFileService> : IFileInfo
                 if (!IsMetaDataLoaded)
                 {
                     //ToDo: handle exceptions
-                    var artifact = _fileService.GetArtifactAsync(_path)?.GetAwaiter().GetResult();
-                    if (artifact != null)
-                    {
-                        var thumbnailAddress = _artifactThumbnailService.GetOrCreateThumbnailAsync(artifact, _scale).GetAwaiter().GetResult();
-                        if (thumbnailAddress != null)
+                        var artifact = _fileService.GetArtifactAsync(_path)?.GetAwaiter().GetResult();
+                        if (artifact != null)
                         {
-                            _physicalPath = thumbnailAddress;
-                            _fileInfo = new FileInfo(thumbnailAddress);
+                            var thumbnailAddress = _artifactThumbnailService.GetOrCreateThumbnailAsync(artifact, _scale)?.GetAwaiter().GetResult();
+                            if (thumbnailAddress != null)
+                            {
+                                _physicalPath = thumbnailAddress;
+                                _fileInfo = new FileInfo(thumbnailAddress);
+                            }
                         }
-                    }
+                        IsMetaDataLoaded = true;
                 }
             }
         }
     }
 
-    public bool Exists
-    {
-        get
-        {
-            EnsureLoadThumbnail();
-            if(_fileInfo is null)
-                return false;
-
-            return _fileInfo.Exists;
-        }
-    }
+    public bool Exists => true;
 
     public long Length
     {
@@ -107,7 +98,10 @@ public class ThumbFileInfo<TFileService> : IFileInfo
         try
         {
             EnsureLoadThumbnail();
-            var streamReader = new StreamReader(PhysicalPath);
+            if (_physicalPath == null)
+                return new MemoryStream();
+
+            var streamReader = new StreamReader(_physicalPath);
             return streamReader.BaseStream;
         }
         catch
