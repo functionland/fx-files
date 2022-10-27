@@ -299,8 +299,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
             {
                 return default;
             }
-
-            List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(request.Count).ToList();
+            var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
+            List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
             foreach (var item in items)
             {
@@ -311,7 +311,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
             }
 
-            return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: items.Count);
+            return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
         }
     }
 }
