@@ -668,10 +668,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
+                if (artifact.ArtifactInfo is null) continue;
+
+                if (artifact?.ArtifactInfo?.Attributes == (FileAttributes)(-1)) continue;
+
                 var providerType = GetFsFileProviderType(artifact.FullPath);
                 var artifactType = GetFsArtifactType(artifact.FullPath);
 
-                yield return new FsArtifact(artifact.FullPath, Path.GetFileName(artifact.FullPath), artifactType.Value, providerType)
+                yield return new FsArtifact(artifact.FullPath, artifact.ArtifactInfo.Name, artifactType.Value, providerType)
                 {
                     ParentFullPath = artifact.ArtifactInfo?.Parent?.FullName,
                     LastModifiedDateTime = artifact.ArtifactInfo?.LastWriteTime ?? default,
