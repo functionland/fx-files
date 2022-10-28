@@ -12,6 +12,7 @@
 
         @if (ArtifactType == FsArtifactType.File && FileType == FileCategoryType.Image)
         {
+            <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-blur"/> 
             <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-image" />
         }
         else

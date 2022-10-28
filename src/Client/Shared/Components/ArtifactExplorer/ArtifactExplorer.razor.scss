@@ -25,7 +25,7 @@
     grid-gap: 1px;
     grid-auto-flow: row;
     grid-template-columns: repeat(auto-fit, 177px);
-    grid-template-rows: repeat(auto-fit, 148px);
+    grid-template-rows: repeat(auto-fit, 178px);
     justify-content: flex-start;
 
     .selected-item {
@@ -113,6 +113,10 @@
     align-items: center;
     flex-flow: row nowrap;
 
+/*    .check-box-position {
+        margin-right: 16px;
+    }*/
+
     .icon-box {
         display: flex;
         justify-content: center;
@@ -127,6 +131,10 @@
             justify-content: center;
             align-items: center;
             border-radius: 4px;
+        }
+
+        .selected-item-icon {
+            background-color: color(gray-bg-secondary);
         }
 
         .thumbnail-box {
@@ -231,6 +239,8 @@
     .check-box-position {
         position: absolute;
         z-index: 1;
+        top: 9px;
+        left: 9px;
     }
 
     .icon-box {
@@ -268,10 +278,11 @@
                 }
 
                 .thumbnail-img {
+                    text-indent: -10000px;
                     object-fit: contain;
+                    position: absolute;
                     width: 161px;
                     height: 86px;
-                    position: absolute;
                     left: 0;
                 }
             }
@@ -481,7 +492,7 @@
 }
 
 .checkbox {
-    margin-right: 4px;
+    margin-right: 16px;
     border: $border-size-1 solid;
     border-radius: $border-radius-4;
     background-color: color(app-bg);
@@ -506,8 +517,4 @@
 
 .checkbox-display-none {
     display: none;
-}
-
-::deep .icon-space-in-desktop {
-    margin-right: $spacing-16 !important;
 }
