@@ -167,7 +167,6 @@ public partial class ZipService : IZipService
         var extension = Path.GetExtension(fullPath);
         var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
         var zipFileName = Path.GetFileName(fullPath);
-        var extension = Path.GetExtension(fullPath);
         var ZipFileNameWithoutExtension = zipFileName.Replace(extension, "");
         var deletedPath = Path.Combine(destinationPath, ZipFileNameWithoutExtension);
 
