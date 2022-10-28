@@ -84,8 +84,6 @@
          @onpointerdown="(() =>PointerDown(artifact))"
          @onpointercancel="PointerCancel">
 
-
-
                         @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                         {
                             <div class="check-box-position" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
@@ -95,7 +93,7 @@
                         <div class="icon-box">
                             <div class="thumbnail-box">
                                 <div class="img-box">
-                                    <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))">
+                                    <img class="thumbnail-img" src="@(artifact?.ThumbnailPath?.InProtocol(Protocol))">
                                 </div>
                                 @if (artifact?.FileCategory == FileCategoryType.Video)
                                 {
