@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -19,7 +18,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(async () =>
             {
-                ignoredList = await CopyAllAsync(artifacts, destination, false, overwrite, ignoredList, onProgress, true, cancellationToken);
+                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, ignoredList, onProgress, true, cancellationToken);
             });
 
             if (ignoredList.Any())
@@ -49,14 +48,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (File.Exists(path))
                 throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
 
-            using FileStream outPutFileStream = new(path, FileMode.Create);
-            await stream.CopyToAsync(outPutFileStream);
+            await LocalStorageCreateFile(path, stream);
 
             var providerType = GetFsFileProviderType(path);
             var newFsArtifact = new FsArtifact(path, fileName, FsArtifactType.File, providerType)
             {
                 FileExtension = Path.GetExtension(path),
-                Size = outPutFileStream.Length,
+                Size = stream.Length,
                 LastModifiedDateTime = File.GetLastWriteTime(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName,
             };
@@ -95,7 +93,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (Directory.Exists(newPath))
                 throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
 
-            Directory.CreateDirectory(newPath);
+            LocalStorageCreateDirectory(newPath);
 
             var providerType = GetFsFileProviderType(newPath);
             var newFsArtifact = new FsArtifact(newPath, folderName, FsArtifactType.Folder, providerType)
@@ -146,11 +144,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (artifact.ArtifactType == FsArtifactType.Folder)
             {
-                Directory.Delete(artifact.FullPath, true);
+                LocalStorageDeleteDirectory(artifact.FullPath);
             }
             else if (artifact.ArtifactType == FsArtifactType.File)
             {
-                File.Delete(artifact.FullPath);
+                LocalStorageDeleteFile(artifact.FullPath);
             }
             else if (artifact.ArtifactType == FsArtifactType.Drive)
             {
@@ -225,10 +223,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             List<FsArtifact> ignoredList = new();
 
-            await Task.Run(async () =>
-            {
-                ignoredList = await CopyAllAsync(artifacts, destination, true, overwrite, ignoredList, onProgress, true, cancellationToken);
-            });
+            ignoredList = await MoveAllAsync(artifacts, destination, overwrite, ignoredList, onProgress, true, cancellationToken);
 
             if (ignoredList.Any())
             {
@@ -260,7 +255,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             await Task.Run(() =>
             {
-
                 var directory = Path.GetDirectoryName(filePath);
                 var isExtentionExsit = Path.HasExtension(newName);
                 var newFileName = isExtentionExsit ? newName : Path.ChangeExtension(newName, Path.GetExtension(filePath));
@@ -271,7 +265,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (isFileExist)
                     throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
 
-                File.Move(filePath, newPath);
+                LocalStorageRenameFile(filePath, newPath);
             });
         }
 
@@ -315,14 +309,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (isExist)
                     throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
 
-                Directory.Move(folderPath, newPath);
+                LocalStorageRenameDirectory(folderPath, newPath);
             });
         }
 
         private async Task<List<FsArtifact>> CopyAllAsync(
             IList<FsArtifact> artifacts,
             string destination,
-            bool mustDeleteSource = false,
             bool overwrite = false,
             List<FsArtifact>? ignoredList = null,
             Action<ProgressInfo>? onProgress = null,
@@ -354,19 +347,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     }
                     else
                     {
-                        var destinationDirectory = new DirectoryInfo(Path.GetFullPath(destination));
-
-                        if (!destinationDirectory.Exists)
+                        if (!Directory.Exists(destination))
                         {
-                            destinationDirectory.Create();
+                            LocalStorageCreateDirectory(destination);
                         }
 
-                        fileInfo.CopyTo(destinationInfo.FullName, true);
-
-                        if (mustDeleteSource)
-                        {
-                            DeleteArtifactAsync(artifact, cancellationToken);
-                        }
+                        LocalStorageCopyFile(fileInfo.FullName, destinationInfo.FullName);
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -377,9 +363,111 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     if (directoryInfo.FullName == destinationInfo.FullName)
                         throw new SameDestinationFolderException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
 
-                    if (!destinationInfo.Exists)
+                    if (!Directory.Exists(destinationInfo.FullName))
                     {
-                        destinationInfo.Create();
+                        LocalStorageCreateDirectory(destinationInfo.FullName);
+                    }
+
+                    var children = new List<FsArtifact>();
+
+                    var directoryFiles = directoryInfo.GetFiles();
+
+                    foreach (var file in directoryFiles)
+                    {
+                        if (cancellationToken?.IsCancellationRequested == true) break;
+
+                        var providerType = await GetFsFileProviderTypeAsync(file.FullName);
+
+                        children.Add(new FsArtifact(file.FullName, file.Name, FsArtifactType.File, providerType)
+                        {
+                            FileExtension = file.Extension,
+                            LastModifiedDateTime = file.LastWriteTime,
+                            ParentFullPath = Directory.GetParent(file.FullName)?.FullName,
+                            Size = file.Length
+                        });
+                    }
+
+                    var directorySubDirectories = directoryInfo.GetDirectories();
+
+                    foreach (var subDirectory in directorySubDirectories)
+                    {
+                        if (cancellationToken?.IsCancellationRequested == true) break;
+
+                        var providerType = await GetFsFileProviderTypeAsync(subDirectory.FullName);
+
+                        children.Add(new FsArtifact(subDirectory.FullName, subDirectory.Name, FsArtifactType.Folder, providerType)
+                        {
+                            LastModifiedDateTime = subDirectory.LastWriteTime,
+                            ParentFullPath = Directory.GetParent(subDirectory.FullName)?.FullName,
+                        });
+                    }
+
+                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName,
+                         overwrite, ignoredList, onProgress, false, cancellationToken);
+                }
+
+                if (onProgress is not null && shouldProgress)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
+            }
+
+            return ignoredList;
+        }
+
+        private async Task<List<FsArtifact>> MoveAllAsync(
+          IList<FsArtifact> artifacts,
+          string destination,
+          bool overwrite = false,
+          List<FsArtifact>? ignoredList = null,
+          Action<ProgressInfo>? onProgress = null,
+          bool shouldProgress = true,
+          CancellationToken? cancellationToken = null)
+        {
+            int? progressCount = null;
+
+            foreach (var artifact in artifacts)
+            {
+                if (onProgress is not null && shouldProgress && progressCount == null)
+                {
+                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
+                }
+
+                if (cancellationToken?.IsCancellationRequested == true) break;
+
+                if (artifact.ArtifactType == FsArtifactType.File)
+                {
+                    var fileInfo = new FileInfo(artifact.FullPath);
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
+
+                    if (fileInfo.FullName == destinationInfo.FullName)
+                        throw new SameDestinationFileException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
+
+                    if (!overwrite && destinationInfo.Exists)
+                    {
+                        ignoredList.Add(artifact);
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(destination))
+                        {
+                            LocalStorageCreateDirectory(destination);
+                        }
+
+                        LocalStorageMoveFile(fileInfo.FullName, destinationInfo.FullName);
+                    }
+                }
+                else if (artifact.ArtifactType == FsArtifactType.Folder)
+                {
+                    var directoryInfo = new DirectoryInfo(artifact.FullPath);
+                    var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
+
+                    if (directoryInfo.FullName == destinationInfo.FullName)
+                        throw new SameDestinationFolderException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
+
+                    if (!Directory.Exists(destinationInfo.FullName))
+                    {
+                        LocalStorageCreateDirectory(destinationInfo.FullName);
                     }
 
                     var children = new List<FsArtifact>();
@@ -415,13 +503,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName,
-                        mustDeleteSource, overwrite, ignoredList, onProgress, false, cancellationToken);
+                    var childIgnoredList = await MoveAllAsync(children, destinationInfo.FullName,
+                         overwrite, ignoredList, onProgress, false, cancellationToken);
 
-                    if (!childIgnoredList.Any() && mustDeleteSource)
-                    {
-                        DeleteArtifactAsync(artifact, cancellationToken);
-                    }
+                    DeleteArtifactAsync(artifact, cancellationToken);
+
                 }
 
                 if (onProgress is not null && shouldProgress)
@@ -523,6 +609,47 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
             return fsArtifactList;
+        }
+
+        protected virtual void LocalStorageDeleteFile(string path)
+        {
+            File.Delete(path);
+        }
+
+        protected virtual void LocalStorageDeleteDirectory(string path)
+        {
+            Directory.Delete(path, true);
+        }
+
+        protected virtual void LocalStorageMoveFile(string filePath, string newPath)
+        {
+            File.Move(filePath, newPath, true);
+        }
+
+        protected virtual void LocalStorageRenameFile(string filePath, string newPath)
+        {
+            File.Move(filePath, newPath);
+        }
+
+        protected virtual void LocalStorageCopyFile(string sourceFile, string destinationFile)
+        {
+            File.Copy(sourceFile, destinationFile, true);
+        }
+
+        protected virtual async Task LocalStorageCreateFile(string path, Stream stream)
+        {
+            using FileStream outPutFileStream = new(path, FileMode.Create);
+            await stream.CopyToAsync(outPutFileStream);
+        }
+
+        protected virtual void LocalStorageRenameDirectory(string folderPath, string newPath)
+        {
+            Directory.Move(folderPath, newPath);
+        }
+
+        protected virtual void LocalStorageCreateDirectory(string newPath)
+        {
+            Directory.CreateDirectory(newPath);
         }
 
         private static bool CheckIfNameHasInvalidChars(string name)

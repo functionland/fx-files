@@ -3,6 +3,7 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-accordion.scss';
 
+
 .file-browser-container {
     min-height: calc(100vh - 81px);
     display: flex;
@@ -17,6 +18,22 @@
     top: 0;
     z-index: 2;
 }
+
+::deep .bit-acd .content.expanded {
+    height: 232px !important;
+    overflow: unset !important;
+
+    .items {
+        overflow-x: overlay !important;
+        margin-bottom: -24px;
+
+        &::-webkit-scrollbar {
+            height: 6px;
+        }
+    }
+}
+
+
 
 .root-title {
     font-family: $montserrat-semi-bold;
@@ -44,11 +61,13 @@
     margin-bottom: $spacing-16;
 
     &::before {
-        @include Icon($chevron-right, color(input-disable) );
+        @include Icon($chevron-right, color(input-disable));
     }
 }
 
-
+::deep .bit-acd .content {
+    position: relative;
+}
 
 .action-bar {
     display: flex;
@@ -61,6 +80,11 @@
     position: sticky;
     top: 128px;
     z-index: 2;
+
+    .specter {
+        color: color(gray-border);
+        margin-bottom: $spacing-2;
+    }
 
     .left-actions {
         display: flex;
@@ -75,17 +99,22 @@
             font-size: $font-size-14;
             line-height: $line-height-24;
             letter-spacing: $letter-spacing-02;
-            margin-right: $spacing-4;
-            color: color(gray-content1);
+            margin-right: $spacing-8;
+            color: color(gray-content3);
             cursor: pointer;
+
+            .sort-type {
+                color: $green-dark-base;
+            }
         }
 
         .sort-order {
             cursor: pointer;
+            margin: $spacing-2 $spacing-8 $spacing-0;
 
             &::before {
-                font-size: $icon-16;
-                @include Icon($chevron-up);
+                font-size: $icon-20;
+                @include Icon($arrow-up);
             }
         }
 
@@ -93,12 +122,12 @@
             transform: rotate(180deg);
 
             &::before {
-                @include Icon($chevron-up);
+                @include Icon($arrow-up);
             }
         }
 
         .asc-order::before {
-            @include Icon($chevron-up);
+            @include Icon($arrow-up);
         }
     }
 
@@ -106,23 +135,23 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
 
         .action-btn {
             cursor: pointer;
         }
 
         .select-all-btn {
-            margin-right: $spacing-8;
+            margin: $spacing-0 $spacing-8;
 
             &::before {
                 @include Icon($select, color(gray-content3));
-                font-size: 24px;
+                font-size: $icon-24;
             }
         }
 
         .select-all-filled::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($selected, $green-dark-base, $Icons-Filled);
         }
 
@@ -130,37 +159,41 @@
             margin-right: $spacing-8;
 
             &::before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($list, color(gray-content3));
             }
         }
 
         .list-view-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($list, $green-dark-base);
         }
 
         .grid-view-btn {
-            margin-right: $spacing-8;
+            margin: $spacing-0 $spacing-8;
 
             &::before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($grid, color(gray-content3));
             }
         }
 
         .grid-view-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($grid, $green-dark-base);
         }
 
-        .filter-btn::before {
-            font-size: 24px;
-            @include Icon($filter, color(gray-content3));
+        .filter-btn {
+            margin-left: $spacing-8;
+
+            &:before {
+                font-size: $icon-24;
+                @include Icon($filter, color(gray-content3));
+            }
         }
 
         .filter-btn-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($fill, $green-dark-base, $Icons-Filled);
         }
     }

@@ -33,7 +33,7 @@ public partial class ExternalAndroidFileServicePlatformTest : FileServicePlatfor
             throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToLoadStorageManager));
         }
 
-        var externalRootPath = storageManager.StorageVolumes.Where(s => s.IsPrimary == false).Select(d => d.Directory?.Path).FirstOrDefault();
+        var externalRootPath = storageManager.StorageVolumes.Where(s => s.IsPrimary == false).Select(d => $@"/storage/{d.Uuid}").FirstOrDefault();
 
         if (externalRootPath == null)
         {

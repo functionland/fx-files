@@ -136,55 +136,52 @@
                OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-        @if (IsInRoot(_currentArtifact) && _isInSearch is false)
-        {
-            //this is filter in deep search part TODO: replace it in correct palce in code
+    @if (IsInRoot(_currentArtifact) && _isInSearch is false)
+    {
+        <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+            <ContentTemplate>
+                @if (_isPinBoxLoading)
+                {
+                    <OverlayLoading LoadingType="LoadingType.Overlay" />
+                }
+                @if (_pins?.Count > 0)
+                {
+                    <div class="items">
+                        @foreach (var pin in _pins)
+                        {
+                            <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                <FileCard ArtifactType="@pin.ArtifactType"
+                                          Name="@pin.Name"
+                                          Size="@pin.SizeStr"
+                                          Path="@pin.FullPath"
+                                          FileService = "@FileService"
+                                          FileType="@pin.FileCategory"
+                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                            </div>
+                        }
+                    </div>
+                }
+            </ContentTemplate>
+        </BitAccordion>
+    }
 
-
-
-            //end of filter in deep search
-            @if (_pins?.Count > 0)
-            {
-
-                <BitAccordion Title="Pinned" DefaultIsExpanded="true">
-                    <ContentTemplate>
-                        <div class="items">
-                            @foreach (var pin in _pins)
-                            {
-                                <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                    <FileCard ArtifactType="@pin.ArtifactType"
-                              FileName="@pin.Name"
-                              FileSize="@pin.SizeStr"
-                              FileImage="@pin.ThumbnailPath"
-                              FileType="@pin.FileCategory"
-                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
-                                </div>
-                            }
-                        </div>
-                    </ContentTemplate>
-                </BitAccordion>
-            }
-            else
-            {
-                <div class="disable-pinned">
-                    Pinned (empty)
-                </div>
-            }
-
-            <div class="root-title">My device files</div>
-        }
+    <div class="root-title">My device files</div>
 
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
             <div class="@(_isInSearch ? "action-bar-search" : "") action-bar">
                 <div class="left-actions">
-                    <div class="selected-sort" @onclick="HandleSortClick">@_currentSortType</div>
+                    <div class="selected-sort" @onclick="HandleSortClick">
+                        @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
+                    </div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">
+                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
-                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.List))"></div>
-                    <div class="action-btn grid-view-btn @(ArtifactState.ViewMode == ViewModeEnum.Grid ? "grid-view-selected" : "")" @onclick="@(() => ChangeViewMode(ViewModeEnum.Grid))"></div>
+                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
                 </div>
             </div>
@@ -221,6 +218,7 @@
         }
 
         <ArtifactExplorer Artifacts="_displayedArtifacts"
+                      FileService="FileService"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactOptionClick="HandleOptionsArtifact"
@@ -251,3 +249,4 @@
                OnCancel="ProgressBarOnCancel"
                @ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
+<FileViewer @ref="_fileViewerRef" FileService="FileService" />
