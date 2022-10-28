@@ -1,11 +1,11 @@
 ﻿using Functionland.FxFiles.Client.App.Extensions;
 
 using Microsoft.Extensions.FileProviders;
-using Windows.Graphics;
 
 #if WINDOWS
 using Microsoft.UI;
 using WinRT.Interop;
+using Windows.Graphics;
 using Microsoft.UI.Windowing;
 #endif
 
