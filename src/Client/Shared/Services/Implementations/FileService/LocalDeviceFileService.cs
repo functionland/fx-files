@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
+
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
 using Functionland.FxFiles.Client.Shared.Utils;
@@ -629,8 +631,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) yield break;
 
+            var inLineDeepSearch = new DeepSearchFilter
+            {
+                SearchText = deepSearchFilter.SearchText,
+                ArtifactCategorySearchType = deepSearchFilter.ArtifactCategorySearchType,
+                ArtifactDateSearchType = deepSearchFilter.ArtifactDateSearchType
+            };
             var allFileAndFolders = Directory.EnumerateFileSystemEntries(path,
-                !string.IsNullOrWhiteSpace(deepSearchFilter.SearchText) ? $"*{deepSearchFilter.SearchText}*" : "*",
+                !string.IsNullOrWhiteSpace(inLineDeepSearch.SearchText) ? $"*{inLineDeepSearch.SearchText}*" : "*",
                 new EnumerationOptions
                 {
                     IgnoreInaccessible = true,
@@ -638,22 +646,24 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = true
                 })
-                .Select(c => new 
+                .Select(c => new
                 {
                     FullPath = c,
                     ArtifactInfo = new DirectoryInfo(c)
                 });
 
-            if (deepSearchFilter.ArtifactCategorySearchType is not null)
+            if (inLineDeepSearch.ArtifactCategorySearchType.HasValue)
             {
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
                 allFileAndFolders = allFileAndFolders.Where(f =>
-                    FsArtifactUtils.GetSearchCategoryTypeExtentions(deepSearchFilter.ArtifactCategorySearchType.Value)
+                    FsArtifactUtils.GetSearchCategoryTypeExtentions(inLineDeepSearch.ArtifactCategorySearchType.Value)
                                    .Contains(f.ArtifactInfo.Extension.ToLower()));
             }
 
-            if (deepSearchFilter.ArtifactDateSearchType is not null)
+            if (inLineDeepSearch.ArtifactDateSearchType.HasValue)
             {
-                var dateDiff = deepSearchFilter.ArtifactDateSearchType switch
+                if (cancellationToken?.IsCancellationRequested == true) yield break;
+                var dateDiff = inLineDeepSearch.ArtifactDateSearchType switch
                 {
                     ArtifactDateSearchType.Yesterday => 1,
                     ArtifactDateSearchType.Past7Days => 7,

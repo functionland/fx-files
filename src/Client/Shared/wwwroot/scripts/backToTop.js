@@ -36,3 +36,11 @@ function ShowBackToTopButton() {
     var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
     scrollButton.style.display = 'block';
 }
+
+// search input focus 
+function SearchInputFocus() {
+    var searchInput = document.getElementById('searchinput');
+    if (typeof searchInput !== "undefined") {
+        searchInput.focus();
+    }
+}

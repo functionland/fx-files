@@ -57,8 +57,9 @@ public partial class FileBrowser
 
     // Search
     private DeepSearchFilter? SearchFilter { get; set; }
-    private bool _isFileCategoryFilterModeOpen = true;
+    private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
+    private bool isFirstTimeInSearch = true;
     private string _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
@@ -128,6 +129,16 @@ public partial class FileBrowser
         {
             ExceptionHandler.Handle(exception);
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isInSearch && isFirstTimeInSearch)
+        {
+            await JSRuntime.InvokeVoidAsync("SearchInputFocus");
+            isFirstTimeInSearch = false;
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
@@ -384,6 +395,11 @@ public partial class FileBrowser
             _isPinBoxLoading = true;
             await PinService.SetArtifactsPinAsync(artifacts);
             await UpdatePinedArtifactsAsync(artifacts, true);
+            if (_isInSearch)
+            {
+                ToastModal.Show(Localizer.GetString(AppStrings.ToastSuccessMessage), Localizer.GetString(AppStrings.ToastSuccessMessage), FxToastType.Success);
+                CancelSelectionMode();
+            }
         }
         catch (Exception exception)
         {
@@ -581,12 +597,6 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        if (_isInSearch)
-        {
-            _isInSearch = false;
-            cancellationTokenSource?.Cancel();
-        }
-        _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
             var encodedArtifactPath = WebUtility.UrlEncode(_currentArtifact?.FullPath);
@@ -600,12 +610,22 @@ public partial class FileBrowser
                 baseUrl = baseUrl.Replace(query, "");
             }
 
+            if (_isInSearch)
+            {
+                CancelSearch(true);
+                _currentArtifact = null;
+                await LoadChildrenArtifactsAsync();
+            }
             await ViewFileService.ViewFileAsync(artifact.FullPath, $"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {
             try
             {
+                if (_isInSearch)
+                {
+                    CancelSearch(true);
+                }
                 _currentArtifact = artifact;
                 _isArtifactExplorerLoading = true;
                 await LoadChildrenArtifactsAsync(_currentArtifact);
@@ -908,9 +928,17 @@ public partial class FileBrowser
 
     private async Task HandleSearchAsync(string text)
     {
+        CancelSelectionMode();
         //_isArtifactExplorerLoading = true;
         _searchText = text;
-        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
+        }
+        else
+        {
+            CancelSearch();
+        }
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
@@ -961,9 +989,9 @@ public partial class FileBrowser
                     StateHasChanged();
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ExceptionHandler.Handle(ex);
+                //ExceptionHandler.Handle(ex);
             }
             finally
             {
@@ -982,7 +1010,11 @@ public partial class FileBrowser
             {
                 SearchFilter.SearchText = searchText;
             }
-
+            else
+            {
+                SearchFilter = null;
+                return;
+            }
             SearchFilter.ArtifactDateSearchType = date ?? null;
 
             SearchFilter.ArtifactCategorySearchType = type ?? null;
@@ -994,6 +1026,11 @@ public partial class FileBrowser
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 SearchFilter.SearchText = searchText;
+            }
+            else
+            {
+                SearchFilter = null;
+                return;
             }
             SearchFilter.ArtifactDateSearchType = date ?? null;
 
@@ -1040,11 +1077,7 @@ public partial class FileBrowser
         }
         if (_isInSearch)
         {
-            _isInSearch = false;
-            cancellationTokenSource?.Cancel();
-            _artifactExplorerMode = ArtifactExplorerMode.Normal;
-            _fxSearchInputRef?.HandleClearInputText();
-            _displayedArtifacts.Clear();
+            CancelSearch(true);
             await LoadChildrenArtifactsAsync();
         }
         StateHasChanged();
@@ -1253,6 +1286,10 @@ public partial class FileBrowser
 
     private async Task NavigateToDestionation(string? destinationPath)
     {
+        if (_isInSearch)
+        {
+            CancelSearch(true);
+        }
         _currentArtifact = await FileService.GetArtifactAsync(destinationPath);
         //_isLoading = true;
         await LoadChildrenArtifactsAsync(_currentArtifact);
@@ -1290,32 +1327,35 @@ public partial class FileBrowser
 
     private void ChangeFileCategoryFilterMode()
     {
-        _isFileCategoryFilterModeOpen = !_isFileCategoryFilterModeOpen;
+        _isFileCategoryFilterBoxOpen = !_isFileCategoryFilterBoxOpen;
     }
 
-    private async Task ChangeArtifactsSearchFilterDate(ArtifactDateSearchType date)
+    private async Task ChangeArtifactsSearchFilterDate(ArtifactDateSearchType? date)
     {
-        if (_artifactsSearchFilterDate == date)
-        {
-            _artifactsSearchFilterDate = null;
-        }
-        else
-        {
-            _artifactsSearchFilterDate = date;
-        }
+        CancelSearch();
+        _artifactsSearchFilterDate = date ?? null;
         await HandleSearchAsync(_searchText);
     }
 
-    private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType type)
+    private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType? type)
     {
-        if (_artifactsSearchFilterType == type)
+        CancelSearch();
+        _artifactsSearchFilterType = type ?? null;
+        await HandleSearchAsync(_searchText);
+    }
+
+    private void CancelSearch(bool shouldExist = false)
+    {
+        cancellationTokenSource?.Cancel();
+        SearchFilter = null;
+        _fxSearchInputRef?.HandleClearInputText();
+        _displayedArtifacts.Clear();
+        CancelSelectionMode();
+        _isInSearch = shouldExist is false ? true : false;
+        if (shouldExist)
         {
             _artifactsSearchFilterType = null;
+            _artifactsSearchFilterDate = null;
         }
-        else
-        {
-            _artifactsSearchFilterType = type;
-        }
-        await HandleSearchAsync(_searchText);
     }
 }
