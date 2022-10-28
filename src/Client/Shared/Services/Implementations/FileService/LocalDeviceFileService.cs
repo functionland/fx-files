@@ -376,7 +376,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         if (cancellationToken?.IsCancellationRequested == true) break;
 
-                        var providerType = await GetFsFileProviderTypeAsync(file.FullName);
+                        var providerType = GetFsFileProviderType(file.FullName);
 
                         children.Add(new FsArtifact(file.FullName, file.Name, FsArtifactType.File, providerType)
                         {
@@ -393,7 +393,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         if (cancellationToken?.IsCancellationRequested == true) break;
 
-                        var providerType = await GetFsFileProviderTypeAsync(subDirectory.FullName);
+                        var providerType = GetFsFileProviderType(subDirectory.FullName);
 
                         children.Add(new FsArtifact(subDirectory.FullName, subDirectory.Name, FsArtifactType.Folder, providerType)
                         {

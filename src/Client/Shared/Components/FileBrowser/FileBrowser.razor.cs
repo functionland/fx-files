@@ -96,22 +96,17 @@ public partial class FileBrowser
 
     }
 
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (_isGoingBack)
-        {
-            _isGoingBack = false;
-            await JSRuntime.InvokeVoidAsync("getLastScrollPossition");
-        }
-        await base.OnAfterRenderAsync(firstRender);
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (_isInSearch && isFirstTimeInSearch)
         {
             await JSRuntime.InvokeVoidAsync("SearchInputFocus");
             isFirstTimeInSearch = false;
+        }
+        if (_isGoingBack)
+        {
+            _isGoingBack = false;
+            await JSRuntime.InvokeVoidAsync("getLastScrollPossition");
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -604,6 +599,7 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
+        _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
             var isOpened = _fileViewerRef?.OpenArtifact(artifact);
@@ -620,22 +616,21 @@ public partial class FileBrowser
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    ExceptionHandler?.Handle(new DomainLogicException(Localizer.GetString(nameof(AppStrings.ArtifactUnauthorizedAccessException))));;
+                    ExceptionHandler?.Handle(new DomainLogicException(Localizer.GetString(nameof(AppStrings.ArtifactUnauthorizedAccessException))));
                 }
                 catch (Exception exception)
                 {
                     ExceptionHandler?.Handle(exception);
                 }
+
+                if (_isInSearch)
+                {
+                    CancelSearch(true);
+                    _currentArtifact = null;
+                    await LoadChildrenArtifactsAsync();
+                }
 #endif
             }
-
-            if (_isInSearch)
-            {
-                CancelSearch(true);
-                _currentArtifact = null;
-                await LoadChildrenArtifactsAsync();
-            }
-            await ViewFileService.ViewFileAsync(artifact.FullPath, $"{baseUrl}?encodedArtifactPath={encodedArtifactPath}");
         }
         else
         {
@@ -661,7 +656,6 @@ public partial class FileBrowser
             finally
             {
                 _isArtifactExplorerLoading = false;
-                StateHasChanged();
             }
         }
     }
@@ -962,7 +956,6 @@ public partial class FileBrowser
     {
         //_isLoading = true;
         _artifactExplorerMode = ArtifactExplorerMode.Normal;
-        cancellationTokenSource?.Cancel();
         _inlineSearchText = string.Empty;
         await LoadChildrenArtifactsAsync(_currentArtifact);
         //_isLoading = false;
@@ -973,12 +966,12 @@ public partial class FileBrowser
         _isInSearch = true;
     }
 
-    CancellationTokenSource? cancellationTokenSource;
+    CancellationTokenSource? searchCancellationTokenSource;
 
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
-        //_isArtifactExplorerLoading = true;
+        _isArtifactExplorerLoading = true;
         _searchText = text;
         if (!string.IsNullOrWhiteSpace(text))
         {
@@ -993,13 +986,13 @@ public partial class FileBrowser
 
         RefreshDisplayedArtifacts();
 
-        if (cancellationTokenSource is not null)
+        if (searchCancellationTokenSource is not null)
         {
-            cancellationTokenSource.Cancel();
+            searchCancellationTokenSource.Cancel();
         }
 
-        cancellationTokenSource = new CancellationTokenSource();
-        var token = cancellationTokenSource.Token;
+        searchCancellationTokenSource = new CancellationTokenSource();
+        var token = searchCancellationTokenSource.Token;
         var sw = System.Diagnostics.Stopwatch.StartNew();
 
         await Task.Run(async () =>
@@ -1021,7 +1014,7 @@ public partial class FileBrowser
                         RefreshDisplayedArtifacts();
                         await InvokeAsync(() =>
                         {
-                            //_isArtifactExplorerLoading = false;
+                            _isArtifactExplorerLoading = false;
                             StateHasChanged();
                         });
                         sw.Restart();
@@ -1044,7 +1037,7 @@ public partial class FileBrowser
             }
             finally
             {
-                //_isArtifactExplorerLoading = false;
+                _isArtifactExplorerLoading = false;
             }
 
         });
@@ -1414,7 +1407,7 @@ public partial class FileBrowser
 
     private void CancelSearch(bool shouldExist = false)
     {
-        cancellationTokenSource?.Cancel();
+        searchCancellationTokenSource?.Cancel();
         SearchFilter = null;
         _fxSearchInputRef?.HandleClearInputText();
         _displayedArtifacts.Clear();
