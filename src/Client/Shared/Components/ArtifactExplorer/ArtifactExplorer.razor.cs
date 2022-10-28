@@ -36,24 +36,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private FsArtifact? _longPressedArtifact;
 
         private Virtualize<FsArtifact>? _virtualizeListRef;
-        private Virtualize<FsArtifact[]>? _virtualizeGridRef;
-
-        private int _gridColumn = 2;
-
-        protected override Task OnInitAsync()
-        {
-            return base.OnInitAsync();
-        }
 
         protected override async Task OnParamsSetAsync()
         {
             if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
             {
                 await _virtualizeListRef.RefreshDataAsync();
-            }
-            else if (ViewMode == ViewModeEnum.List && _virtualizeGridRef is not null)
-            {
-                await _virtualizeGridRef.RefreshDataAsync();
             }
 
             await base.OnParamsSetAsync();
@@ -310,14 +298,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
             var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
             List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
-            foreach (var item in items)
-            {
-                if (request.CancellationToken.IsCancellationRequested)
-                {
-                    return default;
-                }
-                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
-            }
+            //foreach (var item in items)
+            //{
+            //    if (request.CancellationToken.IsCancellationRequested)
+            //    {
+            //        return default;
+            //    }
+            //    item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+            //}
 
             return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
         }
