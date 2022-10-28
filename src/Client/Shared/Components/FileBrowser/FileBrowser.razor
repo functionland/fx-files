@@ -58,6 +58,7 @@
             @if (string.IsNullOrWhiteSpace(_searchText) is false)
             {
                 <ArtifactExplorer Artifacts="_displayedArtifacts"
+                          FileService="FileService"
                           CurrentArtifact="_currentArtifact"
                           OnSelectArtifact="HandleSelectArtifactAsync"
                           OnArtifactOptionClick="HandleOptionsArtifact"

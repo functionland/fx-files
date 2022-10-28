@@ -971,7 +971,7 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
-        _isArtifactExplorerLoading = true;
+        //_isArtifactExplorerLoading = true;
         _searchText = text;
         if (!string.IsNullOrWhiteSpace(text))
         {
@@ -1014,7 +1014,10 @@ public partial class FileBrowser
                         RefreshDisplayedArtifacts();
                         await InvokeAsync(() =>
                         {
-                            _isArtifactExplorerLoading = false;
+                            //if (_isArtifactExplorerLoading)
+                            //{
+                            //    _isArtifactExplorerLoading = false;
+                            //}
                             StateHasChanged();
                         });
                         sw.Restart();
@@ -1037,7 +1040,7 @@ public partial class FileBrowser
             }
             finally
             {
-                _isArtifactExplorerLoading = false;
+                //_isArtifactExplorerLoading = false;
             }
 
         });
