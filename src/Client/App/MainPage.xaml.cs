@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.Client.App.Extensions;
 
 using Microsoft.Extensions.FileProviders;
+using Windows.Graphics;
 
 #if WINDOWS
 using Microsoft.UI;
@@ -23,12 +24,16 @@ public partial class MainPage
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
 #if WINDOWS
+
             var nativeWindow = handler.PlatformView;
             nativeWindow.Activate();
 
             var hWnd = WindowNative.GetWindowHandle(nativeWindow);
             var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             var appWindow = AppWindow.GetFromWindowId(windowId);
+
+            appWindow.Resize(new SizeInt32(691, 968));
+
             var titleBar = appWindow.TitleBar;
             appWindow.Title = "FxFiles";
 
@@ -76,6 +81,12 @@ public partial class MainPage
 
         BlazorWebViewHandler.BlazorWebViewMapper.AppendToMapping("CustomBlazorWebViewMapper", (handler, view) =>
         {
+#if WINDOWS
+            if (AppInfo.Current.RequestedTheme == AppTheme.Dark)
+            {
+                handler.PlatformView.DefaultBackgroundColor = Microsoft.UI.Colors.Black;
+            }
+#endif
 
 #if IOS
             handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
