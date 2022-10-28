@@ -49,8 +49,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.Storage,
-                IFulaFileService => PathProtocol.Fula,
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageSmall,
+                IFulaFileService => PathProtocol.ThumbnailFulaSmall,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
 
