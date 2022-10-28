@@ -166,6 +166,10 @@ public partial class ZipService : IZipService
     {
         var extension = Path.GetExtension(fullPath);
         var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
+        var zipFileName = Path.GetFileName(fullPath);
+        var extension = Path.GetExtension(fullPath);
+        var ZipFileNameWithoutExtension = zipFileName.Replace(extension, "");
+        var deletedPath = Path.Combine(destinationPath, ZipFileNameWithoutExtension);
 
         try
         {
@@ -200,8 +204,9 @@ public partial class ZipService : IZipService
             }
         }
 
-        catch (CryptographicException ex) when (ex.Message == "The password did not match." || ex.Message.StartsWith("Unknown Rar Header:"))
+        catch (CryptographicException ex) when (ex.Message == "The password did not match.")
         {
+            Directory.Delete(deletedPath, true);
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
@@ -214,6 +219,11 @@ public partial class ZipService : IZipService
         }
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
+        {
+            Directory.Delete(deletedPath, true);
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch
