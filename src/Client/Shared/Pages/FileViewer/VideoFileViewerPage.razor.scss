@@ -5,6 +5,7 @@
 .video-viewer {
     display: grid;
     min-height: inherit;
+    background-color: $main-dark;
 }
 
 .video-toolbar {
@@ -67,9 +68,11 @@ input[type=range]::-webkit-slider-thumb {
 video {
     width: 100%;
     height: 100%;
+    outline: none;
 }
 
 .fxVideo-controls {
+    color: white;
     display: flex;
     font-size: 12px;
     font-family: $open-sans-light;
