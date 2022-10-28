@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.FileProviders;
 
+using SharpCompress.Common;
+
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FxFileInfo;
 
 public class PreviewFileInfo<TFileService> : IFileInfo
@@ -42,14 +44,7 @@ public class PreviewFileInfo<TFileService> : IFileInfo
     }
 
     public bool _exists;
-    public bool Exists
-    {
-        get
-        {
-            EnsureLoadMetadata();
-            return _exists;
-        }
-    }
+    public bool Exists => true;
 
     public long _length;
     public long Length
@@ -72,14 +67,7 @@ public class PreviewFileInfo<TFileService> : IFileInfo
     }
 
     public string _name;
-    public string Name
-    {
-        get
-        {
-            EnsureLoadMetadata();
-            return _name;
-        }
-    }
+    public string Name => Path.GetFileName(_path);
 
     public DateTimeOffset _lastModified;
     public DateTimeOffset LastModified
