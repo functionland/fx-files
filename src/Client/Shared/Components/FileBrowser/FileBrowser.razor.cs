@@ -397,7 +397,6 @@ public partial class FileBrowser
             await UpdatePinedArtifactsAsync(artifacts, true);
             if (_isInSearch)
             {
-                ToastModal.Show(Localizer.GetString(AppStrings.ToastSuccessMessage), Localizer.GetString(AppStrings.ToastSuccessMessage), FxToastType.Success);
                 CancelSelectionMode();
             }
         }
@@ -1356,6 +1355,7 @@ public partial class FileBrowser
         {
             _artifactsSearchFilterType = null;
             _artifactsSearchFilterDate = null;
+            isFirstTimeInSearch = true;
         }
     }
 }

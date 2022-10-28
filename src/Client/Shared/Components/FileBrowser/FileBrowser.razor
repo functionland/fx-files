@@ -23,7 +23,10 @@
                     <div class="chaveron-up-icon" @onclick="ChangeFileCategoryFilterMode"></div>
                     <div class="chaveron-down-icon" @onclick="ChangeFileCategoryFilterMode"></div>
                 </div>
-                <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
+                @if (_isFileCategoryFilterBoxOpen)
+                {
+                    <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
+                }
 
                 <div class="filters-options">
                     <div class="time-options-container">
