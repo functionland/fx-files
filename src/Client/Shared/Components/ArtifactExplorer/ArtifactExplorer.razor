@@ -33,20 +33,17 @@
                     </div>
                 }
                 <div class="icon-box">
-                    @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal || ViewMode == ViewModeEnum.Grid || !IsPhone)
-                    {
-                        <div class="thumbnail-box">
-                            <div class="img-box">
-                                <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))" >
-                            </div>
-                            @if (artifact?.FileCategory == FileCategoryType.Video)
-                            {
-                                <div class="icon-play"></div>
-                            }
-
+                    <div class="thumbnail-box">
+                        <div class="img-box">
+                            <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))">
                         </div>
-                        <div class="item-icon-position @GetArtifactIcon(artifact)"></div>
-                    }
+                        @if (artifact?.FileCategory == FileCategoryType.Video)
+                        {
+                            <div class="icon-play"></div>
+                        }
+
+                    </div>
+                    <div class="item-icon-position @(artifact.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
                 </div>
                 <div class="footer-box">
 
