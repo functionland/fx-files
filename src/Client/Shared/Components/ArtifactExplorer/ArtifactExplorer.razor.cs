@@ -49,8 +49,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.ThumbnailStorageSmall,
-                IFulaFileService => PathProtocol.ThumbnailFulaSmall,
+                ILocalDeviceFileService => PathProtocol.Storage,
+                IFulaFileService => PathProtocol.Fula,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
 
@@ -298,14 +298,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
             var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
             List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
-            //foreach (var item in items)
-            //{
-            //    if (request.CancellationToken.IsCancellationRequested)
-            //    {
-            //        return default;
-            //    }
-            //    item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
-            //}
+            foreach (var item in items)
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                {
+                    return default;
+                }
+                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+            }
 
             return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
         }

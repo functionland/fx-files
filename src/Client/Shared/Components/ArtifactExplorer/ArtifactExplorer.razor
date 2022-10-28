@@ -35,7 +35,7 @@
                     <div class="icon-box">
                         <div class="thumbnail-box">
                             <div class="img-box">
-                                <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol))">
+                                <img class="thumbnail-img" src="@(artifact?.ThumbnailPath?.InProtocol(Protocol) ?? "")">
                             </div>
                             @if (artifact?.FileCategory == FileCategoryType.Video)
                             {
@@ -89,7 +89,7 @@
                     <div class="icon-box">
                         <div class="thumbnail-box">
                             <div class="img-box">
-                                <img class="thumbnail-img" src="@(artifact?.FullPath.InProtocol(Protocol) ?? "")">
+                                <img class="thumbnail-img" src="@(artifact?.ThumbnailPath?.InProtocol(Protocol) ?? "")">
                             </div>
                             @if (artifact?.FileCategory == FileCategoryType.Video)
                             {
