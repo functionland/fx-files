@@ -268,10 +268,11 @@
                 }
 
                 .thumbnail-img {
+                    text-indent: -10000px;
                     object-fit: contain;
+                    position: absolute;
                     width: 161px;
                     height: 86px;
-                    position: absolute;
                     left: 0;
                 }
             }
