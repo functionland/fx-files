@@ -39,7 +39,7 @@ public partial class ZipService : IZipService
         return fsArtifacts;
     }
 
-    public virtual async Task ExtractZippedArtifactAsync(string zipFullPath, string destinationPath, List<string> itemsPath, bool overwrite = false, string? password = null, CancellationToken? cancellationToken = null)
+    public virtual async Task ExtractZippedArtifactAsync(string zipFullPath, string destinationPath, string itemPath, bool overwrite = false, string? password = null, CancellationToken? cancellationToken = null)
     {
         var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
         var zipFileName = Path.GetFileName(zipFullPath);
@@ -50,8 +50,6 @@ public partial class ZipService : IZipService
 
         try
         {
-            foreach (var itemPath in itemsPath)
-            {
                 var itemExtension = Path.GetExtension(itemPath);
                 if (zipFileExtension == ".zip")
                 {
@@ -65,11 +63,7 @@ public partial class ZipService : IZipService
                             if (string.IsNullOrWhiteSpace(itemExtension))
                             {
                                 key = entry.Key.Replace("/", "\\").Substring(0, entry.Key.Length - 1);
-                            }
-                            else
-                            {
-                                key = entry.Key.Replace("/", "\\");
-                            }
+
                             if (key.StartsWith(filePath))
                             {
                                 entry.WriteToDirectory(destinationPath, new ExtractionOptions()
@@ -79,18 +73,11 @@ public partial class ZipService : IZipService
                                 });
                             }
                         }
-                    }
-                }
-                else if (zipFileExtension == ".rar")
-                {
-                    using (var archive = RarArchive.Open(zipFullPath, new ReaderOptions() { Password = password }))
-                    {
-                        foreach (var entry in archive.Entries.ToList())
-                        {
-                            var filePath = itemPath.Replace(zipFileName + "\\", "");
-                            artifactPath = destinationPath + "\\" + filePath;
+                            else
+                            {
+                                key = entry.Key.Replace("/", "\\");
 
-                            if (entry.Key.StartsWith(filePath))
+                            if (key.Contains(filePath))
                             {
                                 entry.WriteToDirectory(destinationPath, new ExtractionOptions()
                                 {
@@ -101,6 +88,42 @@ public partial class ZipService : IZipService
                         }
                     }
                 }
+            }
+                else if (zipFileExtension == ".rar")
+                {
+                    using (var archive = RarArchive.Open(zipFullPath, new ReaderOptions() { Password = password }))
+                    {
+                        foreach (var entry in archive.Entries.ToList())
+                        {
+                            var filePath = itemPath.Replace(zipFileName + "\\", "");
+                            artifactPath = destinationPath + "\\" + filePath;
+
+                        if (string.IsNullOrWhiteSpace(itemExtension))
+                        {
+                            if (entry.Key.StartsWith(filePath))
+                            {
+                                entry.WriteToDirectory(destinationPath, new ExtractionOptions()
+                                {
+                                    ExtractFullPath = true,
+                                    Overwrite = overwrite
+                                });
+                            }
+                        }
+                        else
+                        {
+                            if (entry.Key.Contains(filePath))
+                            {
+                                entry.WriteToDirectory(destinationPath, new ExtractionOptions()
+                                {
+                                    ExtractFullPath = true,
+                                    Overwrite = overwrite
+                                });
+                            }
+                        }
+                        
+                    }
+                }
+            }
 
                 var getFileName = Path.GetFileName(artifactPath);
                 if (string.IsNullOrWhiteSpace(itemExtension))
@@ -112,9 +135,9 @@ public partial class ZipService : IZipService
                     File.Move(artifactPath, Path.Combine(destinationPath, getFileName));
                 }
                 Directory.Delete(deletedPath, true);
+            
             }
-        }
-        catch (IOException ex) when (ex.Message == "Cannot create a file when that file already exists.")
+        catch (IOException ex) when (ex.Message.EndsWith("because a file or directory with the same name already exists."))
         {
             Directory.Delete(deletedPath, true);
             throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
@@ -122,6 +145,11 @@ public partial class ZipService : IZipService
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (CryptographicException ex) when (ex.Message == "The password did not match.")
+        {
+            Directory.Delete(deletedPath, true);
+            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
