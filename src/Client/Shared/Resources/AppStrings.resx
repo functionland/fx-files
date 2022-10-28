@@ -588,4 +588,7 @@
   <data name="Specter" xml:space="preserve">
     <value>|</value>
   </data>
+  <data name="InvalidPasswordException" xml:space="preserve">
+    <value>The password is invalid.</value>
+  </data>
 </root>
