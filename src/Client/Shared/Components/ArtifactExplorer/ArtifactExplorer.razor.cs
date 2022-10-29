@@ -2,10 +2,11 @@
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Models;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using Functionland.FxFiles.Client.Shared.Utils;
 
 using Microsoft.AspNetCore.Components.Web;
+using Functionland.FxFiles.Client.Shared.Utils;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace Functionland.FxFiles.Client.Shared.Components
 {
@@ -29,20 +30,28 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public IFileService FileService { get; set; }
         [Parameter] public bool IsInSearchMode { get; set; }
 
+        [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
+
         private System.Timers.Timer? _timer;
 
         private FsArtifact? _longPressedArtifact;
 
-        protected override Task OnInitAsync()
-        {
-            return base.OnInitAsync();
-        }
+        private Virtualize<FsArtifact>? _virtualizeListRef;
 
+        protected override async Task OnParamsSetAsync()
+        {
+            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
+            {
+                await _virtualizeListRef.RefreshDataAsync();
+            }
+
+            await base.OnParamsSetAsync();
+        }
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.ThumbnailStorageSmall,
-                IFulaFileService => PathProtocol.ThumbnailStorageSmall,
+                ILocalDeviceFileService => PathProtocol.Storage,
+                IFulaFileService => PathProtocol.Fula,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
 
@@ -279,5 +288,63 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 }
             }
         }
+
+        private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
+        {
+            await Task.Delay(300);
+            if (request.CancellationToken.IsCancellationRequested)
+            {
+                return default;
+            }
+            var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
+            List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
+
+            foreach (var item in items)
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                {
+                    return default;
+                }
+                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+            }
+
+            return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
+        }
+
+        private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
+        {
+            await Task.Delay(300);
+            if (request.CancellationToken.IsCancellationRequested)
+            {
+                return default;
+            }
+            var count = request.Count * 2;
+            var start = request.StartIndex * 2;
+            var requestCount = Math.Min(count, Artifacts.Count - start);
+
+            List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
+
+            foreach (var item in items)
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                {
+                    return default;
+                }
+                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+            }
+            var result = new List<FsArtifact[]>();
+            for (int i = 0; i < items.Count; i += 2)
+            {
+                if ((i + 1) < items.Count)
+                {
+                    result.Add(new FsArtifact[2] { items[i], items[i + 1] });
+                    continue;
+                }
+                result.Add(new FsArtifact[1] { items[i] });
+            }
+
+            return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / 2));
+        }
+
     }
 }
