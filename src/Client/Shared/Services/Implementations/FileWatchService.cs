@@ -30,7 +30,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                                    NotifyFilters.CreationTime |
                                    NotifyFilters.DirectoryName |
                                    NotifyFilters.FileName |
-                                   NotifyFilters.LastAccess |
                                    NotifyFilters.LastWrite |
                                    NotifyFilters.Security |
                                    NotifyFilters.Size,
