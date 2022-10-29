@@ -20,6 +20,13 @@
             _isModalOpen = false;
         }
 
+        //TODO: complete extract onclick
+        public void Extract()
+        {
+            var result = new ArtifactOverflowResult();
+
+        }
+
         public void Rename()
         {
             var result = new ArtifactOverflowResult();
