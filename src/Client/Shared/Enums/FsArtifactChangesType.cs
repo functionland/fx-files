@@ -4,6 +4,7 @@
     {
         Add,
         Modify,
-        Delete
+        Delete, 
+        Rename
     }
 }
