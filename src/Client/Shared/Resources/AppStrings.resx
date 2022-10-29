@@ -591,4 +591,13 @@
   <data name="InvalidPasswordException" xml:space="preserve">
     <value>The password is invalid.</value>
   </data>
+  <data name="Copy" xml:space="preserve">
+    <value>copy</value>
+  </data>
+  <data name="ShowInLocation" xml:space="preserve">
+    <value>show in location</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
 </root>

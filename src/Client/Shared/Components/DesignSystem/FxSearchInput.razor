@@ -5,7 +5,7 @@
 @if (IsPartial)
 {
     <div class="search-icon"></div>
-    <input class="input-box input-partial" type="text"
+    <input class="input-box input-partial" type="text" id="searchinput"
        placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]"
        value="@_inputText"
        @oninput="HandleInput"
