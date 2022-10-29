@@ -14,6 +14,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public double DebounceInterval { get; set; }
         [Parameter] public EventCallback<string?> OnSearch { get; set; }
         [Parameter] public EventCallback OnCancel { get; set; }
+        [Parameter] public bool IsEnabled { get; set; } = true;
 
         public void HandleClear()
         {
