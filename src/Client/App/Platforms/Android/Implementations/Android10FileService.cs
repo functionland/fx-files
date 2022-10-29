@@ -21,8 +21,15 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public partial class Android10FileService : AndroidFileService
 {
+    private List<FsArtifact>? _allDrives = null;
 
-    public override async Task<List<FsArtifact>> GetDrivesAsync()
+    public override List<FsArtifact> GetDrives()
+    {
+        LazyInitializer.EnsureInitialized(ref _allDrives, LoadDrives);
+        return _allDrives;
+    }
+
+    private List<FsArtifact> LoadDrives()
     {
         var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
         if (storageManager is null)

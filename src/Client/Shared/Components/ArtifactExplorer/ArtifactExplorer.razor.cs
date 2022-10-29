@@ -305,7 +305,14 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 {
                     return default;
                 }
-                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+                try
+                {
+                    item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+                }
+                catch
+                {
+                    item.ThumbnailPath = null;
+                }
             }
 
             return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
