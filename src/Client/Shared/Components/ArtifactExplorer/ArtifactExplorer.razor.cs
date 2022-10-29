@@ -28,6 +28,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public bool IsLoading { get; set; }
         [Parameter] public EventCallback HandleBack { get; set; }
         [Parameter] public IFileService FileService { get; set; }
+        [Parameter] public bool IsInSearchMode { get; set; }
 
         [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
 

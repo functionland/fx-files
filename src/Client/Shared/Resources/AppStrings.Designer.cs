@@ -376,6 +376,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to copy.
+        /// </summary>
+        public static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copying files.
         /// </summary>
         public static string CopyFiles {
@@ -471,6 +480,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string DeletingFiles {
             get {
                 return ResourceManager.GetString("DeletingFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
             }
         }
         
@@ -1110,6 +1128,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string SharedFileCardTag {
             get {
                 return ResourceManager.GetString("SharedFileCardTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to show in location.
+        /// </summary>
+        public static string ShowInLocation {
+            get {
+                return ResourceManager.GetString("ShowInLocation", resourceCulture);
             }
         }
         
