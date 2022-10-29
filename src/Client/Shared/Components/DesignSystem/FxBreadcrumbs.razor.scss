@@ -2,3 +2,28 @@
 @import '../../Styles/abstracts/_variables.scss';
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/abstracts/_media-queries.scss';
+
+.fx-breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+    gap: $spacing-6;
+}
+
+.file-path {
+    font-family: $open-sans-regular;
+    font-size: $font-size-12;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content2);
+    cursor: pointer;
+}
+
+.chaveron-right {
+    display: flex;
+
+    &::before {
+        font-size: $icon-16;
+        @include Icon($chevron-right, color(gray-content1));
+    }
+}
