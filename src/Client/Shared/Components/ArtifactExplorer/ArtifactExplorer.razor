@@ -11,9 +11,12 @@
     }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
-        <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
+        if (!IsInSearchMode)
+        {
+            <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
                    Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
                    IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+        }
     }
     else
     {
@@ -57,20 +60,20 @@
                         </div>
                         <div class="item-sub-text"></div>
                     </div>
-
-
-
-                    @if (ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact))
-                    {
-                        <div class="options-btn"
-                 @onclick="() => HandleArtifactOptionClick(artifact)"
-                 @onpointerup:preventDefault="true"
-                 @onpointerup:stopPropagation="true"
-                 @onpointerdown:preventDefault="true"
-                 @onpointerdown:stopPropagation="true">
-                        </div>
-                    }
                 </div>
+
+
+
+                @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
+                {
+                    <div class="options-btn"
+             @onclick="() => HandleArtifactOptionClick(artifact)"
+             @onpointerup:preventDefault="true"
+             @onpointerup:stopPropagation="true"
+             @onpointerdown:preventDefault="true"
+             @onpointerdown:stopPropagation="true">
+                    </div>
+                }
             </div>
         }
     }

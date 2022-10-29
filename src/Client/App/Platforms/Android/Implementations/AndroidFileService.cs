@@ -1,5 +1,7 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
+
+using Functionland.FxFiles.App.Platforms.Android;
 using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
 using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
@@ -7,6 +9,7 @@ using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
+
 using android = Android;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
@@ -14,7 +17,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 public abstract partial class AndroidFileService : LocalDeviceFileService
 {
     [AutoInject] public IPermissionUtils PermissionUtils { get; set; } = default!;
-    [AutoInject] public  IExceptionHandler ExceptionHandler { get; set; } = default!;
+    [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
+    private List<FsArtifact>? _allDrives = null;
+
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
     {
         await GetPermission(path);
@@ -43,11 +48,11 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return await base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null && string.IsNullOrWhiteSpace(searchText))
+        if (path is null)
         {
-            var drives = await GetDrivesAsync();
+            var drives = GetDrives();
             foreach (var drive in drives)
             {
                 yield return drive;
@@ -55,7 +60,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             yield break;
         }
 
-        await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
+        await foreach (var artifact in base.GetArtifactsAsync(path, cancellationToken))
         {
             yield return artifact;
         }
@@ -106,7 +111,13 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return await base.CheckPathExistsAsync(paths, cancellationToken);
     }
 
-    public override async Task<List<FsArtifact>> GetDrivesAsync()
+    public override List<FsArtifact> GetDrives()
+    {
+        LazyInitializer.EnsureInitialized(ref _allDrives, LoadDrives);
+        return _allDrives;
+    }
+
+    private List<FsArtifact> LoadDrives()
     {
         var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
         if (storageManager is null)
@@ -163,9 +174,9 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return drives;
     }
 
-    public override async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
+    public override FsArtifactType? GetFsArtifactType(string path)
     {
-        var isDrive = await FsArtifactIsDriveAsync(path);
+        var isDrive = IsDrive(path);
 
         if (isDrive)
         {
@@ -185,9 +196,9 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
+    public override FsFileProviderType GetFsFileProviderType(string filePath)
     {
-        var drives = await GetDrivesAsync();
+        var drives = GetDrives();
 
         if (IsFsFileProviderInternal(filePath, drives))
         {
@@ -204,7 +215,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
     protected abstract Task GetPermission(string path = null);
 
     protected abstract Task GetPermission(IEnumerable<string> paths = null);
-   
+
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
         var internalDrive = drives?.FirstOrDefault(d => d.ProviderType == FsFileProviderType.InternalMemory);
@@ -239,12 +250,12 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return false;
     }
 
-    private async Task<bool> FsArtifactIsDriveAsync(string path)
+    private bool IsDrive(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
             return false;
 
-        var drives = await GetDrivesAsync();
+        var drives = GetDrives();
         var drivesPath = drives
                                     .Where(drive => String.IsNullOrWhiteSpace(drive.FullPath) is false)
                                     .Select(drive => drive.FullPath)
