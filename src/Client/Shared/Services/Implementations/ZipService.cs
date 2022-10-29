@@ -11,7 +11,7 @@ public partial class ZipService : IZipService
 {
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-    public virtual async Task<List<FsArtifact>> GetZippedArtifactsAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
+    public virtual async Task<List<FsArtifact>> ZipFileViewerAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
         var extension = Path.GetExtension(zipFilePath);
         var fsArtifacts = new List<FsArtifact>();
@@ -20,11 +20,11 @@ public partial class ZipService : IZipService
         {
             if (extension == ".zip")
             {
-                fsArtifacts = GetZipArtifactsAsync(zipFilePath, subDirectoriesPath, cancellationToken);
+                fsArtifacts = ZipFileViewer(zipFilePath, subDirectoriesPath, cancellationToken);
             }
             else if (extension == ".rar")
             {
-                fsArtifacts = GetRarArtifactsAsync(zipFilePath, subDirectoriesPath, password, cancellationToken);
+                fsArtifacts = RarFileViewer(zipFilePath, subDirectoriesPath, password, cancellationToken);
             }
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
@@ -231,12 +231,9 @@ public partial class ZipService : IZipService
         }
     }
 
-    private List<FsArtifact> GetRarArtifactsAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
+    private List<FsArtifact> RarFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
-        var zipFileName = Path.GetFileName(zipFilePath);
-        var parentZipFilePath = zipFilePath.Replace(zipFileName, "");
-        var pathNewFile = subDirectoriesPath.Replace(parentZipFilePath, "");
-        var itemsPath = pathNewFile.Split('\\');
+        var itemsPath = subDirectoriesPath.Split('\\');
         var fsArtifacts = new List<FsArtifact>();
 
         using (var archive = RarArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
@@ -254,7 +251,7 @@ public partial class ZipService : IZipService
                 };
 
                 var result = entry.Key.Split('\\');
-                if (result.Length == itemsPath.Length && newFsArtifact.FullPath.Contains(pathNewFile))
+                if (result.Length == itemsPath.Length && newFsArtifact.FullPath.Contains(subDirectoriesPath))
                 {
                     fsArtifacts.Add(newFsArtifact);
                 }
@@ -264,12 +261,9 @@ public partial class ZipService : IZipService
         return fsArtifacts;
 
     }
-    private List<FsArtifact> GetZipArtifactsAsync(string zipFilePath, string subDirectoriesPath, CancellationToken? cancellationToken = null)
+    private List<FsArtifact> ZipFileViewer(string zipFilePath, string subDirectoriesPath, CancellationToken? cancellationToken = null)
     {
-        var zipFileName = Path.GetFileName(zipFilePath);
-        var parentZipFilePath = zipFilePath.Replace(zipFileName, "");
-        var pathNewFile = subDirectoriesPath.Replace(parentZipFilePath, "");
-        var itemsPath = pathNewFile.Split('\\');
+        var itemsPath = subDirectoriesPath.Split('\\');
         var fsArtifacts = new List<FsArtifact>();
 
         using (var archive = ZipArchive.Open(zipFilePath))
@@ -288,7 +282,7 @@ public partial class ZipService : IZipService
                 };
 
                 var result = key.Split('\\');
-                if (result.Length == itemsPath.Length && newPath.Contains(pathNewFile))
+                if (result.Length == itemsPath.Length && newPath.Contains(subDirectoriesPath))
                 {
                     fsArtifacts.Add(newFsArtifact);
                 }
