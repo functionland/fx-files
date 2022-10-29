@@ -6,10 +6,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
     public abstract partial class FileWatchService : IFileWatchService
     {
         [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
+        [AutoInject] public ILocalDeviceFileService FileService { get; set; } = default!;
 
         private readonly ConcurrentDictionary<string, (FileSystemWatcher Watcher, int WatchCount)> WatcherDictionary = new();
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public virtual void WatchArtifact(FsArtifact fsArtifact)
         {
@@ -30,6 +32,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                                    NotifyFilters.CreationTime |
                                    NotifyFilters.DirectoryName |
                                    NotifyFilters.FileName |
+                                   //NotifyFilters.LastAccess |
                                    NotifyFilters.LastWrite |
                                    NotifyFilters.Security |
                                    NotifyFilters.Size,
@@ -42,6 +45,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            watcher.Renamed += new RenamedEventHandler(OnRenamed);
 
             WatcherDictionary.TryAdd(fsArtifact.FullPath, (watcher, 1));
         }
@@ -63,9 +67,21 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
             }
         }
-
+        
+        private  void OnRenamed(object sender, RenamedEventArgs e)
+        {
+            var fsArtifactChangesType = FsArtifactChangesType.Rename;
+            var artifact =  FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
+            
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
+            {
+                ChangeType = fsArtifactChangesType,
+                FsArtifact = artifact,
+                Description = e.OldFullPath
+            });
+        }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        private void OnChanged(object source, FileSystemEventArgs e)
+        private  void OnChanged(object source, FileSystemEventArgs e)
         {
             if (e is null) return;
 
@@ -80,32 +96,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     break;
                 case WatcherChangeTypes.Changed:
                     fsArtifactChangesType = FsArtifactChangesType.Modify;
+              
                     break;
             }
 
-            var isFileExist = File.Exists(e.FullPath);
-            DateTimeOffset lastModifiedDateTime;
-            FsArtifactType artifactType;
-            var name = Path.GetFileName(e.FullPath);
-
-            if (isFileExist)
-            {
-                artifactType = FsArtifactType.File;
-                lastModifiedDateTime = File.GetLastWriteTime(e.FullPath);
-            }
-            else
-            {
-                artifactType = FsArtifactType.Folder;
-                lastModifiedDateTime = Directory.GetLastWriteTime(e.FullPath);
-            }
-
+            var artifact = FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
             EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
                 ChangeType = fsArtifactChangesType,
-                FsArtifact = new FsArtifact(e.FullPath, name, artifactType, FsFileProviderType.InternalMemory)
-                {
-                    LastModifiedDateTime = lastModifiedDateTime
-                }
+                FsArtifact = artifact
             });
         }
     }

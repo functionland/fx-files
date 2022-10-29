@@ -81,6 +81,11 @@
     top: 128px;
     z-index: 2;
 
+    .specter {
+        color: color(gray-border);
+        margin-bottom: $spacing-2;
+    }
+
     .left-actions {
         display: flex;
         flex-flow: row nowrap;
@@ -94,17 +99,22 @@
             font-size: $font-size-14;
             line-height: $line-height-24;
             letter-spacing: $letter-spacing-02;
-            margin-right: $spacing-4;
-            color: color(gray-content1);
+            margin-right: $spacing-8;
+            color: color(gray-content3);
             cursor: pointer;
+
+            .sort-type {
+                color: $green-dark-base;
+            }
         }
 
         .sort-order {
             cursor: pointer;
+            margin: $spacing-2 $spacing-8 $spacing-0;
 
             &::before {
-                font-size: $icon-16;
-                @include Icon($chevron-up);
+                font-size: $icon-20;
+                @include Icon($arrow-up);
             }
         }
 
@@ -112,12 +122,12 @@
             transform: rotate(180deg);
 
             &::before {
-                @include Icon($chevron-up);
+                @include Icon($arrow-up);
             }
         }
 
         .asc-order::before {
-            @include Icon($chevron-up);
+            @include Icon($arrow-up);
         }
     }
 
@@ -125,23 +135,23 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
 
         .action-btn {
             cursor: pointer;
         }
 
         .select-all-btn {
-            margin-right: $spacing-8;
+            margin: $spacing-0 $spacing-8;
 
             &::before {
                 @include Icon($select, color(gray-content3));
-                font-size: 24px;
+                font-size: $icon-24;
             }
         }
 
         .select-all-filled::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($selected, $green-dark-base, $Icons-Filled);
         }
 
@@ -149,41 +159,46 @@
             margin-right: $spacing-8;
 
             &::before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($list, color(gray-content3));
             }
         }
 
         .list-view-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($list, $green-dark-base);
         }
 
         .grid-view-btn {
-            margin-right: $spacing-8;
+            margin: $spacing-0 $spacing-8;
 
             &::before {
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($grid, color(gray-content3));
             }
         }
 
         .grid-view-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($grid, $green-dark-base);
         }
 
-        .filter-btn::before {
-            font-size: 24px;
-            @include Icon($filter, color(gray-content3));
+        .filter-btn {
+            margin-left: $spacing-8;
+
+            &:before {
+                font-size: $icon-24;
+                @include Icon($filter, color(gray-content3));
+            }
         }
 
         .filter-btn-selected::before {
-            font-size: 24px;
+            font-size: $icon-24;
             @include Icon($fill, $green-dark-base, $Icons-Filled);
         }
     }
 }
+
 .action-bar-search {
     top: 72px;
 }
@@ -257,6 +272,7 @@
 .select-action-search {
     top: 72px;
 }
+
 .sticky-content {
     position: sticky;
     top: 0;
@@ -265,4 +281,205 @@
     background-color: color(app-bg);
     z-index: 2;
     padding-top: 32px;
+}
+
+
+//deep search style
+
+.search-container {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    .search-container-content {
+        height: 100%;
+        margin: 0 auto;
+        max-width: 600px;
+        background-color: color(app-bg);
+
+        ::deep div.toolbar-box {
+            padding-top: $spacing-16;
+            padding-bottom: $spacing-16;
+            background-color: color(app-bg);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        ::deep .list-container{
+            height:100%;
+            overflow:auto;
+        }
+    }
+}
+
+
+.filter-deep-search {
+    padding: $spacing-0 $spacing-21;
+}
+
+.expanded {
+
+    .filter-content {
+        .chaveron-up-icon {
+            display: block;
+        }
+
+        .chaveron-down-icon {
+            display: none;
+        }
+    }
+
+    .filters-options {
+        display: block;
+    }
+}
+
+.filter-content {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin-bottom: $spacing-16;
+    cursor: pointer;
+
+    .filter-text {
+        font-family: $open-sans-regular;
+        font-size: $font-size-16;
+        line-height: $line-height-28;
+        letter-spacing: $letter-spacing-02;
+        color: color(gray-content1);
+    }
+
+    .chaveron-up-icon {
+        display: none;
+
+        &:before {
+            @include Icon($chevron-up, color(gray-content1));
+            font-size: $icon-24;
+        }
+    }
+
+    .chaveron-down-icon {
+        display: block;
+
+        &:before {
+            @include Icon($chevron-down, color(gray-content1));
+            font-size: $icon-24;
+        }
+    }
+}
+
+.filters-options {
+    padding: $spacing-16 $spacing-0 $spacing-24;
+    display: none;
+
+    div[class$="title"] {
+        font-family: $open-sans-regular;
+        font-size: $font-size-14;
+        line-height: $line-height-24;
+        letter-spacing: $letter-spacing-02;
+        color: color(gray-content3);
+        margin-bottom: $spacing-16;
+    }
+
+    div[class$="options"] {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-flow: row wrap;
+        gap: $spacing-8;
+
+        div {
+            background-color: color(gray-bg-secondary);
+            height: 26px;
+            padding: $spacing-6 $spacing-8;
+            border-radius: $border-radius-6;
+            font-family: $open-sans-regular;
+            font-size: $font-size-10;
+            line-height: $line-height-14;
+            letter-spacing: $letter-spacing-02;
+            color: color(gray-content1);
+            cursor: pointer;
+        }
+
+        .option-selected-mode {
+            background-color: $primary-color;
+            color: $pure-white;
+        }
+    }
+}
+
+.time-options-container {
+    margin-bottom: $spacing-16;
+}
+
+.footer-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-10 $spacing-21;
+    border-top: 1px solid color(gray-bg-secondary);
+    position: fixed;
+    bottom: 0;
+    max-width: 600px;
+    width: 100%;
+    background-color: color(app-bg);
+
+    & div {
+        cursor: pointer;
+    }
+
+    .option-item {
+        min-width: 70px;
+        height: 46px;
+        text-align: center;
+    }
+
+    .title-item {
+        color: color(gray-content1);
+        font-size: $font-size-12;
+        font-family: $open-sans-regular;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .detail-icon {
+        text-align: center;
+
+        &::before {
+            font-size: 24px;
+            @include Icon($detail);
+        }
+    }
+
+    .show-location-icon {
+        text-align: center;
+
+        &::before {
+            font-size: 24px;
+            @include Icon($folder,$color:color(gray-content1));
+        }
+    }
+
+    .copy-btn-icon {
+
+
+        &::before {
+            font-size: 24px;
+            @include Icon($copy);
+        }
+    }
+
+    .pin-icon::before {
+        font-size: 24px;
+        @include Icon($pin-outline);
+    }
+
+    .more-option-icon::before {
+        @include Icon($options-horizontal);
+        font-size: 24px;
+    }
 }
