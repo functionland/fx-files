@@ -4,84 +4,94 @@
 
 .video-viewer {
     display: grid;
-    min-height: inherit;
+    grid-template-rows: 41px 1fr 88px;
+    gap: $spacing-16;
+    height: 100vh;
     background-color: $main-dark;
 }
 
 .video-toolbar {
-    height: 72px;
     display: flex;
-    padding: 16px 21px;
     justify-content: space-between;
+    padding: $spacing-0 $spacing-21;
+
+    .right-side-toolbar {
+        display: flex;
+    }
+
+    ::deep .back-button::after {
+        font-size: $icon-24;
+        vertical-align: middle;
+        @include Icon($arrow-left, $pure-white);
+    }
+
+    ::deep .overflow-button::after {
+        font-size: $icon-24;
+        vertical-align: middle;
+        @include Icon($options-vertical, $pure-white);
+    }
+
+    ::deep .pin-button::after {
+        font-size: $icon-24;
+        vertical-align: middle;
+        @include Icon($pin, $pure-white, $Icons-Filled);
+    }
+
+    ::deep .picture-in-picture-button::after {
+        font-size: $icon-24;
+        vertical-align: middle;
+        @include Icon($external-link, $pure-white);
+    }
 }
 
-.video-commandbar {
-    height: 104px;
-    align-self: end;
-    padding: 16px 21px;
-    justify-content: space-between;
-}
-
-.right-side-toolbar {
-    display: flex;
-}
-
-::deep .back-button::after {
-    font-size: 24px;
-    vertical-align: middle;
-    @include Icon($arrow-left, white);
-}
-
-::deep .overflow-button::after {
-    font-size: 24px;
-    vertical-align: middle;
-    @include Icon($options-vertical, white);
-}
-
-::deep .pin-button::after {
-    font-size: 24px;
-    vertical-align: middle;
-    @include Icon($pin, white, $Icons-Filled);
-}
-
-::deep .picture-in-picture-button::after {
-    font-size: 24px;
-    vertical-align: middle;
-    @include Icon($external-link, white);
-}
-
-input[type="range"] {
-    margin: 0;
+#fxVideoElement {
     width: 100%;
-    border: none;
-    outline: none;
-    accent-color: white;
-}
-
-input[type=range]::-webkit-slider-thumb {
-    width: 12px;
-    height: 12px;
-    background: white;
-    border-radius: 50%;
-}
-
-video {
-    width: 100%;
+    min-height: 100%;
     height: 100%;
     outline: none;
 }
 
-.fxVideo-controls {
-    color: white;
-    display: flex;
-    font-size: 12px;
-    font-family: $open-sans-light;
-    justify-content: space-between;
+.video-commandbar {
+    padding: $spacing-0 $spacing-21;
+
+    input[type="range"] {
+        width: 100%;
+        margin: 0;
+        border: none;
+        border-radius: $border-radius-8;
+        outline: none;
+        accent-color: white;
+
+
+        &::-webkit-slider-thumb {
+            width: 12px;
+            height: 12px;
+            background: $pure-white;
+            border-radius: 50%;
+        }
+
+        &:focus,
+        &:active::-webkit-slider-thumb,
+        &::-moz-focus-outer {
+            border: 0px;
+            outline: 0px;
+        }
+    }
 }
 
-.fxVideo-control-buttons {
-    width: 152px;
-    height: 24px;
+.fxVideo-controls {
     display: flex;
     justify-content: space-between;
+    font-size: $font-size-12;
+    font-family: $open-sans-light;
+    color: $pure-white;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+
+    .fxVideo-control-buttons {
+        width: 152px;
+        height: 24px;
+        display: flex;
+        justify-content: space-between;
+    }
 }
