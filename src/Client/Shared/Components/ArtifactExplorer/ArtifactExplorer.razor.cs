@@ -13,7 +13,16 @@ namespace Functionland.FxFiles.Client.Shared.Components
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-        [Parameter] public List<FsArtifact> Artifacts { get; set; } = default!;
+        [Parameter]
+        public List<FsArtifact> Artifacts
+        {
+            get => artifacts;
+            set
+            {
+                artifacts = value;
+                _isArtifactsChanged = true;
+            }
+        }
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
         [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
         [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
@@ -38,15 +47,19 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private Virtualize<FsArtifact>? _virtualizeListRef;
 
+        private bool _isArtifactsChanged;
+
         protected override async Task OnParamsSetAsync()
         {
-            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
+            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null && _isArtifactsChanged)
             {
                 await _virtualizeListRef.RefreshDataAsync();
+                _isArtifactsChanged = false;
             }
 
             await base.OnParamsSetAsync();
         }
+
         public PathProtocol Protocol =>
             FileService switch
             {
@@ -240,6 +253,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         }
 
         (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+        private List<FsArtifact> artifacts = default!;
 
         private void HandleTouchStart(TouchEventArgs t)
         {
@@ -291,7 +305,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
         {
-            await Task.Delay(300);
             if (request.CancellationToken.IsCancellationRequested)
             {
                 return default;
@@ -320,7 +333,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
         {
-            await Task.Delay(300);
             if (request.CancellationToken.IsCancellationRequested)
             {
                 return default;

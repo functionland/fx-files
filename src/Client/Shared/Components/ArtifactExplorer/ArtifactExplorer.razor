@@ -79,7 +79,7 @@
             }
             else
             {
-                <Virtualize Context="artifact" ItemsProvider="@ProvideArtifactsList" @ref="_virtualizeListRef">
+                <Virtualize Context="artifact" ItemsProvider="@ProvideArtifactsList" OverscanCount="10" @ref="_virtualizeListRef">
                     <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
              @onpointerup="((e) => PointerUp(e,artifact))"
              @onpointerdown="(() =>PointerDown(artifact))"
