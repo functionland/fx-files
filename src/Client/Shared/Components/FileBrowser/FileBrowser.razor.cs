@@ -1397,14 +1397,14 @@ public partial class FileBrowser
     private async Task ChangeArtifactsSearchFilterDate(ArtifactDateSearchType? date)
     {
         CancelSearch();
-        _artifactsSearchFilterDate = date ?? null;
+        _artifactsSearchFilterDate = _artifactsSearchFilterDate == date ? null : date;
         await HandleSearchAsync(_searchText);
     }
 
     private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType? type)
     {
         CancelSearch();
-        _artifactsSearchFilterType = type ?? null;
+        _artifactsSearchFilterType = _artifactsSearchFilterType == type ? null : type;
         await HandleSearchAsync(_searchText);
     }
 
