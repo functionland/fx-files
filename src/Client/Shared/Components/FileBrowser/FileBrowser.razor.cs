@@ -971,7 +971,7 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
-        //_isArtifactExplorerLoading = true;
+        _isArtifactExplorerLoading = true;
         _searchText = text;
         if (!string.IsNullOrWhiteSpace(text))
         {
@@ -1014,10 +1014,10 @@ public partial class FileBrowser
                         RefreshDisplayedArtifacts();
                         await InvokeAsync(() =>
                         {
-                            //if (_isArtifactExplorerLoading)
-                            //{
-                            //    _isArtifactExplorerLoading = false;
-                            //}
+                            if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
+                            {
+                                _isArtifactExplorerLoading = false;
+                            }
                             StateHasChanged();
                         });
                         sw.Restart();
@@ -1040,7 +1040,7 @@ public partial class FileBrowser
             }
             finally
             {
-                //_isArtifactExplorerLoading = false;
+                _isArtifactExplorerLoading = false;
             }
 
         });
@@ -1397,14 +1397,14 @@ public partial class FileBrowser
     private async Task ChangeArtifactsSearchFilterDate(ArtifactDateSearchType? date)
     {
         CancelSearch();
-        _artifactsSearchFilterDate = date ?? null;
+        _artifactsSearchFilterDate = _artifactsSearchFilterDate == date ? null : date;
         await HandleSearchAsync(_searchText);
     }
 
     private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType? type)
     {
         CancelSearch();
-        _artifactsSearchFilterType = type ?? null;
+        _artifactsSearchFilterType = _artifactsSearchFilterType == type ? null : type;
         await HandleSearchAsync(_searchText);
     }
 
