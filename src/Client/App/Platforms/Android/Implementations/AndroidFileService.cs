@@ -1,7 +1,6 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
 
-using Functionland.FxFiles.App.Platforms.Android;
 using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
 using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
