@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services.Common;
+
 using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
@@ -11,7 +12,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         private readonly ConcurrentDictionary<string, (FileSystemWatcher Watcher, int WatchCount)> WatcherDictionary = new();
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public virtual void WatchArtifact(FsArtifact fsArtifact)
         {
@@ -22,7 +23,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
             var path = fsArtifact.ArtifactType == FsArtifactType.File ? fsArtifact.ParentFullPath : fsArtifact.FullPath;
-            if(path == null) throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+            if (path == null) throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
 
             FileSystemWatcher watcher = new()
             {
@@ -32,7 +33,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                                    NotifyFilters.CreationTime |
                                    NotifyFilters.DirectoryName |
                                    NotifyFilters.FileName |
-                                   //NotifyFilters.LastAccess |
                                    NotifyFilters.LastWrite |
                                    NotifyFilters.Security |
                                    NotifyFilters.Size,
@@ -67,12 +67,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
             }
         }
-        
-        private  void OnRenamed(object sender, RenamedEventArgs e)
+
+        private void OnRenamed(object sender, RenamedEventArgs e)
         {
             var fsArtifactChangesType = FsArtifactChangesType.Rename;
-            var artifact =  FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
-            
+            var artifact = FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
+
             EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
                 ChangeType = fsArtifactChangesType,
@@ -81,7 +81,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
-        private  void OnChanged(object source, FileSystemEventArgs e)
+        private void OnChanged(object source, FileSystemEventArgs e)
         {
             if (e is null) return;
 
@@ -96,15 +96,38 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     break;
                 case WatcherChangeTypes.Changed:
                     fsArtifactChangesType = FsArtifactChangesType.Modify;
-              
+
                     break;
             }
 
-            var artifact = FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
+            var isFileExist = File.Exists(e.FullPath);
+            DateTimeOffset lastModifiedDateTime;
+            FsArtifactType artifactType;
+            var name = Path.GetFileName(e.FullPath);
+            long size = 0;
+
+            if (isFileExist)
+            {
+                artifactType = FsArtifactType.File;
+                lastModifiedDateTime = File.GetLastWriteTime(e.FullPath);
+                var fileInfo = new FileInfo(e.FullPath);
+                size = fileInfo.Length;
+            }
+            else
+            {
+                artifactType = FsArtifactType.Folder;
+                lastModifiedDateTime = Directory.GetLastWriteTime(e.FullPath);
+            }
+
             EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
                 ChangeType = fsArtifactChangesType,
-                FsArtifact = artifact
+                FsArtifact = new FsArtifact(e.FullPath, name, artifactType, FsFileProviderType.InternalMemory)
+                {
+                    LastModifiedDateTime = lastModifiedDateTime,
+                    ParentFullPath = Path.GetDirectoryName(e.FullPath),
+                    Size = size
+                }
             });
         }
     }
