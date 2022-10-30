@@ -6,6 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 8px 21px;
 
     ::deep .back-button::before {
         font-size: 24px;
@@ -24,7 +25,6 @@
         justify-content: center;
         align-items: center;
         margin-left: auto;
-        gap: 16px;
 
         .pin-icon::before {
             font-size: 24px;
@@ -40,5 +40,20 @@
             @include Icon($options-vertical);
             font-size: 24px;
         }
+
+        .more-option-icon {
+            margin-left: 16px;
+        }
     }
+}
+
+.main-image {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

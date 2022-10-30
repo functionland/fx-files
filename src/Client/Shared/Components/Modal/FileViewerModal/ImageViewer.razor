@@ -4,8 +4,7 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 
 <div class="navigation-header">
-    <FxButton Padding="0"
-              OnClick="@OnBack"
+    <FxButton OnClick="@OnBack"
               Class="back-button"
               BackgroundColor="transparent"
               IsVisible="true"
@@ -16,4 +15,6 @@
     </div>
 </div>
 
-<img src="@(CurrentArtifact?.ThumbnailPath?.InProtocol(Protocol) ?? "")" />
+<div class="main-image">
+    <img src="@(CurrentArtifact?.ThumbnailPath?.InProtocol(Protocol) ?? "")" />
+</div>
