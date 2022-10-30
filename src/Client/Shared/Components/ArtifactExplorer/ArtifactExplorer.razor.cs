@@ -46,15 +46,41 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private FsArtifact? _longPressedArtifact;
 
         private Virtualize<FsArtifact>? _virtualizeListRef;
+        private Virtualize<FsArtifact[]>? _virtualizeGridRef;
 
         private bool _isArtifactsChanged;
 
+        private int _gridRowCount = 1;
+
+        protected override async Task OnInitAsync()
+        {
+            if (DeviceDisplay.MainDisplayInfo.Width >= 534)
+            {
+                _gridRowCount = 3;
+            }
+            else if (DeviceDisplay.MainDisplayInfo.Width >= 400)
+            {
+                _gridRowCount = 2;
+            }
+
+            await base.OnInitAsync();
+        }
+
         protected override async Task OnParamsSetAsync()
         {
-            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null && _isArtifactsChanged)
+            if (_isArtifactsChanged)
             {
-                await _virtualizeListRef.RefreshDataAsync();
-                _isArtifactsChanged = false;
+                if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
+                {
+                    await _virtualizeListRef.RefreshDataAsync();
+                    _isArtifactsChanged = false;
+                }
+
+                if (ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+                {
+                    await _virtualizeGridRef.RefreshDataAsync();
+                    _isArtifactsChanged = false;
+                }
             }
 
             await base.OnParamsSetAsync();
@@ -303,8 +329,11 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
+        private bool _isLoadingThumbnailFinished;
         private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
         {
+            _isLoadingThumbnailFinished = false;
+
             if (request.CancellationToken.IsCancellationRequested)
             {
                 return default;
@@ -328,17 +357,21 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 }
             }
 
+            _isLoadingThumbnailFinished = true;
+
             return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
         }
 
         private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
         {
+            _isLoadingThumbnailFinished = false;
+
             if (request.CancellationToken.IsCancellationRequested)
             {
                 return default;
             }
-            var count = request.Count * 2;
-            var start = request.StartIndex * 2;
+            var count = request.Count * _gridRowCount;
+            var start = request.StartIndex * _gridRowCount;
             var requestCount = Math.Min(count, Artifacts.Count - start);
 
             List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
@@ -351,19 +384,53 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 }
                 item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
             }
+
+            _isLoadingThumbnailFinished = true;
+
             var result = new List<FsArtifact[]>();
-            for (int i = 0; i < items.Count; i += 2)
+            if (_gridRowCount == 1)
             {
-                if ((i + 1) < items.Count)
+                for (int i = 0; i < items.Count; i += 1)
                 {
-                    result.Add(new FsArtifact[2] { items[i], items[i + 1] });
-                    continue;
+                    if (i < items.Count)
+                    {
+                        result.Add(new FsArtifact[1] { items[i] });
+                        continue;
+                    }
+                    result.Add(new FsArtifact[1] { items[i] });
                 }
-                result.Add(new FsArtifact[1] { items[i] });
+            }
+            else if (_gridRowCount == 2)
+            {
+                for (int i = 0; i < items.Count; i += 2)
+                {
+                    if ((i + 1) < items.Count)
+                    {
+                        result.Add(new FsArtifact[2] { items[i], items[i + 1] });
+                        continue;
+                    }
+                    result.Add(new FsArtifact[1] { items[i] });
+                }
+            }
+            else if (_gridRowCount == 3)
+            {
+                for (int i = 0; i < items.Count; i += 3)
+                {
+                    if ((i + 2) < items.Count)
+                    {
+                        result.Add(new FsArtifact[3] { items[i], items[i + 1], items[i + 2] });
+                        continue;
+                    }
+                    else if ((i + 1) < items.Count)
+                    {
+                        result.Add(new FsArtifact[2] { items[i], items[i + 1] });
+                        continue;
+                    }
+                    result.Add(new FsArtifact[1] { items[i] });
+                }
             }
 
-            return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / 2));
+            return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
         }
-
     }
 }
