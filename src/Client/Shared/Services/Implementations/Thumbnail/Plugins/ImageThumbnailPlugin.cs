@@ -13,11 +13,16 @@ public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 
     protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 
-    public bool IsSupported(string extension)
+    public virtual bool IsSupported(string extension)
     {
-        return FsArtifactUtils.FileExtentionsType
-                        .Where(e => e.Value == FileCategoryType.Image)
-                        .Select(f => f.Key)
-                        .Any(c => c.Equals(extension.ToLower()));
+        return new string[]
+        {
+            ".jpg",
+            ".png",
+            ".jpeg",
+            ".bmp",
+            ".ico",
+            ".jfif"
+        }.Contains(extension.ToLower());
     }
 }
