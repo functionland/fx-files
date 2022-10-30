@@ -610,10 +610,20 @@ public partial class FileBrowser
 #if BlazorHybrid
                 try
                 {
+
+#if Mac || iOS
+                    var uri = new Uri($"file://{artifact.FullPath}");
+                    await Launcher.OpenAsync(uri);
+
+#else
+
                     await Launcher.OpenAsync(new OpenFileRequest
                     {
                         File = new ReadOnlyFile(artifact?.FullPath)
                     });
+
+#endif
+
                 }
                 catch (UnauthorizedAccessException)
                 {
