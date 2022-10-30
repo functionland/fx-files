@@ -66,6 +66,7 @@ public partial class FileBrowser
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private ArtifactCategorySearchType? _artifactsSearchFilterType;
+    private FsArtifact? _lastArtifactStateForBackInSearchMode;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
@@ -964,6 +965,7 @@ public partial class FileBrowser
     private void HandleSearchFocused()
     {
         _isInSearch = true;
+        _lastArtifactStateForBackInSearchMode = _currentArtifact;
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1124,7 +1126,8 @@ public partial class FileBrowser
         if (_isInSearch)
         {
             CancelSearch(true);
-            await LoadChildrenArtifactsAsync();
+            _currentArtifact = _lastArtifactStateForBackInSearchMode;
+            await LoadChildrenArtifactsAsync(_lastArtifactStateForBackInSearchMode);
         }
         StateHasChanged();
     }
@@ -1421,6 +1424,19 @@ public partial class FileBrowser
             _artifactsSearchFilterType = null;
             _artifactsSearchFilterDate = null;
             isFirstTimeInSearch = true;
+        }
+    }
+
+    private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
+    {
+        if (artifact.ArtifactType == FsArtifactType.File)
+        {
+            var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
+            await HandleSelectArtifactAsync(destinationArtifact);
+        }
+        else
+        {
+            await HandleSelectArtifactAsync(artifact);
         }
     }
 }
