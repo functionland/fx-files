@@ -2,6 +2,8 @@
 
 using Prism.Events;
 
+using System.Xml.Linq;
+
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 {
     public abstract partial class FileWatchService : IFileWatchService
@@ -43,8 +45,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             };
 
             watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Created += new FileSystemEventHandler(OnChanged);
-            watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            watcher.Created += new FileSystemEventHandler(OnAdded);
+            watcher.Deleted += new FileSystemEventHandler(OnDeleted);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
 
             WatcherDictionary.TryAdd(fsArtifact.FullPath, (watcher, 1));
@@ -68,6 +70,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         private void OnRenamed(object sender, RenamedEventArgs e)
         {
             var fsArtifactChangesType = FsArtifactChangesType.Rename;
@@ -80,25 +83,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 Description = e.OldFullPath
             });
         }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         private void OnChanged(object source, FileSystemEventArgs e)
         {
             if (e is null) return;
-
-            FsArtifactChangesType? fsArtifactChangesType = null;
-            switch (e.ChangeType)
-            {
-                case WatcherChangeTypes.Created:
-                    fsArtifactChangesType = FsArtifactChangesType.Add;
-                    break;
-                case WatcherChangeTypes.Deleted:
-                    fsArtifactChangesType = FsArtifactChangesType.Delete;
-                    break;
-                case WatcherChangeTypes.Changed:
-                    fsArtifactChangesType = FsArtifactChangesType.Modify;
-
-                    break;
-            }
 
             var isFileExist = File.Exists(e.FullPath);
             DateTimeOffset lastModifiedDateTime;
@@ -121,13 +110,43 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
-                ChangeType = fsArtifactChangesType,
+                ChangeType = FsArtifactChangesType.Modify,
                 FsArtifact = new FsArtifact(e.FullPath, name, artifactType, FsFileProviderType.InternalMemory)
                 {
                     LastModifiedDateTime = lastModifiedDateTime,
                     ParentFullPath = Path.GetDirectoryName(e.FullPath),
                     Size = size
                 }
+            });
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        private void OnDeleted(object source, FileSystemEventArgs e)
+        {
+            if (e is null) return;
+
+            var name = Path.GetFileName(e.FullPath);
+
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
+            {
+                ChangeType = FsArtifactChangesType.Delete,
+                FsArtifact = new FsArtifact(e.FullPath, name, FsArtifactType.File, FsFileProviderType.InternalMemory)
+            }); 
+
+ 
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        private void OnAdded(object sender, FileSystemEventArgs e)
+        {
+            if (e is null) return;
+
+            var artifact = FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
+
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
+            {
+                ChangeType = FsArtifactChangesType.Add,
+                FsArtifact = artifact
             });
         }
     }
