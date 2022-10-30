@@ -31,6 +31,16 @@ public partial class FileBrowser
         ProgressBarCts?.Cancel();
     }
 
+    // Search
+    private DeepSearchFilter? SearchFilter { get; set; }
+    private bool _isFileCategoryFilterBoxOpen = true;
+    private bool _isInSearch;
+    private bool isFirstTimeInSearch = true;
+    private string _inlineSearchText = string.Empty;
+    private string _searchText = string.Empty;
+    private ArtifactDateSearchType? _artifactsSearchFilterDate;
+    private ArtifactCategorySearchType? _artifactsSearchFilterType;
+
     private FsArtifact? _currentArtifact;
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _allArtifacts = new();
@@ -56,17 +66,7 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-
-    // Search
-    private DeepSearchFilter? SearchFilter { get; set; }
-    private bool _isFileCategoryFilterBoxOpen = true;
-    private bool _isInSearch;
-    private bool isFirstTimeInSearch = true;
-    private string _inlineSearchText = string.Empty;
-    private string _searchText = string.Empty;
-    private ArtifactDateSearchType? _artifactsSearchFilterDate;
-    private ArtifactCategorySearchType? _artifactsSearchFilterType;
-    private FsArtifact? _lastArtifactStateForBackInSearchMode;
+    private bool _shouldLoadLastArtifactForBackClick = false;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
@@ -965,7 +965,7 @@ public partial class FileBrowser
     private void HandleSearchFocused()
     {
         _isInSearch = true;
-        _lastArtifactStateForBackInSearchMode = _currentArtifact;
+        _shouldLoadLastArtifactForBackClick = true;
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1126,8 +1126,7 @@ public partial class FileBrowser
         if (_isInSearch)
         {
             CancelSearch(true);
-            _currentArtifact = _lastArtifactStateForBackInSearchMode;
-            await LoadChildrenArtifactsAsync(_lastArtifactStateForBackInSearchMode);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
         }
         StateHasChanged();
     }
@@ -1136,7 +1135,14 @@ public partial class FileBrowser
     {
         try
         {
-            _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            if (_shouldLoadLastArtifactForBackClick is false)
+            {
+                _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            }
+            else
+            {
+                _shouldLoadLastArtifactForBackClick = false;
+            }
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
