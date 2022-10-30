@@ -31,6 +31,7 @@ $info-dark: #1C7ED6;
 $warning-dark: #FCC419;
 $error-dark: #FA5252;
 $input-dark-disable: $gray-dark-border;
+$diable-item-dark: #212529;
 
 //light colors
 $gray-light-content1: #343A40;
@@ -51,6 +52,7 @@ $error-light: #FA4343;
 $info-light: $info-dark;
 $success-light: $success-dark;
 $input-light-disable: $gray-dark-content3;
+$diable-item-light: #F8F9FA;
 
 $colors-light: (
     "app-bg": $pure-white,
@@ -65,7 +67,8 @@ $colors-light: (
     "gray-content3": $gray-light-content3,
     "gray-bg-primary": $gray-light-bg-primary,
     "gray-bg-secondary": $gray-light-bg-secondary,
-    "input-disable": $input-light-disable
+    "input-disable": $input-light-disable,
+    "disable-item": $diable-item-light
 );
 
 $colors-dark: (
@@ -81,17 +84,21 @@ $colors-dark: (
     "gray-content3": $gray-dark-content3,
     "gray-bg-primary": $gray-dark-bg-primary,
     "gray-bg-secondary": $gray-dark-bg-secondary,
-    "input-disable": $input-dark-disable
+    "input-disable": $input-dark-disable,
+    "disable-item": $diable-item-dark
 );
 
 
 //svg icons
+
+
 $back: $icon-base-url + "back.svg";
 $copy: $icon-base-url + "copy.svg";
 $delete: $icon-base-url + "delete.svg";
 $details: $icon-base-url + "details.svg";
 $rename-file: $icon-base-url + "rename.svg";
 $close-btn: $icon-base-url + "close-btn.svg";
+$play-circle: $icon-base-url + "play-circle.svg";
 $tag-label: $icon-base-url + "tag-label.svg";
 $chevron-up: $icon-base-url + "chevron-up.svg";
 
@@ -366,6 +373,7 @@ $border-size-4: 4 + $base-unit;
 
 //spacing
 $spacing-0: 0 + $base-unit;
+$spacing-2: 2 + $base-unit;
 $spacing-4: 4 + $base-unit;
 $spacing-6: 6 + $base-unit;
 $spacing-8: 8 + $base-unit;
@@ -393,6 +401,7 @@ $spacing-333: 333 + $base-unit;
 //icon sizes
 $icon-96: 96 + $base-unit;
 $icon-64: 64 + $base-unit;
+$icon-56: 56 + $base-unit;
 $icon-48: 48 + $base-unit;
 $icon-32: 32 + $base-unit;
 $icon-24: 24 + $base-unit;

@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.FileProviders;
-using Functionland.FxFiles.Client.Shared.Resources;
-using Microsoft.Maui;
-using System.Drawing;
-using Microsoft.Maui.Platform;
+﻿using Functionland.FxFiles.Client.App.Extensions;
+
+using Microsoft.Extensions.FileProviders;
 
 #if WINDOWS
 using Microsoft.UI;
 using WinRT.Interop;
+using Windows.Graphics;
 using Microsoft.UI.Windowing;
 #endif
 
@@ -25,12 +24,16 @@ public partial class MainPage
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
 #if WINDOWS
+
             var nativeWindow = handler.PlatformView;
             nativeWindow.Activate();
 
             var hWnd = WindowNative.GetWindowHandle(nativeWindow);
             var windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
             var appWindow = AppWindow.GetFromWindowId(windowId);
+
+            appWindow.Resize(new SizeInt32(691, 968));
+
             var titleBar = appWindow.TitleBar;
             appWindow.Title = "FxFiles";
 
@@ -78,6 +81,12 @@ public partial class MainPage
 
         BlazorWebViewHandler.BlazorWebViewMapper.AppendToMapping("CustomBlazorWebViewMapper", (handler, view) =>
         {
+#if WINDOWS
+            if (AppInfo.Current.RequestedTheme == AppTheme.Dark)
+            {
+                handler.PlatformView.DefaultBackgroundColor = Microsoft.UI.Colors.Black;
+            }
+#endif
 
 #if IOS
             handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
@@ -139,11 +148,13 @@ public partial class MainPage
 
 }
 
-public class FxBlazorWebView : BlazorWebView
+public class FsBlazorWebView : BlazorWebView
 {
     public override IFileProvider CreateFileProvider(string contentRootDir)
     {
         var baseFileProvider = base.CreateFileProvider(contentRootDir);
-        return new FxFileProvider(baseFileProvider);
+        var fsFileProviderDependency = ServiceExtention.GetRequiredService<FsFileProviderDependency>();
+        
+        return new FsFileProvider(baseFileProvider, fsFileProviderDependency);
     }
 }

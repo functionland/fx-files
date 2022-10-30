@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 {
@@ -13,6 +15,9 @@ public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 
     public bool IsSupported(string extension)
     {
-        return new string[] { ".pdf" }.Contains(extension.ToLower());
+        return FsArtifactUtils.FileExtentionsType
+                        .Where(e => e.Value == FileCategoryType.Pdf)
+                        .Select(f => f.Key)
+                        .Any(c => c.Equals(extension.ToLower()));
     }
 }

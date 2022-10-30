@@ -49,3 +49,11 @@ function getLastScrollPossition() {
 function saveScrollPosition() {
     savePositionScroll.push(document.documentElement.scrollTop);
 }
+
+// search input focus 
+function SearchInputFocus() {
+    var searchInput = document.getElementById('searchinput');
+    if (typeof searchInput !== "undefined") {
+        searchInput.focus();
+    }
+}
