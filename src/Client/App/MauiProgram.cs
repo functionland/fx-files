@@ -14,7 +14,7 @@ public static class MauiProgram
     public static MauiApp CreateMauiAppBuilder()
     {
        
-#if RELEASE
+#if RELEASE && !Mac
        
         AppCenter.Start(
             $"windowsdesktop={Configuration.AppCenterWindowsAppSecret};"+
