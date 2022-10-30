@@ -1,7 +1,7 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
+﻿using System.Reflection.Metadata.Ecma335;
 
-using System.Reflection.Metadata.Ecma335;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
@@ -46,11 +46,11 @@ public partial class FileViewer
     {
         if (artifact is null)
             return false;
- 
-        //if (artifact.FileCategory == FileCategoryType.Image && typeof(TComponent) == typeof(ImageViewer))
-        //{
-        //    return true;
-        //}
+
+        if (artifact.FileCategory == FileCategoryType.Image && typeof(TComponent) == typeof(ImageViewer))
+        {
+            return true;
+        }
 
         return false;
     }

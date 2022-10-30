@@ -1,2 +1,44 @@
-﻿body {
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.navigation-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    ::deep .back-button::before {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .right-side {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+        gap: 16px;
+
+        .pin-icon::before {
+            font-size: 24px;
+            @include Icon($pin, $pure-white, $Icons-Filled);
+        }
+
+        .pin-icon-outline::before {
+            font-size: 24px;
+            @include Icon($pin-outline);
+        }
+
+        .more-option-icon::before {
+            @include Icon($options-vertical);
+            font-size: 24px;
+        }
+    }
 }
