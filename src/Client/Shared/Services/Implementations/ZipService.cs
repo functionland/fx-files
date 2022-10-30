@@ -175,7 +175,8 @@ public partial class ZipService : IZipService
 
     private List<FsArtifact> RarFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
-        var itemsPath = subDirectoriesPath.Split('\\');
+        var length = SplitPath(subDirectoriesPath);
+
         var fsArtifacts = new List<FsArtifact>();
 
         using (var archive = RarArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
@@ -185,15 +186,14 @@ public partial class ZipService : IZipService
                 var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
                 var newPath = Path.Combine(zipFilePath, entry.Key);
                 var entryFileName = Path.GetFileName(newPath);
-
                 var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, FsFileProviderType.InternalMemory)
                 {
                     FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
                     LastModifiedDateTime = (DateTimeOffset)entry.LastModifiedTime
                 };
 
-                var result = entry.Key.Split('\\');
-                if (result.Length == itemsPath.Length && newFsArtifact.FullPath.Contains(subDirectoriesPath))
+                var keyLength = SplitPath(entry.Key);
+                if (keyLength == length && newFsArtifact.FullPath.Contains(subDirectoriesPath))
                 {
                     fsArtifacts.Add(newFsArtifact);
                 }
@@ -201,11 +201,11 @@ public partial class ZipService : IZipService
         }
 
         return fsArtifacts;
-
     }
+
     private List<FsArtifact> ZipFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
-        var itemsPath = subDirectoriesPath.Split('\\');
+        var length = SplitPath(subDirectoriesPath);
         var fsArtifacts = new List<FsArtifact>();
 
         using (var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
@@ -214,17 +214,26 @@ public partial class ZipService : IZipService
             {
                 var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
                 var key = entry.Key.Trim('/').Replace("/", "\\");
-                var newPath = Path.Combine(zipFilePath, key);
-                var entryFileName = Path.GetFileName(newPath);
+                var newPath = "";
 
+                if(zipFilePath.Contains('\\'))
+                {
+                    newPath = Path.Combine(zipFilePath, key);
+                }
+                else if (zipFilePath.Contains('/'))
+                {
+                    newPath = Path.Combine(zipFilePath, entry.Key.Trim('/'));
+                }
+
+                var entryFileName = Path.GetFileName(newPath);
                 var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, FsFileProviderType.InternalMemory)
                 {
                     FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
                     LastModifiedDateTime = (DateTimeOffset)entry.LastModifiedTime
                 };
 
-                var result = key.Split('\\');
-                if (result.Length == itemsPath.Length && newPath.Contains(subDirectoriesPath))
+                var keyLength = SplitPath(key);
+                if (keyLength == length && newPath.Contains(subDirectoriesPath))
                 {
                     fsArtifacts.Add(newFsArtifact);
                 }
@@ -305,5 +314,22 @@ public partial class ZipService : IZipService
             }
         }
 
+    }
+
+    private int SplitPath(string subDirectoriesPath)
+    {
+        string[] itemsPath;
+        int length = 0;
+        if (subDirectoriesPath.Contains('\\'))
+        {
+            itemsPath = subDirectoriesPath.Split('\\');
+            length = itemsPath.Length;
+        }
+        else if (subDirectoriesPath.Contains('/'))
+        {
+            itemsPath = subDirectoriesPath.Split('/');
+            length = itemsPath.Length;
+        }
+        return length;
     }
 }
