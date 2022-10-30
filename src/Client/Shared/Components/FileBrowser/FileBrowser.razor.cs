@@ -1139,6 +1139,10 @@ public partial class FileBrowser
             {
                 _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
             }
+            else
+            {
+                _shouldLoadLastArtifactForBackClick = false;
+            }
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
