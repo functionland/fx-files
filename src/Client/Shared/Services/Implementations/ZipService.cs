@@ -98,13 +98,24 @@ public partial class ZipService : IZipService
 
     }
 
-    public virtual async Task ExtractZipAsync(string fullPath, string destinationPath, string? password = null, bool overwrite = false, CancellationToken? cancellationToken = null)
+    public virtual async Task ExtractZipAsync(string fullPath, string destinationPath, string? destinationFolderName = null, string? password = null, bool overwrite = false, CancellationToken? cancellationToken = null)
     {
         var extension = Path.GetExtension(fullPath);
         var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
         var zipFileName = Path.GetFileName(fullPath);
         var ZipFileNameWithoutExtension = zipFileName.Replace(extension, "");
         var deletedPath = Path.Combine(destinationPath, ZipFileNameWithoutExtension);
+
+        if(destinationFolderName is not null)
+        {
+            var newPath = Path.Combine(destinationPath, destinationFolderName);
+
+            if (!Directory.Exists(newPath))
+            {
+                Directory.CreateDirectory(newPath);
+            }
+            destinationPath = newPath;
+        }
 
         try
         {
