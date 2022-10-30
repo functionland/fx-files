@@ -5,7 +5,7 @@
 @if (IsPartial)
 {
     <div class="search-icon"></div>
-    <input class="input-box input-partial" type="text" id="searchinput"
+    <input class="input-box input-partial @(IsEnabled ? "" : "fully-disabled")" type="text" id="searchinput"
        placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]"
        value="@_inputText"
        @oninput="HandleInput"
@@ -14,7 +14,7 @@
 else
 {
     <div class="input-full-width">
-        <div class="search-icon"></div>
+        <div class="search-icon @(IsEnabled ? "" : "fully-disabled")"></div>
         <input class="input-box" value="@_inputText" @oninput="HandleInput" @onfocus="HandleFocus" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth), (Placeholder?? "Folder name")]" />
         @if (!string.IsNullOrEmpty(_inputText) || !string.IsNullOrWhiteSpace(_inputText))
         {
