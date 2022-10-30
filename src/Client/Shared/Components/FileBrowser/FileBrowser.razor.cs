@@ -32,6 +32,16 @@ public partial class FileBrowser
         ProgressBarCts?.Cancel();
     }
 
+    // Search
+    private DeepSearchFilter? SearchFilter { get; set; }
+    private bool _isFileCategoryFilterBoxOpen = true;
+    private bool _isInSearch;
+    private bool isFirstTimeInSearch = true;
+    private string _inlineSearchText = string.Empty;
+    private string _searchText = string.Empty;
+    private ArtifactDateSearchType? _artifactsSearchFilterDate;
+    private ArtifactCategorySearchType? _artifactsSearchFilterType;
+
     private FsArtifact? _currentArtifactValue;
     private FsArtifact? _currentArtifact
     {
@@ -77,17 +87,7 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-
-    // Search
-    private DeepSearchFilter? SearchFilter { get; set; }
-    private bool _isFileCategoryFilterBoxOpen = true;
-    private bool _isInSearch;
-    private bool isFirstTimeInSearch = true;
-    private string _inlineSearchText = string.Empty;
-    private string _searchText = string.Empty;
-    private ArtifactDateSearchType? _artifactsSearchFilterDate;
-    private ArtifactCategorySearchType? _artifactsSearchFilterType;
-    private FsArtifact? _lastArtifactStateForBackInSearchMode;
+    private bool _shouldLoadLastArtifactForBackClick = false;
 
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -1080,7 +1080,7 @@ public partial class FileBrowser
     private void HandleSearchFocused()
     {
         _isInSearch = true;
-        _lastArtifactStateForBackInSearchMode = _currentArtifact;
+        _shouldLoadLastArtifactForBackClick = true;
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1221,7 +1221,7 @@ public partial class FileBrowser
         {
             case ArtifactExplorerMode.Normal:
                 _fxSearchInputRef?.HandleClearInputText();
-                _currentArtifact = await GetParentArtifact(_currentArtifact);
+                await UpdateCurrentArtifactForBackButton(_currentArtifact);
                 await LoadChildrenArtifactsAsync(_currentArtifact);
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 _isGoingBack = true;
@@ -1241,21 +1241,27 @@ public partial class FileBrowser
         if (_isInSearch)
         {
             CancelSearch(true);
-            _currentArtifact = _lastArtifactStateForBackInSearchMode;
-            await LoadChildrenArtifactsAsync(_lastArtifactStateForBackInSearchMode);
+            await LoadChildrenArtifactsAsync(_currentArtifact);
         }
         await InvokeAsync(() => StateHasChanged());
     }
 
-    private async Task<FsArtifact?> GetParentArtifact(FsArtifact? fsArtifact)
+    private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
         try
         {
-            return await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            if (_shouldLoadLastArtifactForBackClick is false)
+            {
+                _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            }
+            else
+            {
+                _shouldLoadLastArtifactForBackClick = false;
+            }
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
-            return null;
+            _currentArtifact = null;
         }
     }
 
