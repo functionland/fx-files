@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
 
 using System.Reflection.Metadata.Ecma335;
 
@@ -37,6 +38,10 @@ public partial class FileViewer
         {
             return true;
         }
+        else if(IsSupported<TextViewer>(artifact))
+        {
+            return true;
+        }
 
         return false;
     }
@@ -47,10 +52,10 @@ public partial class FileViewer
         if (artifact is null)
             return false;
  
-        //if (artifact.FileCategory == FileCategoryType.Image && typeof(TComponent) == typeof(ImageViewer))
-        //{
-        //    return true;
-        //}
+        if(artifact.FileCategory == FileCategoryType.Document)
+        {
+            return true;
+        }
 
         return false;
     }

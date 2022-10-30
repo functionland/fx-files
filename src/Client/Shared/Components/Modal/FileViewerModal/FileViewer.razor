@@ -16,6 +16,12 @@
             {
                 <VideoViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
             }
+
+            @if (IsSupported<TextViewer>(_currentArtifact))
+            {
+                <TextViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
+            }
+
         </div>
     </div>
 }
