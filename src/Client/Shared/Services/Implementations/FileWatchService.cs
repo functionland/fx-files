@@ -44,7 +44,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
-            watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            watcher.Deleted += new FileSystemEventHandler(OnDelete);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
 
             WatcherDictionary.TryAdd(fsArtifact.FullPath, (watcher, 1));
@@ -91,9 +91,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 case WatcherChangeTypes.Created:
                     fsArtifactChangesType = FsArtifactChangesType.Add;
                     break;
-                case WatcherChangeTypes.Deleted:
-                    fsArtifactChangesType = FsArtifactChangesType.Delete;
-                    break;
+                
                 case WatcherChangeTypes.Changed:
                     fsArtifactChangesType = FsArtifactChangesType.Modify;
               
@@ -106,6 +104,20 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 ChangeType = fsArtifactChangesType,
                 FsArtifact = artifact
             });
+        }
+        private void OnDelete(object source, FileSystemEventArgs e)
+        {
+            if (e is null) return;
+
+            var name = Path.GetFileName(e.FullPath);
+
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
+            {
+                ChangeType = FsArtifactChangesType.Delete,
+                FsArtifact = new FsArtifact(e.FullPath, name, FsArtifactType.File, FsFileProviderType.InternalMemory)
+            }); 
+
+ 
         }
     }
 }
