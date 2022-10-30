@@ -9,13 +9,21 @@
     height: 100%;
     max-width: 600px;
     width: 100%;
-    position: absolute;
     display: flex;
+    position: absolute;
     justify-content: center;
     align-items: center;
+    background-color: color(app-bg);
+}
+
+.instead-loading {
+    opacity: 1;
+    z-index: 40;
+}
+
+.overlay-loading {
     opacity: 0.85;
     z-index: 50;
-    background-color: color(app-bg);
 }
 
 .fx-loading-dots-ring {

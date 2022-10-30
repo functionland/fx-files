@@ -1,5 +1,7 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_mixins.scss';
+
 
 footer {
     bottom: 0;
@@ -21,6 +23,12 @@ footer {
 .navbarApp__wrapper {
     display: flex;
     justify-content: space-around;
+}
+
+.navbarApp-item {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
 }
 
 ::deep .navbarApp-link {

@@ -47,6 +47,7 @@ namespace Functionland.FxFiles.Client.Shared.Utils
 
             return sizeValue;
         }
+
         public static IDictionary<string, FileCategoryType> FileExtentionsType = new Dictionary<string, FileCategoryType>()
         {
             //Image
@@ -70,7 +71,6 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".svg", FileCategoryType.Image},
             
             //PDF
-            
             { ".pdf", FileCategoryType.Pdf},
 
             //Audio
@@ -112,9 +112,7 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".wv", FileCategoryType.Audio},
             { ".8svx", FileCategoryType.Audio},
             { ".cda", FileCategoryType.Audio},
-            
-            
-
+                      
             //Video
             { ".mp4", FileCategoryType.Video},
             { ".avi", FileCategoryType.Video},
@@ -166,6 +164,22 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".apkm", FileCategoryType.App},
             { ".apks", FileCategoryType.App},
             { ".xapk", FileCategoryType.App},
+
+            //Documents
+            { ".doc", FileCategoryType.Document},
+            { ".docx", FileCategoryType.Document},
+            { ".html", FileCategoryType.Document},
+            { ".htm", FileCategoryType.Document},
+            { ".odt", FileCategoryType.Document},
+            { ".xls", FileCategoryType.Document},
+            { ".xlsx", FileCategoryType.Document},
+            { ".ods", FileCategoryType.Document},
+            { ".tpt", FileCategoryType.Document},
+            { ".tptx", FileCategoryType.Document},
+            { ".txt", FileCategoryType.Document},
+
+            //Zip
+            {".zip",FileCategoryType.Zip }
         };
 
         public static FileCategoryType GetCategoryType(string fileExtension)
@@ -177,6 +191,24 @@ namespace Functionland.FxFiles.Client.Shared.Utils
                 return FileExtentionsType[fileExtension];
             }
             return FileCategoryType.Other;
+        }
+
+        public static List<string> GetSearchCategoryTypeExtentions(ArtifactCategorySearchType searchType)
+        {
+            return searchType switch
+            {
+                ArtifactCategorySearchType.Image =>
+                    FileExtentionsType.Where(f => f.Value == FileCategoryType.Image).Select(f => f.Key.ToLower()).ToList(),
+                ArtifactCategorySearchType.App =>
+                    FileExtentionsType.Where(f => f.Value == FileCategoryType.App).Select(f => f.Key.ToLower()).ToList(),
+                ArtifactCategorySearchType.Audio =>
+                    FileExtentionsType.Where(f => f.Value == FileCategoryType.Audio).Select(f => f.Key.ToLower()).ToList(),
+                ArtifactCategorySearchType.Document =>
+                    FileExtentionsType.Where(f => f.Value == FileCategoryType.Document || f.Value == FileCategoryType.Pdf).Select(f => f.Key.ToLower()).ToList(),
+                ArtifactCategorySearchType.Video =>
+                    FileExtentionsType.Where(f => f.Value == FileCategoryType.Video).Select(f => f.Key.ToLower()).ToList(),
+                _ => new List<string>()
+            };
         }
     }
 }

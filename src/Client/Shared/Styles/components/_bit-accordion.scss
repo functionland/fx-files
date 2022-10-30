@@ -75,3 +75,21 @@
     font-size: $font-size-18;
     line-height: $line-height-24;
 }
+
+::deep .pin-empty-style {
+    .header {
+
+        .title-description-wrapper {
+            .title {
+                color: color(input-disable);
+                font-family: $montserrat-semi-bold;
+                font-size: $font-size-18;
+                line-height: $line-height-24;
+            }
+        }
+
+        .header-icon {
+            color: color(input-disable);
+        }
+    }
+}
