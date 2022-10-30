@@ -40,6 +40,8 @@ public static class IServiceCollectionExtensions
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
 
+        services.AddSingleton<IntentHolder>();
+
         return services;
     }
 
