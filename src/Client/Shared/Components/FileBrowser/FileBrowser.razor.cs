@@ -97,7 +97,6 @@ public partial class FileBrowser
     [Parameter] public IFileService FileService { get; set; } = default!;
 
     [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
-    [Parameter] public IViewFileService<IFileService> ViewFileService { get; set; } = default!;
     [Parameter] public string? DefaultPath { get; set; }
 
     protected override async Task OnInitAsync()

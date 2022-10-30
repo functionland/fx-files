@@ -1,6 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class VideoViewer : IFileViewerComponent
 {
