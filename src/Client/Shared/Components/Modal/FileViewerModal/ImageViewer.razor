@@ -10,8 +10,8 @@
               IsVisible="true"
               ButtonStyle="FxButtonStyle.None" />
     <div class="right-side">
-        <div class="@(CurrentArtifact?.IsPinned == true ? "pin-icon":"pin-icon-outline")"></div>
-        <div class="more-option-icon"></div>
+        <div class="@(CurrentArtifact?.IsPinned == true ? "pin-icon":"pin-icon-outline")" @onclick="@(CurrentArtifact?.IsPinned == true ? UnpinArtifact : PinArtifact)"></div>
+        <div class="more-option-icon" @onclick="ArtifactOption"></div>
     </div>
 </div>
 

@@ -9,7 +9,7 @@
 
             @if (IsSupported<ImageViewer>(_currentArtifact))
             {
-                <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" />
+                <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" OnBack="Back" HandlePinArtifact="HandlePinArtifact" HandleUnpinArtifact="HandleUnpinArtifact" HandleArtifactOption="HandleArtifactOption" />
             }
 
             @if (IsSupported<VideoViewer>(_currentArtifact))

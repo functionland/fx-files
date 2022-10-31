@@ -8,6 +8,9 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 public partial class FileViewer
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public EventCallback<List<FsArtifact>> HandlePinArtifact { get; set; }
+    [Parameter] public EventCallback<List<FsArtifact>> HandleUnpinArtifact { get; set; }
+    [Parameter] public EventCallback<FsArtifact> HandleArtifactOption { get; set; }
 
     private FsArtifact? _currentArtifact;
     private bool _isModalOpen { get; set; } = false;
