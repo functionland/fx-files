@@ -872,5 +872,68 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
             yield break;
         }
+
+
+        public async IAsyncEnumerable<long> GetArtifactSizeAsync(string path, CancellationToken? cancellationToken = null)
+        {
+            //Exceptions based on path checking
+
+            //1. GetFsArtifact
+            //2. Decide based on FsArtifactProviderType
+            //3. Go for special implementation for each platform
+            //4. Enumerate through files in directories
+
+            if (cancellationToken?.IsCancellationRequested is true) yield break;
+
+            long artifactSize = 0;
+            var file = new FileInfo(path);
+            var artifactType = GetFsArtifactType(path);
+
+            if (artifactType == FsArtifactType.File)
+            {
+                artifactSize = file.Length;
+
+                yield return artifactSize;
+                yield break;
+            }
+
+            if (artifactType == FsArtifactType.Drive)
+            {
+                artifactSize = await CalculateDriveSizeAsync(path, cancellationToken);
+
+                yield return artifactSize;
+                yield break;
+            }
+
+            if (artifactType == FsArtifactType.Folder)
+            {
+                var allFiles = Directory.EnumerateFileSystemEntries(path, "*", new EnumerationOptions()
+                {
+                    RecurseSubdirectories = true
+                }).Select(a => new FileInfo(a));
+
+                foreach (var item in allFiles)
+                {
+                    if (!File.Exists(item.FullName)) continue;
+                    artifactSize += item.Length;
+
+                    yield return artifactSize;
+                }
+            }
+
+        }
+
+        protected virtual async Task<long> CalculateDriveSizeAsync(string drivePath, CancellationToken? cancellation = null)
+        {
+            long totalSize = 0;
+            var drives = DriveInfo.GetDrives();
+            var targetDrive = drives.FirstOrDefault(drive => drive.Name.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+            if (targetDrive is null)
+                throw new InvalidOperationException("No drive found given the current path.");
+
+            totalSize = targetDrive.TotalSize - targetDrive.TotalFreeSpace;
+            return totalSize;
+        }
     }
 }

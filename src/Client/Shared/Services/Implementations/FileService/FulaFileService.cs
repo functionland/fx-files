@@ -78,4 +78,9 @@ public partial class FulaFileService : IFulaFileService
     {
         throw new NotImplementedException();
     }
+
+    public IAsyncEnumerable<long> GetArtifactSizeAsync(string path, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
 }
