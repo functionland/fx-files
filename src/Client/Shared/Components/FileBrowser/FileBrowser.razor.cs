@@ -611,19 +611,19 @@ public partial class FileBrowser
                 try
                 {
 
-#if Mac || iOS
-                    var uri = new Uri($"file://{artifact.FullPath}");
-                    await Launcher.OpenAsync(uri);
-
-#else
-
-                    await Launcher.OpenAsync(new OpenFileRequest
+                    if (DeviceInfo.Current.Platform == DevicePlatform.iOS || DeviceInfo.Current.Platform == DevicePlatform.macOS || DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst)
                     {
-                        File = new ReadOnlyFile(artifact?.FullPath)
-                    });
+                        var uri = new Uri($"file://{artifact.FullPath}");
+                        await Launcher.OpenAsync(uri);
 
-#endif
-
+                    }
+                    else
+                    {
+                        await Launcher.OpenAsync(new OpenFileRequest
+                        {
+                            File = new ReadOnlyFile(artifact?.FullPath)
+                        });
+                    }
                 }
                 catch (UnauthorizedAccessException)
                 {
