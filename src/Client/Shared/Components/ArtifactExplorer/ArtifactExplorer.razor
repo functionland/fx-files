@@ -27,10 +27,11 @@
                 @foreach (var artifact in Artifacts)
                 {
                     <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-         @onpointerup="((e) => PointerUp(e,artifact))"
          @onpointerdown="(() =>PointerDown(artifact))"
-         @onpointercancel="PointerCancel">
+         @onpointercancel="PointerCancel"
+         @onclick="(async(e) => await HandleArtifactClick(artifact))">
 
+         @*@onpointerup="(async(e) => await PointerUp(e,artifact))"*@
                         @if ((ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact || !IsPhone) && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
                         {
                             <div class="check-box-position" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">

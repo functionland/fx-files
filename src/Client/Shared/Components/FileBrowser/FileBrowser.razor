@@ -137,36 +137,36 @@
                OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-    @if (IsInRoot(_currentArtifact) && _isInSearch is false)
-    {
-        <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
-            <ContentTemplate>
-                @if (_isPinBoxLoading)
-                {
-                    <OverlayLoading LoadingType="LoadingType.Overlay" />
-                }
-                @if (_pins?.Count > 0)
-                {
-                    <div class="items">
-                        @foreach (var pin in _pins)
-                        {
-                            <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                <FileCard ArtifactType="@pin.ArtifactType"
-                                          Name="@pin.Name"
-                                          Size="@pin.SizeStr"
-                                          Path="@pin.FullPath"
-                                          FileService = "@FileService"
-                                          FileType="@pin.FileCategory"
-                                          ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
-                            </div>
-                        }
-                    </div>
-                }
-            </ContentTemplate>
-        </BitAccordion>
-    }
+        @if (IsInRoot(_currentArtifact) && _isInSearch is false)
+        {
+            <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+                <ContentTemplate>
+                    @if (_isPinBoxLoading)
+                    {
+                        <OverlayLoading LoadingType="LoadingType.Overlay" />
+                    }
+                    @if (_pins?.Count > 0)
+                    {
+                        <div class="items">
+                            @foreach (var pin in _pins)
+                            {
+                                <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                    <FileCard ArtifactType="@pin.ArtifactType"
+                              Name="@pin.Name"
+                              Size="@pin.SizeStr"
+                              Path="@pin.FullPath"
+                              FileService="@FileService"
+                              FileType="@pin.FileCategory"
+                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                </div>
+                            }
+                        </div>
+                    }
+                </ContentTemplate>
+            </BitAccordion>
+        }
 
-    <div class="root-title">My device files</div>
+        <div class="root-title">My device files</div>
 
         @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
         {
@@ -217,7 +217,9 @@
                    OnSearch="HandleInLineSearch"
                    IsPartial="false" />
         }
-
+        <div>
+            count :  @_displayedArtifacts.Count
+        </div>
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
                       CurrentArtifact="_currentArtifact"

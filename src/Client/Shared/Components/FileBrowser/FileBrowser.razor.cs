@@ -557,6 +557,8 @@ public partial class FileBrowser
     private async Task LoadChildrenArtifactsAsync(FsArtifact? artifact = null)
     {
         _isArtifactExplorerLoading = true;
+        StateHasChanged();
+        await Task.Delay(1000);
 
         try
         {
@@ -579,6 +581,7 @@ public partial class FileBrowser
             }
 
             _allArtifacts = artifacts;
+            // call _displayArtifact
             RefreshDisplayedArtifacts();
         }
         catch (ArtifactUnauthorizedAccessException exception)
@@ -587,7 +590,11 @@ public partial class FileBrowser
         }
         finally
         {
+            //trick for update load artifact and refresh visualization
+            // Task.Delay(100);
             _isArtifactExplorerLoading = false;
+
+            // check functionality
             StateHasChanged();
         }
     }
@@ -1211,20 +1218,26 @@ public partial class FileBrowser
 
     }
 
+    // TODO: septate variable for sort display variable and sort variable use case
     private async Task HandleSortOrderClick()
     {
         if (_isArtifactExplorerLoading) return;
 
         _isAscOrder = !_isAscOrder;
         _isArtifactExplorerLoading = true;
-        System.Threading.Thread.Sleep(3000);
+        await Task.Delay(100);
+        //System.Threading.Thread.Sleep(3000);
         try
         {
-            await Task.Run(() =>
-            {
-                var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-                _displayedArtifacts = sortedDisplayArtifact.ToList();
-            });
+            //await Task.Run(() =>
+            //{
+            var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+            //_displayedArtifacts = new();
+            _displayedArtifacts = sortedDisplayArtifact.ToList();
+            //});
+
+            // For smooth transition and time for the animation to complete
+            // await Task.Delay(100);
         }
         catch (Exception exception)
         {
