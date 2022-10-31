@@ -19,6 +19,8 @@ public static class IMacServiceCollectionExtensions
 
         services.AddTransient<IThumbnailPlugin, MacImageThumbnailPlugin>();
         services.AddSingleton<IFileWatchService, MacFileWatchService>();
+
+        services.AddSingleton<IFileCacheService, MacFileCacheService>();
         return services;
     }
 }

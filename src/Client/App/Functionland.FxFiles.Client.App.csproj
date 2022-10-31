@@ -91,7 +91,6 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.2" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
 	</ItemGroup>
 </Project>
