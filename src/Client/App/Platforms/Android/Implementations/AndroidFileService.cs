@@ -266,4 +266,15 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
 
         return false;
     }
+
+    protected override async Task<long> CalculateDriveSizeAsync(string drivePath, CancellationToken? cancellation = null)
+    {
+        var drives = LoadDrives();
+        var targetDrive = drives.FirstOrDefault(drive => drive.FullPath.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+        if (targetDrive is null)
+            throw new InvalidOperationException("No drive found given the current path.");
+
+        return targetDrive.Size ?? 0;
+    }
 }
