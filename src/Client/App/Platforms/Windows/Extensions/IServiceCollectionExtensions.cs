@@ -21,6 +21,8 @@ public static class IWindowsServiceCollectionExtensions
         services.AddTransient<IThumbnailPlugin, WindowsVideoThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsPdfThumbnailPlugin>();
 
+        services.AddTransient<IZipService, WindowsZipService>();
+
         return services;
     }
 }

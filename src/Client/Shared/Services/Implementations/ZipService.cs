@@ -7,9 +7,11 @@ using SharpCompress.Readers;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-public partial class ZipService : IZipService
+public abstract partial class ZipService : IZipService
 {
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+
+    public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
     public virtual async Task<List<FsArtifact>> ZipFileViewerAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
@@ -184,6 +186,7 @@ public partial class ZipService : IZipService
     private List<FsArtifact> RarFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
         var length = SplitPath(subDirectoriesPath);
+        var providerType = GetFsFileProviderType(zipFilePath);
 
         var fsArtifacts = new List<FsArtifact>();
 
@@ -194,7 +197,7 @@ public partial class ZipService : IZipService
                 var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
                 var newPath = Path.Combine(zipFilePath, entry.Key);
                 var entryFileName = Path.GetFileName(newPath);
-                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, FsFileProviderType.InternalMemory)
+                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, providerType)
                 {
                     FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
                     LastModifiedDateTime = (DateTimeOffset)entry.LastModifiedTime
@@ -214,6 +217,7 @@ public partial class ZipService : IZipService
     private List<FsArtifact> ZipFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
     {
         var length = SplitPath(subDirectoriesPath);
+        var providerType = GetFsFileProviderType(zipFilePath);
         var fsArtifacts = new List<FsArtifact>();
 
         using (var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
@@ -234,7 +238,7 @@ public partial class ZipService : IZipService
                 }
 
                 var entryFileName = Path.GetFileName(newPath);
-                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, FsFileProviderType.InternalMemory)
+                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, providerType)
                 {
                     FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
                     LastModifiedDateTime = (DateTimeOffset)entry.LastModifiedTime
