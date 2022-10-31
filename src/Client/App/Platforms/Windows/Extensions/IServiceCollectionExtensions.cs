@@ -18,6 +18,8 @@ public static class IWindowsServiceCollectionExtensions
         services.AddSingleton<IFileCacheService, WindowsFileCacheService>();
 
         services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
+        services.AddTransient<IThumbnailPlugin, WindowsVideoThumbnailPlugin>();
+        services.AddTransient<IThumbnailPlugin, WindowsPdfThumbnailPlugin>();
 
         return services;
     }

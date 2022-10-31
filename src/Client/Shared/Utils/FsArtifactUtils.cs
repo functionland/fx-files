@@ -176,7 +176,10 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".ods", FileCategoryType.Document},
             { ".tpt", FileCategoryType.Document},
             { ".tptx", FileCategoryType.Document},
-            { ".txt", FileCategoryType.Document}
+            { ".txt", FileCategoryType.Document},
+
+            //Zip
+            {".zip",FileCategoryType.Zip }
         };
 
         public static FileCategoryType GetCategoryType(string fileExtension)
@@ -194,15 +197,15 @@ namespace Functionland.FxFiles.Client.Shared.Utils
         {
             return searchType switch
             {
-                ArtifactCategorySearchType.Image => 
+                ArtifactCategorySearchType.Image =>
                     FileExtentionsType.Where(f => f.Value == FileCategoryType.Image).Select(f => f.Key.ToLower()).ToList(),
-                ArtifactCategorySearchType.App => 
+                ArtifactCategorySearchType.App =>
                     FileExtentionsType.Where(f => f.Value == FileCategoryType.App).Select(f => f.Key.ToLower()).ToList(),
-                ArtifactCategorySearchType.Audio => 
+                ArtifactCategorySearchType.Audio =>
                     FileExtentionsType.Where(f => f.Value == FileCategoryType.Audio).Select(f => f.Key.ToLower()).ToList(),
-                ArtifactCategorySearchType.Document => 
+                ArtifactCategorySearchType.Document =>
                     FileExtentionsType.Where(f => f.Value == FileCategoryType.Document || f.Value == FileCategoryType.Pdf).Select(f => f.Key.ToLower()).ToList(),
-                ArtifactCategorySearchType.Video => 
+                ArtifactCategorySearchType.Video =>
                     FileExtentionsType.Where(f => f.Value == FileCategoryType.Video).Select(f => f.Key.ToLower()).ToList(),
                 _ => new List<string>()
             };

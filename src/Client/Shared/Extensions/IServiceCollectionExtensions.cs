@@ -1,5 +1,4 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services;
-using Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
 using Prism.Events;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -33,15 +32,12 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IGoBackService, GoBackService>();
         services.AddSingleton<IZipService, ZipService>();
 
-        services.AddTransient<IFileViewer, TextFileViewer>();
-        services.AddTransient<IFileViewer, ZipFileViewer>();
-        services.AddTransient<IViewFileService<ILocalDeviceFileService>, ViewFileService<ILocalDeviceFileService>>();
-        services.AddTransient<IViewFileService<IFulaFileService>, ViewFileService<IFulaFileService>>();
-
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
 
         services.AddSingleton<FsFileProviderDependency>();
+
+        services.AddSingleton<IntentHolder>();
 
         return services;
     }
