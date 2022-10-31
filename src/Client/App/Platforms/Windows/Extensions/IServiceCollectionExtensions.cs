@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.Client.App.Platforms.Windows.Implementations.Test;
 using Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
+using Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +21,7 @@ public static class IWindowsServiceCollectionExtensions
         services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsVideoThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsPdfThumbnailPlugin>();
-
+        services.AddTransient<IThumbnailPlugin, WindowsAudioThumbnailPlugin>();
         return services;
     }
 }
