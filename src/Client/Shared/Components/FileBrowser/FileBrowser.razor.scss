@@ -206,7 +206,7 @@
 
 .select-action {
     display: flex;
-    height: 40px;
+    min-height: 40px;
     align-items: center;
     justify-content: space-between;
     background-color: $green-dark-base;

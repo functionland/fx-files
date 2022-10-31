@@ -1217,6 +1217,7 @@ public partial class FileBrowser
 
         _isAscOrder = !_isAscOrder;
         _isArtifactExplorerLoading = true;
+        System.Threading.Thread.Sleep(3000);
         try
         {
             await Task.Run(() =>
