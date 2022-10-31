@@ -1,5 +1,4 @@
-﻿using Functionland.FxFiles.Client.App.Platforms.iOS;
-using Functionland.FxFiles.Client.App.Platforms.iOS.Implementations;
+﻿using Functionland.FxFiles.Client.App.Platforms.iOS.Implementations;
 using Functionland.FxFiles.Client.App.Platforms.iOS.Implementations.Test;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
 
@@ -21,8 +20,6 @@ public static class IiOSServiceCollectionExtensions
         services.AddSingleton<IFileWatchService, IosFileWatchService>();
 
         services.AddSingleton<IFileCacheService, IosFileCacheService>();
-
-        services.AddSingleton<IZipService, IosZipService>();
         return services;
     }
 }
