@@ -3,6 +3,8 @@ using System.Drawing;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
 using Functionland.FxFiles.Client.Shared.Utils;
+using AppKit;
+using Foundation;
 
 namespace Functionland.FxFiles.Client.App.Platforms.MacCatalyst.Implementations
 {
@@ -25,17 +27,26 @@ namespace Functionland.FxFiles.Client.App.Platforms.MacCatalyst.Implementations
                 if (imageStream is null)
                     throw new InvalidOperationException("No stream available for the image.");
 
-                var image = System.Drawing.Image.FromStream(imageStream);
-                image = CorrectRotation(image);
+                var imageStreamDate = NSData.FromStream(imageStream);
+                var image = new NSImage(imageStreamDate);
 
-                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);
 
-                var thumb = image.GetThumbnailImage(imageWidth, imageHeight, () => false, IntPtr.Zero);
-                var memoryStream = new MemoryStream();
+                //  var image = System.Drawing.Image.FromStream(imageStream);
+                // image = CorrectRotation(image);
 
-                thumb.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                (int imageWidth, int imageHeight) = ImageUtils.ScaleImage((int)image.Size.Width, (int)image.Size.Height, thumbnailScale);
 
-                return memoryStream;
+                var thumb = new NSImage(new CoreGraphics.CGSize(imageWidth, imageHeight));
+
+                thumb.LockFocus();
+                image.Draw(new CoreGraphics.CGRect(0, 0, imageWidth, imageHeight));
+                thumb.UnlockFocus();
+
+                var thumbData = thumb.AsTiff();
+
+                return thumbData.AsStream();
+
+
             }
             finally
             {
