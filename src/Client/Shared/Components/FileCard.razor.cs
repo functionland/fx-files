@@ -18,7 +18,7 @@
         public string? TagTitle { get; set; }
 
         [Parameter]
-        public string? FileName { get; set; }
+        public string? Name { get; set; }
 
         [Parameter]
         public string? FileFormat { get; set; }
@@ -27,27 +27,13 @@
         public string? ModifiedDate { get; set; }
 
         [Parameter]
-        public string? FileSize { get; set; }
-
-        private string? _path;
+        public string? Size { get; set; }
 
         [Parameter]
-        public string? FileImage
-        {
-            get => getFileImage(_path);
-            set => _path = value;
-        }
+        public string? Path { get; set; }
 
-        private string getFileImage(string? path)
-        {
-            if(path != null)
-            {
-                var resultPath = "_content/Functionland.FxFiles.Client.Shared/" + path + ".HandleByApp=true";
-                return resultPath;
-            }
-
-            return string.Empty;
-        }
+        [Parameter]
+        public IFileService? FileService { get; set; }
 
         public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
         {
@@ -74,5 +60,13 @@
 
             return "folder-icon";
         }
+
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
+                IFulaFileService => PathProtocol.ThumbnailStorageMedium,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
     }
 }

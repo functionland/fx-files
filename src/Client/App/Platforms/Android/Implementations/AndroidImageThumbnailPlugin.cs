@@ -93,4 +93,15 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
 
         return rotatedBitmap;
     }
+
+    public override bool IsSupported(string extension)
+    {
+        if (base.IsSupported(extension)) return true;
+
+        return new string[]
+        {
+            ".webp"
+        }.Contains(extension.ToLower());
+
+    }
 }

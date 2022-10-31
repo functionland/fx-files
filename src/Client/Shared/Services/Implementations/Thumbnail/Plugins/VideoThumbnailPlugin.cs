@@ -13,12 +13,19 @@ public abstract class VideoThumbnailPlugin : IThumbnailPlugin
 
     protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 
-    public bool IsSupported(string extension)
+    public virtual bool IsSupported(string extension)
     {
-        return FsArtifactUtils.FileExtentionsType
-                        .Where(e => e.Value == FileCategoryType.Video)
-                        .Select(f => f.Key)
-                        .Any(c => c.Equals(extension.ToLower()));
-
+        return new string[]
+        {
+            ".mkv",
+            ".mov",
+            ".avi",
+            ".wmv",
+            ".asf",
+            ".3gp",
+            ".webm",
+            ".m4v",
+            ".mp4"
+        }.Contains(extension.ToLower());
     }
 }
