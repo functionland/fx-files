@@ -8,6 +8,7 @@
     align-items: center;
     flex-flow: row wrap;
     gap: $spacing-6;
+    margin: $spacing-10 $spacing-21;
 }
 
 .file-path {
@@ -17,10 +18,19 @@
     letter-spacing: $letter-spacing-02;
     color: color(gray-content2);
     cursor: pointer;
-    max-width: 250px;
+}
+
+.ellipsis-file-path {
+    max-width: 41px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    direction: rtl;
+}
+
+div.file-path:last-of-type {
+    font-family: $open-sans-semi-bold;
+    color: color(gray-content1);
 }
 
 .chaveron-right {
