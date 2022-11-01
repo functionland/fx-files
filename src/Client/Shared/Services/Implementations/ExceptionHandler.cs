@@ -27,7 +27,11 @@ public partial class ExceptionHandler : IExceptionHandler
         }
         else
         {
-            Crashes.TrackError(exception);
+            if (DeviceInfo.Current.Platform != DevicePlatform.macOS && DeviceInfo.Current.Platform != DevicePlatform.MacCatalyst)
+            {
+                Crashes.TrackError(exception);
+            }
+
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
             var message = _localizer.GetString(AppStrings.TheOpreationFailedMessage);
             ToastModal.Show(title, message, FxToastType.Error);
