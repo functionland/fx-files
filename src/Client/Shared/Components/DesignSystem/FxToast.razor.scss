@@ -5,13 +5,13 @@
 .open-toast {
     opacity: 1 !important;
     bottom: 90px !important;
-    transition: opacity 0.3s linear 0.25s, bottom 0.5s linear;
+    transition: opacity 0.3s linear 0.1s, bottom 0.3s linear;
 }
 
 .close-toast {
     opacity: 0 !important;
     bottom: -67px !important;
-    transition: opacity 0.3s linear, bottom 0.5s linear;
+    transition: opacity 0.3s linear, bottom 0.3s linear;
 }
 
 .fx-taost {
