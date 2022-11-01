@@ -8,6 +8,7 @@
         Document,
         App,
         Pdf,
-        Other
+        Other,
+        Zip
     }
 }
