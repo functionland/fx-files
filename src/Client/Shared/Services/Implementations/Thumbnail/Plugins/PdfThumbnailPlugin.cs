@@ -15,9 +15,9 @@ public abstract class PdfThumbnailPlugin : IThumbnailPlugin
 
     public bool IsSupported(string extension)
     {
-        return FsArtifactUtils.FileExtentionsType
-                        .Where(e => e.Value == FileCategoryType.Pdf)
-                        .Select(f => f.Key)
-                        .Any(c => c.Equals(extension.ToLower()));
+        return new string[]
+        {
+            ".pdf"
+        }.Contains(extension.ToLower());
     }
 }
