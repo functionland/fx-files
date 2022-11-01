@@ -434,9 +434,10 @@
     }
 
     .option-item {
-        min-width: 70px;
+        width: 70px;
         height: 46px;
         text-align: center;
+        white-space: nowrap;
     }
 
     .title-item {
@@ -458,6 +459,7 @@
 
     .show-location-icon {
         text-align: center;
+        margin-left: 23.5px;
 
         &::before {
             font-size: 24px;
