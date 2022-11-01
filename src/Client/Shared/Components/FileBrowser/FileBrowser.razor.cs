@@ -87,7 +87,6 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private bool _shouldLoadLastArtifactForBackClick = false;
 
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -668,8 +667,8 @@ public partial class FileBrowser
                 if (_isInSearch)
                 {
                     CancelSearch(true);
-                    _currentArtifact = null;
-                    await LoadChildrenArtifactsAsync();
+                    _currentArtifact = artifact;
+                    await LoadChildrenArtifactsAsync(_currentArtifact);
                 }
 #endif
             }
@@ -1102,7 +1101,6 @@ public partial class FileBrowser
     private void HandleSearchFocused()
     {
         _isInSearch = true;
-        _shouldLoadLastArtifactForBackClick = true;
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1272,14 +1270,7 @@ public partial class FileBrowser
     {
         try
         {
-            if (_shouldLoadLastArtifactForBackClick is false)
-            {
-                _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
-            }
-            else
-            {
-                _shouldLoadLastArtifactForBackClick = false;
-            }
+            _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
@@ -1516,19 +1507,29 @@ public partial class FileBrowser
         }
         else if (mode == ArtifactExplorerMode.Normal)
         {
-            if (_currentArtifact == null)
+            if (_currentArtifact == null && _isInSearch is false)
             {
                 GoBackService.OnInit(null, true, true);
             }
             else
             {
-                GoBackService.OnInit((Task () =>
+                if (_isInSearch)
                 {
-                    CancelSelectionMode();
-                    return Task.CompletedTask;
-                }), true, false);
+                    GoBackService.OnInit((Task () =>
+                    {
+                        CancelSearch();
+                        return Task.CompletedTask;
+                    }), true, false);
+                }
+                else
+                {
+                    GoBackService.OnInit((async Task () =>
+                    {
+                        await HandleToolbarBackClick();
+                        await Task.CompletedTask;
+                    }), true, false);
+                }
             }
-
         }
     }
 
@@ -1572,10 +1573,12 @@ public partial class FileBrowser
         if (artifact.ArtifactType == FsArtifactType.File)
         {
             var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
+            _currentArtifact = destinationArtifact;
             await HandleSelectArtifactAsync(destinationArtifact);
         }
         else
         {
+            _currentArtifact = artifact;
             await HandleSelectArtifactAsync(artifact);
         }
     }
