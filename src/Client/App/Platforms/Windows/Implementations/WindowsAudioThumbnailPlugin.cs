@@ -18,9 +18,6 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations
     {
         protected override async Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
         {
-            if (stream is not null)
-                throw new InvalidOperationException($"Stream is not supported by this plugin.");
-
             if (filePath is null)
                 throw new InvalidOperationException("FilePath should be provided for this plugin.");
 
@@ -32,8 +29,8 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations
             myRendererSettings.Width = 1080;
             myRendererSettings.TopHeight = 64;
             myRendererSettings.BottomHeight = 64;
-            myRendererSettings.TopPeakPen = new Pen(Color.FromArgb(204, 229, 255));
-            myRendererSettings.BottomPeakPen = new Pen(Color.FromArgb(204, 204, 255));
+            myRendererSettings.TopPeakPen = new Pen(Color.FromArgb(255, 139, 0));
+            myRendererSettings.BottomPeakPen = new Pen(Color.FromArgb(158, 160, 165));
             myRendererSettings.BackgroundColor = Color.White;
 
             WaveFormRenderer renderer = new WaveFormRenderer();
