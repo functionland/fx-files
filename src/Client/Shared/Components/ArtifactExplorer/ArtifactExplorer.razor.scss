@@ -6,6 +6,8 @@
 .list-container {
     position: relative;
     flex-grow: 2;
+    overflow-y: auto;
+    height: 100%;
 }
 
 .list-title {
