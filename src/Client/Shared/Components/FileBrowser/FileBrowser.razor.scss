@@ -5,7 +5,8 @@
 
 
 .file-browser-container {
-    min-height: calc(100vh - 81px);
+    //min-height: calc(100vh - 81px);
+    height:100%;
     display: flex;
     flex-flow: column nowrap;
 }
@@ -74,7 +75,7 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    min-height: 40px;
     padding: 0 $spacing-21;
     background-color: color(gray-bg-primary);
     position: sticky;
@@ -205,7 +206,7 @@
 
 .select-action {
     display: flex;
-    height: 40px;
+    min-height: 40px;
     align-items: center;
     justify-content: space-between;
     background-color: $green-dark-base;
@@ -433,9 +434,10 @@
     }
 
     .option-item {
-        min-width: 70px;
+        width: 70px;
         height: 46px;
         text-align: center;
+        white-space: nowrap;
     }
 
     .title-item {
@@ -457,6 +459,7 @@
 
     .show-location-icon {
         text-align: center;
+        margin-left: 23.5px;
 
         &::before {
             font-size: 24px;

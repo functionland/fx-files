@@ -5,17 +5,17 @@
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="false">
     <div class="overflow-sheet" style="padding: 24px 0">
         <FxButton Class="details-button"
-                  Text="See details"
+                  Text="@Localizer[nameof(AppStrings.SeeDetails)]"
                   OnClick="Details"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="rename-button"
-                  Text="Rename"
+                  Text="@Localizer[nameof(AppStrings.Rename)]"
                   OnClick="Rename"
                   IsEnabled="!_isInRoot"
                   IsVisible="!_isMultiple"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="copy-button"
-                  Text="Make a copy"
+                  Text="@Localizer[nameof(AppStrings.CopyTo)]"
                   OnClick="Copy"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
@@ -24,7 +24,7 @@
             @if (_pinOptionResult?.Type == PinOptionResultType.Add)
             {
                 <FxButton Class="pin-button"
-                  Text="Add to pinned items"
+                  Text="@Localizer[nameof(AppStrings.AddPinnedItems)]"
                   OnClick="Pin"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
@@ -32,27 +32,27 @@
             else if (_pinOptionResult?.Type == PinOptionResultType.Remove)
             {
                 <FxButton Class="pin-button"
-                  Text="Remove from pinned items"
+                  Text="@Localizer[nameof(AppStrings.RemoveFromPinnedItems)]"
                   OnClick="UnPin"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
             }
         }
         <FxButton Class="move-button"
-                  Text="Move to"
+                  Text="@Localizer[nameof(AppStrings.MoveTo)]"
                   OnClick="Move"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         @if (_isVisibleShareWithAppOption)
         {
             <FxButton Class="share-with-app-button"
-                  Text="Share with app"
+                  Text="@Localizer[nameof(AppStrings.ShareWithApp)]"
                   OnClick="ShareWithApp"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         }
         <FxButton Class="delete-button"
-                  Text="Delete"
+                  Text="@Localizer[nameof(AppStrings.Delete)]"
                   OnClick="Delete"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
