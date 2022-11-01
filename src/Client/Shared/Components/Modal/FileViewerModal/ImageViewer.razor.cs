@@ -9,6 +9,12 @@ public partial class ImageViewer : IFileViewerComponent
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
 
+    protected override Task OnInitAsync()
+    {
+        GoBackService.OnInit(HandleBackAsync, true, false);
+        return base.OnInitAsync();
+    }
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -45,5 +51,11 @@ public partial class ImageViewer : IFileViewerComponent
     private async Task HandleOptionClickAsync()
     {
         await OnOptionClick.InvokeAsync(CurrentArtifact);
+    }
+
+    private async Task HandleBackAsync()
+    {
+        CurrentArtifact = null;
+        await OnBack.InvokeAsync();
     }
 }
