@@ -79,7 +79,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The artifact already dose not pinned .
+        ///   Looks up a localized string similar to The artifact already dose not pinned. .
         /// </summary>
         public static string ArtifactAlreadyDoseNotPinnedException {
             get {
@@ -88,7 +88,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name.
+        ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name..
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
@@ -124,7 +124,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid characters in the item name.
+        ///   Looks up a localized string similar to Invalid characters in the item name..
         /// </summary>
         public static string ArtifactNameHasInvalidCharsException {
             get {
@@ -142,7 +142,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You have not entered any name.
+        ///   Looks up a localized string similar to You have not entered any name..
         /// </summary>
         public static string ArtifactNameIsNullException {
             get {
