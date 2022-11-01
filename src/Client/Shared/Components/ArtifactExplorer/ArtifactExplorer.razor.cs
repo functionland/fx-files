@@ -38,14 +38,22 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private Virtualize<FsArtifact>? _virtualizeListRef;
 
-        protected override async Task OnParamsSetAsync()
+        //protected override async Task OnParamsSetAsync()
+        //{
+        //    if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
+        //    {
+        //        await _virtualizeListRef.RefreshDataAsync();
+        //    }
+
+        //    await base.OnParamsSetAsync();
+        //}
+
+        public async Task RefreshAsync()
         {
-            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
+            if(_virtualizeListRef is not null)
             {
                 await _virtualizeListRef.RefreshDataAsync();
             }
-
-            await base.OnParamsSetAsync();
         }
         public PathProtocol Protocol =>
             FileService switch

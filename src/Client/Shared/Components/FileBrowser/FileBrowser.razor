@@ -218,7 +218,8 @@
                    OnSearch="HandleInLineSearch"
                    IsPartial="false" />
         }
-        <ArtifactExplorer Artifacts="_displayedArtifacts"
+        <ArtifactExplorer @ref="_artifactExplorerRef"
+                      Artifacts="_displayedArtifacts"
                       FileService="FileService"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"

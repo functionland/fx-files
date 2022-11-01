@@ -88,6 +88,7 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldLoadLastArtifactForBackClick = false;
+    private ArtifactExplorer? _artifactExplorerRef;
 
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -599,9 +600,12 @@ public partial class FileBrowser
             }
 
             _allArtifacts = artifacts;
-            // call _displayArtifact
-            _displayedArtifacts = new();
             RefreshDisplayedArtifacts();
+            StateHasChanged();
+            if (_artifactExplorerRef is not null)
+            {
+                await _artifactExplorerRef.RefreshAsync();
+            }
         }
         catch (ArtifactUnauthorizedAccessException exception)
         {
@@ -609,13 +613,7 @@ public partial class FileBrowser
         }
         finally
         {
-            //trick for update load artifact and refresh visualization
-            await Task.Delay(100);
             _isArtifactExplorerLoading = false;
-            
-
-            // check functionality
-            StateHasChanged();
         }
     }
 
