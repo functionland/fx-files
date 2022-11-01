@@ -5,7 +5,7 @@
 {
     <div class="search-container">
         <div class="search-container-content">
-            <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+            <FxToolBar IsInRoot="true"
                    OnSearch="HandleSearchAsync"
                    OnSearchFocused="HandleSearchFocused"
                    IsInSearchMode="_isInSearch"
@@ -82,9 +82,9 @@
                             <div class="detail-icon"></div>
                             <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
                         </div>
-                        @if (_selectedArtifacts?.Count == 1 && (_selectedArtifacts[0].ArtifactType != FsArtifactType.File))
+                        @if (_selectedArtifacts?.Count == 1)
                         {
-                            <div class="option-item" @onclick="(()=>HandleSelectArtifactAsync(_selectedArtifacts[0]))">
+                            <div class="option-item" @onclick="(()=>NavigateArtifactForShowInFolder(_selectedArtifacts[0]))">
                                 <div class="show-location-icon"></div>
                                 <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
                             </div>
@@ -129,6 +129,7 @@
                OnSearch="HandleSearchAsync"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearch"
+               ShouldSearchBoxShow="true"
                OnBackClick="HandleToolbarBackClick"
                Title="@(_currentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
