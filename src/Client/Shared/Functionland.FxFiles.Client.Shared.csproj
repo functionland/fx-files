@@ -26,6 +26,8 @@
 
 		    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
 
+		<PackageReference Include="NAudio" Version="2.1.0" />
+
 		<PackageReference Include="Prism.Core" Version="8.1.97" />
         <PackageReference Include="Bit.BlazorUI" Version="4.3.1" />
         <PackageReference Include="Bit.CodeAnalyzers" Version="4.3.1">
