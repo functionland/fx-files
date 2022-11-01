@@ -558,7 +558,6 @@ public partial class FileBrowser
     {
         _isArtifactExplorerLoading = true;
         StateHasChanged();
-        await Task.Delay(1000);
 
         try
         {
@@ -582,6 +581,7 @@ public partial class FileBrowser
 
             _allArtifacts = artifacts;
             // call _displayArtifact
+            _displayedArtifacts = new();
             RefreshDisplayedArtifacts();
         }
         catch (ArtifactUnauthorizedAccessException exception)
@@ -591,8 +591,9 @@ public partial class FileBrowser
         finally
         {
             //trick for update load artifact and refresh visualization
-            // Task.Delay(100);
+            await Task.Delay(100);
             _isArtifactExplorerLoading = false;
+            
 
             // check functionality
             StateHasChanged();
@@ -1226,18 +1227,14 @@ public partial class FileBrowser
         _isAscOrder = !_isAscOrder;
         _isArtifactExplorerLoading = true;
         await Task.Delay(100);
-        //System.Threading.Thread.Sleep(3000);
         try
         {
-            //await Task.Run(() =>
-            //{
             var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-            //_displayedArtifacts = new();
+            _displayedArtifacts = new();
             _displayedArtifacts = sortedDisplayArtifact.ToList();
-            //});
 
             // For smooth transition and time for the animation to complete
-            // await Task.Delay(100);
+            await Task.Delay(100);
         }
         catch (Exception exception)
         {
