@@ -1,6 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Pages.FileViewer;
+﻿namespace Functionland.FxFiles.Client.Shared.Pages;
 
-public partial class VideoFileViewerPage : IFileViewerPage
+public partial class VideoFileViewerPage
 {
     public string Path { get; set; } = "D:\\test.mp4";
 
