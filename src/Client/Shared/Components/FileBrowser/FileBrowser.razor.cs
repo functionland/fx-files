@@ -185,13 +185,13 @@ public partial class FileBrowser
                     await _progressModalRef.CloseAsync();
                 }
 
-                CloseFileViewer();
+                await CloseFileViewer();
             }
 
             if (_progressModalRef is not null)
             {
                 await _progressModalRef.CloseAsync();
-                CloseFileViewer();
+                await CloseFileViewer();
                 StateHasChanged();
             }
 
@@ -295,7 +295,7 @@ public partial class FileBrowser
                     await _progressModalRef.CloseAsync();
                 }
 
-                CloseFileViewer();
+                await CloseFileViewer();
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
@@ -450,7 +450,6 @@ public partial class FileBrowser
                         }, cancellationToken: ProgressBarCts.Token);
 
                         await _progressModalRef.CloseAsync();
-                        CloseFileViewer();
                     }
                 }
             }
@@ -468,7 +467,7 @@ public partial class FileBrowser
                 ProgressBarCts?.Cancel();
                 await _progressModalRef.CloseAsync();
             }
-            CloseFileViewer();
+            await CloseFileViewer();
         }
     }
 
@@ -628,7 +627,7 @@ public partial class FileBrowser
             //trick for update load artifact and refresh visualization
             await Task.Delay(100);
             _isArtifactExplorerLoading = false;
-            
+
 
             // check functionality
             StateHasChanged();
@@ -1581,11 +1580,11 @@ public partial class FileBrowser
         }
     }
 
-    private void CloseFileViewer()
+    private async Task CloseFileViewer()
     {
-        if (_fileViewerRef is not null)
+        if (_fileViewerRef is not null && _fileViewerRef.IsModalOpen)
         {
-            _fileViewerRef.Back();
+            await _fileViewerRef.HandleBackAsync();
         }
     }
 }

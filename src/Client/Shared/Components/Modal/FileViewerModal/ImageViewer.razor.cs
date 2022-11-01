@@ -5,18 +5,16 @@ public partial class ImageViewer : IFileViewerComponent
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback<List<FsArtifact>> HandlePinArtifact { get; set; }
-    [Parameter] public EventCallback<List<FsArtifact>> HandleUnpinArtifact { get; set; }
-    [Parameter] public EventCallback<FsArtifact> HandleArtifactOption { get; set; }
+    [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
+    [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
+    [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
     [Parameter] public bool IsInActualSize { get; set; } = false;
-
-    private System.Timers.Timer? _timer;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("Test");
+            await JSRuntime.InvokeVoidAsync("ImagePinchZoom");
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -29,20 +27,24 @@ public partial class ImageViewer : IFileViewerComponent
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
 
-    private async Task PinArtifact()
+    private async Task HandlePinAsync()
     {
+        if (CurrentArtifact is null) return;
+
         var pinArtifact = new List<FsArtifact> { CurrentArtifact };
-        await HandlePinArtifact.InvokeAsync(pinArtifact);
+        await OnPin.InvokeAsync(pinArtifact);
     }
 
-    private async Task UnpinArtifact()
+    private async Task HandleUnpinAsync()
     {
+        if (CurrentArtifact is null) return;
+
         var unPinArtifact = new List<FsArtifact> { CurrentArtifact };
-        await HandleUnpinArtifact.InvokeAsync(unPinArtifact);
+        await OnUnpin.InvokeAsync(unPinArtifact);
     }
 
-    private async Task ArtifactOption()
+    private async Task HandleOptionClickAsync()
     {
-        await HandleArtifactOption.InvokeAsync(CurrentArtifact);
+        await OnOptionClick.InvokeAsync(CurrentArtifact);
     }
 }

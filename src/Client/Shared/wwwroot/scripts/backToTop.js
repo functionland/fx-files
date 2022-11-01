@@ -61,7 +61,7 @@ function SearchInputFocus() {
     }
 }
 
-function Test() {
+function ImagePinchZoom() {
     let el = document.querySelector('#image-viewer');
     new PinchZoom.default(el, {
         draggableUnzoomed: false,
