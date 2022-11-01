@@ -878,11 +878,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             //Exceptions based on path checking
 
-            //1. GetFsArtifact
-            //2. Decide based on FsArtifactProviderType
-            //3. Go for special implementation for each platform
-            //4. Enumerate through files in directories
-
             if (cancellationToken?.IsCancellationRequested is true) yield break;
 
             long artifactSize = 0;
