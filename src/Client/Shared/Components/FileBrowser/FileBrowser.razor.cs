@@ -157,8 +157,6 @@ public partial class FileBrowser
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
-            List<FsArtifact> removedItems = new();
-
             if (artifactActionResult.Artifacts.Any(a=>destinationPath.Contains(a.ParentFullPath)))
             {
                 var desArtifacts = await FileService.GetArtifactsAsync(destinationPath).ToListAsync();
@@ -190,7 +188,6 @@ public partial class FileBrowser
 
                         var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
                         await FileService.CreateFileAsync(newArtifactPath, fileStream);
-                        removedItems.Add(item);
                     }
                     else if (item.ArtifactType == FsArtifactType.Folder)
                     {
@@ -205,7 +202,9 @@ public partial class FileBrowser
                         {
                             var counter = 1;
                             var fullPathWithCopy = oldArtifactPath + copyText;
+
                             if (!desArtifacts.Any(d => d.FullPath == fullPathWithCopy)) break;
+
                             counter++;
                             copyText += $" ({counter})";
                         }
@@ -215,7 +214,6 @@ public partial class FileBrowser
                         await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
                         var oldArtifactChilds = await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
                         await FileService.CopyArtifactsAsync(oldArtifactChilds, newArtifactPath, false);
-                        removedItems.Add(item);
                     }
                     else
                     {
