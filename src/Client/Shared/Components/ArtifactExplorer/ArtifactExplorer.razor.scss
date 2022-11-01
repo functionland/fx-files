@@ -114,10 +114,24 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
+   
+    .check-box-mobile {
+        position: absolute;
+    }
 
-/*    .check-box-position {
-        margin-right: 16px;
-    }*/
+    .item-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        overflow: hidden;
+        margin-right: 21px;
+        transition: margin 250ms linear;
+    }
+
+    .selection-mode-style {
+        margin-left: 36px;
+    }
 
     .icon-box {
         display: flex;
@@ -244,6 +258,10 @@
         z-index: 1;
         top: 9px;
         left: 9px;
+    }
+
+    .check-box-mobile {
+        position: absolute;
     }
 
     .icon-box {
@@ -417,70 +435,6 @@
 .app-file-icon::before {
     @include Icon($app);
 }
-/*.select-action {
-    display: flex;
-    height: 40px;
-    align-items: center;
-    justify-content: space-between;
-    background-color: $green-dark-base;
-    padding: 0px $spacing-31 0px $spacing-21;
-
-    .info-selection {
-        display: flex;
-        align-items: center;
-
-        .close-btn {
-            cursor: pointer;
-
-            &::before {
-                font-size: $icon-16;
-                @include Icon($close, $pure-white);
-            }
-        }
-
-        .item-selected {
-            margin-left: $spacing-6;
-
-            .move-selected-items-text,
-            .item-selected-count,
-            .item-selected-text {
-                font-size: $font-size-14;
-                line-height: $line-height-24;
-                font-family: $open-sans-regular;
-                letter-spacing: $letter-spacing-02;
-                color: $pure-white;
-            }
-        }
-    }
-
-    .right-part {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .move-icon::before {
-            cursor: pointer;
-            font-size: 24px;
-            @include Icon($move, $pure-white);
-        }
-
-        .vertical-option-icon::before {
-            cursor: pointer;
-            font-size: 20px;
-            @include Icon($options-vertical, $pure-white);
-            margin-left: $spacing-16;
-        }
-
-        .add-folder::before {
-            display: none;
-            cursor: pointer;
-            font-size: 24px;
-            @include Icon($create-folder, $pure-white);
-        }
-    }
-}*/
-
-
 
 .position-scroll-btn {
     position: fixed;

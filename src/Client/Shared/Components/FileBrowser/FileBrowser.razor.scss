@@ -206,7 +206,7 @@
 
 .select-action {
     display: flex;
-    min-height: 40px;
+    /*min-height: 40px;*/
     align-items: center;
     justify-content: space-between;
     background-color: $green-dark-base;
@@ -214,6 +214,9 @@
     position: sticky;
     top: 128px;
     z-index: 2;
+    transition: height 300ms  linear;
+    height: 0px;
+    overflow: hidden;
 
     .info-selection {
         display: flex;
@@ -268,6 +271,11 @@
             @include Icon($create-folder, $pure-white);
         }
     }
+}
+
+.selected-item {
+    height: 40px;
+
 }
 
 .select-action-search {
