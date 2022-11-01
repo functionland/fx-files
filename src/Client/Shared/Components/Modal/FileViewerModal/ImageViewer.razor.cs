@@ -10,6 +10,18 @@ public partial class ImageViewer : IFileViewerComponent
     [Parameter] public EventCallback<List<FsArtifact>> HandlePinArtifact { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> HandleUnpinArtifact { get; set; }
     [Parameter] public EventCallback<FsArtifact> HandleArtifactOption { get; set; }
+    [Parameter] public bool IsInActualSize { get; set; } = false;
+
+    private System.Timers.Timer? _timer;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("Test");
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     private PathProtocol Protocol =>
             FileService switch

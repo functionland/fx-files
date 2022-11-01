@@ -14,7 +14,7 @@
     ::deep .back-button::before {
         font-size: 24px;
         vertical-align: middle;
-        @include Icon($arrow-left);
+        @include Icon($arrow-left, $pure-white);
     }
 
     .back-button {
@@ -36,11 +36,11 @@
 
         .pin-icon-outline::before {
             font-size: 24px;
-            @include Icon($pin-outline);
+            @include Icon($pin-outline, $pure-white);
         }
 
         .more-option-icon::before {
-            @include Icon($options-vertical);
+            @include Icon($options-vertical, $pure-white);
             font-size: 24px;
         }
 
@@ -56,26 +56,30 @@
     right: 0;
     bottom: 0;
     top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     text-align: center;
     max-width: 600px;
     margin: 0 auto;
     background: #212529;
 
 
-    img {
+    /*.actual-size-active {
         object-fit: contain;
         max-width: 600px;
         max-height: 100%;
+    }*/
+
+    .actual-size-deactivate {
+        max-height: 100%;
+        max-width: 600px;
+        width:100%;
+        object-fit: contain;
     }
 
-    /*img:hover {
-        -webkit-transform: scale(1.5);
-        -moz-transform: scale(1.5);
-        -o-transform: scale(1.5);
-        -ms-transform: scale(1.5);
-        transform: scale(1.5);
-    }*/
+    .pich-zoom {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

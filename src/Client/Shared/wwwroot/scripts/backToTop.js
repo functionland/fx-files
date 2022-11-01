@@ -57,3 +57,13 @@ function SearchInputFocus() {
         searchInput.focus();
     }
 }
+
+function Test() {
+    let el = document.querySelector('#image-viewer');
+    new PinchZoom.default(el, {
+        draggableUnzoomed: false,
+        setOffsetsOnce: true,
+        maxZoom: 20,
+        tapZoomFactor : 3
+    });
+}

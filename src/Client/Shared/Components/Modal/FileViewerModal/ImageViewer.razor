@@ -15,6 +15,9 @@
     </div>
 </div>
 
+
 <div class="main-image">
-    <img src="@(CurrentArtifact?.FullPath?.InProtocol(Protocol) ?? "")" />
+    <div id="image-viewer">
+    <img src="@(CurrentArtifact?.FullPath?.InProtocol(Protocol) ?? "")" class="actual-size-deactivate" />
+    </div>
 </div>

@@ -158,11 +158,14 @@ public partial class FileBrowser
                 {
                     await _progressModalRef.CloseAsync();
                 }
+
+                CloseFileViewer();
             }
 
             if (_progressModalRef is not null)
             {
                 await _progressModalRef.CloseAsync();
+                CloseFileViewer();
                 StateHasChanged();
             }
 
@@ -265,6 +268,8 @@ public partial class FileBrowser
                 {
                     await _progressModalRef.CloseAsync();
                 }
+
+                CloseFileViewer();
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
@@ -425,7 +430,7 @@ public partial class FileBrowser
                             cancellationToken: ProgressBarCts.Token);
 
                         await _progressModalRef.CloseAsync();
-
+                        CloseFileViewer();
                     }
                 }
             }
@@ -433,6 +438,17 @@ public partial class FileBrowser
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
+        }
+
+        finally
+        {
+
+            if (_progressModalRef is not null)
+            {
+                ProgressBarCts?.Cancel();
+                await _progressModalRef.CloseAsync();
+            }
+            CloseFileViewer();
         }
     }
 
@@ -1443,6 +1459,14 @@ public partial class FileBrowser
         else
         {
             await HandleSelectArtifactAsync(artifact);
+        }
+    }
+
+    private void CloseFileViewer()
+    {
+        if (_fileViewerRef is not null)
+        {
+            _fileViewerRef.Back();
         }
     }
 }
