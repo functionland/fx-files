@@ -336,10 +336,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
-                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
-
-                    if (fileInfo.FullName == destinationInfo.FullName)
-                        throw new SameDestinationFileException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));                   
 
                     if (!overwrite && destinationInfo.Exists)
                     {
@@ -359,10 +356,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     var directoryInfo = new DirectoryInfo(artifact.FullPath);
                     var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
-
-                    if (directoryInfo.FullName == destinationInfo.FullName)
-                        throw new SameDestinationFolderException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
-
+                    
                     if (!Directory.Exists(destinationInfo.FullName))
                     {
                         LocalStorageCreateDirectory(destinationInfo.FullName);

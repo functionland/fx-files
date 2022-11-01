@@ -1,8 +1,9 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Common;
-
+using Functionland.FxFiles.Client.Shared.Utils;
 using Prism.Events;
+using System.Linq;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -152,8 +153,78 @@ public partial class FileBrowser
             };
 
             string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
+
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
+
+            List<FsArtifact> removedItems = new();
+
+            if (artifactActionResult.Artifacts.Any(a=>destinationPath.Contains(a.ParentFullPath)))
+            {
+                var desArtifacts = await FileService.GetArtifactsAsync(destinationPath).ToListAsync();
+
+                foreach (var item in artifactActionResult.Artifacts)
+                {
+                    if (item.ArtifactType == FsArtifactType.File)
+                    {
+                        var nameWithOutExtention = Path.GetFileNameWithoutExtension(item.FullPath);
+                        var pathWithOutExtention = Path.Combine(item.ParentFullPath, nameWithOutExtention);
+                        var newArtifactPath = string.Empty;
+                        var oldArtifactPath = item.FullPath;
+
+                        var copyText = " - Copy";
+
+                        while (true)
+                        {
+                            var counter = 1;
+                            var fullPathWithCopy = pathWithOutExtention + copyText;
+                            fullPathWithCopy = Path.ChangeExtension(fullPathWithCopy, item.FileExtension);
+
+                            if (!desArtifacts.Any(d => d.FullPath == fullPathWithCopy)) break;
+
+                            counter++;
+                            copyText += $" ({counter})";
+                        }
+
+                        newArtifactPath = Path.ChangeExtension(pathWithOutExtention + copyText, item.FileExtension);
+
+                        var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
+                        await FileService.CreateFileAsync(newArtifactPath, fileStream);
+                        removedItems.Add(item);
+                    }
+                    else if (item.ArtifactType == FsArtifactType.Folder)
+                    {
+                        var newArtifactPath = string.Empty;
+                        var oldArtifactPath = item.FullPath;
+                        var oldArtifactParentPath = item.ParentFullPath;
+                        var oldArtifactName = item.Name;
+
+                        var copyText = " - Copy";
+
+                        while (true)
+                        {
+                            var counter = 1;
+                            var fullPathWithCopy = oldArtifactPath + copyText;
+                            if (!desArtifacts.Any(d => d.FullPath == fullPathWithCopy)) break;
+                            counter++;
+                            copyText += $" ({counter})";
+                        }
+
+                        newArtifactPath = oldArtifactPath + copyText;
+                        var newArtifactName = oldArtifactName + copyText;
+                        await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
+                        var oldArtifactChilds = await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
+                        await FileService.CopyArtifactsAsync(oldArtifactChilds, newArtifactPath, false);
+                        removedItems.Add(item);
+                    }
+                    else
+                    {
+                        // ToDo : not supported
+                    }                  
+                }
+
+                return; // ToDo : show proper message
+            }
 
             try
             {
