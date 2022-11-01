@@ -355,21 +355,32 @@
     background-color: color(disable-item);
     pointer-events: none;
 
-    .item-content {
-
-        .item-title {
-            .title-text {
-                color: color(gray-border);
-            }
+    .icon-box {
+        .item-icon-position {
+            background-color: color(disable-item-icon);
         }
 
-        .item-sub-text {
+        .item-icon-position::before {
             color: color(gray-border);
         }
     }
 
-    .item-icon-position::before {
+    .footer-box {
         color: color(gray-border);
+
+        .item-content {
+            color: color(gray-border);
+
+            .item-title {
+                .title-text {
+                    color: var(--gray-border);
+                }
+            }
+
+            .item-sub-text {
+                color: color(gray-border);
+            }
+        }
     }
 }
 

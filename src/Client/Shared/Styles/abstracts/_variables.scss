@@ -32,7 +32,7 @@ $warning-dark: #FCC419;
 $error-dark: #FA5252;
 $input-dark-disable: $gray-dark-border;
 $diable-item-dark: #212529;
-
+$disable-icon-item-dark: #343A40;
 //light colors
 $gray-light-content1: #343A40;
 $gray-light-content2: #495057;
@@ -53,6 +53,7 @@ $info-light: $info-dark;
 $success-light: $success-dark;
 $input-light-disable: $gray-dark-content3;
 $diable-item-light: #F8F9FA;
+$disable-icon-item-light: #E9ECEF;
 
 $colors-light: (
     "app-bg": $pure-white,
@@ -68,7 +69,8 @@ $colors-light: (
     "gray-bg-primary": $gray-light-bg-primary,
     "gray-bg-secondary": $gray-light-bg-secondary,
     "input-disable": $input-light-disable,
-    "disable-item": $diable-item-light
+    "disable-item": $diable-item-light,
+    "disable-item-icon": $disable-icon-item-light
 );
 
 $colors-dark: (
@@ -85,7 +87,8 @@ $colors-dark: (
     "gray-bg-primary": $gray-dark-bg-primary,
     "gray-bg-secondary": $gray-dark-bg-secondary,
     "input-disable": $input-dark-disable,
-    "disable-item": $diable-item-dark
+    "disable-item": $diable-item-dark,
+    "disable-item-icon": $disable-icon-item-dark
 );
 
 
