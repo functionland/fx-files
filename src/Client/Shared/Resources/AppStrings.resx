@@ -543,18 +543,6 @@
   <data name="WelcomePageDesc" xml:space="preserve">
     <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
   </data>
-	<data name="AutomaticContent" xml:space="preserve">
-    <value>Automatic</value>
-  </data>
-	<data name="DarkMode" xml:space="preserve">
-    <value>Dark</value>
-  </data>
-	<data name="LightMode" xml:space="preserve">
-    <value>Light</value>
-  </data>
-	<data name="SystemThemeDescription" xml:space="preserve">
-    <value>Use system light/dark mode setting.</value>
-  </data>
   <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
     <value>The artifact already dose not pinned </value>
   </data>
@@ -599,5 +587,29 @@
   </data>
   <data name="Details" xml:space="preserve">
     <value>Details</value>
+  </data>
+  <data name="AddPinnedItems" xml:space="preserve">
+    <value>Add to pinned items</value>
+  </data>
+  <data name="CopyTo" xml:space="preserve">
+    <value>Copy to</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ExtractHere" xml:space="preserve">
+    <value>Extract in current location</value>
+  </data>
+  <data name="MoveTo" xml:space="preserve">
+    <value>Move to</value>
+  </data>
+  <data name="RemoveFromPinnedItems" xml:space="preserve">
+    <value>Remove from pinned items</value>
+  </data>
+  <data name="SeeDetails" xml:space="preserve">
+    <value>See details </value>
+  </data>
+  <data name="ShareWithApp" xml:space="preserve">
+    <value>Share with app</value>
   </data>
 </root>
