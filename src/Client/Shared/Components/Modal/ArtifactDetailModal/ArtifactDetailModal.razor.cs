@@ -14,6 +14,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private bool _isMultiple;
         private bool _isInRoot;
 
+        private string? _folderOrDriveSize;
+
         [Parameter] public IFileService FileService { get; set; } = default!;
 
         public void Download()
@@ -72,15 +74,22 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         }
 
         //TODO: If we don't need to calculate the size of the artifacts for folder we can refactor this method
-        public void CalculateArtifactsSize()
+        public async IAsyncEnumerable<string> CalculateFolderOrDriveSize(string folderPath)
         {
-            long? totalSize = 0;
-            foreach (var artifact in _artifacts)
-            {
-                totalSize += artifact.Size;
-            }
+            //long? totalSize = 0;
+            //foreach (var artifact in _artifacts)
+            //{
+            //    totalSize += artifact.Size;
+            //}
 
-            _artifactsSize = FsArtifactUtils.CalculateSizeStr(totalSize);
+            //_artifactsSize = FsArtifactUtils.CalculateSizeStr(totalSize);
+
+            await foreach (var size in FileService.GetArtifactSizeAsync(folderPath))
+            {
+                _folderOrDriveSize = FsArtifactUtils.CalculateSizeStr(size);
+                yield return _folderOrDriveSize;
+                StateHasChanged();
+            }
         }
 
         public void ChangeArtifactSlideItem(bool isNext)
@@ -107,10 +116,20 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs?.SetCanceled();
             _currentArtifactForShowNumber = 0;
             _artifacts = artifacts;
-            CalculateArtifactsSize();
             _isMultiple = isMultiple;
             _isInRoot = isInRoot;
             _isModalOpen = true;
+
+            var containsFolder = _artifacts.Where(c => c.ArtifactType != FsArtifactType.File).Any();
+            if (containsFolder)
+            {
+                var path = artifacts.Where(a => a.ArtifactType != FsArtifactType.File).Select(f => f.FullPath).FirstOrDefault();
+                if (path is not null)
+                {
+                    await foreach (var size in CalculateFolderOrDriveSize(path)) { } 
+                }
+            }
+
             StateHasChanged();
 
             _tcs = new TaskCompletionSource<ArtifactDetailModalResult>();
