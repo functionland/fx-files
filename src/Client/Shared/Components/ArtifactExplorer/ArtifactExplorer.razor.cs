@@ -2,10 +2,10 @@
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Functionland.FxFiles.Client.Shared.Utils;
 
 using Microsoft.AspNetCore.Components.Web;
-using Functionland.FxFiles.Client.Shared.Utils;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace Functionland.FxFiles.Client.Shared.Components
@@ -120,7 +120,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
-        public async Task PointerUp(PointerEventArgs args, FsArtifact artifact)
+        public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
         {
             if (args.Button == 0)
             {

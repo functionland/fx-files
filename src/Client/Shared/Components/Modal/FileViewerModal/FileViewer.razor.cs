@@ -1,10 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
-using Functionland.FxFiles.Client.Shared.Services.Implementations.FileViewer;
-
-using System.Reflection.Metadata.Ecma335;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class FileViewer
 {
@@ -20,6 +14,7 @@ public partial class FileViewer
 
         _isModalOpen = true;
         _currentArtifact = artifact;
+        StateHasChanged();
         return true;
     }
 
@@ -31,17 +26,13 @@ public partial class FileViewer
     public bool CanOpen(FsArtifact artifact)
     {
         if (IsSupported<ImageViewer>(artifact))
-        {
             return true;
-        }
         else if (IsSupported<VideoViewer>(artifact))
-        {
             return true;
-        }
-        else if(IsSupported<TextViewer>(artifact))
-        {
+        else if (IsSupported<ZipViewer>(artifact))
             return true;
-        }
+        else if (IsSupported<TextViewer>(artifact))
+            return true;
 
         return false;
     }
@@ -51,11 +42,11 @@ public partial class FileViewer
     {
         if (artifact is null)
             return false;
- 
-        if(artifact.FileCategory == FileCategoryType.Document)
-        {
+
+        if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
             return true;
-        }
+        else if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Document)
+            return true;
 
         return false;
     }

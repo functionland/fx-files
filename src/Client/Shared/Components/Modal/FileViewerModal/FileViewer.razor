@@ -1,6 +1,5 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase
-
 @if (_isModalOpen == true)
 {
     <div class="file-viewer-container">
@@ -11,13 +10,15 @@
             {
                 <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" />
             }
-
-            @if (IsSupported<VideoViewer>(_currentArtifact))
+            else if (IsSupported<VideoViewer>(_currentArtifact))
             {
                 <VideoViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
             }
-
-            @if (IsSupported<TextViewer>(_currentArtifact))
+            else if (IsSupported<ZipViewer>(_currentArtifact))
+            {
+                <ZipViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
+            }
+            else if (IsSupported<TextViewer>(_currentArtifact))
             {
                 <TextViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
             }

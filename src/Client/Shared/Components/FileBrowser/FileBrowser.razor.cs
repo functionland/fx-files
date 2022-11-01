@@ -97,7 +97,6 @@ public partial class FileBrowser
     [Parameter] public IFileService FileService { get; set; } = default!;
 
     [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
-    [Parameter] public IViewFileService<IFileService> ViewFileService { get; set; } = default!;
     [Parameter] public string? DefaultPath { get; set; }
 
     protected override async Task OnInitAsync()
@@ -577,6 +576,7 @@ public partial class FileBrowser
     private async Task LoadChildrenArtifactsAsync(FsArtifact? artifact = null)
     {
         _isArtifactExplorerLoading = true;
+        StateHasChanged();
 
         try
         {
@@ -599,6 +599,8 @@ public partial class FileBrowser
             }
 
             _allArtifacts = artifacts;
+            // call _displayArtifact
+            _displayedArtifacts = new();
             RefreshDisplayedArtifacts();
         }
         catch (ArtifactUnauthorizedAccessException exception)
@@ -607,8 +609,13 @@ public partial class FileBrowser
         }
         finally
         {
+            //trick for update load artifact and refresh visualization
+            await Task.Delay(100);
             _isArtifactExplorerLoading = false;
-            await InvokeAsync(StateHasChanged);
+            
+
+            // check functionality
+            StateHasChanged();
         }
     }
 
@@ -1335,19 +1342,22 @@ public partial class FileBrowser
 
     }
 
+    // TODO: septate variable for sort display variable and sort variable use case
     private async Task HandleSortOrderClick()
     {
         if (_isArtifactExplorerLoading) return;
 
         _isAscOrder = !_isAscOrder;
         _isArtifactExplorerLoading = true;
+        await Task.Delay(100);
         try
         {
-            await Task.Run(() =>
-            {
-                var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-                _displayedArtifacts = sortedDisplayArtifact.ToList();
-            });
+            var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
+            _displayedArtifacts = new();
+            _displayedArtifacts = sortedDisplayArtifact.ToList();
+
+            // For smooth transition and time for the animation to complete
+            await Task.Delay(100);
         }
         catch (Exception exception)
         {
