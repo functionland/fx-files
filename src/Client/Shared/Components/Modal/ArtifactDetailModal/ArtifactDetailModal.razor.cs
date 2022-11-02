@@ -109,8 +109,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }), true, false);
 
             _tcs?.SetCanceled();
-            SetCurrentArtifact(0);
             _artifacts = artifacts;
+            SetCurrentArtifact(0);
             _isMultiple = isMultiple;
             _isInRoot = isInRoot;
             _isModalOpen = true;
@@ -128,14 +128,17 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         {
             try
             {
-                var requireToCalculateSizeArtifacts = _artifacts.Where(c => c.ArtifactType != FsArtifactType.File);
-
-                foreach (var artifact in requireToCalculateSizeArtifacts)
+                await Task.Run(async () =>
                 {
-                    await UpdateArtifactSizeAsync(artifact);
-                    _artifactsSize = FsArtifactUtils.CalculateSizeStr(_artifacts.Sum(a => a.Size ?? 0));
-                    await InvokeAsync(StateHasChanged);
-                }
+                    var requireToCalculateSizeArtifacts = _artifacts.Where(c => c.ArtifactType != FsArtifactType.File);
+
+                    foreach (var artifact in requireToCalculateSizeArtifacts)
+                    {
+                        await UpdateArtifactSizeAsync(artifact);
+                        await InvokeAsync(StateHasChanged);
+                    }
+                });
+                
             }
             catch (Exception exception)
             {
@@ -163,6 +166,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 if (second != lastUpdateSecond)
                 {
                     lastUpdateSecond = second;
+                    _artifactsSize = FsArtifactUtils.CalculateSizeStr(_artifacts.Sum(a => a.Size ?? 0));
                     await InvokeAsync(StateHasChanged);
                 }
             }
