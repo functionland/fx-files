@@ -391,7 +391,7 @@
         justify-content: flex-start;
         align-items: center;
         flex-flow: row wrap;
-        gap: $spacing-8;
+       /* gap: $spacing-8;*/
 
         div {
             background-color: color(gray-bg-secondary);
@@ -404,6 +404,7 @@
             letter-spacing: $letter-spacing-02;
             color: color(gray-content1);
             cursor: pointer;
+            margin-right: 8px;
         }
 
         .option-selected-mode {
