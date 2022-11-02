@@ -62,18 +62,17 @@
                                 </div>
                                 <div class="item-sub-text"></div>
                             </div>
+                            @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
+                            {
+                                <div class="options-btn"
+                 @onclick="() => HandleArtifactOptionClick(artifact)"
+                 @onpointerup:preventDefault="true"
+                 @onpointerup:stopPropagation="true"
+                 @onpointerdown:preventDefault="true"
+                 @onpointerdown:stopPropagation="true">
+                                </div>
+                            }
                         </div>
-
-                        @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
-                        {
-                            <div class="options-btn"
-             @onclick="() => HandleArtifactOptionClick(artifact)"
-             @onpointerup:preventDefault="true"
-             @onpointerup:stopPropagation="true"
-             @onpointerdown:preventDefault="true"
-             @onpointerdown:stopPropagation="true">
-                            </div>
-                        }
                     </div>
                 }
             }

@@ -1,31 +1,29 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class FileViewer
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public EventCallback OnBack { get; set; }
+    [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
+    [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
+    [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
+
+    public bool IsModalOpen { get; set; } = false;
 
     private FsArtifact? _currentArtifact;
-    private bool _isModalOpen { get; set; } = false;
 
     public bool OpenArtifact(FsArtifact artifact)
     {
         if (!CanOpen(artifact))
             return false;
 
-        _isModalOpen = true;
+        IsModalOpen = true;
         _currentArtifact = artifact;
         StateHasChanged();
         return true;
     }
 
-    public void Back()
-    {
-        _isModalOpen = false;
-    }
-
-    public bool CanOpen(FsArtifact artifact)
+    private bool CanOpen(FsArtifact artifact)
     {
         if (IsSupported<ImageViewer>(artifact))
             return true;
@@ -43,14 +41,17 @@ public partial class FileViewer
         if (artifact is null)
             return false;
 
-        if (artifact.FileCategory == FileCategoryType.Zip && typeof(TComponent) == typeof(ZipViewer))
+        if (typeof(TComponent) == typeof(ImageViewer) && artifact.FileCategory == FileCategoryType.Image)
+            return true;
+        else if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
             return true;
 
-        //if (artifact.FileCategory == FileCategoryType.Image && typeof(TComponent) == typeof(ImageViewer))
-        //{
-        //    return true;
-        //}
-
         return false;
+    }
+
+    public async Task HandleBackAsync()
+    {
+        IsModalOpen = false;
+        await OnBack.InvokeAsync();
     }
 }

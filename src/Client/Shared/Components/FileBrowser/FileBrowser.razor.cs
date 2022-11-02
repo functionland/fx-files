@@ -87,7 +87,6 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private bool _shouldLoadLastArtifactForBackClick = false;
 
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -184,11 +183,14 @@ public partial class FileBrowser
                 {
                     await _progressModalRef.CloseAsync();
                 }
+
+                await CloseFileViewer();
             }
 
             if (_progressModalRef is not null)
             {
                 await _progressModalRef.CloseAsync();
+                await CloseFileViewer();
                 StateHasChanged();
             }
 
@@ -291,6 +293,8 @@ public partial class FileBrowser
                 {
                     await _progressModalRef.CloseAsync();
                 }
+
+                await CloseFileViewer();
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
@@ -445,7 +449,6 @@ public partial class FileBrowser
                         }, cancellationToken: ProgressBarCts.Token);
 
                         await _progressModalRef.CloseAsync();
-
                     }
                 }
             }
@@ -453,6 +456,17 @@ public partial class FileBrowser
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
+        }
+
+        finally
+        {
+
+            if (_progressModalRef is not null)
+            {
+                ProgressBarCts?.Cancel();
+                await _progressModalRef.CloseAsync();
+            }
+            await CloseFileViewer();
         }
     }
 
@@ -612,7 +626,7 @@ public partial class FileBrowser
             //trick for update load artifact and refresh visualization
             await Task.Delay(100);
             _isArtifactExplorerLoading = false;
-            
+
 
             // check functionality
             StateHasChanged();
@@ -653,8 +667,8 @@ public partial class FileBrowser
                 if (_isInSearch)
                 {
                     CancelSearch(true);
-                    _currentArtifact = null;
-                    await LoadChildrenArtifactsAsync();
+                    _currentArtifact = artifact;
+                    await LoadChildrenArtifactsAsync(_currentArtifact);
                 }
 #endif
             }
@@ -1087,7 +1101,6 @@ public partial class FileBrowser
     private void HandleSearchFocused()
     {
         _isInSearch = true;
-        _shouldLoadLastArtifactForBackClick = true;
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1257,14 +1270,7 @@ public partial class FileBrowser
     {
         try
         {
-            if (_shouldLoadLastArtifactForBackClick is false)
-            {
-                _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
-            }
-            else
-            {
-                _shouldLoadLastArtifactForBackClick = false;
-            }
+            _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
@@ -1501,19 +1507,29 @@ public partial class FileBrowser
         }
         else if (mode == ArtifactExplorerMode.Normal)
         {
-            if (_currentArtifact == null)
+            if (_currentArtifact == null && _isInSearch is false)
             {
                 GoBackService.OnInit(null, true, true);
             }
             else
             {
-                GoBackService.OnInit((Task () =>
+                if (_isInSearch)
                 {
-                    CancelSelectionMode();
-                    return Task.CompletedTask;
-                }), true, false);
+                    GoBackService.OnInit((Task () =>
+                    {
+                        CancelSearch();
+                        return Task.CompletedTask;
+                    }), true, false);
+                }
+                else
+                {
+                    GoBackService.OnInit((async Task () =>
+                    {
+                        await HandleToolbarBackClick();
+                        await Task.CompletedTask;
+                    }), true, false);
+                }
             }
-
         }
     }
 
@@ -1557,11 +1573,21 @@ public partial class FileBrowser
         if (artifact.ArtifactType == FsArtifactType.File)
         {
             var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
+            _currentArtifact = destinationArtifact;
             await HandleSelectArtifactAsync(destinationArtifact);
         }
         else
         {
+            _currentArtifact = artifact;
             await HandleSelectArtifactAsync(artifact);
+        }
+    }
+
+    private async Task CloseFileViewer()
+    {
+        if (_fileViewerRef is not null && _fileViewerRef.IsModalOpen)
+        {
+            await _fileViewerRef.HandleBackAsync();
         }
     }
 }
