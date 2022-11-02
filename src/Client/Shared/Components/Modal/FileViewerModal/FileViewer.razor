@@ -4,7 +4,6 @@
 {
     <div class="file-viewer-container">
         <div class="main-content">
-
             @if (IsSupported<ImageViewer>(_currentArtifact))
             {
                 <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" OnBack="HandleBackAsync" OnPin="OnPin" OnUnpin="OnUnpin" OnOptionClick="OnOptionClick" />
@@ -19,9 +18,14 @@
             }
             else if (IsSupported<TextViewer>(_currentArtifact))
             {
-                <TextViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
+                <TextViewer 
+                    CurrentArtifact="_currentArtifact"
+                    FileService="FileService"
+                    OnBack="HandleBackAsync"
+                    OnOptionClick="OnOptionClick"
+                    OnPin="OnPin"
+                    OnUnpin="OnUnpin"/>
             }
-
         </div>
     </div>
 }

@@ -47,6 +47,8 @@ public partial class FileViewer
             return true;
         else if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
             return true;
+        else if (typeof(TComponent) == typeof(TextViewer) && new string[] { ".txt" }.Contains(artifact.FileExtension))
+            return true;
 
         return false;
     }
