@@ -179,7 +179,8 @@ namespace Functionland.FxFiles.Client.Shared.Utils
             { ".txt", FileCategoryType.Document},
 
             //Zip
-            {".zip",FileCategoryType.Zip }
+            {".zip",FileCategoryType.Zip },
+            {".rar",FileCategoryType.Zip }
         };
 
         public static FileCategoryType GetCategoryType(string fileExtension)
