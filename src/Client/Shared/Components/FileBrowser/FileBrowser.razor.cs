@@ -609,30 +609,67 @@ public partial class FileBrowser
 
     private async Task ExtraxtZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? paswword = null)
     {
-        var duplicatCount = await ZipService.ExtractZippedArtifactAsync(zipFilePath, destinationFolderPath, destinationFolderName, overwrite: false, password: paswword);
-        if (duplicatCount <= 0) return;
-
-        if (_confirmationReplaceOrSkipModalRef == null)
-            return;
-
-        var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicatCount);
-
-        if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+        if (_progressModalRef is null) return;
+        await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
+        try
         {
+
             ProgressBarCts = new CancellationTokenSource();
 
-            if (_progressModalRef is not null)
+
+            async Task onProgress(ProgressInfo progressInfo)
             {
+                ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                ProgressBarMax = progressInfo.MaxValue ?? 1;
+                await InvokeAsync(() => StateHasChanged());
+            }
+
+            var duplicatCount = await ZipService.ExtractZippedArtifactAsync(
+                zipFilePath,
+                destinationFolderPath,
+                destinationFolderName,
+                overwrite: false,
+                password: paswword,
+                onProgress: onProgress, 
+                cancellationToken: ProgressBarCts.Token);
+
+            await _progressModalRef.CloseAsync();
+
+            if (duplicatCount <= 0) return;
+
+            if (_confirmationReplaceOrSkipModalRef == null)
+                return;
+
+            var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicatCount);
+
+            if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+            {
+
                 await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
-                await ZipService.ExtractZippedArtifactAsync(zipFilePath, destinationFolderPath, destinationFolderName, overwrite: true, password: paswword);
+
+                ProgressBarCts = new CancellationTokenSource();
+                await ZipService.ExtractZippedArtifactAsync(
+                    zipFilePath,
+                    destinationFolderPath,
+                    destinationFolderName,
+                    overwrite: true,
+                    password: paswword,
+                    onProgress: onProgress, 
+                    cancellationToken: ProgressBarCts.Token);
 
                 await _progressModalRef.CloseAsync();
             }
+            ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        finally
+        {
+            await _progressModalRef.CloseAsync();
+        }
     }
-   
-    
+
+
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
         var files = new List<ShareFile>();

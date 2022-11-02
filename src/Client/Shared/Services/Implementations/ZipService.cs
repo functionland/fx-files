@@ -1,4 +1,7 @@
-﻿using Functionland.FxFiles.Client.Shared.Extensions;
+﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Extensions;
+using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Utils;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
@@ -46,12 +49,13 @@ public partial class ZipService : IZipService
         return Task.FromResult(fsArtifacts);
     }
 
-    public virtual Task<int> ExtractZippedArtifactAsync(string zipFullPath,
+    public virtual async Task<int> ExtractZippedArtifactAsync(string zipFullPath,
                                                    string destinationPath,
                                                    string destinationFolderName,
                                                    string? itemPath = null,
                                                    bool overwrite = false,
                                                    string? password = null,
+                                                   Func<ProgressInfo, Task>? onProgress = null,
                                                    CancellationToken? cancellationToken = null)
     {
         var duplicateCount = 0;
@@ -69,22 +73,22 @@ public partial class ZipService : IZipService
             {
                 if (!string.IsNullOrWhiteSpace(itemPath))
                 {
-                    duplicateCount = ExtractZipArtifact(zipFullPath, newPath, itemPath, overwrite, password);
+                    duplicateCount = await ExtractZipArtifactAsync(zipFullPath, newPath, itemPath, overwrite, password, onProgress, cancellationToken);
                 }
                 else
                 {
-                    duplicateCount = ExtractZip(zipFullPath, newPath, password, overwrite);
+                    duplicateCount = await ExtractZipAsync(zipFullPath, newPath, password, overwrite, onProgress, cancellationToken);
                 }
             }
             else if (zipFileExtension == ".rar")
             {
                 if (!string.IsNullOrWhiteSpace(itemPath))
                 {
-                    duplicateCount = ExtractRarArtifact(zipFullPath, newPath, itemPath, overwrite, password);
+                    duplicateCount = await ExtractRarArtifactAsync(zipFullPath, newPath, itemPath, overwrite, password, onProgress, cancellationToken);
                 }
                 else
                 {
-                    duplicateCount = ExtractRar(zipFullPath, newPath, password, overwrite);
+                    duplicateCount = await ExtractRarAsync(zipFullPath, newPath, password, overwrite, onProgress, cancellationToken);
                 }
             }
             else
@@ -93,7 +97,7 @@ public partial class ZipService : IZipService
                 throw new InvalidZipExtensionException(invalidZipFileExtensionExceptionMessage);
             }
 
-            if (string.IsNullOrWhiteSpace(itemPath)) return Task.FromResult(duplicateCount);
+            if (string.IsNullOrWhiteSpace(itemPath)) return duplicateCount;
 
             string? artifactPath = "";
             var extractedZipFilePath = GetFilePath(zipFullPath, itemPath);
@@ -123,7 +127,7 @@ public partial class ZipService : IZipService
 
             Directory.Delete(newPath, true);
 
-            return Task.FromResult(duplicateCount);
+            return duplicateCount;
         }
         catch (IOException ex) when (ex.Message.EndsWith("because a file or directory with the same name already exists."))
         {
@@ -231,15 +235,32 @@ public partial class ZipService : IZipService
         return fsArtifacts;
     }
 
-    private static int ExtractZipArtifact(string zipFullPath, string destinationPath, string itemPath, bool overwrite = false, string? password = null)
+    private static async Task<int> ExtractZipArtifactAsync(string zipFullPath,
+                                                string destinationPath,
+                                                string itemPath,
+                                                bool overwrite = false,
+                                                string? password = null,
+                                                Func<ProgressInfo, Task>? onProgress = null,
+                                                CancellationToken? cancellationToken = null)
     {
+        int? progressCount = null;
         var duplicateCount = 0;
         var itemExtension = Path.GetExtension(itemPath);
         var filePath = GetFilePath(zipFullPath, itemPath);
 
         using var archive = ZipArchive.Open(zipFullPath, new ReaderOptions() { Password = password });
-        foreach (var entry in archive.Entries.ToList())
+        var entries = archive.Entries.ToList();
+        foreach (var entry in entries)
         {
+            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
+            {
+                return 0;
+            }
+            if (progressCount is null && onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
+
             try
             {
                 string? key;
@@ -289,20 +310,42 @@ public partial class ZipService : IZipService
                 duplicateCount++;
                 continue;
             }
+
+            if (onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
         }
 
         return duplicateCount;
     }
 
-    private static int ExtractRarArtifact(string zipFullPath, string destinationPath, string itemPath, bool overwrite = false, string? password = null)
+    private static async Task<int> ExtractRarArtifactAsync(
+        string zipFullPath,
+        string destinationPath,
+        string itemPath,
+        bool overwrite = false,
+        string? password = null,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
+        int? progressCount = null;
         var duplicateCount = 0;
         var itemExtension = Path.GetExtension(itemPath);
         var filePath = GetFilePath(zipFullPath, itemPath);
 
         using var archive = RarArchive.Open(zipFullPath, new ReaderOptions() { Password = password });
-        foreach (var entry in archive.Entries.ToList())
+        var entries = archive.Entries.ToList();
+        foreach (var entry in entries)
         {
+            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
+            {
+                return 0;
+            }
+            if (progressCount is null && onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
             try
             {
                 if (string.IsNullOrWhiteSpace(itemExtension))
@@ -333,16 +376,37 @@ public partial class ZipService : IZipService
                 duplicateCount++;
                 continue;
             }
+
+            if (onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
         }
         return duplicateCount;
     }
 
-    private static int ExtractRar(string fullPath, string destinationPath, string? password = null, bool overwrite = false)
+    private static async Task<int> ExtractRarAsync(
+        string fullPath,
+        string destinationPath,
+        string? password = null,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
+        int? progressCount = null;
         var duplicateCount = 0;
         using var archive = RarArchive.Open(fullPath, new ReaderOptions() { Password = password });
-        foreach (var entry in archive.Entries.ToList())
+        var entries = archive.Entries.ToList();
+        foreach (var entry in entries)
         {
+            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
+            {
+                return 0;
+            }
+            if (progressCount is null && onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
             try
             {
                 entry.WriteToDirectory(destinationPath, new ExtractionOptions()
@@ -355,18 +419,40 @@ public partial class ZipService : IZipService
             {
                 duplicateCount++;
                 continue;
+            }
+
+            if (onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
             }
         }
 
         return duplicateCount;
     }
 
-    private static int ExtractZip(string fullPath, string destinationPath, string? password = null, bool overwrite = false)
+    private static async Task<int> ExtractZipAsync(
+        string fullPath,
+        string destinationPath,
+        string? password = null,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
+        int? progressCount = null;
         var duplicateCount = 0;
         using var archive = ZipArchive.Open(fullPath, new ReaderOptions() { Password = password });
-        foreach (var entry in archive.Entries.ToList())
+        var entries = archive.Entries.ToList();
+        foreach (var entry in entries)
         {
+            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
+            {
+                return 0;
+            }
+            if (progressCount is null && onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
+
             try
             {
                 entry.WriteToDirectory(destinationPath, new ExtractionOptions()
@@ -380,6 +466,13 @@ public partial class ZipService : IZipService
                 duplicateCount++;
                 continue;
             }
+
+            if (onProgress is not null)
+            {
+                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
+            }
+            Task.Delay(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult();
+
         }
 
         return duplicateCount;
