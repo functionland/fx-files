@@ -1,5 +1,23 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase
 
+@using Functionland.FxFiles.Client.Shared.Utils
+
+<div class="navigation-header">
+    <FxButton OnClick="@OnBack"
+              Class="back-button"
+              BackgroundColor="transparent"
+              IsVisible="true"
+              ButtonStyle="FxButtonStyle.None" />
+    <div class="right-side">
+        <div class="@(CurrentArtifact?.IsPinned == true ? "pin-icon":"pin-icon-outline")" @onclick="@(CurrentArtifact?.IsPinned == true ? HandleUnpinAsync : HandlePinAsync)"></div>
+        <div class="more-option-icon" @onclick="HandleOptionClickAsync"></div>
+    </div>
+</div>
 
 
+<div class="main-image">
+    <div id="image-viewer">
+    <img src="@(CurrentArtifact?.FullPath?.InProtocol(Protocol) ?? "")" class="actual-size-deactivate" />
+    </div>
+</div>

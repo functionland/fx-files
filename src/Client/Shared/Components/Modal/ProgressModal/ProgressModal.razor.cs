@@ -30,6 +30,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task ShowAsync(ProgressMode progressMode, string title, bool isCanellabel)
         {
+            if (_isModalOpen) return;
             _progressMode = progressMode;
             _title = title;
             _isCancellable = isCanellabel;
@@ -39,6 +40,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task CloseAsync()
         {
+            if (_isModalOpen is false) return;
             await OnCancel.InvokeAsync();
             _isModalOpen = false;
             await InvokeAsync(() => StateHasChanged());
