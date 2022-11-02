@@ -90,6 +90,7 @@ public partial class FileBrowser
 
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
+    [AutoInject] public IZipService ZipService { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
@@ -555,6 +556,15 @@ public partial class FileBrowser
         _isArtifactExplorerLoading = false;
     }
 
+    public async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
+    {
+        foreach (var artifact in artifacts)
+        {
+            var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact.FullPath)?.FullName;
+            await ZipService.ExtractZippedArtifactAsync(artifact.FullPath, parentPath, Path.GetFileNameWithoutExtension(artifact.Name));
+        }
+    }
+
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
         var files = new List<ShareFile>();
@@ -718,7 +728,7 @@ public partial class FileBrowser
             };
             var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
             var isVisibleShareWithApp = artifact?.ArtifactType == FsArtifactType.File;
-            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isVisibleShareWithApp, isDrive);
+            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isVisibleShareWithApp, artifact?.FileCategory, isDrive);
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -760,6 +770,9 @@ public partial class FileBrowser
             case ArtifactOverflowResultType.Delete:
                 await HandleDeleteArtifactsAsync(new List<FsArtifact> { artifact });
                 break;
+            case ArtifactOverflowResultType.Extract:
+                await HandleExtractArtifactsAsync(new List<FsArtifact> { artifact });
+                break;
         }
     }
 
@@ -799,64 +812,67 @@ public partial class FileBrowser
         var selectedArtifactsCount = artifacts.Count;
         var isMultiple = selectedArtifactsCount > 1;
 
-        if (selectedArtifactsCount > 0)
+        if (selectedArtifactsCount <= 0) return;
+
+        ArtifactOverflowResult? result = null;
+        if (_artifactOverflowModalRef is not null)
         {
-            ArtifactOverflowResult? result = null;
-            if (_artifactOverflowModalRef is not null)
-            {
-                _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                var pinOptionResult = GetPinOptionResult(artifacts);
-                var isVisibleSahreWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
-                result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, IsInRoot(_currentArtifact));
-                ChangeDeviceBackFunctionality(_artifactExplorerMode);
-            }
+            _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+            var pinOptionResult = GetPinOptionResult(artifacts);
+            var isVisibleSahreWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
 
-            switch (result?.ResultType)
-            {
-                case ArtifactOverflowResultType.Details:
-                    try
-                    {
-                        _isArtifactExplorerLoading = true;
-                        await HandleShowDetailsArtifact(artifacts);
-                    }
-                    catch (Exception exception)
-                    {
-                        ExceptionHandler?.Handle(exception);
-                    }
-                    finally
-                    {
-                        _isArtifactExplorerLoading = false;
-                    }
-                    break;
-                case ArtifactOverflowResultType.Rename when (!isMultiple):
-                    var singleArtifact = artifacts.SingleOrDefault();
-                    await HandleRenameArtifactAsync(singleArtifact);
-                    break;
-                case ArtifactOverflowResultType.Copy:
-                    await HandleCopyArtifactsAsync(artifacts);
-                    break;
-                case ArtifactOverflowResultType.Pin:
-                    await HandlePinArtifactsAsync(artifacts);
-                    break;
-                case ArtifactOverflowResultType.UnPin:
-                    await HandleUnPinArtifactsAsync(artifacts);
-                    break;
-                case ArtifactOverflowResultType.Move:
-                    await HandleMoveArtifactsAsync(artifacts);
-                    break;
-                case ArtifactOverflowResultType.Delete:
-                    await HandleDeleteArtifactsAsync(artifacts);
-                    break;
-                case ArtifactOverflowResultType.ShareWithApp:
-                    await HandleShareFiles(artifacts);
-                    break;
-                case ArtifactOverflowResultType.Cancel:
-                    _artifactExplorerMode = ArtifactExplorerMode.Normal;
-                    break;
-            }
+            var firstArtifactCategoryType = artifacts.First().FileCategory;
+            FileCategoryType? filesCategoryType = artifacts.All(c => c.FileCategory == firstArtifactCategoryType) ? firstArtifactCategoryType : null;
 
-            _artifactExplorerMode = ArtifactExplorerMode.Normal;
+            result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, filesCategoryType, IsInRoot(_currentArtifact));
+            ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
+
+        switch (result?.ResultType)
+        {
+            case ArtifactOverflowResultType.Details:
+                try
+                {
+                    _isArtifactExplorerLoading = true;
+                    await HandleShowDetailsArtifact(artifacts);
+                }
+                catch (Exception exception)
+                {
+                    ExceptionHandler?.Handle(exception);
+                }
+                finally
+                {
+                    _isArtifactExplorerLoading = false;
+                }
+                break;
+            case ArtifactOverflowResultType.Rename when (!isMultiple):
+                var singleArtifact = artifacts.SingleOrDefault();
+                await HandleRenameArtifactAsync(singleArtifact);
+                break;
+            case ArtifactOverflowResultType.Copy:
+                await HandleCopyArtifactsAsync(artifacts);
+                break;
+            case ArtifactOverflowResultType.Pin:
+                await HandlePinArtifactsAsync(artifacts);
+                break;
+            case ArtifactOverflowResultType.UnPin:
+                await HandleUnPinArtifactsAsync(artifacts);
+                break;
+            case ArtifactOverflowResultType.Move:
+                await HandleMoveArtifactsAsync(artifacts);
+                break;
+            case ArtifactOverflowResultType.Delete:
+                await HandleDeleteArtifactsAsync(artifacts);
+                break;
+            case ArtifactOverflowResultType.ShareWithApp:
+                await HandleShareFiles(artifacts);
+                break;
+            case ArtifactOverflowResultType.Cancel:
+                _artifactExplorerMode = ArtifactExplorerMode.Normal;
+                break;
+        }
+
+        _artifactExplorerMode = ArtifactExplorerMode.Normal;
     }
 
     private void ArtifactExplorerModeChange(ArtifactExplorerMode mode)
