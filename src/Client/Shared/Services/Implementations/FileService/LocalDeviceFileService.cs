@@ -878,14 +878,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             //Exceptions based on path checking
 
-            if (cancellationToken?.IsCancellationRequested is true) yield break;
+            if (cancellationToken?.IsCancellationRequested is true) 
+                yield break;
 
             long artifactSize = 0;
-            var file = new FileInfo(path);
             var artifactType = GetFsArtifactType(path);
 
             if (artifactType == FsArtifactType.File)
             {
+                var file = new FileInfo(path);
                 artifactSize = file.Length;
 
                 yield return artifactSize;
@@ -894,7 +895,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (artifactType == FsArtifactType.Drive)
             {
-                artifactSize = await CalculateDriveSizeAsync(path, cancellationToken);
+                artifactSize = CalculateDriveSize(path, cancellationToken);
 
                 yield return artifactSize;
                 yield break;
@@ -909,7 +910,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 foreach (var item in allFiles)
                 {
-                    if (!File.Exists(item.FullName)) continue;
+                    if (!File.Exists(item.FullName)) 
+                        continue;
+
                     artifactSize += item.Length;
 
                     yield return artifactSize;
@@ -918,7 +921,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         }
 
-        protected virtual async Task<long> CalculateDriveSizeAsync(string drivePath, CancellationToken? cancellation = null)
+        protected virtual long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
         {
             long totalSize = 0;
             var drives = DriveInfo.GetDrives();

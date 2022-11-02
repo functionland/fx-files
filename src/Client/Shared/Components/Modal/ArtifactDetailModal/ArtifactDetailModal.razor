@@ -9,20 +9,19 @@
             @if (_isModalOpen)
             {
                 <FileDetailView 
-                    FileName="@_artifacts[_currentArtifactForShowNumber].Name" 
-                    FileCategoryType="@_artifacts[_currentArtifactForShowNumber].FileCategory" 
-                    FsArtifactType="_artifacts[_currentArtifactForShowNumber].ArtifactType">
+                    FileName="@_currentArtifact?.Name" 
+                    FileCategoryType="@_currentArtifact!.FileCategory" 
+                    FsArtifactType="_currentArtifact!.ArtifactType">
                     <FileDetailItemFragment>
                         <FileDetailViewItem 
                             FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
-                            FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].LastModifiedDateTime.Date.ToShortDateString())"/>
+                            FileDetailFieldValue="@(_currentArtifact?.LastModifiedDateTime.Date.ToShortDateString())"/>
                         <FileDetailViewItem 
                             FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" 
-                            FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].ArtifactType == FsArtifactType.File ? _artifacts[_currentArtifactForShowNumber].SizeStr 
-                                                                                                                                  : _folderOrDriveSize)" />
+                            FileDetailFieldValue="@_currentArtifact?.SizeStr" />
                         <FileDetailViewItem 
                             FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" 
-                            FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].OriginDevice)"/>
+                            FileDetailFieldValue="@(_currentArtifact?.OriginDevice)"/>
                         <div class="modal-slider">
                             <FxLink 
                                 FxLinkIconSide="FxLinkIconSide.Left" 
@@ -59,7 +58,7 @@
                             <FileDetailActionBarItemFragment>
                                 <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
                                 <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
-                                @if (_artifacts[_currentArtifactForShowNumber].IsPinned == true)
+                                @if (_currentArtifact?.IsPinned == true)
                                 {
                                     <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
                                 }
@@ -83,23 +82,22 @@
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
             <FileDetailView 
-                FileName="@_artifacts[0].Name" 
-                IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)"
-                FilePath="@_artifacts[0].FullPath"
+                FileName="@_currentArtifact?.Name" 
+                IsImageFile="@(_currentArtifact?.FileCategory == FileCategoryType.Image)"
+                FilePath="@_currentArtifact?.FullPath"
                 FileService="@FileService"
-                FileCategoryType="@_artifacts[0].FileCategory" 
-                FsArtifactType="@_artifacts[0].ArtifactType">
+                FileCategoryType="@_currentArtifact!.FileCategory" 
+                FsArtifactType="@_currentArtifact!.ArtifactType">
                 <FileDetailItemFragment>
                     <FileDetailViewItem 
                         FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
-                        FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"/>
+                        FileDetailFieldValue="@(_currentArtifact?.LastModifiedDateTime.Date.ToShortDateString())"/>
                     <FileDetailViewItem 
                         FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" 
-                        FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr 
-                                                                                                  : _folderOrDriveSize)" />
+                        FileDetailFieldValue="@_currentArtifact?.SizeStr" />
                     <FileDetailViewItem 
                         FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" 
-                        FileDetailFieldValue="@(_artifacts[0].OriginDevice)"/>
+                        FileDetailFieldValue="@(_currentArtifact?.OriginDevice)"/>
                 </FileDetailItemFragment>
 
                 <FileDetailItemActionsFragment>
@@ -107,7 +105,7 @@
                         <FileDetailActionBarItemFragment>
                             <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
-                            @if (_artifacts[0].IsPinned == true)
+                            @if (_currentArtifact?.IsPinned == true)
                             {
                                 <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
                             }
