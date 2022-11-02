@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
@@ -11,7 +12,7 @@ public partial class TextViewer : IFileViewerComponent
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
 
-    private string Text { get; set; } = string.Empty;
+    private StringBuilder Text { get; set; } = new();
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -49,8 +50,11 @@ public partial class TextViewer : IFileViewerComponent
         if (CurrentArtifact?.FullPath == null) return;
 
         using var stream = await FileService.GetFileContentAsync(CurrentArtifact.FullPath);
-        using var streamReader = new StreamReader(stream, System.Text.Encoding.UTF8);
-        Text = streamReader.ReadToEnd();
-        await InvokeAsync(() => StateHasChanged());
+        using var streamReader = new StreamReader(stream);
+        while (streamReader.ReadLine() is string line)
+        {
+            Text.AppendLine(line);
+            await InvokeAsync(() => StateHasChanged());
+        }
     }
 }
