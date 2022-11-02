@@ -76,15 +76,6 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _isModalOpen = false;
         }
 
-        //TODO: If we don't need to calculate the size of the artifacts for folder we can refactor this method
-        public async IAsyncEnumerable<long?> CalculateFolderOrDriveSize(string folderPath)
-        {
-            await foreach (var size in FileService.GetArtifactSizeAsync(folderPath))
-            {
-                yield return size;
-            }
-        }
-
         public void ChangeArtifactSlideItem(bool isNext)
         {
             if (isNext)
@@ -158,18 +149,23 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             var path = artifact.FullPath;
             int lastUpdateSecond = 0;
             var sw = Stopwatch.StartNew();
-            
-            await foreach (var newSize in CalculateFolderOrDriveSize(path))
+
+            var totalSize = await FileService.GetArtifactSizeAsync(path, newSize =>
             {
                 artifact.Size = newSize;
-                var second = (int) sw.Elapsed.TotalSeconds;
+                var second = (int)sw.Elapsed.TotalSeconds;
                 if (second != lastUpdateSecond)
                 {
                     lastUpdateSecond = second;
                     _artifactsSize = FsArtifactUtils.CalculateSizeStr(_artifacts.Sum(a => a.Size ?? 0));
-                    await InvokeAsync(StateHasChanged);
+                    _ = InvokeAsync(StateHasChanged);
                 }
-            }
+            });
+
+            //await foreach (var newSize in FileService.GetArtifactSizeAsync(folderPath))
+            //{
+                
+            //}
         }
 
         private void Close()

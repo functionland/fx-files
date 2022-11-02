@@ -874,12 +874,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         }
 
 
-        public async IAsyncEnumerable<long> GetArtifactSizeAsync(string path, CancellationToken? cancellationToken = null)
+        public async Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
         {
             //Exceptions based on path checking
 
             if (cancellationToken?.IsCancellationRequested is true) 
-                yield break;
+                return 0;
 
             long artifactSize = 0;
             var artifactType = GetFsArtifactType(path);
@@ -889,16 +889,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var file = new FileInfo(path);
                 artifactSize = file.Length;
 
-                yield return artifactSize;
-                yield break;
+                return artifactSize;
             }
 
             if (artifactType == FsArtifactType.Drive)
             {
                 artifactSize = CalculateDriveSize(path, cancellationToken);
 
-                yield return artifactSize;
-                yield break;
+                return artifactSize;
             }
 
             if (artifactType == FsArtifactType.Folder)
@@ -915,10 +913,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                     artifactSize += item.Length;
 
-                    yield return artifactSize;
+                    onProgress?.Invoke(artifactSize);
+                    //yield return artifactSize;
                 }
+
+                return artifactSize;
             }
 
+            throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
         }
 
         protected virtual long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)

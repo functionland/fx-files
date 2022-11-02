@@ -267,7 +267,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return false;
     }
 
-    protected override async Task<long> CalculateDriveSizeAsync(string drivePath, CancellationToken? cancellation = null)
+    protected override long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
     {
         var drives = LoadDrives();
         var targetDrive = drives.FirstOrDefault(drive => drive.FullPath.Equals(drivePath, StringComparison.OrdinalIgnoreCase));

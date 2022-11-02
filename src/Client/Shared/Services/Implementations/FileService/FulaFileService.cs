@@ -79,7 +79,7 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public IAsyncEnumerable<long> GetArtifactSizeAsync(string path, CancellationToken? cancellationToken = null)
+    public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
