@@ -612,4 +612,7 @@
   <data name="ShareWithApp" xml:space="preserve">
     <value>Share with app</value>
   </data>
+  <data name="InvalidZipExtensionException" xml:space="preserve">
+    <value>{1} not supported.</value>
+  </data>
 </root>

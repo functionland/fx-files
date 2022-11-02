@@ -11,5 +11,6 @@
         Delete,
         ShareWithApp,
         Cancel,
+        Extract
     }
 }
