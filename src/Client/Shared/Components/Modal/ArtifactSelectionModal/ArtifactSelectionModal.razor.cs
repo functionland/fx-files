@@ -103,7 +103,7 @@ public partial class ArtifactSelectionModal
         {
             if (result?.ResultType == InputModalResultType.Confirm)
             {
-                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
+                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.Result); //ToDo: Make CreateFolderAsync nullable
                 _artifacts.Add(newFolder);
                 StateHasChanged();
             }
