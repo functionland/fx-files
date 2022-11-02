@@ -131,7 +131,10 @@ public partial class ZipService : IZipService
         }
         catch (IOException ex) when (ex.Message.EndsWith("because a file or directory with the same name already exists."))
         {
-            Directory.Delete(newPath, true);
+            if (Directory.Exists(newPath))
+            {
+                Directory.Delete(newPath, true);
+            }
             var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
             throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseArtifact));
         }
@@ -141,7 +144,10 @@ public partial class ZipService : IZipService
         }
         catch (CryptographicException ex) when (ex.Message == "The password did not match.")
         {
-            Directory.Delete(newPath, true);
+            if (Directory.Exists(newPath))
+            {
+                Directory.Delete(newPath, true);
+            }
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
@@ -150,7 +156,10 @@ public partial class ZipService : IZipService
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
-            Directory.Delete(newPath, true);
+            if (Directory.Exists(newPath))
+            {
+                Directory.Delete(newPath, true);
+            }
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (Exception ex) when (ex.Message == "bad password")
