@@ -70,14 +70,24 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return await base.GetArtifactAsync(path, cancellationToken);
     }
 
-    public override async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        string destination,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         await GetPermission(destination);
 
         await base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
-    public override async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        string destination,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         await GetPermission(destination);
 
@@ -98,7 +108,10 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         await base.RenameFolderAsync(folderPath, newName, cancellationToken);
     }
 
-    public override async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task DeleteArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         await GetPermission(artifacts.Select(f => f.FullPath));
 
