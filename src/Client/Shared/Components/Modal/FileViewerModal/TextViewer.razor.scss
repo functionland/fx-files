@@ -63,12 +63,13 @@
     }
 
     .text {
-        margin: 8px 21px 34px;
+        padding: 8px 21px 34px;
         font-size: $font-size-14;
         line-height: $line-height-24;
         letter-spacing: $letter-spacing-02;
         font-family: $open-sans-semi-bold;
         color: color(gray-content2);
         overflow-y: auto;
+        margin-bottom: 60px;
     }
 }
