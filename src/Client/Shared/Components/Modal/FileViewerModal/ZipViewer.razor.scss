@@ -1,2 +1,81 @@
-﻿body {
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.navigation-header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 8px 21px;
+    position: relative;
+    z-index: 1;
+
+    ::deep .back-button::before {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left, $pure-white);
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 8px 21px;
+
+    .artifact-title {
+        font-family: $montserrat-medium;
+        font-style: normal;
+        font-weight: 600;
+        font-size: $font-size-24;
+        line-height: $line-height-36;
+        color: color(gray-content1);
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex;
+        justify-content: start;
+    }
+
+    .extract-button {
+        display: flex;
+        justify-content: end;
+        flex-grow: 1;
+    }
+}
+
+.list-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 21px;
+
+    .action-btn {
+        cursor: pointer;
+    }
+
+    .select-all-btn {
+        display: flex;
+        flex-grow: 1;
+        justify-content: end;
+        margin-left: 16px;
+
+        &::before {
+            @include Icon($select, color(gray-content3));
+            font-size: $icon-24;
+        }
+    }
+
+    .select-all-filled::before {
+        font-size: $icon-24;
+        @include Icon($selected, $green-dark-base, $Icons-Filled);
+    }
+}
+
+.artifact-list{
+    height:100%;
 }
