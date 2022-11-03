@@ -16,30 +16,37 @@ public partial class ZipService : IZipService
 
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }
 
-    public virtual Task<List<FsArtifact>> ViewZipFileAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
+    
+    public virtual Task<List<FsArtifact>> GetAllInnerZippedArtifactsAsync(string zipFilePath, string? password = null, CancellationToken? cancellationToken = null)
     {
         var extension = Path.GetExtension(zipFilePath);
         var fsArtifacts = new List<FsArtifact>();
-
         try
         {
-            if (extension == ".zip")
+            if (extension == ".rar")
             {
-                fsArtifacts = ZipFileViewer(zipFilePath, subDirectoriesPath, password);
+                fsArtifacts = RarFileService(zipFilePath, password);
             }
-            else if (extension == ".rar")
+            else if (extension == ".zip")
             {
-                fsArtifacts = RarFileViewer(zipFilePath, subDirectoriesPath, password);
-            }
-            else
-            {
-                var invalidZipFileExtensionExceptionMessage = StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), extension);
-                throw new InvalidZipExtensionException(invalidZipFileExtensionExceptionMessage);
+                fsArtifacts = ZipFileService(zipFilePath, password);
             }
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+        }
+        catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (Exception ex) when (ex.Message == "bad password")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch
         {
@@ -172,16 +179,31 @@ public partial class ZipService : IZipService
         }
     }
 
-    private List<FsArtifact> RarFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null)
+    private List<FsArtifact> RarFileService(string zipFilePath, string? password = null)
     {
-        var length = SplitPath(subDirectoriesPath);
+        var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
         var providerType = LocalDeviceFileService.GetArtifactAsync(zipFilePath).Result.ProviderType;
+        string? parentPath;
         var fsArtifacts = new List<FsArtifact>();
-
         using (var archive = RarArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
         {
             foreach (var entry in archive.Entries.ToList())
             {
+                if (entry.Key.EndsWith(fileName))
+                {
+                    parentPath = string.Empty;
+                }
+                else
+                {
+                    if (zipFilePath.Contains("\\"))
+                    {
+                        parentPath = zipFilePath + "\\" + Path.GetDirectoryName(entry.Key);
+                    }
+                    else
+                    {
+                        parentPath = zipFilePath + "/" + Path.GetDirectoryName(entry.Key);
+                    }
+                }
                 var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
                 var newPath = Path.Combine(zipFilePath, entry.Key);
                 var entryFileName = Path.GetFileName(newPath);
@@ -189,58 +211,44 @@ public partial class ZipService : IZipService
                 {
                     FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
                     LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
+                    ParentFullPath = parentPath
                 };
 
-                var keyLength = SplitPath(entry.Key);
-                if (keyLength == length && newFsArtifact.FullPath.Contains(subDirectoriesPath))
-                {
-                    fsArtifacts.Add(newFsArtifact);
-                }
+                fsArtifacts.Add(newFsArtifact);
             }
         }
-
         return fsArtifacts;
     }
 
-
-    private List<FsArtifact> ZipFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null)
+    private List<FsArtifact> ZipFileService(string zipFilePath, string? password = null)
     {
-        var length = SplitPath(subDirectoriesPath);
-        var fsArtifacts = new List<FsArtifact>();
+        var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
         var providerType = LocalDeviceFileService.GetArtifactAsync(zipFilePath).Result.ProviderType;
-
-        using (var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
+        var fsArtifacts = new List<FsArtifact>();
+        using var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
+        foreach (var entry in archive.Entries.ToList())
         {
-            foreach (var entry in archive.Entries.ToList())
+            var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
+            var key = entry.Key.Trim('/').Replace("/", "\\");
+            var path = "";
+            if (zipFilePath.Contains('\\'))
             {
-                var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
-                var key = entry.Key.Trim('/').Replace("/", "\\");
-                var newPath = "";
-
-                if (zipFilePath.Contains('\\'))
-                {
-                    newPath = Path.Combine(zipFilePath, key);
-                }
-                else if (zipFilePath.Contains('/'))
-                {
-                    newPath = Path.Combine(zipFilePath, entry.Key.Trim('/'));
-                }
-
-                var entryFileName = Path.GetFileName(newPath);
-                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, providerType)
-                {
-                    FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
-                    LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
-                };
-
-                var keyLength = SplitPath(key);
-                if (keyLength == length && newPath.Contains(subDirectoriesPath))
-                {
-                    fsArtifacts.Add(newFsArtifact);
-                }
+                path = Path.Combine(zipFilePath, key);
             }
-        }
+            else if (zipFilePath.Contains('/'))
+            {
+                path = Path.Combine(zipFilePath, entry.Key.Trim('/'));
+            }
 
+            var entryFileName = Path.GetFileName(path);
+            var newFsArtifact = new FsArtifact(path, entryFileName, fsArtifactType, providerType)
+            {
+                FileExtension = !entry.IsDirectory ? Path.GetExtension(path) : null,
+                LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
+            };
+
+            fsArtifacts.Add(newFsArtifact);
+        }
         return fsArtifacts;
     }
 
@@ -485,23 +493,6 @@ public partial class ZipService : IZipService
         }
 
         return duplicateCount;
-    }
-
-    private static int SplitPath(string subDirectoriesPath)
-    {
-        string[] itemsPath;
-        int length = 0;
-        if (subDirectoriesPath.Contains('\\'))
-        {
-            itemsPath = subDirectoriesPath.Split('\\');
-            length = itemsPath.Length;
-        }
-        else if (subDirectoriesPath.Contains('/'))
-        {
-            itemsPath = subDirectoriesPath.Split('/');
-            length = itemsPath.Length;
-        }
-        return length;
     }
 
     private static string GetFilePath(string zipFullPath, string itemPath)
