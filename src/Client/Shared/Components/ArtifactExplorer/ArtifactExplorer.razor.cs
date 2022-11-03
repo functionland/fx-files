@@ -391,19 +391,30 @@ namespace Functionland.FxFiles.Client.Shared.Components
             var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
             List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
-            foreach (var item in items)
+            _ = Task.Run(async () =>
             {
-                if (request.CancellationToken.IsCancellationRequested) return default;
+                foreach (var item in items)
+                {
+                    if (request.CancellationToken.IsCancellationRequested) 
+                        return;
 
-                try
-                {
-                    item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+                    try
+                    {
+                        var thumbnailUrl =
+                            await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
+                                request.CancellationToken);
+
+                        await InvokeAsync(() =>
+                        {
+                            item.ThumbnailPath = thumbnailUrl;
+                        });
+                    }
+                    catch(Exception exception)
+                    {
+                        ExceptionHandler.Handle(exception, showError: false);
+                    }
                 }
-                catch
-                {
-                    item.ThumbnailPath = null;
-                }
-            }
+            });
 
             _isLoadingThumbnailFinished = true;
 
