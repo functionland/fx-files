@@ -612,4 +612,25 @@
   <data name="ShareWithApp" xml:space="preserve">
     <value>Share with app</value>
   </data>
+  <data name="InvalidZipExtensionException" xml:space="preserve">
+    <value>{1} not supported.</value>
+  </data>
+  <data name="FolderName" xml:space="preserve">
+    <value>Folder name</value>
+  </data>
+  <data name="Extract" xml:space="preserve">
+    <value>Extract</value>
+  </data>
+  <data name="ExtractFolderTargetNamePlaceHolder" xml:space="preserve">
+    <value>Zip file name</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ExtraxtPasswordModalTitle" xml:space="preserve">
+    <value>Enter password for the zip file</value>
+  </data>
 </root>

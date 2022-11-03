@@ -1,83 +1,103 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+
+public partial class InputModal
 {
-    public partial class InputModal
+    private TaskCompletionSource<InputModalResult>? _tcs;
+    private bool _isModalOpen;
+    private string? _title;
+    private string? _placeholder;
+    private string? _inputValue;
+    private string? _headTitle;
+    private string? _doneBtnText;
+    private FxTextInput? _inputRef;
+    private string? _lable;
+
+    public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder, string? doneBtnText = null, string? lable = null)
     {
-        private TaskCompletionSource<InputModalResult>? _tcs;
-        private bool _isModalOpen;
-        private string? _title;
-        private string? _placeholder;
-        private string? _inputValue;
-        private string? _headTitle;
-        private FxTextInput? _inputRef;
-
-        public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
+        GoBackService.OnInit((Task () =>
         {
-            GoBackService.OnInit((Task () =>
-            {
-                Close();
-                StateHasChanged();
-                return Task.CompletedTask;
-            }), true, false);
-
-            _headTitle = headTitle;
-            _inputValue = inputValue;
-            _title = tilte;
-            _placeholder = placeholder;
-
-            _tcs?.SetCanceled();
-            _isModalOpen = true;
+            Close();
             StateHasChanged();
+            return Task.CompletedTask;
+        }), true, false);
 
-            var timer = new System.Timers.Timer(700);
-            timer.Elapsed += TimerElapsed;
-            timer.Enabled = true;
-            timer.Start();
+        _headTitle = headTitle;
+        _inputValue = inputValue;
+        _title = tilte;
+        _placeholder = placeholder;
+        _doneBtnText = doneBtnText ?? Localizer[nameof(AppStrings.Confirm)];
+        _lable = lable ?? Localizer[nameof(AppStrings.Name)];
 
-            _tcs = new TaskCompletionSource<InputModalResult>();
-            return await _tcs.Task;
-        }
+        _tcs?.SetCanceled();
+        _isModalOpen = true;
+        StateHasChanged();
 
-        private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        var timer = new System.Timers.Timer(700);
+        timer.Elapsed += TimerElapsed;
+        timer.Enabled = true;
+        timer.Start();
+
+        _tcs = new TaskCompletionSource<InputModalResult>();
+        return await _tcs.Task;
+    }
+
+    private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        InvokeAsync(async () =>
         {
-            InvokeAsync(async () =>
-            {
-                await _inputRef!.FocusInputAsync();
-            });
+            await _inputRef!.FocusInputAsync();
+        });
 
-            var timer = (System.Timers.Timer)sender;
-            timer.Elapsed -= TimerElapsed;
-            timer.Enabled = false;
-            timer.Stop();
+        var timer = (System.Timers.Timer)sender;
+        timer.Elapsed -= TimerElapsed;
+        timer.Enabled = false;
+        timer.Stop();
 
-            timer.Dispose();
-        }
+        timer.Dispose();
+    }
 
-        private void Close()
+    private void Close()
+    {
+        var result = new InputModalResult
         {
-            var result = new InputModalResult();
-            result.ResultType = InputModalResultType.Cancel;
+            ResultType = InputModalResultType.Cancel
+        };
 
-            _tcs!.SetResult(result);
+        try
+        {
+            _tcs?.SetResult(result);
+        }
+        finally
+        {
             _tcs = null;
 
             _isModalOpen = false;
         }
+       
+    }
 
-        private void Confirm()
+    private void Confirm()
+    {
+        var result = new InputModalResult
         {
-            var result = new InputModalResult();
-            result.ResultType = InputModalResultType.Confirm;
-            result.ResultName = _inputValue;
+            ResultType = InputModalResultType.Confirm,
+            Result = _inputValue
+        };
 
+        try
+        {
             _tcs!.SetResult(result);
+        }
+        finally
+        {
             _tcs = null;
 
             _isModalOpen = false;
         }
+    }
 
-        public void Dispose()
-        {
-            _tcs?.SetCanceled();
-        }
+    public void Dispose()
+    {
+        _tcs?.SetCanceled();
     }
 }

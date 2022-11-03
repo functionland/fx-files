@@ -8,11 +8,24 @@
         private bool _isInRoot;
         private PinOptionResult? _pinOptionResult;
         private bool _isVisibleShareWithAppOption;
+        private FileCategoryType? _fileCategoryType;
 
         public void Details()
         {
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Details;
+
+            _tcs?.SetResult(result);
+            _tcs = null;
+
+            _isModalOpen = false;
+        }
+
+        //TODO: complete extract onclick
+        public void Extract()
+        {
+            var result = new ArtifactOverflowResult();
+            result.ResultType = ArtifactOverflowResultType.Extract;
 
             _tcs?.SetResult(result);
             _tcs = null;
@@ -97,7 +110,7 @@
             _isModalOpen = false;
         }
 
-        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult, bool isVisibleShareWithAppOption, bool isInRoot = false)
+        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult, bool isVisibleShareWithAppOption, FileCategoryType? fileCategoryType = null, bool isInRoot = false)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -112,6 +125,7 @@
             _pinOptionResult = pinOptionResult;
             _isVisibleShareWithAppOption = isVisibleShareWithAppOption;
             _isModalOpen = true;
+            _fileCategoryType = fileCategoryType;
             StateHasChanged();
 
             _tcs = new TaskCompletionSource<ArtifactOverflowResult>();
