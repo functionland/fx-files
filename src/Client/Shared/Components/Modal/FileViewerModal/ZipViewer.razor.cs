@@ -4,18 +4,30 @@ public partial class ZipViewer : IFileViewerComponent
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-    [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback OnToggle { get; set; }
-    [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; }
 
-    private List<FsArtifact>? _displayedArtifacts = new();
-    private List<FsArtifact>? _selectedArtifacts = new();
+    [AutoInject] private IZipService _zipService = default!;
+
+    private FsArtifact _currentInnerZipArtifact =
+        new FsArtifact("", "", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
+    private string? _password;
+
+
+    private List<FsArtifact> _displayedArtifacts = new();
+    private List<FsArtifact> _selectedArtifacts = new();
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
-    protected async override Task OnInitAsync()
+
+    protected override async Task OnInitAsync()
     {
         await LoadAllArtifactsAsync();
         await base.OnInitAsync();
+
+        if (true)
+        {
+            // Get password from modal if required.
+        }
+
+        await LoadAllArtifactsAsync();
     }
 
     // Get the list of artifacts to display in the explorer
@@ -26,20 +38,34 @@ public partial class ZipViewer : IFileViewerComponent
             return;
         }
 
-
-        // 10 sample artifacts to display
-        var fakeArtifacts = new List<FsArtifact>();
-        for (int i = 0; i < 50; i++)
-        {
-            fakeArtifacts.Add(new FsArtifact("C://", "sample 1", FsArtifactType.File, FsFileProviderType.InternalMemory));
-        }
-
-        _displayedArtifacts = fakeArtifacts;
+        var children = await _zipService.ViewZipFileAsync(CurrentArtifact.FullPath,
+            _currentInnerZipArtifact?.FullPath ?? "", _password);
+        _displayedArtifacts = children;
     }
 
     // Extract the artifact to the current directory
     private async Task ExtractArtifactsAsync()
     {
 
+    }
+
+    private async Task HandleBackAsync()
+    {
+        if (_currentInnerZipArtifact.FullPath == "")
+        {
+            // Navigate back.
+        }
+        else
+        {
+            _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
+            await LoadAllArtifactsAsync();
+        }
+
+
+    }
+
+    private FsArtifact GetParent(FsArtifact artifact)
+    {
+        return artifact;
     }
 }
