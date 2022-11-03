@@ -4,26 +4,37 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaElement;assembly=CommunityToolkit.Maui.MediaElement"
-    Title="NativeVideoViewer">
-    <VerticalStackLayout Margin="{OnPlatform WinUI='0,40,0,0'}">
-        <Button
-            Margin="20,0"
-            Clicked="close_Clicked"
-            HorizontalOptions="Start"
-            Text="Close" />
-        <Button
-            Margin="20,0"
-            x:Name="pip"
-            HorizontalOptions="Start"
-            Clicked="Minimize"
-            Text="File Picker" />
-        
+    NavigationPage.HasBackButton="False"
+    NavigationPage.HasNavigationBar="False">
+    <Grid>
         <media:MediaElement
-            x:Name="mediaElement"
+            x:Name="media"
             AutoPlay="True"
-            HeightRequest="500"
-            HorizontalOptions="FillAndExpand"
-            ShowsPlaybackControls="True"
-            VerticalOptions="FillAndExpand" />
-    </VerticalStackLayout>
+            ShowsPlaybackControls="True">
+            <media:MediaElement.GestureRecognizers>
+                <TapGestureRecognizer Tapped="media_Tapped" />
+            </media:MediaElement.GestureRecognizers>
+        </media:MediaElement>
+        <HorizontalStackLayout
+            x:Name="header"
+            BackgroundColor="#212529"
+            HeightRequest="72"
+            Spacing="16"
+            VerticalOptions="StartAndExpand">
+            <ImageButton
+                Margin="20,0"
+                Clicked="close_Clicked"
+                CornerRadius="20"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                WidthRequest="40" />
+            <ImageButton
+                x:Name="pip"
+                Margin="20,0"
+                Clicked="Minimize"
+                HorizontalOptions="Start"
+                IsVisible="{OnIdiom Phone=true,
+                                    Default=false}" />
+        </HorizontalStackLayout>
+    </Grid>
 </ContentPage>

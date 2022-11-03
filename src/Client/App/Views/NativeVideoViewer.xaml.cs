@@ -4,6 +4,7 @@ using Android.Util;
 #endif
 
 using CommunityToolkit.Maui.MediaElement;
+using Microsoft.Maui.Devices;
 
 namespace Functionland.FxFiles.Client.App.Views;
 
@@ -12,16 +13,16 @@ public partial class NativeVideoViewer : ContentPage
     public NativeVideoViewer(string path)
     {
         InitializeComponent();
-        mediaElement.Play();
-        mediaElement.Source = MediaSource.FromFile(path);
+        media.Play();
+        media.Source = MediaSource.FromFile(path);
     }
 
     private async void close_Clicked(object sender, EventArgs e)
     {
         try
         {
-            mediaElement.Stop();
-            mediaElement.Source = null;
+            media.Stop();
+            media.Source = null;
             await Navigation.PopAsync();
         }
         catch (Exception ex)
@@ -32,15 +33,24 @@ public partial class NativeVideoViewer : ContentPage
 
     public void Minimize(object sender, EventArgs e)
     {
-
-        // Hide the controls in picture-in-picture mode.
-        //     MainActivity.mainActivity.Minimize();
 #if ANDROID
         var aspectRatio = new Rational(300, 300);
         PictureInPictureParams.Builder pictureInPictureParamsBuilder = new PictureInPictureParams.Builder();
         var piparam = pictureInPictureParamsBuilder.SetAspectRatio(aspectRatio).Build();
         Platform.CurrentActivity.EnterPictureInPictureMode(pictureInPictureParamsBuilder.Build());
 #endif
+    }
 
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        media.WidthRequest = width;
+        media.HeightRequest = height;
+
+        base.OnSizeAllocated(width, height);
+    }
+
+    private void media_Tapped(object sender, EventArgs e)
+    {
+        header.IsVisible = !header.IsVisible;
     }
 }
