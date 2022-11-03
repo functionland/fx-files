@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks>net6.0-android33;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<UseMaui>true</UseMaui>
@@ -30,6 +30,10 @@
 		<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
 	</PropertyGroup>
 
+	<!-- Got errors while building in the pipeline that Android used all kinds of preview features? Trying if this fixes it. More info: https://aka.ms/dotnet-warnings/preview-features -->
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+		<EnablePreviewFeatures>True</EnablePreviewFeatures>
+	</PropertyGroup>
 		
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
 		<LinkDescription Include="Platforms\Android\Linker.xml" />
@@ -83,6 +87,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CommunityToolkit.Maui.MediaElement\CommunityToolkit.Maui.MediaElement.csproj" />
 		<ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
 	</ItemGroup>
 
@@ -93,5 +98,10 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.2" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiXaml Update="Views\NativeVideoViewer.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 </Project>

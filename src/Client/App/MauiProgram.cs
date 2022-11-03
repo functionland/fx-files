@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Shared;
+﻿using CommunityToolkit.Maui.MediaElement;
+using Functionland.FxFiles.Client.Shared.Shared;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -34,6 +35,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkitMediaElement()
             .Configuration.AddJsonFile(new EmbeddedFileProvider(assembly), "wwwroot.appsettings.json", optional: false, false);
         
         builder.ConfigureLifecycleEvents(lifecycle => {

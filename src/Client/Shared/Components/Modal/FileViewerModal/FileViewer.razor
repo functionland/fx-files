@@ -11,11 +11,6 @@
             {
                 <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" />
             }
-
-            @if (IsSupported<VideoViewer>(_currentArtifact))
-            {
-                <VideoViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
-            }
         </div>
     </div>
 }
