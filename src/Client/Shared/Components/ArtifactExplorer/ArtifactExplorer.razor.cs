@@ -19,8 +19,11 @@ namespace Functionland.FxFiles.Client.Shared.Components
             get => artifacts;
             set
             {
-                artifacts = value;
-                _isArtifactsChanged = true;
+                if (artifacts != value)
+                {
+                    artifacts = value;
+                    _isArtifactsChanged = true;
+                }
             }
         }
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
@@ -378,20 +381,20 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
         {
             _isLoadingThumbnailFinished = false;
-
-            if (request.CancellationToken.IsCancellationRequested)
+            if (_isArtifactsChanged == false)
             {
-                return default;
+                await Task.Delay(300);
             }
+
+            if (request.CancellationToken.IsCancellationRequested) return default;
+
             var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
             List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
             foreach (var item in items)
             {
-                if (request.CancellationToken.IsCancellationRequested)
-                {
-                    return default;
-                }
+                if (request.CancellationToken.IsCancellationRequested) return default;
+
                 try
                 {
                     item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
@@ -410,11 +413,13 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
         {
             _isLoadingThumbnailFinished = false;
-
-            if (request.CancellationToken.IsCancellationRequested)
+            if (_isArtifactsChanged == false)
             {
-                return default;
+                await Task.Delay(300);
             }
+
+            if (request.CancellationToken.IsCancellationRequested) return default;
+
             var count = request.Count * _gridRowCount;
             var start = request.StartIndex * _gridRowCount;
             var requestCount = Math.Min(count, Artifacts.Count - start);
@@ -423,13 +428,17 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
             foreach (var item in items)
             {
-                if (request.CancellationToken.IsCancellationRequested)
-                {
-                    return default;
-                }
-                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
-            }
+                if (request.CancellationToken.IsCancellationRequested) return default;
 
+                try
+                {
+                    item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+                }
+                catch
+                {
+                    item.ThumbnailPath = null;
+                }
+            }
             _isLoadingThumbnailFinished = true;
 
             var result = new List<FsArtifact[]>();
