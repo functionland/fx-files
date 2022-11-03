@@ -42,9 +42,9 @@
                                 <div class="icon-box">
                                     <div class="thumbnail-box">
                                         <div class="img-box">
-                                            @if (_isLoadingThumbnailFinished)
+                                            @if (artifact?.ThumbnailPath != null && _isLoadingThumbnailFinished)
                                             {
-                                                <img class="thumbnail-img" src="@(artifact?.ThumbnailPath?.InProtocol(Protocol) ?? "")">
+                                                <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
                                             }
                                         </div>
                                         @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
@@ -98,9 +98,9 @@
                         <div class="icon-box">
                             <div class="thumbnail-box">
                                 <div class="img-box">
-                                    @if (_isLoadingThumbnailFinished)
+                                    @if (artifact?.ThumbnailPath != null && _isLoadingThumbnailFinished)
                                     {
-                                        <img class="thumbnail-img" src="@(artifact?.ThumbnailPath?.InProtocol(Protocol) ?? "")">
+                                        <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
                                     }
                                 </div>
                                 @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
