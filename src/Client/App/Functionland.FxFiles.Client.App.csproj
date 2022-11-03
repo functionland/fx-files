@@ -31,6 +31,9 @@
 	</PropertyGroup>
 
 		
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	</PropertyGroup>
 	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
 		<LinkDescription Include="Platforms\Android\Linker.xml" />
 		<AndroidAotProfile Condition="Exists('custom.aprof')" Include="custom.aprof" />
@@ -42,11 +45,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Android App Icon -->
-		<MauiIcon Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'" Include="Resources\AppIcon\appicon.svg" ForegroundScale="0.5" Color="#1B262C" />
-
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundScale="0.85" Color="#212529" />
+		<MauiIcon Include="Resources\AppIcon\appicon.png" Color="#212529" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#212529" BaseSize="128,128" />
@@ -79,7 +79,6 @@
 		</PackageReference>
 		<PackageReference Include="iTextSharp" Version="5.5.13.3" />
 		<Content Remove="Properties\launchSettings.json" />
-
 	</ItemGroup>
 
 	<ItemGroup>
@@ -92,5 +91,8 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <BundleResource Include="Platforms\Android\Resources\playstore-icon.png" />
 	</ItemGroup>
 </Project>
