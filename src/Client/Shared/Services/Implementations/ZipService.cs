@@ -444,10 +444,8 @@ public partial class ZipService : IZipService
         var entries = archive.Entries.ToList();
         foreach (var entry in entries)
         {
-            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
-            {
-                return 0;
-            }
+            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) return 0;
+
             if (progressCount is null && onProgress is not null)
             {
                 progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
@@ -471,8 +469,6 @@ public partial class ZipService : IZipService
             {
                 progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
             }
-            Task.Delay(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult();
-
         }
 
         return duplicateCount;
