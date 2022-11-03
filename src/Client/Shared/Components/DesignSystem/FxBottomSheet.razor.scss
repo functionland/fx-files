@@ -11,7 +11,7 @@
     left: 0px;
     z-index: 100;
     visibility: hidden;
-    transition: all .6s ease-out .1s;
+    transition: all 0.3s linear 0.1s;
 }
 
 .sheet-wrapper-apear {
@@ -24,7 +24,7 @@
     width: 100%;
     position: absolute;
     transform: translateY(100%);
-    transition: all 500ms ease-in-out .2s;
+    transition: all 300ms linear 0.2s;
     bottom: 0px;
 }
 
