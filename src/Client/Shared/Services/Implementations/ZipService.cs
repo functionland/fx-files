@@ -189,23 +189,17 @@ public partial class ZipService : IZipService
         {
             foreach (var entry in archive.Entries.ToList())
             {
+                var newPath = Path.Combine(zipFilePath, entry.Key);
                 if (entry.Key.EndsWith(fileName))
                 {
                     parentPath = string.Empty;
                 }
                 else
                 {
-                    if (zipFilePath.Contains("\\"))
-                    {
-                        parentPath = zipFilePath + "\\" + Path.GetDirectoryName(entry.Key);
-                    }
-                    else
-                    {
-                        parentPath = zipFilePath + "/" + Path.GetDirectoryName(entry.Key);
-                    }
+                    parentPath = Path.GetDirectoryName(newPath);
                 }
                 var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
-                var newPath = Path.Combine(zipFilePath, entry.Key);
+               
                 var entryFileName = Path.GetFileName(newPath);
                 var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, providerType)
                 {
@@ -224,6 +218,7 @@ public partial class ZipService : IZipService
     {
         var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
         var providerType = LocalDeviceFileService.GetArtifactAsync(zipFilePath).Result.ProviderType;
+        string parentPath;
         var fsArtifacts = new List<FsArtifact>();
         using var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
         foreach (var entry in archive.Entries.ToList())
@@ -231,6 +226,7 @@ public partial class ZipService : IZipService
             var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
             var key = entry.Key.Trim('/').Replace("/", "\\");
             var path = "";
+
             if (zipFilePath.Contains('\\'))
             {
                 path = Path.Combine(zipFilePath, key);
@@ -240,11 +236,21 @@ public partial class ZipService : IZipService
                 path = Path.Combine(zipFilePath, entry.Key.Trim('/'));
             }
 
+            if (key.EndsWith(fileName))
+            {
+                parentPath = string.Empty;
+            }
+            else
+            {
+                parentPath = Path.GetDirectoryName(path);
+            }
+
             var entryFileName = Path.GetFileName(path);
             var newFsArtifact = new FsArtifact(path, entryFileName, fsArtifactType, providerType)
             {
                 FileExtension = !entry.IsDirectory ? Path.GetExtension(path) : null,
                 LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
+                ParentFullPath = parentPath
             };
 
             fsArtifacts.Add(newFsArtifact);
