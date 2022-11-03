@@ -9,10 +9,10 @@ public partial class ZipViewer : IFileViewerComponent
     [AutoInject] private IZipService _zipService = default!;
 
     private FsArtifact _currentInnerZipArtifact =
-        new FsArtifact("", "", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
+        new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
 
-    private string? _password;
-    private CancellationTokenSource? _cancellationTokenSource;
+    private string? _password = null;
+    private CancellationTokenSource _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource();
 
 
     private List<FsArtifact> _displayedArtifacts = new();
@@ -23,12 +23,19 @@ public partial class ZipViewer : IFileViewerComponent
 
     protected override async Task OnInitAsync()
     {
+        if (CurrentArtifact is null)
+        {
+            return;
+        }
+
         if (true)
         {
             // Get password from modal if required.
+            _password = null;
         }
 
         await LoadAllArtifactsAsync();
+        DisplayChildrenArtifacts(_currentInnerZipArtifact);
         await base.OnInitAsync();
     }
 
@@ -36,19 +43,14 @@ public partial class ZipViewer : IFileViewerComponent
     private async Task LoadAllArtifactsAsync()
     {
         if (CurrentArtifact is null)
-        {
-            return;
-        }
+            throw new InvalidOperationException("Current artifact can not be null.");
 
-        _cancellationTokenSource = new CancellationTokenSource();
         var token = _cancellationTokenSource.Token;
 
-        _allZipFileEntities = await _zipService.GetAllInnerZippedArtifactsAsync(CurrentArtifact.FullPath, _password, token);
-
-        LoadInnerZipArtifacts(_currentInnerZipArtifact);
+        _allZipFileEntities = await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
     }
 
-    private void LoadInnerZipArtifacts(FsArtifact artifact)
+    private void DisplayChildrenArtifacts(FsArtifact artifact)
     {
         _displayedArtifacts = _allZipFileEntities.Where(a => a.ParentFullPath == artifact.FullPath).ToList();
     }
@@ -70,12 +72,13 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (_currentInnerZipArtifact.FullPath == string.Empty)
         {
+            _cancellationTokenSource.Cancel();
             await OnBack.InvokeAsync();
         }
         else
         {
             _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
-            LoadInnerZipArtifacts(_currentInnerZipArtifact);
+            DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
     }
 
@@ -90,7 +93,7 @@ public partial class ZipViewer : IFileViewerComponent
         if (artifact.ArtifactType == FsArtifactType.Folder)
         {
             _currentInnerZipArtifact = artifact;
-            LoadInnerZipArtifacts(_currentInnerZipArtifact);
+            DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
     }
 

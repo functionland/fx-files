@@ -12,7 +12,7 @@ public interface IZipService
     /// <param name="password"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<FsArtifact>> GetAllInnerZippedArtifactsAsync(string zipFilePath, string? password = null, CancellationToken? cancellationToken = null);
+    Task<List<FsArtifact>> GetAllArtifactsAsync(string zipFilePath, string? password = null, CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// 
