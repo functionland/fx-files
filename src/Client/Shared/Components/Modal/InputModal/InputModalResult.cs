@@ -4,6 +4,6 @@
     {
         public InputModalResultType ResultType { get; set; }
 
-        public string? ResultName { get; set; }
+        public string? Result { get; set; }
     }
 }

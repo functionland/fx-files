@@ -69,6 +69,10 @@
     @include Icon($search);
 }
 
+.search-icon-active::after {
+    color: #049B8F;
+}
+
 .search-input-active {
     color: color(gray-bg-primary);
 
