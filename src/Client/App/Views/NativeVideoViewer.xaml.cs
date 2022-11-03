@@ -17,7 +17,15 @@ public partial class NativeVideoViewer : ContentPage
         media.Source = MediaSource.FromFile(path);
     }
 
-    private async void close_Clicked(object sender, EventArgs e)
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        media.WidthRequest = width;
+        media.HeightRequest = height;
+
+        base.OnSizeAllocated(width, height);
+    }
+
+    private async void back_Clicked(object sender, EventArgs e)
     {
         try
         {
@@ -41,16 +49,18 @@ public partial class NativeVideoViewer : ContentPage
 #endif
     }
 
-    protected override void OnSizeAllocated(double width, double height)
-    {
-        media.WidthRequest = width;
-        media.HeightRequest = height;
-
-        base.OnSizeAllocated(width, height);
-    }
-
     private void media_Tapped(object sender, EventArgs e)
     {
         header.IsVisible = !header.IsVisible;
+    }
+
+    private void pin_Clicked(object sender, EventArgs e)
+    {
+
+    }
+
+    private void overflow_Clicked(object sender, EventArgs e)
+    {
+
     }
 }

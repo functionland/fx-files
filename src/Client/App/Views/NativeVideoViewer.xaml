@@ -6,6 +6,19 @@
     xmlns:media="clr-namespace:CommunityToolkit.Maui.MediaElement;assembly=CommunityToolkit.Maui.MediaElement"
     NavigationPage.HasBackButton="False"
     NavigationPage.HasNavigationBar="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="ImageButton">
+                <Setter Property="BackgroundColor" Value="#212529" />
+                <Setter Property="BorderColor" Value="Transparent" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="HorizontalOptions" Value="End" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <Grid>
         <media:MediaElement
             x:Name="media"
@@ -15,26 +28,31 @@
                 <TapGestureRecognizer Tapped="media_Tapped" />
             </media:MediaElement.GestureRecognizers>
         </media:MediaElement>
-        <HorizontalStackLayout
+        <StackLayout
             x:Name="header"
             BackgroundColor="#212529"
             HeightRequest="72"
-            Spacing="16"
+            Orientation="Horizontal"
             VerticalOptions="StartAndExpand">
             <ImageButton
                 Margin="20,0"
-                Clicked="close_Clicked"
-                CornerRadius="20"
-                HeightRequest="40"
-                HorizontalOptions="Start"
-                WidthRequest="40" />
+                Clicked="back_Clicked"
+                HorizontalOptions="StartAndExpand"
+                Source="back.png" />
             <ImageButton
-                x:Name="pip"
-                Margin="20,0"
+                Margin="16,0"
                 Clicked="Minimize"
-                HorizontalOptions="Start"
                 IsVisible="{OnIdiom Phone=true,
-                                    Default=false}" />
-        </HorizontalStackLayout>
+                                    Default=false}"
+                Source="pip.png" />
+            <!--<ImageButton
+                x:Name="pin"
+                Clicked="pin_Clicked"
+                Source="pin_filled.png" />
+            <ImageButton
+                Margin="16,0,20,0"
+                Clicked="overflow_Clicked"
+                Source="overflow.png" />-->
+        </StackLayout>
     </Grid>
 </ContentPage>
