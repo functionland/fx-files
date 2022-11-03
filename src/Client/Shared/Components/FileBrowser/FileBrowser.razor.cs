@@ -144,11 +144,11 @@ public partial class FileBrowser
         }
         await base.OnAfterRenderAsync(firstRender);
     }
-    private void HandleProgressBar(string currentArtifactName)
+    private void HandleProgressBar(string CurrentText)
     {
         ProgressBarCurrentValue++;
         ProgressBarCurrentSubText = $"{ProgressBarCurrentValue} of {ProgressBarMax}";
-        ProgressBarCurrentText = currentArtifactName;
+        ProgressBarCurrentText = CurrentText;
     }
 
     private void InitialProgressBar(int maxValue)
@@ -242,7 +242,7 @@ public partial class FileBrowser
                     }
                     else
                     {
-                        // ToDo : not supported
+                        // ToDo : copy drive not supported, show proper message
                     }
 
                     HandleProgressBar(item.Name);
