@@ -41,6 +41,7 @@ public partial class NativeVideoViewer : ContentPage
 
     public void Minimize(object sender, EventArgs e)
     {
+        header.IsVisible = false;
 #if ANDROID
         var aspectRatio = new Rational(300, 300);
         PictureInPictureParams.Builder pictureInPictureParamsBuilder = new PictureInPictureParams.Builder();
