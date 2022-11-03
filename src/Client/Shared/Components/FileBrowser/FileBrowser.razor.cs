@@ -3,7 +3,9 @@ using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
+
 using Prism.Events;
+
 using System.Linq;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
@@ -142,6 +144,20 @@ public partial class FileBrowser
         }
         await base.OnAfterRenderAsync(firstRender);
     }
+    private void HandleProgressBar(string currentArtifactName)
+    {
+        ProgressBarCurrentValue++;
+        ProgressBarCurrentSubText = $"{ProgressBarCurrentValue} of {ProgressBarMax}";
+        ProgressBarCurrentText = currentArtifactName;
+    }
+
+    private void InitialProgressBar(int maxValue)
+    {
+        ProgressBarCurrentValue = 0;
+        ProgressBarMax = maxValue;
+        ProgressBarCurrentSubText = string.Empty;
+        ProgressBarCurrentText = "Loading...";
+    }
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
     {
@@ -159,11 +175,18 @@ public partial class FileBrowser
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
-            if (artifactActionResult.Artifacts.Any(a=>destinationPath.Contains(a.ParentFullPath)))
+            if (_progressModalRef is not null)
+            {
+                InitialProgressBar(artifacts.Count);
+                await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles), true);
+            }
+            ProgressBarCts = new CancellationTokenSource();
+
+            if (destinationPath == _currentArtifact?.FullPath)
             {
                 var desArtifacts = await FileService.GetArtifactsAsync(destinationPath).ToListAsync();
 
-                foreach (var item in artifactActionResult.Artifacts)
+                foreach (var item in artifacts)
                 {
                     if (item.ArtifactType == FsArtifactType.File)
                     {
@@ -220,81 +243,71 @@ public partial class FileBrowser
                     else
                     {
                         // ToDo : not supported
-                    }                  
+                    }
+
+                    HandleProgressBar(item.Name);
                 }
-
-                return; // ToDo : show proper message
             }
-
-            try
+            else
             {
-                if (_progressModalRef is not null)
+                try
                 {
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles), true);
+                    await FileService.CopyArtifactsAsync(artifacts, destinationPath, false,
+                        onProgress: async (progressInfo) =>
+                        {
+                            ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                            ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                            ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
+                            await InvokeAsync(() => StateHasChanged());
+                        }, cancellationToken: ProgressBarCts.Token);
+
                 }
-                ProgressBarCts = new CancellationTokenSource();
-
-                await FileService.CopyArtifactsAsync(artifacts, destinationPath, false,
-                    onProgress: async (progressInfo) =>
-                    {
-                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
-                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                        await InvokeAsync(() => StateHasChanged());
-                    }, cancellationToken: ProgressBarCts.Token);
-
-            }
-            catch (CanNotOperateOnFilesException ex)
-            {
-                existArtifacts = ex.FsArtifacts;
-            }
-            finally
-            {
-                if (_progressModalRef is not null)
+                catch (CanNotOperateOnFilesException ex)
                 {
-                    await _progressModalRef.CloseAsync();
+                    existArtifacts = ex.FsArtifacts;
                 }
-
-                await CloseFileViewer();
-            }
-
-            if (_progressModalRef is not null)
-            {
-                await _progressModalRef.CloseAsync();
-                await CloseFileViewer();
-                StateHasChanged();
-            }
-
-            var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
-
-            if (existArtifacts.Count > 0 && _confirmationReplaceOrSkipModalRef != null)
-            {
-                var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
-
-                if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                finally
                 {
-                    ProgressBarCts = new CancellationTokenSource();
-
                     if (_progressModalRef is not null)
                     {
-                        await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
-
-                        await FileService.CopyArtifactsAsync(overwriteArtifacts, destinationPath, true,
-                            onProgress: async (progressInfo) =>
-                            {
-                                ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
-                                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                                await InvokeAsync(() => StateHasChanged());
-                            },
-                            cancellationToken: ProgressBarCts.Token);
-
                         await _progressModalRef.CloseAsync();
                     }
                 }
-                ChangeDeviceBackFunctionality(_artifactExplorerMode);
+
+                var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+
+                if (existArtifacts.Count > 0)
+                {
+                    if (_confirmationReplaceOrSkipModalRef != null)
+                    {
+                        var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
+
+                        if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                        {
+                            ProgressBarCts = new CancellationTokenSource();
+
+                            if (_progressModalRef is not null)
+                            {
+                                await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
+
+                                await FileService.CopyArtifactsAsync(overwriteArtifacts, destinationPath, true,
+                                    onProgress: async (progressInfo) =>
+                                    {
+                                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
+                                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+                                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
+                                        await InvokeAsync(() => StateHasChanged());
+                                    },
+                                    cancellationToken: ProgressBarCts.Token);
+
+                                await _progressModalRef.CloseAsync();
+                            }
+                        }
+                        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+                    }
+                }
             }
 
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
@@ -313,6 +326,7 @@ public partial class FileBrowser
             {
                 await _progressModalRef.CloseAsync();
             }
+            await CloseFileViewer();
         }
     }
 
