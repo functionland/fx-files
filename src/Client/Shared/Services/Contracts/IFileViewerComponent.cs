@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts.FileViewer;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFileViewerComponent
 {

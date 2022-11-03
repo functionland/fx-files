@@ -262,5 +262,9 @@
   {
     "outputFile": "Components/OverlayLoading/OverlayLoading.razor.css",
     "inputFile": "Components/OverlayLoading/OverlayLoading.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/FileViewerModal/TextViewer.razor.css",
+    "inputFile": "Components/Modal/FileViewerModal/TextViewer.razor.scss"
   }
 ]

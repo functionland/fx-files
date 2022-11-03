@@ -2,10 +2,10 @@
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Functionland.FxFiles.Client.Shared.Utils;
 
 using Microsoft.AspNetCore.Components.Web;
-using Functionland.FxFiles.Client.Shared.Utils;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace Functionland.FxFiles.Client.Shared.Components
@@ -13,7 +13,19 @@ namespace Functionland.FxFiles.Client.Shared.Components
     public partial class ArtifactExplorer
     {
         [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-        [Parameter] public List<FsArtifact> Artifacts { get; set; } = default!;
+        [Parameter]
+        public List<FsArtifact> Artifacts
+        {
+            get => artifacts;
+            set
+            {
+                if (artifacts != value)
+                {
+                    artifacts = value;
+                    _isArtifactsChanged = true;
+                }
+            }
+        }
         [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
         [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
         [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
@@ -29,24 +41,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback HandleBack { get; set; }
         [Parameter] public IFileService FileService { get; set; }
         [Parameter] public bool IsInSearchMode { get; set; }
-
         [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
-
-        private System.Timers.Timer? _timer;
-
-        private FsArtifact? _longPressedArtifact;
-
-        private Virtualize<FsArtifact>? _virtualizeListRef;
-
-        protected override async Task OnParamsSetAsync()
-        {
-            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
-            {
-                await _virtualizeListRef.RefreshDataAsync();
-            }
-
-            await base.OnParamsSetAsync();
-        }
         public PathProtocol Protocol =>
             FileService switch
             {
@@ -54,6 +49,70 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 IFulaFileService => PathProtocol.Fula,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
+
+        public int WindowWidth { get; set; }
+
+        private System.Timers.Timer? _timer;
+
+        private FsArtifact? _longPressedArtifact;
+
+        private Virtualize<FsArtifact>? _virtualizeListRef;
+        private Virtualize<FsArtifact[]>? _virtualizeGridRef;
+
+        private int _gridRowCount = 2;
+
+        private bool _isArtifactsChanged;
+
+        private DotNetObjectReference<ArtifactExplorer>? _objectReference;
+
+        protected override async Task OnInitAsync()
+        {
+            _objectReference = DotNetObjectReference.Create(this);
+
+            await base.OnInitAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
+                await InitWindowWidthListener();
+            }
+        }
+
+        protected override async Task OnParamsSetAsync()
+        {
+            if (_isArtifactsChanged)
+            {
+                if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
+                {
+                    await _virtualizeListRef.RefreshDataAsync();
+                    _isArtifactsChanged = false;
+                }
+
+                if (ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+                {
+                    await _virtualizeGridRef.RefreshDataAsync();
+                    _isArtifactsChanged = false;
+                }
+            }
+
+            await base.OnParamsSetAsync();
+        }
+
+        [JSInvokable]
+        public void UpdateWindowWidth(int windowWidth)
+        {
+            WindowWidth = windowWidth;
+            UpdateGridRowCount(WindowWidth);
+            StateHasChanged();
+        }
+
+        private async Task InitWindowWidthListener()
+        {
+            await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference);
+        }
 
         private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
@@ -120,7 +179,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
-        public async Task PointerUp(PointerEventArgs args, FsArtifact artifact)
+        public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
         {
             if (args.Button == 0)
             {
@@ -240,6 +299,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         }
 
         (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+        private List<FsArtifact> artifacts = default!;
 
         private void HandleTouchStart(TouchEventArgs t)
         {
@@ -289,22 +349,52 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
+        public void UpdateGridRowCount(int width)
+        {
+            bool shouldRefresh = false;
+
+            if (width >= 530)
+            {
+                shouldRefresh = true;
+                _gridRowCount = 3;
+            }
+            else if (width >= 350)
+            {
+                shouldRefresh = true;
+                _gridRowCount = 2;
+            }
+            else
+            {
+                shouldRefresh = true;
+                _gridRowCount = 1;
+            }
+
+            if (shouldRefresh == true && ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+            {
+                _virtualizeGridRef.RefreshDataAsync();
+            }
+
+            StateHasChanged();
+        }
+
+        private bool _isLoadingThumbnailFinished;
         private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
         {
-            await Task.Delay(300);
-            if (request.CancellationToken.IsCancellationRequested)
+            _isLoadingThumbnailFinished = false;
+            if (_isArtifactsChanged == false)
             {
-                return default;
+                await Task.Delay(300);
             }
+
+            if (request.CancellationToken.IsCancellationRequested) return default;
+
             var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
             List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
             foreach (var item in items)
             {
-                if (request.CancellationToken.IsCancellationRequested)
-                {
-                    return default;
-                }
+                if (request.CancellationToken.IsCancellationRequested) return default;
+
                 try
                 {
                     item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
@@ -315,43 +405,92 @@ namespace Functionland.FxFiles.Client.Shared.Components
                 }
             }
 
+            _isLoadingThumbnailFinished = true;
+
             return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
         }
 
         private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
         {
-            await Task.Delay(300);
-            if (request.CancellationToken.IsCancellationRequested)
+            _isLoadingThumbnailFinished = false;
+            if (_isArtifactsChanged == false)
             {
-                return default;
+                await Task.Delay(300);
             }
-            var count = request.Count * 2;
-            var start = request.StartIndex * 2;
+
+            if (request.CancellationToken.IsCancellationRequested) return default;
+
+            var count = request.Count * _gridRowCount;
+            var start = request.StartIndex * _gridRowCount;
             var requestCount = Math.Min(count, Artifacts.Count - start);
 
             List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
 
             foreach (var item in items)
             {
-                if (request.CancellationToken.IsCancellationRequested)
+                if (request.CancellationToken.IsCancellationRequested) return default;
+
+                try
                 {
-                    return default;
+                    item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
                 }
-                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+                catch
+                {
+                    item.ThumbnailPath = null;
+                }
             }
+            _isLoadingThumbnailFinished = true;
+
             var result = new List<FsArtifact[]>();
-            for (int i = 0; i < items.Count; i += 2)
+            if (_gridRowCount == 1)
             {
-                if ((i + 1) < items.Count)
+                for (int i = 0; i < items.Count; i += 1)
                 {
-                    result.Add(new FsArtifact[2] { items[i], items[i + 1] });
-                    continue;
+                    if (i < items.Count)
+                    {
+                        result.Add(new FsArtifact[1] { items[i] });
+                        continue;
+                    }
+                    result.Add(new FsArtifact[1] { items[i] });
                 }
-                result.Add(new FsArtifact[1] { items[i] });
+            }
+            else if (_gridRowCount == 2)
+            {
+                for (int i = 0; i < items.Count; i += 2)
+                {
+                    if ((i + 1) < items.Count)
+                    {
+                        result.Add(new FsArtifact[2] { items[i], items[i + 1] });
+                        continue;
+                    }
+                    result.Add(new FsArtifact[1] { items[i] });
+                }
+            }
+            else if (_gridRowCount == 3)
+            {
+                for (int i = 0; i < items.Count; i += 3)
+                {
+                    if ((i + 2) < items.Count)
+                    {
+                        result.Add(new FsArtifact[3] { items[i], items[i + 1], items[i + 2] });
+                        continue;
+                    }
+                    else if ((i + 1) < items.Count)
+                    {
+                        result.Add(new FsArtifact[2] { items[i], items[i + 1] });
+                        continue;
+                    }
+                    result.Add(new FsArtifact[1] { items[i] });
+                }
             }
 
-            return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / 2));
+            return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
         }
 
+        public void Dispose()
+        {
+            JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _objectReference);
+            _objectReference?.Dispose();
+        }
     }
 }

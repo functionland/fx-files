@@ -83,5 +83,16 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
 
             return image;
         }
+
+        public override bool IsSupported(string extension)
+        {
+            if (base.IsSupported(extension)) return true;
+
+            return new string[]
+            {
+                ".tiff"
+            }.Contains(extension.ToLower());
+
+        }
     }
 }
