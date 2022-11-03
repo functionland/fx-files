@@ -878,28 +878,31 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             //Exceptions based on path checking
 
-            if (cancellationToken?.IsCancellationRequested is true) 
+            if (cancellationToken?.IsCancellationRequested is true)
                 return 0;
 
             long artifactSize = 0;
             var artifactType = GetFsArtifactType(path);
+
+            if (artifactType is null)
+                throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
+                //Or just return 0, as default?
 
             if (artifactType == FsArtifactType.File)
             {
                 var file = new FileInfo(path);
                 artifactSize = file.Length;
 
-                return artifactSize;
-            }
+                onProgress?.Invoke(artifactSize);
 
-            if (artifactType == FsArtifactType.Drive)
+            }
+            else if (artifactType == FsArtifactType.Drive)
             {
                 artifactSize = CalculateDriveSize(path, cancellationToken);
 
-                return artifactSize;
+                onProgress?.Invoke(artifactSize);
             }
-
-            if (artifactType == FsArtifactType.Folder)
+            else if (artifactType == FsArtifactType.Folder)
             {
                 var allFiles = Directory.EnumerateFileSystemEntries(path, "*", new EnumerationOptions()
                 {
@@ -908,19 +911,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 foreach (var item in allFiles)
                 {
-                    if (!File.Exists(item.FullName)) 
+                    if (!File.Exists(item.FullName))
                         continue;
 
                     artifactSize += item.Length;
 
                     onProgress?.Invoke(artifactSize);
-                    //yield return artifactSize;
                 }
-
-                return artifactSize;
             }
-
-            throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
+            return artifactSize;          
         }
 
         protected virtual long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
