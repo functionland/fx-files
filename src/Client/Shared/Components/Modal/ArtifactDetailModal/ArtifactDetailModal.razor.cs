@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using Functionland.FxFiles.Client.Shared.Enums;
-using Functionland.FxFiles.Client.Shared.Models;
-using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
+using System.Diagnostics;
+using System.Security.AccessControl;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
@@ -16,8 +15,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private bool _isModalOpen;
         private bool _isMultiple;
         private bool _isInRoot;
-
-        //private string? _folderOrDriveSize;
+        private CancellationTokenSource? CalculateArtifactSizeProgressCts;
 
         [Parameter] public IFileService FileService { get; set; } = default!;
 
@@ -119,23 +117,29 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         {
             try
             {
+                CalculateArtifactSizeProgressCts = new();
+                var cancellationToken = CalculateArtifactSizeProgressCts.Token;
+
                 await Task.Run(async () =>
                 {
                     var requireToCalculateSizeArtifacts = _artifacts.Where(c => c.ArtifactType != FsArtifactType.File);
 
                     foreach (var artifact in requireToCalculateSizeArtifacts)
                     {
-                        await UpdateArtifactSizeAsync(artifact);
+                        if (cancellationToken.IsCancellationRequested is true)
+                            return;
+
+                        await UpdateArtifactSizeAsync(artifact, cancellationToken);
                         await InvokeAsync(StateHasChanged);
                     }
                 });
-                
+
             }
             catch (Exception exception)
             {
                 ExceptionHandler.Handle(exception);
             }
-            
+
         }
 
         void SetCurrentArtifact(int index)
@@ -144,28 +148,32 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _currentArtifact = _artifacts[index];
         }
 
-        async Task UpdateArtifactSizeAsync(FsArtifact artifact)
+        async Task UpdateArtifactSizeAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
-            var path = artifact.FullPath;
-            int lastUpdateSecond = 0;
-            var sw = Stopwatch.StartNew();
-
-            var totalSize = await FileService.GetArtifactSizeAsync(path, newSize =>
+            try
             {
-                artifact.Size = newSize;
-                var second = (int)sw.Elapsed.TotalSeconds;
-                if (second != lastUpdateSecond)
-                {
-                    lastUpdateSecond = second;
-                    _artifactsSize = FsArtifactUtils.CalculateSizeStr(_artifacts.Sum(a => a.Size ?? 0));
-                    _ = InvokeAsync(StateHasChanged);
-                }
-            });
+                var path = artifact.FullPath;
+                int lastUpdateSecond = 0;
+                var sw = Stopwatch.StartNew();
 
-            //await foreach (var newSize in FileService.GetArtifactSizeAsync(folderPath))
-            //{
-                
-            //}
+                var totalSize = await FileService.GetArtifactSizeAsync(path, newSize =>
+                {
+                    artifact.Size = newSize;
+                    var second = (int)sw.Elapsed.TotalSeconds;
+                    if (second != lastUpdateSecond)
+                    {
+                        lastUpdateSecond = second;
+                        _artifactsSize = FsArtifactUtils.CalculateSizeStr(_artifacts.Sum(a => a.Size ?? 0));
+
+                        //How about exceptions which may occure inside InvokeAsync?
+                        _ = InvokeAsync(StateHasChanged);
+                    }
+                }, cancellationToken);
+            }
+            catch (Exception)
+            {
+                //Log something here?
+            }
         }
 
         private void Close()
@@ -181,6 +189,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _timer.Enabled = true;
             _timer.Start();
             _timer.Elapsed += async (sender, e) => { await TimeElapsedForCloseDetailModal(sender, e); };
+
+            CalculateArtifactSizeProgressCts?.Cancel();
         }
 
         private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)

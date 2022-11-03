@@ -911,6 +911,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 foreach (var item in allFiles)
                 {
+                    if (cancellationToken?.IsCancellationRequested is true)
+                        break;
+
                     if (!File.Exists(item.FullName))
                         continue;
 
