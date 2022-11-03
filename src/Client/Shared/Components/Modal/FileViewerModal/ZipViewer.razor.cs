@@ -43,21 +43,14 @@ public partial class ZipViewer : IFileViewerComponent
         _cancellationTokenSource = new CancellationTokenSource();
         var token = _cancellationTokenSource.Token;
 
-        var children = await _zipService.GetAllInnerZippedArtifactsAsync(CurrentArtifact.FullPath, _password, token);
+        _allZipFileEntity = await _zipService.GetAllInnerZippedArtifactsAsync(CurrentArtifact.FullPath, _password, token);
 
-        _displayedArtifacts = children;
+        LoadInnerZipArtifacts(_currentInnerZipArtifact);
     }
 
-    private async Task LoadInnerZipArtifactsAsync(FsArtifact artifact)
+    private void LoadInnerZipArtifacts(FsArtifact artifact)
     {
-        if (string.IsNullOrEmpty(artifact.ParentFullPath))
-        {
-            _displayedArtifacts = _allZipFileEntity;
-        }
-        else
-        {
-            _displayedArtifacts = _allZipFileEntity.Where(x => x.ParentFullPath == artifact.FullPath).ToList();
-        }
+        _displayedArtifacts = _allZipFileEntity.Where(a => a.ParentFullPath == artifact.FullPath).ToList();
     }
 
     // Extract the artifact to the current directory
@@ -75,28 +68,29 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleBackAsync()
     {
-        if (_currentInnerZipArtifact.FullPath == "")
+        if (_currentInnerZipArtifact.FullPath == string.Empty)
         {
-            // Navigate back.
+            await OnBack.InvokeAsync();
         }
         else
         {
             _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
-            await LoadAllArtifactsAsync();
+            LoadInnerZipArtifacts(_currentInnerZipArtifact);
         }
     }
 
     private FsArtifact GetParent(FsArtifact artifact)
     {
-        return artifact;
+        var parentArtifact = _allZipFileEntity.Find(a => a.FullPath == artifact.ParentFullPath);
+        return parentArtifact ?? new FsArtifact("", "", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
     }
 
-    private async Task HandleArtifactClickAsync(FsArtifact artifact)
+    private void HandleArtifactClick(FsArtifact artifact)
     {
         if (artifact.ArtifactType == FsArtifactType.Folder)
         {
             _currentInnerZipArtifact = artifact;
-            await LoadAllArtifactsAsync();
+            LoadInnerZipArtifacts(_currentInnerZipArtifact);
         }
     }
 
