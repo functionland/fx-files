@@ -8,9 +8,11 @@
         private string? _placeholder;
         private string? _inputValue;
         private string? _headTitle;
+        private string? _doneBtnText;
         private FxTextInput? _inputRef;
+        private string? _lable;
 
-        public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder)
+        public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder, string? doneBtnText = null, string? lable = null)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -23,6 +25,8 @@
             _inputValue = inputValue;
             _title = tilte;
             _placeholder = placeholder;
+            _doneBtnText = doneBtnText ?? Localizer[nameof(AppStrings.Confirm)];
+            _lable = lable ?? Localizer[nameof(AppStrings.Name)];
 
             _tcs?.SetCanceled();
             _isModalOpen = true;
@@ -67,7 +71,7 @@
         {
             var result = new InputModalResult();
             result.ResultType = InputModalResultType.Confirm;
-            result.ResultName = _inputValue;
+            result.Result = _inputValue;
 
             _tcs!.SetResult(result);
             _tcs = null;

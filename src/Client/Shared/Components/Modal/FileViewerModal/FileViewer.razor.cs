@@ -31,6 +31,8 @@ public partial class FileViewer
             return true;
         else if (IsSupported<ZipViewer>(artifact))
             return true;
+        else if (IsSupported<TextViewer>(artifact))
+            return true;
 
         return false;
     }
@@ -44,6 +46,8 @@ public partial class FileViewer
         if (typeof(TComponent) == typeof(ImageViewer) && artifact.FileCategory == FileCategoryType.Image)
             return true;
         else if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
+            return true;
+        else if (typeof(TComponent) == typeof(TextViewer) && new string[] { ".txt" }.Contains(artifact.FileExtension))
             return true;
 
         return false;
