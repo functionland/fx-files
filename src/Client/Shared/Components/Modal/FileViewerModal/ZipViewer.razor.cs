@@ -12,7 +12,7 @@ public partial class ZipViewer : IFileViewerComponent
         new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
 
     private string? _password = null;
-    private CancellationTokenSource _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource();
+    private CancellationTokenSource _cancellationTokenSource = new();
 
 
     private List<FsArtifact> _displayedArtifacts = new();
