@@ -29,6 +29,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback HandleBack { get; set; }
         [Parameter] public IFileService FileService { get; set; }
         [Parameter] public bool IsInSearchMode { get; set; }
+        [Parameter] public bool IsInZipMode { get; set; }
+        [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
 
         [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
 

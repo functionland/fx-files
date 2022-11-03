@@ -26,15 +26,17 @@
 
 <div class="list-header">
     <div>breadcrumb</div>
-    <div class="action-btn select-all-btn" @onclick="OnToggle"></div>
+    <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>
 </div>
 
 <div class="artifact-list">
     <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
                       CurrentArtifact="null"
-                      OnSelectArtifact="OnSelectArtifact"
+                      OnSelectArtifact="LoadInnerZipArtifactsAsync"
                       HandleBack="HandleBackAsync"
+                      IsInZipMode="true"
+                      OnZipArtifactClick="HandleExtractArtifactsAsync"
                       IsInSearchMode="false"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
