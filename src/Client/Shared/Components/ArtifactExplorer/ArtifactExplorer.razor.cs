@@ -41,8 +41,16 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback HandleBack { get; set; }
         [Parameter] public IFileService FileService { get; set; }
         [Parameter] public bool IsInSearchMode { get; set; }
-
         [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.Storage,
+                IFulaFileService => PathProtocol.Fula,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
+
+        public int WindowWidth { get; set; }
 
         private System.Timers.Timer? _timer;
 
@@ -51,22 +59,26 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private Virtualize<FsArtifact>? _virtualizeListRef;
         private Virtualize<FsArtifact[]>? _virtualizeGridRef;
 
+        private int _gridRowCount = 2;
+
         private bool _isArtifactsChanged;
 
-        private int _gridRowCount = 1;
+        private DotNetObjectReference<ArtifactExplorer>? _objectReference;
 
         protected override async Task OnInitAsync()
         {
-            if (DeviceDisplay.MainDisplayInfo.Width >= 534)
-            {
-                _gridRowCount = 3;
-            }
-            else if (DeviceDisplay.MainDisplayInfo.Width >= 400)
-            {
-                _gridRowCount = 2;
-            }
+            _objectReference = DotNetObjectReference.Create(this);
 
             await base.OnInitAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
+                await InitWindowWidthListener();
+            }
         }
 
         protected override async Task OnParamsSetAsync()
@@ -89,13 +101,18 @@ namespace Functionland.FxFiles.Client.Shared.Components
             await base.OnParamsSetAsync();
         }
 
-        public PathProtocol Protocol =>
-            FileService switch
-            {
-                ILocalDeviceFileService => PathProtocol.Storage,
-                IFulaFileService => PathProtocol.Fula,
-                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
-            };
+        [JSInvokable]
+        public void UpdateWindowWidth(int windowWidth)
+        {
+            WindowWidth = windowWidth;
+            UpdateGridRowCount(WindowWidth);
+            StateHasChanged();
+        }
+
+        private async Task InitWindowWidthListener()
+        {
+            await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference);
+        }
 
         private async Task HandleArtifactOptionClick(FsArtifact artifact)
         {
@@ -332,6 +349,34 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
         }
 
+        public void UpdateGridRowCount(int width)
+        {
+            bool shouldRefresh = false;
+
+            if (width >= 530)
+            {
+                shouldRefresh = true;
+                _gridRowCount = 3;
+            }
+            else if (width >= 350)
+            {
+                shouldRefresh = true;
+                _gridRowCount = 2;
+            }
+            else
+            {
+                shouldRefresh = true;
+                _gridRowCount = 1;
+            }
+
+            if (shouldRefresh == true && ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+            {
+                _virtualizeGridRef.RefreshDataAsync();
+            }
+
+            StateHasChanged();
+        }
+
         private bool _isLoadingThumbnailFinished;
         private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
         {
@@ -440,6 +485,12 @@ namespace Functionland.FxFiles.Client.Shared.Components
             }
 
             return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
+        }
+
+        public void Dispose()
+        {
+            JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _objectReference);
+            _objectReference?.Dispose();
         }
     }
 }

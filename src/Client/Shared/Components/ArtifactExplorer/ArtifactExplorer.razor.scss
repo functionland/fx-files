@@ -4,10 +4,11 @@
 @import '../../Styles/components/_bit-checkbox.scss';
 
 .list-container {
-    position: relative;
+    height: 100%;
     flex-grow: 2;
     overflow-y: auto;
-    height: 100%;
+    overflow-x: hidden;
+    position: relative;
 }
 
 .list-title {

@@ -1,5 +1,5 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components
-
+@implements IDisposable
 @inherits AppComponentBase
 @using Functionland.FxFiles.Client.Shared.Utils
 
@@ -24,11 +24,11 @@
         {
             @if (ViewMode == ViewModeEnum.Grid)
             {
-                <Virtualize Context="artifacts" OverscanCount="10" ItemsProvider="@ProvideArtifactGrid" @ref="_virtualizeGridRef">
+                <Virtualize Context="artifacts" OverscanCount="5" ItemsProvider="@ProvideArtifactGrid" @ref="_virtualizeGridRef">
                     <div style="display: flex">
                         @foreach (var artifact in artifacts)
                         {
-                            <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+                            <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") grid-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
                  @onpointerup="((e) => PointerUp(e,artifact))"
                  @onpointerdown="(() =>PointerDown(artifact))"
                  @onpointercancel="PointerCancel">
@@ -83,8 +83,8 @@
             }
             else
             {
-                <Virtualize Context="artifact" OverscanCount="10" ItemsProvider="@ProvideArtifactsList" @ref="_virtualizeListRef">
-                    <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") @(ViewMode.ToString().ToLower())-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+                <Virtualize Context="artifact" OverscanCount="5" ItemsProvider="@ProvideArtifactsList" @ref="_virtualizeListRef">
+                    <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") list-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
              @onpointerup="((e) => PointerUp(e,artifact))"
              @onpointerdown="(() =>PointerDown(artifact))"
              @onpointercancel="PointerCancel">
