@@ -50,20 +50,68 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private bool _isArtifactsChanged;
 
-        private int _gridRowCount = 1;
+        private int _gridRowCount = 2;
+
+        private DotNetObjectReference<ArtifactExplorer>? _objectReference;
+
+        public int WindowWidth { get; set; }
 
         protected override async Task OnInitAsync()
         {
-            if (DeviceDisplay.MainDisplayInfo.Width >= 534)
+            _objectReference = DotNetObjectReference.Create(this);
+
+            await base.OnInitAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
+                await InitWindowWidthListener();
+            }
+        }
+
+        [JSInvokable]
+        public void UpdateWindowWidth(int windowWidth)
+        {
+            WindowWidth = windowWidth;
+            UpdateGridRowCount(WindowWidth);
+            StateHasChanged();
+        }
+
+        private async Task InitWindowWidthListener()
+        {
+            await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference);
+        }
+
+        public void Dispose()
+        {
+             JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _objectReference);
+            _objectReference?.Dispose();
+        }
+
+        public void UpdateGridRowCount(int width)
+        {
+            if (width >= 530)
             {
                 _gridRowCount = 3;
             }
-            else if (DeviceDisplay.MainDisplayInfo.Width >= 400)
+            else if (width >= 350)
             {
                 _gridRowCount = 2;
             }
+            else
+            {
+                _gridRowCount = 1;
+            }
 
-            await base.OnInitAsync();
+            if (ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+            {
+                _virtualizeGridRef.RefreshDataAsync();
+            }
+
+            StateHasChanged();
         }
 
         protected override async Task OnParamsSetAsync()
