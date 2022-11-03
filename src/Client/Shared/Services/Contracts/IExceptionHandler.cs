@@ -2,5 +2,6 @@
 
 public interface IExceptionHandler
 {
-    void Handle(Exception exception, IDictionary<string, object?>? parameters = null, bool showError = true);
+    void Handle(Exception exception, IDictionary<string, object?>? parameters = null);
+    void Track(Exception exception, IDictionary<string, object?>? parameters = null);
 }

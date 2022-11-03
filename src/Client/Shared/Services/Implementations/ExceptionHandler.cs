@@ -10,7 +10,7 @@ public partial class ExceptionHandler : IExceptionHandler
 {
     [AutoInject] IStringLocalizer<AppStrings> _localizer = default!;
 
-    public void Handle(Exception exception, IDictionary<string, object?>? parameters = null, bool showError = true)
+    public void Handle(Exception exception, IDictionary<string, object?>? parameters = null)
     {
 #if DEBUG
         var title = _localizer.GetString(AppStrings.ToastErrorTitle);
@@ -31,11 +31,20 @@ public partial class ExceptionHandler : IExceptionHandler
             Crashes.TrackError(exception);
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
             var message = _localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            
-            if (showError)
-                ToastModal.Show(title, message, FxToastType.Error);
+            ToastModal.Show(title, message, FxToastType.Error);
         }
 #endif
 
+    }
+
+    public void Track(Exception exception, IDictionary<string, object?>? parameters = null)
+    {
+#if DEBUG
+        var message = (exception as KnownException)?.Message ?? exception.ToString();
+        Console.WriteLine(message);
+        Debugger.Break();
+#else
+        Crashes.TrackError(exception);
+#endif
     }
 }
