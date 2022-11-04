@@ -1,12 +1,18 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Pages;
+﻿using System.Diagnostics.Metrics;
+
+namespace Functionland.FxFiles.Client.Shared.Pages;
 
 public partial class SettingsPage
 {
     [AutoInject] private ThemeInterop ThemeInterop = default!;
+    [AutoInject] private InMemoryAppStateStore AppState { get; set; } = default;
 
     private FxTheme DesiredTheme { get; set; }
     private string? CurrentTheme { get; set; }
     private string? CurrentVersion { get; set; }
+
+    private int _counter = 0;
+    private const int MaxCount = 7;
 
     protected override async Task OnInitAsync()
     {
@@ -24,6 +30,22 @@ public partial class SettingsPage
         GetAppVersion();
     }
 
+    public void Login()
+    {
+        //show toast
+    }
+
+    public void HandleTitleClick()
+    {
+        if (_counter >= MaxCount && AppState.IsAvailableForTest) return;
+
+        _counter++;
+
+        if(_counter >= MaxCount)
+        {
+            AppState.SetAvailableForTest(true);
+        }
+    }
     private void GetAppVersion()
     {
 #if BlazorHybrid
