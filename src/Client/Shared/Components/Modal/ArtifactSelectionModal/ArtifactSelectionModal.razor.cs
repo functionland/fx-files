@@ -18,6 +18,7 @@ public partial class ArtifactSelectionModal
 
     [Parameter] public bool IsMultiple { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
