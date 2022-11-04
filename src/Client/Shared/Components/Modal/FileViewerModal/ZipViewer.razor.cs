@@ -19,6 +19,7 @@ public partial class ZipViewer : IFileViewerComponent
     private List<FsArtifact> _displayedArtifacts = new();
     private List<FsArtifact> _selectedArtifacts = new();
     private List<FsArtifact> _allZipFileEntities = new();
+    private InputModal? _passwordModalRef;
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
 
@@ -26,6 +27,16 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact is null)
         {
+            return;
+        }
+
+        try
+        {
+            await LoadAllArtifactsAsync();
+        }
+        catch (InvalidPasswordException)
+        {
+            await GetPassword();
             return;
         }
 
@@ -38,6 +49,24 @@ public partial class ZipViewer : IFileViewerComponent
         await LoadAllArtifactsAsync();
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
         await base.OnInitAsync();
+    }
+
+    private async Task<string?> GetPassword()
+    {
+        if (_passwordModalRef is null)
+            return null;
+
+        var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+        var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
+        var extractPasswordModalLable = Localizer.GetString(AppStrings.Password);
+        var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty,
+            string.Empty, extractBtnTitle, extractPasswordModalLable);
+        if (passwordResult?.ResultType == InputModalResultType.Confirm)
+        {
+            return passwordResult.Result;
+        }
+
+        return null;
     }
 
     // Get the list of artifacts to display in the explorer
