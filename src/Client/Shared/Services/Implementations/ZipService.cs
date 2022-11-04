@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Extensions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Utils;
@@ -16,7 +17,7 @@ public partial class ZipService : IZipService
 
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }
 
-    
+
     public virtual async Task<List<FsArtifact>> GetAllArtifactsAsync(string zipFilePath, string? password = null, CancellationToken? cancellationToken = null)
     {
         var extension = Path.GetExtension(zipFilePath);
@@ -25,11 +26,11 @@ public partial class ZipService : IZipService
             var artifacts = extension switch
             {
                 ".rar" => await GetRarArtifactsAsync(zipFilePath, password),
-                ".zip" => await  GetZipArtifactsAsync(zipFilePath, password),
+                ".zip" => await GetZipArtifactsAsync(zipFilePath, password),
                 // ToDo: move string to resources.
                 _ => throw new InvalidOperationException($"Zip file not supported: {extension}")
             };
-            
+
             return artifacts;
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
@@ -186,12 +187,13 @@ public partial class ZipService : IZipService
         var artifacts = new List<FsArtifact>();
         using var archive = RarArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
 
-        foreach (var entry in archive.Entries.ToList())
+        var entries = archive.Entries.ToList();
+        foreach (var entry in entries)
         {
-            var newPath = Path.Combine(zipFilePath, entry.Key);
-            var parentPath = entry.Key.EndsWith(fileName) ? string.Empty : Path.GetDirectoryName(newPath);
+            var newPath = entry.Key;
+            var parentPath = Path.GetDirectoryName(newPath);
             var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
-               
+
             var entryFileName = Path.GetFileName(newPath);
             var newArtifact = new FsArtifact(newPath, entryFileName, artifactType, providerType)
             {
@@ -203,6 +205,8 @@ public partial class ZipService : IZipService
             artifacts.Add(newArtifact);
         }
 
+        FillRemainedArtifacts(providerType, artifacts);
+
         return artifacts;
     }
 
@@ -212,15 +216,17 @@ public partial class ZipService : IZipService
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
         var providerType = artifact.ProviderType;
 
-        var fsArtifacts = new List<FsArtifact>();
+        var artifacts = new List<FsArtifact>();
         using var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
-        
-        foreach (var entry in archive.Entries.ToList())
+
+        var entries = archive.Entries.ToList();
+        var keys = entries.Select(c => c.Key).ToList();
+        foreach (var entry in entries)
         {
             var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
-            var path = entry.Key;
+            var path = entry.Key.TrimEnd('/');
 
-            var parentPath = string.IsNullOrEmpty(path) ? string.Empty : Path.GetDirectoryName(path);
+            var parentPath = Path.GetDirectoryName(path);
 
             var entryFileName = Path.GetFileName(path);
             var newFsArtifact = new FsArtifact(path, entryFileName, artifactType, providerType)
@@ -230,11 +236,15 @@ public partial class ZipService : IZipService
                 ParentFullPath = parentPath
             };
 
-            fsArtifacts.Add(newFsArtifact);
+            artifacts.Add(newFsArtifact);
         }
-        return fsArtifacts;
+
+        FillRemainedArtifacts(providerType, artifacts);
+
+        return artifacts;
     }
 
+   
     private static async Task<int> ExtractZipArtifactAsync(string zipFullPath,
                                                 string destinationPath,
                                                 string itemPath,
@@ -495,4 +505,47 @@ public partial class ZipService : IZipService
         }
         return filePath;
     }
+
+    private static List<string> GetRemainedEntries(IEnumerable<string> filesPath)
+    {
+        var result = new List<string>();
+
+        foreach (var filePath in filesPath)
+        {
+            var path = filePath;
+
+            while (true)
+            {
+                var parentFilePath = Path.GetDirectoryName(path);
+                
+                if (string.IsNullOrWhiteSpace(parentFilePath)) break;
+
+                path = parentFilePath;
+
+                if (filesPath.Contains(parentFilePath) || result.Contains(parentFilePath)) continue;
+
+                result.Add(parentFilePath);
+            }
+        }
+
+        return result;
+    }
+
+    private static void FillRemainedArtifacts(FsFileProviderType providerType, List<FsArtifact> artifacts)
+    {
+        var remainedEntries = GetRemainedEntries(artifacts.Select(c => c.FullPath));
+
+        foreach (var remainedEntry in remainedEntries)
+        {
+            var entryFileName = Path.GetFileName(remainedEntry);
+            var newArtifact = new FsArtifact(remainedEntry, entryFileName, FsArtifactType.Folder, providerType)
+            {
+                FileExtension = null,
+                ParentFullPath = Path.GetDirectoryName(remainedEntry)
+            };
+
+            artifacts.Add(newArtifact);
+        }
+    }
+
 }
