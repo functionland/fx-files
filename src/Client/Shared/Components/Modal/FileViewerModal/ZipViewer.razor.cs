@@ -6,6 +6,7 @@ public partial class ZipViewer : IFileViewerComponent
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
+    [Parameter] public EventCallback<FsArtifact> OnExtract { get; set; }
 
     [AutoInject] private IZipService _zipService = default!;
 
@@ -90,6 +91,12 @@ public partial class ZipViewer : IFileViewerComponent
     {
         // full path, destination path, destination name, override if exists , password
         //await _zipService.ExtractZipFileAsync(CurrentArtifact.FullPath, artifacts, _password);
+    }
+
+    private async Task HandleExtractAllZipArtifactsAsync()
+    {
+        await OnExtract.InvokeAsync(CurrentArtifact);
+        await HandleBackAsync();
     }
 
     private async Task HandleBackAsync()
