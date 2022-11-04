@@ -3,6 +3,7 @@
 public partial class ZipViewer : IFileViewerComponent
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
 

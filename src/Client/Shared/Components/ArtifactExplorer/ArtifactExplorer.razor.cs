@@ -1,4 +1,9 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
+
+namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class ArtifactExplorer
 {
@@ -433,6 +438,11 @@ public partial class ArtifactExplorer
         var result = items.Chunk(_gridRowCount).ToList();
 
         return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
+    }
+
+    private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
+    {
+        await OnZipArtifactClick.InvokeAsync(artifact);
     }
 
     public void Dispose()

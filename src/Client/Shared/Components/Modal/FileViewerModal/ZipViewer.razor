@@ -17,7 +17,7 @@
     </div>
     <div class="extract-button">
         <FxButton OnClick="@OnBack"
-                  IsVisible="true"
+                  IsVisible="@(ArtifactExplorerMode == ArtifactExplorerMode.Normal && _currentInnerZipArtifact.FullPath== string.Empty)"
                   Text="Extract"
                   ButtonStyle="FxButtonStyle.Normal"
                   LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/extract.svg" />
@@ -25,8 +25,8 @@
 </div>
 
 
-@if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
-{
+
+<div class="action-header">
     <div class="list-header">
         <div>breadcrumb</div>
         <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>
@@ -34,10 +34,7 @@
     <div class="divider">
         <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerType="FxDividerType.Horizontal" FxDividerSize="FxDividerSize.Thin"></FxDivider>
     </div>
-}
-@if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-{
-    <div class="select-action">
+    <div class="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") select-action">
         <div class="info-selection">
             <div class="close-btn" @onclick="CancelSelectionMode"></div>
             <div class="item-selected">
@@ -53,17 +50,18 @@
             }
         </div>
     </div>
-}
+</div>
 
 <div class="artifact-list">
     <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
-                      CurrentArtifact="null"
+                      CurrentArtifact="CurrentArtifact"
                       OnSelectArtifact="HandleArtifactClick"
                       HandleBack="HandleBackAsync"
                       IsInZipMode="true"
                       OnZipArtifactClick="HandleExtractArtifactsAsync"
                       IsInSearchMode="false"
+                      ThumbnailService="ThumbnailService"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
 </div>
