@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages;
 public partial class SettingsPage
 {
     [AutoInject] private ThemeInterop ThemeInterop = default!;
-    [AutoInject] private InMemoryAppStateStore AppState { get; set; } = default;
+    [AutoInject] private InMemoryAppStateStore AppState { get; set; } = default!;
 
     private FxTheme DesiredTheme { get; set; }
     private string? CurrentTheme { get; set; }
@@ -32,7 +32,7 @@ public partial class SettingsPage
 
     public void Login()
     {
-        //show toast
+        FxToast.Show(Localizer[nameof(AppStrings.ComingSoon)], Localizer[nameof(AppStrings.FutureFeature)], FxToastType.Info);
     }
 
     public void HandleTitleClick()
