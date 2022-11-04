@@ -640,16 +640,16 @@ public partial class FileBrowser
 
     public async Task HandleExtractArtifactAsync(FsArtifact artifact)
     {
-        if (_inputModalRef is null || artifact is null) return;
+        if (_inputModalRef is null) return;
 
         var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
         var createFolder = Localizer.GetString(AppStrings.FolderName);
         var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
-        var extraxtBtnTitle = Localizer.GetString(AppStrings.Extract);
+        var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
 
         try
         {
-            var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extraxtBtnTitle);
+            var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
             var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
             if ((result?.ResultType) != InputModalResultType.Confirm) return;
@@ -657,18 +657,18 @@ public partial class FileBrowser
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtraxtZipAsync(artifact.FullPath, parentPath!, destinationFolderName);
+                await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName);
             }
             catch (InvalidPasswordException)
             {
                 if (_passwordModalRef is null) return;
 
-                var extraxtPasswordModalTitle = Localizer.GetString(AppStrings.ExtraxtPasswordModalTitle);
-                var extraxtPasswordModalLable = Localizer.GetString(AppStrings.Password);
-                var paswordResult = await _passwordModalRef.ShowAsync(extraxtPasswordModalTitle, string.Empty, string.Empty, string.Empty, extraxtBtnTitle, extraxtPasswordModalLable);
+                var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
+                var extractPasswordModalLable = Localizer.GetString(AppStrings.Password);
+                var paswordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLable);
                 if (paswordResult?.ResultType == InputModalResultType.Confirm)
                 {
-                    await ExtraxtZipAsync(artifact.FullPath, parentPath!, destinationFolderName, paswordResult.Result);
+                    await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName, paswordResult.Result);
                 }
             }
 
@@ -686,7 +686,7 @@ public partial class FileBrowser
 
     }
 
-    private async Task ExtraxtZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? paswword = null)
+    private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null)
     {
         if (_progressModalRef is null) return;
 
@@ -704,23 +704,23 @@ public partial class FileBrowser
                 await InvokeAsync(StateHasChanged);
             }
 
-            var duplicatCount = await ZipService.ExtractZippedArtifactAsync(
+            var duplicateCount = await ZipService.ExtractZippedArtifactAsync(
                 zipFilePath,
                 destinationFolderPath,
                 destinationFolderName,
                 overwrite: false,
-                password: paswword,
+                password: password,
                 onProgress: onProgress,
                 cancellationToken: ProgressBarCts.Token);
 
             await _progressModalRef.CloseAsync();
 
-            if (duplicatCount <= 0) return;
+            if (duplicateCount <= 0) return;
 
             if (_confirmationReplaceOrSkipModalRef == null)
                 return;
 
-            var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicatCount);
+            var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount);
 
             if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
             {
@@ -733,7 +733,7 @@ public partial class FileBrowser
                     destinationFolderPath,
                     destinationFolderName,
                     overwrite: true,
-                    password: paswword,
+                    password: password,
                     onProgress: onProgress,
                     cancellationToken: ProgressBarCts.Token);
             }
