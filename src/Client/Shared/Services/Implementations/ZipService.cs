@@ -3,6 +3,7 @@ using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Extensions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Utils;
+using Microsoft.VisualBasic;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
@@ -18,7 +19,10 @@ public partial class ZipService : IZipService
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }
 
 
-    public virtual async Task<List<FsArtifact>> GetAllArtifactsAsync(string zipFilePath, string? password = null, CancellationToken? cancellationToken = null)
+    public virtual async Task<List<FsArtifact>> GetAllArtifactsAsync(
+        string zipFilePath,
+        string? password = null,
+        CancellationToken? cancellationToken = null)
     {
         var extension = Path.GetExtension(zipFilePath);
         try
@@ -55,14 +59,15 @@ public partial class ZipService : IZipService
         }
     }
 
-    public virtual async Task<int> ExtractZippedArtifactAsync(string zipFullPath,
-                                                   string destinationPath,
-                                                   string destinationFolderName,
-                                                   string? itemPath = null,
-                                                   bool overwrite = false,
-                                                   string? password = null,
-                                                   Func<ProgressInfo, Task>? onProgress = null,
-                                                   CancellationToken? cancellationToken = null)
+    public virtual async Task<int> ExtractZippedArtifactAsync(
+        string zipFullPath,
+        string destinationPath,
+        string destinationFolderName,
+        IEnumerable<FsArtifact>? fsArtifacts = null,
+        bool overwrite = false,
+        string? password = null,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
         var duplicateCount = 0;
         var newPath = Path.Combine(destinationPath, destinationFolderName);
@@ -75,65 +80,45 @@ public partial class ZipService : IZipService
 
         try
         {
-            if (zipFileExtension == ".zip")
+            if (fsArtifacts is null || !fsArtifacts.Any())
             {
-                if (!string.IsNullOrWhiteSpace(itemPath))
+                return zipFileExtension switch
                 {
-                    duplicateCount = await ExtractZipArtifactAsync(zipFullPath, newPath, itemPath, overwrite, password, onProgress, cancellationToken);
-                }
-                else
-                {
-                    duplicateCount = await ExtractZipAsync(zipFullPath, newPath, password, overwrite, onProgress, cancellationToken);
-                }
-            }
-            else if (zipFileExtension == ".rar")
-            {
-                if (!string.IsNullOrWhiteSpace(itemPath))
-                {
-                    duplicateCount = await ExtractRarArtifactAsync(zipFullPath, newPath, itemPath, overwrite, password, onProgress, cancellationToken);
-                }
-                else
-                {
-                    duplicateCount = await ExtractRarAsync(zipFullPath, newPath, password, overwrite, onProgress, cancellationToken);
-                }
-            }
-            else
-            {
-                var invalidZipFileExtensionExceptionMessage = StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), zipFileExtension);
-                throw new InvalidZipExtensionException(invalidZipFileExtensionExceptionMessage);
+                    ".zip" => await ExtractZipAsync(zipFullPath, newPath, null, password, overwrite, onProgress, cancellationToken),
+                    ".rar" => await ExtractRarAsync(zipFullPath, newPath, null, password, overwrite, onProgress, cancellationToken),
+                    _ => throw new InvalidZipExtensionException(StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), zipFileExtension)),
+                };
             }
 
-            if (string.IsNullOrWhiteSpace(itemPath)) return duplicateCount;
-
-            string? artifactPath = "";
-            var extractedZipFilePath = GetFilePath(zipFullPath, itemPath);
-
-            //Add another path in Windows
-            if (destinationPath.Contains('\\'))
+            switch (zipFileExtension)
             {
-                artifactPath = destinationPath + "\\" + extractedZipFilePath;
-            }
-            //Add another path in Android
-            else
-            {
-                artifactPath = destinationPath + "/" + extractedZipFilePath;
-            }
+                case ".zip":
+                    {
+                        foreach (var fsArtifact in fsArtifacts)
+                        {
+                            duplicateCount += await ExtractZipAsync(zipFullPath, newPath, fsArtifact.FullPath, password, overwrite, onProgress, cancellationToken);
+                        }
 
-            var fileAttribute = File.GetAttributes(itemPath);
-            var getFileName = Path.GetFileName(artifactPath);
+                        break;
+                    }
 
-            if (fileAttribute.HasFlag(FileAttributes.Directory))
-            {
-                Directory.Move(artifactPath, Path.Combine(destinationPath, getFileName));
-            }
-            else
-            {
-                File.Move(artifactPath, Path.Combine(destinationPath, getFileName));
+                case ".rar":
+                    {
+                        foreach (var fsArtifact in fsArtifacts)
+                        {
+                            duplicateCount += await ExtractRarAsync(zipFullPath, newPath, fsArtifact.FullPath, password, overwrite, onProgress, cancellationToken);
+                        }
+                        break;
+                    }
+
+                default:
+                    throw new InvalidZipExtensionException(StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), zipFileExtension));
             }
 
-            Directory.Delete(newPath, true);
+
 
             return duplicateCount;
+
         }
         catch (IOException ex) when (ex.Message.EndsWith("because a file or directory with the same name already exists."))
         {
@@ -180,7 +165,6 @@ public partial class ZipService : IZipService
 
     private async Task<List<FsArtifact>> GetRarArtifactsAsync(string zipFilePath, string? password = null)
     {
-        var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
         var providerType = artifact.ProviderType;
 
@@ -212,7 +196,6 @@ public partial class ZipService : IZipService
 
     private async Task<List<FsArtifact>> GetZipArtifactsAsync(string zipFilePath, string? password = null)
     {
-        var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
         var providerType = artifact.ProviderType;
 
@@ -220,7 +203,6 @@ public partial class ZipService : IZipService
         using var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
 
         var entries = archive.Entries.ToList();
-        var keys = entries.Select(c => c.Key).ToList();
         foreach (var entry in entries)
         {
             var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
@@ -244,169 +226,39 @@ public partial class ZipService : IZipService
         return artifacts;
     }
 
-   
-    private static async Task<int> ExtractZipArtifactAsync(string zipFullPath,
-                                                string destinationPath,
-                                                string itemPath,
-                                                bool overwrite = false,
-                                                string? password = null,
-                                                Func<ProgressInfo, Task>? onProgress = null,
-                                                CancellationToken? cancellationToken = null)
-    {
-        int? progressCount = null;
-        var duplicateCount = 0;
-        var itemExtension = Path.GetExtension(itemPath);
-        var filePath = GetFilePath(zipFullPath, itemPath);
-
-        using var archive = ZipArchive.Open(zipFullPath, new ReaderOptions() { Password = password });
-        var entries = archive.Entries.ToList();
-        foreach (var entry in entries)
-        {
-            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
-            {
-                return 0;
-            }
-            if (progressCount is null && onProgress is not null)
-            {
-                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
-            }
-
-            try
-            {
-                string? key;
-                if (string.IsNullOrWhiteSpace(itemExtension))
-                {
-                    if (filePath.Contains('\\'))
-                    {
-                        key = entry.Key.Replace("/", "\\")[..(entry.Key.Length - 1)];
-                    }
-                    else
-                    {
-                        key = entry.Key[..^1];
-                    }
-
-                    if (key.StartsWith(filePath))
-                    {
-                        entry.WriteToDirectory(destinationPath, new ExtractionOptions()
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = overwrite
-                        });
-                    }
-                }
-                else
-                {
-                    if (filePath.Contains('\\'))
-                    {
-                        key = entry.Key.Replace("/", "\\");
-                    }
-                    else
-                    {
-                        key = entry.Key;
-                    }
-
-                    if (key.Contains(filePath))
-                    {
-                        entry.WriteToDirectory(destinationPath, new ExtractionOptions()
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = overwrite
-                        });
-                    }
-                }
-            }
-            catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
-            {
-                duplicateCount++;
-                continue;
-            }
-
-            if (onProgress is not null)
-            {
-                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
-            }
-        }
-
-        return duplicateCount;
-    }
-
-    private static async Task<int> ExtractRarArtifactAsync(
-        string zipFullPath,
-        string destinationPath,
-        string itemPath,
-        bool overwrite = false,
-        string? password = null,
-        Func<ProgressInfo, Task>? onProgress = null,
-        CancellationToken? cancellationToken = null)
-    {
-        int? progressCount = null;
-        var duplicateCount = 0;
-        var itemExtension = Path.GetExtension(itemPath);
-        var filePath = GetFilePath(zipFullPath, itemPath);
-
-        using var archive = RarArchive.Open(zipFullPath, new ReaderOptions() { Password = password });
-        var entries = archive.Entries.ToList();
-        foreach (var entry in entries)
-        {
-            if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
-            {
-                return 0;
-            }
-            if (progressCount is null && onProgress is not null)
-            {
-                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
-            }
-            try
-            {
-                if (string.IsNullOrWhiteSpace(itemExtension))
-                {
-                    if (entry.Key.StartsWith(filePath))
-                    {
-                        entry.WriteToDirectory(destinationPath, new ExtractionOptions()
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = overwrite
-                        });
-                    }
-                }
-                else
-                {
-                    if (entry.Key.Contains(filePath))
-                    {
-                        entry.WriteToDirectory(destinationPath, new ExtractionOptions()
-                        {
-                            ExtractFullPath = true,
-                            Overwrite = overwrite
-                        });
-                    }
-                }
-            }
-            catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
-            {
-                duplicateCount++;
-                continue;
-            }
-
-            if (onProgress is not null)
-            {
-                progressCount = await FsArtifactUtils.HandleProgressBarAsync(entry.Key, entries.Count, progressCount, onProgress);
-            }
-        }
-        return duplicateCount;
-    }
-
     private static async Task<int> ExtractRarAsync(
         string fullPath,
         string destinationPath,
-        string? password = null,
-        bool overwrite = false,
-        Func<ProgressInfo, Task>? onProgress = null,
-        CancellationToken? cancellationToken = null)
+        string? itemPath,
+        string? password,
+        bool overwrite,
+        Func<ProgressInfo, Task>? onProgress,
+        CancellationToken? cancellationToken)
     {
         int? progressCount = null;
         var duplicateCount = 0;
         using var archive = RarArchive.Open(fullPath, new ReaderOptions() { Password = password });
-        var entries = archive.Entries.ToList();
+        var entries = archive.Entries;
+
+        if (itemPath is not null)
+        {
+            entries = entries.Where(c => c.Key.StartsWith(itemPath)).ToList();
+            if (!entries.Any())
+            {
+                if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
+                    return 0;
+
+                var folderName = Path.GetFileNameWithoutExtension(itemPath);
+                var finalPath = Path.Combine(destinationPath, folderName);
+                if (!Directory.Exists(finalPath))
+                {
+                    Directory.CreateDirectory(finalPath);
+                }
+
+                return 0;
+            }
+        }
+
         foreach (var entry in entries)
         {
             if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
@@ -424,6 +276,12 @@ public partial class ZipService : IZipService
                     ExtractFullPath = true,
                     Overwrite = overwrite
                 });
+
+                if (itemPath is not null)
+                {
+                    var entryFullPath = GetRarFullPath(destinationPath, entry.Key.TrimEnd('\\'));
+                    MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
+                }
             }
             catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
             {
@@ -443,6 +301,7 @@ public partial class ZipService : IZipService
     private static async Task<int> ExtractZipAsync(
         string fullPath,
         string destinationPath,
+        string? itemPath = null,
         string? password = null,
         bool overwrite = false,
         Func<ProgressInfo, Task>? onProgress = null,
@@ -451,7 +310,28 @@ public partial class ZipService : IZipService
         int? progressCount = null;
         var duplicateCount = 0;
         using var archive = ZipArchive.Open(fullPath, new ReaderOptions() { Password = password });
-        var entries = archive.Entries.ToList();
+
+        var entries = archive.Entries;
+
+        if (itemPath is not null)
+        {
+            entries = entries.Where(c => c.Key.StartsWith(itemPath)).ToList();
+            if (!entries.Any())
+            {
+                if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
+                    return 0;
+
+                var folderName = Path.GetFileNameWithoutExtension(itemPath);
+                var finalPath = Path.Combine(destinationPath, folderName);
+                if (!Directory.Exists(finalPath))
+                {
+                    Directory.CreateDirectory(finalPath);
+                }
+
+                return 0;
+            }
+        }
+
         foreach (var entry in entries)
         {
             if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) return 0;
@@ -468,6 +348,12 @@ public partial class ZipService : IZipService
                     ExtractFullPath = true,
                     Overwrite = overwrite
                 });
+
+                if (itemPath is not null)
+                {
+                    var entryFullPath = GetZipFullPath(destinationPath, entry.Key.TrimEnd('/'));
+                    MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
+                }
             }
             catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
             {
@@ -484,23 +370,52 @@ public partial class ZipService : IZipService
         return duplicateCount;
     }
 
-    private static string GetFilePath(string zipFullPath, string itemPath)
+    private static void MoveExtractedFileToFinalDestination(string destinationPath, string extractedItemPath)
     {
-        var zipFileName = Path.GetFileName(zipFullPath);
+        var fileAttribute = File.GetAttributes(extractedItemPath);
 
-        var filePath = "";
-        //Add another path in Windows
-        if (zipFullPath.Contains('\\'))
+        if (fileAttribute.HasFlag(FileAttributes.Directory))
         {
-            filePath = itemPath.Replace(zipFileName + "\\", "");
+            Directory.Move(extractedItemPath, destinationPath);
         }
-        //Add another path in Android
-        else if (zipFullPath.Contains('/'))
+        else
         {
-            filePath = itemPath.Replace(zipFileName + "/", "");
+            File.Move(extractedItemPath, destinationPath);
         }
+
+        var remainedPath = extractedItemPath;
+        while (true)
+        {
+            var parentPath = Path.GetDirectoryName(remainedPath);
+            if (parentPath is null || parentPath.Equals(destinationPath))
+                break;
+
+            remainedPath = parentPath;
+            Directory.Delete(parentPath, true);
+        }
+    }
+    private static string GetZipFullPath(string destinationPath, string itemPath)
+    {
+
+#if WINDOWS
+        itemPath = itemPath.Replace("/", "\\");
+#endif
+
+        var filePath = Path.Combine(destinationPath, itemPath);
         return filePath;
     }
+
+    private static string GetRarFullPath(string destinationPath, string itemPath)
+    {
+
+#if ANDROID || IOS || Mac
+        itemPath = itemPath.Replace("\", "/");
+#endif
+
+        var filePath = Path.Combine(destinationPath, itemPath);
+        return filePath;
+    }
+
 
     private static List<string> GetRemainedEntries(IEnumerable<string> filesPath)
     {
@@ -513,7 +428,7 @@ public partial class ZipService : IZipService
             while (true)
             {
                 var parentFilePath = Path.GetDirectoryName(path);
-                
+
                 if (string.IsNullOrWhiteSpace(parentFilePath)) break;
 
                 path = parentFilePath;
