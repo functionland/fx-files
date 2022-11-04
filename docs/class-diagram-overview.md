@@ -1,5 +1,5 @@
 # Basic Models
-The `FsArtifact` is an entity to describe a *File*, *Folder* or a *Drive* in the file system in any platform. The file system platform could be an android's internal memory, a windows drive, or a Blox Storage. All these file systems are stroing `FsArtifact`s which we may call them as **artifact**(s) in this document.
+The `FsArtifact` is an entity to describe a *File*, *Folder* or a *Drive* in the file system in any platform. The file system platform could be an android's internal memory, a windows drive, or a Blox Storage. All these file systems are strong `FsArtifact`s which we may call as **artifact**(s) in this document.
 ```mermaid
 classDiagram
 class FsArtifact{
@@ -38,7 +38,7 @@ class FsArtifactType{
 ```
 
 # FileService Architecture
-To unify the development experience of facing with different file systems (Android, iOS, Widnows, Blox and ...) we use an abstraction called `IFileService`. This abstraction represents all the requirements that a typical file system should expose.
+To unify the development experience of facing with different file systems (Android, iOS, Windows, Blox and ...) we use an abstraction called `IFileService`. This abstraction represents all the requirements that a typical file system should expose.
 
 As you see, there are different implementations of `IFileService` for different platforms leveraging specialized API(s) of each specific platform.
 Amongst these implementations `FakeFileService` is the interesting one for developers, as they can use it to easily test their application, removing all the barriers to setup a proper file system for testing purposes.
