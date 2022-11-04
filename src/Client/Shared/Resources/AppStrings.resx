@@ -630,7 +630,19 @@
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="ExtraxtPasswordModalTitle" xml:space="preserve">
+  <data name="ExtractPasswordModalTitle" xml:space="preserve">
     <value>Enter password for the zip file</value>
+  </data>
+  <data name="ExtractingFolder" xml:space="preserve">
+    <value>Extracting folder</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming soon...</value>
+  </data>
+  <data name="FutureFeature" xml:space="preserve">
+    <value>This feature will come in near future</value>
+  </data>
+  <data name="FxFiles" xml:space="preserve">
+    <value>Fx Files</value>
   </data>
 </root>

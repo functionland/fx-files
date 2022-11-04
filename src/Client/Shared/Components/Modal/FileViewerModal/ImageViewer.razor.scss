@@ -31,7 +31,7 @@
 
         .pin-icon::before {
             font-size: 24px;
-            @include Icon($pin, $pure-white, $Icons-Filled);
+            @include Icon($pin, $pure-white);
         }
 
         .pin-icon-outline::before {
