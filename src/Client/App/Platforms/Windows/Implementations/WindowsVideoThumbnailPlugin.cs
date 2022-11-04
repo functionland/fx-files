@@ -28,6 +28,17 @@ public class WindowsVideoThumbnailPlugin : VideoThumbnailPlugin
 
         return memoryStream;
     }
+
+    public override bool IsSupported(string extension)
+    {
+        if (base.IsSupported(extension)) return true;
+
+        return new string[]
+        {
+            ".ogv"
+        }.Contains(extension.ToLower());
+
+    }
 }
 
 [Flags]
@@ -224,5 +235,6 @@ public class WindowsThumbnailProvider
 
         throw Marshal.GetExceptionForHR((int)hr);
     }
+
 }
 

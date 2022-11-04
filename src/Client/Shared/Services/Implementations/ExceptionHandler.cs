@@ -35,4 +35,15 @@ public partial class ExceptionHandler : IExceptionHandler
 #endif
 
     }
+
+    public void Track(Exception exception, IDictionary<string, object?>? parameters = null)
+    {
+#if DEBUG
+        var message = (exception as KnownException)?.Message ?? exception.ToString();
+        Console.WriteLine(message);
+        Debugger.Break();
+#else
+        Crashes.TrackError(exception);
+#endif
+    }
 }

@@ -59,6 +59,7 @@
             {
                 <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
+                          ThumbnailService="ThumbnailService"
                           CurrentArtifact="_currentArtifact"
                           OnSelectArtifact="HandleSelectArtifactAsync"
                           OnArtifactOptionClick="HandleOptionsArtifact"
@@ -78,7 +79,7 @@
                 @if (_selectedArtifacts.Count >= 1)
                 {
                     <div class="footer-option">
-                        <div class="btn-detail" @onclick="(()=>HandleShowDetailsArtifact(_selectedArtifacts))">
+                        <div class="option-item btn-detail" @onclick="(()=>HandleShowDetailsArtifact(_selectedArtifacts))">
                             <div class="detail-icon"></div>
                             <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
                         </div>
@@ -218,9 +219,9 @@
                    OnSearch="HandleInLineSearch"
                    IsPartial="false" />
         }
-
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
+                      ThumbnailService="ThumbnailService"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactOptionClick="HandleOptionsArtifact"
@@ -236,12 +237,13 @@
     </div>
 }
 
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" />
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService"/>
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
+<InputModal @ref="_passwordModalRef" />
 <ConfirmationModal @ref="_confirmationModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" />
 <ProgressModal CurrentText="@ProgressBarCurrentText"
@@ -251,4 +253,4 @@
                OnCancel="ProgressBarOnCancel"
                @ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
-<FileViewer @ref="_fileViewerRef" FileService="FileService" />
+<FileViewer @ref="_fileViewerRef" FileService="FileService" OnPin="HandlePinArtifactsAsync" OnUnpin="HandleUnPinArtifactsAsync" OnOptionClick="HandleOptionsArtifact"/>

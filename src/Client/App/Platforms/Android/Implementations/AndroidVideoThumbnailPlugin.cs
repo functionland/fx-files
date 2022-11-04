@@ -40,4 +40,15 @@ public class AndroidVideoThumbnailPlugin : VideoThumbnailPlugin
 
         return outputStream;
     }
+
+    public override bool IsSupported(string extension)
+    {
+        if (base.IsSupported(extension)) return true;
+
+        return new string[]
+        {
+            ".f4v"
+        }.Contains(extension.ToLower());
+
+    }
 }
