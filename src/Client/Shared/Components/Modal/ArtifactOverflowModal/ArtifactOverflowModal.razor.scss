@@ -9,7 +9,6 @@
     @include Icon($detail);
 }
 
-//TODO: replace extract icon with detail icon
 ::deep .extract-button .fxbutton-text::before {
     font-size: 20px;
     margin-right: 8px;
