@@ -858,7 +858,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public async Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
         {
-            //Exceptions based on path checking
+            if (path is null)
+                throw new ArtifactPathNullException("Artifact path is null.");
 
             if (cancellationToken?.IsCancellationRequested is true)
                 return 0;
