@@ -28,7 +28,13 @@ public class MauiMediaElement : UIView
 		playerViewController.Player = player;
 
 		playerViewController.View!.Frame = this.Bounds;
-		AddSubview(playerViewController.View);
+
+        // This shouldn't be necessary but something in this call is making the playback controls largely size correctly.
+        // Largely because they are slightly off at the top margin, but if you fullscreen then cancel fullscreen they size correctly.
+        var vc = WindowStateManager.Default.GetCurrentUIViewController();
+        vc!.View!.AddSubview(playerViewController.View);
+
+        AddSubview(playerViewController.View);
 
 		AddPlayedToEndObserver();
 	}

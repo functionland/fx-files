@@ -6,6 +6,8 @@ public partial class NativeVideoViewer : ContentPage
 {
     protected IExceptionHandler ExceptionHandler { get; set; } = default!;
 
+    private bool IsInPictureInPicture { get; set; }
+
     public NativeVideoViewer(string path)
     {
         InitializeComponent();
@@ -15,8 +17,11 @@ public partial class NativeVideoViewer : ContentPage
 
     protected override void OnSizeAllocated(double width, double height)
     {
-        media.WidthRequest = width;
-        media.HeightRequest = height;
+        if (!IsInPictureInPicture)
+        {
+            media.WidthRequest = width;
+            media.HeightRequest = height;
+        }
 
         base.OnSizeAllocated(width, height);
     }
@@ -41,10 +46,11 @@ public partial class NativeVideoViewer : ContentPage
         mediaControls.IsVisible = false;
 
 #if ANDROID
-        var aspectRatio = new Android.Util.Rational(300, 300);
+        var aspectRatio = new Android.Util.Rational(700, 400);
         Android.App.PictureInPictureParams.Builder pictureInPictureParamsBuilder = new Android.App.PictureInPictureParams.Builder();
         var piparam = pictureInPictureParamsBuilder.SetAspectRatio(aspectRatio).Build();
         Platform.CurrentActivity.EnterPictureInPictureMode(pictureInPictureParamsBuilder.Build());
+        IsInPictureInPicture = Platform.CurrentActivity.IsInPictureInPictureMode;
 #endif
     }
 
