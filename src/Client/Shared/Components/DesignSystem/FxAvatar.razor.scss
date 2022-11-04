@@ -7,7 +7,7 @@
 
     &::before {
         display: flex;
-        @include Icon($avatar, color(gray-bg-secondary), $Icons-Filled);
+        @include Icon($avatar, color(gray-bg-secondary));
     }
 }
 
@@ -56,16 +56,16 @@
 }
 
 .selected-status::before {
-    @include Icon($success, $green-dark-base, $Icons-Filled);
+    @include Icon($success, $green-dark-base);
     font-size: $icon-24;
 }
 
 .deselected-status::before {
-    @include Icon($success, color(app-bg), $Icons-Filled);
+    @include Icon($success, color(app-bg));
     font-size: $icon-24;
 }
 
 .edit-status::before {
-    @include Icon($edit, $info-dark, $Icons-Filled);
+    @include Icon($edit, $info-dark);
     font-size: $icon-24;
 }

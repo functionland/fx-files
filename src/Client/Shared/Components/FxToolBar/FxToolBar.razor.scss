@@ -108,7 +108,7 @@
             .pinned-icon::before {
                 margin-right: $spacing-4;
                 font-size: $icon-24;
-                @include Icon($pin, color(gray-content1), $Icons-Filled);
+                @include Icon($pin, color(gray-content1));
             }
             /*            .artifact_subtext {
                 color: color(gray-content3);

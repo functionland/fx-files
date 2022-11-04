@@ -153,7 +153,7 @@
 
         .select-all-filled::before {
             font-size: $icon-24;
-            @include Icon($selected, $green-dark-base, $Icons-Filled);
+            @include Icon($selected, $green-dark-base);
         }
 
         .list-view-btn {
@@ -195,7 +195,7 @@
 
         .filter-btn-selected::before {
             font-size: $icon-24;
-            @include Icon($fill, $green-dark-base, $Icons-Filled);
+            @include Icon($fill, $green-dark-base);
         }
     }
 }
