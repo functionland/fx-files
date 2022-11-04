@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -12,7 +13,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
@@ -29,7 +30,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
+            var lowerCaseFile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(stream?.ToString()))
                 throw new StreamNullException(StringLocalizer.GetString(AppStrings.StreamFileIsNull));
@@ -38,6 +39,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
 
             var fileName = Path.GetFileNameWithoutExtension(path);
+
+            if (NameHasInvalidCharacter(fileName))
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
@@ -76,11 +80,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFolder = AppStrings.Folder.ToLowerFirstChar();
+            var lowerCaseFolder = StringLocalizer[nameof(AppStrings.Folder)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
+            if (NameHasInvalidCharacter(folderName))
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             if (string.IsNullOrWhiteSpace(folderName))
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
@@ -105,7 +111,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return newFsArtifact;
         }
 
-        public virtual async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             int? progressCount = null;
 
@@ -113,7 +119,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (onProgress is not null && progressCount == null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
 
                 if (cancellationToken?.IsCancellationRequested == true)
@@ -123,14 +129,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 if (onProgress is not null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
             }
         }
 
         private void DeleteArtifactAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
+            var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(artifact.FullPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, artifact?.ArtifactType.ToString() ?? ""));
@@ -210,7 +216,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
+            var lowerCaseFile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
@@ -219,7 +225,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
 
@@ -233,10 +239,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFile = AppStrings.File.ToLowerFirstChar();
+            var lowerCaseFile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
+
+            if (NameHasInvalidCharacter(newName))
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var artifactType = GetFsArtifactType(filePath);
 
@@ -271,10 +280,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseFolder = AppStrings.Folder.ToLowerFirstChar();
+            var lowerCaseFolder = StringLocalizer[nameof(AppStrings.Folder)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
+
+            if(NameHasInvalidCharacter(newName))
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var artifactType = GetFsArtifactType(folderPath);
 
@@ -318,7 +330,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             string destination,
             bool overwrite = false,
             List<FsArtifact>? ignoredList = null,
-            Action<ProgressInfo>? onProgress = null,
+            Func<ProgressInfo, Task>? onProgress = null,
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
         {
@@ -328,7 +340,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (onProgress is not null && shouldProgress && progressCount == null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
 
                 if (cancellationToken?.IsCancellationRequested == true) break;
@@ -336,10 +348,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
-                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
-
-                    if (fileInfo.FullName == destinationInfo.FullName)
-                        throw new SameDestinationFileException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));                   
 
                     if (!overwrite && destinationInfo.Exists)
                     {
@@ -359,10 +368,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     var directoryInfo = new DirectoryInfo(artifact.FullPath);
                     var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
-
-                    if (directoryInfo.FullName == destinationInfo.FullName)
-                        throw new SameDestinationFolderException(StringLocalizer.GetString(AppStrings.SameDestinationFolderException));
-
+                    
                     if (!Directory.Exists(destinationInfo.FullName))
                     {
                         LocalStorageCreateDirectory(destinationInfo.FullName);
@@ -408,7 +414,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 if (onProgress is not null && shouldProgress)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
             }
 
@@ -420,7 +426,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
           string destination,
           bool overwrite = false,
           List<FsArtifact>? ignoredList = null,
-          Action<ProgressInfo>? onProgress = null,
+          Func<ProgressInfo, Task>? onProgress = null,
           bool shouldProgress = true,
           CancellationToken? cancellationToken = null)
         {
@@ -430,7 +436,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (onProgress is not null && shouldProgress && progressCount == null)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count, progressCount, onProgress);
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
 
                 if (cancellationToken?.IsCancellationRequested == true) break;
@@ -512,7 +518,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 if (onProgress is not null && shouldProgress)
                 {
-                    progressCount = HandleProgressBar(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
             }
 
@@ -663,7 +669,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private async IAsyncEnumerable<FsArtifact> GetChildArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
-            var lowerCaseArtifact = AppStrings.Artifact.ToLowerFirstChar();
+            var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
 
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -833,30 +839,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             throw new NotImplementedException();
         }
 
-        private int HandleProgressBar(string artifactName, int totalCount, int? progressCount, Action<ProgressInfo> onProgress)
-        {
-            if (progressCount != null)
-            {
-                progressCount++;
-            }
-            else
-            {
-                progressCount = 0;
-            }
-
-            var subText = $"{progressCount} of {totalCount}";
-
-            onProgress(new ProgressInfo
-            {
-                CurrentText = artifactName,
-                CurrentSubText = subText,
-                CurrentValue = progressCount,
-                MaxValue = totalCount
-            });
-
-            return progressCount.Value;
-        }
-
         public virtual async IAsyncEnumerable<FsArtifact> GetSearchArtifactAsync(DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
         {
             var drives = GetDrives();
@@ -886,7 +868,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (artifactType is null)
                 throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
-                //Or just return 0, as default?
 
             if (artifactType == FsArtifactType.File)
             {
@@ -937,5 +918,20 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             totalSize = targetDrive.TotalSize - targetDrive.TotalFreeSpace;
             return totalSize;
         }
+
+        private static bool NameHasInvalidCharacter(string fileName)
+        {
+            if (fileName.Contains('>') ||
+               fileName.Contains('<') ||
+               fileName.Contains(':') ||
+               fileName.Contains('?') ||
+               fileName.Contains('"') ||
+               fileName.Contains('*'))
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

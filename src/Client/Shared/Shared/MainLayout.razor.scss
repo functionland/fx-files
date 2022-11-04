@@ -218,6 +218,8 @@
 .content {
     position: relative;
     color: color(gray-content1);
-    min-height: calc(100vh - 81px);
+    //min-height: calc(100vh - 81px);
+    height: 100vh;
+    padding-bottom: 81px;
     background-color: color(app-bg);
 }
