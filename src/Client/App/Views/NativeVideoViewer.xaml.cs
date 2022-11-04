@@ -26,7 +26,18 @@ public partial class NativeVideoViewer : ContentPage
         base.OnSizeAllocated(width, height);
     }
 
-    private async void Back(object sender, EventArgs e)
+    protected override bool OnBackButtonPressed()
+    {
+        HandleBack();
+        return true;
+    }
+
+    private void Back_Clicked(object sender, EventArgs e)
+    {
+        HandleBack();
+    }
+
+    private async void HandleBack()
     {
         try
         {

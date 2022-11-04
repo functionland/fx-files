@@ -38,7 +38,7 @@
             VerticalOptions="StartAndExpand">
             <ImageButton
                 Margin="20,0"
-                Clicked="Back"
+                Clicked="Back_Clicked"
                 HorizontalOptions="StartAndExpand"
                 Source="back.png" />
             <ImageButton
