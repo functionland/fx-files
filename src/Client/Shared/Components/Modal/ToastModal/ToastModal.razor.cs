@@ -14,7 +14,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private string? _title { get; set; } = string.Empty;
         private string? _message { get; set; } = string.Empty;
         private FxToastType _toastType { get; set; }
-        private Timer _timer = new Timer(5000);
+        private Timer _timer = new Timer(100000);
 
         protected override Task OnInitAsync()
         {
