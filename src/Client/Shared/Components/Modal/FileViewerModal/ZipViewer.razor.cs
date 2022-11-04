@@ -101,6 +101,35 @@ public partial class ZipViewer : IFileViewerComponent
     {
         _displayedArtifacts.ForEach(x => x.IsSelected = true);
         _selectedArtifacts = _displayedArtifacts;
-        ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+        ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
+    }
+
+    private void HandleSelectArtifact(FsArtifact artifact)
+    {
+        if (_selectedArtifacts.Any(a => a.FullPath == artifact.FullPath))
+        {
+            _selectedArtifacts.Remove(artifact);
+        }
+        else
+        {
+            _selectedArtifacts.Add(artifact);
+        }
+
+        ChangeArtifactExplorerMode(_selectedArtifacts.Count > 0
+            ? ArtifactExplorerMode.SelectArtifact
+            : ArtifactExplorerMode.Normal);
+    }
+
+    private void ChangeArtifactExplorerMode(ArtifactExplorerMode explorerMode)
+    {
+        ArtifactExplorerMode = explorerMode;
+    }
+
+    private void CancelSelectionMode()
+    {
+        _selectedArtifacts.ForEach(x => x.IsSelected = false);
+        _selectedArtifacts.Clear();
+        DisplayChildrenArtifacts(_currentInnerZipArtifact);
+        ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
     }
 }

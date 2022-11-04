@@ -75,8 +75,81 @@
         font-size: $icon-24;
         @include Icon($selected, $green-dark-base, $Icons-Filled);
     }
+    
+}
+.divider {
+    padding: 0px 21px;
 }
 
 .artifact-list{
     height:100%;
+}
+
+.select-action {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $green-dark-base;
+    padding: 0px $spacing-31 0px $spacing-21;
+    position: sticky;
+    top: 128px;
+    z-index: 2;
+
+    .info-selection {
+        display: flex;
+        align-items: center;
+
+        .close-btn {
+            cursor: pointer;
+
+            &::before {
+                font-size: 16px;
+                @include Icon($close, $pure-white);
+            }
+        }
+
+        .item-selected {
+            margin-left: $spacing-6;
+
+            .move-selected-items-text,
+            .item-selected-count,
+            .item-selected-text {
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                font-family: $open-sans-regular;
+                letter-spacing: $letter-spacing-02;
+                color: $pure-white;
+            }
+        }
+    }
+
+    .right-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .move-icon::before {
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($move, $pure-white);
+        }
+
+        .vertical-option-icon::before {
+            cursor: pointer;
+            font-size: 20px;
+            @include Icon($options-vertical, $pure-white);
+            margin-left: $spacing-16;
+        }
+
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
+        }
+    }
+}
+::deep .list-view {
+    padding: 0px 21px;
 }
