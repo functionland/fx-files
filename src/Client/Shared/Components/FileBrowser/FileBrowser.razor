@@ -169,9 +169,25 @@
             }
 
             <div class="root-title">My device files</div>
+            <div class="action-bar-box">
+                <div class="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") @(_isInSearch ? "select-action-search" : "") select-action ">
+                    <div class="info-selection">
+                        <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
+                        <div class="item-selected">
+                            <span class="item-selected-count">@_selectedArtifacts?.Count</span>
+                            <span class="item-selected-text">items selected</span>
+                        </div>
+                    </div>
 
-            @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
-            {
+                    <div class="right-part">
+                        @if (_selectedArtifacts?.Count > 0 && IsInRoot(_currentArtifact) is false)
+                        {
+                            <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                        }
+                        <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
+                    </div>
+                </div>
+
                 <div class="@(_isInSearch ? "action-bar-search" : "") action-bar">
                     <div class="left-actions">
                         <div class="selected-sort" @onclick="HandleSortClick">
@@ -188,25 +204,8 @@
                         <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
                     </div>
                 </div>
-
-            }
-            <div class="@(_isInSearch ? "select-action-search" : "") select-action @(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "selected-item" : "")">
-                <div class="info-selection">
-                    <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
-                    <div class="item-selected">
-                        <span class="item-selected-count">@_selectedArtifacts?.Count</span>
-                        <span class="item-selected-text">items selected</span>
-                    </div>
-                </div>
-
-                <div class="right-part">
-                    @if (_selectedArtifacts?.Count > 0 && IsInRoot(_currentArtifact) is false)
-                    {
-                        <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
-                    }
-                    <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
-                </div>
             </div>
+
             @* else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
 
