@@ -8,11 +8,18 @@ public partial class NativeVideoViewer : ContentPage
 
     private bool IsInPictureInPicture { get; set; }
 
+    private MediaElementState _currentMediaState = MediaElementState.Playing;
+
     public NativeVideoViewer(string path)
     {
         InitializeComponent();
-        media.Play();
-        media.Source = MediaSource.FromFile(path);
+
+        if (path is not null)
+        {
+            media.Play();
+            media.Source = MediaSource.FromFile(path);
+            playButton.Source = ImageSource.FromFile("pause.png");
+        }
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -71,12 +78,29 @@ public partial class NativeVideoViewer : ContentPage
         mediaControls.IsVisible = !mediaControls.IsVisible;
     }
 
+    private void media_MediaEnded(object sender, EventArgs e)
+    {
+        _currentMediaState = MediaElementState.Stopped;
+        playButton.Source = ImageSource.FromFile("play.png");
+    }
+
     private void PausePlay_Clicked(object sender, EventArgs e)
     {
-        if (media.CurrentState == MediaElementState.Playing)
+#if !ANDROID
+        _currentMediaState = media.CurrentState;
+#endif
+        if (_currentMediaState == MediaElementState.Playing)
+        {
             media.Pause();
-        else if (media.CurrentState == MediaElementState.Paused || media.CurrentState == MediaElementState.Stopped)
+            playButton.Source = ImageSource.FromFile("play.png");
+            _currentMediaState = MediaElementState.Paused;
+        }
+        else if (_currentMediaState == MediaElementState.Paused || _currentMediaState == MediaElementState.Stopped)
+        {
             media.Play();
+            playButton.Source = ImageSource.FromFile("pause.png");
+            _currentMediaState = MediaElementState.Playing;
+        }
     }
 
     private void Backward_Clicked(object sender, EventArgs e)

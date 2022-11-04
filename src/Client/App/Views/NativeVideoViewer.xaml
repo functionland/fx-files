@@ -25,6 +25,7 @@
         <media:MediaElement
             x:Name="media"
             AutoPlay="True"
+            MediaEnded="media_MediaEnded"
             ShowsPlaybackControls="False">
             <media:MediaElement.GestureRecognizers>
                 <TapGestureRecognizer Tapped="media_Tapped" />
@@ -102,22 +103,11 @@
                     HorizontalOptions="Center"
                     Source="backward.png" />
                 <ImageButton
+                    x:Name="playButton"
                     Clicked="PausePlay_Clicked"
                     HorizontalOptions="Center"
-                    Source="play.png">
+                    Source="pause.png">
                     <ImageButton.Triggers>
-                        <DataTrigger
-                            Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
-                            TargetType="ImageButton"
-                            Value="{x:Static media:MediaElementState.Playing}">
-                            <Setter Property="Source" Value="pause.png" />
-                        </DataTrigger>
-                        <DataTrigger
-                            Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
-                            TargetType="ImageButton"
-                            Value="{x:Static media:MediaElementState.Paused}">
-                            <Setter Property="Source" Value="play.png" />
-                        </DataTrigger>
                         <DataTrigger
                             Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
                             TargetType="ImageButton"
