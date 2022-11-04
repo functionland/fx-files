@@ -6,9 +6,10 @@
 .fx-breadcrumbs {
     display: flex;
     align-items: center;
-    flex-flow: row wrap;
     gap: $spacing-6;
     margin: $spacing-10 $spacing-21;
+    white-space: nowrap;
+    overflow-x: auto;
 }
 
 .file-path {
