@@ -6,7 +6,7 @@ public partial class ZipViewer : IFileViewerComponent
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?>> OnExtract { get; set; }
+    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?>> OnExtract { get; set; }
 
     [AutoInject] private IZipService _zipService = default!;
 
@@ -71,7 +71,9 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(CurrentArtifact, _selectedArtifacts);
+            //TODO : Handle extract artifacts to a specific folder
+            string? destinationPath = null;
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
 
@@ -82,8 +84,10 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
+            //TODO : Handle extract artifacts to a specific folder
+            string? destinationPath = null;
             var singleArtifactList = new List<FsArtifact> { artifact };
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(CurrentArtifact, singleArtifactList);
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, singleArtifactList, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
 
@@ -94,7 +98,9 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(CurrentArtifact, null);
+            //TODO : Handle extract artifacts to a specific folder
+            string? destinationPath = null;
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, null, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
 

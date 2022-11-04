@@ -176,4 +176,9 @@
         opacity: 0;
         height: 0;
     }
+
+    .z-index-header{
+        z-index:100;
+        position:relative;
+    }
 }

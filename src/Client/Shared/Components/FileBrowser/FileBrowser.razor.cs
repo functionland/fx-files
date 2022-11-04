@@ -71,7 +71,7 @@ public partial class FileBrowser
     private List<FsArtifact> _selectedArtifacts = new();
     private FileCategoryType? _fileCategoryFilter;
 
-    private Tuple<FsArtifact, List<FsArtifact>?>? _extractTuple;
+    private Tuple<FsArtifact, List<FsArtifact>?, string?>? _extractTuple;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
@@ -636,10 +636,14 @@ public partial class FileBrowser
         });
         _isArtifactExplorerLoading = false;
     }
-    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?> extractTuple)
+
+    // TODO: change tuple item for real names.
+    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?, string?> extractTuple)
     {
         var artifact = extractTuple.Item1;
         var innerArtifacts = extractTuple.Item2;
+        //TODO: check if current path is null
+        var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
         if (_inputModalRef is null) return;
 
         var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
@@ -650,14 +654,14 @@ public partial class FileBrowser
         try
         {
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
-            var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
+            //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
             if ((result?.ResultType) != InputModalResultType.Confirm) return;
 
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName);
+                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName);
             }
             catch (InvalidPasswordException)
             {
@@ -668,11 +672,11 @@ public partial class FileBrowser
                 var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
                 if (passwordResult?.ResultType == InputModalResultType.Confirm)
                 {
-                    await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName, passwordResult.Result, innerArtifacts);
+                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName, passwordResult.Result, innerArtifacts);
                 }
             }
 
-            var destinationPath = Path.Combine(parentPath!, destinationFolderName);
+            var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
             await NavigateToDestionation(destinationPath);
         }
         catch (Exception exception)
@@ -963,7 +967,7 @@ public partial class FileBrowser
             case ArtifactOverflowResultType.Extract:
                 if (artifact != null)
                 {
-                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(artifact, null);
+                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(artifact, null, null);
                 }
 
                 if (_extractTuple != null)
@@ -1067,7 +1071,7 @@ public partial class FileBrowser
                 break;
             case ArtifactOverflowResultType.Extract:
 
-                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(artifacts.First(), null);
+                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(artifacts.First(), null, null);
 
                 if (_extractTuple != null)
                 {
