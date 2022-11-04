@@ -1,6 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Models;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ZipViewer : IFileViewerComponent
 {
@@ -76,8 +74,8 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            var destionationPath = await GetDestionationPathAsync();
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, _selectedArtifacts, destionationPath);
+            var destinationPath = await GetDestinationPathAsync();
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
 
@@ -86,9 +84,9 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleExtractArtifactAsync(FsArtifact artifact)
     {
+        var destinationPath = await GetDestinationPathAsync();
         if (CurrentArtifact != null)
         {
-            string? destinationPath = await GetDestionationPathAsync();
             var singleArtifactList = new List<FsArtifact> { artifact };
             var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, singleArtifactList, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
@@ -99,9 +97,9 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleExtractCurrentArtifactAsync()
     {
+        var destinationPath = await GetDestinationPathAsync();
         if (CurrentArtifact != null)
         {
-            string? destinationPath = await GetDestionationPathAsync();
             var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, null, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
@@ -109,7 +107,7 @@ public partial class ZipViewer : IFileViewerComponent
         await HandleBackAsync(true);
     }
 
-    private async Task<string?> GetDestionationPathAsync()
+    private async Task<string?> GetDestinationPathAsync()
     {
         if (_artifactSelectionModalRef is null)
             return null;
@@ -126,8 +124,8 @@ public partial class ZipViewer : IFileViewerComponent
         if (result.ResultType == ArtifactSelectionResultType.Cancel)
             return null;
 
-        var destionationPath = result.SelectedArtifacts.FirstOrDefault()?.FullPath;
-        return destionationPath;
+        var destinationPath = result.SelectedArtifacts.FirstOrDefault()?.FullPath;
+        return destinationPath;
     }
 
     private async Task HandleBackAsync(bool shouldExit = false)
@@ -152,11 +150,11 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void HandleArtifactClick(FsArtifact artifact)
     {
-        if (artifact.ArtifactType == FsArtifactType.Folder)
-        {
-            _currentInnerZipArtifact = artifact;
-            DisplayChildrenArtifacts(_currentInnerZipArtifact);
-        }
+        if (artifact.ArtifactType != FsArtifactType.Folder)
+            return;
+
+        _currentInnerZipArtifact = artifact;
+        DisplayChildrenArtifacts(_currentInnerZipArtifact);
     }
 
     private void HandleSelectAllArtifact()

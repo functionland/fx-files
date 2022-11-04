@@ -598,7 +598,7 @@
     <value>Delete</value>
   </data>
   <data name="ExtractHere" xml:space="preserve">
-    <value>Extract in current location</value>
+    <value>Extract here</value>
   </data>
   <data name="MoveTo" xml:space="preserve">
     <value>Move to</value>

@@ -601,7 +601,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extract in current location.
+        ///   Looks up a localized string similar to Extract here.
         /// </summary>
         public static string ExtractHere {
             get {
