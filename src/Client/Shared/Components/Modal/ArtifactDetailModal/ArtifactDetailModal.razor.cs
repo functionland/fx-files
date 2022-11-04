@@ -1,6 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Utils;
 using System.Diagnostics;
-using System.Security.AccessControl;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
@@ -15,7 +14,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private bool _isModalOpen;
         private bool _isMultiple;
         private bool _isInRoot;
-        private CancellationTokenSource? CalculateArtifactSizeProgressCts;
+        private CancellationTokenSource? _calculateArtifactsSizeCts;
 
         [Parameter] public IFileService FileService { get; set; } = default!;
 
@@ -117,12 +116,12 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         {
             try
             {
-                CalculateArtifactSizeProgressCts = new();
-                var cancellationToken = CalculateArtifactSizeProgressCts.Token;
+                _calculateArtifactsSizeCts = new();
+                var cancellationToken = _calculateArtifactsSizeCts.Token;
 
                 await Task.Run(async () =>
                 {
-                    var requireToCalculateSizeArtifacts = _artifacts.Where(c => c.ArtifactType != FsArtifactType.File);
+                    var requireToCalculateSizeArtifacts = _artifacts.Where(c => c.ArtifactType != FsArtifactType.File).ToList();
 
                     foreach (var artifact in requireToCalculateSizeArtifacts)
                     {
@@ -164,15 +163,13 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     {
                         lastUpdateSecond = second;
                         _artifactsSize = FsArtifactUtils.CalculateSizeStr(_artifacts.Sum(a => a.Size ?? 0));
-
-                        //How about exceptions which may occure inside InvokeAsync?
                         _ = InvokeAsync(StateHasChanged);
                     }
                 }, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                //Log something here?
+                ExceptionHandler.Handle(exception);
             }
         }
 
@@ -190,7 +187,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _timer.Start();
             _timer.Elapsed += async (sender, e) => { await TimeElapsedForCloseDetailModal(sender, e); };
 
-            CalculateArtifactSizeProgressCts?.Cancel();
+            _calculateArtifactsSizeCts?.Cancel();
         }
 
         private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)
