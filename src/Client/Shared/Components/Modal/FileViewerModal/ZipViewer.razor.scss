@@ -73,10 +73,7 @@
         }
 
         .select-all-btn {
-            display: flex;
-            flex-grow: 1;
-            justify-content: end;
-            margin-left: 16px;
+            margin-left: auto;
 
             &::before {
                 @include Icon($select, color(gray-content3));

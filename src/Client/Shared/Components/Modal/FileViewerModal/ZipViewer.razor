@@ -3,7 +3,7 @@
 
 
 <div class="navigation-header">
-    <FxButton OnClick="HandleBackAsync"
+    <FxButton OnClick="()=>HandleBackAsync()"
               Class="back-button"
               Padding="8px 16px 8px 0px"
               BackgroundColor="transparent"
@@ -57,7 +57,7 @@
                       FileService="FileService"
                       CurrentArtifact="CurrentArtifact"
                       OnSelectArtifact="HandleArtifactClick"
-                      HandleBack="HandleBackAsync"
+                      HandleBack="()=>HandleBackAsync()"
                       IsInZipMode="true"
                       OnZipArtifactClick="HandleExtractArtifactAsync"
                       IsInSearchMode="false"
