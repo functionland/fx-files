@@ -14,7 +14,7 @@
             }
             else if (IsSupported<ZipViewer>(_currentArtifact))
             {
-                <ZipViewer CurrentArtifact="_currentArtifact" FileService="FileService" OnBack="HandleBackAsync" />
+                <ZipViewer CurrentArtifact="_currentArtifact" FileService="FileService" OnBack="HandleBackAsync" ThumbnailService="ThumbnailService"/>
             }
             else if (IsSupported<TextViewer>(_currentArtifact))
             {

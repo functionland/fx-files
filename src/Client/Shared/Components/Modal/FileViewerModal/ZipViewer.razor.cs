@@ -3,6 +3,7 @@
 public partial class ZipViewer : IFileViewerComponent
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
 
@@ -100,7 +101,47 @@ public partial class ZipViewer : IFileViewerComponent
     private void HandleSelectAllArtifact()
     {
         _displayedArtifacts.ForEach(x => x.IsSelected = true);
-        _selectedArtifacts = _displayedArtifacts;
-        ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+        _selectedArtifacts = _displayedArtifacts.ToList();
+        ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
+    }
+
+    private void HandleSelectArtifact(FsArtifact artifact)
+    {
+        var selectedArtifact = _displayedArtifacts.FirstOrDefault(a => a.FullPath == artifact.FullPath);
+        if (_selectedArtifacts.Any(a => a.FullPath == artifact.FullPath))
+        {
+            _selectedArtifacts.Remove(artifact);
+
+            if (selectedArtifact is not null)
+            {
+                selectedArtifact.IsSelected = false;
+            }
+        }
+        else
+        {
+            _selectedArtifacts.Add(artifact);
+
+            if (selectedArtifact is not null)
+            {
+                selectedArtifact.IsSelected = true;
+            }
+        }
+
+        ChangeArtifactExplorerMode(_selectedArtifacts.Count > 0
+            ? ArtifactExplorerMode.SelectArtifact
+            : ArtifactExplorerMode.Normal);
+    }
+
+    private void ChangeArtifactExplorerMode(ArtifactExplorerMode explorerMode)
+    {
+        ArtifactExplorerMode = explorerMode;
+    }
+
+    private void CancelSelectionMode()
+    {
+        _displayedArtifacts.ForEach(x => x.IsSelected = false);
+        _selectedArtifacts.Clear();
+        DisplayChildrenArtifacts(_currentInnerZipArtifact);
+        ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
     }
 }

@@ -36,7 +36,7 @@
 
     .unpin-action-icon::before {
         font-size: $icon-24;
-        @include Icon($pin, color(gray-content1), $Icons-Filled);
+        @include Icon($pin, color(gray-content1));
     }
 
     .more-action-icon::before {
