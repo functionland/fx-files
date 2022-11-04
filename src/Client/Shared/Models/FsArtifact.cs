@@ -41,6 +41,7 @@ public class FsArtifact
     public List<ArtifactPermissionInfo>? PermissionedUsers { get; set; }
     public FulaUser? Owner { get; set; }
     public ArtifactPermissionLevel ArtifactPermissionLevel { get; set; }
+    public string? ShowablePath { get; set;}
 
     public bool? IsAvailableOffline { get; set; }
     public bool? IsSharedWithMe { get; set; }
