@@ -9,12 +9,11 @@
     @include Icon($detail);
 }
 
-//TODO: replace extract icon with detail icon
 ::deep .extract-button .fxbutton-text::before {
     font-size: 20px;
     margin-right: 8px;
     vertical-align: middle;
-    @include Icon($detail);
+    @include Icon($zip-file);
 }
 
 ::deep .rename-button .fxbutton-text::before {
