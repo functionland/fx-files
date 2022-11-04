@@ -312,7 +312,7 @@ public partial class FileBrowser
 
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
-            ToastModal.Show(title, message, FxToastType.Success);
+            FxToast.Show(title, message, FxToastType.Success);
 
             await NavigateToDestionation(destinationPath);
         }
@@ -414,7 +414,7 @@ public partial class FileBrowser
 
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
-            ToastModal.Show(title, message, FxToastType.Success);
+            FxToast.Show(title, message, FxToastType.Success);
 
             await NavigateToDestionation(destinationPath);
         }
@@ -453,7 +453,7 @@ public partial class FileBrowser
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.RootfolderRenameException);
-            ToastModal.Show(title, message, FxToastType.Error);
+            FxToast.Show(title, message, FxToastType.Error);
         }
     }
 
