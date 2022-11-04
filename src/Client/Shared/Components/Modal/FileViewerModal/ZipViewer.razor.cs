@@ -36,14 +36,8 @@ public partial class ZipViewer : IFileViewerComponent
         }
         catch (InvalidPasswordException)
         {
-            await GetPassword();
-            return;
-        }
+            _password = await GetPassword();
 
-        if (true)
-        {
-            // Get password from modal if required.
-            _password = null;
         }
 
         await LoadAllArtifactsAsync();
