@@ -1,6 +1,10 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Functionland.FxFiles.Client.Shared.Models;
+using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 using System.Drawing;
+using Windows.ApplicationModel.Activation;
 using Windows.UI;
+using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows;
 
@@ -31,4 +35,21 @@ public partial class App
     }
 
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiAppBuilder();
+
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
+    {
+        base.OnLaunched(args);
+
+        var goodArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+
+        switch (goodArgs.Kind)
+        {
+            case ExtendedActivationKind.File:
+                var intentHolder = MauiWinUIApplication.Current.Services.GetRequiredService<IntentHolder>();
+                var data = goodArgs.Data as IFileActivatedEventArgs;
+                var path = data.Files.Select(file => file.Path).FirstOrDefault();
+                intentHolder.FileUrl = path;
+                break;
+        }
+    }
 }

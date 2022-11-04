@@ -32,7 +32,7 @@ $warning-dark: #FCC419;
 $error-dark: #FA5252;
 $input-dark-disable: $gray-dark-border;
 $diable-item-dark: #212529;
-
+$disable-icon-item-dark: #343A40;
 //light colors
 $gray-light-content1: #343A40;
 $gray-light-content2: #495057;
@@ -53,6 +53,7 @@ $info-light: $info-dark;
 $success-light: $success-dark;
 $input-light-disable: $gray-dark-content3;
 $diable-item-light: #F8F9FA;
+$disable-icon-item-light: #E9ECEF;
 
 $colors-light: (
     "app-bg": $pure-white,
@@ -68,7 +69,8 @@ $colors-light: (
     "gray-bg-primary": $gray-light-bg-primary,
     "gray-bg-secondary": $gray-light-bg-secondary,
     "input-disable": $input-light-disable,
-    "disable-item": $diable-item-light
+    "disable-item": $diable-item-light,
+    "disable-item-icon": $disable-icon-item-light
 );
 
 $colors-dark: (
@@ -85,7 +87,8 @@ $colors-dark: (
     "gray-bg-primary": $gray-dark-bg-primary,
     "gray-bg-secondary": $gray-dark-bg-secondary,
     "input-disable": $input-dark-disable,
-    "disable-item": $diable-item-dark
+    "disable-item": $diable-item-dark,
+    "disable-item-icon": $disable-icon-item-dark
 );
 
 
@@ -186,77 +189,86 @@ $right-arrow-hover: $icon-base-url + "right-arrow-hover.svg";
 $right-arrow-pressed: $icon-base-url + "right-arrow-pressed.svg";
 $right-arrow-disabled: $icon-base-url + "right-arrow-disabled.svg";
 
+//outline icons
+$extract: "\e900";
+$backward-15-seconds: "\e901";
+$forward-15-seconds: "\e902";
+$puase: "\e903";
+$picture-in-picture: "\e904";
+$play-outline: "\e906";
+$zip-file: "\e907";
+$add-file: "\e908";
+$app: "\e909";
+$arrow-down: "\e90a";
+$arrow-left: "\e90b";
+$arrow-right: "\e90c";
+$arrow-up: "\e90d";
+$audio: "\e90e";
+$available-offline: "\e90f";
+$blox: "\e910";
+$check: "\e911";
+$chevron-down: "\e912";
+$chevron-left: "\e913";
+$chevron-right: "\e914";
+$chevron-up: "\e915";
+$close: "\e916";
+$copy: "\e917";
+$create-folder: "\e918";
+$detail: "\e919";
+$document: "\e91a";
+$downloading: "\e91b";
+$edit-permission: "\e91c";
+$external-link: "\e91d";
+$file: "\e91e";
+$files: "\e91f";
+$filter: "\e920";
+$folder: "\e921";
+$grid: "\e922";
+$image: "\e923";
+$list: "\e924";
+$merge: "\e925";
+$move: "\e926";
+$options-horizontal: "\e927";
+$options-vertical: "\e928";
+$PDF: "\e929";
+$pending: "\e92a";
+$phone: "\e92b";
+$pin-outline: "\e92c";
+$plug: "\e92d";
+$plus: "\e92e";
+$pool: "\e92f";
+$refresh: "\e930";
+$rename: "\e931";
+$reward: "\e932";
+$scan-code: "\e933";
+$search: "\e934";
+$select: "\e935";
+$settings: "\e936";
+$share: "\e937";
+$star-outline: "\e938";
+$trash: "\e939";
+$upload-file: "\e93a";
+$user: "\e93b";
+$video: "\e93c";
+$zones: "\e93d";
 
-// outline icons
-$add-file: "\e900";
-$image: "\e901";
-$user: "\e902";
-$app: "\e903";
-$arrow-down: "\e904";
-$arrow-left: "\e905";
-$arrow-right: "\e906";
-$arrow-up: "\e907";
-$audio: "\e908";
-$available-offline: "\e909";
-$blox: "\e90a";
-$chevron-down: "\e90b";
-$chevron-left: "\e90c";
-$chevron-right: "\e90d";
-$chevron-up: "\e90e";
-$close: "\e90f";
-$copy: "\e910";
-$create-folder: "\e911";
-$detail: "\e912";
-$document: "\e913";
-$downloading: "\e914";
-$edit-permission: "\e915";
-$external-link: "\e916";
-$files: "\e917";
-$filter: "\e918";
-$folder: "\e919";
-$grid: "\e91a";
-$list: "\e91b";
-$merge: "\e91c";
-$move: "\e91d";
-$options-horizontal: "\e91e";
-$options-vertical: "\e91f";
-$PDF: "\e920";
-$phone: "\e921";
-$pin-outline: "\e922";
-$plug: "\e923";
-$plus: "\e924";
-$pool: "\e925";
-$refresh: "\e926";
-$rename: "\e927";
-$reward: "\e928";
-$scan-code: "\e929";
-$search: "\e92a";
-$select: "\e92b";
-$settings: "\e92c";
-$share: "\e92d";
-$star-outline: "\e92e";
-$trash: "\e92f";
-$upload-file: "\e930";
-$video: "\e931";
-
-//filled icons
-$avatar: "\e900";
-$pin: "\e901";
-$select-filled: "\e902";
-$circle-filled: "\e903";
-$critical: "\e904";
-$edit: "\e905";
-$fill: "\e906";
-$info: "\e907";
-$open-in: "\e908";
-$selected: "\e909";
-$star-filled: "\e90a";
-$success: "\e90b";
-$warning: "\e90c";
-
+//Filled icons
+$avatar: "\e93e";
+$circle-filled: "\e93f";
+$critical: "\e940";
+$edit: "\e941";
+$fill: "\e942";
+$info: "\e943";
+$open-in: "\e944";
+$pin: "\e945";
+$selected: "\e946";
+$star-filled: "\e947";
+$success: "\e948";
+$uploaded: "\e949";
+$warning: "\e94a";
+$play-filled: "\e905";
 
 //font faces
-$Icons-Filled: "FxL-icon";
 $Icons-Outline: "FxL-Outline";
 
 $open-sans-light: "OpenSans-Light";
@@ -295,14 +307,6 @@ $montserrat-semi-bold: "Montserrat-SemiBold";
     font-family: $open-sans-semi-bold;
     font-weight: 600;
     src: url("#{$font-path}/OpenSans-SemiBold.ttf") format("truetype"),
-}
-
-@font-face {
-    font-family: $Icons-Filled;
-    font-style: normal;
-    font-weight: normal;
-    font-display: block;
-    src: url('#{$font-path}/FxL-icon.ttf') format('truetype');
 }
 
 @font-face {
