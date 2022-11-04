@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.App.Implementations;
+
+namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class FileViewer
 {
