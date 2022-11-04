@@ -1,14 +1,12 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase
-@if (_isModalOpen == true)
+@if (IsModalOpen == true)
 {
     <div class="file-viewer-container">
         <div class="main-content">
-            <button onclick="@(() =>Back())">Back</button>
-
             @if (IsSupported<ImageViewer>(_currentArtifact))
             {
-                <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" />
+                <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" OnBack="HandleBackAsync" OnPin="OnPin" OnUnpin="OnUnpin" OnOptionClick="OnOptionClick" />
             }
             else if (IsSupported<VideoViewer>(_currentArtifact))
             {
@@ -16,7 +14,17 @@
             }
             else if (IsSupported<ZipViewer>(_currentArtifact))
             {
-                <ZipViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
+                <ZipViewer CurrentArtifact="_currentArtifact" FileService="FileService" OnBack="HandleBackAsync" ThumbnailService="ThumbnailService"/>
+            }
+            else if (IsSupported<TextViewer>(_currentArtifact))
+            {
+                <TextViewer 
+                    CurrentArtifact="_currentArtifact"
+                    FileService="FileService"
+                    OnBack="HandleBackAsync"
+                    OnOptionClick="OnOptionClick"
+                    OnPin="OnPin"
+                    OnUnpin="OnUnpin"/>
             }
         </div>
     </div>

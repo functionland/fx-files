@@ -4,8 +4,11 @@
 @import '../../Styles/components/_bit-checkbox.scss';
 
 .list-container {
-    position: relative;
+    height: 100%;
     flex-grow: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
 }
 
 .list-title {
@@ -24,9 +27,9 @@
     display: grid;
     grid-gap: 1px;
     grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fit, 177px);
-    grid-template-rows: repeat(auto-fit, 178px);
-    justify-content: flex-start;
+    grid-template-columns: repeat(auto-fit, 175px);
+    grid-template-rows: repeat(auto-fit, 148px);
+    justify-content: space-evenly;
 
     .selected-item {
         background-color: color(gray-bg-primary);
@@ -78,7 +81,7 @@
 
         .pin-badge::before {
             font-size: $icon-20;
-            @include Icon($pin, color(gray-content1), $Icons-Filled);
+            @include Icon($pin, color(gray-content1));
             margin-right: $spacing-8;
         }
 
@@ -103,6 +106,12 @@
     text-align: center;
 }
 
+.extract-btn {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+}
+
 .list-view {
     padding: 16px 0;
 }
@@ -112,8 +121,7 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
-
-/*    .check-box-position {
+    /*    .check-box-position {
         margin-right: 16px;
     }*/
 
@@ -166,6 +174,7 @@
                     width: 42px;
                     position: absolute;
                     left: 0;
+                    border-radius: 4px;
                 }
             }
 
@@ -193,6 +202,10 @@
 
     .options-btn::before {
         @include Icon($options-vertical);
+    }
+
+    .extract-btn::before {
+        @include Icon($extract);
     }
 
     .item-content {
@@ -354,21 +367,32 @@
     background-color: color(disable-item);
     pointer-events: none;
 
-    .item-content {
-
-        .item-title {
-            .title-text {
-                color: color(gray-border);
-            }
+    .icon-box {
+        .item-icon-position {
+            background-color: color(disable-item-icon);
         }
 
-        .item-sub-text {
+        .item-icon-position::before {
             color: color(gray-border);
         }
     }
 
-    .item-icon-position::before {
+    .footer-box {
         color: color(gray-border);
+
+        .item-content {
+            color: color(gray-border);
+
+            .item-title {
+                .title-text {
+                    color: var(--gray-border);
+                }
+            }
+
+            .item-sub-text {
+                color: color(gray-border);
+            }
+        }
     }
 }
 
@@ -510,7 +534,7 @@
     border: none;
 
     &::before {
-        @include Icon($select-filled, #fff, $Icons-Filled);
+        @include Icon($check, #fff);
         font-size: $font-size-16;
     }
 }
