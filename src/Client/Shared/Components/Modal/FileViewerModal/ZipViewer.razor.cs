@@ -47,7 +47,7 @@ public partial class ZipViewer : IFileViewerComponent
         }
         catch (Exception e)
         {
-            await HandleBackAsync();
+            await HandleBackAsync(true);
             ExceptionHandler.Handle(e);
         }
     }
@@ -77,7 +77,7 @@ public partial class ZipViewer : IFileViewerComponent
             await OnExtract.InvokeAsync(extractTuple);
         }
 
-        await HandleBackAsync();
+        await HandleBackAsync(true);
     }
 
     private async Task HandleExtractArtifactAsync(FsArtifact artifact)
@@ -91,7 +91,7 @@ public partial class ZipViewer : IFileViewerComponent
             await OnExtract.InvokeAsync(extractTuple);
         }
 
-        await HandleBackAsync();
+        await HandleBackAsync(true);
     }
 
     private async Task HandleExtractCurrentArtifactAsync()
@@ -104,12 +104,12 @@ public partial class ZipViewer : IFileViewerComponent
             await OnExtract.InvokeAsync(extractTuple);
         }
 
-        await HandleBackAsync();
+        await HandleBackAsync(true);
     }
 
-    private async Task HandleBackAsync()
+    private async Task HandleBackAsync(bool shouldExit = false)
     {
-        if (_currentInnerZipArtifact.FullPath == string.Empty)
+        if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
         {
             _cancellationTokenSource.Cancel();
             await OnBack.InvokeAsync();
