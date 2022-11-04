@@ -1,12 +1,9 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
-
-using System.Linq;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -1440,6 +1437,12 @@ public partial class FileBrowser
         switch (_artifactExplorerMode)
         {
             case ArtifactExplorerMode.Normal:
+                if (_isInSearch)
+                {
+                    CancelSearch(true);
+                    await LoadChildrenArtifactsAsync(_currentArtifact);
+                    return;
+                }
                 _fxSearchInputRef?.HandleClearInputText();
                 await UpdateCurrentArtifactForBackButton(_currentArtifact);
                 await LoadChildrenArtifactsAsync(_currentArtifact);
@@ -1457,11 +1460,6 @@ public partial class FileBrowser
 
             default:
                 break;
-        }
-        if (_isInSearch)
-        {
-            CancelSearch(true);
-            await LoadChildrenArtifactsAsync(_currentArtifact);
         }
         await InvokeAsync(() => StateHasChanged());
     }
