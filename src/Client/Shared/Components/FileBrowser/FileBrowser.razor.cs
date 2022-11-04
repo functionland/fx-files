@@ -100,7 +100,7 @@ public partial class FileBrowser
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
-
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
     [Parameter] public string? DefaultPath { get; set; }
 
