@@ -1,8 +1,8 @@
 ﻿@import "_variables.scss";
 @import "_functions.scss";
 
-@mixin Icon($icon, $color: color(gray-content1), $font: $Icons-Outline) {
+@mixin Icon($icon, $color: color(gray-content1)) {
     color: $color;
     content: $icon;
-    font-family: $font;
+    font-family: $Icons-Outline;
 }
