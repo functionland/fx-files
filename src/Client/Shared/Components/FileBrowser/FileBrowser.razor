@@ -59,6 +59,7 @@
             {
                 <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
+                          ThumbnailService="ThumbnailService"
                           CurrentArtifact="_currentArtifact"
                           OnSelectArtifact="HandleSelectArtifactAsync"
                           OnArtifactOptionClick="HandleOptionsArtifact"
@@ -220,6 +221,7 @@
         }
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
+                      ThumbnailService="ThumbnailService"
                       CurrentArtifact="_currentArtifact"
                       OnSelectArtifact="HandleSelectArtifactAsync"
                       OnArtifactOptionClick="HandleOptionsArtifact"
@@ -235,7 +237,7 @@
     </div>
 }
 
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" />
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService"/>
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter" />
