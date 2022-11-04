@@ -100,19 +100,30 @@ public partial class ZipViewer : IFileViewerComponent
     private void HandleSelectAllArtifact()
     {
         _displayedArtifacts.ForEach(x => x.IsSelected = true);
-        _selectedArtifacts = _displayedArtifacts;
+        _selectedArtifacts = _displayedArtifacts.ToList();
         ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
     }
 
     private void HandleSelectArtifact(FsArtifact artifact)
     {
+        var selectedArtifact = _displayedArtifacts.FirstOrDefault(a => a.FullPath == artifact.FullPath);
         if (_selectedArtifacts.Any(a => a.FullPath == artifact.FullPath))
         {
             _selectedArtifacts.Remove(artifact);
+
+            if (selectedArtifact is not null)
+            {
+                selectedArtifact.IsSelected = false;
+            }
         }
         else
         {
             _selectedArtifacts.Add(artifact);
+
+            if (selectedArtifact is not null)
+            {
+                selectedArtifact.IsSelected = true;
+            }
         }
 
         ChangeArtifactExplorerMode(_selectedArtifacts.Count > 0
@@ -127,7 +138,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void CancelSelectionMode()
     {
-        _selectedArtifacts.ForEach(x => x.IsSelected = false);
+        _displayedArtifacts.ForEach(x => x.IsSelected = false);
         _selectedArtifacts.Clear();
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
         ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
