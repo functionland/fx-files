@@ -26,17 +26,17 @@
     border: none;
 
     &::before {
-        @include Icon($select-filled, #fff, $Icons-Filled);
+        @include Icon($check, $pure-white);
         font-size: $font-size-16;
     }
 }
 
 .checkbox-checked-disable {
     background: $green-dark-border;
-    pointer-events:none;
+    pointer-events: none;
 
     &::before {
-        @include Icon($select-filled,$gray-dark-border, $Icons-Filled);
+        @include Icon($check,$gray-dark-border);
         font-size: $font-size-16;
     }
 }

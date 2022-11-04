@@ -65,7 +65,7 @@
 
 .success-message {
     .toast-icon::before {
-        @include Icon($success, $success-dark, $Icons-Filled);
+        @include Icon($success, $success-dark);
     }
 
     .taost-message-title {
@@ -75,7 +75,7 @@
 
 .info-message {
     .toast-icon::before {
-        @include Icon($info, $info-dark, $Icons-Filled);
+        @include Icon($info, $info-dark);
     }
 
     .taost-message-title {
@@ -85,7 +85,7 @@
 
 .warning-message {
     .toast-icon::before {
-        @include Icon($warning, color(warning), $Icons-Filled);
+        @include Icon($warning, color(warning));
     }
 
     .taost-message-title {
@@ -95,7 +95,7 @@
 
 .error-message {
     .toast-icon::before {
-        @include Icon($critical, color(error), $Icons-Filled);
+        @include Icon($critical, color(error));
     }
 
     .taost-message-title {

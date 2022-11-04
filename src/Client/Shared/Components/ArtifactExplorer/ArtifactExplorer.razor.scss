@@ -81,7 +81,7 @@
 
         .pin-badge::before {
             font-size: $icon-20;
-            @include Icon($pin, color(gray-content1), $Icons-Filled);
+            @include Icon($pin, color(gray-content1));
             margin-right: $spacing-8;
         }
 
@@ -525,7 +525,7 @@
     border: none;
 
     &::before {
-        @include Icon($select-filled, #fff, $Icons-Filled);
+        @include Icon($check, #fff);
         font-size: $font-size-16;
     }
 }
