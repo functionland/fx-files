@@ -63,6 +63,9 @@ public partial class ArtifactExplorer
 
     private bool _isArtifactsChanged;
 
+    private bool _shouldRefresh;
+
+
     private DotNetObjectReference<ArtifactExplorer>? _objectReference;
     (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
 
@@ -329,25 +332,23 @@ public partial class ArtifactExplorer
 
     public void UpdateGridRowCount(int width)
     {
-        bool shouldRefresh;
-
         if (width >= 530)
         {
-            shouldRefresh = true;
+            _shouldRefresh = true;
             _gridRowCount = 3;
         }
         else if (width >= 350)
         {
-            shouldRefresh = true;
+            _shouldRefresh = true;
             _gridRowCount = 2;
         }
         else
         {
-            shouldRefresh = true;
+            _shouldRefresh = true;
             _gridRowCount = 1;
         }
 
-        if (shouldRefresh && ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+        if (_shouldRefresh is true && ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
         {
             _virtualizeGridRef.RefreshDataAsync();
         }
@@ -357,7 +358,7 @@ public partial class ArtifactExplorer
 
     private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
     {
-        if (_isArtifactsChanged == false)
+        if (_isArtifactsChanged is false && _shouldRefresh is false)
         {
             await Task.Delay(300);
         }
@@ -397,7 +398,7 @@ public partial class ArtifactExplorer
 
     private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
     {
-        if (_isArtifactsChanged == false)
+        if (_isArtifactsChanged is false && _shouldRefresh is false)
         {
             await Task.Delay(300);
         }
