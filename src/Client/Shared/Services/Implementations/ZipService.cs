@@ -16,37 +16,42 @@ public partial class ZipService : IZipService
 
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }
 
-    public virtual Task<List<FsArtifact>> ViewZipFileAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null)
+    
+    public virtual async Task<List<FsArtifact>> GetAllArtifactsAsync(string zipFilePath, string? password = null, CancellationToken? cancellationToken = null)
     {
         var extension = Path.GetExtension(zipFilePath);
-        var fsArtifacts = new List<FsArtifact>();
-
         try
         {
-            if (extension == ".zip")
+            var artifacts = extension switch
             {
-                fsArtifacts = ZipFileViewer(zipFilePath, subDirectoriesPath, password);
-            }
-            else if (extension == ".rar")
-            {
-                fsArtifacts = RarFileViewer(zipFilePath, subDirectoriesPath, password);
-            }
-            else
-            {
-                var invalidZipFileExtensionExceptionMessage = StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), extension);
-                throw new InvalidZipExtensionException(invalidZipFileExtensionExceptionMessage);
-            }
+                ".rar" => await GetRarArtifactsAsync(zipFilePath, password),
+                ".zip" => await  GetZipArtifactsAsync(zipFilePath, password),
+                // ToDo: move string to resources.
+                _ => throw new InvalidOperationException($"Zip file not supported: {extension}")
+            };
+            
+            return artifacts;
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
+        catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (Exception ex) when (ex.Message == "bad password")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
+        {
+            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
         catch
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.TheOpreationFailedMessage));
         }
-
-        return Task.FromResult(fsArtifacts);
     }
 
     public virtual async Task<int> ExtractZippedArtifactAsync(string zipFullPath,
@@ -172,75 +177,61 @@ public partial class ZipService : IZipService
         }
     }
 
-    private List<FsArtifact> RarFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null)
+    private async Task<List<FsArtifact>> GetRarArtifactsAsync(string zipFilePath, string? password = null)
     {
-        var length = SplitPath(subDirectoriesPath);
-        var providerType = LocalDeviceFileService.GetArtifactAsync(zipFilePath).Result.ProviderType;
-        var fsArtifacts = new List<FsArtifact>();
+        var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
+        var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
+        var providerType = artifact.ProviderType;
 
-        using (var archive = RarArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
+        var artifacts = new List<FsArtifact>();
+        using var archive = RarArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
+
+        foreach (var entry in archive.Entries.ToList())
         {
-            foreach (var entry in archive.Entries.ToList())
+            var newPath = Path.Combine(zipFilePath, entry.Key);
+            var parentPath = entry.Key.EndsWith(fileName) ? string.Empty : Path.GetDirectoryName(newPath);
+            var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
+               
+            var entryFileName = Path.GetFileName(newPath);
+            var newArtifact = new FsArtifact(newPath, entryFileName, artifactType, providerType)
             {
-                var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
-                var newPath = Path.Combine(zipFilePath, entry.Key);
-                var entryFileName = Path.GetFileName(newPath);
-                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, providerType)
-                {
-                    FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
-                    LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
-                };
+                FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
+                LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
+                ParentFullPath = parentPath
+            };
 
-                var keyLength = SplitPath(entry.Key);
-                if (keyLength == length && newFsArtifact.FullPath.Contains(subDirectoriesPath))
-                {
-                    fsArtifacts.Add(newFsArtifact);
-                }
-            }
+            artifacts.Add(newArtifact);
         }
 
-        return fsArtifacts;
+        return artifacts;
     }
 
-
-    private List<FsArtifact> ZipFileViewer(string zipFilePath, string subDirectoriesPath, string? password = null)
+    private async Task<List<FsArtifact>> GetZipArtifactsAsync(string zipFilePath, string? password = null)
     {
-        var length = SplitPath(subDirectoriesPath);
+        var fileName = Path.GetFileNameWithoutExtension(zipFilePath);
+        var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
+        var providerType = artifact.ProviderType;
+
         var fsArtifacts = new List<FsArtifact>();
-        var providerType = LocalDeviceFileService.GetArtifactAsync(zipFilePath).Result.ProviderType;
-
-        using (var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password }))
+        using var archive = ZipArchive.Open(zipFilePath, new ReaderOptions() { Password = password });
+        
+        foreach (var entry in archive.Entries.ToList())
         {
-            foreach (var entry in archive.Entries.ToList())
+            var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
+            var path = entry.Key;
+
+            var parentPath = string.IsNullOrEmpty(path) ? string.Empty : Path.GetDirectoryName(path);
+
+            var entryFileName = Path.GetFileName(path);
+            var newFsArtifact = new FsArtifact(path, entryFileName, artifactType, providerType)
             {
-                var fsArtifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
-                var key = entry.Key.Trim('/').Replace("/", "\\");
-                var newPath = "";
+                FileExtension = !entry.IsDirectory ? Path.GetExtension(path) : null,
+                LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
+                ParentFullPath = parentPath
+            };
 
-                if (zipFilePath.Contains('\\'))
-                {
-                    newPath = Path.Combine(zipFilePath, key);
-                }
-                else if (zipFilePath.Contains('/'))
-                {
-                    newPath = Path.Combine(zipFilePath, entry.Key.Trim('/'));
-                }
-
-                var entryFileName = Path.GetFileName(newPath);
-                var newFsArtifact = new FsArtifact(newPath, entryFileName, fsArtifactType, providerType)
-                {
-                    FileExtension = !entry.IsDirectory ? Path.GetExtension(newPath) : null,
-                    LastModifiedDateTime = entry.LastModifiedTime ?? DateTimeOffset.Now,
-                };
-
-                var keyLength = SplitPath(key);
-                if (keyLength == length && newPath.Contains(subDirectoriesPath))
-                {
-                    fsArtifacts.Add(newFsArtifact);
-                }
-            }
+            fsArtifacts.Add(newFsArtifact);
         }
-
         return fsArtifacts;
     }
 
@@ -481,23 +472,6 @@ public partial class ZipService : IZipService
         }
 
         return duplicateCount;
-    }
-
-    private static int SplitPath(string subDirectoriesPath)
-    {
-        string[] itemsPath;
-        int length = 0;
-        if (subDirectoriesPath.Contains('\\'))
-        {
-            itemsPath = subDirectoriesPath.Split('\\');
-            length = itemsPath.Length;
-        }
-        else if (subDirectoriesPath.Contains('/'))
-        {
-            itemsPath = subDirectoriesPath.Split('/');
-            length = itemsPath.Length;
-        }
-        return length;
     }
 
     private static string GetFilePath(string zipFullPath, string itemPath)

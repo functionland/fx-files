@@ -358,6 +358,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coming soon....
+        /// </summary>
+        public static string ComingSoon {
+            get {
+                return ResourceManager.GetString("ComingSoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
@@ -601,11 +610,20 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extracting folder.
+        /// </summary>
+        public static string ExtractingFolder {
+            get {
+                return ResourceManager.GetString("ExtractingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter password for the zip file.
         /// </summary>
-        public static string ExtraxtPasswordModalTitle {
+        public static string ExtractPasswordModalTitle {
             get {
-                return ResourceManager.GetString("ExtraxtPasswordModalTitle", resourceCulture);
+                return ResourceManager.GetString("ExtractPasswordModalTitle", resourceCulture);
             }
         }
         
@@ -723,6 +741,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ForbiddenException {
             get {
                 return ResourceManager.GetString("ForbiddenException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This feature will come in near future.
+        /// </summary>
+        public static string FutureFeature {
+            get {
+                return ResourceManager.GetString("FutureFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fx Files.
+        /// </summary>
+        public static string FxFiles {
+            get {
+                return ResourceManager.GetString("FxFiles", resourceCulture);
             }
         }
         

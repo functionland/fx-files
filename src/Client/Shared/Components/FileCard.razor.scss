@@ -59,7 +59,7 @@
 
         .pin-defualt-icon::before {
             font-size: $icon-20;
-            @include Icon($pin, color(gray-content1), $Icons-Filled);
+            @include Icon($pin, color(gray-content1));
             position: absolute;
             top: 10.28px;
             right: 10.28px;

@@ -5,6 +5,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 public partial class FileViewer
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public EventCallback OnBack { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
