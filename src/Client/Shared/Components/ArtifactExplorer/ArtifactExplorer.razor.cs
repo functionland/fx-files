@@ -44,7 +44,7 @@ public partial class ArtifactExplorer
     [Parameter] public EventCallback HandleBack { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public bool IsInSearchMode { get; set; }
-    [AutoInject] public IArtifactThumbnailService<ILocalDeviceFileService> ThumbnailService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     public PathProtocol Protocol =>
         FileService switch
         {
