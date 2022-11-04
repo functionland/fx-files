@@ -601,6 +601,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extracting folder.
+        /// </summary>
+        public static string ExtractingFolder {
+            get {
+                return ResourceManager.GetString("ExtractingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter password for the zip file.
         /// </summary>
         public static string ExtraxtPasswordModalTitle {

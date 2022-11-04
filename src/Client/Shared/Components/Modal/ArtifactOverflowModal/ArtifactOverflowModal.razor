@@ -13,7 +13,7 @@
                   Text="Extract in current location"
                   OnClick="Extract"
                   IsEnabled="!_isInRoot"
-                  IsVisible="_fileCategoryType == FileCategoryType.Zip"
+                  IsVisible="_fileCategoryType == FileCategoryType.Zip && !_isMultiple"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="rename-button"
                   Text="@Localizer[nameof(AppStrings.Rename)]"

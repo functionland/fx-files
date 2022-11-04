@@ -633,4 +633,7 @@
   <data name="ExtraxtPasswordModalTitle" xml:space="preserve">
     <value>Enter password for the zip file</value>
   </data>
+  <data name="ExtractingFolder" xml:space="preserve">
+    <value>Extracting folder</value>
+  </data>
 </root>
