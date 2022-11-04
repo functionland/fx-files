@@ -1,6 +1,4 @@
-﻿using Functionland.FxFiles.Client.App.Implementations;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class FileViewer
 {
@@ -11,6 +9,7 @@ public partial class FileViewer
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
     [AutoInject] public INativeNavigation NativeNavigation { get; set; } = default!;
+    [Parameter] public EventCallback<FsArtifact> OnExtract { get; set; }
 
     public bool IsModalOpen { get; set; } = false;
 

@@ -6,12 +6,12 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    padding: 8px 21px;
+    padding: $spacing-8 $spacing-21;
     position: relative;
     z-index: 1;
 
     ::deep .back-button::before {
-        font-size: 24px;
+        font-size: $icon-24;
         vertical-align: middle;
         @include Icon($arrow-left, $pure-white);
     }
@@ -26,7 +26,7 @@
 .header {
     display: flex;
     align-items: center;
-    padding: 8px 21px;
+    padding: $spacing-8 $spacing-21;
 
     .artifact-title {
         font-family: $montserrat-medium;
@@ -40,7 +40,7 @@
         text-overflow: ellipsis;
         display: flex;
         justify-content: start;
-        display:block;
+        display: block;
     }
 
     .extract-button {
@@ -56,15 +56,16 @@
 
 
 ::deep .list-view {
-    padding: 0px;
+    padding: $spacing-0;
 }
 
 .action-header {
-    position:relative;
+    position: relative;
+
     .list-header {
         display: flex;
         align-items: center;
-        padding: 8px 21px;
+        padding: $spacing-8 $spacing-21;
         height: 40px;
 
         .action-btn {
@@ -90,7 +91,7 @@
     }
 
     .divider {
-        padding: 0px 21px;
+        padding: $spacing-0 $spacing-21;
     }
 
     .select-action {
@@ -99,7 +100,7 @@
         align-items: center;
         justify-content: space-between;
         background-color: $green-dark-base;
-        padding: 0px $spacing-31 0px $spacing-21;
+        padding: $spacing-0 $spacing-31 $spacing-0 $spacing-21;
         z-index: 2;
         position: absolute;
         left: 0;
@@ -118,7 +119,7 @@
                 cursor: pointer;
 
                 &::before {
-                    font-size: 16px;
+                    font-size: $icon-16;
                     @include Icon($close, $pure-white);
                 }
             }
@@ -145,13 +146,13 @@
 
             .move-icon::before {
                 cursor: pointer;
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($move, $pure-white);
             }
 
             .vertical-option-icon::before {
                 cursor: pointer;
-                font-size: 20px;
+                font-size: $icon-20;
                 @include Icon($options-vertical, $pure-white);
                 margin-left: $spacing-16;
             }
@@ -159,7 +160,7 @@
             .add-folder::before {
                 display: none;
                 cursor: pointer;
-                font-size: 24px;
+                font-size: $icon-24;
                 @include Icon($create-folder, $pure-white);
             }
         }

@@ -662,10 +662,10 @@ public partial class FileBrowser
 
                 var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
                 var extractPasswordModalLable = Localizer.GetString(AppStrings.Password);
-                var paswordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLable);
-                if (paswordResult?.ResultType == InputModalResultType.Confirm)
+                var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLable);
+                if (passwordResult?.ResultType == InputModalResultType.Confirm)
                 {
-                    await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName, paswordResult.Result);
+                    await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName, passwordResult.Result);
                 }
             }
 
