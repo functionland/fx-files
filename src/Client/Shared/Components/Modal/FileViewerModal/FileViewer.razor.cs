@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.App.Implementations;
+
+namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class FileViewer
 {
@@ -8,18 +10,28 @@ public partial class FileViewer
     [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
+    [AutoInject] public INativeNavigation NativeNavigation { get; set; } = default!;
 
     public bool IsModalOpen { get; set; } = false;
 
     private FsArtifact? _currentArtifact;
 
-    public bool OpenArtifact(FsArtifact artifact)
+    public async Task<bool> OpenArtifact(FsArtifact artifact)
     {
         if (!CanOpen(artifact))
             return false;
 
-        IsModalOpen = true;
         _currentArtifact = artifact;
+        if (IsSupported<VideoViewer>(_currentArtifact))
+        {
+            IsModalOpen = false;
+            await NavigateToView(_currentArtifact);
+        }
+        else
+        {
+            IsModalOpen = true;
+        }
+
         StateHasChanged();
         return true;
     }
@@ -38,6 +50,11 @@ public partial class FileViewer
         return false;
     }
 
+    public async Task NavigateToView(FsArtifact artifact)
+    {
+        await NativeNavigation.NavigateToVidoeViewer(artifact.FullPath);
+    }
+
     private bool IsSupported<TComponent>(FsArtifact? artifact)
         where TComponent : IFileViewerComponent
     {
@@ -46,10 +63,17 @@ public partial class FileViewer
 
         if (typeof(TComponent) == typeof(ImageViewer) && artifact.FileCategory == FileCategoryType.Image)
             return true;
+        else if (typeof(TComponent) == typeof(VideoViewer) && artifact.FileCategory == FileCategoryType.Video)
+            return true;
         else if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
             return true;
         else if (typeof(TComponent) == typeof(TextViewer) && new string[] { ".txt" }.Contains(artifact.FileExtension))
             return true;
+
+        return false;
+        {
+            return true;
+        }
 
         return false;
     }

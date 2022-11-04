@@ -831,7 +831,7 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            var isOpened = _fileViewerRef?.OpenArtifact(artifact);
+            var isOpened = await _fileViewerRef?.OpenArtifact(artifact);
 
             if (isOpened == false)
             {
