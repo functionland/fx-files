@@ -1,0 +1,124 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0</TargetFrameworks>
+        <UseMauiEssentials Condition=" '$(BlazorMode)' == 'BlazorHybrid' ">true</UseMauiEssentials>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <SupportedPlatform Include="browser" />
+
+        <Content Remove="compilerconfig.json" />
+        <None Include="compilerconfig.json" />
+
+        <Content Remove="wwwroot\appsettings.json" />
+        <EmbeddedResource Include="wwwroot\appsettings.json" />
+
+		<EmbeddedResource Include="Migrations\*.sql" />
+
+		<PackageReference Include="FreeSpire.PDF" Version="8.6.0" />
+
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.0-preview.1" />
+
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.0-preview.1" />
+
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
+
+		<PackageReference Include="NAudio" Version="2.1.0" />
+
+		<PackageReference Include="Prism.Core" Version="8.1.97" />
+        <PackageReference Include="Bit.BlazorUI" Version="4.3.1" />
+        <PackageReference Include="Bit.CodeAnalyzers" Version="4.3.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Bit.SourceGenerators" Version="4.3.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="LibSassBuilder" Version="2.0.2" Watch="false">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
+        <PackageReference Condition=" '$(BlazorMode)' == 'BlazorWebAssembly' " Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.8" />
+        <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.8.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+		<PackageReference Include="SharpCompress" Version="0.32.2" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0-rc.1.22426.10" />
+
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
+		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+		<PackageReference Include="dbup-sqlite" Version="4.6.0" />
+
+        <Using Include="Microsoft.AspNetCore.Components" />
+        <Using Include="Functionland.FxFiles.Client.Shared.Services.Contracts" />
+        <Using Include="Functionland.FxFiles.Client.Shared.Services.Implementations" />
+        <Using Include="Microsoft.Extensions.Configuration" />
+        <Using Include="Microsoft.JSInterop" />
+        <Using Include="System.Net.Http.Json" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="Microsoft.AspNetCore.Components.Authorization" />
+        <Using Include="Functionland.FxFiles.Client.Shared.Components" />
+        <Using Include="Bit.BlazorUI" />
+        <Using Include="Microsoft.AspNetCore.Authorization" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Attributes" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Resources" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Exceptions" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Enums" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Models" />
+		<Compile Remove="Components\FxLoading\**" />
+		<Content Remove="Components\FxLoading\**" />
+		<EmbeddedResource Remove="Components\FxLoading\**" />
+		<None Remove="Components\FxLoading\**" />
+		<SassFile Remove="Components\FxLoading\**" />
+		<TypeScriptCompile Remove="Components\FxLoading\**" />
+
+        <Watch Remove="*.scss" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(BlazorMode)' == 'BlazorHybrid' ">
+        <Using Include="Microsoft.Maui" />
+        <Using Include="Microsoft.Maui.Graphics" />
+        <Using Include="Microsoft.Maui.Accessibility" />
+        <Using Include="Microsoft.Maui.ApplicationModel" />
+        <Using Include="Microsoft.Maui.ApplicationModel.Communication" />
+        <Using Include="Microsoft.Maui.ApplicationModel.DataTransfer" />
+        <Using Include="Microsoft.Maui.Authentication" />
+        <Using Include="Microsoft.Maui.Devices" />
+        <Using Include="Microsoft.Maui.Devices.Sensors" />
+        <Using Include="Microsoft.Maui.Media" />
+        <Using Include="Microsoft.Maui.Networking" />
+        <Using Include="Microsoft.Maui.Storage" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="**\*.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>$([System.String]::Copy('%(Filename)').Replace('.Designer','')).resx</DependentUpon>
+        </Compile>
+        <EmbeddedResource Update="**\*.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>%(Filename).Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\AppStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+      </Compile>
+    </ItemGroup>
+	
+</Project>

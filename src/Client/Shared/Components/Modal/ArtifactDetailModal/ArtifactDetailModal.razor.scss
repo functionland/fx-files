@@ -1,0 +1,150 @@
+﻿@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+@import '../../../Styles/abstracts/_media-queries.scss';
+@import '../../../Styles/abstracts/_mixins.scss';
+.select-action {
+    display: flex;
+    height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $green-dark-base;
+    padding: $spacing-8 $spacing-21;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 100%;
+    bottom: 142px;
+
+    .info-selection {
+        flex-direction: column;
+        display: flex;
+        align-items: start;
+
+        .close-btn {
+            cursor: pointer;
+
+            &::before {
+                font-size: 16px;
+                @include Icon($close, $pure-white);
+            }
+        }
+
+        .item-selected {
+            margin-left: $spacing-6;
+
+            .move-selected-items-text,
+            .item-selected-count,
+            .item-selected-text {
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                font-family: $open-sans-regular;
+                letter-spacing: $letter-spacing-02;
+                color: $pure-white;
+            }
+        }
+    }
+
+    .right-part {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .move-icon::before {
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($move, $pure-white);
+        }
+
+        .vertical-option-icon::before {
+            cursor: pointer;
+            font-size: 20px;
+            @include Icon($options-vertical, $pure-white);
+            margin-left: $spacing-16;
+        }
+
+        .add-folder::before {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            @include Icon($create-folder, $pure-white);
+        }
+
+        .disabled-icon {
+            opacity: .5;
+            pointer-events: none;
+        }
+    }
+}
+
+.modal-slider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 38px $letter-spacing-0 $spacing-16;
+
+    .slider-btn {
+        color: color(input-disable);
+        font-family: $open-sans-semi-bold;
+        font-style: normal;
+        font-size: $font-size-12;
+        line-height: $line-height-16;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .slider-selected {
+        color: $green-dark-base;
+    }
+
+    .number-slider {
+        background-color: color(gray-bg-secondary);
+        color: color(gray-content1);
+        font-family: $open-sans-regular;
+        font-style: normal;
+        font-size: $font-size-10;
+        line-height: $line-height-14;
+        letter-spacing: $letter-spacing-02;
+        padding: $spacing-6 $spacing-8;
+        border-radius: $border-radius-6;
+        margin: $spacing-0 $spacing-8;
+    }
+}
+
+.folder-file-icon::before {
+    font-size: 32px;
+    @include Icon($folder);
+}
+
+.text-file-icon::before {
+    font-size: 32px;
+    @include Icon($document);
+}
+
+.image-file-icon::before {
+    font-size: 32px;
+    @include Icon($image);
+}
+
+.pdf-file-icon::before {
+    font-size: 32px;
+    @include Icon($PDF);
+}
+
+.audio-file-icon::before {
+    font-size: 32px;
+    @include Icon($audio);
+}
+
+.video-file-icon::before {
+    font-size: 32px;
+    @include Icon($video);
+}
+
+.app-file-icon::before {
+    font-size: 32px;
+    @include Icon($app);
+}
+
+.other-file-icon::before {
+    font-size: 32px;
+    @include Icon($document);
+}

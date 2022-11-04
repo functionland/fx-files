@@ -1,0 +1,105 @@
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+@import "../../Styles/abstracts/_mixins.scss";
+
+.fx-link {
+    color: $green-dark-base;
+    text-decoration: none;
+    font-family: $open-sans-semi-bold;
+    font-size: $font-size-12;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+    display: flex;
+
+    &:hover {
+        color: $green-dark-hover;
+    }
+
+    &:active {
+        color: $green-dark-pressed;
+    }
+}
+
+.fx-link-large {
+    font-family: $open-sans-regular;
+    font-size: $font-size-14;
+}
+
+.fx-link-left {
+    &::before {
+        @include Icon($chevron-left, $green-dark-base);
+        font-size: 16px;
+        margin-right: $spacing-4;
+    }
+
+    &:hover {
+        .fx-link-left::before {
+            @include Icon($chevron-left, $green-dark-hover);
+            font-size: 16px;
+            margin-right: $spacing-4;
+        }
+    }
+
+    &:active {
+        .fx-link-left::before {
+            @include Icon($chevron-left, $green-dark-pressed);
+            font-size: 16px;
+            margin-right: $spacing-4;
+        }
+    }
+}
+
+.fx-link-right {
+    &::after {
+        @include Icon($chevron-right, $green-dark-base);
+        font-size: 16px;
+        margin-left: $spacing-4;
+    }
+
+    &:hover {
+        .fx-link-left::after {
+            @include Icon($chevron-right, $green-dark-hover);
+            font-size: 16px;
+            margin-left: $spacing-4;
+        }
+    }
+
+    &:active {
+        .fx-link-left::after {
+            @include Icon($chevron-right, $green-dark-pressed);
+            font-size: 16px;
+            margin-left: $spacing-4;
+        }
+    }
+
+}
+
+
+.fx-link-disabled,
+.fx-link-disabled:hover,
+.fx-link-disabled:active {
+    color: color(input-disable);
+    pointer-events: none;
+}
+
+.fx-link-disabled-left {
+    color: color(input-disable);
+    pointer-events: none;
+
+    &::before {
+        @include Icon($chevron-left, color(input-disable));
+        font-size: 16px;
+        margin-right: $spacing-4;
+    }
+}
+
+.fx-link-disabled-right {
+    color: color(input-disable);
+    pointer-events: none;
+
+    &::after {
+        @include Icon($chevron-right, color(input-disable));
+        font-size: 16px;
+        margin-left: $spacing-4;
+    }
+}

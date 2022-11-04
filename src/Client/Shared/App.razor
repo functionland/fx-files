@@ -1,0 +1,31 @@
+﻿@using System.Runtime.InteropServices
+<CascadingAuthenticationState>
+    <PageTitle>Functionland.FxFiles</PageTitle>
+    <LayoutView Layout="@typeof(MainLayout)">
+        <Router AppAssembly="@GetType().Assembly"
+                OnNavigateAsync="@OnNavigateAsync">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData">
+                    <NotAuthorized>
+                        <NotAuthorizedComponent />
+                    </NotAuthorized>
+                    <Authorizing>
+                        @if (_isLoading)
+                        {
+                            <OverlayLoading LoadingType="LoadingType.Instead" />
+                        }
+                    </Authorizing>
+                </AuthorizeRouteView>
+            </Found>
+            <NotFound>
+                <PageNotFound />
+            </NotFound>
+            <Navigating>
+                @if (_isLoading)
+                {
+                    <OverlayLoading LoadingType="LoadingType.Instead" />
+                }
+            </Navigating>
+        </Router>
+    </LayoutView>
+</CascadingAuthenticationState>

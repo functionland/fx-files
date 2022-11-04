@@ -1,0 +1,71 @@
+﻿@import "../../Styles//abstracts//_mixins.scss";
+@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.fx-avatart {
+    position: relative;
+
+    &::before {
+        display: flex;
+        @include Icon($avatar, color(gray-bg-secondary), $Icons-Filled);
+    }
+}
+
+.xsmall-avatar {
+    font-size: $icon-16;
+}
+
+.small-avatar {
+    font-size: $icon-32;
+
+    .avatar-status {
+        position: absolute;
+        right: -13px;
+        bottom: -10px;
+    }
+}
+
+.medium-avatar {
+    font-size: $icon-48;
+
+    .avatar-status {
+        position: absolute;
+        right: -10px;
+        bottom: -14px;
+    }
+}
+
+.large-avatar {
+    font-size: $icon-64;
+
+    .avatar-status {
+        position: absolute;
+        right: -8px;
+        bottom: -18px;
+    }
+}
+
+.xlarge-avatar {
+    font-size: $icon-96;
+
+    .avatar-status {
+        position: absolute;
+        right: -4px;
+        bottom: -21px;
+    }
+}
+
+.selected-status::before {
+    @include Icon($success, $green-dark-base, $Icons-Filled);
+    font-size: $icon-24;
+}
+
+.deselected-status::before {
+    @include Icon($success, color(app-bg), $Icons-Filled);
+    font-size: $icon-24;
+}
+
+.edit-status::before {
+    @include Icon($edit, $info-dark, $Icons-Filled);
+    font-size: $icon-24;
+}

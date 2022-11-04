@@ -1,0 +1,64 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_mixins.scss';
+
+.bottom-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: $spacing-0;
+    gap: $spacing-6;
+    height: 46px;
+    width: 70px;
+
+    .action-button {
+        background: transparent;
+        padding: $spacing-0;
+        cursor: pointer;
+        border: none
+    }
+
+    .download-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($available-offline);
+    }
+
+    .move-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($move);
+    }
+
+    .pin-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($pin-outline);
+    }
+
+    .unpin-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($pin, color(gray-content1), $Icons-Filled);
+    }
+
+    .more-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($options-vertical);
+    }
+
+    .upload-action-icon::before {
+        font-size: $icon-24;
+        @include Icon($upload-file);
+    }
+
+    .action-text p {
+        margin: $spacing-0;
+        margin-top: $spacing-6;
+        color: var(--gray-content1);
+        line-height: $line-height-16;
+        font-size: $open-sans-regular;
+    }
+}
+
+.bottom-action-disabled {
+    opacity: .5 !important;
+    pointer-events: none;
+}

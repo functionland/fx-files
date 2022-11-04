@@ -1,0 +1,94 @@
+﻿@import "../../Styles/abstracts/_mixins.scss";
+@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+.input-box {
+    background-color: color(gray-bg-secondary);
+    color: color(gray-content1);
+    border: none;
+    outline: none;
+    font-style: normal;
+    height: $font-size-40;
+    font-size: $font-size-14;
+    background-size: $icon-20;
+    caret-color: $blue-crayola;
+    line-height: $line-height-24;
+    font-family: $open-sans-regular;
+    letter-spacing: $letter-spacing-02;
+    padding: $spacing-8 $spacing-12 $spacing-8 $spacing-48;
+
+    &::placeholder {
+        color: color(gray-content1);
+    }
+}
+
+.input-partial {
+    border-radius: $border-size-4;
+    padding: $spacing-8 $spacing-12 $spacing-8 44px;
+}
+
+.fully-disabled {
+    opacity: .5;
+    pointer-events: none !important;
+}
+
+.input-full-width {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 168px;
+    z-index: 2;
+
+    .button-search-input {
+        background-color: color(gray-bg-secondary);
+        cursor: pointer;
+        font-style: normal;
+        padding: 0 $spacing-8;
+        height: $font-size-40;
+        color: $green-dark-base;
+        font-size: $font-size-12;
+        line-height: $line-height-16;
+        font-family: $montserrat-semi-bold;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .input-box {
+        flex: 1;
+    }
+}
+
+.search-icon::after {
+    height: 0;
+    display: flex;
+    font-size: 20px;
+    margin-left: 16px;
+    position: absolute;
+    align-items: center;
+    @include Icon($search);
+}
+
+.search-icon-active::after {
+    color: #049B8F;
+}
+
+.search-input-active {
+    color: color(gray-bg-primary);
+
+    &::placeholder {
+        color: color(gray-bg-primary);
+    }
+}
+
+.search-input-active::before {
+    @include Icon($search);
+}
+
+.search-input-disable {
+    @include Icon($search);
+
+    &::placeholder {
+        color: color(gray-border);
+    }
+}

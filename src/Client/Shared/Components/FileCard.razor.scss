@@ -1,0 +1,181 @@
+﻿@import "../Styles/abstracts/_variables.scss";
+@import "../Styles/abstracts/_functions.scss";
+@import '../Styles/abstracts/_mixins.scss';
+
+.file-card-container {
+    width: 252px;
+    height: 216px;
+    margin-right: 16px;
+
+    .file-card-media {
+        height: 146px;
+        position: relative;
+        background-color: color(gray-border);
+        background-position: center;
+        border-radius: $border-radius-4 $border-radius-4 0px 0px;
+
+        &:active {
+            background-color: color(gray-bg-secondary);
+        }
+
+        .tag-wrapper {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+        }
+
+        .file-card-image {
+            padding: $spacing-12 $spacing-24;
+            width: 100%;
+            height: 100%;
+            max-height: 146px;
+            object-fit: contain;
+            position: absolute;
+            left: 0px;
+        }
+
+        .file-card-blur {
+            -webkit-filter: blur(2px);
+            -moz-filter: blur(2px);
+            -o-filter: blur(2px);
+            -ms-filter: blur(2px);
+            filter: blur(2px);
+            width: 100%;
+            height: 100%;
+            max-height: 146px;
+            object-fit: cover;
+        }
+
+
+        .file-card-icon {
+            font-size: 80px;
+            padding: 16px 21px;
+            text-align: center;
+        }
+
+        .file-card-icon::before {
+            color: $green-dark-base;
+        }
+
+        .pin-defualt-icon::before {
+            font-size: $icon-20;
+            @include Icon($pin, color(gray-content1), $Icons-Filled);
+            position: absolute;
+            top: 10.28px;
+            right: 10.28px;
+            cursor: pointer;
+        }
+    }
+
+    .file-card-content {
+        background-color: color(gray-bg-primary);
+        padding: $spacing-16;
+        border-radius: 0px 0px $border-radius-4 $border-radius-4;
+
+        .card-file-name {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            .file-icon::before {
+                font-size: $font-size-16;
+                color: color(gray-content1);
+            }
+
+            .file-name-container {
+                margin-left: $spacing-6;
+                display: flex;
+                color: color(gray-content1);
+
+                .file-format,
+                .file-name {
+                    display: inline-block;
+                    font-family: $open-sans-regular;
+                    font-size: $font-size-14;
+                    line-height: $line-height-24;
+                    letter-spacing: $letter-spacing-02;
+                    color: color(gray-content1);
+                }
+
+                .file-name {
+                    max-width: 162px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        .file-info {
+            font-family: $open-sans-regular;
+            font-size: $font-size-10;
+            line-height: $line-height-14;
+            letter-spacing: $letter-spacing-02;
+            color: color(gray-content3);
+
+            .modified-date {
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.favorite {
+    //pin filled mode
+    .pin-defualt-icon {
+        background-image: url($pin-filled) !important;
+    }
+}
+
+.disabled-card {
+    .file-card-content {
+        background-color: color(gray-bg-primary);
+
+        .file-name-container,
+        .file-name-container span,
+        .file-info {
+            color: color(gray-border) !important;
+        }
+
+        .file-icon::before {
+            color: color(gray-border);
+        }
+
+        .file-card-icon::before {
+            color: color(gray-border);
+        }
+    }
+}
+
+.visibility-hidden 
+{
+    visibility: hidden;
+}
+
+
+.folder-icon::before {
+    @include Icon($folder);
+}
+
+.text-file-icon::before {
+    @include Icon($document);
+}
+
+.photo-file-icon::before {
+    @include Icon($image);
+}
+
+.pdf-file-icon::before {
+    @include Icon($PDF);
+}
+
+.audio-file-icon::before {
+    @include Icon($audio);
+}
+
+.video-file-icon::before {
+    @include Icon($video);
+}
+
+.app-file-icon::before {
+    @include Icon($app);
+}

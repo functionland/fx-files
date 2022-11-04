@@ -1,0 +1,39 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
+@inherits AppComponentBase
+
+
+<FxBottomSheet OnClose="CloseAsync"
+               ShowCloseButton="false"
+               IsFullScreenMode="false"
+               CanClose="false"
+               @bind-IsOpen="_isModalOpen">
+    <div class="progress-container">
+        <div class="title">@_title</div>
+        <div class="main-content">
+            @if (_progressMode == ProgressMode.Progressive)
+            {
+                <BitProgressIndicator BarHeight="4"
+                                  Label="@CurrentText"
+                                  PercentComplete="@(GetPrecentComplete())" />
+            }
+            else
+            {
+                <BitProgressIndicator BarHeight="4"
+                                  Label="@CurrentText" />
+            }
+            <div class="progress-dsc">
+                <p>@CurrentSubText</p>
+                <p>@(GetPrecentComplete() + "%")</p>
+            </div>
+        </div>
+
+        @if (_isCancellable)
+        {
+            <FxButton OnClick="CloseAsync" Text="@Localizer[nameof(AppStrings.Cancel)]"
+                  ButtonStyle="FxButtonStyle.Normal"
+                  Height="60px"
+                  Width="100%" />
+        }
+    </div>
+
+</FxBottomSheet>

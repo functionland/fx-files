@@ -1,0 +1,93 @@
+﻿@import "../../Styles/abstracts/_mixins.scss";
+@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+
+//create custom radio button
+.container {
+    display: block;
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-family: $open-sans-regular;
+    font-size: $font-size-14;
+    line-height: $line-height-24;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content1);
+
+    input[type=radio] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+
+        &:checked ~ .checkmark {
+            background-color: $green-dark-base;
+            border: $border-size-0;
+        }
+
+        &:checked ~ .checkmark:after {
+            display: block;
+        }
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 2px;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: color(app-bg);
+        border-radius: 50%;
+        border: $border-size-1 solid color(gray-bg-secondary);
+        box-shadow: $box-shadow-light-s;
+
+        &:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+    }
+
+    .checkmark:after {
+        left: 30%;
+        top: 30%;
+        width: 8px;
+        height: 8px;
+        -moz-border-radius: 7.5px;
+        -webkit-border-radius: 7.5px;
+        border-radius: 7.5px;
+        background-color: $pure-white;
+    }
+}
+
+.unchecked-disabled {
+    color: color(input-disable);
+    pointer-events: none;
+
+    .checkmark {
+        background-color: color(gray-bg-secondary);
+        border-color: color(input-disable);
+    }
+}
+
+.checked-disabled {
+    color: color(input-disable);
+    pointer-events: none;
+
+    .checkmark {
+        background-color: $green-dark-base;
+        opacity: 0.5;
+        border: $border-size-0;
+
+        &:after {
+            display: block;
+            background-color: $pure-white;
+        }
+    }
+}

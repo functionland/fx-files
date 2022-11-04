@@ -1,0 +1,648 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BadRequestException" xml:space="preserve">
+    <value>Invalid request</value>
+  </data>
+  <data name="ConflicException" xml:space="preserve">
+    <value>Request could not be processed because of conflict in the request</value>
+  </data>
+  <data name="FileRemoveFailed" xml:space="preserve">
+    <value>An error occurred while removing file</value>
+  </data>
+  <data name="FileUploadFailed" xml:space="preserve">
+    <value>An error occurred while uploading file</value>
+  </data>
+  <data name="ForbiddenException" xml:space="preserve">
+    <value>Access to the requested resource is forbidden</value>
+  </data>
+  <data name="ResourceValidationException" xml:space="preserve">
+    <value>Request data is not valid</value>
+  </data>
+  <data name="RestException" xml:space="preserve">
+    <value>An error occurred while communicating with server</value>
+  </data>
+  <data name="UnknownException" xml:space="preserve">
+    <value>Unknown error has occurred</value>
+  </data>
+  <data name="UnauthorizedException" xml:space="preserve">
+    <value>Your request lacks valid authentication credentials</value>
+  </data>
+  <data name="UpdateConcurrencyException" xml:space="preserve">
+    <value>The record was modified by another user after you got the original data. the operation was canceled.</value>
+  </data>
+  <data name="KnownException" xml:space="preserve">
+    <value>Known error</value>
+  </data>
+  <data name="ResourceNotFoundException" xml:space="preserve">
+    <value>Resource not found</value>
+  </data>
+  <data name="TooManyRequestsExceptions" xml:space="preserve">
+    <value>Too many requests</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="HomeMessage" xml:space="preserve">
+    <value>This is a simple message in home</value>
+  </data>
+  <data name="HomeTitle" xml:space="preserve">
+    <value>The title of home</value>
+  </data>
+  <data name="FileAlreadyExistsException" xml:space="preserve">
+    <value>FileAlreadyExistsException</value>
+  </data>
+  <data name="ArtifactPathIsNull" xml:space="preserve">
+    <value>The {0} path is null</value>
+  </data>
+  <data name="DriveRemoveFailed" xml:space="preserve">
+    <value>You can not delete drive</value>
+  </data>
+  <data name="ArtifactTypeIsNull" xml:space="preserve">
+    <value>The artifact type is null</value>
+  </data>
+  <data name="UnableToLoadStorageManager" xml:space="preserve">
+    <value>Can't load storge manager.</value>
+  </data>
+  <data name="PathIsNull" xml:space="preserve">
+    <value>the path is null</value>
+  </data>
+  <data name="ArtifactNameIsNull" xml:space="preserve">
+    <value>The {0} name is empty</value>
+  </data>
+  <data name="ArtifactAlreadyExistsException" xml:space="preserve">
+    <value>This {0} already  contains  an item  with the same name.</value>
+  </data>
+  <data name="StreamFileIsNull" xml:space="preserve">
+    <value>The stream file is null</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="FilesAndBloxHardware" xml:space="preserve">
+    <value>Files &amp; Blox hardware</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Night" xml:space="preserve">
+    <value>Night</value>
+  </data>
+  <data name="Pools" xml:space="preserve">
+    <value>Pools</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="MyDevice" xml:space="preserve">
+    <value>My Device</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="FileSize" xml:space="preserve">
+    <value>File size</value>
+  </data>
+  <data name="LastModified" xml:space="preserve">
+    <value>Last modified</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="Move" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="ToastDescMessage" xml:space="preserve">
+    <value>A new version of the app is available for download.</value>
+  </data>
+  <data name="ToastErrorMessage" xml:space="preserve">
+    <value>Your error message</value>
+  </data>
+  <data name="ToastInfoMessage" xml:space="preserve">
+    <value>Your info message</value>
+  </data>
+  <data name="ToastSuccessMessage" xml:space="preserve">
+    <value>Your success message</value>
+  </data>
+  <data name="ToastWarningMessage" xml:space="preserve">
+    <value>Your warning message</value>
+  </data>
+  <data name="ButtonSearchFullWidth" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="InputSearchFullWidth" xml:space="preserve">
+    <value>Search in “{0}”</value>
+  </data>
+  <data name="InputSearchParial" xml:space="preserve">
+    <value>Search your files</value>
+  </data>
+  <data name="SharedFileCardTag" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="CardFileFormat" xml:space="preserve">
+    <value>pdf</value>
+  </data>
+  <data name="CardFileName" xml:space="preserve">
+    <value>Presentation_document</value>
+  </data>
+  <data name="CardFileSize" xml:space="preserve">
+    <value>1.22 mb</value>
+  </data>
+  <data name="ModifiedDate" xml:space="preserve">
+    <value>Modified 09/30/22</value>
+  </data>
+  <data name="InternalStorageName" xml:space="preserve">
+    <value>Internal storage</value>
+  </data>
+  <data name="SDCardName" xml:space="preserve">
+    <value>SD card ({0})</value>
+  </data>
+  <data name="UnknownFsFileProviderException" xml:space="preserve">
+    <value>Unknown file provider for path: {0}</value>
+  </data>
+  <data name="CanNotOperateOnFilesException" xml:space="preserve">
+    <value>Can not operate on files exception</value>
+  </data>
+  <data name="TagLabel" xml:space="preserve">
+    <value>Tag Label</value>
+  </data>
+  <data name="ArtifactNameHasInvalidChars" xml:space="preserve">
+    <value>The {0} name has invalid chars.</value>
+  </data>
+  <data name="ButtonAddFile" xml:space="preserve">
+    <value>Add files</value>
+  </data>
+  <data name="ButtonAddNewFolder" xml:space="preserve">
+    <value>Add new folder</value>
+  </data>
+  <data name="ButtonUploadFiles" xml:space="preserve">
+    <value>Upload files</value>
+  </data>
+  <data name="EmptyListTitle" xml:space="preserve">
+    <value>Nothing here</value>
+  </data>
+  <data name="UnableToAccessToStorage" xml:space="preserve">
+    <value>Allow permission for storage access!</value>
+  </data>
+  <data name="ArtifactDoseNotExistsException" xml:space="preserve">
+    <value>The {0} dose not exists exception</value>
+  </data>
+  <data name="InputLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="PlaceHolderFilledTextInput" xml:space="preserve">
+    <value>Example Description</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Error message</value>
+  </data>
+  <data name="FieldQuestionInput" xml:space="preserve">
+    <value>Perferendis blanditiis modi amet architecto voluptatem animi saepe non?</value>
+  </data>
+  <data name="TextAreaLabel" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="TextAreaPlaceholder" xml:space="preserve">
+    <value>Type message here...</value>
+  </data>
+  <data name="DriveRenameFailed" xml:space="preserve">
+    <value>You can not rename drive</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="TestExplorer" xml:space="preserve">
+    <value>Test explorer</value>
+  </data>
+  <data name="CancelModal" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="MoveFileModal" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
+  <data name="ReplaceButtonModal" xml:space="preserve">
+    <value>Replace {0} item(s) </value>
+  </data>
+  <data name="ReplaceOrSkipSupDescModal" xml:space="preserve">
+    <value>The destination folder already has {0} item(s) with the same name,</value>
+  </data>
+  <data name="ReplaceOrSkipTitleModal" xml:space="preserve">
+    <value>Replace or skip {0} item(s)</value>
+  </data>
+  <data name="SkipButtonModal" xml:space="preserve">
+    <value>Skip {0} item(s)</value>
+  </data>
+  <data name="ToastErrorTitle" xml:space="preserve">
+    <value>Something went wrong!</value>
+  </data>
+  <data name="TheCopyOpreationSuccessedMessage" xml:space="preserve">
+    <value>Items copied</value>
+  </data>
+  <data name="TheCopyOpreationSuccessedTiltle" xml:space="preserve">
+    <value>Your item(s) has been copied</value>
+  </data>
+  <data name="TheMoveOpreationSuccessedMessage" xml:space="preserve">
+    <value>Items moved</value>
+  </data>
+  <data name="TheMoveOpreationSuccessedTiltle" xml:space="preserve">
+    <value>Your item(s) has been moved</value>
+  </data>
+  <data name="TheOpreationFailedMessage" xml:space="preserve">
+    <value>The operation failed</value>
+  </data>
+  <data name="RootfolderRenameException" xml:space="preserve">
+    <value>Root folder cannot be renamed</value>
+  </data>
+  <data name="RootFolderDeleteException" xml:space="preserve">
+    <value>Root folder can not be deleted</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="ItemsSelected" xml:space="preserve">
+    <value>items selected</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>total</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="DeleteItemDescription" xml:space="preserve">
+    <value>This item will be permanently deleted from your device. Are you sure you want to delete this item?</value>
+  </data>
+  <data name="DeleteItemsDescription" xml:space="preserve">
+    <value>These items will be permanently deleted from your device. Are you sure you want to delete these items?</value>
+  </data>
+  <data name="ChangeName" xml:space="preserve">
+    <value>Change name</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="DeleteItem" xml:space="preserve">
+    <value>Delete {0}</value>
+  </data>
+  <data name="DeleteItems" xml:space="preserve">
+    <value>Delete {0} item</value>
+  </data>
+  <data name="FileRenamePlaceholder" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="FolderRenamePlaceholder" xml:space="preserve">
+    <value>Folder name</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="NextSlide" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="PreviousSlide" xml:space="preserve">
+    <value>Prev.</value>
+  </data>
+  <data name="CreateFolder" xml:space="preserve">
+    <value>Create Folder</value>
+  </data>
+  <data name="NewFolderPlaceholder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="CopyHere" xml:space="preserve">
+    <value>Copy here</value>
+  </data>
+  <data name="MoveHere" xml:space="preserve">
+    <value>Move here</value>
+  </data>
+  <data name="SameDestinationFileException" xml:space="preserve">
+    <value>The destination file is the same as the source file.</value>
+  </data>
+  <data name="SameDestinationFolderException" xml:space="preserve">
+    <value>The destination folder is the same as the source folder.</value>
+  </data>
+  <data name="ArtifactNameIsNullException" xml:space="preserve">
+    <value>You have not entered any name.</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>file</value>
+  </data>
+  <data name="Of" xml:space="preserve">
+    <value>of</value>
+  </data>
+  <data name="Artifact" xml:space="preserve">
+    <value>Artifact</value>
+  </data>
+  <data name="ArtifactNameHasInvalidCharsException" xml:space="preserve">
+    <value>Invalid characters in the item name.</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
+    <value>What do you want to do?</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Onboarding" xml:space="preserve">
+    <value>Onboarding</value>
+  </data>
+  <data name="ArtifactUnauthorizedAccessException" xml:space="preserve">
+    <value>Access is denied.</value>
+  </data>
+  <data name="BloxIsNotFoundException" xml:space="preserve">
+    <value>Blox is not found</value>
+  </data>
+  <data name="BloxPoolIsNotFoundException" xml:space="preserve">
+    <value>Blox pool is not found</value>
+  </data>
+  <data name="CopyFiles" xml:space="preserve">
+    <value>Copying files</value>
+  </data>
+  <data name="DeletingFiles" xml:space="preserve">
+    <value>Deleting files</value>
+  </data>
+  <data name="MovingFiles" xml:space="preserve">
+    <value>Moving files</value>
+  </data>
+  <data name="ReplacingFiles" xml:space="preserve">
+    <value>Replacing files</value>
+  </data>
+  <data name="ImportFromApps" xml:space="preserve">
+    <value>Import from apps</value>
+  </data>
+  <data name="HasNotBeenSharedException" xml:space="preserve">
+    <value>The artifact not been shared</value>
+  </data>
+  <data name="AutomaticContent" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="LightMode" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SystemThemeDescription" xml:space="preserve">
+    <value>Use system light/dark mode setting.</value>
+  </data>
+  <data name="GoogleDrive" xml:space="preserve">
+    <value>Google Drive</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>CONGRATULATIONS</value>
+  </data>
+  <data name="LetsGo" xml:space="preserve">
+    <value>Let’s go</value>
+  </data>
+  <data name="SetupComplete" xml:space="preserve">
+    <value>Setup complete</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>WELCOME</value>
+  </data>
+  <data name="WelcomePageConnectContent" xml:space="preserve">
+    <value>Connect to Fula</value>
+  </data>
+  <data name="WelcomePageDesc" xml:space="preserve">
+    <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
+  </data>
+  <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
+    <value>The artifact already dose not pinned. </value>
+  </data>
+  <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
+    <value>The {0} already pinned</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="BloxModified" xml:space="preserve">
+    <value>| Modified 09/30/22</value>
+  </data>
+  <data name="BloxName" xml:space="preserve">
+    <value>Home Blox Setup</value>
+  </data>
+  <data name="SuccessfullLoginBloxBackup" xml:space="preserve">
+    <value>Your data will be backedup in following:</value>
+  </data>
+  <data name="SuccessfulLoginMessage" xml:space="preserve">
+    <value>Your Login was successful To Fula</value>
+  </data>
+  <data name="BloxPoolAlreadyExistsException" xml:space="preserve">
+    <value>The user is already a member of this poolblox</value>
+  </data>
+  <data name="PasswordDidNotMatchedException" xml:space="preserve">
+    <value>The password did not match.</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by:</value>
+  </data>
+  <data name="Specter" xml:space="preserve">
+    <value>|</value>
+  </data>
+  <data name="InvalidPasswordException" xml:space="preserve">
+    <value>The password is invalid.</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>copy</value>
+  </data>
+  <data name="ShowInLocation" xml:space="preserve">
+    <value>show in location</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="AddPinnedItems" xml:space="preserve">
+    <value>Add to pinned items</value>
+  </data>
+  <data name="CopyTo" xml:space="preserve">
+    <value>Copy to</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ExtractHere" xml:space="preserve">
+    <value>Extract in current location</value>
+  </data>
+  <data name="MoveTo" xml:space="preserve">
+    <value>Move to</value>
+  </data>
+  <data name="RemoveFromPinnedItems" xml:space="preserve">
+    <value>Remove from pinned items</value>
+  </data>
+  <data name="SeeDetails" xml:space="preserve">
+    <value>See details </value>
+  </data>
+  <data name="ShareWithApp" xml:space="preserve">
+    <value>Share with app</value>
+  </data>
+  <data name="InvalidZipExtensionException" xml:space="preserve">
+    <value>{1} not supported.</value>
+  </data>
+  <data name="FolderName" xml:space="preserve">
+    <value>Folder name</value>
+  </data>
+  <data name="Extract" xml:space="preserve">
+    <value>Extract</value>
+  </data>
+  <data name="ExtractFolderTargetNamePlaceHolder" xml:space="preserve">
+    <value>Zip file name</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ExtractPasswordModalTitle" xml:space="preserve">
+    <value>Enter password for the zip file</value>
+  </data>
+  <data name="ExtractingFolder" xml:space="preserve">
+    <value>Extracting folder</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming soon...</value>
+  </data>
+  <data name="FutureFeature" xml:space="preserve">
+    <value>This feature will come in near future</value>
+  </data>
+  <data name="FxFiles" xml:space="preserve">
+    <value>Fx Files</value>
+  </data>
+</root>

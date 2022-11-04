@@ -1,0 +1,234 @@
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+@import '../../Styles/abstracts/_media-queries.scss';
+
+.sheet-wrapper {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 10000;
+    visibility: hidden;
+    transition: all 0.3s linear 0.1s;
+}
+
+.sheet-wrapper-apear {
+    background-color: #88888880;
+    visibility: visible;
+}
+
+.bottom-sheet {
+    z-index: 999;
+    width: 100%;
+    position: absolute;
+    transform: translateY(100%);
+    transition: all 300ms linear 0.2s;
+    bottom: 0px;
+}
+
+.show-bottom-sheet {
+    transform: translateY(0px);
+}
+
+.bottom-sheet-contents {
+    box-sizing: border-box;
+    max-height: 100vh;
+    max-width: 600px;
+    width: 100%;
+    padding: $spacing-0 $spacing-21;
+    position: relative;
+    transform: translateY(0);
+    overflow-y: auto;
+    background-color: color(app-bg);
+    border-radius: $border-radius-20 $border-radius-20 0px 0px;
+    transition: transform 0.5s, border-radius 0.5s;
+
+    &:not(.not-selectable) {
+        transition: transform 0.5s, border-radius 0.5s, height 0.5s;
+    }
+
+    &.fullscreen {
+        border-radius: 0px;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: $spacing-8;
+        padding: $spacing-10 $spacing-0;
+    }
+
+    &[aria-hidden="true"] .contents {
+        transform: translateY(100%);
+    }
+
+    .close-sheet {
+        height: $spacing-24;
+        width: $spacing-24;
+        margin-left: auto;
+        border: none;
+        padding: 0;
+        right: 0;
+        top: 0;
+    }
+
+    .close-button {
+        padding: 0;
+        cursor: pointer;
+        background-color: transparent;
+
+        .close-button-icon::before {
+            font-size: 24px;
+            @include Icon($close);
+        }
+    }
+
+}
+
+.full-screen-sheet {
+    height: 100%;
+
+    .bottom-sheet-contents {
+        height: 100%;
+        border-radius: $border-radius-3;
+    }
+}
+
+.show-bottom-sheet-animation {
+    animation: showBottomSheet 300ms ease-in-out forwards;
+    -webkit-animation: showBottomSheet 300ms ease-in-out forwards;
+}
+
+@keyframes showBottomSheet {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0px);
+        height: unset;
+    }
+}
+
+@-webkit-keyframes showBottomSheet {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0px);
+        height: unset;
+    }
+} 
+
+.row {
+    display: flex;
+    flex-direction: row;
+
+    &.reversed-order {
+        flex-direction: row-reverse;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+    &.reversed-order {
+        flex-direction: column-reverse;
+    }
+}
+
+.row.items-start, .column.items-start {
+    align-items: flex-start;
+}
+
+.row.justify-start, .column.justify-start {
+    justify-content: flex-start;
+}
+
+.row.content-start, .column.content-start {
+    align-content: flex-start;
+}
+
+.row.items-center, .column.items-center {
+    align-items: center;
+}
+
+.row.justify-center, .column.justify-center {
+    justify-content: center;
+}
+
+.row.content-center, .column.content-center {
+    align-content: center;
+}
+
+.row.items-end, .column.items-end {
+    align-items: flex-end;
+}
+
+.row.justify-end, .column.justify-end {
+    justify-content: flex-end;
+}
+
+.row.content-end, .column.content-end {
+    align-content: flex-end;
+}
+
+.row.items-stretch, .column.items-stretch {
+    align-items: stretch;
+}
+
+.row.justify-stretch, .column.justify-stretch {
+    justify-content: stretch;
+}
+
+.row.content-stretch, .column.content-stretch {
+    align-content: stretch;
+}
+
+.row.items-baseline, .column.items-baseline {
+    align-items: baseline;
+}
+
+.row.justify-baseline, .column.justify-baseline {
+    justify-content: baseline;
+}
+
+.row.content-baseline, .column.content-baseline {
+    align-content: baseline;
+}
+
+.row .wrap, .column .wrap {
+    flex-wrap: wrap;
+}
+
+.row .reversed-wrap, .column .reversed-wrap {
+    flex-wrap: wrap-reverse;
+}
+
+.row .no-wrap, .column .no-wrap {
+    flex-wrap: nowrap;
+}
+
+.fill {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.not-selectable {
+    user-select: none;
+}
+
+.selectable {
+    user-select: auto;
+}
+
+

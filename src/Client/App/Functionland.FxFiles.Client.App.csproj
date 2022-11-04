@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<EnableDefaultCssItems>false</EnableDefaultCssItems>
+
+		<!-- Display name -->
+		<ApplicationTitle>Functionland.FxFiles</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.bitplatform.Todo.Template</ApplicationId>
+		<ApplicationIdGuid>A6B6FEDD-EFCA-4A47-9E85-C04B9C1D5F2B</ApplicationIdGuid>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<!-- Required for C# Hot Reload -->
+		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+		<DefaultLanguage>en-US</DefaultLanguage>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+		<EnableLLVM>false</EnableLLVM>
+		<MauiUseDefaultAotProfile Condition="Exists('custom.aprof')">false</MauiUseDefaultAotProfile>
+		<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>
+	</PropertyGroup>
+
+		
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	</PropertyGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+		<LinkDescription Include="Platforms\Android\Linker.xml" />
+		<AndroidAotProfile Condition="Exists('custom.aprof')" Include="custom.aprof" />
+		<!-- Run the following commands to create custom.aprof file which improves the Android app performance -->
+		<!-- dotnet add package Mono.AotProfiler.Android -->
+		<!-- dotnet build -t:BuildAndStartAotProfiling -f net6.0-android /p:UseInterpreter=false -->
+		<!-- dotnet build -t:FinishAotProfiling -f net6.0-android -->
+		<!-- dotnet remove package Mono.AotProfiler.Android -->
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.png" Color="#212529" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.png" Color="#212529" BaseSize="128,128" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+
+		<!-- Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<Using Include="Microsoft.Extensions.Configuration" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Components" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Services.Implementations" />
+		<Using Include="Functionland.FxFiles.Client.Shared.Services.Contracts" />
+		<Using Include="Microsoft.AspNetCore.Components.WebView.Maui" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Bit.BlazorUI" Version="4.3.1" />
+		<PackageReference Include="Bit.CodeAnalyzers" Version="4.3.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Bit.SourceGenerators" Version="4.3.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="iTextSharp" Version="5.5.13.3" />
+		<Content Remove="Properties\launchSettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-ios'">
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.2" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.ios" Version="2.1.2" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.2" />
+	</ItemGroup>
+	<ItemGroup>
+	  <BundleResource Include="Platforms\Android\Resources\playstore-icon.png" />
+	</ItemGroup>
+</Project>

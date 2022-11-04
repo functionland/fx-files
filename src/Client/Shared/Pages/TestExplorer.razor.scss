@@ -1,0 +1,93 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+@import '../Styles/components/_bit-dropdown.scss';
+
+$var1: #dddddd;
+$var2: #f2f2f2;
+$var3: #04AA6D;
+
+.page {
+    padding: $spacing-12;
+}
+
+test-selector-dropdown{
+    color: color(gray-content1);
+}
+
+.test-selector {
+    align-items: flex-end;
+    display: flex;
+    gap: 10px;
+}
+
+.label{
+    margin-top: $spacing-12;
+}
+
+.progress-items {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.progress-item {
+    border-radius: 4px;
+    display: flex;
+    padding: 5px;
+    margin: 5px;
+
+    &:hover {
+        background-color: color(gray-bg-secondary);
+    }
+}
+
+.progress-title {
+    padding-left: 30px;
+    overflow-wrap: anywhere;
+}
+
+.show-details {
+    min-width: 103px;
+    margin-left: 10px;
+    color: cornflowerblue;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.test-icon-success {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url($success-mode);
+}
+
+.test-icon-error {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url($error-mode);
+}
+
+.test-icon-warning {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url($warning-mode);
+}
+.test-icon-info {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url($info-mode);
+}
+
+::deep .bit-mdl-container {
+    padding: 16px;
+    border-radius: 4px;
+    background-color: color(app-bg);
+
+    .bit-mdl-scrl-cnt::-webkit-scrollbar {
+        height: 6px;
+    }
+}

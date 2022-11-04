@@ -1,0 +1,130 @@
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+
+
+
+.toolbar-box {
+    width: 100%;
+    padding: 0 21px;
+}
+
+.search-toolbar-not-in-root {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        margin-bottom:$spacing-16;
+
+        ::deep .back-button::after {
+            font-size: 24px;
+            vertical-align: middle;
+            @include Icon($arrow-left);
+        }
+}
+
+.search-toolbar-not-in-root ::deep input.input-box {
+    flex-grow: 2;
+}
+
+.root-mode {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+
+    ::deep .search-back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($chevron-left);
+    }
+
+    ::deep .root-add-button {
+        .fxbutton-lefticon {
+            margin-right: 0px;
+        }
+    }
+}
+
+.root-mode ::deep input.input-box {
+    flex-grow: 2;
+
+}
+
+.not-root-mode {
+    width: 100%;
+
+    ::deep .search-back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($chevron-left);
+    }
+
+    ::deep .fxbutton img {
+        height: 24px;
+        width: 24px;
+    }
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+
+    ::deep .overflow-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($options-vertical);
+    }
+
+    .action-row {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+
+        .info-box {
+
+            .artifact-title {
+                font-family: $montserrat-medium;
+                font-style: normal;
+                font-weight: 600;
+                font-size: $font-size-24;
+                line-height: $line-height-36;
+                color: color(gray-content1);
+                max-width: 220px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .pinned-icon::before {
+                margin-right: $spacing-4;
+                font-size: $icon-24;
+                @include Icon($pin, color(gray-content1), $Icons-Filled);
+            }
+            /*            .artifact_subtext {
+                color: color(gray-content3);
+                font-family: $open-sans-regular;
+                font-style: normal;
+                font-weight: 400;
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+            }*/
+        }
+
+        .action-box {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+}

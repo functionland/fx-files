@@ -1,0 +1,72 @@
+﻿@import '../abstracts/_mixins.scss';
+@import '../abstracts/_variables.scss';
+@import '../abstracts/_functions.scss';
+
+
+::deep .bit-chb-fluent .bit-chb-checkbox {
+    margin: 0 .5px;
+    border: 1px solid;
+    border-radius: $border-radius-4;
+    background-color: color(app-bg);
+    border-color: color(gray-border);
+}
+
+::deep .bit-chb-checked-fluent .bit-chb-checkbox {
+    background: $green-dark-base;
+    border: none;
+}
+
+::deep .bit-chb-checked-disabled-fluent .bit-chb-checkmark {
+    background: $green-dark-border;
+    color: $gray-dark-border;
+    border: none;
+}
+
+::deep .bit-chb-disabled-fluent .bit-chb-checkbox {
+    background: color(gray-bg-secondary);
+    color: color(gray-bg-secondary);
+}
+
+::deep .bit-chb-disabled-fluent .bit-chb-checkmark {
+    background: color(gray-bg-secondary);
+    color: color(gray-bg-secondary);
+}
+
+::deep .bit-chb-indeterminate-fluent .bit-chb-checkmark {
+    opacity: 1;
+    display: inline-block;
+    width: $line-height-10;
+    height: $border-size-2;
+    background-color: $pure-white;
+    border-radius: $border-size-1;
+}
+
+::deep .bit-chb-fluent .bit-chb-checkmark {
+    font-size: 17px;
+}
+
+::deep .bit-chb-enabled-unchecked-fluent div button {
+    background: $gray-dark-border;
+    border: none;
+}
+
+::deep .bit-chb-disabled-checked-fluent div button {
+    background: $green-dark-border;
+    border: none;
+}
+
+::deep .bit-chb-disabled-checked-fluent div button span {
+    background-color: $gray-dark-border;
+}
+
+::deep .bit-chb-enabled-unchecked-fluent div button span {
+    background-color: $gray-dark-content1;
+}
+
+::deep .bit-chb-disabled-unchecked-fluent div button span {
+    background-color: $gray-dark-border;
+}
+
+::deep .bit-icon--Accept:before {
+    @include Icon($select-filled, #fff, $Icons-Filled);
+}

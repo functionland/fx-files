@@ -1,0 +1,152 @@
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+@import "../../Styles/abstracts/_mixins.scss";
+
+.open-toast {
+    opacity: 1 !important;
+    bottom: 90px !important;
+    transition: opacity 0.3s linear 0.1s, bottom 0.3s linear;
+}
+
+.close-toast {
+    opacity: 0 !important;
+    bottom: -67px !important;
+    transition: opacity 0.3s linear, bottom 0.3s linear;
+}
+
+.fx-taost {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: color(app-bg);
+    border: 1px solid color(gray-bg-secondary);
+    border-radius: $border-radius-4;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    padding: $spacing-16 $spacing-18;
+    width: 100%;
+    max-width: 574px;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    margin: 0 auto;
+    z-index: 1000;
+
+
+
+    .toast-container {
+        display: flex;
+        align-items: center;
+
+        .toast-icon {
+            font-size: $icon-24;
+        }
+
+        .toast-messages {
+            margin: 0px $spacing-18;
+
+            .taost-message-title {
+                font-family: $open-sans-semi-bold;
+                font-size: $font-size-14;
+                line-height: $line-height-24;
+                letter-spacing: $letter-spacing-02;
+            }
+
+            .taost-message-desc {
+                font-family: $open-sans-semi-bold;
+                font-size: $font-size-12;
+                line-height: $line-height-16;
+                letter-spacing: $letter-spacing-02;
+                color: color(gray-content2);
+                max-width: 242px;
+                overflow-wrap: break-word;
+            }
+        }
+    }
+
+    .close-icon::before {
+        @include Icon($close);
+        font-size: $icon-16;
+        cursor: pointer;
+    }
+}
+
+.success-message {
+    .toast-icon::before {
+        @include Icon($success, $success-dark, $Icons-Filled);
+    }
+
+    .taost-message-title {
+        color: $success-light;
+    }
+}
+
+.info-message {
+    .toast-icon::before {
+        @include Icon($info, $info-dark, $Icons-Filled);
+    }
+
+    .taost-message-title {
+        color: $info-dark;
+    }
+}
+
+.warning-message {
+    .toast-icon::before {
+        @include Icon($warning, color(warning), $Icons-Filled);
+    }
+
+    .taost-message-title {
+        color: color(warning);
+    }
+}
+
+.error-message {
+    .toast-icon::before {
+        @include Icon($critical, color(error), $Icons-Filled);
+    }
+
+    .taost-message-title {
+        color: color(error);
+    }
+}
+
+@keyframes toast-animation {
+    0% {
+        left: -360px
+    }
+
+    100% {
+        left: 10px;
+    }
+}
+
+@-webkit-keyframes toast-animation {
+    0% {
+        left: -360px
+    }
+
+    100% {
+        left: 10px;
+    }
+}
+
+@keyframes toast-animation-hide {
+    0% {
+        left: 10px
+    }
+
+    100% {
+        left: -360px;
+    }
+}
+
+@-webkit-keyframes toast-animation-hide {
+    0% {
+        left: 10px
+    }
+
+    100% {
+        left: -360px;
+    }
+}

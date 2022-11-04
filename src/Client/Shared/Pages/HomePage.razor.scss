@@ -1,0 +1,12 @@
+﻿@import '../Styles/abstracts/_variables.scss';
+@import '../Styles/abstracts/_functions.scss';
+@import '../Styles/components/_bit-breadcrumb.scss';
+
+.move-file {
+    margin-bottom: $spacing-40;
+}
+
+// style ali
+.files-content {
+    padding: 21px;
+}

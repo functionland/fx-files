@@ -1,0 +1,50 @@
+﻿@page "/Settings/TestExplorer"
+@inherits AppComponentBase;
+
+<div class="page">
+    <div class="test-selector">
+        <BitDropDown Label="Select tests"
+                     Items="GetDropdownItems()"
+                     @bind-Value="TestName"
+                     Placeholder="Select tests" />
+        <FxButton Text="Play"
+                  Height="32px"
+                  Padding="0 16px"
+                  ButtonStyle="FxButtonStyle.Normal"
+                  OnClick="(()=>HandleValidSubmit())" />
+    </div>
+
+    <div>
+        <div class="label">Test Output</div>
+
+        <div class="progress-items">
+            @foreach (var progress in testProgressChangedEventArgs)
+            {
+                <div class="progress-item">
+                    @if (progress.ProgressType == TestProgressType.Success)
+                    {
+                        <div class="test-icon-success"></div>
+                    }
+                    @if (progress.ProgressType == TestProgressType.Fail)
+                    {
+                        <div class="test-icon-error"></div>
+                    }
+                    
+                    <div class="progress-title" >@progress.Title</div>
+                    @if (!string.IsNullOrEmpty(progress.Description))
+                    {
+                        <div 
+                            class="show-details"
+                            @onclick="()=>ShowDescription(progress)">
+                            (show details)
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <BitModal @bind-IsOpen="IsDescriptionOpen">
+        <p>@Description</p>
+    </BitModal>
+</div>

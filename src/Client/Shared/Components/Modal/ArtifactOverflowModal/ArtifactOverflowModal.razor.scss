@@ -1,0 +1,65 @@
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+::deep .details-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($detail);
+}
+
+//TODO: replace extract icon with detail icon
+::deep .extract-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($detail);
+}
+
+::deep .rename-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($rename);
+}
+
+::deep .copy-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($copy);
+}
+
+::deep .pin-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($pin-outline);
+}
+
+::deep .move-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($move);
+}
+
+::deep .share-with-app-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($app);
+}
+
+::deep .delete-button .fxbutton-text {
+    color: color(error);
+    line-height: 24px;
+}
+
+::deep .delete-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($trash, color(error));
+}

@@ -1,0 +1,11 @@
+﻿@page "/onboarding/import-app"
+@inherits AppComponentBase;
+@namespace Functionland.FxFiles.Client.Shared.Pages
+@layout OnboardingMainLayout
+<div class="import-app">
+    <div class="title">@Localizer[nameof(AppStrings.ImportFromApps)]</div>
+    <div class="account-sync">@Localizer[nameof(AppStrings.GoogleDrive)]</div>
+
+    <ImportFromApp />
+
+</div>

@@ -1,0 +1,26 @@
+﻿@page "/Settings/About"
+@inherits AppComponentBase;
+@namespace Functionland.FxFiles.Client.Shared.Pages
+
+
+<div class="fxtoolbar-wrapper">
+    <FxToolBar IsInRoot="false"
+               IsBackButtonVisible="true"
+               IsAddButtonVisible="false"
+               IsOverflowButtonVisible="false"
+               OnBackClick="HandleToolbarBack" />
+</div>
+
+<section class="about-container">
+
+    <div class="about-content">@Localizer[nameof(AppStrings.About)]</div>
+
+    <div class="about-app-container">
+        <div class="part-one"> FxBlox is built by <span class="important-contents">Functionland</span>, a pioneer in <span class="important-contents">Blockchain-Attached Storage</span>. This flagship device aims to give you full control over your data, privacy, and storage.</div>
+        <div class="part-two">
+            <span class="important-contents">FxFiles</span> app helps you manage your files and data stored locally on your device or on your FxBlox.
+            It allows you to collaborate with these files and share them with your loved ones, colleagues and trusted contacts.
+            There are no middlemen or cloud companies that have access to your files, all data is stored and transacted over a private peer to peer network,
+            the Fula network that transfers files to/from your FxBlox to other devices in the private network.</div>
+    </div>
+</section>

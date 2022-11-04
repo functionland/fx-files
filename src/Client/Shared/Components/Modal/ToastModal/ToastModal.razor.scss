@@ -1,0 +1,12 @@
+﻿@import '../../../Styles/abstracts/_functions.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+
+.toast-modal {
+    position: fixed;
+    bottom: 90px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+}

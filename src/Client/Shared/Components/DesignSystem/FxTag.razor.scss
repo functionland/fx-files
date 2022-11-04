@@ -1,0 +1,36 @@
+﻿@import "../../Styles/abstracts/_variables.scss";
+@import "../../Styles/abstracts/_functions.scss";
+@import "../../Styles/abstracts/_mixins.scss";
+
+.tag-label-container {
+    background-color: color(gray-bg-secondary);
+    border-radius: $border-radius-6;
+    padding: $spacing-6 $spacing-8;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .tag-title {
+        color: color(gray-content1);
+        font-family: $open-sans-regular;
+        font-size: $font-size-10;
+        line-height: $line-height-14;
+        letter-spacing: $letter-spacing-02;
+    }
+
+    .left-icon-tag::before {
+        margin-right: $spacing-8;
+        @include Icon($circle-filled, color(gray-content1), $Icons-Filled);
+        font-size: $icon-16;
+    }
+
+    .right-icon-tag::after {
+        margin-left: $spacing-8;
+        @include Icon($circle-filled, color(gray-content1), $Icons-Filled);
+        font-size: $icon-16;
+        position: absolute;
+        bottom: 5.33px;
+    }
+}

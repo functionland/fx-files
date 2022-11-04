@@ -1,5 +1,5 @@
 # Basic Models
-The `FsArtifact` is an entity to describe a *File*, *Folder* or a *Drive* in the file system in any platform. The file system platform could be an android's internal memory, a windows drive, or a Blox Storage. All these file systems are stroing `FsArtifact`s which we may call them as **artifact**(s) in this document.
+The `FsArtifact` is an entity to describe a *File*, *Folder* or a *Drive* in the file system in any platform. The file system platform could be an android's internal memory, a windows drive, or a Blox Storage. All these file systems are strong `FsArtifact`s which we may call as **artifact**(s) in this document.
 ```mermaid
 classDiagram
 class FsArtifact{
@@ -38,21 +38,21 @@ class FsArtifactType{
 ```
 
 # FileService Architecture
-To unify the development experience of facing with different file systems (Android, iOS, Widnows, Blox and ...) we use an abstraction called `IFileService`. This abstraction represents all the requirements that a typical file system should expose.
+To unify the development experience of facing with different file systems (Android, iOS, Windows, Blox and ...) we use an abstraction called `IFileService`. This abstraction represents all the requirements that a typical file system should expose.
 
 As you see, there are different implementations of `IFileService` for different platforms leveraging specialized API(s) of each specific platform.
 Amongst these implementations `FakeFileService` is the interesting one for developers, as they can use it to easily test their application, removing all the barriers to setup a proper file system for testing purposes.
 ```mermaid
 classDiagram
-IFileService <|-- LocalDeviceFileService
+IFileService <|-- ILocalDeviceFileService
+ILocalDeviceFileService <|-- LocalDeviceFileService
 LocalDeviceFileService <|-- AndroidFileService
 LocalDeviceFileService <|-- IosFileService
 LocalDeviceFileService <|-- WindowsFileService
-IFileService <|-- FakeFileService
-IFileService <|-- FulaFileService
-FulaFileService <|-- AndroidFulaFileService
-FulaFileService <|-- IosFulaFileService
-FulaFileService <|-- WindowsFulaFileService
+ILocalDeviceFileService <|-- FakeFileService
+IFulaFileService <|-- FakeFileService
+IFileService <|-- IFulaFileService
+IFulaFileService <|-- FulaFileService
 
 class IFileService {
   <<interface>>
@@ -65,13 +65,51 @@ class IFileService {
 class LocalDeviceFileService {
   <<abstract>>
 }
+
 ```
-
-# UI Components
-
+# PinService Architecture
 ```mermaid
 classDiagram
-class FileExplorerComponent {
-  +IFileService FileService
+IPinService <|-- ILocalDevicePinService
+ILocalDevicePinService <|-- LocalDevicePinService
+IPinService <|-- IFulaPinService
+IFulaPinService <|-- FulaPinService
+```
+# OfflineAvailablityService Architecture
+```mermaid
+classDiagram
+IOfflineAvailablityService <|-- WindowsOfflineAvailablityService
+IOfflineAvailablityService <|-- AndroidOfflineAvailablityService
+IOfflineAvailablityService <|-- IosOfflineAvailablityService
+IOfflineAvailablityService <|-- FakeOfflineAvailablityService
+
+class IOfflineAvailablityService{
+<<interface>>
+InitAsync(CancellationToken? cancellationToken = null)
+EnsureInitializedAsync()
+MakeAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+RemoveAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+IsAvailableOfflineAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
+GetFulaLocalFolderAddress()
+}
+```
+
+# ShareService Architecture
+```mermaid
+classDiagram
+IShareService <|-- ILocalDeviceShareService
+IShareService <|-- IFulaShareService
+ILocalDeviceShareService <|-- LocalDeviceShareService
+IFulaShareService <|-- FulaShareService
+
+class IShareService{
+<<interface>>
+InitAsync(CancellationToken? cancellationToken = null)
+EnsureInitializedAsync()
+ShareFsArtifactAsync(IEnumerable<string> dids, FsArtifact fsArtifact, CancellationToken? cancellationToken = null)
+ShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+UnShareFsArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
+UnShareFsArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
+GetSharedFsArtifactsAsync(CancellationToken? cancellationToken = null) FsArtifact
 }
 ```
