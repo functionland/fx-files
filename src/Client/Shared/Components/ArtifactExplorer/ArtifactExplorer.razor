@@ -97,11 +97,12 @@
                         <div class="item-box @(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "")">
                             <div class="icon-box">
                                 <div class="thumbnail-box">
-
-                                    @if (artifact?.ThumbnailPath != null)
-                                    {
-                                        <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
-                                    }
+                                    <div class="img-box">
+                                        @if (artifact?.ThumbnailPath != null)
+                                        {
+                                            <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
+                                        }
+                                    </div>
                                     @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
                                     {
                                         <div class="icon-play"></div>
