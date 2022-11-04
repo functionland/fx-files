@@ -612,9 +612,9 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Enter password for the zip file.
         /// </summary>
-        public static string ExtraxtPasswordModalTitle {
+        public static string ExtractPasswordModalTitle {
             get {
-                return ResourceManager.GetString("ExtraxtPasswordModalTitle", resourceCulture);
+                return ResourceManager.GetString("ExtractPasswordModalTitle", resourceCulture);
             }
         }
         
