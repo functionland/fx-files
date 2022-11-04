@@ -17,7 +17,7 @@
                             FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
                             FileDetailFieldValue="@(_currentArtifact?.LastModifiedDateTime.Date.ToShortDateString())"/>
                         <FileDetailViewItem 
-                            FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" 
+                            FileDetailFieldName="@(_currentArtifact?.ArtifactType == FsArtifactType.File ? Localizer[nameof(AppStrings.FileSize)] : Localizer[nameof(AppStrings.FolderSize)])"
                             FileDetailFieldValue="@_currentArtifact?.SizeStr" />
                         <FileDetailViewItem 
                             FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" 
@@ -93,7 +93,7 @@
                         FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
                         FileDetailFieldValue="@(_currentArtifact?.LastModifiedDateTime.Date.ToShortDateString())"/>
                     <FileDetailViewItem 
-                        FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" 
+                        FileDetailFieldName="@(_currentArtifact?.ArtifactType == FsArtifactType.File ? Localizer[nameof(AppStrings.FileSize)] : Localizer[nameof(AppStrings.FolderSize)])"
                         FileDetailFieldValue="@_currentArtifact?.SizeStr" />
                     <FileDetailViewItem 
                         FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" 
