@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Models;
+
+namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ZipViewer : IFileViewerComponent
 {
@@ -20,7 +22,10 @@ public partial class ZipViewer : IFileViewerComponent
     private List<FsArtifact> _displayedArtifacts = new();
     private List<FsArtifact> _selectedArtifacts = new();
     private List<FsArtifact> _allZipFileEntities = new();
+
     private InputModal? _passwordModalRef;
+    private ArtifactSelectionModal? _artifactSelectionModalRef;
+
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -71,9 +76,8 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            //TODO : Handle extract artifacts to a specific folder
-            string? destinationPath = null;
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath);
+            var destionationPath = await GetDestionationPathAsync();
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, _selectedArtifacts, destionationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
 
@@ -84,8 +88,7 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            //TODO : Handle extract artifacts to a specific folder
-            string? destinationPath = null;
+            string? destinationPath = await GetDestionationPathAsync();
             var singleArtifactList = new List<FsArtifact> { artifact };
             var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, singleArtifactList, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
@@ -98,13 +101,33 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            //TODO : Handle extract artifacts to a specific folder
-            string? destinationPath = null;
+            string? destinationPath = await GetDestionationPathAsync();
             var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, null, destinationPath);
             await OnExtract.InvokeAsync(extractTuple);
         }
 
         await HandleBackAsync(true);
+    }
+
+    private async Task<string?> GetDestionationPathAsync()
+    {
+        if (_artifactSelectionModalRef is null)
+            return null;
+
+        ArtifactActionResult actionResult = new()
+        {
+            ActionType = ArtifactActionType.Extract,
+            Artifacts = null
+        };
+
+        var routeArtifact = await FileService.GetArtifactAsync(CurrentArtifact?.ParentFullPath);
+        var result = await _artifactSelectionModalRef.ShowAsync(routeArtifact, actionResult);
+
+        if (result.ResultType == ArtifactSelectionResultType.Cancel)
+            return null;
+
+        var destionationPath = result.SelectedArtifacts.FirstOrDefault()?.FullPath;
+        return destionationPath;
     }
 
     private async Task HandleBackAsync(bool shouldExit = false)
