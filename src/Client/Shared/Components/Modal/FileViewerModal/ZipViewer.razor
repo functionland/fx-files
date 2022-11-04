@@ -16,7 +16,7 @@
         @CurrentArtifact?.Name
     </div>
     <div class="extract-button">
-        <FxButton OnClick="@OnBack"
+        <FxButton OnClick="@HandleExtractAllZipArtifactsAsync"
                   IsVisible="@(ArtifactExplorerMode == ArtifactExplorerMode.Normal && _currentInnerZipArtifact.FullPath== string.Empty)"
                   Text="Extract"
                   ButtonStyle="FxButtonStyle.Normal"
@@ -59,7 +59,7 @@
                       OnSelectArtifact="HandleArtifactClick"
                       HandleBack="HandleBackAsync"
                       IsInZipMode="true"
-                      OnZipArtifactClick="HandleExtractArtifactsAsync"
+                      OnZipArtifactClick="HandleExtractArtifactAsync"
                       IsInSearchMode="false"
                       ThumbnailService="ThumbnailService"
                       @bind-SelectedArtifacts="_selectedArtifacts"

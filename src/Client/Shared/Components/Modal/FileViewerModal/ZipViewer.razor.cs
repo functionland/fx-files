@@ -23,27 +23,41 @@ public partial class ZipViewer : IFileViewerComponent
     private InputModal? _passwordModalRef;
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitialZipViewerAsync();
+            StateHasChanged();
+        }
 
-    protected override async Task OnInitAsync()
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task InitialZipViewerAsync()
     {
         if (CurrentArtifact is null)
-        {
             return;
-        }
 
         try
         {
-            await LoadAllArtifactsAsync();
+            try
+            {
+                await LoadAllArtifactsAsync();
+            }
+            catch (InvalidPasswordException)
+            {
+                _password = await GetPassword();
+                await LoadAllArtifactsAsync();
+            }
+
+            DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
-        catch (InvalidPasswordException)
+        catch(Exception e)
         {
-            _password = await GetPassword();
-
+            await HandleBackAsync();
+            ExceptionHandler.Handle(e);
         }
-
-        await LoadAllArtifactsAsync();
-        DisplayChildrenArtifacts(_currentInnerZipArtifact);
-        await base.OnInitAsync();
     }
 
     private async Task<string?> GetPassword()
@@ -87,7 +101,7 @@ public partial class ZipViewer : IFileViewerComponent
         //await _zipService.ExtractZipFileAsync(CurrentArtifact.FullPath, artifacts, _password);
     }
 
-    private async Task HandleExtractArtifactsAsync(FsArtifact artifacts)
+    private async Task HandleExtractArtifactAsync(FsArtifact artifacts)
     {
         // full path, destination path, destination name, override if exists , password
         //await _zipService.ExtractZipFileAsync(CurrentArtifact.FullPath, artifacts, _password);
