@@ -312,7 +312,7 @@ public partial class FileBrowser
 
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
-            ToastModal.Show(title, message, FxToastType.Success);
+            FxToast.Show(title, message, FxToastType.Success);
 
             await NavigateToDestionation(destinationPath);
         }
@@ -414,7 +414,7 @@ public partial class FileBrowser
 
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
-            ToastModal.Show(title, message, FxToastType.Success);
+            FxToast.Show(title, message, FxToastType.Success);
 
             await NavigateToDestionation(destinationPath);
         }
@@ -453,7 +453,7 @@ public partial class FileBrowser
         {
             var title = Localizer.GetString(AppStrings.ToastErrorTitle);
             var message = Localizer.GetString(AppStrings.RootfolderRenameException);
-            ToastModal.Show(title, message, FxToastType.Error);
+            FxToast.Show(title, message, FxToastType.Error);
         }
     }
 
@@ -671,6 +671,9 @@ public partial class FileBrowser
                     await ExtraxtZipAsync(artifact.FullPath, parentPath!, destinationFolderName, paswordResult.Result);
                 }
             }
+
+            var destinationPath = Path.Combine(parentPath!, destinationFolderName);
+            await NavigateToDestionation(destinationPath);
         }
         catch (Exception exception)
         {
@@ -689,7 +692,7 @@ public partial class FileBrowser
 
         try
         {
-            await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
+            await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ExtractingFolder), true);
             ProgressBarCts = new CancellationTokenSource();
 
             async Task onProgress(ProgressInfo progressInfo)
@@ -707,7 +710,7 @@ public partial class FileBrowser
                 destinationFolderName,
                 overwrite: false,
                 password: paswword,
-                onProgress: onProgress, 
+                onProgress: onProgress,
                 cancellationToken: ProgressBarCts.Token);
 
             await _progressModalRef.CloseAsync();
@@ -731,7 +734,7 @@ public partial class FileBrowser
                     destinationFolderName,
                     overwrite: true,
                     password: paswword,
-                    onProgress: onProgress, 
+                    onProgress: onProgress,
                     cancellationToken: ProgressBarCts.Token);
             }
         }
@@ -999,7 +1002,10 @@ public partial class FileBrowser
             var pinOptionResult = GetPinOptionResult(artifacts);
             var isVisibleSahreWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
 
-            result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, null, IsInRoot(_currentArtifact));
+            var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
+            FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
+
+            result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, fileCategoryType, IsInRoot(_currentArtifact));
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -1041,6 +1047,9 @@ public partial class FileBrowser
                 break;
             case ArtifactOverflowResultType.ShareWithApp:
                 await HandleShareFiles(artifacts);
+                break;
+            case ArtifactOverflowResultType.Extract:
+                await HandleExtractArtifactAsync(artifacts.First());
                 break;
             case ArtifactOverflowResultType.Cancel:
                 _artifactExplorerMode = ArtifactExplorerMode.Normal;
