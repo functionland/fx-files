@@ -11,7 +11,7 @@
     }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
-        if (!IsInSearchMode)
+        if (!IsInSearchMode&& !IsInZipMode)
         {
             <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
                    Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
