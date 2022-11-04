@@ -6,7 +6,7 @@ public partial class ZipViewer : IFileViewerComponent
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback<FsArtifact> OnExtract { get; set; }
+    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?>> OnExtract { get; set; }
 
     [AutoInject] private IZipService _zipService = default!;
 
@@ -41,44 +41,17 @@ public partial class ZipViewer : IFileViewerComponent
 
         try
         {
-            try
-            {
-                await LoadAllArtifactsAsync();
-            }
-            catch (InvalidPasswordException)
-            {
-                _password = await GetPassword();
-                await LoadAllArtifactsAsync();
-            }
+            await LoadAllArtifactsAsync();
 
             DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             await HandleBackAsync();
             ExceptionHandler.Handle(e);
         }
     }
 
-    private async Task<string?> GetPassword()
-    {
-        if (_passwordModalRef is null)
-            return null;
-
-        var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
-        var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
-        var extractPasswordModalLable = Localizer.GetString(AppStrings.Password);
-        var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty,
-            string.Empty, extractBtnTitle, extractPasswordModalLable);
-        if (passwordResult?.ResultType == InputModalResultType.Confirm)
-        {
-            return passwordResult.Result;
-        }
-
-        return null;
-    }
-
-    // Get the list of artifacts to display in the explorer
     private async Task LoadAllArtifactsAsync()
     {
         if (CurrentArtifact is null)
@@ -94,22 +67,37 @@ public partial class ZipViewer : IFileViewerComponent
         _displayedArtifacts = _allZipFileEntities.Where(a => a.ParentFullPath == artifact.FullPath).ToList();
     }
 
-    // Extract the artifact to the current directory
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
     {
-        // full path, destination path, destination name, override if exists , password
-        //await _zipService.ExtractZipFileAsync(CurrentArtifact.FullPath, artifacts, _password);
+        if (CurrentArtifact != null)
+        {
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(CurrentArtifact, _selectedArtifacts);
+            await OnExtract.InvokeAsync(extractTuple);
+        }
+
+        await HandleBackAsync();
     }
 
-    private async Task HandleExtractArtifactAsync(FsArtifact artifacts)
+    private async Task HandleExtractArtifactAsync(FsArtifact artifact)
     {
-        // full path, destination path, destination name, override if exists , password
-        //await _zipService.ExtractZipFileAsync(CurrentArtifact.FullPath, artifacts, _password);
+        if (CurrentArtifact != null)
+        {
+            var singleArtifactList = new List<FsArtifact> { artifact };
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(CurrentArtifact, singleArtifactList);
+            await OnExtract.InvokeAsync(extractTuple);
+        }
+
+        await HandleBackAsync();
     }
 
-    private async Task HandleExtractAllZipArtifactsAsync()
+    private async Task HandleExtractCurrentArtifactAsync()
     {
-        await OnExtract.InvokeAsync(CurrentArtifact);
+        if (CurrentArtifact != null)
+        {
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?>(CurrentArtifact, null);
+            await OnExtract.InvokeAsync(extractTuple);
+        }
+
         await HandleBackAsync();
     }
 

@@ -16,7 +16,7 @@
         @CurrentArtifact?.Name
     </div>
     <div class="extract-button">
-        <FxButton OnClick="@HandleExtractAllZipArtifactsAsync"
+        <FxButton OnClick="@HandleExtractCurrentArtifactAsync"
                   IsVisible="@(ArtifactExplorerMode == ArtifactExplorerMode.Normal && _currentInnerZipArtifact.FullPath== string.Empty)"
                   Text="Extract"
                   ButtonStyle="FxButtonStyle.Normal"
@@ -46,7 +46,7 @@
         <div class="right-part">
             @if (_selectedArtifacts.Count > 0)
             {
-                <div class="icons-action move-icon" @onclick="(() => HandleExtractArtifactsAsync(_selectedArtifacts))"></div>
+                <div class="icons-action extract-btn" @onclick="(() => HandleExtractArtifactsAsync(_selectedArtifacts))"></div>
             }
         </div>
     </div>
