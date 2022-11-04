@@ -19,7 +19,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public EventCallback<bool> IsOpenChanged { get; set; }
 
         private static event Func<string, string, FxToastType, Task> OnShow = default!;
-        private Timer _timer = new Timer(1000000);
+        private Timer _timer = new Timer(3000);
 
         protected override Task OnInitAsync()
         {
