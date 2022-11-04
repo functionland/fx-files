@@ -418,6 +418,10 @@
 .app-file-icon::before {
     @include Icon($app);
 }
+
+.zip-file-icon::before {
+    @include Icon($zip-file);
+}
 /*.select-action {
     display: flex;
     height: 40px;
