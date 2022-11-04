@@ -433,48 +433,7 @@ public partial class ArtifactExplorer
         }
         _isLoadingThumbnailFinished = true;
 
-        var result = new List<FsArtifact[]>();
-        if (_gridRowCount == 1)
-        {
-            for (int i = 0; i < items.Count; i += 1)
-            {
-                if (i < items.Count)
-                {
-                    result.Add(new[] { items[i] });
-                    continue;
-                }
-                result.Add(new[] { items[i] });
-            }
-        }
-        else if (_gridRowCount == 2)
-        {
-            for (int i = 0; i < items.Count; i += 2)
-            {
-                if ((i + 1) < items.Count)
-                {
-                    result.Add(new[] { items[i], items[i + 1] });
-                    continue;
-                }
-                result.Add(new[] { items[i] });
-            }
-        }
-        else if (_gridRowCount == 3)
-        {
-            for (int i = 0; i < items.Count; i += 3)
-            {
-                if ((i + 2) < items.Count)
-                {
-                    result.Add(new[] { items[i], items[i + 1], items[i + 2] });
-                    continue;
-                }
-                else if ((i + 1) < items.Count)
-                {
-                    result.Add(new[] { items[i], items[i + 1] });
-                    continue;
-                }
-                result.Add(new[] { items[i] });
-            }
-        }
+        var result = items.Chunk(_gridRowCount).ToList();
 
         return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
     }
