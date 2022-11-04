@@ -21,7 +21,6 @@
             _isModalOpen = false;
         }
 
-        //TODO: complete extract onclick
         public void Extract()
         {
             var result = new ArtifactOverflowResult();
