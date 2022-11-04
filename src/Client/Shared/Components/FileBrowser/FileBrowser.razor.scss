@@ -140,7 +140,7 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: center;
 
         .action-btn {
             cursor: pointer;
@@ -188,18 +188,51 @@
             @include Icon($grid, $green-dark-base);
         }
 
-        .filter-btn {
-            margin-left: $spacing-8;
+        .filter {
+            position: relative;
 
-            &:before {
-                font-size: $icon-24;
-                @include Icon($filter, color(gray-content3));
+            .filter-btn {
+                position: relative;
+                z-index: 1;
+                background-color: var(--gray-bg-primary);
+                margin-left: $spacing-8;
+
+                &:before {
+                    font-size: $icon-24;
+                    @include Icon($filter, color(gray-content3));
+                }
             }
-        }
 
-        .filter-btn-selected::before {
-            font-size: $icon-24;
-            @include Icon($fill, $green-dark-base);
+            .filter-btn:hover {
+
+                &:before {
+                    transition: color 200ms linear;
+                    color: $green-dark-base;
+                }
+            }
+
+            .filter-btn-selected {
+                position: absolute;
+                top: 0;
+                margin-left: 8px;
+
+                &::before {
+                    font-size: $icon-24;
+                    @include Icon($fill);
+                    color: $green-dark-base;
+                    transition: all 200ms linear;
+                }
+            }
+
+            .show-fliter-btn {
+                z-index: 2;
+                transition: all 200ms linear;
+            }
+
+            .hide-filter-btn {
+                z-index: 0;
+                transition: all 200ms linear;
+            }
         }
     }
 }
