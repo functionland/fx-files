@@ -8,6 +8,7 @@ public partial class FileViewer
     [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
+    [Parameter] public EventCallback<FsArtifact> OnExtract { get; set; }
 
     public bool IsModalOpen { get; set; } = false;
 
