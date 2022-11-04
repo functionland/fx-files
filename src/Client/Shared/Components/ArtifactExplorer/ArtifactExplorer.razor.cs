@@ -1,10 +1,4 @@
-﻿using System;
-
-using Functionland.FxFiles.Client.Shared.Components.Common;
-using Functionland.FxFiles.Client.Shared.Models;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using Functionland.FxFiles.Client.Shared.Utils;
-using Microsoft.AppCenter.Crashes;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
@@ -325,7 +319,7 @@ public partial class ArtifactExplorer
             if (velocityY >= swipeThreshold)
                 return;
 
-            if (diffX < 0) 
+            if (diffX < 0)
                 await HandleBack.InvokeAsync();
         }
     }
@@ -358,10 +352,8 @@ public partial class ArtifactExplorer
         StateHasChanged();
     }
 
-    private bool _isLoadingThumbnailFinished;
     private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
     {
-        _isLoadingThumbnailFinished = false;
         if (_isArtifactsChanged == false)
         {
             await Task.Delay(300);
@@ -376,7 +368,7 @@ public partial class ArtifactExplorer
         {
             foreach (var item in items)
             {
-                if (request.CancellationToken.IsCancellationRequested) 
+                if (request.CancellationToken.IsCancellationRequested)
                     return;
 
                 try
@@ -390,21 +382,18 @@ public partial class ArtifactExplorer
                         item.ThumbnailPath = thumbnailUrl;
                     });
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     ExceptionHandler.Track(exception);
                 }
             }
         });
 
-        _isLoadingThumbnailFinished = true;
-
         return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
     }
 
     private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
     {
-        _isLoadingThumbnailFinished = false;
         if (_isArtifactsChanged == false)
         {
             await Task.Delay(300);
@@ -418,20 +407,30 @@ public partial class ArtifactExplorer
 
         List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
 
-        foreach (var item in items)
+        _ = Task.Run(async () =>
         {
-            if (request.CancellationToken.IsCancellationRequested) return default;
+            foreach (var item in items)
+            {
+                if (request.CancellationToken.IsCancellationRequested)
+                    return;
 
-            try
-            {
-                item.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small, request.CancellationToken);
+                try
+                {
+                    var thumbnailUrl =
+                        await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
+                            request.CancellationToken);
+
+                    await InvokeAsync(() =>
+                    {
+                        item.ThumbnailPath = thumbnailUrl;
+                    });
+                }
+                catch (Exception exception)
+                {
+                    ExceptionHandler.Track(exception);
+                }
             }
-            catch
-            {
-                item.ThumbnailPath = null;
-            }
-        }
-        _isLoadingThumbnailFinished = true;
+        });
 
         var result = items.Chunk(_gridRowCount).ToList();
 
