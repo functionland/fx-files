@@ -3,8 +3,8 @@
 @inherits AppComponentBase;
 
 <div class="fx-breadcrumbs">
+    <span class="start-ellipsis">...</span>
 
-    <span class="start-elipse">...</span>
     @if (_breadCrumbsPath != null)
     {
         @foreach (var path in _breadCrumbsPath)
@@ -12,4 +12,6 @@
             <div class="file-path">@path</div>
         }
     }
+
+    <span class="end-ellipsis">...</span>
 </div>

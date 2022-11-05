@@ -10,15 +10,27 @@
     margin: $spacing-0 $spacing-21;
     white-space: nowrap;
     overflow-x: auto;
-    height: 19px;
+    overflow-y: hidden;
+    height: 27px;
 
-    .start-elipse {
-        width: 20px;
-        position: fixed;
-        left: 28px;
+    span[class$="ellipsis"] {
         font-size: $font-size-12;
         background-color: color(app-bg);
+        position: sticky;
+        width: 13px;
         display: none;
+    }
+
+    .start-ellipsis {
+        left: 0px;
+    }
+
+    .end-ellipsis {
+        right: 0px;
+    }
+
+    .color-changer {
+        color: color(app-bg);
     }
 
     &::-webkit-scrollbar {
@@ -46,13 +58,4 @@
 div.file-path:last-of-type {
     font-family: $open-sans-semi-bold;
     color: color(gray-content1);
-}
-
-.chaveron-right {
-    display: flex;
-
-    &::before {
-        font-size: $icon-16;
-        @include Icon($chevron-right, color(gray-content1));
-    }
 }
