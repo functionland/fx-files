@@ -41,11 +41,11 @@ public partial class FileViewer
     {
         if (IsSupported<ImageViewer>(artifact))
             return true;
-        else if (IsSupported<VideoViewer>(artifact))
+        if (IsSupported<VideoViewer>(artifact))
             return true;
-        else if (IsSupported<ZipViewer>(artifact))
+        if (IsSupported<ZipViewer>(artifact))
             return true;
-        else if (IsSupported<TextViewer>(artifact))
+        if (IsSupported<TextViewer>(artifact))
             return true;
 
         return false;
@@ -64,17 +64,12 @@ public partial class FileViewer
 
         if (typeof(TComponent) == typeof(ImageViewer) && artifact.FileCategory == FileCategoryType.Image)
             return true;
-        else if (typeof(TComponent) == typeof(VideoViewer) && artifact.FileCategory == FileCategoryType.Video)
+        if (typeof(TComponent) == typeof(VideoViewer) && artifact.FileCategory == FileCategoryType.Video)
             return true;
-        else if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
+        if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
             return true;
-        else if (typeof(TComponent) == typeof(TextViewer) && new string[] { ".txt" }.Contains(artifact.FileExtension))
+        if (typeof(TComponent) == typeof(TextViewer) && new string[] { ".txt" }.Contains(artifact.FileExtension))
             return true;
-
-        return false;
-        {
-            return true;
-        }
 
         return false;
     }
