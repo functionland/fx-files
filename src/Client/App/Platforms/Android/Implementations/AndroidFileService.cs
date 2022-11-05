@@ -242,8 +242,8 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             throw new Exception("No drive found!");
 
         showablePath = artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory
-                                                                            ? "Internal storage"
-                                                                            : "External storage");
+                                                                            ? StringLocalizer.GetString(AppStrings.InternalStorageName)
+                                                                            : StringLocalizer.GetString(AppStrings.ExternalStorageName));
         return showablePath;
     }
     protected abstract Task GetWritePermission(string path = null);
