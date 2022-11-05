@@ -88,7 +88,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The artifact already dose not pinned .
+        ///   Looks up a localized string similar to The artifact already dose not pinned. .
         /// </summary>
         public static string ArtifactAlreadyDoseNotPinnedException {
             get {
@@ -97,7 +97,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name.
+        ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name..
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
@@ -133,7 +133,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid characters in the item name.
+        ///   Looks up a localized string similar to Invalid characters in the item name..
         /// </summary>
         public static string ArtifactNameHasInvalidCharsException {
             get {
@@ -151,7 +151,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You have not entered any name.
+        ///   Looks up a localized string similar to You have not entered any name..
         /// </summary>
         public static string ArtifactNameIsNullException {
             get {
@@ -354,6 +354,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Clear {
             get {
                 return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coming soon....
+        /// </summary>
+        public static string ComingSoon {
+            get {
+                return ResourceManager.GetString("ComingSoon", resourceCulture);
             }
         }
         
@@ -574,11 +583,47 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extract in current location.
+        ///   Looks up a localized string similar to Extract.
+        /// </summary>
+        public static string Extract {
+            get {
+                return ResourceManager.GetString("Extract", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zip file name.
+        /// </summary>
+        public static string ExtractFolderTargetNamePlaceHolder {
+            get {
+                return ResourceManager.GetString("ExtractFolderTargetNamePlaceHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extract here.
         /// </summary>
         public static string ExtractHere {
             get {
                 return ResourceManager.GetString("ExtractHere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting folder.
+        /// </summary>
+        public static string ExtractingFolder {
+            get {
+                return ResourceManager.GetString("ExtractingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter password for the zip file.
+        /// </summary>
+        public static string ExtractPasswordModalTitle {
+            get {
+                return ResourceManager.GetString("ExtractPasswordModalTitle", resourceCulture);
             }
         }
         
@@ -675,6 +720,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Folder name.
         /// </summary>
+        public static string FolderName {
+            get {
+                return ResourceManager.GetString("FolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder name.
+        /// </summary>
         public static string FolderRenamePlaceholder {
             get {
                 return ResourceManager.GetString("FolderRenamePlaceholder", resourceCulture);
@@ -687,6 +741,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ForbiddenException {
             get {
                 return ResourceManager.GetString("ForbiddenException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This feature will come in near future.
+        /// </summary>
+        public static string FutureFeature {
+            get {
+                return ResourceManager.GetString("FutureFeature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fx Files.
+        /// </summary>
+        public static string FxFiles {
+            get {
+                return ResourceManager.GetString("FxFiles", resourceCulture);
             }
         }
         
@@ -777,6 +849,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string InvalidPasswordException {
             get {
                 return ResourceManager.GetString("InvalidPasswordException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1} not supported..
+        /// </summary>
+        public static string InvalidZipExtensionException {
+            get {
+                return ResourceManager.GetString("InvalidZipExtensionException", resourceCulture);
             }
         }
         
@@ -925,6 +1006,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Folder.
         /// </summary>
         public static string NewFolderPlaceholder {
@@ -966,6 +1056,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Onboarding {
             get {
                 return ResourceManager.GetString("Onboarding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
             }
         }
         
@@ -1339,7 +1438,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your files has been copied.
+        ///   Looks up a localized string similar to Your item(s) has been copied.
         /// </summary>
         public static string TheCopyOpreationSuccessedTiltle {
             get {
@@ -1357,7 +1456,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your files has been moved.
+        ///   Looks up a localized string similar to Your item(s) has been moved.
         /// </summary>
         public static string TheMoveOpreationSuccessedTiltle {
             get {
