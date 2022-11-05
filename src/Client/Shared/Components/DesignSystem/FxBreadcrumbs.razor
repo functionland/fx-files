@@ -4,14 +4,12 @@
 
 <div class="fx-breadcrumbs">
 
-    @*<div class="file-path ellipsis-file-path">Office Blox Unit Amin Asghar Abadi Hashem</div>
-    <span class="chaveron-right"></span>*@
+    <div class="start-elipse">...</div>
     @if (_breadCrumbsPath != null)
     {
         @foreach (var path in _breadCrumbsPath)
         {
             <div class="file-path">@path</div>
-            <span class="chaveron-right"></span>
         }
     }
 </div>
