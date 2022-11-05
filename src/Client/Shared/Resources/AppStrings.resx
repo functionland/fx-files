@@ -648,4 +648,7 @@
   <data name="FolderSize" xml:space="preserve">
     <value>Folder size</value>
   </data>
+  <data name="ExternalStorageName" xml:space="preserve">
+    <value>External storage</value>
+  </data>
 </root>
