@@ -4,18 +4,28 @@
 {
     <div class="file-viewer-container">
         <div class="main-content">
-
             @if (IsSupported<ImageViewer>(_currentArtifact))
             {
                 <ImageViewer CurrentArtifact="@_currentArtifact" FileService="FileService" OnBack="HandleBackAsync" OnPin="OnPin" OnUnpin="OnUnpin" OnOptionClick="OnOptionClick" />
             }
-            else if (IsSupported<VideoViewer>(_currentArtifact))
-            {
-                <VideoViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
-            }
             else if (IsSupported<ZipViewer>(_currentArtifact))
             {
-                <ZipViewer CurrentArtifact="_currentArtifact" FileService="FileService" />
+                <ZipViewer
+                    CurrentArtifact="_currentArtifact"
+                    FileService="FileService" 
+                    OnBack="HandleBackAsync"
+                    ThumbnailService="ThumbnailService"
+                    OnExtract="OnExtract"/>
+            }
+            else if (IsSupported<TextViewer>(_currentArtifact))
+            {
+                <TextViewer 
+                    CurrentArtifact="_currentArtifact"
+                    FileService="FileService"
+                    OnBack="HandleBackAsync"
+                    OnOptionClick="OnOptionClick"
+                    OnPin="OnPin"
+                    OnUnpin="OnUnpin"/>
             }
         </div>
     </div>

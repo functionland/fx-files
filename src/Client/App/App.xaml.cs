@@ -10,6 +10,7 @@ public partial class App
     public App(IExceptionHandler exceptionHandler, IServiceProvider serviceProvider)
     {
         InitializeComponent();
+        MainPage = new NavigationPage(new MainPage());
         ExceptionHandler = exceptionHandler;
         ServiceProvider = serviceProvider;
     }

@@ -22,13 +22,13 @@
 
     .left-icon-tag::before {
         margin-right: $spacing-8;
-        @include Icon($circle-filled, color(gray-content1), $Icons-Filled);
+        @include Icon($circle-filled, color(gray-content1));
         font-size: $icon-16;
     }
 
     .right-icon-tag::after {
         margin-left: $spacing-8;
-        @include Icon($circle-filled, color(gray-content1), $Icons-Filled);
+        @include Icon($circle-filled, color(gray-content1));
         font-size: $icon-16;
         position: absolute;
         bottom: 5.33px;

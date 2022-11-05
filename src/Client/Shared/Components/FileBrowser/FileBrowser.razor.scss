@@ -153,7 +153,7 @@
 
         .select-all-filled::before {
             font-size: $icon-24;
-            @include Icon($selected, $green-dark-base, $Icons-Filled);
+            @include Icon($selected, $green-dark-base);
         }
 
         .list-view-btn {
@@ -195,7 +195,7 @@
 
         .filter-btn-selected::before {
             font-size: $icon-24;
-            @include Icon($fill, $green-dark-base, $Icons-Filled);
+            @include Icon($fill, $green-dark-base);
         }
     }
 }
@@ -391,7 +391,7 @@
         justify-content: flex-start;
         align-items: center;
         flex-flow: row wrap;
-        gap: $spacing-8;
+       /* gap: $spacing-8;*/
 
         div {
             background-color: color(gray-bg-secondary);
@@ -404,6 +404,7 @@
             letter-spacing: $letter-spacing-02;
             color: color(gray-content1);
             cursor: pointer;
+            margin-right: 8px;
         }
 
         .option-selected-mode {

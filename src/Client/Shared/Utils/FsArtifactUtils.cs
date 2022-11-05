@@ -22,7 +22,7 @@ public static class FsArtifactUtils
             (< OneKB) => $"{size} bytes",
             (>= OneKB) and (< OneMB) => $"{string.Format("{0:F2}", (float)size / OneKB)} KB",
             (>= OneMB) and (< OneGB) => $"{string.Format("{0:F2}", (float)size / OneMB)} MB",
-            (>= OneGB) and (< OneTB) => $"{string.Format("{0:F2}", (float)size / OneMB)} GB",
+            (>= OneGB) and (< OneTB) => $"{string.Format("{0:F2}", (float)size / OneGB)} GB",
             (>= OneTB) => $"{string.Format("{0:F2}", (float)size / OneTB)} TB"
         };
     }
