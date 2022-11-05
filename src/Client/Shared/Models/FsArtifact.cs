@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Models;
 
@@ -38,7 +36,7 @@ public class FsArtifact
     public DateTimeOffset LastModifiedDateTime { get; set; }
     public string? WhoMadeLastEdit { get; set; }
     public List<FsArtifactActivity>? FsArtifactActivity { get; set; }
-    public List<ArtifactPermissionInfo>? PermissionedUsers { get; set; }
+    public List<ArtifactPermissionInfo>? PermissionUsers { get; set; }
     public FulaUser? Owner { get; set; }
     public ArtifactPermissionLevel ArtifactPermissionLevel { get; set; }
 
@@ -51,7 +49,7 @@ public class FsArtifact
     public bool? IsPinned { get; set; }
     public bool? IsDisabled { get; set; }
     public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
-    public string ShowablePath { get; set;}
+    public string ShowablePath { get; set; }
     public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension?.ToLower() ?? "");
 
     public override string ToString()
