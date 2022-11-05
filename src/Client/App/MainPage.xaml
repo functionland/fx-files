@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:app="clr-namespace:Functionland.FxFiles.Client.App"
     xmlns:b="clr-namespace:Microsoft.AspNetCore.Components.WebView.Maui;assembly=Microsoft.AspNetCore.Components.WebView.Maui"
-    xmlns:client="clr-namespace:Functionland.FxFiles.Client.Shared;assembly=Functionland.FxFiles.Client.Shared">
+    xmlns:client="clr-namespace:Functionland.FxFiles.Client.Shared;assembly=Functionland.FxFiles.Client.Shared"
+    NavigationPage.HasNavigationBar="False">
 
     <app:FsBlazorWebView BackgroundColor="#212529" HostPage="wwwroot/index.html">
         <b:BlazorWebView.RootComponents>
