@@ -7,9 +7,10 @@
     display: flex;
     align-items: center;
     gap: $spacing-6;
-    margin: $spacing-10 $spacing-21;
+    margin: $spacing-0 $spacing-21;
     white-space: nowrap;
     overflow-x: auto;
+    height: 19px;
 
     .start-elipse {
         width: 20px;
@@ -24,6 +25,7 @@
         height: 4px;
     }
 }
+ 
 
 .file-path {
     font-family: $open-sans-regular;
@@ -33,12 +35,14 @@
     color: color(gray-content2);
     cursor: pointer;
     display: flex;
-
-    &:not(div.file-path:first-of-type):before {
-        font-size: $icon-16;
-        @include Icon($chevron-right, color(gray-content1));
-    }
 }
+
+.file-path:not(div.file-path:first-of-type):before {
+    font-size: $icon-16;
+    margin-right: $spacing-6;
+    @include Icon($chevron-right, color(gray-content1));
+}
+
 div.file-path:last-of-type {
     font-family: $open-sans-semi-bold;
     color: color(gray-content1);
