@@ -94,30 +94,30 @@ public partial class Android10FileService : AndroidFileService
         return drives;
     }
 
-    protected override async Task GetPermission(string path = null)
+    protected override async Task GetWritePermission(string path = null)
     {
-        if (!await PermissionUtils.CheckStoragePermissionAsync(path))
+        if (!await PermissionUtils.CheckWriteStoragePermissionAsync(path))
         {
             await PermissionUtils.RequestStoragePermission(path);
 
             var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult || !await PermissionUtils.CheckStoragePermissionAsync(path))
+            if (!StoragePermissionResult || !await PermissionUtils.CheckWriteStoragePermissionAsync(path))
             {
                 throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
             }
         }
     }
 
-    protected override async Task GetPermission(IEnumerable<string> paths = null)
+    protected override async Task GetWritePermission(IEnumerable<string> paths = null)
     {
         if (paths == null || !paths.Any())
         {
-            await GetPermission(String.Empty);
+            await GetWritePermission(String.Empty);
         }
 
         foreach (var path in paths)
         {
-            await GetPermission(path);
+            await GetWritePermission(path);
         }
     }
 
@@ -358,6 +358,33 @@ public partial class Android10FileService : AndroidFileService
         else
         {
             return Java.IO.File.Separator;
+        }
+    }
+
+    protected override async Task GetReadPermission(string path = null)
+    {
+        if (!await PermissionUtils.CheckReadStoragePermissionAsync(path))
+        {
+            await PermissionUtils.RequestStoragePermission();
+
+            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
+            if (!StoragePermissionResult || !await PermissionUtils.CheckReadStoragePermissionAsync(path))
+            {
+                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
+            }
+        }
+    }
+
+    protected override async Task GetReadPermission(IEnumerable<string> paths = null)
+    {
+        if (paths == null || !paths.Any())
+        {
+            await GetReadPermission(String.Empty);
+        }
+
+        foreach (var path in paths)
+        {
+            await GetReadPermission(path);
         }
     }
 }

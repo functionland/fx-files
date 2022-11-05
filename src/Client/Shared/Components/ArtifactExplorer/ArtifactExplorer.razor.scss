@@ -4,10 +4,11 @@
 @import '../../Styles/components/_bit-checkbox.scss';
 
 .list-container {
-    position: relative;
+    height: 100%;
     flex-grow: 2;
     overflow-y: auto;
-    height: 100%;
+    overflow-x: hidden;
+    position: relative;
 }
 
 .list-title {
@@ -80,7 +81,7 @@
 
         .pin-badge::before {
             font-size: $icon-20;
-            @include Icon($pin, color(gray-content1), $Icons-Filled);
+            @include Icon($pin, color(gray-content1));
             margin-right: $spacing-8;
         }
 
@@ -105,6 +106,12 @@
     text-align: center;
 }
 
+.extract-btn {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+}
+
 .list-view {
     padding: 16px 0;
 }
@@ -114,8 +121,7 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
-
-/*    .check-box-position {
+    /*    .check-box-position {
         margin-right: 16px;
     }*/
 
@@ -196,6 +202,10 @@
 
     .options-btn::before {
         @include Icon($options-vertical);
+    }
+
+    .extract-btn::before {
+        @include Icon($extract);
     }
 
     .item-content {
@@ -524,7 +534,7 @@
     border: none;
 
     &::before {
-        @include Icon($select-filled, #fff, $Icons-Filled);
+        @include Icon($check, #fff);
         font-size: $font-size-16;
     }
 }

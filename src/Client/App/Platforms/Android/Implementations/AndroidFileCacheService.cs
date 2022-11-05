@@ -2,6 +2,6 @@
 {
     public class AndroidFileCacheService : FileCacheService
     {
-        protected override string GetAppCacheDirectory() => MauiApplication.Current.CacheDir.Path;
+        public override string GetAppCacheDirectory() =>MauiApplication.Current.CacheDir.Path;
     }
 }

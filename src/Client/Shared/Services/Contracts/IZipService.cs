@@ -9,15 +9,13 @@ public interface IZipService
     /// </summary>
     /// <param name="zipFilePath">
     /// C:\temp\file.zip
-    /// </param>
-    /// <param name="subDirectoriesPath">
-    /// Send file.zip for view root path items
-    /// Send file.zip\folder1 for view all item inside file.zip\folder1
-    /// </param>
     /// <param name="password"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<List<FsArtifact>> ViewZipFileAsync(string zipFilePath, string subDirectoriesPath, string? password = null, CancellationToken? cancellationToken = null);
+    Task<List<FsArtifact>> GetAllArtifactsAsync(
+        string zipFilePath,
+        string? password = null,
+        CancellationToken? cancellationToken = null);
 
     /// <summary>
     /// 
@@ -30,12 +28,13 @@ public interface IZipService
     /// <param name="password"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>Count of duplicated items</returns>
-    Task<int> ExtractZippedArtifactAsync(string zipFullPath,
-                                         string destinationPath,
-                                         string destinationFolderName,
-                                         string? itemPath = null,
-                                         bool overwrite = false,
-                                         string? password = null,
-                                         Func<ProgressInfo, Task>? onProgress = null,
-                                         CancellationToken? cancellationToken = null);
+    Task<int> ExtractZippedArtifactAsync(
+        string zipFullPath,
+        string destinationPath,
+        string destinationFolderName,
+        IEnumerable<FsArtifact>? fsArtifacts = null,
+        bool overwrite = false,
+        string? password = null,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null);
 }
