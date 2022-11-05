@@ -67,9 +67,25 @@
 @media (hover: hover) and (pointer: fine) {
     .item-container:hover {
         background-color: color(gray-hover);
+        transition: background 200ms linear;
+
+        .item-icon-position {
+            background-color: var(--gray-bg-secondary) !important;
+            transition: background 200ms linear !important;
+        }
     }
 }
 
+
+item-container:active {
+    background-color: color(gray-hover);
+    transition: background 200ms linear;
+
+    item-icon-position {
+        background-color: var(--gray-bg-secondary) !important;
+        transition: background 200ms linear !important;
+    }
+}
 
 .item-content {
 
@@ -121,7 +137,7 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
-   
+
     .check-box-mobile {
         position: absolute;
     }
