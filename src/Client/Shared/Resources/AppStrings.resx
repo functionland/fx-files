@@ -613,7 +613,7 @@
     <value>Share with app</value>
   </data>
   <data name="InvalidZipExtensionException" xml:space="preserve">
-    <value>{1} not supported.</value>
+    <value>Zip file not supported: {0}</value>
   </data>
   <data name="FolderName" xml:space="preserve">
     <value>Folder name</value>

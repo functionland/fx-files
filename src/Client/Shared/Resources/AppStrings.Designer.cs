@@ -871,7 +871,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1} not supported..
+        ///   Looks up a localized string similar to Zip file not supported: {0}.
         /// </summary>
         public static string InvalidZipExtensionException {
             get {
