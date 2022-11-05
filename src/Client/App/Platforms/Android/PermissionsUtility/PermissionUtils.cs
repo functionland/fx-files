@@ -22,14 +22,12 @@ public abstract class PermissionUtils : IPermissionUtils
         Platform.CurrentActivity?.StartActivityForResult(intent, StoragePermissionRequestCode);
     }
 
-    public virtual async Task<bool> CheckStoragePermissionAsync(string filepath = null)
-    {
-        return android.OS.Environment.IsExternalStorageManager;
-    }
+    public abstract Task<bool> CheckWriteStoragePermissionAsync(string filepath = null);
+    
 
     public virtual async Task OnPermissionResult(Result resultCode, Intent? data)
     {
-        if (!await CheckStoragePermissionAsync())
+        if (!await CheckWriteStoragePermissionAsync())
         {
             GetPermissionTask?.SetResult(false);
             Toast.MakeText(MauiApplication.Context, "Allow permission for storage access!", ToastLength.Long)?.Show();
@@ -39,5 +37,7 @@ public abstract class PermissionUtils : IPermissionUtils
             GetPermissionTask?.SetResult(true);
         }
     }
+
+    public abstract Task<bool> CheckReadStoragePermissionAsync(string path);
 }
 
