@@ -19,5 +19,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Contracts
         Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null);
         Task FillArtifactMetaAsync(FsArtifact artifact, CancellationToken? cancellationToken = null);
         Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
+        Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress = null, CancellationToken? cancellationToken = null);
     }
 }

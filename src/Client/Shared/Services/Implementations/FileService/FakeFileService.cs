@@ -437,5 +437,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 yield return file;
             }
         }
+
+        public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

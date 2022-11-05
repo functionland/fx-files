@@ -50,7 +50,8 @@ public class FsArtifact
 
     public bool? IsPinned { get; set; }
     public bool? IsDisabled { get; set; }
-    public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
+    
+    public string? SizeStr  => FsArtifactUtils.CalculateSizeStr(Size);
     public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension?.ToLower() ?? "");
 
     public override string ToString()

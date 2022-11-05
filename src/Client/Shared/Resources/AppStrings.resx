@@ -645,4 +645,7 @@
   <data name="FxFiles" xml:space="preserve">
     <value>Fx Files</value>
   </data>
+  <data name="FolderSize" xml:space="preserve">
+    <value>Folder size</value>
+  </data>
 </root>

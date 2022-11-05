@@ -736,6 +736,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder size.
+        /// </summary>
+        public static string FolderSize {
+            get {
+                return ResourceManager.GetString("FolderSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access to the requested resource is forbidden.
         /// </summary>
         public static string ForbiddenException {

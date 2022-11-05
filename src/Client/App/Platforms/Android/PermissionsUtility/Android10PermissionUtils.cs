@@ -13,6 +13,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 public partial class Android10PermissionUtils : PermissionUtils
 {
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+    [AutoInject] public IFileCacheService FileCacheService { get; set; } = default!;
 
     public override int StoragePermissionRequestCode { get; set; } = 2020;
 
@@ -25,7 +26,7 @@ public partial class Android10PermissionUtils : PermissionUtils
         if (isInternal)
         {
             await Permissions.RequestAsync<Android10StoragePermission>();
-            GetPermissionTask.SetResult(await CheckStoragePermissionAsync());
+            GetPermissionTask.SetResult(await CheckWriteStoragePermissionAsync());
         }
         else
         {
@@ -36,8 +37,13 @@ public partial class Android10PermissionUtils : PermissionUtils
         }
     }
 
-    public override async Task<bool> CheckStoragePermissionAsync(string filepath = null)
+    public override async Task<bool> CheckWriteStoragePermissionAsync(string filepath = null)
     {
+        if(!string.IsNullOrWhiteSpace(filepath) && IsCacheFile(filepath))
+        {
+            return true;
+        }
+
         var isInternal = string.IsNullOrWhiteSpace(filepath) || IsInternalFilePath(filepath);
 
         if (isInternal)
@@ -62,6 +68,11 @@ public partial class Android10PermissionUtils : PermissionUtils
         }
     }
 
+    private bool IsCacheFile(string filepath)
+    {
+        return filepath.StartsWith(FileCacheService.GetAppCacheDirectory());
+    }
+
     public override async Task OnPermissionResult(Result resultCode, Intent? data)
     {
         if (resultCode is Result.Ok)
@@ -81,6 +92,16 @@ public partial class Android10PermissionUtils : PermissionUtils
     {
         var storage = android.OS.Environment.ExternalStorageDirectory;
         return filepath.StartsWith(storage.AbsolutePath);
+    }
+
+    public override async Task<bool> CheckReadStoragePermissionAsync(string path)
+    {
+        if (!string.IsNullOrWhiteSpace(path) && IsCacheFile(path))
+        {
+            return true;
+        }
+
+        return  await Permissions.CheckStatusAsync<Android10StoragePermission>() == PermissionStatus.Granted;
     }
 }
 
