@@ -274,8 +274,6 @@ public partial class ArtifactExplorer
                     return "video-file-icon";
                 case FileCategoryType.App:
                     return "app-file-icon";
-                case FileCategoryType.Zip:
-                    return "zip-file-icon";
             }
         }
 
