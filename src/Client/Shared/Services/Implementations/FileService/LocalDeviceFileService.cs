@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -11,6 +12,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
+
+        protected abstract string GetFolderOrDriveShowablePath(string artifactPath);
 
         public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
@@ -191,6 +194,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var providerType = GetFsFileProviderType(path);
             var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType.Value, providerType)
             {
+                //ToDo: FileExtension should be exclusive to artifacts of type File, not here which is filled for all type.
                 FileExtension = Path.GetExtension(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName
             };
@@ -203,11 +207,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             else if (fsArtifactType == FsArtifactType.Folder)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
+                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
             else if (fsArtifactType == FsArtifactType.Drive)
             {
                 var drives = GetDrives();
                 fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
+                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
 
             return fsArtifact;
@@ -284,7 +290,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
-            if(NameHasInvalidCharacter(newName))
+            if (NameHasInvalidCharacter(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var artifactType = GetFsArtifactType(folderPath);
@@ -347,7 +353,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
-                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));                   
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
                     if (!overwrite && destinationInfo.Exists)
                     {
@@ -367,7 +373,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     var directoryInfo = new DirectoryInfo(artifact.FullPath);
                     var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
-                    
+
                     if (!Directory.Exists(destinationInfo.FullName))
                     {
                         LocalStorageCreateDirectory(destinationInfo.FullName);
@@ -678,6 +684,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
+                    drive.ShowablePath = GetFolderOrDriveShowablePath(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
@@ -718,7 +725,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     yield return new FsArtifact(folder, Path.GetFileName(folder), FsArtifactType.Folder, providerType)
                     {
                         ParentFullPath = Directory.GetParent(folder)?.FullName,
-                        LastModifiedDateTime = Directory.GetLastWriteTime(folder)
+                        LastModifiedDateTime = Directory.GetLastWriteTime(folder),
+                        ShowablePath = GetFolderOrDriveShowablePath(folder)
                     };
                 }
 
@@ -854,12 +862,78 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             yield break;
         }
 
+
+        public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            if (path is null)
+                throw new ArtifactPathNullException("Artifact path is null.");
+
+            if (cancellationToken?.IsCancellationRequested is true)
+                return Task.FromResult<long>(0);
+
+            long artifactSize = 0;
+            var artifactType = GetFsArtifactType(path);
+
+            if (artifactType == FsArtifactType.Folder)
+            {
+                var allFiles = Directory.EnumerateFileSystemEntries(path, "*", new EnumerationOptions()
+                {
+                    RecurseSubdirectories = true
+                }).Select(a => new FileInfo(a));
+
+                foreach (var item in allFiles)
+                {
+                    if (cancellationToken?.IsCancellationRequested is true)
+                        break;
+
+                    if (!File.Exists(item.FullName))
+                        continue;
+
+                    artifactSize += item.Length;
+
+                    onProgress?.Invoke(artifactSize);
+                }
+            }
+            else if (artifactType == FsArtifactType.Drive)
+            {
+                artifactSize = CalculateDriveSize(path, cancellationToken);
+
+                onProgress?.Invoke(artifactSize);
+            }
+            else if (artifactType == FsArtifactType.File)
+            {
+                var file = new FileInfo(path);
+                artifactSize = file.Length;
+
+                onProgress?.Invoke(artifactSize);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
+            }
+
+            return Task.FromResult(artifactSize);          
+        }
+
+        protected virtual long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
+        {
+            long totalSize = 0;
+            var drives = DriveInfo.GetDrives();
+            var targetDrive = drives.FirstOrDefault(drive => drive.Name.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+            if (targetDrive is null)
+                throw new InvalidOperationException("No drive found given the current path.");
+
+            totalSize = targetDrive.TotalSize - targetDrive.TotalFreeSpace;
+            return totalSize;
+        }
+
         private static bool NameHasInvalidCharacter(string fileName)
         {
-            if(fileName.Contains('>') || 
-               fileName.Contains('<') || 
-               fileName.Contains(':') || 
-               fileName.Contains('?') || 
+            if (fileName.Contains('>') ||
+               fileName.Contains('<') ||
+               fileName.Contains(':') ||
+               fileName.Contains('?') ||
                fileName.Contains('"') ||
                fileName.Contains('*'))
             {
@@ -867,5 +941,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
             return false;
         }
+
     }
 }

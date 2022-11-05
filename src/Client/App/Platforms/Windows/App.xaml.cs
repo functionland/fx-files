@@ -40,7 +40,7 @@ public partial class App
     {
         base.OnLaunched(args);
 
-        var goodArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+        var goodArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
 
         switch (goodArgs.Kind)
         {

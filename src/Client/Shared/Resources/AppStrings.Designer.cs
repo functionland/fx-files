@@ -583,6 +583,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to External storage.
+        /// </summary>
+        public static string ExternalStorageName {
+            get {
+                return ResourceManager.GetString("ExternalStorageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extract.
         /// </summary>
         public static string Extract {
@@ -601,7 +610,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extract in current location.
+        ///   Looks up a localized string similar to Extract here.
         /// </summary>
         public static string ExtractHere {
             get {
@@ -736,6 +745,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder size.
+        /// </summary>
+        public static string FolderSize {
+            get {
+                return ResourceManager.GetString("FolderSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Access to the requested resource is forbidden.
         /// </summary>
         public static string ForbiddenException {
@@ -853,7 +871,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1} not supported..
+        ///   Looks up a localized string similar to Zip file not supported: {0}.
         /// </summary>
         public static string InvalidZipExtensionException {
             get {

@@ -8,7 +8,7 @@ using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
-[Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+[Activity(Theme = "@style/Maui.SplashTheme", SupportsPictureInPicture = true, MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
 
@@ -23,9 +23,9 @@ public class MainActivity : MauiAppCompatActivity
 
             permissionUtils = MauiApplication.Current.Services.GetRequiredService<IPermissionUtils>();
 
-            if (!await permissionUtils.CheckStoragePermissionAsync())
+            if (!await permissionUtils.CheckWriteStoragePermissionAsync())
             {
-               await permissionUtils.RequestStoragePermission();
+                await permissionUtils.RequestStoragePermission();
             }
         }
         catch (Exception ex)
@@ -48,7 +48,7 @@ public class MainActivity : MauiAppCompatActivity
         }
         catch (Exception ex)
         {
-            
+
         }
     }
 

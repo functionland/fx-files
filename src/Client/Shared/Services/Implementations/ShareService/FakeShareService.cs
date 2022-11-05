@@ -164,7 +164,7 @@ public class FakeShareService : IFulaShareService, ILocalDeviceShareService
 
             var artifact = FulaFileService.GetArtifactAsync(permissionInfo.FullPath).GetAwaiter().GetResult();
 
-            artifact.PermissionedUsers = await GetArtifactSharesAsync(permissionInfo.FullPath, cancellationToken);
+            artifact.PermissionUsers = await GetArtifactSharesAsync(permissionInfo.FullPath, cancellationToken);
         }
     }
 }

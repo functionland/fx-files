@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functionland.FxFiles.Client
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Functionland.FxFiles.Client.Test", "Client\Test\Functionland.FxFiles.Client.Test.csproj", "{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommunityToolkit.Maui.MediaElement", "Client\CommunityToolkit.Maui.MediaElement\CommunityToolkit.Maui.MediaElement.csproj", "{CA5EE61A-6A2C-4557-B9F9-5E087191BBEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA5EE61A-6A2C-4557-B9F9-5E087191BBEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA5EE61A-6A2C-4557-B9F9-5E087191BBEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA5EE61A-6A2C-4557-B9F9-5E087191BBEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA5EE61A-6A2C-4557-B9F9-5E087191BBEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +67,7 @@ Global
 		{37B0BFFF-762E-42C6-A999-80EF9F38BE4C} = {99987B56-D7E8-43AA-9EFC-07EC384B4382}
 		{5DD4EE2C-8397-4E32-B147-6FF87D7DD648} = {99987B56-D7E8-43AA-9EFC-07EC384B4382}
 		{3600CC2F-E822-4FCC-AF57-38ADDFACB7B4} = {99987B56-D7E8-43AA-9EFC-07EC384B4382}
+		{CA5EE61A-6A2C-4557-B9F9-5E087191BBEC} = {99987B56-D7E8-43AA-9EFC-07EC384B4382}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
