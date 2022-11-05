@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
@@ -39,6 +40,8 @@ public partial class ArtifactExplorer
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public bool IsInSearchMode { get; set; }
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
+    [Parameter] public bool IsInZipMode { get; set; }
+    [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
     public PathProtocol Protocol =>
         FileService switch
         {
@@ -437,6 +440,11 @@ public partial class ArtifactExplorer
         var result = items.Chunk(_gridRowCount).ToList();
 
         return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
+    }
+
+    private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
+    {
+        await OnZipArtifactClick.InvokeAsync(artifact);
     }
 
     public void Dispose()

@@ -8,9 +8,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public partial class Android11andAboveFileService : AndroidFileService
 {
-    protected override async Task GetPermission(string path = null)
+    protected override async Task GetWritePermission(string path = null)
     {
-        if (!await PermissionUtils.CheckStoragePermissionAsync())
+        if (!await PermissionUtils.CheckWriteStoragePermissionAsync(path))
         {
             await PermissionUtils.RequestStoragePermission();
 
@@ -22,8 +22,34 @@ public partial class Android11andAboveFileService : AndroidFileService
         }
     }
 
-    protected override async Task GetPermission(IEnumerable<string> paths = null)
+    protected override async Task GetWritePermission(IEnumerable<string> paths = null)
     {
-        await GetPermission(String.Empty);
+        if (paths == null || !paths.Any())
+        {
+            await GetWritePermission(String.Empty);
+        }
+
+        foreach (var path in paths)
+        {
+            await GetWritePermission(path);
+        }
+    }
+
+    protected override async Task GetReadPermission(string path = null)
+    {
+        await GetWritePermission(path);
+    }
+
+    protected override async Task GetReadPermission(IEnumerable<string> paths = null)
+    {
+        if (paths == null || !paths.Any())
+        {
+            await GetWritePermission(String.Empty);
+        }
+
+        foreach (var path in paths)
+        {
+            await GetWritePermission(path);
+        }
     }
 }

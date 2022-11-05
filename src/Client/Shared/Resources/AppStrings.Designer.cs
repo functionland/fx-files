@@ -601,7 +601,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extract in current location.
+        ///   Looks up a localized string similar to Extract here.
         /// </summary>
         public static string ExtractHere {
             get {
@@ -732,6 +732,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string FolderRenamePlaceholder {
             get {
                 return ResourceManager.GetString("FolderRenamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder size.
+        /// </summary>
+        public static string FolderSize {
+            get {
+                return ResourceManager.GetString("FolderSize", resourceCulture);
             }
         }
         
