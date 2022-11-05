@@ -645,4 +645,7 @@
   <data name="FxFiles" xml:space="preserve">
     <value>Fx Files</value>
   </data>
+  <data name="ExternalStorageName" xml:space="preserve">
+    <value>External storage</value>
+  </data>
 </root>
