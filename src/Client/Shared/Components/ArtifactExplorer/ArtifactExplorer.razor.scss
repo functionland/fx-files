@@ -106,6 +106,12 @@
     text-align: center;
 }
 
+.extract-btn {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+}
+
 .list-view {
     padding: 16px 0;
 }
@@ -115,8 +121,7 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
-
-/*    .check-box-position {
+    /*    .check-box-position {
         margin-right: 16px;
     }*/
 
@@ -197,6 +202,10 @@
 
     .options-btn::before {
         @include Icon($options-vertical);
+    }
+
+    .extract-btn::before {
+        @include Icon($extract);
     }
 
     .item-content {
