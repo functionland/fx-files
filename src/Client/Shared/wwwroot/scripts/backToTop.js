@@ -70,3 +70,7 @@ function ImagePinchZoom() {
         tapZoomFactor : 3
     });
 }
+
+function Amin() {
+    // TODO: 
+}
