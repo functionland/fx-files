@@ -661,7 +661,7 @@ public partial class FileBrowser
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName);
+                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,innerArtifacts:innerArtifacts);
             }
             catch (InvalidPasswordException)
             {
@@ -854,10 +854,20 @@ public partial class FileBrowser
 #if BlazorHybrid
                 try
                 {
-                    await Launcher.OpenAsync(new OpenFileRequest
+
+                    if (DeviceInfo.Current.Platform == DevicePlatform.iOS || DeviceInfo.Current.Platform == DevicePlatform.macOS || DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst)
                     {
-                        File = new ReadOnlyFile(artifact?.FullPath)
-                    });
+                        var uri = new Uri($"file://{artifact.FullPath}");
+                        await Launcher.OpenAsync(uri);
+
+                    }
+                    else
+                    {
+                        await Launcher.OpenAsync(new OpenFileRequest
+                        {
+                            File = new ReadOnlyFile(artifact?.FullPath)
+                        });
+                    }
                 }
                 catch (UnauthorizedAccessException)
                 {

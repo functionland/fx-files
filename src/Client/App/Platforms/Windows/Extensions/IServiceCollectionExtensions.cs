@@ -22,6 +22,9 @@ public static class IWindowsServiceCollectionExtensions
         services.AddTransient<IThumbnailPlugin, WindowsVideoThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsPdfThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsAudioThumbnailPlugin>();
+
+        services.AddSingleton<IPathUtilService, WindowsPathUtilService>();
+
         return services;
     }
 }
