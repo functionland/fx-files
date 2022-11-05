@@ -148,7 +148,6 @@ item-container:active {
         align-items: center;
         flex: 1;
         overflow: hidden;
-        margin-right: 21px;
         transition: margin 250ms linear;
     }
 
@@ -289,7 +288,18 @@ item-container:active {
 
     .check-box-mobile {
         position: absolute;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: opacity 300ms linear, height 0ms linear 300ms;
     }
+
+    .selection-mode-style {
+        height: 20px;
+        opacity: 1;
+        transition: opacity 300ms linear, height 0ms linear 300ms;
+    }
+
 
     .icon-box {
         background-color: color(gray-bg-primary);
