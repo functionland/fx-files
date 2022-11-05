@@ -6,10 +6,11 @@
 
         private string[]? _breadCrumbsPath;
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             LoadBreadCrumbsPath();
-            return base.OnAfterRenderAsync(firstRender);
+            await JSRuntime.InvokeVoidAsync("Amin");
+            await base.OnAfterRenderAsync(firstRender);
         }
         private void LoadBreadCrumbsPath()
         {

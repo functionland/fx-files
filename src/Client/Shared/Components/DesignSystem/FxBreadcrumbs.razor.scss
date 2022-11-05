@@ -10,6 +10,19 @@
     margin: $spacing-10 $spacing-21;
     white-space: nowrap;
     overflow-x: auto;
+
+    .start-elipse {
+        width: 20px;
+        position: fixed;
+        left: 28px;
+        font-size: $font-size-12;
+        background-color: color(app-bg);
+        display: none;
+    }
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
 }
 
 .file-path {
@@ -19,16 +32,13 @@
     letter-spacing: $letter-spacing-02;
     color: color(gray-content2);
     cursor: pointer;
-}
+    display: flex;
 
-.ellipsis-file-path {
-    max-width: 41px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    direction: rtl;
+    &:not(div.file-path:first-of-type):before {
+        font-size: $icon-16;
+        @include Icon($chevron-right, color(gray-content1));
+    }
 }
-
 div.file-path:last-of-type {
     font-family: $open-sans-semi-bold;
     color: color(gray-content1);
