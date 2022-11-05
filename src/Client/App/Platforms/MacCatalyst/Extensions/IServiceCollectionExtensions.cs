@@ -1,4 +1,4 @@
-﻿using Functionland.FxFiles.Client.App.Platforms.MacCatalyst.Implementations;
+using Functionland.FxFiles.Client.App.Platforms.MacCatalyst.Implementations;
 using Functionland.FxFiles.Client.App.Platforms.MacCatalyst.Implementations.Test;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
@@ -11,6 +11,7 @@ public static class IMacServiceCollectionExtensions
     {
         // Services being registered here can get injected in Mac.
 
+        services.AddSingleton<IPathUtilService, MacPathUtilService>();
         services.AddSingleton<IFulaFileService, FulaFileService>();
         services.AddSingleton<ILocalDeviceFileService, MacFileService>();
 
