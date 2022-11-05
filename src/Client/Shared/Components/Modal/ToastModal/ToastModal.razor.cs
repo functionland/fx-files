@@ -1,6 +1,4 @@
-﻿using Microsoft.AppCenter.Channel;
-
-using System.Threading;
+﻿using System.Threading;
 using System.Timers;
 
 using Timer = System.Timers.Timer;

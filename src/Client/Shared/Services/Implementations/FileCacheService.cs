@@ -35,5 +35,5 @@ public abstract class FileCacheService : IFileCacheService
         return filePath;
     }
 
-    protected abstract string GetAppCacheDirectory();
+    public abstract string GetAppCacheDirectory();
 }

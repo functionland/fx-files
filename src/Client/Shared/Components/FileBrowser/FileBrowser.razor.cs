@@ -71,6 +71,8 @@ public partial class FileBrowser
     private List<FsArtifact> _selectedArtifacts = new();
     private FileCategoryType? _fileCategoryFilter;
 
+    private Tuple<FsArtifact, List<FsArtifact>?, string?>? _extractTuple;
+
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
     {
@@ -272,7 +274,7 @@ public partial class FileBrowser
                     }
                 }
 
-                var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+                var overwriteArtifacts = GetShouldOverwriteArtifacts(artifacts, existArtifacts); //TODO: we must enhance this
 
                 if (existArtifacts.Count > 0)
                 {
@@ -377,7 +379,7 @@ public partial class FileBrowser
                 await CloseFileViewer();
             }
 
-            var overwriteArtifacts = GetShouldOverwriteArtiacts(artifacts, existArtifacts); //TODO: we must enhance this
+            var overwriteArtifacts = GetShouldOverwriteArtifacts(artifacts, existArtifacts); //TODO: we must enhance this
 
             if (existArtifacts.Count > 0)
             {
@@ -635,8 +637,13 @@ public partial class FileBrowser
         _isArtifactExplorerLoading = false;
     }
 
-    public async Task HandleExtractArtifactAsync(FsArtifact artifact)
+    // TODO: change tuple item for real names.
+    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?, string?> extractTuple)
     {
+        var artifact = extractTuple.Item1;
+        var innerArtifacts = extractTuple.Item2;
+        //TODO: check if current path is null
+        var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
         if (_inputModalRef is null) return;
 
         var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
@@ -647,29 +654,29 @@ public partial class FileBrowser
         try
         {
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
-            var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
+            //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
             if ((result?.ResultType) != InputModalResultType.Confirm) return;
 
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName);
+                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName);
             }
             catch (InvalidPasswordException)
             {
                 if (_passwordModalRef is null) return;
 
                 var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
-                var extractPasswordModalLable = Localizer.GetString(AppStrings.Password);
-                var paswordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLable);
-                if (paswordResult?.ResultType == InputModalResultType.Confirm)
+                var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
+                var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
+                if (passwordResult?.ResultType == InputModalResultType.Confirm)
                 {
-                    await ExtractZipAsync(artifact.FullPath, parentPath!, destinationFolderName, paswordResult.Result);
+                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName, passwordResult.Result, innerArtifacts);
                 }
             }
 
-            var destinationPath = Path.Combine(parentPath!, destinationFolderName);
+            var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
             await NavigateToDestionation(destinationPath);
         }
         catch (Exception exception)
@@ -683,7 +690,7 @@ public partial class FileBrowser
 
     }
 
-    private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null)
+    private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
     {
         if (_progressModalRef is null) return;
 
@@ -692,10 +699,10 @@ public partial class FileBrowser
             await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ExtractingFolder), true);
             ProgressBarCts = new CancellationTokenSource();
 
-            async Task onProgress(ProgressInfo progressInfo)
+            async Task OnProgress(ProgressInfo progressInfo)
             {
-                ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
                 ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                 ProgressBarMax = progressInfo.MaxValue ?? 1;
                 await InvokeAsync(StateHasChanged);
@@ -705,10 +712,11 @@ public partial class FileBrowser
                 zipFilePath,
                 destinationFolderPath,
                 destinationFolderName,
-                overwrite: false,
-                password: password,
-                onProgress: onProgress,
-                cancellationToken: ProgressBarCts.Token);
+                innerArtifacts,
+                 false,
+                 password,
+                 OnProgress,
+                 ProgressBarCts.Token);
 
             await _progressModalRef.CloseAsync();
 
@@ -716,6 +724,13 @@ public partial class FileBrowser
 
             if (_confirmationReplaceOrSkipModalRef == null)
                 return;
+
+            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
+            List<FsArtifact> overwriteArtifacts = new();
+            if (innerArtifacts != null)
+            {
+                overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
+            }
 
             var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount);
 
@@ -729,10 +744,11 @@ public partial class FileBrowser
                     zipFilePath,
                     destinationFolderPath,
                     destinationFolderName,
-                    overwrite: true,
-                    password: password,
-                    onProgress: onProgress,
-                    cancellationToken: ProgressBarCts.Token);
+                    overwriteArtifacts,
+                     true,
+                     password,
+                     OnProgress,
+                     ProgressBarCts.Token);
             }
         }
         finally
@@ -831,17 +847,27 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            var isOpened = _fileViewerRef?.OpenArtifact(artifact);
+            var isOpened = await _fileViewerRef?.OpenArtifact(artifact);
 
             if (isOpened == false)
             {
 #if BlazorHybrid
                 try
                 {
-                    await Launcher.OpenAsync(new OpenFileRequest
+
+                    if (DeviceInfo.Current.Platform == DevicePlatform.iOS || DeviceInfo.Current.Platform == DevicePlatform.macOS || DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst)
                     {
-                        File = new ReadOnlyFile(artifact?.FullPath)
-                    });
+                        var uri = new Uri($"file://{artifact.FullPath}");
+                        await Launcher.OpenAsync(uri);
+
+                    }
+                    else
+                    {
+                        await Launcher.OpenAsync(new OpenFileRequest
+                        {
+                            File = new ReadOnlyFile(artifact?.FullPath)
+                        });
+                    }
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -949,7 +975,15 @@ public partial class FileBrowser
                 await HandleDeleteArtifactsAsync(new List<FsArtifact> { artifact });
                 break;
             case ArtifactOverflowResultType.Extract:
-                await HandleExtractArtifactAsync(artifact);
+                if (artifact != null)
+                {
+                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(artifact, null, null);
+                }
+
+                if (_extractTuple != null)
+                {
+                    await HandleExtractArtifactAsync(_extractTuple);
+                }
                 break;
         }
     }
@@ -1046,7 +1080,13 @@ public partial class FileBrowser
                 await HandleShareFiles(artifacts);
                 break;
             case ArtifactOverflowResultType.Extract:
-                await HandleExtractArtifactAsync(artifacts.First());
+
+                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(artifacts.First(), null, null);
+
+                if (_extractTuple != null)
+                {
+                    await HandleExtractArtifactAsync(_extractTuple);
+                }
                 break;
             case ArtifactOverflowResultType.Cancel:
                 _artifactExplorerMode = ArtifactExplorerMode.Normal;
@@ -1667,7 +1707,7 @@ public partial class FileBrowser
         }
     }
 
-    private static List<FsArtifact> GetShouldOverwriteArtiacts(List<FsArtifact> artifacts, List<FsArtifact> existArtifacts)
+    private static List<FsArtifact> GetShouldOverwriteArtifacts(List<FsArtifact> artifacts, List<FsArtifact> existArtifacts)
     {
         List<FsArtifact> overwriteArtifacts = new();
         var pathExistArtifacts = existArtifacts.Select(a => a.FullPath);
