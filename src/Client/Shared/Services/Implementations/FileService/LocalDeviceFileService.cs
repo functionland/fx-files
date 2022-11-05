@@ -12,7 +12,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        protected abstract string GetArtifactShowablePath(string artifactPath);
+        protected abstract string GetFolderOrDriveShowablePath(string artifactPath);
 
         public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
@@ -195,8 +195,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 //ToDo: FileExtension should be exclusive to artifacts of type File, not here which is filled for all type.
                 FileExtension = Path.GetExtension(path),
-                ParentFullPath = Directory.GetParent(path)?.FullName,
-                ShowablePath = GetArtifactShowablePath(path)
+                ParentFullPath = Directory.GetParent(path)?.FullName
             };
 
 
@@ -207,11 +206,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             else if (fsArtifactType == FsArtifactType.Folder)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
+                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
             else if (fsArtifactType == FsArtifactType.Drive)
             {
                 var drives = GetDrives();
                 fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
+                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
 
             return fsArtifact;
@@ -288,7 +289,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
-            if(NameHasInvalidCharacter(newName))
+            if (NameHasInvalidCharacter(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var artifactType = GetFsArtifactType(folderPath);
@@ -351,7 +352,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
-                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));                   
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
                     if (!overwrite && destinationInfo.Exists)
                     {
@@ -371,7 +372,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     var directoryInfo = new DirectoryInfo(artifact.FullPath);
                     var destinationInfo = new DirectoryInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
-                    
+
                     if (!Directory.Exists(destinationInfo.FullName))
                     {
                         LocalStorageCreateDirectory(destinationInfo.FullName);
@@ -682,7 +683,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
-                    drive.ShowablePath = GetArtifactShowablePath(drive.FullPath);
+                    drive.ShowablePath = GetFolderOrDriveShowablePath(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
@@ -724,7 +725,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         ParentFullPath = Directory.GetParent(folder)?.FullName,
                         LastModifiedDateTime = Directory.GetLastWriteTime(folder),
-                        ShowablePath = GetArtifactShowablePath(folder)
+                        ShowablePath = GetFolderOrDriveShowablePath(folder)
                     };
                 }
 
@@ -744,8 +745,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         ParentFullPath = Directory.GetParent(file)?.FullName,
                         LastModifiedDateTime = File.GetLastWriteTime(file),
                         FileExtension = Path.GetExtension(file),
-                        Size = fileinfo.Length,
-                        ShowablePath = GetArtifactShowablePath(file)
+                        Size = fileinfo.Length
                     };
                 }
             }
@@ -863,10 +863,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         private static bool NameHasInvalidCharacter(string fileName)
         {
-            if(fileName.Contains('>') || 
-               fileName.Contains('<') || 
-               fileName.Contains(':') || 
-               fileName.Contains('?') || 
+            if (fileName.Contains('>') ||
+               fileName.Contains('<') ||
+               fileName.Contains(':') ||
+               fileName.Contains('?') ||
                fileName.Contains('"') ||
                fileName.Contains('*'))
             {

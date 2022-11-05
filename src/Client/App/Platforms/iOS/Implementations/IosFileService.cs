@@ -28,7 +28,7 @@ public partial class IosFileService : LocalDeviceFileService
         return new List<FsArtifact>();
     }
 
-    protected override string GetArtifactShowablePath(string artifactPath)
+    protected override string GetFolderOrDriveShowablePath(string artifactPath)
     {
         if (artifactPath is null)
             throw new ArtifactPathNullException(nameof(artifactPath));
