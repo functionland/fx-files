@@ -44,6 +44,7 @@
 						<uap:SupportedFileTypes>
 							<uap:FileType ContentType="application/zip">.zip</uap:FileType>
 							<uap:FileType ContentType="application/x-rar-compressed">.rar</uap:FileType>
+							<uap:FileType ContentType="video/*">.mp4</uap:FileType>
 						</uap:SupportedFileTypes>
 						<uap:DisplayName>Functionlan ZipViewer</uap:DisplayName>
 						<uap:EditFlags OpenIsSafe="true"/>

@@ -1,4 +1,4 @@
-﻿namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
+﻿namespace Functionland.FxFiles.Client.App.Platforms.MacCatalyst.Implementations;
 
 public class MacPathUtilService : PathUtilService
 {
