@@ -224,44 +224,24 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             throw new UnknownFsFileProviderException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
 
-    public override string? GetFsArtifactShowablePath(string? artifactPath)
+    protected override string GetArtifactShowablePath(string artifactPath)
     {
         if (artifactPath is null)
             throw new ArtifactPathNullException(nameof(artifactPath));
-
-        // internalDrivePath = "/storage/emulated/0"
-        // externalDrivePath = "/storage/015F-1422"
 
         var showablePath = string.Empty;
         var providerType = GetFsFileProviderType(artifactPath);
         var drives = GetDrives();
 
-        var internalDrivePathToReplace = drives.Where(d => d.ProviderType == FsFileProviderType.InternalMemory)
-                                               .Select(d => d.FullPath).FirstOrDefault();
+        var currentDrivePath = drives.Where(d => d.ProviderType == providerType)
+                                     .Select(d => d.FullPath).FirstOrDefault();
 
-        if (internalDrivePathToReplace is null)
-            throw new Exception("No internal drive found!");
+        if (currentDrivePath is null)
+            throw new Exception("No drive found!");
 
-        var externalDrivePathToReplace = drives.Where(d => d.ProviderType == FsFileProviderType.ExternalMemory)
-                                               .Select(d => d.FullPath).FirstOrDefault();
-
-        if (externalDrivePathToReplace is null)
-            throw new Exception("No external drive found!");
-
-        if (providerType is FsFileProviderType.InternalMemory)
-        {
-            showablePath = artifactPath.Replace(internalDrivePathToReplace, "Internal storage");
-        }
-        else if (providerType is FsFileProviderType.ExternalMemory)
-        {
-            showablePath = artifactPath.Replace(externalDrivePathToReplace, "External storage");
-        }
-        //ToDo: Ask about Fula?
-        else
-        {
-            throw new Exception("Invalid FsProviderType!");
-        }
-
+        showablePath = artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory 
+                                                                            ? "Internal storage" 
+                                                                            : "External storage");
         return showablePath;
     }
 

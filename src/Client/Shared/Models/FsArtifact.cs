@@ -41,7 +41,6 @@ public class FsArtifact
     public List<ArtifactPermissionInfo>? PermissionedUsers { get; set; }
     public FulaUser? Owner { get; set; }
     public ArtifactPermissionLevel ArtifactPermissionLevel { get; set; }
-    public string? ShowablePath { get; set;}
 
     public bool? IsAvailableOffline { get; set; }
     public bool? IsSharedWithMe { get; set; }
@@ -52,6 +51,7 @@ public class FsArtifact
     public bool? IsPinned { get; set; }
     public bool? IsDisabled { get; set; }
     public string? SizeStr => FsArtifactUtils.CalculateSizeStr(Size);
+    public string ShowablePath { get; set;}
     public FileCategoryType FileCategory => FsArtifactUtils.GetCategoryType(FileExtension?.ToLower() ?? "");
 
     public override string ToString()

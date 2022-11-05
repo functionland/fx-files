@@ -10,11 +10,12 @@ public partial class WindowsFileService : LocalDeviceFileService
         return FsFileProviderType.InternalMemory;
     }
 
-    public override string? GetFsArtifactShowablePath(string? artifactPath)
+    protected override string GetArtifactShowablePath(string artifactPath)
     {
         if (artifactPath is null)
             throw new ArtifactPathNullException(nameof(artifactPath));
 
-        return artifactPath.Replace('\\', '/');
+        return artifactPath.Replace($"{Path.VolumeSeparatorChar}", "")
+                           .Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     }
 }

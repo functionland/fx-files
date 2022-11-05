@@ -12,7 +12,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        public abstract string? GetFsArtifactShowablePath(string? artifactPath);
+        protected abstract string GetArtifactShowablePath(string artifactPath);
 
         public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
@@ -196,7 +196,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 //ToDo: FileExtension should be exclusive to artifacts of type File, not here which is filled for all type.
                 FileExtension = Path.GetExtension(path),
                 ParentFullPath = Directory.GetParent(path)?.FullName,
-                ShowablePath = GetFsArtifactShowablePath(path)
+                ShowablePath = GetArtifactShowablePath(path)
             };
 
 
@@ -682,7 +682,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
-                    drive.ShowablePath = GetFsArtifactShowablePath(drive.FullPath);
+                    drive.ShowablePath = GetArtifactShowablePath(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
@@ -724,7 +724,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         ParentFullPath = Directory.GetParent(folder)?.FullName,
                         LastModifiedDateTime = Directory.GetLastWriteTime(folder),
-                        ShowablePath = GetFsArtifactShowablePath(folder)
+                        ShowablePath = GetArtifactShowablePath(folder)
                     };
                 }
 
@@ -745,7 +745,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         LastModifiedDateTime = File.GetLastWriteTime(file),
                         FileExtension = Path.GetExtension(file),
                         Size = fileinfo.Length,
-                        ShowablePath = GetFsArtifactShowablePath(file)
+                        ShowablePath = GetArtifactShowablePath(file)
                     };
                 }
             }

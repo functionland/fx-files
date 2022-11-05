@@ -28,12 +28,12 @@ public partial class IosFileService : LocalDeviceFileService
         return new List<FsArtifact>();
     }
 
-    public override string? GetFsArtifactShowablePath(string? artifactPath)
+    protected override string GetArtifactShowablePath(string artifactPath)
     {
         if (artifactPath is null)
             throw new ArtifactPathNullException(nameof(artifactPath));
 
         //ToDo: Implement iOS version of how to shape the fullPath to be shown in UI.
-        throw new NotImplementedException();
+        return artifactPath;
     }
 }
