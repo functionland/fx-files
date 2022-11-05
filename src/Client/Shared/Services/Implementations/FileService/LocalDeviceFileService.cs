@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -859,6 +860,72 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
             }
             yield break;
+        }
+
+
+        public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            if (path is null)
+                throw new ArtifactPathNullException("Artifact path is null.");
+
+            if (cancellationToken?.IsCancellationRequested is true)
+                return Task.FromResult<long>(0);
+
+            long artifactSize = 0;
+            var artifactType = GetFsArtifactType(path);
+
+            if (artifactType == FsArtifactType.Folder)
+            {
+                var allFiles = Directory.EnumerateFileSystemEntries(path, "*", new EnumerationOptions()
+                {
+                    RecurseSubdirectories = true
+                }).Select(a => new FileInfo(a));
+
+                foreach (var item in allFiles)
+                {
+                    if (cancellationToken?.IsCancellationRequested is true)
+                        break;
+
+                    if (!File.Exists(item.FullName))
+                        continue;
+
+                    artifactSize += item.Length;
+
+                    onProgress?.Invoke(artifactSize);
+                }
+            }
+            else if (artifactType == FsArtifactType.Drive)
+            {
+                artifactSize = CalculateDriveSize(path, cancellationToken);
+
+                onProgress?.Invoke(artifactSize);
+            }
+            else if (artifactType == FsArtifactType.File)
+            {
+                var file = new FileInfo(path);
+                artifactSize = file.Length;
+
+                onProgress?.Invoke(artifactSize);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
+            }
+
+            return Task.FromResult(artifactSize);          
+        }
+
+        protected virtual long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
+        {
+            long totalSize = 0;
+            var drives = DriveInfo.GetDrives();
+            var targetDrive = drives.FirstOrDefault(drive => drive.Name.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+            if (targetDrive is null)
+                throw new InvalidOperationException("No drive found given the current path.");
+
+            totalSize = targetDrive.TotalSize - targetDrive.TotalFreeSpace;
+            return totalSize;
         }
 
         private static bool NameHasInvalidCharacter(string fileName)
