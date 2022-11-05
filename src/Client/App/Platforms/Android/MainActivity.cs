@@ -23,7 +23,7 @@ public class MainActivity : MauiAppCompatActivity
 
             permissionUtils = MauiApplication.Current.Services.GetRequiredService<IPermissionUtils>();
 
-            if (!await permissionUtils.CheckStoragePermissionAsync())
+            if (!await permissionUtils.CheckWriteStoragePermissionAsync())
             {
                await permissionUtils.RequestStoragePermission();
             }
