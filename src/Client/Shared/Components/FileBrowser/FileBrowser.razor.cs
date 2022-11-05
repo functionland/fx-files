@@ -120,7 +120,8 @@ public partial class FileBrowser
         }
         else
         {
-            var defaultArtifact = await FileService.GetArtifactAsync(DefaultPath);
+            var filePath = Path.GetDirectoryName(DefaultPath);
+            var defaultArtifact = await FileService.GetArtifactAsync(filePath);
             _currentArtifact = defaultArtifact;
             ArtifactListTask = LoadChildrenArtifactsAsync(defaultArtifact);
         }
