@@ -115,6 +115,20 @@ public partial class ArtifactSelectionModal
         }
     }
 
+    private string GetActionButtonText()
+    {
+        if (_artifactActionResult is null)
+            return string.Empty;
+
+        return _artifactActionResult.ActionType switch
+        {
+            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),   
+            ArtifactActionType.Move => Localizer.GetString(AppStrings.MoveHere),
+            ArtifactActionType.Extract => Localizer.GetString(AppStrings.ExtractHere),
+            _ => throw new InvalidOperationException("Invalid action type")
+        };
+    }
+
     private async Task Back()
     {
         try

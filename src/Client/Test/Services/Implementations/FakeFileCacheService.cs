@@ -10,5 +10,5 @@ internal class FakeFileCacheService : FileCacheService
     {
         _cacheFolder = cacheFolder;
     }
-    protected override string GetAppCacheDirectory() => _cacheFolder;
+    public override string GetAppCacheDirectory() => _cacheFolder;
 }

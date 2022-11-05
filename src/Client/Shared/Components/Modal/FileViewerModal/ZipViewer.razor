@@ -3,7 +3,7 @@
 
 
 <div class="navigation-header">
-    <FxButton OnClick="HandleBackAsync"
+    <FxButton OnClick="()=>HandleBackAsync()"
               Class="back-button"
               Padding="8px 16px 8px 0px"
               BackgroundColor="transparent"
@@ -16,7 +16,7 @@
         @CurrentArtifact?.Name
     </div>
     <div class="extract-button">
-        <FxButton OnClick="@OnBack"
+        <FxButton OnClick="@HandleExtractCurrentArtifactAsync"
                   IsVisible="@(ArtifactExplorerMode == ArtifactExplorerMode.Normal && _currentInnerZipArtifact.FullPath== string.Empty)"
                   Text="Extract"
                   ButtonStyle="FxButtonStyle.Normal"
@@ -27,7 +27,7 @@
 
 
 <div class="action-header">
-    <div class="list-header">
+    <div class="list-header @(ArtifactExplorerMode == ArtifactExplorerMode.Normal ? "z-index-header" : "")">
         <div>breadcrumb</div>
         <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>
     </div>
@@ -46,22 +46,25 @@
         <div class="right-part">
             @if (_selectedArtifacts.Count > 0)
             {
-                <div class="icons-action move-icon" @onclick="(() => HandleExtractArtifactsAsync(_selectedArtifacts))"></div>
+                <div class="icons-action extract-btn" @onclick="(() => HandleExtractArtifactsAsync(_selectedArtifacts))"></div>
             }
         </div>
     </div>
 </div>
 
-<div class="artifact-list">
+
     <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
                       CurrentArtifact="CurrentArtifact"
                       OnSelectArtifact="HandleArtifactClick"
-                      HandleBack="HandleBackAsync"
+                      HandleBack="()=>HandleBackAsync()"
                       IsInZipMode="true"
-                      OnZipArtifactClick="HandleExtractArtifactsAsync"
+                      OnZipArtifactClick="HandleExtractArtifactAsync"
                       IsInSearchMode="false"
                       ThumbnailService="ThumbnailService"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
-</div>
+
+
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
+<InputModal @ref="_passwordModalRef" />

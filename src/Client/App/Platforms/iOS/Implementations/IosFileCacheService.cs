@@ -2,5 +2,5 @@
 
 public class IosFileCacheService : FileCacheService
 {
-    protected override string GetAppCacheDirectory() => FileSystem.CacheDirectory;
+    public override string GetAppCacheDirectory() => FileSystem.CacheDirectory;
 }
