@@ -52,10 +52,10 @@ public partial class ZipViewer : IFileViewerComponent
         {
             await GetArtifactPassword();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
             await HandleBackAsync(true);
-            ExceptionHandler.Handle(e);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -79,6 +79,11 @@ public partial class ZipViewer : IFileViewerComponent
                 {
                     await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
                 }
+            }
+            catch (NotSupportedEncryptedFileException exception)
+            {
+                await HandleBackAsync(true);
+                ExceptionHandler.Handle(exception);
             }
             catch (Exception exception)
             {
