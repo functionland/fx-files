@@ -187,7 +187,7 @@
     <value>The {0} name is empty</value>
   </data>
   <data name="ArtifactAlreadyExistsException" xml:space="preserve">
-    <value>This {0} already  contains  an item  with the same name</value>
+    <value>This {0} already  contains  an item  with the same name.</value>
   </data>
   <data name="StreamFileIsNull" xml:space="preserve">
     <value>The stream file is null</value>
@@ -373,13 +373,13 @@
     <value>Items copied</value>
   </data>
   <data name="TheCopyOpreationSuccessedTiltle" xml:space="preserve">
-    <value>Your files has been copied</value>
+    <value>Your item(s) has been copied</value>
   </data>
   <data name="TheMoveOpreationSuccessedMessage" xml:space="preserve">
     <value>Items moved</value>
   </data>
   <data name="TheMoveOpreationSuccessedTiltle" xml:space="preserve">
-    <value>Your files has been moved</value>
+    <value>Your item(s) has been moved</value>
   </data>
   <data name="TheOpreationFailedMessage" xml:space="preserve">
     <value>The operation failed</value>
@@ -457,7 +457,7 @@
     <value>The destination folder is the same as the source folder.</value>
   </data>
   <data name="ArtifactNameIsNullException" xml:space="preserve">
-    <value>You have not entered any name</value>
+    <value>You have not entered any name.</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>file</value>
@@ -469,7 +469,7 @@
     <value>Artifact</value>
   </data>
   <data name="ArtifactNameHasInvalidCharsException" xml:space="preserve">
-    <value>Invalid characters in the item name</value>
+    <value>Invalid characters in the item name.</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Upload</value>
@@ -543,20 +543,8 @@
   <data name="WelcomePageDesc" xml:space="preserve">
     <value>Et ex nam hic qui minima neque dolore sunt repellendus. Commodi explicabo qui.</value>
   </data>
-  <data name="AutomaticContent" xml:space="preserve">
-    <value>Automatic</value>
-  </data>
-  <data name="DarkMode" xml:space="preserve">
-    <value>Dark</value>
-  </data>
-  <data name="LightMode" xml:space="preserve">
-    <value>Light</value>
-  </data>
-  <data name="SystemThemeDescription" xml:space="preserve">
-    <value>Use system light/dark mode setting.</value>
-  </data>
   <data name="ArtifactAlreadyDoseNotPinnedException" xml:space="preserve">
-    <value>The artifact already dose not pinned </value>
+    <value>The artifact already dose not pinned. </value>
   </data>
   <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
     <value>The {0} already pinned</value>
@@ -578,5 +566,89 @@
   </data>
   <data name="BloxPoolAlreadyExistsException" xml:space="preserve">
     <value>The user is already a member of this poolblox</value>
+  </data>
+  <data name="PasswordDidNotMatchedException" xml:space="preserve">
+    <value>The password did not match.</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by:</value>
+  </data>
+  <data name="Specter" xml:space="preserve">
+    <value>|</value>
+  </data>
+  <data name="InvalidPasswordException" xml:space="preserve">
+    <value>The password is invalid.</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>copy</value>
+  </data>
+  <data name="ShowInLocation" xml:space="preserve">
+    <value>show in location</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="AddPinnedItems" xml:space="preserve">
+    <value>Add to pinned items</value>
+  </data>
+  <data name="CopyTo" xml:space="preserve">
+    <value>Copy to</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ExtractHere" xml:space="preserve">
+    <value>Extract here</value>
+  </data>
+  <data name="MoveTo" xml:space="preserve">
+    <value>Move to</value>
+  </data>
+  <data name="RemoveFromPinnedItems" xml:space="preserve">
+    <value>Remove from pinned items</value>
+  </data>
+  <data name="SeeDetails" xml:space="preserve">
+    <value>See details </value>
+  </data>
+  <data name="ShareWithApp" xml:space="preserve">
+    <value>Share with app</value>
+  </data>
+  <data name="InvalidZipExtensionException" xml:space="preserve">
+    <value>Zip file not supported: {0}</value>
+  </data>
+  <data name="FolderName" xml:space="preserve">
+    <value>Folder name</value>
+  </data>
+  <data name="Extract" xml:space="preserve">
+    <value>Extract</value>
+  </data>
+  <data name="ExtractFolderTargetNamePlaceHolder" xml:space="preserve">
+    <value>Zip file name</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="ExtractPasswordModalTitle" xml:space="preserve">
+    <value>Enter password for the zip file</value>
+  </data>
+  <data name="ExtractingFolder" xml:space="preserve">
+    <value>Extracting folder</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming soon...</value>
+  </data>
+  <data name="FutureFeature" xml:space="preserve">
+    <value>This feature will come in near future</value>
+  </data>
+  <data name="FxFiles" xml:space="preserve">
+    <value>Fx Files</value>
+  </data>
+  <data name="FolderSize" xml:space="preserve">
+    <value>Folder size</value>
+  </data>
+  <data name="ExternalStorageName" xml:space="preserve">
+    <value>External storage</value>
   </data>
 </root>

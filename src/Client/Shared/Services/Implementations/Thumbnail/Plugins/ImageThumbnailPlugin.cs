@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Utils;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 {
@@ -11,12 +13,16 @@ public abstract class ImageThumbnailPlugin : IThumbnailPlugin
 
     protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 
-    public bool IsSupported(string extension)
+    public virtual bool IsSupported(string extension)
     {
         return new string[]
         {
             ".jpg",
-            ".png"
+            ".png",
+            ".jpeg",
+            ".bmp",
+            ".ico",
+            ".jfif"
         }.Contains(extension.ToLower());
     }
 }

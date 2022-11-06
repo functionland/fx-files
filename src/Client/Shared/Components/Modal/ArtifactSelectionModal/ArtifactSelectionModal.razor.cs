@@ -18,6 +18,7 @@ public partial class ArtifactSelectionModal
 
     [Parameter] public bool IsMultiple { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
@@ -103,7 +104,7 @@ public partial class ArtifactSelectionModal
         {
             if (result?.ResultType == InputModalResultType.Confirm)
             {
-                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
+                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.Result); //ToDo: Make CreateFolderAsync nullable
                 _artifacts.Add(newFolder);
                 StateHasChanged();
             }
@@ -112,6 +113,20 @@ public partial class ArtifactSelectionModal
         {
             ExceptionHandler?.Handle(exception);
         }
+    }
+
+    private string GetActionButtonText()
+    {
+        if (_artifactActionResult is null)
+            return string.Empty;
+
+        return _artifactActionResult.ActionType switch
+        {
+            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),   
+            ArtifactActionType.Move => Localizer.GetString(AppStrings.MoveHere),
+            ArtifactActionType.Extract => Localizer.GetString(AppStrings.ExtractHere),
+            _ => throw new InvalidOperationException("Invalid action type")
+        };
     }
 
     private async Task Back()

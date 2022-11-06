@@ -9,6 +9,8 @@
         UnPin,
         Move,
         Delete,
+        ShareWithApp,
         Cancel,
+        Extract
     }
 }

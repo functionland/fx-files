@@ -9,13 +9,31 @@
     height: 100%;
     max-width: 600px;
     width: 100%;
-    position: absolute;
     display: flex;
+    position: absolute;
+    top: 0;
     justify-content: center;
     align-items: center;
+    background-color: color(app-bg);
+}
+
+.instead-loading {
+    opacity: 1;
+    z-index: 40;
+}
+
+.overlay-loading {
     opacity: 0.85;
     z-index: 50;
-    background-color: color(app-bg);
+}
+
+.fx-loading-sppiner {
+    background-image: url(images/Loading/Loading.svg);
+    background-repeat: no-repeat;
+    background-size: 55px;
+    background-position: center;
+    height: 44px;
+    width: 44px;
 }
 
 .fx-loading-dots-ring {
@@ -23,7 +41,7 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 50%;
+    top: 18%;
     left: 50%;
     transform: translate(-50%, -50%);
 

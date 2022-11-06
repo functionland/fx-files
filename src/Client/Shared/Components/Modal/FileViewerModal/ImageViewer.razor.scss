@@ -1,0 +1,85 @@
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.navigation-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 21px;
+    position: relative;
+    z-index: 1;
+
+
+    ::deep .back-button::before {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left, $pure-white);
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .right-side {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: auto;
+
+        .pin-icon::before {
+            font-size: 24px;
+            @include Icon($pin, $pure-white);
+        }
+
+        .pin-icon-outline::before {
+            font-size: 24px;
+            @include Icon($pin-outline, $pure-white);
+        }
+
+        .more-option-icon::before {
+            @include Icon($options-vertical, $pure-white);
+            font-size: 24px;
+        }
+
+        .more-option-icon {
+            margin-left: 16px;
+        }
+    }
+}
+
+.main-image {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #212529;
+
+
+    /*.actual-size-active {
+        object-fit: contain;
+        max-width: 600px;
+        max-height: 100%;
+    }*/
+
+    .actual-size-deactivate {
+        max-height: 100%;
+        max-width: 600px;
+        width:100%;
+        object-fit: contain;
+    }
+
+    .pich-zoom {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

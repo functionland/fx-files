@@ -5,12 +5,8 @@
     xmlns:maui="using:Microsoft.Maui">
     <maui:MauiWinUIApplication.Resources>
         <ResourceDictionary>
-            <Style TargetType="WebView2">
-                <Setter Property="DefaultBackgroundColor" Value="Transparent" />
-            </Style>
-            <Style TargetType="Page">
-                <Setter Property="Background" Value="Transparent" />
-            </Style>
+            <Color x:Key="SystemAccentColor">#049B8F</Color>
+            <SolidColorBrush x:Key="SliderTrackValueFillPointerOver">White</SolidColorBrush>
         </ResourceDictionary>
     </maui:MauiWinUIApplication.Resources>
 </maui:MauiWinUIApplication>

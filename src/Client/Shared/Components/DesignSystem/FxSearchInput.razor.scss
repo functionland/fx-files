@@ -27,6 +27,11 @@
     padding: $spacing-8 $spacing-12 $spacing-8 44px;
 }
 
+.fully-disabled {
+    opacity: .5;
+    pointer-events: none !important;
+}
+
 .input-full-width {
     width: 100%;
     display: flex;
@@ -62,6 +67,10 @@
     position: absolute;
     align-items: center;
     @include Icon($search);
+}
+
+.search-icon-active::after {
+    color: #049B8F;
 }
 
 .search-input-active {

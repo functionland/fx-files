@@ -9,12 +9,37 @@
     padding: 0 21px;
 }
 
+.search-toolbar-not-in-root {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        margin-bottom:$spacing-16;
+
+        ::deep .back-button::after {
+            font-size: 24px;
+            vertical-align: middle;
+            @include Icon($arrow-left);
+        }
+}
+
+.search-toolbar-not-in-root ::deep input.input-box {
+    flex-grow: 2;
+}
+
 .root-mode {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
 
     ::deep .search-back-button::after {
         font-size: 24px;
@@ -24,7 +49,7 @@
 
     ::deep .root-add-button {
         .fxbutton-lefticon {
-             margin-right: 0px; 
+            margin-right: 0px;
         }
     }
 }
@@ -36,6 +61,12 @@
 
 .not-root-mode {
     width: 100%;
+
+    ::deep .search-back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($chevron-left);
+    }
 
     ::deep .fxbutton img {
         height: 24px;
@@ -72,12 +103,13 @@
                 max-width: 220px;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .pinned-icon::before {
                 margin-right: $spacing-4;
                 font-size: $icon-24;
-                @include Icon($pin, color(gray-content1), $Icons-Filled);
+                @include Icon($pin, color(gray-content1));
             }
             /*            .artifact_subtext {
                 color: color(gray-content3);

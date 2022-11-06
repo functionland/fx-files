@@ -68,5 +68,5 @@
 }
 
 ::deep .bit-icon--Accept:before {
-    @include Icon($select-filled, #fff, $Icons-Filled);
+    @include Icon($selected, $pure-white);
 }

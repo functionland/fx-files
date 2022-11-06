@@ -15,7 +15,7 @@ public partial class ExceptionHandler : IExceptionHandler
 #if DEBUG
         var title = _localizer.GetString(AppStrings.ToastErrorTitle);
         var message = (exception as KnownException)?.Message ?? exception.ToString(); ;
-        ToastModal.Show(title, message, FxToastType.Error);
+        FxToast.Show(title, message, FxToastType.Error);
         Console.WriteLine(message);
         Debugger.Break();
 #else
@@ -23,16 +23,31 @@ public partial class ExceptionHandler : IExceptionHandler
         {
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
             var message = exception.Message;
-            ToastModal.Show(title, message, FxToastType.Error);
+            FxToast.Show(title, message, FxToastType.Error);
         }
         else
         {
-            Crashes.TrackError(exception);
+            if (DeviceInfo.Current.Platform != DevicePlatform.macOS && DeviceInfo.Current.Platform != DevicePlatform.MacCatalyst)
+            {
+                Crashes.TrackError(exception);
+            }
+
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
             var message = _localizer.GetString(AppStrings.TheOpreationFailedMessage);
-            ToastModal.Show(title, message, FxToastType.Error);
+            FxToast.Show(title, message, FxToastType.Error);
         }
 #endif
 
+    }
+
+    public void Track(Exception exception, IDictionary<string, object?>? parameters = null)
+    {
+#if DEBUG
+        var message = (exception as KnownException)?.Message ?? exception.ToString();
+        Console.WriteLine(message);
+        Debugger.Break();
+#else
+        Crashes.TrackError(exception);
+#endif
     }
 }
