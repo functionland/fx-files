@@ -40,15 +40,15 @@ public partial class ZipService : IZipService
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (Exception ex) when (ex.Message == "bad password")
         {
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
         {
