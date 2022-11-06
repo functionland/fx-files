@@ -10,7 +10,8 @@
     max-width: 600px;
     width: 100%;
     display: flex;
-    position: absolute;
+    position: fixed;
+    margin-top: -16px;
     justify-content: center;
     align-items: center;
     background-color: color(app-bg);
@@ -31,7 +32,7 @@
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 50%;
+    top: 18%;
     left: 50%;
     transform: translate(-50%, -50%);
 
