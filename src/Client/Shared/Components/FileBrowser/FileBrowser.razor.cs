@@ -663,7 +663,7 @@ public partial class FileBrowser
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
             //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
-            if ((result?.ResultType) != InputModalResultType.Confirm)
+            if ((result?.ResultType) == InputModalResultType.Cancel)
             {
                 FileViewerResult = FileViewerResultType.Cancel;
                 return;
@@ -687,6 +687,11 @@ public partial class FileBrowser
                 var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
                 var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
                 var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
+                if (passwordResult?.ResultType == InputModalResultType.Cancel)
+                {
+                    FileViewerResult = FileViewerResultType.Cancel;
+                    return;
+                }
                 if (passwordResult?.ResultType == InputModalResultType.Confirm)
                 {
                     if (destinationDirectory != null)
