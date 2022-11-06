@@ -9,7 +9,7 @@
     font-size: $font-size-14;
     line-height: $line-height-24;
     letter-spacing: $letter-spacing-02;
-    display:block;
+    display: block;
 }
 
 .field-question-input {
@@ -44,14 +44,19 @@
     }
 }
 
-.text-input-active {
+input:focus {
+    border: 1px solid #038082;
+    transition: all 200ms linear;
+    background-color: color(gray-bg-primary);
+}
+
+
+
+.text-input:active {
     color: color(gray-content3);
     background-color: color(gray-bg-primary);
     border-color: $green-light-pressed;
-
-    &::placeholder {
-        color: color(gray-content3)
-    }
+    transition: all 200ms linear;
 }
 
 .text-input-disable {
@@ -70,7 +75,7 @@
 
     &::placeholder {
         color: color(gray-content3);
-  
+
     }
 }
 
@@ -87,4 +92,3 @@
     background-position: center left;
     background-repeat: no-repeat;
 }
-
