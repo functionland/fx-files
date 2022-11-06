@@ -792,7 +792,7 @@ public partial class FileBrowser
     private async Task LoadPinsAsync()
     {
         _isPinBoxLoading = true;
-        
+
         try
         {
             //ToDo: pin expander will be open and empty! 
@@ -814,7 +814,7 @@ public partial class FileBrowser
         try
         {
             _isArtifactExplorerLoading = true;
-            
+
             var childrenArtifacts = FileService.GetArtifactsAsync(artifact?.FullPath);
             if (artifact is null)
             {
@@ -1250,10 +1250,12 @@ public partial class FileBrowser
             if (artifact.FullPath == _currentArtifact?.FullPath)
             {
                 await HandleToolbarBackClick();
-                return;
             }
-            _allArtifacts.RemoveAll(a => a.FullPath == artifact.FullPath);
-            RefreshDisplayedArtifacts();
+            else
+            {
+                _allArtifacts.RemoveAll(a => a.FullPath == artifact.FullPath);
+                RefreshDisplayedArtifacts();
+            }
             await InvokeAsync(() => StateHasChanged());
         }
         catch (Exception ex)
@@ -1491,12 +1493,20 @@ public partial class FileBrowser
                 if (_isInSearch)
                 {
                     CancelSearch(true);
-                    await LoadChildrenArtifactsAsync(_currentArtifact);
+                    _ = Task.Run(async () =>
+                    {
+                        await LoadChildrenArtifactsAsync(_currentArtifact);
+                        await InvokeAsync(() => StateHasChanged());
+                    });
                     return;
                 }
                 _fxSearchInputRef?.HandleClearInputText();
                 await UpdateCurrentArtifactForBackButton(_currentArtifact);
-                await LoadChildrenArtifactsAsync(_currentArtifact);
+                _ = Task.Run(async () =>
+                {
+                    await LoadChildrenArtifactsAsync(_currentArtifact);
+                    await InvokeAsync(() => StateHasChanged());
+                });
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 _isGoingBack = true;
                 break;
@@ -1512,7 +1522,6 @@ public partial class FileBrowser
             default:
                 break;
         }
-        await InvokeAsync(() => StateHasChanged());
     }
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
