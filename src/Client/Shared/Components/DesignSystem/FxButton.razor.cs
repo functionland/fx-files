@@ -14,9 +14,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public string? MetaDataText { get; set; }
 
         [Parameter]
-        public string? Link { get; set; }
-
-        [Parameter]
         public string? Width { get; set; }
 
         [Parameter]

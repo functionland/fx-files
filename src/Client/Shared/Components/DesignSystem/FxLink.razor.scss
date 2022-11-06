@@ -17,6 +17,7 @@
 
     &:active {
         color: $green-dark-pressed;
+        transition: color 100ms linear;
     }
 }
 

@@ -5,7 +5,7 @@
         [Parameter, EditorRequired]
         public bool ShowCloseButton { get; set; } = false;
 
-        [Parameter, EditorRequired]
+        [Parameter]
         public RenderFragment? ChildContent { get; set; }
 
         [Parameter]

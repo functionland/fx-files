@@ -613,7 +613,7 @@
     <value>Share with app</value>
   </data>
   <data name="InvalidZipExtensionException" xml:space="preserve">
-    <value>{1} not supported.</value>
+    <value>Zip file not supported: {0}</value>
   </data>
   <data name="FolderName" xml:space="preserve">
     <value>Folder name</value>
@@ -644,5 +644,11 @@
   </data>
   <data name="FxFiles" xml:space="preserve">
     <value>Fx Files</value>
+  </data>
+  <data name="FolderSize" xml:space="preserve">
+    <value>Folder size</value>
+  </data>
+  <data name="ExternalStorageName" xml:space="preserve">
+    <value>External storage</value>
   </data>
 </root>

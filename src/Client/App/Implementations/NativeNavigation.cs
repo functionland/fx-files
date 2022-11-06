@@ -1,25 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui;
-using Microsoft.Maui.Platform;
-using Functionland.FxFiles.Client.App.Views;
+﻿using Functionland.FxFiles.Client.App.Views;
+using Microsoft.AspNetCore.Components;
 
-#if WINDOWS
-using Windows.UI.ViewManagement;
-#endif
+namespace Functionland.FxFiles.Client.App.Implementations;
 
-namespace Functionland.FxFiles.Client.App.Implementations
+public class NativeNavigation : INativeNavigation
 {
-    public class NativeNavigation : INativeNavigation
+    public async Task NavigateToVidoeViewer(string path, EventCallback onBack)
     {
-        public async Task NavigateToVidoeViewer(string path)
-        {
-            var videoViewer = new NativeVideoViewer(path);
-            await App.Current.MainPage.Navigation.PushAsync(videoViewer, true);
-        }
+        if (Application.Current?.MainPage is null) return;
+
+        var videoViewer = new NativeVideoViewer(path, onBack);
+        await Application.Current.MainPage.Navigation.PushAsync(videoViewer, true);
     }
 }

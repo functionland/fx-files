@@ -52,7 +52,7 @@
     </div>
 </div>
 
-<div class="artifact-list">
+
     <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
                       CurrentArtifact="CurrentArtifact"
@@ -64,7 +64,7 @@
                       ThumbnailService="ThumbnailService"
                       @bind-SelectedArtifacts="_selectedArtifacts"
                       @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
-</div>
+
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
 <InputModal @ref="_passwordModalRef" />

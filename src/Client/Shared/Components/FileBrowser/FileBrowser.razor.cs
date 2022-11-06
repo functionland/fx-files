@@ -120,7 +120,8 @@ public partial class FileBrowser
         }
         else
         {
-            var defaultArtifact = await FileService.GetArtifactAsync(DefaultPath);
+            var filePath = Path.GetDirectoryName(DefaultPath);
+            var defaultArtifact = await FileService.GetArtifactAsync(filePath);
             _currentArtifact = defaultArtifact;
             ArtifactListTask = LoadChildrenArtifactsAsync(defaultArtifact);
         }
@@ -661,7 +662,7 @@ public partial class FileBrowser
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName);
+                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,innerArtifacts:innerArtifacts);
             }
             catch (InvalidPasswordException)
             {

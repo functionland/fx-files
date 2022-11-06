@@ -226,6 +226,26 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             throw new UnknownFsFileProviderException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
 
+    protected override string GetFolderOrDriveShowablePath(string artifactPath)
+    {
+        if (artifactPath is null)
+            throw new ArtifactPathNullException(nameof(artifactPath));
+
+        var showablePath = string.Empty;
+        var providerType = GetFsFileProviderType(artifactPath);
+        var drives = GetDrives();
+
+        var currentDrivePath = drives.Where(d => d.ProviderType == providerType)
+                                     .Select(d => d.FullPath).FirstOrDefault();
+
+        if (currentDrivePath is null)
+            throw new Exception("No drive found!");
+
+        showablePath = artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory
+                                                                            ? StringLocalizer.GetString(AppStrings.InternalStorageName)
+                                                                            : StringLocalizer.GetString(AppStrings.ExternalStorageName));
+        return showablePath;
+    }
     protected abstract Task GetWritePermission(string path = null);
 
     protected abstract Task GetWritePermission(IEnumerable<string> paths = null);
@@ -233,6 +253,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
     protected abstract Task GetReadPermission(string path = null);
 
     protected abstract Task GetReadPermission(IEnumerable<string> paths = null);
+
 
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
@@ -284,5 +305,16 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             return true;
 
         return false;
+    }
+
+    protected override long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
+    {
+        var drives = LoadDrives();
+        var targetDrive = drives.FirstOrDefault(drive => drive.FullPath.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+        if (targetDrive is null)
+            throw new InvalidOperationException("No drive found given the current path.");
+
+        return targetDrive.Size ?? 0;
     }
 }
