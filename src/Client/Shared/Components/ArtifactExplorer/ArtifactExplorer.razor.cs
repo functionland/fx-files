@@ -359,11 +359,6 @@ public partial class ArtifactExplorer
 
     private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
     {
-        if (_isArtifactsChanged == false)
-        {
-            await Task.Delay(300);
-        }
-
         if (request.CancellationToken.IsCancellationRequested) return default;
 
         var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
@@ -371,6 +366,7 @@ public partial class ArtifactExplorer
 
         _ = Task.Run(async () =>
         {
+            await Task.Delay(300);
             foreach (var item in items)
             {
                 if (request.CancellationToken.IsCancellationRequested)
@@ -378,13 +374,13 @@ public partial class ArtifactExplorer
 
                 try
                 {
-                    var thumbnailUrl =
+                    item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
 
                     await InvokeAsync(() =>
                     {
-                        item.ThumbnailPath = thumbnailUrl;
+                        StateHasChanged();
                     });
                 }
                 catch (Exception exception)
@@ -399,11 +395,6 @@ public partial class ArtifactExplorer
 
     private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
     {
-        if (_isArtifactsChanged == false)
-        {
-            await Task.Delay(300);
-        }
-
         if (request.CancellationToken.IsCancellationRequested) return default;
 
         var count = request.Count * _gridRowCount;
@@ -414,6 +405,7 @@ public partial class ArtifactExplorer
 
         _ = Task.Run(async () =>
         {
+            await Task.Delay(300);
             foreach (var item in items)
             {
                 if (request.CancellationToken.IsCancellationRequested)
@@ -421,13 +413,14 @@ public partial class ArtifactExplorer
 
                 try
                 {
-                    var thumbnailUrl =
+                    await Task.Delay(300);
+                    item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
 
                     await InvokeAsync(() =>
                     {
-                        item.ThumbnailPath = thumbnailUrl;
+                        StateHasChanged();
                     });
                 }
                 catch (Exception exception)

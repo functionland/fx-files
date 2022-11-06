@@ -5,6 +5,8 @@ using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
 
+using System.Runtime.InteropServices;
+
 namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class FileBrowser
@@ -111,20 +113,33 @@ public partial class FileBrowser
                                HandleChangedArtifacts,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
-        Task PinTask = LoadPinsAsync();
-        Task ArtifactListTask;
-
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
-            ArtifactListTask = LoadChildrenArtifactsAsync();
+            _currentArtifact = null;
         }
         else
         {
             var filePath = Path.GetDirectoryName(DefaultPath);
             var defaultArtifact = await FileService.GetArtifactAsync(filePath);
             _currentArtifact = defaultArtifact;
-            ArtifactListTask = LoadChildrenArtifactsAsync(defaultArtifact);
+
         }
+        //TODo: pin loadin stuck and fill all page!!
+        //throw new Exception(); 
+        var pinTask = Task.Run(async () =>
+        {
+            await LoadPinsAsync();
+            await InvokeAsync(() => StateHasChanged());
+        });
+        var artifactListTask = Task.Run(async () =>
+        {
+            await LoadChildrenArtifactsAsync(_currentArtifact);
+            await InvokeAsync(() => StateHasChanged());
+        });
+
+        //check this after fix abave bug
+        //throw new Exception(); 
+        _ = Task.WhenAll(pinTask, artifactListTask);
 
         await base.OnInitAsync();
 
@@ -777,8 +792,11 @@ public partial class FileBrowser
     private async Task LoadPinsAsync()
     {
         _isPinBoxLoading = true;
+        
         try
         {
+            //ToDo: pin expander will be open and empty! 
+            //throw new Exception();
             _pins = await PinService.GetPinnedArtifactsAsync();
         }
         catch (Exception exception)
@@ -788,17 +806,15 @@ public partial class FileBrowser
         finally
         {
             _isPinBoxLoading = false;
-            StateHasChanged();
         }
     }
 
     private async Task LoadChildrenArtifactsAsync(FsArtifact? artifact = null)
     {
-        _isArtifactExplorerLoading = true;
-        StateHasChanged();
-
         try
         {
+            _isArtifactExplorerLoading = true;
+            
             var childrenArtifacts = FileService.GetArtifactsAsync(artifact?.FullPath);
             if (artifact is null)
             {
@@ -818,23 +834,15 @@ public partial class FileBrowser
             }
 
             _allArtifacts = artifacts;
-            // call _displayArtifact
-            _displayedArtifacts = new();
             RefreshDisplayedArtifacts();
         }
-        catch (ArtifactUnauthorizedAccessException exception)
+        catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
         }
         finally
         {
-            //trick for update load artifact and refresh visualization
-            await Task.Delay(100);
             _isArtifactExplorerLoading = false;
-
-
-            // check functionality
-            StateHasChanged();
         }
     }
 
@@ -907,17 +915,19 @@ public partial class FileBrowser
                 await JSRuntime.InvokeVoidAsync("saveScrollPosition");
                 _isGoingBack = false;
             }
+
             _currentArtifact = artifact;
-            _isArtifactExplorerLoading = true;
-            await LoadChildrenArtifactsAsync(_currentArtifact);
+            _displayedArtifacts = new();
+
+            _ = Task.Run(async () =>
+            {
+                await LoadChildrenArtifactsAsync(_currentArtifact);
+                await InvokeAsync(() => StateHasChanged());
+            });
         }
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
-        }
-        finally
-        {
-            _isArtifactExplorerLoading = false;
         }
     }
 
