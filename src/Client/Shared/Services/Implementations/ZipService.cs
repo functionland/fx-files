@@ -1,9 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Extensions;
-using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Utils;
-using Microsoft.VisualBasic;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
@@ -39,7 +36,7 @@ public partial class ZipService : IZipService
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
-            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
@@ -118,7 +115,7 @@ public partial class ZipService : IZipService
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
-            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
