@@ -101,7 +101,7 @@
 }
 
 .fxbutton-normal:not(:active):after {
-    animation: ripple 400ms cubic-bezier(1, -0.02, 1, 0.67);
+    animation: ripple 300ms ease-in-out 1ms;
 }
 
 /* fixes initial animation run, without user input, on page load.
@@ -115,10 +115,12 @@
 }
 
 .fxbutton-normal:hover {
+    transition: background 100ms ease-in;
     background: $green-dark-hover !important;
 }
 
 .fxbutton-normal:active {
+    transition: background 200ms ease-in;
     background: $green-dark-pressed !important;
 }
 
@@ -128,6 +130,12 @@
     border: 1px solid $green-dark-base !important;
     background-color: transparent !important;
     position: relative;
+
+
+    &:hover {
+        background-color: $green-dark-hover;
+        transition: background 100ms ease-in;
+    }
 }
 
 .fxbutton-outline:after {
@@ -189,6 +197,7 @@
     margin: 0px;
     justify-content: space-between;
     border-bottom: 1px solid color(gray-bg-secondary);
+    padding: 11px 0;
 }
 
 .fxbutton-icononly {
