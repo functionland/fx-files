@@ -11,11 +11,11 @@
     }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
-        if (!IsInSearchMode&& !IsInZipMode)
+        if (!IsInSearchMode)
         {
             <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
                    Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsInZipMode==false)" />
         }
     }
     else

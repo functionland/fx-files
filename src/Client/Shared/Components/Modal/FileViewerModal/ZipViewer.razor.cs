@@ -75,7 +75,10 @@ public partial class ZipViewer : IFileViewerComponent
             _password = passwordResult.Result;
             try
             {
-                await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
+                if (CurrentArtifact != null)
+                {
+                    await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
+                }
             }
             catch (Exception exception)
             {
@@ -97,7 +100,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
     {
-        _displayedArtifacts = _allZipFileEntities.Where(a => a.ParentFullPath == artifact.FullPath).ToList();
+        _displayedArtifacts = _allZipFileEntities.Where(a => a.ParentFullPath == artifact.FullPath).OrderByDescending(a => a.ArtifactType == FsArtifactType.Folder).ToList();
     }
 
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
@@ -192,33 +195,6 @@ public partial class ZipViewer : IFileViewerComponent
         _displayedArtifacts.ForEach(x => x.IsSelected = true);
         _selectedArtifacts = _displayedArtifacts.ToList();
         ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
-    }
-
-    private void HandleSelectArtifact(FsArtifact artifact)
-    {
-        var selectedArtifact = _displayedArtifacts.FirstOrDefault(a => a.FullPath == artifact.FullPath);
-        if (_selectedArtifacts.Any(a => a.FullPath == artifact.FullPath))
-        {
-            _selectedArtifacts.Remove(artifact);
-
-            if (selectedArtifact is not null)
-            {
-                selectedArtifact.IsSelected = false;
-            }
-        }
-        else
-        {
-            _selectedArtifacts.Add(artifact);
-
-            if (selectedArtifact is not null)
-            {
-                selectedArtifact.IsSelected = true;
-            }
-        }
-
-        ChangeArtifactExplorerMode(_selectedArtifacts.Count > 0
-            ? ArtifactExplorerMode.SelectArtifact
-            : ArtifactExplorerMode.Normal);
     }
 
     private void ChangeArtifactExplorerMode(ArtifactExplorerMode explorerMode)
