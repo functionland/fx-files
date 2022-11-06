@@ -30,6 +30,15 @@ public partial class ZipViewer : IFileViewerComponent
 
     private List<FsArtifact> _allZipFileEntities = new();
 
+    protected override Task OnInitAsync()
+    {
+        GoBackService.OnInit((async Task () =>
+        {
+            await HandleBackAsync();
+            await Task.CompletedTask;
+        }), true, false);
+        return base.OnInitAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -52,16 +61,14 @@ public partial class ZipViewer : IFileViewerComponent
             await LoadAllArtifactsAsync();
             DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
-        catch (InvalidPasswordException)
+        catch (NotSupportedEncryptedFileException)
         {
-            // ToDo: show proper modal.
-            //await GetArtifactPassword();
+            FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)), Localizer.GetString(nameof(AppStrings.NotSupportedEncryptedFileException)), FxToastType.Error);
+            await HandleBackAsync(true);
         }
         catch (Exception)
         {
             await HandleBackAsync(true);
-            // ToDo: Check this
-            //ExceptionHandler.Handle(exception);
             throw;
         }
     }
@@ -155,16 +162,24 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleBackAsync(bool shouldExit = false)
     {
-        if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
+        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            _cancellationTokenSource.Cancel();
-            await OnBack.InvokeAsync();
+            if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
+            {
+                _cancellationTokenSource.Cancel();
+                await OnBack.InvokeAsync();
+            }
+            else
+            {
+                _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
+                DisplayChildrenArtifacts(_currentInnerZipArtifact);
+            }
         }
-        else
+        else if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
-            DisplayChildrenArtifacts(_currentInnerZipArtifact);
+            CancelSelectionMode();
         }
+        StateHasChanged();
     }
 
     private FsArtifact GetParent(FsArtifact artifact)

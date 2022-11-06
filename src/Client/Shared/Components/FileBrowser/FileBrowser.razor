@@ -139,11 +139,6 @@
                    OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                    IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-            @if (_currentArtifact != null)
-            {
-                <FxBreadcrumbs Artifact="_currentArtifact"></FxBreadcrumbs>
-            }
-
             @if (IsInRoot(_currentArtifact) && _isInSearch is false)
             {
                 <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
