@@ -28,7 +28,7 @@
 
 <div class="action-header">
     <div class="list-header @(ArtifactExplorerMode == ArtifactExplorerMode.Normal ? "z-index-header" : "")">
-        <div>breadcrumb</div>
+        @*<FxBreadcrumbs Artifact="CurrentArtifact"></FxBreadcrumbs>*@
         @if (_displayedArtifacts.Count > 0)
         {
             <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>

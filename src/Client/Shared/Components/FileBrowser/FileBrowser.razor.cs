@@ -1,4 +1,11 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Services.Common;
+using Functionland.FxFiles.Client.Shared.Utils;
+
+using Prism.Events;
+
+namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class FileBrowser
 {
