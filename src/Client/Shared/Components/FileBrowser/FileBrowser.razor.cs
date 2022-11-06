@@ -644,7 +644,6 @@ public partial class FileBrowser
     {
         var artifact = extractTuple.Item1;
         var innerArtifacts = extractTuple.Item2;
-        //TODO: check if current path is null
         var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
         var artifactPassword = extractTuple.Item4;
         if (_inputModalRef is null)
@@ -695,7 +694,7 @@ public partial class FileBrowser
 
                 if (destinationDirectory != null)
                     await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
-                        passwordResult.Result, innerArtifacts);
+                        passwordResult?.Result, innerArtifacts);
             }
 
             if (destinationDirectory != null)
