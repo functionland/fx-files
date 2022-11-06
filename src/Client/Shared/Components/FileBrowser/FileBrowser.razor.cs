@@ -91,6 +91,7 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
+    private FileViewerResultType FileViewerResult { get; set; }
 
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -646,7 +647,11 @@ public partial class FileBrowser
         //TODO: check if current path is null
         var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
         var artifactPassword = extractTuple.Item4;
-        if (_inputModalRef is null) return;
+        if (_inputModalRef is null)
+        {
+            FileViewerResult = FileViewerResultType.Cancel;
+            return;
+        }
 
         var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
         var createFolder = Localizer.GetString(AppStrings.FolderName);
@@ -658,7 +663,11 @@ public partial class FileBrowser
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
             //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
-            if ((result?.ResultType) != InputModalResultType.Confirm) return;
+            if ((result?.ResultType) != InputModalResultType.Confirm)
+            {
+                FileViewerResult = FileViewerResultType.Cancel;
+                return;
+            }
 
             var destinationFolderName = result?.Result ?? folderName;
             try
@@ -669,7 +678,11 @@ public partial class FileBrowser
             }
             catch (InvalidPasswordException)
             {
-                if (_passwordModalRef is null) return;
+                if (_passwordModalRef is null)
+                {
+                    FileViewerResult = FileViewerResultType.Cancel;
+                    return;
+                }
 
                 var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
                 var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
@@ -687,6 +700,8 @@ public partial class FileBrowser
                 var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
                 await NavigateToDestionation(destinationPath);
             }
+
+            FileViewerResult = FileViewerResultType.Success;
         }
         catch (Exception exception)
         {
