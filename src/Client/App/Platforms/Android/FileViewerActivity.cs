@@ -15,8 +15,8 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
     DataHost = "*",
     DataSchemes = new[] { "file", "content" },
     Categories = new[] { Intent.ActionView, Intent.CategoryDefault, Intent.CategoryBrowsable },
-    DataMimeTypes = new[] { "application/zip", "application/x-rar-compressed" })]
-public class ZipViewActivity : MainActivity
+    DataMimeTypes = new[] { "application/zip", "application/x-rar-compressed", "video/*" })]
+public class FileViewerActivity : MainActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {
