@@ -1,11 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
-using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Services.Common;
-using Functionland.FxFiles.Client.Shared.Utils;
-
-using Prism.Events;
-
-namespace Functionland.FxFiles.Client.Shared.Components;
+﻿namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class FileBrowser
 {
@@ -663,7 +656,7 @@ public partial class FileBrowser
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
             //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
-            if ((result?.ResultType) != InputModalResultType.Confirm)
+            if ((result?.ResultType) == InputModalResultType.Cancel)
             {
                 FileViewerResult = FileViewerResultType.Cancel;
                 return;
@@ -687,11 +680,18 @@ public partial class FileBrowser
                 var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
                 var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
                 var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
-                if (passwordResult?.ResultType == InputModalResultType.Confirm)
+                switch (passwordResult?.ResultType)
                 {
-                    if (destinationDirectory != null)
-                        await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
-                            passwordResult.Result, innerArtifacts);
+                    case InputModalResultType.Cancel:
+                        FileViewerResult = FileViewerResultType.Cancel;
+                        return;
+                    case InputModalResultType.Confirm:
+                        {
+                            if (destinationDirectory != null)
+                                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
+                                    passwordResult.Result, innerArtifacts);
+                            break;
+                        }
                 }
             }
 
@@ -747,7 +747,10 @@ public partial class FileBrowser
             if (duplicateCount <= 0) return;
 
             if (_confirmationReplaceOrSkipModalRef == null)
+            {
+                FileViewerResult = FileViewerResultType.Cancel;
                 return;
+            }
 
             var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
             List<FsArtifact> overwriteArtifacts = new();
