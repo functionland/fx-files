@@ -23,6 +23,9 @@
     justify-content: flex-end;
     padding: $spacing-16 $spacing-21;
     margin: 0;
+}
+
+::deep .bit-acd .header .header-icon {
     transition: transform 300ms linear;
 }
 
@@ -121,3 +124,17 @@
             }
         }
     }
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
