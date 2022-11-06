@@ -362,7 +362,7 @@ public partial class ArtifactExplorer
         if (request.CancellationToken.IsCancellationRequested) return default;
 
         var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
-        List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
+        var items = Artifacts.Skip(request.StartIndex).Take(requestCount);
 
         _ = Task.Run(async () =>
         {
@@ -371,17 +371,16 @@ public partial class ArtifactExplorer
             {
                 if (request.CancellationToken.IsCancellationRequested)
                     return;
-
                 try
                 {
+                    if (item.ThumbnailPath != null)
+                        continue;
+
                     item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
 
-                    await InvokeAsync(() =>
-                    {
-                        StateHasChanged();
-                    });
+                    await InvokeAsync(() => { StateHasChanged(); });
                 }
                 catch (Exception exception)
                 {
@@ -401,7 +400,7 @@ public partial class ArtifactExplorer
         var start = request.StartIndex * _gridRowCount;
         var requestCount = Math.Min(count, Artifacts.Count - start);
 
-        List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
+        var items = Artifacts.Skip(start).Take(requestCount);
 
         _ = Task.Run(async () =>
         {
@@ -413,15 +412,14 @@ public partial class ArtifactExplorer
 
                 try
                 {
-                    await Task.Delay(300);
+                    if (item.ThumbnailPath != null)
+                        continue;
+
                     item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
 
-                    await InvokeAsync(() =>
-                    {
-                        StateHasChanged();
-                    });
+                    await InvokeAsync(() => { StateHasChanged(); });
                 }
                 catch (Exception exception)
                 {
