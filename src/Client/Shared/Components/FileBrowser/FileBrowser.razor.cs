@@ -62,6 +62,8 @@ public partial class FileBrowser
                     FileWatchService.WatchArtifact(_currentArtifactValue);
                 }
             }
+
+            ArtifactState.SetCurrentMyDeviceArtifact(_currentArtifact);
         }
     }
 
@@ -92,15 +94,15 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
 
-    [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
+    [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
+    [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IZipService ZipService { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
-    [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
     [Parameter] public string? DefaultPath { get; set; }
 
     protected override async Task OnInitAsync()
@@ -116,7 +118,16 @@ public partial class FileBrowser
 
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
-            ArtifactListTask = LoadChildrenArtifactsAsync();
+            var preArtifact = ArtifactState.CurrentMyDeviceArtifact;
+            if (preArtifact is null)
+            {
+                ArtifactListTask = LoadChildrenArtifactsAsync();
+            }
+            else
+            {
+                _currentArtifact = preArtifact;
+                ArtifactListTask = LoadChildrenArtifactsAsync(preArtifact);
+            }
         }
         else
         {
