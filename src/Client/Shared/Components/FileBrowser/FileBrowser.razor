@@ -125,7 +125,6 @@
 @if (_isInSearch is false)
 {
     <div class="file-browser-container">
-
         <div class="fix-content">
             <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
                    OnSearch="HandleSearchAsync"
@@ -260,11 +259,10 @@
                OnCancel="ProgressBarOnCancel"
                @ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
-<FileViewer 
-    @ref="_fileViewerRef" 
-    FileService="FileService"
-    OnPin="HandlePinArtifactsAsync"
-    OnUnpin="HandleUnPinArtifactsAsync"
-    OnOptionClick="HandleOptionsArtifact"
-    ThumbnailService="ThumbnailService"
-    OnExtract="HandleExtractArtifactAsync"/>
+<FileViewer @ref="_fileViewerRef"
+            FileService="FileService"
+            OnPin="HandlePinArtifactsAsync"
+            OnUnpin="HandleUnPinArtifactsAsync"
+            OnOptionClick="HandleOptionsArtifact"
+            ThumbnailService="ThumbnailService"
+            OnExtract="HandleExtractArtifactAsync" />
