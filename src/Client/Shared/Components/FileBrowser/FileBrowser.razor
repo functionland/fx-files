@@ -141,7 +141,9 @@
 
             @if (IsInRoot(_currentArtifact) && _isInSearch is false)
             {
-                <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+                <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
+                      Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
+                      DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
                     <ContentTemplate>
                         @if (_isPinBoxLoading)
                         {

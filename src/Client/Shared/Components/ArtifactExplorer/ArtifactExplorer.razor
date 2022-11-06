@@ -39,19 +39,22 @@
                                 </div>
 
                                 <div class="icon-box">
-                                    <div class="thumbnail-box">
-                                        <div class="img-box">
-                                            @if (artifact?.ThumbnailPath != null)
-                                            {
+                                    @if (artifact?.ThumbnailPath != null)
+                                    {
+                                        <div class="thumbnail-box">
+                                            <div class="img-box">
                                                 <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
+                                            </div>
+                                            @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
+                                            {
+                                                <div class="icon-play"></div>
                                             }
                                         </div>
-                                        @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
-                                        {
-                                            <div class="icon-play"></div>
-                                        }
-                                    </div>
-                                    <div class="item-icon-position @(artifact.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="item-icon-position @(artifact.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
+                                    }
                                 </div>
                                 <div class="footer-box">
                                     <div class="item-content">
@@ -95,26 +98,28 @@
 
                         <div class="item-box @(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "")">
                             <div class="icon-box">
-                                <div class="thumbnail-box">
-                                    <div class="img-box">
-                                        @if (artifact?.ThumbnailPath != null)
-                                        {
+                                @if (artifact?.ThumbnailPath != null)
+                                {
+                                    <div class="thumbnail-box">
+                                        <div class="img-box">
                                             <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
+                                        </div>
+                                        @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
+                                        {
+                                            <div class="icon-play"></div>
                                         }
                                     </div>
-                                    @if (artifact?.FileCategory == FileCategoryType.Video && artifact?.ThumbnailPath != null)
-                                    {
-                                        <div class="icon-play"></div>
-                                    }
-
-                                </div>
-                                <div class="item-icon-position @(artifact.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
+                                }
+                                else
+                                {
+                                    <div class="item-icon-position @(artifact?.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
+                                }
                             </div>
                             <div class="footer-box">
 
                                 <div class="item-content">
                                     <div class="item-title">
-                                        @if (artifact.IsPinned == true)
+                                        @if (artifact?.IsPinned == true)
                                         {
                                             <div class="pin-badge"></div>
                                         }

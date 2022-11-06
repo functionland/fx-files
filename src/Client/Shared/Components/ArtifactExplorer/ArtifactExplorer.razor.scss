@@ -176,17 +176,13 @@ item-container:active {
         }
 
         .thumbnail-box {
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            text-align: center;
             height: 42px;
             width: 42px;
 
             .img-box {
                 position: relative;
-
+                border-radius: 4px;
+                
                 .thumbnail-background {
                     object-fit: cover;
                     height: 42px;
@@ -198,7 +194,6 @@ item-container:active {
                 }
 
                 .thumbnail-img {
-                    text-indent: -10000px;
                     object-fit: contain;
                     height: 42px;
                     width: 42px;
