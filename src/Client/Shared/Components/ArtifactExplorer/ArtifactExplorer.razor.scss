@@ -178,11 +178,12 @@ item-container:active {
         .thumbnail-box {
             height: 42px;
             width: 42px;
+            background-color: color(gray-bg-primary);
 
             .img-box {
                 position: relative;
                 border-radius: 4px;
-                
+
                 .thumbnail-background {
                     object-fit: cover;
                     height: 42px;
