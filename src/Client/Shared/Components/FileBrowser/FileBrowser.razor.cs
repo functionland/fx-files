@@ -662,7 +662,7 @@ public partial class FileBrowser
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,innerArtifacts:innerArtifacts);
+                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName, innerArtifacts: innerArtifacts);
             }
             catch (InvalidPasswordException)
             {

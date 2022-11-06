@@ -2,4 +2,16 @@
 
 @inherits AppComponentBase;
 
-<h3>FxBreadcrumbs</h3>
+<div class="fx-breadcrumbs">
+    <span class="start-ellipsis">...</span>
+
+    @if (_breadCrumbsPath != null)
+    {
+        @foreach (var path in _breadCrumbsPath)
+        {
+            <div class="file-path">@path</div>
+        }
+    }
+
+    <span class="end-ellipsis">...</span>
+</div>

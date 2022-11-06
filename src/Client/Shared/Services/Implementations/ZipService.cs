@@ -32,8 +32,7 @@ public partial class ZipService : IZipService
             {
                 ".rar" => await GetRarArtifactsAsync(zipFilePath, password),
                 ".zip" => await GetZipArtifactsAsync(zipFilePath, password),
-                // ToDo: move string to resources.
-                _ => throw new InvalidOperationException($"Zip file not supported: {extension}")
+                _ => throw new InvalidZipExtensionException(StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), extension))
             };
 
             return artifacts;
@@ -486,9 +485,6 @@ public partial class ZipService : IZipService
             Directory.Delete(parentFinalPath, true);
         }
     }
-
-    private string GetRarFullPath(string destinationPath, string itemPath) => Path.Combine(destinationPath, PathUtilService.GetRarEntryPath(itemPath));
-
 
     private static List<string> GetRemainedEntries(IEnumerable<string> filesPath)
     {
