@@ -664,6 +664,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The zip file dose not found..
+        /// </summary>
+        public static string FileNotFoundException {
+            get {
+                return ResourceManager.GetString("FileNotFoundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while removing file.
         /// </summary>
         public static string FileRemoveFailed {

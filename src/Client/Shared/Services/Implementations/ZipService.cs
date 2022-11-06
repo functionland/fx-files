@@ -58,6 +58,10 @@ public partial class ZipService : IZipService
         {
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
+        catch(FileNotFoundException)
+        {
+            throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
+        }
         catch
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.TheOpreationFailedMessage));
@@ -146,6 +150,12 @@ public partial class ZipService : IZipService
     private async Task<List<FsArtifact>> GetRarArtifactsAsync(string zipFilePath, string? password = null)
     {
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
+
+        if (artifact is null)
+        {
+            throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
+        }
+
         var providerType = artifact.ProviderType;
 
         var artifacts = new List<FsArtifact>();
@@ -177,6 +187,12 @@ public partial class ZipService : IZipService
     private async Task<List<FsArtifact>> GetZipArtifactsAsync(string zipFilePath, string? password = null)
     {
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
+
+        if(artifact is null)
+        {
+            throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
+        }
+
         var providerType = artifact.ProviderType;
 
         var artifacts = new List<FsArtifact>();

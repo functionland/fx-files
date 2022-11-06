@@ -654,4 +654,7 @@
   <data name="NotSupportedEncryptedFileException" xml:space="preserve">
     <value>Not supported encrypted file</value>
   </data>
+  <data name="FileNotFoundException" xml:space="preserve">
+    <value>The zip file dose not found.</value>
+  </data>
 </root>
