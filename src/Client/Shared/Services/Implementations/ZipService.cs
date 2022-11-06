@@ -187,8 +187,8 @@ public partial class ZipService : IZipService
         {
             var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
             var path = entry.Key.TrimEnd('/');
-
-            var parentPath = Path.GetDirectoryName(path);
+            
+            var parentPath = Path.GetDirectoryName(path)?.Replace(Path.DirectorySeparatorChar.ToString(), "/");
 
             var entryFileName = Path.GetFileName(path);
             var newFsArtifact = new FsArtifact(path, entryFileName, artifactType, providerType)
@@ -276,7 +276,7 @@ public partial class ZipService : IZipService
         if (artifacts is null)
         {
             var keys = archive.Entries.Select(c => c.Key).ToList();
-            var correctPaths = keys.Select(PathUtilService.GetZipEntryPath);
+            var correctPaths = keys.Select(k=>k.Replace("/", Path.PathSeparator.ToString()));
             var remainedEntries = GetRemainedEntries(correctPaths);
             allEntriesCount = archive.Entries.Count + remainedEntries.Count;
         }

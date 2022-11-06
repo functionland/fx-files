@@ -50,55 +50,19 @@ public partial class ZipViewer : IFileViewerComponent
         try
         {
             await LoadAllArtifactsAsync();
-
             DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
         catch (InvalidPasswordException)
         {
-            await GetArtifactPassword();
+            // ToDo: show proper modal.
+            //await GetArtifactPassword();
         }
-        catch (Exception exception)
+        catch (Exception)
         {
             await HandleBackAsync(true);
-            ExceptionHandler.Handle(exception);
-        }
-    }
-
-    private async Task GetArtifactPassword()
-    {
-        if (_passwordModalRef is null)
-            return;
-
-        var token = _cancellationTokenSource.Token;
-        var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
-        var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
-        var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
-        var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty,
-            string.Empty, extractBtnTitle, extractPasswordModalLabel);
-
-        if (passwordResult.ResultType == InputModalResultType.Cancel)
-        {
-            await HandleBackAsync(true);
-            return;
-        }
-
-        _password = passwordResult.Result;
-        try
-        {
-            if (CurrentArtifact != null)
-            {
-                await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
-            }
-        }
-        catch (NotSupportedEncryptedFileException exception)
-        {
-            await HandleBackAsync(true);
-            ExceptionHandler.Handle(exception);
-        }
-        catch (Exception exception)
-        {
-            await HandleBackAsync(true);
-            ExceptionHandler.Handle(exception);
+            // ToDo: Check this
+            //ExceptionHandler.Handle(exception);
+            throw;
         }
     }
 
@@ -114,7 +78,12 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
     {
-        _displayedArtifacts = _allZipFileEntities.Where(a => a.ParentFullPath == artifact.FullPath).OrderByDescending(a => a.ArtifactType == FsArtifactType.Folder).ToList();
+        _displayedArtifacts = (
+             from innerArtifact in _allZipFileEntities
+             where innerArtifact.ParentFullPath == artifact.FullPath
+             orderby artifact.ArtifactType descending, artifact.Name ascending
+             select innerArtifact
+        ).ToList();
     }
 
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)

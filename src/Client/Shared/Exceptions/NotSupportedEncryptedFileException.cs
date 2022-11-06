@@ -3,7 +3,7 @@
 namespace Functionland.FxFiles.Client.Shared.Exceptions;
 
 [Serializable]
-internal class NotSupportedEncryptedFileException : DomainLogicException
+public class NotSupportedEncryptedFileException : DomainLogicException
 {
     public NotSupportedEncryptedFileException(string message) : base(message)
     {
