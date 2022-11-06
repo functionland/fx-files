@@ -1,9 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Extensions;
-using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Utils;
-using Microsoft.VisualBasic;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
@@ -39,19 +36,31 @@ public partial class ZipService : IZipService
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
-            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (Exception ex) when (ex.Message == "bad password")
         {
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+        }
+        catch (FormatException ex) when (ex.Message == "malformed vint")
+        {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+        catch (OverflowException ex) when (ex.Message == "Arithmetic operation resulted in an overflow.")
+        {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+        catch(FileNotFoundException)
+        {
+            throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
         }
         catch
         {
@@ -110,7 +119,7 @@ public partial class ZipService : IZipService
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
-            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
@@ -130,14 +139,23 @@ public partial class ZipService : IZipService
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
         {
-            //TODO: Handle this exception.
-            throw;
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+        catch (OverflowException ex) when (ex.Message == "Arithmetic operation resulted in an overflow.")
+        {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
     }
 
     private async Task<List<FsArtifact>> GetRarArtifactsAsync(string zipFilePath, string? password = null)
     {
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
+
+        if (artifact is null)
+        {
+            throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
+        }
+
         var providerType = artifact.ProviderType;
 
         var artifacts = new List<FsArtifact>();
@@ -169,6 +187,12 @@ public partial class ZipService : IZipService
     private async Task<List<FsArtifact>> GetZipArtifactsAsync(string zipFilePath, string? password = null)
     {
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
+
+        if(artifact is null)
+        {
+            throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
+        }
+
         var providerType = artifact.ProviderType;
 
         var artifacts = new List<FsArtifact>();
@@ -179,8 +203,8 @@ public partial class ZipService : IZipService
         {
             var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
             var path = entry.Key.TrimEnd('/');
-
-            var parentPath = Path.GetDirectoryName(path);
+            
+            var parentPath = Path.GetDirectoryName(path)?.Replace(Path.DirectorySeparatorChar.ToString(), "/");
 
             var entryFileName = Path.GetFileName(path);
             var newFsArtifact = new FsArtifact(path, entryFileName, artifactType, providerType)
@@ -268,7 +292,7 @@ public partial class ZipService : IZipService
         if (artifacts is null)
         {
             var keys = archive.Entries.Select(c => c.Key).ToList();
-            var correctPaths = keys.Select(PathUtilService.GetZipEntryPath);
+            var correctPaths = keys.Select(k=>k.Replace("/", Path.PathSeparator.ToString()));
             var remainedEntries = GetRemainedEntries(correctPaths);
             allEntriesCount = archive.Entries.Count + remainedEntries.Count;
         }
