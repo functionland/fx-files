@@ -1,18 +1,29 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
+
+public class InMemoryAppStateStore : IAppStateStore
 {
-    public class InMemoryAppStateStore
+    public ViewModeEnum ViewMode { get; set; }
+    public bool IsAvailableForTest { get; set; }
+    public FsArtifact? CurrentFulaArtifact { get; set; }
+    public FsArtifact? CurrentMyDeviceArtifact { get; set; }
+
+    public void SetViewMode(ViewModeEnum viewMode)
     {
-        public ViewModeEnum ViewMode { get; private set; } = ViewModeEnum.List;
-        public bool IsAvailableForTest { get; private set; }= false;
+        ViewMode = viewMode;
+    }
 
-        public void SetViewMode(ViewModeEnum viewMode)
-        {
-            ViewMode = viewMode;
-        }
+    public void SetAvailableForTest(bool isAvailable)
+    {
+        IsAvailableForTest = isAvailable;
+    }
 
-        public void SetAvailableForTest( bool isAvailable)
-        {
-            IsAvailableForTest = isAvailable;
-        }
+    public void SetCurrentFulaArtifact(FsArtifact? fulaArtifact)
+    {
+        CurrentFulaArtifact = fulaArtifact;
+    }
+
+    public void SetCurrentMyDeviceArtifact(FsArtifact? myDeviceArtifact)
+    {
+        CurrentMyDeviceArtifact = myDeviceArtifact;
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components
+﻿namespace Functionland.FxFiles.Client.Shared.Components;
+
+public enum ViewModeEnum
 {
-    public enum ViewModeEnum
-    {
-        List,
-        Grid
-    }
+    List,
+    Grid
 }
