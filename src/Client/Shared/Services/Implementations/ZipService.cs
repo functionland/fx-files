@@ -53,6 +53,14 @@ public partial class ZipService : IZipService
         {
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
+        catch (FormatException ex) when (ex.Message == "malformed vint")
+        {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+        catch (OverflowException ex) when (ex.Message == "Arithmetic operation resulted in an overflow.")
+        {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
         catch
         {
             throw new DomainLogicException(StringLocalizer.GetString(AppStrings.TheOpreationFailedMessage));
@@ -129,6 +137,10 @@ public partial class ZipService : IZipService
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
+        {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+        catch (OverflowException ex) when (ex.Message == "Arithmetic operation resulted in an overflow.")
         {
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
