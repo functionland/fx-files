@@ -30,7 +30,7 @@
     transition: .2s;
     font-weight: bold;
     font-size: $font-size-18;
-    transform: rotate(360deg);
+    transform: rotate(180deg);
 }
 
 ::deep .bit-acd .header.collapsed {
@@ -42,7 +42,7 @@
 ::deep .bit-acd .header.collapsed .header-icon {
     transition: .2s;
     font-weight: bold;
-    transform: rotate(270deg);
+    transform: rotate(360deg);
 }
 
 ::deep .bit-acd .content {
@@ -81,17 +81,22 @@
         height: 6px;
     }
 
-::deep .bit-acd .content.expanded .items {
-    display: flex;
-    overflow-y: unset;
-    max-height: 230px;
-    flex-direction: row;
-    white-space: nowrap;
-    scroll-behavior: smooth;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+::deep .bit-acd .content .items {
     padding: 0 $spacing-16;
 }
+
+
+    ::deep .bit-acd .content.expanded .items {
+        display: flex;
+        overflow-y: unset;
+        max-height: 230px;
+        flex-direction: row;
+        white-space: nowrap;
+        scroll-behavior: smooth;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        
+    }
 
     ::deep .bit-acd .title-description-wrapper .title {
         font-family: $montserrat-semi-bold;

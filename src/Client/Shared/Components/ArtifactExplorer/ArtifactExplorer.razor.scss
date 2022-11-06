@@ -67,9 +67,25 @@
 @media (hover: hover) and (pointer: fine) {
     .item-container:hover {
         background-color: color(gray-hover);
+        transition: background 200ms linear;
+
+        .item-icon-position {
+            background-color: var(--gray-bg-secondary) !important;
+            transition: background 200ms linear !important;
+        }
     }
 }
 
+
+item-container:active {
+    background-color: color(gray-hover);
+    transition: background 200ms linear;
+
+    item-icon-position {
+        background-color: var(--gray-bg-secondary) !important;
+        transition: background 200ms linear !important;
+    }
+}
 
 .item-content {
 
@@ -121,9 +137,23 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
-    /*    .check-box-position {
-        margin-right: 16px;
-    }*/
+
+    .check-box-mobile {
+        position: absolute;
+    }
+
+    .item-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        overflow: hidden;
+        transition: margin 250ms linear;
+    }
+
+    .selection-mode-style {
+        margin-left: 36px;
+    }
 
     .icon-box {
         display: flex;
@@ -255,6 +285,21 @@
         top: 9px;
         left: 9px;
     }
+
+    .check-box-mobile {
+        position: absolute;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: opacity 300ms linear, height 0ms linear 300ms;
+    }
+
+    .selection-mode-style {
+        height: 20px;
+        opacity: 1;
+        transition: opacity 300ms linear, height 0ms linear 300ms;
+    }
+
 
     .icon-box {
         background-color: color(gray-bg-primary);

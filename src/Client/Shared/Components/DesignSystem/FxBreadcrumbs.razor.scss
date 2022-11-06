@@ -1,2 +1,61 @@
-﻿body {
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+@import '../../Styles/abstracts/_media-queries.scss';
+
+.fx-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: $spacing-6;
+    margin: $spacing-0 $spacing-21;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 27px;
+
+    span[class$="ellipsis"] {
+        font-size: $font-size-12;
+        background-color: color(app-bg);
+        position: sticky;
+        width: 13px;
+        display: none;
+    }
+
+    .start-ellipsis {
+        left: 0px;
+    }
+
+    .end-ellipsis {
+        right: 0px;
+    }
+
+    .color-changer {
+        color: color(app-bg);
+    }
+
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+}
+ 
+
+.file-path {
+    font-family: $open-sans-regular;
+    font-size: $font-size-12;
+    line-height: $line-height-16;
+    letter-spacing: $letter-spacing-02;
+    color: color(gray-content2);
+    cursor: pointer;
+    display: flex;
+}
+
+.file-path:not(div.file-path:first-of-type):before {
+    font-size: $icon-16;
+    margin-right: $spacing-6;
+    @include Icon($chevron-right, color(gray-content1));
+}
+
+div.file-path:last-of-type {
+    font-family: $open-sans-semi-bold;
+    color: color(gray-content1);
 }

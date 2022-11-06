@@ -70,3 +70,29 @@ function ImagePinchZoom() {
         tapZoomFactor : 3
     });
 }
+
+function breadCrumbStyle() {
+    let breadcrumbs = document.querySelector(".fx-breadcrumbs");
+    let startEllipsis = document.querySelector(".start-ellipsis");
+    let endEllipsis = document.querySelector(".end-ellipsis");
+
+    breadcrumbs.addEventListener("scroll", () => {
+        let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
+
+        if (breadcrumbsScroll != 0) {
+            startEllipsis.style.display = "block";
+            endEllipsis.style.display = "block";
+            endEllipsis.classList.remove("color-changer");
+
+
+        } else {
+            startEllipsis.style.display = "none";
+            endEllipsis.classList.add("color-changer");
+        }
+        
+        if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+            endEllipsis.classList.add("color-changer");
+            endEllipsis.style.display = "block";
+        }
+    })
+}

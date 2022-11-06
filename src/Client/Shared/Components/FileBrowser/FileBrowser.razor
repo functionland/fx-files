@@ -125,100 +125,106 @@
 @if (_isInSearch is false)
 {
     <div class="file-browser-container">
+        <div class="fix-content">
+            <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
+                   OnSearch="HandleSearchAsync"
+                   OnSearchFocused="HandleSearchFocused"
+                   IsInSearchMode="_isInSearch"
+                   ShouldSearchBoxShow="true"
+                   OnBackClick="HandleToolbarBackClick"
+                   Title="@(_currentArtifact?.Name)"
+                   SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
+                   IsPinned="@(_currentArtifact?.IsPinned ?? false)"
+                   OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
+                   OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
+                   IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-        <FxToolBar IsInRoot="IsInRoot(_currentArtifact)"
-               OnSearch="HandleSearchAsync"
-               OnSearchFocused="HandleSearchFocused"
-               IsInSearchMode="_isInSearch"
-               ShouldSearchBoxShow="true"
-               OnBackClick="HandleToolbarBackClick"
-               Title="@(_currentArtifact?.Name)"
-               SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
-               IsPinned="@(_currentArtifact?.IsPinned ?? false)"
-               OnOverflowButtonClick="@(()=>HandleOptionsArtifact(_currentArtifact))"
-               OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
-               IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
+            @if (IsInRoot(_currentArtifact) && _isInSearch is false)
+            {
+                <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+                    <ContentTemplate>
+                        @if (_isPinBoxLoading)
+                        {
+                            <OverlayLoading LoadingType="LoadingType.Overlay" />
+                        }
+                        @if (_pins?.Count > 0)
+                        {
+                            <div class="items">
+                                @foreach (var pin in _pins)
+                                {
+                                    <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                        <FileCard ArtifactType="@pin.ArtifactType"
+                                  Name="@pin.Name"
+                                  Size="@pin.SizeStr"
+                                  Path="@pin.FullPath"
+                                  FileService="@FileService"
+                                  FileType="@pin.FileCategory"
+                                  ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </ContentTemplate>
+                </BitAccordion>
+            }
 
-        @if (IsInRoot(_currentArtifact) && _isInSearch is false)
-        {
-            <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
-                <ContentTemplate>
-                    @if (_isPinBoxLoading)
-                    {
-                        <OverlayLoading LoadingType="LoadingType.Overlay" />
-                    }
-                    @if (_pins?.Count > 0)
-                    {
-                        <div class="items">
-                            @foreach (var pin in _pins)
-                            {
-                                <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                    <FileCard ArtifactType="@pin.ArtifactType"
-                              Name="@pin.Name"
-                              Size="@pin.SizeStr"
-                              Path="@pin.FullPath"
-                              FileService="@FileService"
-                              FileType="@pin.FileCategory"
-                              ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
-                                </div>
-                            }
+            <div class="root-title">My device files</div>
+            <div class="action-bar-box">
+                <div class="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") @(_isInSearch ? "select-action-search" : "") select-action ">
+                    <div class="info-selection">
+                        <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
+                        <div class="item-selected">
+                            <span class="item-selected-count">@_selectedArtifacts?.Count</span>
+                            <span class="item-selected-text">items selected</span>
                         </div>
-                    }
-                </ContentTemplate>
-            </BitAccordion>
-        }
-
-        <div class="root-title">My device files</div>
-
-        @if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
-        {
-            <div class="@(_isInSearch ? "action-bar-search" : "") action-bar">
-                <div class="left-actions">
-                    <div class="selected-sort" @onclick="HandleSortClick">
-                        @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
                     </div>
-                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
-                    <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
-                </div>
-                <div class="right-actions">
-                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
-                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
-                    <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
-                    <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
-                    <div class="action-btn filter-btn @(_fileCategoryFilter != null ? "filter-btn-selected" : "")" @onclick="HandleFilterClick"></div>
-                </div>
-            </div>
-        }
-        else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-        {
-            <div class="@(_isInSearch ? "select-action-search" : "") select-action">
-                <div class="info-selection">
-                    <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
-                    <div class="item-selected">
-                        <span class="item-selected-count">@_selectedArtifacts?.Count</span>
-                        <span class="item-selected-text">items selected</span>
+
+                    <div class="right-part">
+                        @if (_selectedArtifacts?.Count > 0 && IsInRoot(_currentArtifact) is false)
+                        {
+                            <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
+                        }
+                        <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
                     </div>
                 </div>
 
-                <div class="right-part">
-                    @if (_selectedArtifacts?.Count > 0 && IsInRoot(_currentArtifact) is false)
-                    {
-                        <div class="icons-action move-icon" @onclick="(() => HandleMoveArtifactsAsync(_selectedArtifacts))"></div>
-                    }
-                    <div class="icons-action vertical-option-icon" @onclick="(async () => await HandleSelectedArtifactsOptions(_selectedArtifacts))"></div>
+                <div class="@(_isInSearch ? "action-bar-search" : "") action-bar">
+                    <div class="left-actions">
+                        <div class="selected-sort" @onclick="HandleSortClick">
+                            @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
+                        </div>
+                        <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
+                        <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
+                    </div>
+                    <div class="right-actions">
+                        <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
+                        <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
+                        <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
+                        <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
+                        <div class="action-btn filter">
+                            <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
+                            <div class="filter-btn-selected @(_fileCategoryFilter != null ? "show-fliter-btn" : "hide-filter-btn")" @onclick="HandleFilterClick"></div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        }
 
-        @if (!IsInRoot(_currentArtifact))
+            @* else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
-            <FxSearchInput Placeholder="@_currentArtifact?.Name"
-                   @ref="_fxSearchInputRef"
-                   OnCancel="HandleCancelInLineSearchAsync"
-                   DebounceInterval="300"
-                   OnSearch="HandleInLineSearch"
-                   IsPartial="false" />
-        }
+
+        }*@
+
+            @if (!IsInRoot(_currentArtifact))
+            {
+                <FxSearchInput Placeholder="@_currentArtifact?.Name"
+                       @ref="_fxSearchInputRef"
+                       OnCancel="HandleCancelInLineSearchAsync"
+                       DebounceInterval="300"
+                       OnSearch="HandleInLineSearch"
+                       IsPartial="false" />
+            }
+        </div>
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
                       ThumbnailService="ThumbnailService"
@@ -237,7 +243,7 @@
     </div>
 }
 
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService"/>
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter" />
