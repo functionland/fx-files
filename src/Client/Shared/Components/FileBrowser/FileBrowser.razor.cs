@@ -662,7 +662,7 @@ public partial class FileBrowser
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,innerArtifacts:innerArtifacts);
+                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName, innerArtifacts: innerArtifacts);
             }
             catch (InvalidPasswordException)
             {
@@ -818,12 +818,9 @@ public partial class FileBrowser
             }
 
             _allArtifacts = artifacts;
+            // call _displayArtifact
+            _displayedArtifacts = new();
             RefreshDisplayedArtifacts();
-            StateHasChanged();
-            if (_artifactExplorerRef is not null)
-            {
-                await _artifactExplorerRef.RefreshAsync();
-            }
         }
         catch (ArtifactUnauthorizedAccessException exception)
         {
@@ -831,6 +828,8 @@ public partial class FileBrowser
         }
         finally
         {
+            //trick for update load artifact and refresh visualization
+            await Task.Delay(100);
             _isArtifactExplorerLoading = false;
 
 
