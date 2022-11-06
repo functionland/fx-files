@@ -9,7 +9,7 @@
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             LoadBreadCrumbsPath();
-            await JSRuntime.InvokeVoidAsync("Amin");
+            await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
             await base.OnAfterRenderAsync(firstRender);
         }
         private void LoadBreadCrumbsPath()

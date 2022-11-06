@@ -71,7 +71,7 @@ function ImagePinchZoom() {
     });
 }
 
-function Amin() {
+function breadCrumbStyle() {
     let breadcrumbs = document.querySelector(".fx-breadcrumbs");
     let startEllipsis = document.querySelector(".start-ellipsis");
     let endEllipsis = document.querySelector(".end-ellipsis");
