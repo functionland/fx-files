@@ -1060,6 +1060,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not supported encrypted file.
+        /// </summary>
+        public static string NotSupportedEncryptedFileException {
+            get {
+                return ResourceManager.GetString("NotSupportedEncryptedFileException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to of.
         /// </summary>
         public static string Of {

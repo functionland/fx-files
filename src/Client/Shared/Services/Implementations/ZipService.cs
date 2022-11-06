@@ -130,8 +130,7 @@ public partial class ZipService : IZipService
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
         {
-            //TODO: Handle this exception.
-            throw;
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
     }
 
