@@ -62,6 +62,8 @@ public partial class FileBrowser
                     FileWatchService.WatchArtifact(_currentArtifactValue);
                 }
             }
+
+            ArtifactState.SetCurrentMyDeviceArtifact(_currentArtifact);
         }
     }
 
@@ -116,7 +118,16 @@ public partial class FileBrowser
 
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
-            ArtifactListTask = LoadChildrenArtifactsAsync();
+            var preArtifact = ArtifactState.CurrentMyDeviceArtifact;
+            if (preArtifact is null)
+            {
+                ArtifactListTask = LoadChildrenArtifactsAsync();
+            }
+            else
+            {
+                _currentArtifact = preArtifact;
+                ArtifactListTask = LoadChildrenArtifactsAsync(preArtifact);
+            }
         }
         else
         {
