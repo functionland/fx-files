@@ -10,8 +10,8 @@
     max-width: 600px;
     width: 100%;
     display: flex;
-    position: fixed;
-    margin-top: -16px;
+    position: absolute;
+    top: 0;
     justify-content: center;
     align-items: center;
     background-color: color(app-bg);
@@ -25,6 +25,15 @@
 .overlay-loading {
     opacity: 0.85;
     z-index: 50;
+}
+
+.fx-loading-sppiner {
+    background-image: url(images/Loading/Loading.svg);
+    background-repeat: no-repeat;
+    background-size: 55px;
+    background-position: center;
+    height: 44px;
+    width: 44px;
 }
 
 .fx-loading-dots-ring {
