@@ -14,7 +14,7 @@ public partial class ZipService : IZipService
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }
-    [AutoInject] public IPathUtilService PathUtilService { get; set; } = default!;
+    [AutoInject] public IZipPathUtilService ZipPathUtilService { get; set; } = default!;
 
 
     public virtual async Task<List<FsArtifact>> GetAllArtifactsAsync(
@@ -240,7 +240,7 @@ public partial class ZipService : IZipService
         {
             var keys = archive.Entries.Select(c => c.Key).ToList();
 
-            var correctPaths = keys.Select(PathUtilService.GetRarEntryPath);
+            var correctPaths = keys.Select(ZipPathUtilService.GetRarEntryPath);
             var remainedEntries = GetRemainedEntries(correctPaths);
             allEntriesCount = archive.Entries.Count + remainedEntries.Count;
         }
@@ -253,7 +253,7 @@ public partial class ZipService : IZipService
 
                 var keys = archive.Entries.Where(c => c.Key.StartsWith(item.FullPath)).Select(c => c.Key).ToList();
 
-                var correctPaths = keys.Select(PathUtilService.GetRarEntryPath);
+                var correctPaths = keys.Select(ZipPathUtilService.GetRarEntryPath);
                 var remainedEntries = GetRemainedEntries(correctPaths);
                 allEntriesCount += archive.Entries.Count + remainedEntries.Count;
             }
@@ -304,7 +304,7 @@ public partial class ZipService : IZipService
                     return 0;
 
                 var keys = archive.Entries.Where(c => c.Key.StartsWith(item.FullPath)).Select(c => c.Key).ToList();
-                var correctPaths = keys.Select(PathUtilService.GetZipEntryPath);
+                var correctPaths = keys.Select(ZipPathUtilService.GetZipEntryPath);
                 var remainedEntries = GetRemainedEntries(correctPaths);
                 allEntriesCount += archive.Entries.Count + remainedEntries.Count;
             }
@@ -393,7 +393,7 @@ public partial class ZipService : IZipService
 
         if (itemPath is not null)
         {
-            var entryFullPath = PathUtilService.GetZipEntryPath(itemPath);
+            var entryFullPath = ZipPathUtilService.GetZipEntryPath(itemPath);
             MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
         }
 
@@ -466,7 +466,7 @@ public partial class ZipService : IZipService
 
         if (itemPath is not null)
         {
-            var entryFullPath = PathUtilService.GetRarEntryPath(itemPath);
+            var entryFullPath = ZipPathUtilService.GetRarEntryPath(itemPath);
             MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
         }
 
@@ -539,8 +539,8 @@ public partial class ZipService : IZipService
         var remainedEntries = GetRemainedEntries(artifacts.Select(c =>
                     archiveType switch
                     {
-                        ArchiveType.Rar => PathUtilService.GetRarEntryPath(c.FullPath),
-                        _ => PathUtilService.GetZipEntryPath(c.FullPath)
+                        ArchiveType.Rar => ZipPathUtilService.GetRarEntryPath(c.FullPath),
+                        _ => ZipPathUtilService.GetZipEntryPath(c.FullPath)
                     }
                 )
             );

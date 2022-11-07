@@ -4,6 +4,8 @@ using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
+using SharpCompress.Common;
+using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -115,6 +117,7 @@ public partial class FileBrowser
                                HandleChangedArtifacts,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
+        HandleIntentReceiver();
 
         _ = EventAggregator
                        .GetEvent<IntentReceiveEvent>()
@@ -1877,13 +1880,19 @@ public partial class FileBrowser
         }
     }
 
-    private void HandleIntentReceiver(IntentReceiveEvent intentReceiveEvent)
+    private void HandleIntentReceiver(IntentReceiveEvent? intentReceiveEvent = null)
     {
         if (IntentHolder.FileUrl is null || _fileViewerRef is null)
             return;
 
         var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
+        _currentArtifact = artifact;
         IntentHolder.FileUrl = null;
         _ = _fileViewerRef.OpenArtifact(artifact);
+    }
+
+    private async Task FileViewerBack()
+    {
+        await OnInitAsync();
     }
 }

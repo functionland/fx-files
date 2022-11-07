@@ -13,8 +13,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        protected abstract string GetFolderOrDriveShowablePath(string artifactPath);
-
         public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
@@ -207,13 +205,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             else if (fsArtifactType == FsArtifactType.Folder)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
             else if (fsArtifactType == FsArtifactType.Drive)
             {
                 var drives = GetDrives();
                 fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
-                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
 
             return fsArtifact;
@@ -690,7 +686,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
-                    drive.ShowablePath = GetFolderOrDriveShowablePath(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
@@ -732,7 +727,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         ParentFullPath = Directory.GetParent(folder)?.FullName,
                         LastModifiedDateTime = Directory.GetLastWriteTime(folder),
-                        ShowablePath = GetFolderOrDriveShowablePath(folder)
                     };
                 }
 
@@ -948,5 +942,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return false;
         }
 
+        public virtual string GetShowablePath(string artifactPath)
+        {
+            return artifactPath;
+        }
     }
 }
