@@ -1895,7 +1895,7 @@ public partial class FileBrowser
 
     private async Task FileViewerBack()
     {
-        if (_currentArtifact?.ParentFullPath is not null)
+        if (_currentArtifact?.ParentFullPath is not null && _currentArtifact.ArtifactType == FsArtifactType.File)
         {
             var artifact = await FileService.GetArtifactAsync(_currentArtifact.ParentFullPath);
             _currentArtifact = artifact;
