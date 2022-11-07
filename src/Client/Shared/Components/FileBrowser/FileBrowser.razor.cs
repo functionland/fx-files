@@ -130,8 +130,7 @@ public partial class FileBrowser
             _currentArtifact = defaultArtifact;
 
         }
-        //TODo: pin loadin stuck and fill all page!!
-        //throw new Exception(); 
+
         var pinTask = Task.Run(async () =>
         {
             await LoadPinsAsync();
@@ -143,8 +142,6 @@ public partial class FileBrowser
             await InvokeAsync(() => StateHasChanged());
         });
 
-        //check this after fix abave bug
-        //throw new Exception(); 
         _ = Task.WhenAll(pinTask, artifactListTask);
 
         await base.OnInitAsync();
@@ -828,8 +825,6 @@ public partial class FileBrowser
 
         try
         {
-            //ToDo: pin expander will be open and empty! 
-            //throw new Exception();
             _pins = await PinService.GetPinnedArtifactsAsync();
         }
         catch (Exception exception)
