@@ -4,7 +4,10 @@
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
     <div class="sticky-header">
-        <div class="close-btn" @onclick="(() => Close())"></div>
+        <div class="select-destination-header">
+            <div class="close-btn" @onclick="(() => Close())"></div>
+
+        </div>
 
         <div class="select-destination-container">
             <div class="select-destination-info">

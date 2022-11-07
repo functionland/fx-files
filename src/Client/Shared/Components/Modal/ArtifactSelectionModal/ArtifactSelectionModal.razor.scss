@@ -9,6 +9,12 @@
     left: 0;
 }
 
+.select-destination-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .close-btn {
     cursor: pointer;
     text-align: right;
