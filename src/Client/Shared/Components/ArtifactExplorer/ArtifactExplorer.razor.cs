@@ -373,13 +373,9 @@ public partial class ArtifactExplorer
                     return;
                 try
                 {
-                    var thumbPath =
+                    item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
-                    await InvokeAsync(() =>
-                    {
-                        item.ThumbnailPath = thumbPath;
-                    });
                 }
                 catch (Exception exception)
                 {
@@ -413,13 +409,9 @@ public partial class ArtifactExplorer
 
                 try
                 {
-                    var thumbPath =
+                    item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
-                    await InvokeAsync(() =>
-                    {
-                        item.ThumbnailPath = thumbPath;
-                    });
 
                 }
                 catch (Exception exception)
