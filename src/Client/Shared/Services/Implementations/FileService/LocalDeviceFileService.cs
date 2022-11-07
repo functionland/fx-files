@@ -249,8 +249,16 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
 
+            var isExistOld = File.Exists(filePath);
+
+            if (!isExistOld)
+                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
+
+            if (Path.GetFileNameWithoutExtension(filePath) == newName)
+                return;
+
             if (NameHasInvalidCharacter(newName))
-                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
+            throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var artifactType = GetFsArtifactType(filePath);
 
@@ -261,11 +269,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (CheckIfNameHasInvalidChars(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
-
-            var isExistOld = File.Exists(filePath);
-
-            if (!isExistOld)
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             await Task.Run(() =>
             {
@@ -290,6 +293,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (string.IsNullOrWhiteSpace(folderPath))
                 throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFolder));
 
+            var isExistOld = Directory.Exists(folderPath);
+
+            if (!isExistOld)
+                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, lowerCaseFolder));
+
+            if (Path.GetFileNameWithoutExtension(folderPath) == newName)
+                return;
+
             if (NameHasInvalidCharacter(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
@@ -305,11 +316,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (CheckIfNameHasInvalidChars(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
-
-            var isExistOld = Directory.Exists(folderPath);
-
-            if (!isExistOld)
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, lowerCaseFolder));
 
             var fsArtifactType = GetFsArtifactType(folderPath);
 
