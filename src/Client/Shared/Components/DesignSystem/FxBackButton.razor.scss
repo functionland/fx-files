@@ -1,0 +1,36 @@
+﻿@import '../../Styles/abstracts/_mixins.scss';
+@import '../../Styles/abstracts/_variables.scss';
+@import '../../Styles/abstracts/_functions.scss';
+
+.back-button {
+    cursor: pointer;
+
+    &::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+}
+
+.back-button:active {
+    color: $green-dark-pressed !important;
+
+    &::after {
+        color: $green-dark-pressed !important;
+        transition: color 100ms linear;
+    }
+}
+
+.back-button:hover {
+    color: $green-light-hover;
+
+    &::after {
+        color: $green-light-hover;
+        transition: color 100ms linear;
+    }
+}
+
+.back-button-disable {
+    opacity: 0.5;
+    pointer-events: none;
+}
