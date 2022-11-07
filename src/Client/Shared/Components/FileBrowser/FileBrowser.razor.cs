@@ -4,8 +4,6 @@ using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
-using SharpCompress.Common;
-using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -65,7 +63,7 @@ public partial class FileBrowser
                 }
             }
 
-            ArtifactState.SetCurrentMyDeviceArtifact(_currentArtifact);
+            ArtifactState.CurrentMyDeviceArtifact = _currentArtifact;
         }
     }
 
@@ -1060,7 +1058,7 @@ public partial class FileBrowser
     public void ChangeViewMode()
     {
         var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
-        ArtifactState.SetViewMode(viewMode);
+        ArtifactState.ViewMode = viewMode;
         StateHasChanged();
     }
 
