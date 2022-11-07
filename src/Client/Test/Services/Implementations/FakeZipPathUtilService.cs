@@ -2,7 +2,7 @@
 
 namespace Functionland.FxFiles.Client.Test.Services.Implementations;
 
-public class FakePathUtilService : PathUtilService
+public class FakeZipPathUtilService : ZipPathUtilService
 {
     public override string GetZipEntryPath(string itemPath)
     {

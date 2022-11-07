@@ -442,5 +442,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         {
             throw new NotImplementedException();
         }
+
+        public string GetShowablePath(string artifactPath)
+        {
+            return artifactPath;
+        }
     }
 }

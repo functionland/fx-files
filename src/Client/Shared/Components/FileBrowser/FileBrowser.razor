@@ -141,7 +141,7 @@
 
             @if (_currentArtifact != null)
             {
-                <FxBreadcrumbs Artifact="_currentArtifact"></FxBreadcrumbs>
+                <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
             }
 
             @if (IsInRoot(_currentArtifact) && _isInSearch is false)
@@ -271,4 +271,5 @@
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
             OnExtract="HandleExtractArtifactAsync"
+            OnBack="FileViewerBack"
             FileViewerResult="FileViewerResult" />

@@ -3,6 +3,7 @@
     public partial class FxBreadcrumbs
     {
         [Parameter] public FsArtifact? Artifact { get; set; }
+        [Parameter] public IFileService? FileService { get; set; }
 
         private string[] _breadCrumbsPath = Array.Empty<string>();
 
@@ -23,16 +24,16 @@
 
         private void LoadBreadCrumbsPath()
         {
-            if (Artifact == null)
+            if (Artifact == null || FileService is null)
                 return;
 
             if (_breadCrumbsPath.Length == 0)
             {
-                _breadCrumbsPath = Artifact.ShowablePath.Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
+                _breadCrumbsPath = FileService.GetShowablePath(Artifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
                 StateHasChanged();
                 return;
             }
-            _breadCrumbsPath = Artifact.ShowablePath.Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
+            _breadCrumbsPath = FileService.GetShowablePath(Artifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
         }
 
     }
