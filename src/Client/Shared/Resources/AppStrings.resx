@@ -657,4 +657,7 @@
   <data name="FileNotFoundException" xml:space="preserve">
     <value>The zip file dose not found.</value>
   </data>
+  <data name="SettingPageAppTitle" xml:space="preserve">
+    <value>Fx Files by Functionland</value>
+  </data>
 </root>
