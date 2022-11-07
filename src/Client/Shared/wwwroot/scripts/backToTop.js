@@ -89,10 +89,10 @@ function breadCrumbStyle() {
             startEllipsis.style.display = "none";
             endEllipsis.classList.add("color-changer");
         }
-        
+
         if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
             endEllipsis.classList.add("color-changer");
             endEllipsis.style.display = "block";
         }
-    })
+    });
 }
