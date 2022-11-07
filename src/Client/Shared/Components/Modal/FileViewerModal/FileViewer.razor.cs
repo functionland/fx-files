@@ -11,7 +11,8 @@ public partial class FileViewer
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
     [AutoInject] public INativeNavigation NativeNavigation { get; set; } = default!;
-    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?>> OnExtract { get; set; }
+    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?, string?>> OnExtract { get; set; }
+    [Parameter] public FileViewerResultType FileViewerResult { get; set; }
 
     public bool IsModalOpen { get; set; } = false;
 
@@ -33,7 +34,7 @@ public partial class FileViewer
             IsModalOpen = true;
         }
 
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         return true;
     }
 

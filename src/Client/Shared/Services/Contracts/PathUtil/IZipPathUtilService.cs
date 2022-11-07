@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
-public interface IPathUtilService
+public interface IZipPathUtilService
 {
     string GetZipEntryPath(string itemPath);
 

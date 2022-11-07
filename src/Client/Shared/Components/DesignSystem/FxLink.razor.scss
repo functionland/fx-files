@@ -10,14 +10,16 @@
     line-height: $line-height-16;
     letter-spacing: $letter-spacing-02;
     display: flex;
+    cursor: pointer;
 
     &:hover {
+        transition: color 100ms linear; 
         color: $green-dark-hover;
     }
 
     &:active {
         color: $green-dark-pressed;
-        transition: color 100ms linear;
+        transition: color 200ms linear;
     }
 }
 

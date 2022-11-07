@@ -62,6 +62,8 @@ public partial class FileBrowser
                     FileWatchService.WatchArtifact(_currentArtifactValue);
                 }
             }
+
+            ArtifactState.CurrentMyDeviceArtifact = _currentArtifact;
         }
     }
 
@@ -71,7 +73,7 @@ public partial class FileBrowser
     private List<FsArtifact> _selectedArtifacts = new();
     private FileCategoryType? _fileCategoryFilter;
 
-    private Tuple<FsArtifact, List<FsArtifact>?, string?>? _extractTuple;
+    private Tuple<FsArtifact, List<FsArtifact>?, string?, string?>? _extractTuple;
 
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
@@ -91,16 +93,18 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
+    private FileViewerResultType FileViewerResult { get; set; }
 
-    [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
+    [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
+    [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IZipService ZipService { get; set; } = default!;
+    [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
-    [Parameter] public InMemoryAppStateStore ArtifactState { get; set; } = default!;
     [Parameter] public string? DefaultPath { get; set; }
 
     protected override async Task OnInitAsync()
@@ -111,12 +115,23 @@ public partial class FileBrowser
                                HandleChangedArtifacts,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
+
+
         Task PinTask = LoadPinsAsync();
         Task ArtifactListTask;
 
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
-            ArtifactListTask = LoadChildrenArtifactsAsync();
+            var preArtifact = ArtifactState.CurrentMyDeviceArtifact;
+            if (preArtifact is null)
+            {
+                ArtifactListTask = LoadChildrenArtifactsAsync();
+            }
+            else
+            {
+                _currentArtifact = preArtifact;
+                ArtifactListTask = LoadChildrenArtifactsAsync(preArtifact);
+            }
         }
         else
         {
@@ -132,6 +147,16 @@ public partial class FileBrowser
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            HandleIntentReceiver();
+
+            _ = EventAggregator
+                           .GetEvent<IntentReceiveEvent>()
+                           .Subscribe(
+                               HandleIntentReceiver,
+                               ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+        }
         if (_isInSearch && isFirstTimeInSearch)
         {
             await JSRuntime.InvokeVoidAsync("SearchInputFocus");
@@ -639,13 +664,17 @@ public partial class FileBrowser
     }
 
     // TODO: change tuple item for real names.
-    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?, string?> extractTuple)
+    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?, string?, string?> extractTuple)
     {
         var artifact = extractTuple.Item1;
         var innerArtifacts = extractTuple.Item2;
-        //TODO: check if current path is null
         var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
-        if (_inputModalRef is null) return;
+        var artifactPassword = extractTuple.Item4;
+        if (_inputModalRef is null)
+        {
+            FileViewerResult = FileViewerResultType.Cancel;
+            return;
+        }
 
         var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
         var createFolder = Localizer.GetString(AppStrings.FolderName);
@@ -657,28 +686,48 @@ public partial class FileBrowser
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
             //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
-            if ((result?.ResultType) != InputModalResultType.Confirm) return;
+            if (result?.ResultType == InputModalResultType.Cancel)
+            {
+                FileViewerResult = FileViewerResultType.Cancel;
+                return;
+            }
 
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
-                await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName, innerArtifacts: innerArtifacts);
+                if (destinationDirectory != null)
+                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
+                        artifactPassword, innerArtifacts);
             }
             catch (InvalidPasswordException)
             {
-                if (_passwordModalRef is null) return;
+                if (_passwordModalRef is null)
+                {
+                    FileViewerResult = FileViewerResultType.Cancel;
+                    return;
+                }
 
                 var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
                 var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
                 var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
-                if (passwordResult?.ResultType == InputModalResultType.Confirm)
+                if (passwordResult?.ResultType == InputModalResultType.Cancel)
                 {
-                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName, passwordResult.Result, innerArtifacts);
+                    FileViewerResult = FileViewerResultType.Cancel;
+                    return;
                 }
+
+                if (destinationDirectory != null)
+                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
+                        passwordResult?.Result, innerArtifacts);
             }
 
-            var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
-            await NavigateToDestionation(destinationPath);
+            if (destinationDirectory != null)
+            {
+                var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
+                await NavigateToDestionation(destinationPath);
+            }
+
+            FileViewerResult = FileViewerResultType.Success;
         }
         catch (Exception exception)
         {
@@ -724,7 +773,10 @@ public partial class FileBrowser
             if (duplicateCount <= 0) return;
 
             if (_confirmationReplaceOrSkipModalRef == null)
+            {
+                FileViewerResult = FileViewerResultType.Cancel;
                 return;
+            }
 
             var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
             List<FsArtifact> overwriteArtifacts = new();
@@ -978,7 +1030,7 @@ public partial class FileBrowser
             case ArtifactOverflowResultType.Extract:
                 if (artifact != null)
                 {
-                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(artifact, null, null);
+                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(artifact, null, null, null);
                 }
 
                 if (_extractTuple != null)
@@ -1006,7 +1058,7 @@ public partial class FileBrowser
     public void ChangeViewMode()
     {
         var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
-        ArtifactState.SetViewMode(viewMode);
+        ArtifactState.ViewMode = viewMode;
         StateHasChanged();
     }
 
@@ -1082,7 +1134,7 @@ public partial class FileBrowser
                 break;
             case ArtifactOverflowResultType.Extract:
 
-                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(artifacts.First(), null, null);
+                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(artifacts.First(), null, null, null);
 
                 if (_extractTuple != null)
                 {
@@ -1828,5 +1880,26 @@ public partial class FileBrowser
         {
             await _fileViewerRef.HandleBackAsync();
         }
+    }
+
+    private void HandleIntentReceiver(IntentReceiveEvent? intentReceiveEvent = null)
+    {
+        if (IntentHolder.FileUrl is null || _fileViewerRef is null)
+            return;
+
+        var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
+        _currentArtifact = artifact;
+        IntentHolder.FileUrl = null;
+        _ = _fileViewerRef.OpenArtifact(artifact);
+    }
+
+    private async Task FileViewerBack()
+    {
+        if (_currentArtifact?.ParentFullPath is not null && _currentArtifact.ArtifactType == FsArtifactType.File)
+        {
+            var artifact = await FileService.GetArtifactAsync(_currentArtifact.ParentFullPath);
+            _currentArtifact = artifact;
+        }
+        await OnInitAsync();
     }
 }

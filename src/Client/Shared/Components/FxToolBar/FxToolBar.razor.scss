@@ -129,3 +129,70 @@
         }
     }
 }
+
+::deep .animate-button {
+    position: relative;
+    color: red !important;
+}
+
+::deep .animate-button:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    margin-top: -60px;
+    background-color: #038082;
+    border-radius: 100%;
+    opacity: 0.6;
+    transform: scale(0);
+}
+
+::deep .animate-button:not(:active):after {
+    animation: ripple 300ms ease-in-out 1ms;
+}
+
+::deep .animate-button:after {
+    visibility: hidden;
+}
+
+::deep .animate-button:focus:after {
+    visibility: visible;
+}
+
+::deep .animate-button:hover {
+    transition: background 100ms ease-in;
+    background: $green-dark-hover !important;
+}
+
+::deep .animate-button:active {
+    transition: background 200ms ease-in;
+    background: $green-dark-pressed !important;
+}
+
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+    }
+
+    25% {
+        transform: scale(0.25);
+    }
+
+    50% {
+        transform: scale(0.5);
+    }
+
+    75% {
+        transform: scale(0.75);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
