@@ -47,7 +47,9 @@
 							<uap:FileType ContentType="application/zip">.zip</uap:FileType>
 							<uap:FileType ContentType="application/x-rar-compressed">.rar</uap:FileType>
 
+							<!--TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.-->
 							<!--VIDEO-->
+							<!--
 							<uap:FileType ContentType="video/*">.mp4</uap:FileType>
 							<uap:FileType ContentType="video/*">.avi</uap:FileType>
 							<uap:FileType ContentType="video/*">.wmv</uap:FileType>
@@ -88,6 +90,7 @@
 							<uap:FileType ContentType="video/*">.mp2</uap:FileType>
 							<uap:FileType ContentType="video/*">.mpe</uap:FileType>
 							<uap:FileType ContentType="video/*">.mpv</uap:FileType>
+							-->
 
 							<!--TXT-->
 							<uap:FileType ContentType="text/*">.txt</uap:FileType>
