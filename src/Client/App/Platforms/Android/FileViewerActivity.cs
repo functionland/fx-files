@@ -24,7 +24,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
        
         //TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.
         //"video/*" 
-        "text/plain"
+       
+        "text/plain",
+        "image/*"
 
     })]
 public class FileViewerActivity : MainActivity
