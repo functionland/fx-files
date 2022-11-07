@@ -17,7 +17,15 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
     DataHost = "*",
     DataSchemes = new[] { "file", "content" },
     Categories = new[] { Intent.ActionView, Intent.CategoryDefault, Intent.CategoryBrowsable },
-    DataMimeTypes = new[] { "application/zip", "application/x-rar-compressed", "video/*" })]
+    DataMimeTypes = new[] 
+    {
+        "application/zip", 
+        "application/x-rar-compressed", 
+       
+        //TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.
+        //"video/*" 
+
+    })]
 public class FileViewerActivity : MainActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
