@@ -5,8 +5,8 @@
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
     <div class="sticky-header">
         <div class="select-destination-header">
-            <div class="close-btn" @onclick="(() => Close())"></div>
-
+            <FxBackButton IsEnabled="_currentArtifact!=null" OnClick="Back"></FxBackButton>
+            <div class="close-btn" @onclick="Close"></div>
         </div>
 
         <div class="select-destination-container">
@@ -20,10 +20,10 @@
             </div>
 
             <FxButton Width="40px"
-              Height="40px"
-              OnClick="CreateFolder"
-              ButtonStyle="FxButtonStyle.IconOnly"
-              LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
+                      Height="40px"
+                      OnClick="CreateFolder"
+                      ButtonStyle="FxButtonStyle.IconOnly"
+                      LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
 
         </div>
 
@@ -31,8 +31,8 @@
         {
             <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
         }
-    
-        <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerSize="FxDividerSize.Thin" FxDividerType="FxDividerType.Horizontal"/>
+
+        <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerSize="FxDividerSize.Thin" FxDividerType="FxDividerType.Horizontal" />
 
     </div>
 
