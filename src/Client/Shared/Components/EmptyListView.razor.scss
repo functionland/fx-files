@@ -3,11 +3,12 @@
 
 .empty-list-view {
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: $spacing-120 $spacing-21;
+    padding: $spacing-0 $spacing-21;
 }
 
 .empty-list-title {
