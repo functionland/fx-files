@@ -13,6 +13,10 @@
     margin: $spacing-0 $spacing-0 $spacing-21;
 }
 
+::deep .fxbutton {
+    align-self: flex-end;
+}
+
 .select-destination-header {
     display: flex;
     justify-content: space-between;
