@@ -59,6 +59,10 @@
 
 }
 
+::deep .back-button-space {
+    margin-right: $spacing-8;
+}
+
 .not-root-mode {
     width: 100%;
 

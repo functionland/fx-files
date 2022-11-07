@@ -2,4 +2,4 @@
 
 @inherits AppComponentBase;
 
-<div class="back-button @(IsEnabled ? "" : "back-button-disable")" @onclick="@OnClick"></div>
+<div class="back-button @(!string.IsNullOrWhiteSpace(Class) ? Class : "") @(IsEnabled ? "" : "back-button-disable")" @onclick="@OnClick"></div>

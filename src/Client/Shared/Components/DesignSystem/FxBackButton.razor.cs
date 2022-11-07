@@ -9,4 +9,7 @@ public partial class FxBackButton
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
 }
