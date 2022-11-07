@@ -33,7 +33,7 @@ public partial class FileViewer
             IsModalOpen = true;
         }
 
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         return true;
     }
 

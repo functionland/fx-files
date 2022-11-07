@@ -95,6 +95,7 @@ public partial class FileBrowser
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IZipService ZipService { get; set; } = default!;
+    [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
@@ -110,6 +111,13 @@ public partial class FileBrowser
                            .Subscribe(
                                HandleChangedArtifacts,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+
+
+        _ = EventAggregator
+                       .GetEvent<IntentReceiveEvent>()
+                       .Subscribe(
+                           HandleIntentReceiver,
+                           ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
         Task PinTask = LoadPinsAsync();
         Task ArtifactListTask;
@@ -1828,5 +1836,15 @@ public partial class FileBrowser
         {
             await _fileViewerRef.HandleBackAsync();
         }
+    }
+
+    private void HandleIntentReceiver(IntentReceiveEvent intentReceiveEvent)
+    {
+        if (IntentHolder.FileUrl is null || _fileViewerRef is null)
+            return;
+
+        var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
+        IntentHolder.FileUrl = null;
+        _ = _fileViewerRef.OpenArtifact(artifact);
     }
 }
