@@ -9,7 +9,6 @@ public partial class ArtifactExplorer
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
 
-
     private List<FsArtifact> _artifacts = default!;
     [Parameter]
     public List<FsArtifact> Artifacts
@@ -24,6 +23,7 @@ public partial class ArtifactExplorer
             }
         }
     }
+
     [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
     [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
     [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
@@ -42,6 +42,7 @@ public partial class ArtifactExplorer
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public bool IsInZipMode { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
+
     public PathProtocol Protocol =>
         FileService switch
         {
@@ -62,6 +63,8 @@ public partial class ArtifactExplorer
     private int _gridRowCount = 2;
 
     private bool _isArtifactsChanged;
+
+    private string _resizeEventListenerId = string.Empty;
 
     private DotNetObjectReference<ArtifactExplorer>? _objectReference;
     (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
@@ -108,6 +111,12 @@ public partial class ArtifactExplorer
         WindowWidth = windowWidth;
         UpdateGridRowCount(WindowWidth);
         StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void SetResizeEventListenerId(string id)
+    {
+        _resizeEventListenerId = id;
     }
 
     private async Task InitWindowWidthListener()
@@ -449,7 +458,7 @@ public partial class ArtifactExplorer
 
     public void Dispose()
     {
-        JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _objectReference);
+        JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
         _objectReference?.Dispose();
     }
 }
