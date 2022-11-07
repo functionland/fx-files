@@ -433,13 +433,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         }
 
         private async Task<List<FsArtifact>> MoveAllAsync(
-          IList<FsArtifact> artifacts,
-          string destination,
-          bool overwrite = false,
-          List<FsArtifact>? ignoredList = null,
-          Func<ProgressInfo, Task>? onProgress = null,
-          bool shouldProgress = true,
-          CancellationToken? cancellationToken = null)
+            IList<FsArtifact> artifacts,
+            string destination,
+            bool overwrite = false,
+            List<FsArtifact>? ignoredList = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            bool shouldProgress = true,
+            CancellationToken? cancellationToken = null)
         {
             int? progressCount = null;
 
@@ -640,7 +640,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual void LocalStorageMoveFile(string filePath, string newPath)
         {
-            File.Move(filePath, newPath, true);
+            try
+            {
+                File.Move(filePath, newPath, true);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
         }
 
         protected virtual void LocalStorageRenameFile(string filePath, string newPath)
@@ -650,13 +657,27 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual void LocalStorageCopyFile(string sourceFile, string destinationFile)
         {
-            File.Copy(sourceFile, destinationFile, true);
+            try
+            {
+                File.Copy(sourceFile, destinationFile, true);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
         }
 
         protected virtual async Task LocalStorageCreateFile(string path, Stream stream)
         {
-            using FileStream outPutFileStream = new(path, FileMode.Create);
-            await stream.CopyToAsync(outPutFileStream);
+            try
+            {
+                using FileStream outPutFileStream = new(path, FileMode.Create);
+                await stream.CopyToAsync(outPutFileStream);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
         }
 
         protected virtual void LocalStorageRenameDirectory(string folderPath, string newPath)
