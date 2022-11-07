@@ -5,7 +5,7 @@
 <div class="fx-breadcrumbs">
     <span class="start-ellipsis">...</span>
 
-    @if (_breadCrumbsPath != null)
+    @if (_breadCrumbsPath.Length > 0)
     {
         @foreach (var path in _breadCrumbsPath)
         {

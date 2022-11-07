@@ -29,6 +29,7 @@ public static class IServiceCollectionExtensions
             serviceProvider => serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
         );
         services.AddSingleton<IFileWatchService, FakeFileWatchService>();
+        services.AddSingleton<IPathUtilService, FakePathUtilService>();
 
         var cacheDirectory = Path.Combine(testContext.TestDir, "TestCache");
         Directory.CreateDirectory(cacheDirectory);

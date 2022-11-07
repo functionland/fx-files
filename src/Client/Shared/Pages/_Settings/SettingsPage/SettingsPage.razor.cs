@@ -5,7 +5,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages;
 public partial class SettingsPage
 {
     [AutoInject] private ThemeInterop ThemeInterop = default!;
-    [AutoInject] private InMemoryAppStateStore AppState { get; set; } = default!;
+    [AutoInject] private IAppStateStore AppState { get; set; } = default!;
 
     private FxTheme DesiredTheme { get; set; }
     private string? CurrentTheme { get; set; }
@@ -46,6 +46,7 @@ public partial class SettingsPage
             AppState.SetAvailableForTest(true);
         }
     }
+
     private void GetAppVersion()
     {
 #if BlazorHybrid

@@ -2,6 +2,7 @@
 
 namespace Functionland.FxFiles.Client.Shared.Exceptions;
 
+[Serializable]
 public class PasswordDidNotMatchedException : DomainLogicException
 {
     public PasswordDidNotMatchedException(string message) : base(message)
