@@ -7,11 +7,6 @@
 
         private string[] _breadCrumbsPath = Array.Empty<string>();
 
-        protected override async Task OnInitAsync()
-        {
-            await base.OnInitAsync();
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
