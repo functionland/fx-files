@@ -20,6 +20,9 @@ public static class IiOSServiceCollectionExtensions
         services.AddSingleton<IFileWatchService, IosFileWatchService>();
 
         services.AddSingleton<IFileCacheService, IosFileCacheService>();
+
+        services.AddSingleton<IZipPathUtilService, IosZipPathUtilService>();
+
         return services;
     }
 }

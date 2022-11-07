@@ -70,6 +70,15 @@
     }
 }
 
+.item-container:active {
+    background-color: color(gray-hover);
+    transition: background 200ms linear;
+
+    .item-icon-position {
+        background-color: var(--gray-bg-secondary) !important;
+        transition: background 200ms linear !important;
+    }
+}
 
 .item-content {
 
@@ -106,6 +115,12 @@
     text-align: center;
 }
 
+.extract-btn {
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+}
+
 .list-view {
     padding: 16px 0;
 }
@@ -116,9 +131,22 @@
     align-items: center;
     flex-flow: row nowrap;
 
-/*    .check-box-position {
-        margin-right: 16px;
-    }*/
+    .check-box-mobile {
+        position: absolute;
+    }
+
+    .item-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        overflow: hidden;
+        transition: margin 250ms linear;
+    }
+
+    .selection-mode-style {
+        margin-left: 36px;
+    }
 
     .icon-box {
         display: flex;
@@ -199,6 +227,10 @@
         @include Icon($options-vertical);
     }
 
+    .extract-btn::before {
+        @include Icon($extract);
+    }
+
     .item-content {
         flex-grow: 1;
         overflow: hidden;
@@ -247,6 +279,21 @@
         left: 9px;
     }
 
+    .check-box-mobile {
+        position: absolute;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: opacity 300ms linear, height 0ms linear 300ms;
+    }
+
+    .selection-mode-style {
+        height: 20px;
+        opacity: 1;
+        transition: opacity 300ms linear, height 0ms linear 300ms;
+    }
+
+
     .icon-box {
         background-color: color(gray-bg-primary);
         height: 86px;
@@ -255,6 +302,7 @@
 
         .item-icon-position {
             font-size: $icon-56;
+            height: 86px;
 
             &::before {
                 color: color(gray-content3);
@@ -418,6 +466,11 @@
 .app-file-icon::before {
     @include Icon($app);
 }
+
+.zip-file-icon::before {
+    @include Icon($zip-file);
+}
+
 /*.select-action {
     display: flex;
     height: 40px;
@@ -532,4 +585,8 @@
 
 .checkbox-display-none {
     display: none;
+}
+
+.overflosw-hidden {
+    overflow: hidden !important;
 }

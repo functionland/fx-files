@@ -78,4 +78,14 @@ public partial class FulaFileService : IFulaFileService
     {
         throw new NotImplementedException();
     }
+
+    public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string GetShowablePath(string artifactPath)
+    {
+        throw new NotImplementedException();
+    }
 }

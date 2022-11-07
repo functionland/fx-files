@@ -583,6 +583,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to External storage.
+        /// </summary>
+        public static string ExternalStorageName {
+            get {
+                return ResourceManager.GetString("ExternalStorageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extract.
         /// </summary>
         public static string Extract {
@@ -601,7 +610,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extract in current location.
+        ///   Looks up a localized string similar to Extract here.
         /// </summary>
         public static string ExtractHere {
             get {
@@ -651,6 +660,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string FileAlreadyExistsException {
             get {
                 return ResourceManager.GetString("FileAlreadyExistsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The zip file dose not found..
+        /// </summary>
+        public static string FileNotFoundException {
+            get {
+                return ResourceManager.GetString("FileNotFoundException", resourceCulture);
             }
         }
         
@@ -732,6 +750,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string FolderRenamePlaceholder {
             get {
                 return ResourceManager.GetString("FolderRenamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder size.
+        /// </summary>
+        public static string FolderSize {
+            get {
+                return ResourceManager.GetString("FolderSize", resourceCulture);
             }
         }
         
@@ -853,7 +880,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1} not supported..
+        ///   Looks up a localized string similar to Zip file not supported: {0}.
         /// </summary>
         public static string InvalidZipExtensionException {
             get {
@@ -1038,6 +1065,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string Night {
             get {
                 return ResourceManager.GetString("Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not supported encrypted file.
+        /// </summary>
+        public static string NotSupportedEncryptedFileException {
+            get {
+                return ResourceManager.GetString("NotSupportedEncryptedFileException", resourceCulture);
             }
         }
         

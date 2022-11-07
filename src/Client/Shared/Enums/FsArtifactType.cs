@@ -2,8 +2,8 @@
 {
     public enum FsArtifactType
     {
-        File,
-        Folder,
-        Drive
+        File = 1,
+        Folder = 2,
+        Drive = 3
     }
 }

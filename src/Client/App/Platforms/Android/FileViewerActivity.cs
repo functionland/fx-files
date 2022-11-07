@@ -5,6 +5,8 @@ using Android.Database;
 using Android.OS;
 using Android.Provider;
 using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Common;
+using Prism.Events;
 using android = Android;
 using Uri = Android.Net.Uri;
 
@@ -15,8 +17,19 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
     DataHost = "*",
     DataSchemes = new[] { "file", "content" },
     Categories = new[] { Intent.ActionView, Intent.CategoryDefault, Intent.CategoryBrowsable },
-    DataMimeTypes = new[] { "application/zip", "application/x-rar-compressed" })]
-public class ZipViewActivity : MainActivity
+    DataMimeTypes = new[] 
+    {
+        "application/zip", 
+        "application/x-rar-compressed", 
+       
+        //TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.
+        //"video/*" 
+       
+        "text/plain",
+        "image/*"
+
+    })]
+public class FileViewerActivity : MainActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {
@@ -25,7 +38,9 @@ public class ZipViewActivity : MainActivity
         var uri = Uri.Parse(Intent.DataString);
         var path = GetActualPathFromFile(uri);
         var intentHolder = MauiApplication.Current.Services.GetRequiredService<IntentHolder>();
+        var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
         intentHolder.FileUrl = path;
+        eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
     }
     private string? GetActualPathFromFile(Uri uri)
     {

@@ -1,2 +1,167 @@
-﻿body {
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.navigation-header {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: $spacing-8 $spacing-21;
+    position: relative;
+    z-index: 1;
+
+    ::deep .back-button::before {
+        font-size: $icon-24;
+        vertical-align: middle;
+        @include Icon($arrow-left,$color:color(gray-content1));
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: $spacing-8 $spacing-21;
+
+    .artifact-title {
+        font-family: $montserrat-medium;
+        font-style: normal;
+        font-weight: 600;
+        font-size: $font-size-24;
+        line-height: $line-height-36;
+        color: color(gray-content1);
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex;
+        justify-content: start;
+        display: block;
+    }
+
+    .extract-button {
+        display: flex;
+        justify-content: end;
+        flex-grow: 1;
+    }
+}
+
+.artifact-list{
+    height:100%;
+}
+
+
+::deep .list-view {
+    padding: $spacing-0;
+}
+
+.action-header {
+    position: relative;
+
+    .list-header {
+        display: flex;
+        align-items: center;
+        padding: $spacing-8 $spacing-21;
+        height: 40px;
+
+        .action-btn {
+            cursor: pointer;
+        }
+
+        .select-all-btn {
+            margin-left: auto;
+
+            &::before {
+                @include Icon($select, color(gray-content3));
+                font-size: $icon-24;
+            }
+        }
+
+        .select-all-filled::before {
+            font-size: $icon-24;
+            @include Icon($selected, $green-dark-base);
+        }
+    }
+
+    .divider {
+        padding: $spacing-0 $spacing-21;
+    }
+
+    .select-action {
+        display: flex;
+        min-height: 40px;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $green-dark-base;
+        padding: $spacing-0 $spacing-31 $spacing-0 $spacing-21;
+        z-index: 2;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 300ms linear;
+
+        .info-selection {
+            display: flex;
+            align-items: center;
+
+            .close-btn {
+                cursor: pointer;
+
+                &::before {
+                    font-size: $icon-16;
+                    @include Icon($close, $pure-white);
+                }
+            }
+
+            .item-selected {
+                margin-left: $spacing-6;
+
+                .move-selected-items-text,
+                .item-selected-count,
+                .item-selected-text {
+                    font-size: $font-size-14;
+                    line-height: $line-height-24;
+                    font-family: $open-sans-regular;
+                    letter-spacing: $letter-spacing-02;
+                    color: $pure-white;
+                }
+            }
+        }
+
+        .right-part {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .extract-btn::before {
+                cursor: pointer;
+                font-size: $icon-24;
+                @include Icon($extract, $pure-white);
+            }
+        }
+    }
+
+    .show-selected-item {
+        opacity: 1;
+        height: 40px;
+    }
+
+    .hide-selected-item {
+        transition: opacity 300ms linear, height 0ms linear 300ms;
+        opacity: 0;
+        height: 0;
+    }
+
+    .z-index-header {
+        z-index: 100;
+        position: relative;
+    }
 }

@@ -2,4 +2,72 @@
 @inherits AppComponentBase
 
 
-<h1>@CurrentArtifact?.FullPath</h1>
+<div class="navigation-header">
+    <FxButton OnClick="()=>HandleBackAsync()"
+              Class="back-button"
+              Padding="8px 16px 8px 0px"
+              BackgroundColor="transparent"
+              IsVisible="true"
+              ButtonStyle="FxButtonStyle.None" />
+</div>
+
+<div class="header">
+    <div class="artifact-title">
+        @CurrentArtifact?.Name
+    </div>
+    <div class="extract-button">
+        <FxButton OnClick="@HandleExtractCurrentArtifactAsync"
+                  IsVisible="@(ArtifactExplorerMode == ArtifactExplorerMode.Normal && _currentInnerZipArtifact.FullPath== string.Empty)"
+                  Text="Extract"
+                  ButtonStyle="FxButtonStyle.Normal"
+                  LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/extract.svg" />
+    </div>
+</div>
+
+
+
+<div class="action-header">
+    <div class="list-header @(ArtifactExplorerMode == ArtifactExplorerMode.Normal ? "z-index-header" : "")">
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+        @if (_displayedArtifacts.Count > 0)
+        {
+            <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>
+        }
+    </div>
+    <div class="divider">
+        <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerType="FxDividerType.Horizontal" FxDividerSize="FxDividerSize.Thin"></FxDivider>
+    </div>
+    <div class="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") select-action">
+        <div class="info-selection">
+            <div class="close-btn" @onclick="CancelSelectionMode"></div>
+            <div class="item-selected">
+                <span class="item-selected-count">@_selectedArtifacts.Count</span>
+                <span class="item-selected-text">items selected</span>
+            </div>
+        </div>
+
+        <div class="right-part">
+            @if (_selectedArtifacts.Count > 0)
+            {
+                <div class="icons-action extract-btn" @onclick="(() => HandleExtractArtifactsAsync(_selectedArtifacts))"></div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<ArtifactExplorer Artifacts="_displayedArtifacts"
+                  FileService="FileService"
+                  CurrentArtifact="CurrentArtifact"
+                  OnSelectArtifact="HandleArtifactClick"
+                  HandleBack="()=>HandleBackAsync()"
+                  IsInZipMode="true"
+                  OnZipArtifactClick="HandleExtractArtifactAsync"
+                  IsInSearchMode="false"
+                  ThumbnailService="ThumbnailService"
+                  @bind-SelectedArtifacts="_selectedArtifacts"
+                  @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+
+
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
+<InputModal @ref="_passwordModalRef" />

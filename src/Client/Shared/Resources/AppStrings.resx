@@ -598,7 +598,7 @@
     <value>Delete</value>
   </data>
   <data name="ExtractHere" xml:space="preserve">
-    <value>Extract in current location</value>
+    <value>Extract here</value>
   </data>
   <data name="MoveTo" xml:space="preserve">
     <value>Move to</value>
@@ -616,7 +616,7 @@
     <value>Select destination</value>
   </data>
   <data name="InvalidZipExtensionException" xml:space="preserve">
-    <value>{1} not supported.</value>
+    <value>Zip file not supported: {0}</value>
   </data>
   <data name="FolderName" xml:space="preserve">
     <value>Folder name</value>
@@ -647,5 +647,17 @@
   </data>
   <data name="FxFiles" xml:space="preserve">
     <value>Fx Files</value>
+  </data>
+  <data name="FolderSize" xml:space="preserve">
+    <value>Folder size</value>
+  </data>
+  <data name="ExternalStorageName" xml:space="preserve">
+    <value>External storage</value>
+  </data>
+  <data name="NotSupportedEncryptedFileException" xml:space="preserve">
+    <value>Not supported encrypted file</value>
+  </data>
+  <data name="FileNotFoundException" xml:space="preserve">
+    <value>The zip file dose not found.</value>
   </data>
 </root>

@@ -25,11 +25,15 @@
     margin: 0;
 }
 
+::deep .bit-acd .header .header-icon {
+    transition: transform 300ms linear;
+}
+
 ::deep .bit-acd .header.expanded .header-icon {
     transition: .2s;
     font-weight: bold;
     font-size: $font-size-18;
-    transform: rotate(360deg);
+    transform: rotate(180deg);
 }
 
 ::deep .bit-acd .header.collapsed {
@@ -41,55 +45,97 @@
 ::deep .bit-acd .header.collapsed .header-icon {
     transition: .2s;
     font-weight: bold;
-    transform: rotate(270deg);
+    transform: rotate(360deg);
+}
+
+::deep .bit-acd .content {
+    transition: opacity 200ms linear, height 300ms linear;
 }
 
 ::deep .bit-acd .content.collapsed {
-    display: none;
+    height: 0px;
+    opacity: 0;
+    animation-name: none;
+    animation-duration: 0s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
 }
 
 ::deep .bit-acd .content.expanded {
-    display: inline-grid;
+    //height: 300px;
+    opacity: 1;
+    animation-name: none;
+    animation-duration: 0s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
     padding: $spacing-8 $spacing-0;
     margin: $spacing-0;
 }
 
-::deep .bit-acd .content.expanded::-webkit-scrollbar {
-    height: 6px;
-}
+    ::deep .bit-acd .content.expanded::-webkit-scrollbar {
+        height: 6px;
+    }
 
-::deep .bit-acd .content.expanded .items {
-    display: flex;
-    overflow-y: unset;
-    max-height: 230px;
-    flex-direction: row;
-    white-space: nowrap;
-    scroll-behavior: smooth;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+::deep .bit-acd .content .items {
     padding: 0 $spacing-16;
 }
 
-::deep .bit-acd .title-description-wrapper .title {
-    font-family: $montserrat-semi-bold;
-    font-size: $font-size-18;
-    line-height: $line-height-24;
-}
 
-::deep .pin-empty-style {
-    .header {
+    ::deep .bit-acd .content.expanded .items {
+        display: flex;
+        overflow-y: unset;
+        max-height: 230px;
+        flex-direction: row;
+        white-space: nowrap;
+        scroll-behavior: smooth;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        
+    }
 
-        .title-description-wrapper {
-            .title {
+    ::deep .bit-acd .title-description-wrapper .title {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+    }
+
+    ::deep .pin-empty-style {
+        .header {
+            pointer-events: none;
+
+            .title-description-wrapper {
+                .title {
+                    color: color(input-disable);
+                    font-family: $montserrat-semi-bold;
+                    font-size: $font-size-18;
+                    line-height: $line-height-24;
+                }
+            }
+
+            .header-icon {
                 color: color(input-disable);
-                font-family: $montserrat-semi-bold;
-                font-size: $font-size-18;
-                line-height: $line-height-24;
             }
         }
+    }
 
-        .header-icon {
-            color: color(input-disable);
-        }
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: .5;
+    }
+
+    100% {
+        opacity: 1;
     }
 }

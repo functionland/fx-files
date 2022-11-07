@@ -11,6 +11,7 @@
     width: 100%;
     display: flex;
     position: absolute;
+    top: 0;
     justify-content: center;
     align-items: center;
     background-color: color(app-bg);
@@ -26,12 +27,21 @@
     z-index: 50;
 }
 
+.fx-loading-sppiner {
+    background-image: url(images/Loading/Loading.svg);
+    background-repeat: no-repeat;
+    background-size: 55px;
+    background-position: center;
+    height: 44px;
+    width: 44px;
+}
+
 .fx-loading-dots-ring {
     display: inline-block;
     position: absolute;
     width: 80px;
     height: 80px;
-    top: 50%;
+    top: 18%;
     left: 50%;
     transform: translate(-50%, -50%);
 
