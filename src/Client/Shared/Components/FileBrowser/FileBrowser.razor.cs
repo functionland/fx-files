@@ -4,10 +4,6 @@ using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
-using SharpCompress.Common;
-using System.Net;
-
-using System.Runtime.InteropServices;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -128,22 +124,19 @@ public partial class FileBrowser
             var filePath = Path.GetDirectoryName(DefaultPath);
             var defaultArtifact = await FileService.GetArtifactAsync(filePath);
             _currentArtifact = defaultArtifact;
-
         }
 
-        var pinTask = Task.Run(async () =>
+        _ = Task.Run(async () =>
         {
             await LoadPinsAsync();
             await InvokeAsync(() => StateHasChanged());
         });
-        var artifactListTask = Task.Run(async () =>
+        _ = Task.Run(async () =>
         {
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await InvokeAsync(() => StateHasChanged());
         });
-
-        _ = Task.WhenAll(pinTask, artifactListTask);
-
+        
         await base.OnInitAsync();
 
     }
