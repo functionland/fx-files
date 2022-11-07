@@ -4,18 +4,18 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 
 
-<div class="list-container @(!Artifacts.Any() || Artifacts == null ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+<div class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() || Artifacts == null ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (IsLoading)
     {
         <OverlayLoading LoadingType="LoadingType.Overlay" />
     }
     @if (((Artifacts == null) || (!Artifacts.Any())) && !IsLoading)
     {
-        if (!IsInSearchMode && !IsInZipMode)
+        if (!IsInSearchMode)
         {
             <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
                    Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null)" />
+                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsInZipMode==false)" />
         }
     }
     else

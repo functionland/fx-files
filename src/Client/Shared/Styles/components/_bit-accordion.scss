@@ -109,6 +109,7 @@
 
     ::deep .pin-empty-style {
         .header {
+            pointer-events: none;
 
             .title-description-wrapper {
                 .title {

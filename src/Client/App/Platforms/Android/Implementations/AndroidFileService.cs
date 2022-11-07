@@ -226,7 +226,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             throw new UnknownFsFileProviderException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
 
-    protected override string GetFolderOrDriveShowablePath(string artifactPath)
+    public override string GetShowablePath(string artifactPath)
     {
         if (artifactPath is null)
             throw new ArtifactPathNullException(nameof(artifactPath));

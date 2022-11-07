@@ -28,8 +28,11 @@
 
 <div class="action-header">
     <div class="list-header @(ArtifactExplorerMode == ArtifactExplorerMode.Normal ? "z-index-header" : "")">
-        <div>breadcrumb</div>
-        <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+        @if (_displayedArtifacts.Count > 0)
+        {
+            <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>
+        }
     </div>
     <div class="divider">
         <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerType="FxDividerType.Horizontal" FxDividerSize="FxDividerSize.Thin"></FxDivider>
@@ -53,17 +56,17 @@
 </div>
 
 
-    <ArtifactExplorer Artifacts="_displayedArtifacts"
-                      FileService="FileService"
-                      CurrentArtifact="CurrentArtifact"
-                      OnSelectArtifact="HandleArtifactClick"
-                      HandleBack="()=>HandleBackAsync()"
-                      IsInZipMode="true"
-                      OnZipArtifactClick="HandleExtractArtifactAsync"
-                      IsInSearchMode="false"
-                      ThumbnailService="ThumbnailService"
-                      @bind-SelectedArtifacts="_selectedArtifacts"
-                      @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+<ArtifactExplorer Artifacts="_displayedArtifacts"
+                  FileService="FileService"
+                  CurrentArtifact="CurrentArtifact"
+                  OnSelectArtifact="HandleArtifactClick"
+                  HandleBack="()=>HandleBackAsync()"
+                  IsInZipMode="true"
+                  OnZipArtifactClick="HandleExtractArtifactAsync"
+                  IsInSearchMode="false"
+                  ThumbnailService="ThumbnailService"
+                  @bind-SelectedArtifacts="_selectedArtifacts"
+                  @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
 
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />

@@ -2,29 +2,43 @@
 
 public partial class ZipViewer : IFileViewerComponent
 {
+    [AutoInject] private IZipService _zipService = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?>> OnExtract { get; set; }
+    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?, string?>> OnExtract { get; set; }
+    [Parameter] public FileViewerResultType FileViewerResult { get; set; }
 
-    [AutoInject] private IZipService _zipService = default!;
+    // Modals
+    private InputModal? _passwordModalRef;
+    private ArtifactSelectionModal? _artifactSelectionModalRef;
+
+    private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
+
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
+
 
     private FsArtifact _currentInnerZipArtifact =
         new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
 
     private string? _password = null;
-    private CancellationTokenSource _cancellationTokenSource = new();
-
 
     private List<FsArtifact> _displayedArtifacts = new();
+
     private List<FsArtifact> _selectedArtifacts = new();
+
     private List<FsArtifact> _allZipFileEntities = new();
 
-    private InputModal? _passwordModalRef;
-    private ArtifactSelectionModal? _artifactSelectionModalRef;
-
-    private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
+    protected override Task OnInitAsync()
+    {
+        GoBackService.OnInit((async Task () =>
+        {
+            await HandleBackAsync();
+            await Task.CompletedTask;
+        }), true, false);
+        return base.OnInitAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -45,13 +59,17 @@ public partial class ZipViewer : IFileViewerComponent
         try
         {
             await LoadAllArtifactsAsync();
-
             DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
-        catch (Exception e)
+        catch (NotSupportedEncryptedFileException)
+        {
+            FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)), Localizer.GetString(nameof(AppStrings.NotSupportedEncryptedFileException)), FxToastType.Error);
+            await HandleBackAsync(true);
+        }
+        catch (Exception)
         {
             await HandleBackAsync(true);
-            ExceptionHandler.Handle(e);
+            throw;
         }
     }
 
@@ -67,47 +85,61 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
     {
-        _displayedArtifacts = _allZipFileEntities.Where(a => a.ParentFullPath == artifact.FullPath).ToList();
+        _displayedArtifacts = (
+             from innerArtifact in _allZipFileEntities
+             where innerArtifact.ParentFullPath == artifact.FullPath
+             orderby artifact.ArtifactType descending, artifact.Name ascending
+             select innerArtifact
+        ).ToList();
     }
 
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
     {
-        if (CurrentArtifact != null)
+        var destinationPath = await GetDestinationPathAsync(artifacts);
+        if (CurrentArtifact != null && destinationPath != null)
         {
-            var destinationPath = await GetDestinationPathAsync();
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath);
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath, _password);
             await OnExtract.InvokeAsync(extractTuple);
+            if (FileViewerResult == FileViewerResultType.Success)
+            {
+                await HandleBackAsync(true);
+            }
         }
-
-        await HandleBackAsync(true);
     }
 
     private async Task HandleExtractArtifactAsync(FsArtifact artifact)
     {
-        var destinationPath = await GetDestinationPathAsync();
-        if (CurrentArtifact != null)
+        var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { artifact });
+        if (CurrentArtifact != null && destinationPath != null)
         {
             var singleArtifactList = new List<FsArtifact> { artifact };
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, singleArtifactList, destinationPath);
+            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, singleArtifactList, destinationPath, _password);
             await OnExtract.InvokeAsync(extractTuple);
+            if (FileViewerResult == FileViewerResultType.Success)
+            {
+                await HandleBackAsync(true);
+            }
         }
-
-        await HandleBackAsync(true);
     }
 
     private async Task HandleExtractCurrentArtifactAsync()
     {
-        var destinationPath = await GetDestinationPathAsync();
         if (CurrentArtifact != null)
         {
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?>(CurrentArtifact, null, destinationPath);
-            await OnExtract.InvokeAsync(extractTuple);
+            var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { CurrentArtifact });
+            if (CurrentArtifact != null && destinationPath != null)
+            {
+                var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, null, destinationPath, _password);
+                await OnExtract.InvokeAsync(extractTuple);
+                if (FileViewerResult == FileViewerResultType.Success)
+                {
+                    await HandleBackAsync(true);
+                }
+            }
         }
-
-        await HandleBackAsync(true);
     }
 
-    private async Task<string?> GetDestinationPathAsync()
+    private async Task<string?> GetDestinationPathAsync(List<FsArtifact> artifacts)
     {
         if (_artifactSelectionModalRef is null)
             return null;
@@ -115,7 +147,7 @@ public partial class ZipViewer : IFileViewerComponent
         ArtifactActionResult actionResult = new()
         {
             ActionType = ArtifactActionType.Extract,
-            Artifacts = null
+            Artifacts = artifacts
         };
 
         var routeArtifact = await FileService.GetArtifactAsync(CurrentArtifact?.ParentFullPath);
@@ -130,16 +162,24 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleBackAsync(bool shouldExit = false)
     {
-        if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
+        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            _cancellationTokenSource.Cancel();
-            await OnBack.InvokeAsync();
+            if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
+            {
+                _cancellationTokenSource.Cancel();
+                await OnBack.InvokeAsync();
+            }
+            else
+            {
+                _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
+                DisplayChildrenArtifacts(_currentInnerZipArtifact);
+            }
         }
-        else
+        else if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
-            DisplayChildrenArtifacts(_currentInnerZipArtifact);
+            CancelSelectionMode();
         }
+        StateHasChanged();
     }
 
     private FsArtifact GetParent(FsArtifact artifact)
@@ -162,33 +202,6 @@ public partial class ZipViewer : IFileViewerComponent
         _displayedArtifacts.ForEach(x => x.IsSelected = true);
         _selectedArtifacts = _displayedArtifacts.ToList();
         ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
-    }
-
-    private void HandleSelectArtifact(FsArtifact artifact)
-    {
-        var selectedArtifact = _displayedArtifacts.FirstOrDefault(a => a.FullPath == artifact.FullPath);
-        if (_selectedArtifacts.Any(a => a.FullPath == artifact.FullPath))
-        {
-            _selectedArtifacts.Remove(artifact);
-
-            if (selectedArtifact is not null)
-            {
-                selectedArtifact.IsSelected = false;
-            }
-        }
-        else
-        {
-            _selectedArtifacts.Add(artifact);
-
-            if (selectedArtifact is not null)
-            {
-                selectedArtifact.IsSelected = true;
-            }
-        }
-
-        ChangeArtifactExplorerMode(_selectedArtifacts.Count > 0
-            ? ArtifactExplorerMode.SelectArtifact
-            : ArtifactExplorerMode.Normal);
     }
 
     private void ChangeArtifactExplorerMode(ArtifactExplorerMode explorerMode)

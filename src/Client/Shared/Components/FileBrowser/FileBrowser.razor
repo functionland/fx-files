@@ -139,6 +139,11 @@
                    OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                    IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
+            @if (_currentArtifact != null)
+            {
+                <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
+            }
+
             @if (IsInRoot(_currentArtifact) && _isInSearch is false)
             {
                 <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
@@ -267,4 +272,6 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            OnExtract="HandleExtractArtifactAsync" />
+            OnExtract="HandleExtractArtifactAsync"
+            OnBack="FileViewerBack"
+            FileViewerResult="FileViewerResult" />
