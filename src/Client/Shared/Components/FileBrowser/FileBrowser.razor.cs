@@ -4,8 +4,6 @@ using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
-using SharpCompress.Common;
-using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -65,7 +63,7 @@ public partial class FileBrowser
                 }
             }
 
-            ArtifactState.SetCurrentMyDeviceArtifact(_currentArtifact);
+            ArtifactState.CurrentMyDeviceArtifact = _currentArtifact;
         }
     }
 
@@ -117,13 +115,7 @@ public partial class FileBrowser
                                HandleChangedArtifacts,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
-        HandleIntentReceiver();
 
-        _ = EventAggregator
-                       .GetEvent<IntentReceiveEvent>()
-                       .Subscribe(
-                           HandleIntentReceiver,
-                           ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
         Task PinTask = LoadPinsAsync();
         Task ArtifactListTask;
@@ -155,6 +147,16 @@ public partial class FileBrowser
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            HandleIntentReceiver();
+
+            _ = EventAggregator
+                           .GetEvent<IntentReceiveEvent>()
+                           .Subscribe(
+                               HandleIntentReceiver,
+                               ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+        }
         if (_isInSearch && isFirstTimeInSearch)
         {
             await JSRuntime.InvokeVoidAsync("SearchInputFocus");
@@ -1056,7 +1058,7 @@ public partial class FileBrowser
     public void ChangeViewMode()
     {
         var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
-        ArtifactState.SetViewMode(viewMode);
+        ArtifactState.ViewMode = viewMode;
         StateHasChanged();
     }
 
@@ -1893,6 +1895,11 @@ public partial class FileBrowser
 
     private async Task FileViewerBack()
     {
+        if (_currentArtifact?.ParentFullPath is not null)
+        {
+            var artifact = await FileService.GetArtifactAsync(_currentArtifact.ParentFullPath);
+            _currentArtifact = artifact;
+        }
         await OnInitAsync();
     }
 }
