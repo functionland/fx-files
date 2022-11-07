@@ -25,7 +25,7 @@
 
     &::before {
         font-size: $icon-24;
-        @include Icon($close, $pure-white);
+        @include Icon($close, color(gray-content1));
     }
 }
 
