@@ -9,18 +9,6 @@
     padding: $spacing-8 $spacing-21;
     position: relative;
     z-index: 1;
-
-    ::deep .back-button::before {
-        font-size: $icon-24;
-        vertical-align: middle;
-        @include Icon($arrow-left,$color:color(gray-content1));
-    }
-
-    .back-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 }
 
 .header {
