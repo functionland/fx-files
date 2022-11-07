@@ -149,6 +149,7 @@ public partial class ArtifactSelectionModal
 
         result.ResultType = ArtifactSelectionResultType.Cancel;
 
+        _currentArtifact = null;
         _tcs!.SetResult(result);
         _tcs = null;
         _isModalOpen = false;
