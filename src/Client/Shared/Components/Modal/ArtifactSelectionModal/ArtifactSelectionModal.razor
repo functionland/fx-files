@@ -24,7 +24,13 @@
               OnClick="CreateFolder"
               ButtonStyle="FxButtonStyle.IconOnly"
               LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
+
         </div>
+
+        @if (_currentArtifact != null)
+        {
+            <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
+        }
     
         <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerSize="FxDividerSize.Thin" FxDividerType="FxDividerType.Horizontal"/>
 

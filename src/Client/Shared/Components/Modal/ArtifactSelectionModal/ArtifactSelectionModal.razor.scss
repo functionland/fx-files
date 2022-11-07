@@ -9,6 +9,10 @@
     left: 0;
 }
 
+::deep .fx-breadcrumbs {
+    margin: $spacing-0 $spacing-0 $spacing-21;
+}
+
 .select-destination-header {
     display: flex;
     justify-content: space-between;
@@ -30,7 +34,7 @@
     justify-content: space-between;
     align-content: center;
     margin-top: $spacing-24;
-    padding-bottom: $spacing-21;
+    padding-bottom: $spacing-6;
 
     .selected-items-text,
     .selected-items-count {
