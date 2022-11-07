@@ -19,9 +19,9 @@ public partial class NativeVideoViewer : ContentPage
 
         if (path is not null)
         {
-            media.Play();
             media.Source = MediaSource.FromFile(path);
             playButton.Source = ImageSource.FromFile("pause.png");
+            media.Play();
         }
         OnBack = onBack;
     }

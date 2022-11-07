@@ -5,6 +5,8 @@ using Android.Database;
 using Android.OS;
 using Android.Provider;
 using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Common;
+using Prism.Events;
 using android = Android;
 using Uri = Android.Net.Uri;
 
@@ -25,7 +27,9 @@ public class FileViewerActivity : MainActivity
         var uri = Uri.Parse(Intent.DataString);
         var path = GetActualPathFromFile(uri);
         var intentHolder = MauiApplication.Current.Services.GetRequiredService<IntentHolder>();
+        var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
         intentHolder.FileUrl = path;
+        eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
     }
     private string? GetActualPathFromFile(Uri uri)
     {

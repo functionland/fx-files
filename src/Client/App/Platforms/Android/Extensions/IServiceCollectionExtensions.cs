@@ -39,7 +39,7 @@ public static class IAndroidServiceCollectionExtensions
         services.AddSingleton<IThumbnailPlugin, AndroidVideoThumbnailPlugin>();
         services.AddSingleton<IThumbnailPlugin, AndroidPdfThumbnailPlugin>();
 
-        services.AddSingleton<IPathUtilService, AndroidPathUtilService>();
+        services.AddSingleton<IZipPathUtilService, AndroidZipPathUtilService>();
 
         return services;
     }
