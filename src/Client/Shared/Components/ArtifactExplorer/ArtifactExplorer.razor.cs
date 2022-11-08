@@ -3,6 +3,8 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
+using System.Threading;
+
 namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class ArtifactExplorer
@@ -357,7 +359,7 @@ public partial class ArtifactExplorer
         StateHasChanged();
     }
 
-    private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
+    private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsListAsync(ItemsProviderRequest request)
     {
         var cancellationToken = request.CancellationToken;
         
@@ -376,6 +378,30 @@ public partial class ArtifactExplorer
         });
 
         return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
+    }
+
+    private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGridAsync(ItemsProviderRequest request)
+    {
+        var cancellationToken = request.CancellationToken;
+        if (cancellationToken.IsCancellationRequested) return default;
+
+        var count = request.Count * _gridRowCount;
+        var start = request.StartIndex * _gridRowCount;
+        var requestCount = Math.Min(count, Artifacts.Count - start);
+
+        List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(300);
+            var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
+            await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
+            await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+        });
+
+        var result = items.Chunk(_gridRowCount).ToList();
+
+        return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
     }
 
     private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
@@ -400,45 +426,6 @@ public partial class ArtifactExplorer
                 ExceptionHandler.Track(exception);
             }
         }
-    }
-
-    private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
-    {
-        if (request.CancellationToken.IsCancellationRequested) return default;
-
-        var count = request.Count * _gridRowCount;
-        var start = request.StartIndex * _gridRowCount;
-        var requestCount = Math.Min(count, Artifacts.Count - start);
-
-        List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
-
-        _ = Task.Run(async () =>
-        {
-            await Task.Delay(300);
-            foreach (var item in items)
-            {
-                if (request.CancellationToken.IsCancellationRequested)
-                    return;
-
-                try
-                {
-                    item.ThumbnailPath =
-                        await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
-                            request.CancellationToken);
-
-                }
-                catch (Exception exception)
-                {
-                    ExceptionHandler.Track(exception);
-                }
-            }
-
-            await InvokeAsync(() => { StateHasChanged(); });
-        });
-
-        var result = items.Chunk(_gridRowCount).ToList();
-
-        return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
     }
 
     private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
