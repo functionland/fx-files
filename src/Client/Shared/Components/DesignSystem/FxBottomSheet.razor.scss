@@ -89,11 +89,12 @@
 }
 
 .full-screen-sheet {
-    height: 100%;
+    height: 80%;
 
     .bottom-sheet-contents {
-        height: 100%;
-        border-radius: $border-radius-3;
+        height: 80%;
+        border-radius: $border-radius-20 $border-radius-20 $border-size-0 $border-size-0;
+        padding: $spacing-16 $spacing-21;
     }
 }
 

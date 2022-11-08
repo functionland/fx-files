@@ -7,12 +7,7 @@
         <div class="root-mode">
             @if (IsInSearchMode)
             {
-                <FxButton Padding="0"
-                  Margin="0 8px 0 0"
-                  OnClick="@HandleBackClick"
-                  Class="search-back-button"
-                  BackgroundColor="transparent"
-                  ButtonStyle="FxButtonStyle.None" />
+                <FxBackButton IsEnabled="!IsInRootDestinationFolder && IsBackButtonVisible" OnClick="HandleBackClick" Class="back-button-space"></FxBackButton>
             }
 
             <FxSearchInput IsPartial="true"
@@ -38,31 +33,19 @@
         if (ShouldSearchBoxShow)
         {
             <div class="search-toolbar-not-in-root">
-                <FxButton Padding="0"
-                  OnClick="@HandleBackClick"
-                  Class="back-button"
-                  Margin="0 11px 0px 0"
-                  BackgroundColor="transparent"
-                  IsVisible="IsInRootDestinationFolder == true ? false : IsBackButtonVisible"
-                  ButtonStyle="@(IsInSelectMode? FxButtonStyle.Disabled : FxButtonStyle.None)" />
+                <FxBackButton IsEnabled="!IsInRootDestinationFolder && IsBackButtonVisible" OnClick="HandleBackClick" Class="back-button-space"></FxBackButton>
 
                 <FxSearchInput IsPartial="true"
-                       DebounceInterval="1000"
-                       OnSearch="HandleSearch"
-                       OnFocus="HandleSearchFocused"
-                       @ref="_searchInputRef" />
+                               DebounceInterval="1000"
+                               OnSearch="HandleSearch"
+                               OnFocus="HandleSearchFocused"
+                               @ref="_searchInputRef"/>
             </div>
         }
         <div class="not-root-mode">
             @if (!ShouldSearchBoxShow)
             {
-                <FxButton Padding="0"
-                  OnClick="@HandleBackClick"
-                  Class="back-button"
-                  Margin="0 0 16px 0"
-                  BackgroundColor="transparent"
-                  IsVisible="IsInRootDestinationFolder == true ? false : IsBackButtonVisible"
-                  ButtonStyle="@(IsInSelectMode? FxButtonStyle.Disabled : FxButtonStyle.None)" />
+                <FxBackButton IsEnabled="!IsInRootDestinationFolder && IsBackButtonVisible" OnClick="HandleBackClick" Class="back-button-space"></FxBackButton>
             }
 
             <div class="action-row">

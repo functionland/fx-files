@@ -3,11 +3,14 @@
 function AddWindowWidthListener(objReference) {
     let eventListener = () => UpdateWindowWidth(objReference);
     window.addEventListener("resize", eventListener);
-    windowEventListeners[objReference] = eventListener;
+    windowEventListeners[id] = eventListener;
+    var id = Math.floor(Math.random() * 100).toString();
+    objReference.invokeMethodAsync("SetResizeEventListenerId", id);
 }
 
-function RemoveWindowWidthListener(objReference) {
-    window.removeEventListener("resize", windowEventListeners[objReference]);
+function RemoveWindowWidthListener(id) {
+    window.removeEventListener("resize", windowEventListeners[id]);
+    delete windowEventListeners[id];
 }
 
 function UpdateWindowWidth(objReference) {

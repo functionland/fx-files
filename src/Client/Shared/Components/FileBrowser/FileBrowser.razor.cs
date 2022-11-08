@@ -62,7 +62,7 @@ public partial class FileBrowser
             {
                 FileWatchService.WatchArtifact(_currentArtifactValue);
             }
-            ArtifactState.SetCurrentMyDeviceArtifact(_currentArtifact);
+            ArtifactState.CurrentMyDeviceArtifact = _currentArtifact;
         }
     }
 
@@ -143,6 +143,16 @@ public partial class FileBrowser
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            HandleIntentReceiver();
+
+            _ = EventAggregator
+                           .GetEvent<IntentReceiveEvent>()
+                           .Subscribe(
+                               HandleIntentReceiver,
+                               ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+        }
         if (_isInSearch && isFirstTimeInSearch)
         {
             await JSRuntime.InvokeVoidAsync("SearchInputFocus");
@@ -1037,7 +1047,7 @@ public partial class FileBrowser
     public void ChangeViewMode()
     {
         var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
-        ArtifactState.SetViewMode(viewMode);
+        ArtifactState.ViewMode = viewMode;
         StateHasChanged();
     }
 
@@ -1883,6 +1893,11 @@ public partial class FileBrowser
 
     private async Task FileViewerBack()
     {
+        if (_currentArtifact?.ParentFullPath is not null && _currentArtifact.ArtifactType == FsArtifactType.File)
+        {
+            var artifact = await FileService.GetArtifactAsync(_currentArtifact.ParentFullPath);
+            _currentArtifact = artifact;
+        }
         await OnInitAsync();
     }
 }
