@@ -2,9 +2,11 @@
 
 public partial class FakeBloxServiceFactory
 {
+    [AutoInject] public IServiceProvider ServiceProvider { get; set; }
+
     public FakeBloxService CreateTypical(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        var blox = new FakeBloxService(
+        var blox = new FakeBloxService(ServiceProvider,
                 new List<Blox>
                 {
                     CreateBlox("Blox 1","Blox 1","Blox 1")
@@ -24,7 +26,7 @@ public partial class FakeBloxServiceFactory
     {
         var invitedBloxs = new List<Blox>();
 
-        var blox = new FakeBloxService(
+        var blox = new FakeBloxService(ServiceProvider,
                 new List<Blox>
                 {
                     CreateBlox("My Blox","The long number of characters in the blox id should be handled ", "OwnerDId")
@@ -39,7 +41,7 @@ public partial class FakeBloxServiceFactory
     public FakeBloxService CreateInvitedBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
         var bloxs = new List<Blox>();
-        var invitedBloxs = new FakeBloxService(
+        var invitedBloxs = new FakeBloxService(ServiceProvider,
             bloxs,
             new List<Blox>
             {
@@ -57,7 +59,7 @@ public partial class FakeBloxServiceFactory
     {
         var invitedBloxs = new List<Blox>();
 
-        var bloxs = new FakeBloxService(
+        var bloxs = new FakeBloxService(ServiceProvider,
             new List<Blox>
             {
                 CreateBlox("The long number of characters in the blox id should be handled", "The long number of characters in the Blox name should be handled","Blox OwnerDId"),
@@ -73,7 +75,7 @@ public partial class FakeBloxServiceFactory
 
     public FakeBloxService CreateALotOfBloxs(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        var bloxs = new FakeBloxService(
+        var bloxs = new FakeBloxService(ServiceProvider,
             new List<Blox>
             {
                 CreateBlox("My Country Blox One", "First Blox", "First Blox OwnerDId"),
