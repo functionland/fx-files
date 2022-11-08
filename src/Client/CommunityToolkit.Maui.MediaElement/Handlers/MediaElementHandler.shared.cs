@@ -10,10 +10,10 @@ public partial class MediaElementHandler
 		[nameof(IMediaElement.Speed)] = MapSpeed,
 		[nameof(IMediaElement.Volume)] = MapVolume,
 		[nameof(IMediaElement.Position)] = MapPosition,
-#if __ANDROID__
+#if __ANDROID__ || WINDOWS
 		[nameof(MediaElement.IsLooping)] = MapIsLooping
 #endif
-	};
+    };
 
 	public static CommandMapper<MediaElement, MediaElementHandler> CommandMapper = new(ViewCommandMapper)
 	{
