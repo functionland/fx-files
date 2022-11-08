@@ -45,7 +45,10 @@ public partial class InputModal
     {
         InvokeAsync(async () =>
         {
-            await _inputRef!.FocusInputAsync();
+            if (_inputRef is not null)
+            {
+                await _inputRef.FocusInputAsync();
+            }
         });
 
         var timer = (System.Timers.Timer)sender;
@@ -73,7 +76,7 @@ public partial class InputModal
 
             _isModalOpen = false;
         }
-       
+
     }
 
     private void Confirm()
@@ -86,7 +89,7 @@ public partial class InputModal
 
         try
         {
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
         }
         finally
         {
