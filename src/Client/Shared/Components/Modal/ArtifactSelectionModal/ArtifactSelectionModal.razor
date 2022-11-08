@@ -4,38 +4,38 @@
 
 <FxBottomSheet ShowCloseButton="false" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="true">
     <div class="sticky-header">
-        <FxToolBar IsInRoot="false"
-                   IsInRootDestinationFolder="@(_currentArtifact == null ? true : false)"
-                   IsInSearchMode="false"
-                   OnBackClick="Back"
-                   Title="@_currentArtifact?.Name"
-                   IsPinned="@(_currentArtifact?.IsPinned ?? false)"
-                   SubTitle="@(_currentArtifact != null? $"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}" : "")"
-                   OnAddButtonClick="CreateFolder"/>
-
-        <div class="select-action">
-            <div class="info-selection">
-                <div class="close-btn" @onclick="(() => Close())"></div>
-                <div class="item-selected">
-                    <span class="selected-items-count">@_artifactActionResult?.Artifacts?.Count</span>
-                    <span class="selected-items-text">items ready to </span>
-                    @if (_artifactActionResult?.ActionType == @ArtifactActionType.Copy)
-                    {
-                        <span class="selected-items-text">copy</span>
-                    }
-                    else
-                    {
-                        <span class="selected-items-text">move</span>
-                    }
-                </div>
-            </div>
-
-            <div class="right-part">
-                <div class="add-folder"></div>
-            </div>
+        <div class="select-destination-header">
+            <FxBackButton IsEnabled="_currentArtifact!=null" OnClick="Back"></FxBackButton>
+            <div class="close-btn" @onclick="Close"></div>
         </div>
 
+        <div class="select-destination-container">
+            <div class="select-destination-info">
+                <div class="item-selected">
+                    <span class="selected-items-count">@_artifactActionResult?.Artifacts?.Count</span>
+                    <span class="selected-items-text">@Localizer[nameof(AppStrings.ItemsSelected)]</span>
+                </div>
+
+                <div class="select-destination-title">@Localizer[nameof(AppStrings.SelectDestination)]</div>
+            </div>
+
+            <FxButton Width="40px"
+                      Height="40px"
+                      OnClick="CreateFolder"
+                      ButtonStyle="FxButtonStyle.IconOnly"
+                      LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
+
+        </div>
+
+        @if (_currentArtifact != null)
+        {
+            <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
+        }
+
+        <FxDivider FxDividerMode="FxDividerMode.Solid" FxDividerSize="FxDividerSize.Thin" FxDividerType="FxDividerType.Horizontal" />
+
     </div>
+
     <div class="container">
 
 
@@ -55,7 +55,7 @@
         <FxButton Width="100%"
                   Height="60px"
                   Text="@(GetActionButtonText())"
-                  OnClick="SelectDestionation"
+                  OnClick="SelectDestination"
                   ButtonStyle="FxButtonStyle.Normal" />
     </div>
 </FxBottomSheet>

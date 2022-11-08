@@ -7,10 +7,59 @@
     top: 0;
     right: 0;
     left: 0;
+}
 
-    & ::deep div.toolbar-box {
-        margin: $spacing-32 0;
+::deep .fx-breadcrumbs {
+    margin: $spacing-0 $spacing-0 $spacing-21;
+}
+
+::deep .fxbutton {
+    align-self: flex-end;
+}
+
+.select-destination-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    cursor: pointer;
+    text-align: right;
+
+    &::before {
+        font-size: $icon-24;
+        @include Icon($close, color(gray-content1));
     }
+}
+
+.select-destination-container {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    margin-top: $spacing-24;
+    padding-bottom: $spacing-6;
+
+    .selected-items-text,
+    .selected-items-count {
+        font-size: $font-size-12;
+        line-height: $line-height-16;
+        font-family: $montserrat-medium;
+        color: color(gray-content1);
+    }
+
+    .select-destination-title {
+        font-family: $montserrat-semi-bold;
+        font-size: $font-size-18;
+        line-height: $line-height-24;
+        color: color(gray-content1);
+    }
+}
+
+.select-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .container {
@@ -19,54 +68,6 @@
     position: relative;
 }
 
-.select-action {
-    display: flex;
-    height: 40px;
-    align-items: center;
-    justify-content: space-between;
-    background-color: $green-dark-base;
-    padding: 0px $spacing-31 0px $spacing-21;
-
-    .info-selection {
-        display: flex;
-        align-items: center;
-
-        .close-btn {
-            cursor: pointer;
-
-            &::before {
-                font-size: $icon-16;
-                @include Icon($close, $pure-white);
-            }
-        }
-
-        .item-selected {
-            margin-left: $spacing-6;
-
-            .selected-items-text,
-            .selected-items-count{
-                font-size: $font-size-14;
-                line-height: $line-height-24;
-                font-family: $open-sans-regular;
-                letter-spacing: $letter-spacing-02;
-                color: $pure-white;
-            }
-        }
-    }
-
-    .right-part {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .add-folder::before {
-            display: none;
-            cursor: pointer;
-            font-size: 24px;
-            @include Icon($create-folder, $pure-white);
-        }
-    }
-}
 
 .button-container {
     height: 102px;
@@ -74,5 +75,4 @@
     position: sticky;
     padding: 26px 21px;
     justify-content: center;
-    border-top: 1px solid color(gray-bg-secondary);
 }
