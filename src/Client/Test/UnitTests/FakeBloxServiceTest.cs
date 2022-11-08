@@ -56,7 +56,7 @@ public class FakeBloxServiceTest : TestBase
     }
 
     [TestMethod]
-    public async Task FakeBloxService_ShouldThrowBloxIsNotFoundInAcceptBloxInvitation()
+    public async Task FakeBloxService_ShouldThrowBloxIsNotFound_AcceptBloxInvitation()
     {
         var testHost = Host.CreateDefaultBuilder()
            .ConfigureServices((_, services) =>
@@ -82,7 +82,7 @@ public class FakeBloxServiceTest : TestBase
     }
 
     [TestMethod]
-    public async Task FakeBloxService_ShouldThrowBloxIsNotFoundInRejectBloxInvitation()
+    public async Task FakeBloxService_ShouldThrowBloxIsNotFound_RejectBloxInvitation()
     {
         var testHost = Host.CreateDefaultBuilder()
            .ConfigureServices((_, services) =>
