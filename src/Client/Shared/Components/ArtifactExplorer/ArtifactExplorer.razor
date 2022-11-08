@@ -24,7 +24,7 @@
         {
             @if (ViewMode == ViewModeEnum.Grid)
             {
-                <Virtualize Context="artifacts" OverscanCount="5" ItemsProvider="@ProvideArtifactGrid" @ref="_virtualizeGridRef">
+                <Virtualize Context="artifacts" OverscanCount="@_overscanCount" ItemsProvider="@ProvideArtifactGrid" @ref="_virtualizeGridRef">
                     <div style="display: flex">
                         @foreach (var artifact in artifacts)
                         {

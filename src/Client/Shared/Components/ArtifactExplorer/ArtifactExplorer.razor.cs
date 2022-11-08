@@ -60,7 +60,7 @@ public partial class ArtifactExplorer
     private Virtualize<FsArtifact[]>? _virtualizeGridRef;
 
     private int _gridRowCount = 2;
-
+    private int _overscanCount = 5;
     private bool _isArtifactsChanged;
 
     private DotNetObjectReference<ArtifactExplorer>? _objectReference;
@@ -359,38 +359,46 @@ public partial class ArtifactExplorer
 
     private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsList(ItemsProviderRequest request)
     {
-        if (request.CancellationToken.IsCancellationRequested) return default;
+        var cancellationToken = request.CancellationToken;
+        
+        if (cancellationToken.IsCancellationRequested) 
+            return default;
 
         var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
         List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
         _ = Task.Run(async () =>
         {
-            await Task.Delay(300);
-            foreach (var item in items)
-            {
-                if (request.CancellationToken.IsCancellationRequested)
-                    return;
-                try
-                {
-                    if (item.ThumbnailPath is not null)
-                        continue;
-
-                    item.ThumbnailPath =
-                        await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
-                            request.CancellationToken);
-
-                    await InvokeAsync(() => { StateHasChanged(); });
-                }
-                catch (Exception exception)
-                {
-                    ExceptionHandler.Track(exception);
-                }
-            }
-
-        });
+            await Task.Delay(300, cancellationToken);
+            await LoadThumbnailsAsync(items.Skip(_overscanCount).ToList(), cancellationToken);
+            await LoadThumbnailsAsync(items.Take(_overscanCount).ToList(), cancellationToken);
+        }, cancellationToken);
 
         return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
+    }
+
+    private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
+    {
+        foreach (var item in items)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+            try
+            {
+                if (item.ThumbnailPath is not null)
+                    continue;
+
+                item.ThumbnailPath =
+                    await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
+                        cancellationToken);
+
+                await InvokeAsync(() => { StateHasChanged(); });
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandler.Track(exception);
+            }
+        }
     }
 
     private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGrid(ItemsProviderRequest request)
