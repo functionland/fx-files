@@ -19,7 +19,7 @@
         @if (!string.IsNullOrEmpty(FileName))
         {
             <div class="file-icon-row">
-                <div class="@(FsArtifactType == FsArtifactType.File ? FileCategoryType.ToString().ToLower() : "folder")-file-icon"></div>
+                <div class="@(FsArtifactType == Enums.FsArtifactType.File ? FileCategoryType?.ToString().ToLower() : "folder")-file-icon"></div>
             </div>
         }
     }
