@@ -22,7 +22,7 @@ public partial class ZipService : IZipService
         string? password = null,
         CancellationToken? cancellationToken = null)
     {
-        var extension = Path.GetExtension(zipFilePath);
+        var extension = Path.GetExtension(zipFilePath).ToLower();
         try
         {
             var artifacts = extension switch
@@ -80,7 +80,7 @@ public partial class ZipService : IZipService
     {
         var duplicateCount = 0;
         var newPath = Path.Combine(destinationPath, destinationFolderName);
-        var zipFileExtension = Path.GetExtension(zipFullPath);
+        var zipFileExtension = Path.GetExtension(zipFullPath).ToLower();
 
         if (!Directory.Exists(newPath))
         {

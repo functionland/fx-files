@@ -1303,6 +1303,24 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fx Files by Functionland.
+        /// </summary>
+        public static string SettingPageAppTitle {
+            get {
+                return ResourceManager.GetString("SettingPageAppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select destination.
+        /// </summary>
+        public static string SelectDestination {
+            get {
+                return ResourceManager.GetString("SelectDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {
