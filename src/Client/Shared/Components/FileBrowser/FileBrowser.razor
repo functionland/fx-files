@@ -16,7 +16,7 @@
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
 
-    <section>
+    <section class="@(_isInSearch ? "opacity-0" : "opacity-1")">
         @if (_currentArtifact != null)
         {
             <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>

@@ -339,12 +339,24 @@
 
 
 //deep search style
+.opacity-0 {
+    opacity: 0;
+}
+
+.opacity-1 {
+    opacity: 1;
+}
+
 .search-mode {
-    display: block;
+    height: 100%;
+    opacity: 1;
+    transition: height 0ms linear, opacity 300ms linear;
 }
 
 .browsing-mode {
-    display: none;
+    height: 0;
+    opacity: 0;
+    transition: opacity 300ms linear, height 0ms linear 400ms;
 }
 
 .search-container {
@@ -363,7 +375,6 @@
         overflow: auto;
     }
 }
-
 
 .filter-deep-search {
     padding: $spacing-0 $spacing-21;
