@@ -270,6 +270,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            OnExtract="HandleExtractArtifactAsync"
             OnBack="FileViewerBack"
             FileViewerResult="FileViewerResult" />
+
+<Extractor @ref="extractorModalRef" ExtractResultCallback="GetExtractResult"></Extractor>

@@ -22,6 +22,7 @@ public partial class FileBrowser
     private ProgressModal? _progressModalRef;
     private FxSearchInput? _fxSearchInputRef;
     private FileViewer? _fileViewerRef;
+    private Extractor? extractorModalRef;
 
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
@@ -696,8 +697,16 @@ public partial class FileBrowser
             try
             {
                 if (destinationDirectory != null)
-                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
+                {
+                    if (extractorModalRef == null)
+                    {
+                        FileViewerResult = FileViewerResultType.Cancel;
+                        return;
+                    }
+                    await extractorModalRef.ExtractZipAsync(artifact.FullPath, destinationDirectory,
+                        destinationFolderName,
                         artifactPassword, innerArtifacts);
+                }
             }
             catch (InvalidPasswordException)
             {
@@ -717,17 +726,21 @@ public partial class FileBrowser
                 }
 
                 if (destinationDirectory != null)
-                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
-                        passwordResult?.Result, innerArtifacts);
+                {
+                    if (extractorModalRef != null)
+                    {
+                        await extractorModalRef.ExtractZipAsync(artifact.FullPath, destinationDirectory,
+                            destinationFolderName,
+                            passwordResult?.Result, innerArtifacts);
+                    }
+                }
             }
 
-            if (destinationDirectory != null)
+            if (destinationDirectory != null && FileViewerResult == FileViewerResultType.Success)
             {
                 var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
                 await NavigateToDestionation(destinationPath);
             }
-
-            FileViewerResult = FileViewerResultType.Success;
         }
         catch (Exception exception)
         {
@@ -740,77 +753,10 @@ public partial class FileBrowser
 
     }
 
-    private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
+    private void GetExtractResult(FileViewerResultType resultType)
     {
-        if (_progressModalRef is null) return;
-
-        try
-        {
-            await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ExtractingFolder), true);
-            ProgressBarCts = new CancellationTokenSource();
-
-            async Task OnProgress(ProgressInfo progressInfo)
-            {
-                ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
-                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
-                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                ProgressBarMax = progressInfo.MaxValue ?? 1;
-                await InvokeAsync(StateHasChanged);
-            }
-
-            var duplicateCount = await ZipService.ExtractZippedArtifactAsync(
-                zipFilePath,
-                destinationFolderPath,
-                destinationFolderName,
-                innerArtifacts,
-                 false,
-                 password,
-                 OnProgress,
-                 ProgressBarCts.Token);
-
-            await _progressModalRef.CloseAsync();
-
-            if (duplicateCount <= 0) return;
-
-            if (_confirmationReplaceOrSkipModalRef == null)
-            {
-                FileViewerResult = FileViewerResultType.Cancel;
-                return;
-            }
-
-            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
-            List<FsArtifact> overwriteArtifacts = new();
-            if (innerArtifacts != null)
-            {
-                overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
-            }
-
-            var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount);
-
-            if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
-            {
-
-                await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
-
-                ProgressBarCts = new CancellationTokenSource();
-                await ZipService.ExtractZippedArtifactAsync(
-                    zipFilePath,
-                    destinationFolderPath,
-                    destinationFolderName,
-                    overwriteArtifacts,
-                     true,
-                     password,
-                     OnProgress,
-                     ProgressBarCts.Token);
-            }
-        }
-        finally
-        {
-            await _progressModalRef.CloseAsync();
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
-        }
+        FileViewerResult = resultType;
     }
-
 
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {

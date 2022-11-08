@@ -3,16 +3,18 @@
 public partial class ZipViewer : IFileViewerComponent
 {
     [AutoInject] private IZipService _zipService = default!;
+    [AutoInject] protected IStringLocalizer<AppStrings> Localizer = default!;
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?, string?>> OnExtract { get; set; }
     [Parameter] public FileViewerResultType FileViewerResult { get; set; }
 
     // Modals
+    private InputModal? _folderNameInputModalRef;
     private InputModal? _passwordModalRef;
     private ArtifactSelectionModal? _artifactSelectionModalRef;
+    private Extractor? _extractorModalRef;
 
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
@@ -93,13 +95,41 @@ public partial class ZipViewer : IFileViewerComponent
         ).ToList();
     }
 
+    private void GetExtractResult(FileViewerResultType resultType)
+    {
+        FileViewerResult = resultType;
+    }
+
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
     {
         var destinationPath = await GetDestinationPathAsync(artifacts);
         if (CurrentArtifact != null && destinationPath != null)
         {
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath, _password);
-            await OnExtract.InvokeAsync(extractTuple);
+            if (_folderNameInputModalRef is null)
+            {
+                FileViewerResult = FileViewerResultType.Cancel;
+                return;
+            }
+
+            var folderName = Path.GetFileNameWithoutExtension(CurrentArtifact.Name);
+            var createFolder = Localizer.GetString(AppStrings.FolderName);
+            var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
+            var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+
+            var folderNameResult = await _folderNameInputModalRef?.ShowAsync(createFolder, string.Empty, folderName,
+                newFolderPlaceholder, extractBtnTitle);
+
+
+            if (folderNameResult.Result != null)
+            {
+                if (_extractorModalRef != null)
+                {
+                    await _extractorModalRef.ExtractZipAsync(CurrentArtifact.FullPath, destinationPath,
+                        folderNameResult.Result,
+                        password: _password, artifacts);
+                }
+            }
+
             if (FileViewerResult == FileViewerResultType.Success)
             {
                 await HandleBackAsync(true);
@@ -112,9 +142,31 @@ public partial class ZipViewer : IFileViewerComponent
         var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { artifact });
         if (CurrentArtifact != null && destinationPath != null)
         {
-            var singleArtifactList = new List<FsArtifact> { artifact };
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, singleArtifactList, destinationPath, _password);
-            await OnExtract.InvokeAsync(extractTuple);
+            if (_folderNameInputModalRef is null)
+            {
+                FileViewerResult = FileViewerResultType.Cancel;
+                return;
+            }
+
+            var folderName = Path.GetFileNameWithoutExtension(CurrentArtifact.Name);
+            var createFolder = Localizer.GetString(AppStrings.FolderName);
+            var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
+            var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+
+            var folderNameResult = await _folderNameInputModalRef?.ShowAsync(createFolder, string.Empty, folderName,
+                newFolderPlaceholder, extractBtnTitle);
+
+
+            if (folderNameResult.Result != null)
+            {
+                if (_extractorModalRef != null)
+                {
+                    await _extractorModalRef.ExtractZipAsync(CurrentArtifact.FullPath, destinationPath,
+                        folderNameResult.Result,
+                        password: _password, new List<FsArtifact> { artifact });
+                }
+            }
+
             if (FileViewerResult == FileViewerResultType.Success)
             {
                 await HandleBackAsync(true);
@@ -129,8 +181,31 @@ public partial class ZipViewer : IFileViewerComponent
             var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { CurrentArtifact });
             if (CurrentArtifact != null && destinationPath != null)
             {
-                var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, null, destinationPath, _password);
-                await OnExtract.InvokeAsync(extractTuple);
+                if (_folderNameInputModalRef is null)
+                {
+                    FileViewerResult = FileViewerResultType.Cancel;
+                    return;
+                }
+
+                var folderName = Path.GetFileNameWithoutExtension(CurrentArtifact.Name);
+                var createFolder = Localizer.GetString(AppStrings.FolderName);
+                var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
+                var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+
+                var folderNameResult = await _folderNameInputModalRef?.ShowAsync(createFolder, string.Empty, folderName,
+                    newFolderPlaceholder, extractBtnTitle);
+
+
+                if (folderNameResult.Result != null)
+                {
+                    if (_extractorModalRef != null)
+                    {
+                        await _extractorModalRef.ExtractZipAsync(CurrentArtifact.FullPath, destinationPath,
+                            folderNameResult.Result,
+                            password: _password, null);
+                    }
+                }
+
                 if (FileViewerResult == FileViewerResultType.Success)
                 {
                     await HandleBackAsync(true);
