@@ -15,7 +15,7 @@ public partial class ImageViewer : IFileViewerComponent
         return base.OnInitAsync();
     }
 
-    protected async override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {

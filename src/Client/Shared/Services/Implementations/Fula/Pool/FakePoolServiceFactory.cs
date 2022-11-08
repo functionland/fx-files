@@ -2,10 +2,10 @@
 
 public partial class FakePoolServiceFactory
 {
+    [AutoInject] public IServiceProvider ServiceProvider { get; set; }
+
     public FakePoolService CreateSimpleBloxPool(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        var allFulaBloxPools = new List<BloxPool>();
-
         var primaryInfos = new List<KeyValuePair<string, string>>
         {
             new KeyValuePair<string, string>("Location", "5.2 miles"),
@@ -26,12 +26,15 @@ public partial class FakePoolServiceFactory
             new KeyValuePair<string, KeyValuePair<string, string>>("Y", keyValueGroup[1])
         };
 
-        var bloxPool = new FakePoolService(
+        var bloxPool = new FakePoolService(ServiceProvider,
         new List<BloxPool>
         {
-            CreateBloxPool("1459851", primaryInfos, keyValueGroups, 500)
+            CreateBloxPool("1459851fasjkjsahciaishv1235648", primaryInfos, keyValueGroups, 500)
         },
-        allFulaBloxPools,
+        new List<BloxPool>
+        {
+            CreateBloxPool("1459851fasjkjsahciaishv1235648", primaryInfos, keyValueGroups, 500)
+        },
         actionLatency,
         enumerationLatency);
 
@@ -40,8 +43,6 @@ public partial class FakePoolServiceFactory
 
     public FakePoolService CreateBloxPools(TimeSpan? actionLatency = null, TimeSpan? enumerationLatency = null)
     {
-        var allFulaBloxPools = new List<BloxPool>();
-
         var primaryInfos = new List<KeyValuePair<string, string>>
         {
             new KeyValuePair<string, string>("Location", "9.3 miles"),
@@ -61,15 +62,21 @@ public partial class FakePoolServiceFactory
             new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Z", keyValueGroup[2])
         };
 
-        var bloxPools = new FakePoolService(
+        var bloxPools = new FakePoolService(ServiceProvider,
         new List<BloxPool>
         {
-            CreateBloxPool("BloxPool 1", primaryInfos,keyValueGroups, 100),
-            CreateBloxPool("BloxPool 2" , primaryInfos, null, 120),
-            CreateBloxPool("BloxPool 3", primaryInfos, null, 50 ),
-            CreateBloxPool("BloxPool 3",null, keyValueGroups,105)
+            CreateBloxPool("a4s5d5df5ff5f5123665494235525h", primaryInfos,keyValueGroups, 100),
+            CreateBloxPool("qazzdjdiiowppppppppjjjj4452397" , primaryInfos, null, 120),
+            CreateBloxPool("qqqqqqtttttuuuudbddinisoansiai", primaryInfos, null, 50 ),
+            CreateBloxPool("85741656325655sbhsjsabsdvashdv",null, keyValueGroups,105)
         },
-        allFulaBloxPools,
+        new List<BloxPool>
+        {
+            CreateBloxPool("a4s5d5df5ff5f5123665494235525h", primaryInfos,keyValueGroups, 100),
+            CreateBloxPool("qazzdjdiiowppppppppjjjj4452397" , primaryInfos, null, 120),
+            CreateBloxPool("qqqqqqtttttuuuudbddinisoansiai", primaryInfos, null, 50 ),
+            CreateBloxPool("85741656325655sbhsjsabsdvashdv",null, keyValueGroups,105)
+        },
         actionLatency,
         enumerationLatency);
 
@@ -111,26 +118,22 @@ public partial class FakePoolServiceFactory
             new KeyValuePair<string, KeyValuePair<string, string>>("Test", keyValueGroup[0])
         };
 
-        var bloxPools = new FakePoolService(
+        var bloxPools = new FakePoolService(ServiceProvider,
             FullabloxPools,
             new List<BloxPool>
             {
-                CreateBloxPool("BloxPool 2369875523", primaryInfos, null, 100),
-                CreateBloxPool("BloxPool 222", primaryInfos, null, 102),
-                CreateBloxPool("BloxPool 223", primaryInfos, null, 150),
-                CreateBloxPool("BloxPool 224", primaryInfos, null, 50),
-                CreateBloxPool("BloxPool 225", primaryInfos1),
-                CreateBloxPool("BloxPool 226", primaryInfos1),
-                CreateBloxPool("BloxPool 227", primaryInfos1),
-                CreateBloxPool("BloxPool 228", null, keyValueGroups, 400),
+                CreateBloxPool("123654kklljjhhujkoiu123698cvbn", primaryInfos, null, 100),
+                CreateBloxPool("AAAssserdh123666qwwerrttyyuu77", primaryInfos, null, 102),
+                CreateBloxPool("14785236987456321jiunbvhjjbhhj", primaryInfos, null, 150),
+                CreateBloxPool("BloxPool2241111111111111111111", primaryInfos, null, 50),
+                CreateBloxPool("BloxPool2258799999999999666666", primaryInfos1),
+                CreateBloxPool("BloxPool226zaqwssxvcdertgvhhnj", primaryInfos1),
+                CreateBloxPool("BloxPool2271478525468646546548", primaryInfos1),
+                CreateBloxPool("8744166325545454jjjghffgcfxgfc", null, keyValueGroups, 400),
                 CreateBloxPool("The long number of characters in the bloxPool Id should be handled", null, keyValueGroups, 450),
-                CreateBloxPool("BloxPool 78975", primaryInfos1, keyValueGroups, 200),
-                CreateBloxPool("BloxPool 2587428", primaryInfos1, keyValueGroups,120),
-                CreateBloxPool("The long number of characters in the bloxPool Id ", primaryInfos, keyValueGroups, 200),
-                CreateBloxPool("BloxPool 875461", primaryInfos1, keyValueGroups, 190),
-                CreateBloxPool("BloxPool 16", primaryInfos1, keyValueGroups,130),
-                CreateBloxPool("BloxPool 17", primaryInfos1, secondaryInfos1,230),
-                CreateBloxPool("BloxPool 18", primaryInfos1, secondaryInfos1,330),
+                CreateBloxPool("BloxPool78975teteuwiiddwwdhwkp", primaryInfos1, keyValueGroups, 200),
+                CreateBloxPool("BloxPoolbxdhjdidiiijdjf2587428", primaryInfos1, keyValueGroups,120),
+                CreateBloxPool("BloxPool875461hhhggfdsdfgkjjjj", primaryInfos1, keyValueGroups, 190)
 
             },
             actionLatency,
@@ -161,16 +164,17 @@ public partial class FakePoolServiceFactory
             new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Y", keyValueGroup[2])
         };
 
-        var bloxPools = new FakePoolService(
+        var bloxPools = new FakePoolService(ServiceProvider,
         new List<BloxPool>
         {
-            CreateBloxPool("BloxPool 875461", primaryInfos, keyValueGroups),
+            CreateBloxPool("BloxPool8754611478965332655557", primaryInfos, keyValueGroups),
         },
         new List<BloxPool>
         {
-            CreateBloxPool("BloxPool 78975", primaryInfos, null, 150),
-            CreateBloxPool("BloxPool 2587428", primaryInfos,keyValueGroups, 350),
-            CreateBloxPool("The long number of characters in the bloxPool name should be handled ", null,keyValueGroups, 100)
+            CreateBloxPool("BloxPool8754611478965332655557", primaryInfos, keyValueGroups),
+            CreateBloxPool("zvgssdsdbjAAAEEEdjddkdk123654s", primaryInfos, null, 150),
+            CreateBloxPool("BloxPool2587428zxdarasbjdjsdbd", primaryInfos,keyValueGroups, 350),
+            CreateBloxPool("The long number of characters in the bloxPool name should be handled", null,keyValueGroups, 100)
         },
         actionLatency,
         enumerationLatency);
@@ -209,36 +213,35 @@ public partial class FakePoolServiceFactory
             new KeyValuePair<string, KeyValuePair<string, string>>("The long number of characters Documents", keyValueGroup[1])
         };
 
-        var bloxPools = new FakePoolService(
+        var bloxPools = new FakePoolService(ServiceProvider,
         new List<BloxPool>
         {
-            CreateBloxPool("BloxPool One", primaryInfos, null, 200),
-            CreateBloxPool("BloxPool Two", primaryInfos, null, 9),
-            CreateBloxPool("BloxPool Three", primaryInfos),
-            CreateBloxPool("BloxPool Four", primaryInfos1, null, 700),
-            CreateBloxPool("BloxPool Five", primaryInfos1, keyValueGroups,400),
-            CreateBloxPool("BloxPool Six", primaryInfos1),
-            CreateBloxPool("BloxPool Seven", null, keyValueGroups,60),
-            CreateBloxPool("BloxPool Eight", null, keyValueGroups),
-            CreateBloxPool("BloxPool Nine", primaryInfos, keyValueGroups, 90),
+            CreateBloxPool("BloxPoolOne8754611478965332655", primaryInfos, null, 200),
+            CreateBloxPool("BloxPoolTwo1239966887412589632", primaryInfos, null, 9),
+            CreateBloxPool("BloxPoolThree123456789nnnnnnmm", primaryInfos),
+            CreateBloxPool("BloxPoolFour149043846952554715", primaryInfos1, null, 700),
+            CreateBloxPool("BloxPoolFivezsweaysujbjisonaoo", primaryInfos1, keyValueGroups,400),
+            CreateBloxPool("BloxPoolSixqwertyuiopljjgghhjj", primaryInfos1),
+            CreateBloxPool("BloxPool147852369987uyttrrNine", primaryInfos, keyValueGroups, 90),
             CreateBloxPool("The long number of characters in the bloxPool Id should be handled 1235", primaryInfos1, keyValueGroups, 50)
         },
         new List<BloxPool>
         {
-            CreateBloxPool("BloxPool One", primaryInfos, null, 200),
-            CreateBloxPool("BloxPool 78975",primaryInfos, null, 900),
-            CreateBloxPool("BloxPool 2587428",primaryInfos),
-            CreateBloxPool("The long number of characters in the bloxPool Id ",primaryInfos1, null, 900),
-            CreateBloxPool("BloxPool 875461", primaryInfos1),
-            CreateBloxPool("BloxPool 14", primaryInfos1),
-            CreateBloxPool("BloxPool 15", primaryInfos1),
-            CreateBloxPool("BloxPool 16", primaryInfos1, null, 100),
-            CreateBloxPool("BloxPool 17", primaryInfos1, keyValueGroups,1000),
-            CreateBloxPool("BloxPool 18", null, keyValueGroups,2000),
-            CreateBloxPool("BloxPool 19", null, keyValueGroups,200),
-            CreateBloxPool("BloxPool 20", null, keyValueGroups,20),
-            CreateBloxPool("BloxPool 21", null, null, 600),
-            CreateBloxPool("The long number of characters in the bloxPool Id should be handled", primaryInfos1, keyValueGroups, 400)
+            CreateBloxPool("BloxPoolOne8754611478965332655", primaryInfos, null, 200),
+            CreateBloxPool("BloxPoolTwo1239966887412589632", primaryInfos, null, 9),
+            CreateBloxPool("BloxPoolThree123456789nnnnnnmm", primaryInfos),
+            CreateBloxPool("BloxPoolFour149043846952554715", primaryInfos1, null, 700),
+            CreateBloxPool("BloxPoolFivezsweaysujbjisonaoo", primaryInfos1, keyValueGroups,400),
+            CreateBloxPool("BloxPoolSixqwertyuiopljjgghhjj", primaryInfos1),
+            CreateBloxPool("BloxPool147852369987uyttrrNine", primaryInfos, keyValueGroups, 90),
+            CreateBloxPool("The long number of characters in the bloxPool Id should be handled 1235", primaryInfos1, keyValueGroups, 50),
+            CreateBloxPool("BloxPoolOneIdbloxId12378965412", primaryInfos, null, 200),
+            CreateBloxPool("zvgssdsdbjAAAEEEdjddkdk123654s",primaryInfos, null, 900),
+            CreateBloxPool("BloxPool2587428zxdarasbjdjsdbd",primaryInfos),
+            CreateBloxPool("BloxPool875461BloxPoolOne87546", primaryInfos1),
+            CreateBloxPool("BloxPool145461BloxPoolOne87546", primaryInfos1),
+            CreateBloxPool("BloxPool1558646546465464646465", primaryInfos1),
+            CreateBloxPool("BloxPool16AQQSDFGHJBHHVHGVHMGV", primaryInfos1, null, 100),
         },
         actionLatency,
         enumerationLatency);

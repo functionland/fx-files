@@ -2,11 +2,7 @@
 @inherits AppComponentBase
 
 <div class="navigation-header">
-    <FxButton OnClick="@OnBack"
-              Class="back-button"
-              BackgroundColor="transparent"
-              IsVisible="true"
-              ButtonStyle="FxButtonStyle.None" />
+    <FxBackButton IsEnabled="true" OnClick="OnBack"></FxBackButton>
 
     <div class="right-side">
         <div class="@(CurrentArtifact?.IsPinned == true ? "pin-icon":"pin-icon-outline")" @onclick="@(CurrentArtifact?.IsPinned == true ? HandleUnpinAsync : HandlePinAsync)"></div>

@@ -5,9 +5,9 @@
 <div class="fx-breadcrumbs">
     <span class="start-ellipsis">...</span>
 
-    @if (_breadCrumbsPath != null)
+    @if (Artifact != null)
     {
-        @foreach (var path in _breadCrumbsPath)
+        @foreach (var path in GetBreadCrumbsPath(Artifact))
         {
             <div class="file-path">@path</div>
         }

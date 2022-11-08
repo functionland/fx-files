@@ -67,21 +67,14 @@
 @media (hover: hover) and (pointer: fine) {
     .item-container:hover {
         background-color: color(gray-hover);
-        transition: background 200ms linear;
-
-        .item-icon-position {
-            background-color: var(--gray-bg-secondary) !important;
-            transition: background 200ms linear !important;
-        }
     }
 }
 
-
-item-container:active {
+.item-container:active {
     background-color: color(gray-hover);
     transition: background 200ms linear;
 
-    item-icon-position {
+    .item-icon-position {
         background-color: var(--gray-bg-secondary) !important;
         transition: background 200ms linear !important;
     }
@@ -176,16 +169,13 @@ item-container:active {
         }
 
         .thumbnail-box {
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            text-align: center;
             height: 42px;
             width: 42px;
+            background-color: color(gray-bg-primary);
 
             .img-box {
                 position: relative;
+                border-radius: 4px;
 
                 .thumbnail-background {
                     object-fit: cover;
@@ -198,7 +188,6 @@ item-container:active {
                 }
 
                 .thumbnail-img {
-                    text-indent: -10000px;
                     object-fit: contain;
                     height: 42px;
                     width: 42px;
@@ -309,6 +298,7 @@ item-container:active {
 
         .item-icon-position {
             font-size: $icon-56;
+            height: 86px;
 
             &::before {
                 color: color(gray-content3);
@@ -476,6 +466,7 @@ item-container:active {
 .zip-file-icon::before {
     @include Icon($zip-file);
 }
+
 /*.select-action {
     display: flex;
     height: 40px;
@@ -590,4 +581,8 @@ item-container:active {
 
 .checkbox-display-none {
     display: none;
+}
+
+.overflosw-hidden {
+    overflow: hidden !important;
 }

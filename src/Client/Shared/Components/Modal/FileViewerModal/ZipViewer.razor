@@ -3,12 +3,7 @@
 
 
 <div class="navigation-header">
-    <FxButton OnClick="()=>HandleBackAsync()"
-              Class="back-button"
-              Padding="8px 16px 8px 0px"
-              BackgroundColor="transparent"
-              IsVisible="true"
-              ButtonStyle="FxButtonStyle.None" />
+    <FxBackButton IsEnabled="true" OnClick="(()=>HandleBackAsync())"></FxBackButton>
 </div>
 
 <div class="header">
@@ -28,7 +23,7 @@
 
 <div class="action-header">
     <div class="list-header @(ArtifactExplorerMode == ArtifactExplorerMode.Normal ? "z-index-header" : "")">
-        @*<FxBreadcrumbs Artifact="CurrentArtifact"></FxBreadcrumbs>*@
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
         @if (_displayedArtifacts.Count > 0)
         {
             <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>

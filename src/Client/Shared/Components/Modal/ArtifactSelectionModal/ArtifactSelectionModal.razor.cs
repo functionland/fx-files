@@ -1,11 +1,4 @@
-﻿using System.IO;
-
-using Functionland.FxFiles.Client.Shared.Models;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
-
-using Microsoft.AspNetCore.Components;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
@@ -48,7 +41,7 @@ public partial class ArtifactSelectionModal
         StateHasChanged();
     }
 
-    private void SelectDestionation()
+    private void SelectDestination()
     {
         try
         {
@@ -57,10 +50,11 @@ public partial class ArtifactSelectionModal
                 return;
             }
 
-            var result = new ArtifactSelectionResult();
-
-            result.ResultType = ArtifactSelectionResultType.Ok;
-            result.SelectedArtifacts = new[] { _currentArtifact };
+            var result = new ArtifactSelectionResult
+            {
+                ResultType = ArtifactSelectionResultType.Ok,
+                SelectedArtifacts = new[] { _currentArtifact }
+            };
 
             _tcs!.SetResult(result);
             _tcs = null;
@@ -68,7 +62,6 @@ public partial class ArtifactSelectionModal
         }
         catch (Exception)
         {
-
             throw;
         }
     }
@@ -93,7 +86,8 @@ public partial class ArtifactSelectionModal
     //TODO: Move to service and use in ArtifactExplorer
     private async Task CreateFolder()
     {
-        if (_inputModalRef is null) return;
+        if (_inputModalRef is null)
+            return;
 
         var createFolder = Localizer.GetString(AppStrings.CreateFolder);
         var newFolderPlaceholder = Localizer.GetString(AppStrings.NewFolderPlaceholder);
@@ -122,7 +116,7 @@ public partial class ArtifactSelectionModal
 
         return _artifactActionResult.ActionType switch
         {
-            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),   
+            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),
             ArtifactActionType.Move => Localizer.GetString(AppStrings.MoveHere),
             ArtifactActionType.Extract => Localizer.GetString(AppStrings.ExtractHere),
             _ => throw new InvalidOperationException("Invalid action type")
@@ -139,15 +133,16 @@ public partial class ArtifactSelectionModal
         {
             _currentArtifact = null;
         }
-        
+
         await LoadArtifacts(_currentArtifact?.FullPath);
     }
 
     private void Close()
     {
-        var result = new ArtifactSelectionResult();
-
-        result.ResultType = ArtifactSelectionResultType.Cancel;
+        var result = new ArtifactSelectionResult
+        {
+            ResultType = ArtifactSelectionResultType.Cancel
+        };
 
         _tcs!.SetResult(result);
         _tcs = null;

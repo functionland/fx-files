@@ -13,8 +13,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        protected abstract string GetFolderOrDriveShowablePath(string artifactPath);
-
         public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
             List<FsArtifact> ignoredList = new();
@@ -207,13 +205,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             else if (fsArtifactType == FsArtifactType.Folder)
             {
                 fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
             else if (fsArtifactType == FsArtifactType.Drive)
             {
                 var drives = GetDrives();
                 fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
-                fsArtifact.ShowablePath = GetFolderOrDriveShowablePath(path);
             }
 
             return fsArtifact;
@@ -433,13 +429,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         }
 
         private async Task<List<FsArtifact>> MoveAllAsync(
-          IList<FsArtifact> artifacts,
-          string destination,
-          bool overwrite = false,
-          List<FsArtifact>? ignoredList = null,
-          Func<ProgressInfo, Task>? onProgress = null,
-          bool shouldProgress = true,
-          CancellationToken? cancellationToken = null)
+            IList<FsArtifact> artifacts,
+            string destination,
+            bool overwrite = false,
+            List<FsArtifact>? ignoredList = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            bool shouldProgress = true,
+            CancellationToken? cancellationToken = null)
         {
             int? progressCount = null;
 
@@ -640,7 +636,14 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual void LocalStorageMoveFile(string filePath, string newPath)
         {
-            File.Move(filePath, newPath, true);
+            try
+            {
+                File.Move(filePath, newPath, true);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
         }
 
         protected virtual void LocalStorageRenameFile(string filePath, string newPath)
@@ -650,13 +653,27 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual void LocalStorageCopyFile(string sourceFile, string destinationFile)
         {
-            File.Copy(sourceFile, destinationFile, true);
+            try
+            {
+                File.Copy(sourceFile, destinationFile, true);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
         }
 
         protected virtual async Task LocalStorageCreateFile(string path, Stream stream)
         {
-            using FileStream outPutFileStream = new(path, FileMode.Create);
-            await stream.CopyToAsync(outPutFileStream);
+            try
+            {
+                using FileStream outPutFileStream = new(path, FileMode.Create);
+                await stream.CopyToAsync(outPutFileStream);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
         }
 
         protected virtual void LocalStorageRenameDirectory(string folderPath, string newPath)
@@ -690,7 +707,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
                     drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
-                    drive.ShowablePath = GetFolderOrDriveShowablePath(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
@@ -732,7 +748,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     {
                         ParentFullPath = Directory.GetParent(folder)?.FullName,
                         LastModifiedDateTime = Directory.GetLastWriteTime(folder),
-                        ShowablePath = GetFolderOrDriveShowablePath(folder)
                     };
                 }
 
@@ -948,5 +963,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return false;
         }
 
+        public virtual string GetShowablePath(string artifactPath)
+        {
+            return artifactPath;
+        }
     }
 }
