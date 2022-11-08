@@ -339,7 +339,6 @@
 
 
 //deep search style
-
 .search-container {
     position: fixed;
     top: 0;
@@ -348,28 +347,14 @@
     right: 0;
     z-index: 100;
     background-color: color(app-bg);
+    max-width: 600px;
+    margin: 0 auto;
 
-/*    .search-container-content {
+    ::deep .list-container {
         height: 100%;
-        margin: 0 auto;
-        max-width: 600px;
-        background-color: color(app-bg);*/
-
-        ::deep div.toolbar-box {
-            padding-top: $spacing-16;
-            padding-bottom: $spacing-16;
-            background-color: color(app-bg);
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-
-        ::deep .list-container {
-            height: 100%;
-            overflow: auto;
-        }
+        overflow: auto;
     }
-//}
+}
 
 
 .filter-deep-search {
