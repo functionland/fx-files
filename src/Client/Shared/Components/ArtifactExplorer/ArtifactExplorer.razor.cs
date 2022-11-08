@@ -369,11 +369,11 @@ public partial class ArtifactExplorer
 
         _ = Task.Run(async () =>
         {
-            await Task.Delay(300, cancellationToken);
+            await Task.Delay(300);
             var skipCount = Math.Min(_overscanCount, request.StartIndex);
             await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
             await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
-        }, cancellationToken);
+        });
 
         return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
     }
