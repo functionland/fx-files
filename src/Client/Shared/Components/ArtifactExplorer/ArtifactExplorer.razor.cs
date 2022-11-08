@@ -373,9 +373,14 @@ public partial class ArtifactExplorer
                     return;
                 try
                 {
+                    if (item.ThumbnailPath is not null)
+                        continue;
+
                     item.ThumbnailPath =
                         await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                             request.CancellationToken);
+
+                    await InvokeAsync(() => { StateHasChanged(); });
                 }
                 catch (Exception exception)
                 {
@@ -383,7 +388,6 @@ public partial class ArtifactExplorer
                 }
             }
 
-            await InvokeAsync(() => { StateHasChanged(); });
         });
 
         return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
