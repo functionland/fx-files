@@ -339,9 +339,17 @@
 
 
 //deep search style
+.search-mode {
+    display: block;
+}
+
+.browsing-mode {
+    display: none;
+}
+
 .search-container {
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: 73px;
     left: 0;
     bottom: 0;
     right: 0;
