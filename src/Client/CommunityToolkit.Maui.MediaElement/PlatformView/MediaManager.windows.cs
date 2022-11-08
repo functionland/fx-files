@@ -13,9 +13,9 @@ namespace CommunityToolkit.Maui.MediaElement;
 
 partial class MediaManager
 {
-	bool isMediaPlayerAttached;
+    protected bool isMediaPlayerAttached;
 
-	public PlatformMediaView CreatePlatformView()
+    public PlatformMediaView CreatePlatformView()
 	{
 		player = new();
 		return player;
@@ -54,7 +54,6 @@ partial class MediaManager
 			player.MediaPlayer.PlaybackRate = mediaElement.Speed;
 		}
 	}
-
 
 	protected virtual partial void PlatformUpdateShowsPlaybackControls()
 	{
@@ -153,12 +152,17 @@ partial class MediaManager
 		}
 	}
 
-	protected virtual partial void PlatformUpdateIsLooping()
-	{
-		// why this doesn't exist on WIndows?
-	}
+    protected virtual partial void PlatformUpdateIsLooping()
+    {
+        if (mediaElement is null || player is null)
+        {
+            return;
+        }
 
-	void OnMediaPlayerMediaOpened(MediaPlayer sender, object args)
+        player.MediaPlayer.IsLoopingEnabled = mediaElement.IsLooping;
+    }
+
+    void OnMediaPlayerMediaOpened(MediaPlayer sender, object args)
 	{
 		if (mediaElement is null || player is null)
 		{

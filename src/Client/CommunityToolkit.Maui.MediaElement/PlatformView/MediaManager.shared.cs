@@ -86,12 +86,11 @@ public partial class MediaManager
 	protected virtual partial void PlatformUpdatePosition();
 	protected virtual partial void PlatformUpdateStatus();
 	protected virtual partial void PlatformUpdateVolume();
-	//TODO: Check if just android has support for this
 	protected virtual partial void PlatformUpdateIsLooping();
 }
 
 
-#if !(WINDOWS || ANDROID)
+#if !(WINDOWS || ANDROID || IOS || MACCATALYST)
 partial class MediaManager
 {
 	protected virtual partial void PlatformPlay(TimeSpan timeSpan)

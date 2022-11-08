@@ -87,7 +87,7 @@ public partial class MainPage
             }
 #endif
 
-#if IOS
+#if IOS || MACCATALYST
             handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
             handler.PlatformView.Opaque = false;
 #endif
