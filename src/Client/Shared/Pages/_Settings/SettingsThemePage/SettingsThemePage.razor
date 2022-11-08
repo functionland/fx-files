@@ -1,0 +1,39 @@
+﻿@page "/Settings/Theme"
+@inherits AppComponentBase;
+@namespace Functionland.FxFiles.Client.Shared.Pages
+
+<div class="fxtoolbar-wrapper">
+    <FxToolBar IsInRoot="false"
+               IsBackButtonVisible="true"
+               IsAddButtonVisible="false"
+               IsOverflowButtonVisible="false"
+               OnBackClick="HandleToolbarBack" />
+</div>
+
+<section class="theme-mode">
+    <div class="mode-content">@Localizer[nameof(AppStrings.Mode)]</div>
+
+    <div class="select-theme-mode">
+        <div class="light-mode-part" @onclick="() => { CurrentTheme = FxTheme.Light; ChangeThemeAsync(); }">
+            <div class="mode-img light-mode-img"></div>
+            <FxRadioButton Id="lightMode" Title="@Localizer[nameof(AppStrings.LightMode)]" Checked="@(CurrentTheme == FxTheme.Light)" />
+        </div>
+
+        <div class="dark-mode-part" @onclick="() => { CurrentTheme = FxTheme.Dark; ChangeThemeAsync(); }">
+            <div class="mode-img dark-mode-img"></div>
+
+            <FxRadioButton Id="darkMode" Title="@Localizer[nameof(AppStrings.DarkMode)]" Checked="@(CurrentTheme == FxTheme.Dark)" />
+        </div>
+    </div>
+
+    <div class="system-theme-setting" @onclick="() => { CurrentTheme = FxTheme.System; ChangeThemeAsync(); }">
+        <div class="system-mode-part">
+            <FxRadioButton Id="system" Checked="@(CurrentTheme == FxTheme.System)" />
+        </div>
+        <div class="system-theme-info">
+            <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)] <span class="system-mode">@Localizer[nameof(AppStrings.DarkMode)]</span> <span class="mode-text">@Localizer[nameof(AppStrings.Mode)]</span></div>
+            <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
+        </div>
+    </div>
+
+</section>

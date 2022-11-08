@@ -1,86 +1,57 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
 
-using Functionland.FxFiles.App.Platforms.Android;
+using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
+using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
 
+using android = Android;
+
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
-public partial class AndroidFileService : LocalDeviceFileService
+public abstract partial class AndroidFileService : LocalDeviceFileService
 {
+    [AutoInject] public IPermissionUtils PermissionUtils { get; set; } = default!;
+    [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
+    private List<FsArtifact>? _allDrives = null;
+
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetWritePermission(path);
 
         return await base.CreateFileAsync(path, stream, cancellationToken);
     }
 
     public override async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetWritePermission(files.Select(f => f.path));
 
         return await base.CreateFilesAsync(files, cancellationToken);
     }
 
     public override async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetWritePermission(path);
 
         return await base.CreateFolderAsync(path, folderName, cancellationToken);
     }
 
     public override async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetReadPermission(filePath);
 
         return await base.GetFileContentAsync(filePath, cancellationToken);
     }
 
-    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public override async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
-        if (path is null && string.IsNullOrWhiteSpace(searchText))
+        if (path is null)
         {
-            var drives = await GetDrivesAsync();
+            var drives = GetDrives();
             foreach (var drive in drives)
             {
                 yield return drive;
@@ -88,7 +59,7 @@ public partial class AndroidFileService : LocalDeviceFileService
             yield break;
         }
 
-        await foreach (var artifact in base.GetArtifactsAsync(path, searchText, cancellationToken))
+        await foreach (var artifact in base.GetArtifactsAsync(path, cancellationToken))
         {
             yield return artifact;
         }
@@ -99,82 +70,52 @@ public partial class AndroidFileService : LocalDeviceFileService
         return await base.GetArtifactAsync(path, cancellationToken);
     }
 
-    public override async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        string destination,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetReadPermission(artifacts.Select(f => f.FullPath));
+        await GetWritePermission(destination);
 
         await base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
-    public override async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        string destination,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetReadPermission(artifacts.Select(f => f.FullPath));
+        await GetWritePermission(destination);
 
         await base.CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
     public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetWritePermission(filePath);
 
         await base.RenameFileAsync(filePath, newName, cancellationToken);
     }
 
     public override async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetWritePermission(folderPath);
 
         await base.RenameFolderAsync(folderPath, newName, cancellationToken);
     }
 
-    public override async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task DeleteArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
-        if (!PermissionUtils.CheckStoragePermission())
-        {
-            PermissionUtils.RequestStoragePermission();
-
-            var StoragePermissionResult = await PermissionUtils.GetPermissionTask!.Task;
-            if (!StoragePermissionResult)
-            {
-                throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToAccessToStorage));
-            }
-        }
+        await GetWritePermission(artifacts.Select(f => f.FullPath));
 
         await base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
@@ -184,7 +125,13 @@ public partial class AndroidFileService : LocalDeviceFileService
         return await base.CheckPathExistsAsync(paths, cancellationToken);
     }
 
-    public override async Task<List<FsArtifact>> GetDrivesAsync()
+    public override List<FsArtifact> GetDrives()
+    {
+        LazyInitializer.EnsureInitialized(ref _allDrives, LoadDrives);
+        return _allDrives;
+    }
+
+    private List<FsArtifact> LoadDrives()
     {
         var storageManager = MauiApplication.Current.GetSystemService(Context.StorageService) as StorageManager;
         if (storageManager is null)
@@ -197,16 +144,20 @@ public partial class AndroidFileService : LocalDeviceFileService
         var drives = new List<FsArtifact>();
         foreach (var storage in storageVolumes)
         {
-            if (storage is null || storage?.Directory is null)
+
+            if (storage is null || !string.Equals(storage.State, android.OS.Environment.MediaMounted, StringComparison.InvariantCultureIgnoreCase))
                 continue;
 
-            var lastModifiedUnixFormat = storage.Directory?.LastModified() ?? 0;
+
+            var storageDirectory = storage.Directory;
+
+            var lastModifiedUnixFormat = storageDirectory.LastModified();
             var lastModifiedDateTime = lastModifiedUnixFormat == 0
                                                         ? DateTimeOffset.Now
                                                         : DateTimeOffset.FromUnixTimeMilliseconds(lastModifiedUnixFormat);
-            var fullPath = storage.Directory?.Path;
-            var capacity = storage.Directory?.FreeSpace;
-            var size = storage.Directory?.TotalSpace;
+            var fullPath = storageDirectory.Path;
+            var capacity = storageDirectory.FreeSpace;
+            var size = storageDirectory.TotalSpace;
 
             if (storage.IsPrimary)
             {
@@ -220,8 +171,11 @@ public partial class AndroidFileService : LocalDeviceFileService
             }
             else
             {
-                var sDCardName = storage.MediaStoreVolumeName ?? string.Empty;
-                var externalFileName = StringLocalizer.GetString(AppStrings.SDCardName, sDCardName);
+                string sdCardName;
+
+                sdCardName = storage.MediaStoreVolumeName ?? string.Empty;
+
+                var externalFileName = StringLocalizer.GetString(AppStrings.SDCardName, sdCardName);
                 drives.Add(new FsArtifact(fullPath, externalFileName, FsArtifactType.Drive, FsFileProviderType.ExternalMemory)
                 {
                     Capacity = capacity,
@@ -234,9 +188,9 @@ public partial class AndroidFileService : LocalDeviceFileService
         return drives;
     }
 
-    public override async Task<FsArtifactType?> GetFsArtifactTypeAsync(string path)
+    public override FsArtifactType? GetFsArtifactType(string path)
     {
-        var isDrive = await FsArtifactIsDriveAsync(path);
+        var isDrive = IsDrive(path);
 
         if (isDrive)
         {
@@ -256,9 +210,9 @@ public partial class AndroidFileService : LocalDeviceFileService
         }
     }
 
-    public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
+    public override FsFileProviderType GetFsFileProviderType(string filePath)
     {
-        var drives = await GetDrivesAsync();
+        var drives = GetDrives();
 
         if (IsFsFileProviderInternal(filePath, drives))
         {
@@ -271,6 +225,35 @@ public partial class AndroidFileService : LocalDeviceFileService
         else
             throw new UnknownFsFileProviderException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
+
+    public override string GetShowablePath(string artifactPath)
+    {
+        if (artifactPath is null)
+            throw new ArtifactPathNullException(nameof(artifactPath));
+
+        var showablePath = string.Empty;
+        var providerType = GetFsFileProviderType(artifactPath);
+        var drives = GetDrives();
+
+        var currentDrivePath = drives.Where(d => d.ProviderType == providerType)
+                                     .Select(d => d.FullPath).FirstOrDefault();
+
+        if (currentDrivePath is null)
+            throw new Exception("No drive found!");
+
+        showablePath = artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory
+                                                                            ? StringLocalizer.GetString(AppStrings.InternalStorageName)
+                                                                            : StringLocalizer.GetString(AppStrings.ExternalStorageName));
+        return showablePath;
+    }
+    protected abstract Task GetWritePermission(string path = null);
+
+    protected abstract Task GetWritePermission(IEnumerable<string> paths = null);
+
+    protected abstract Task GetReadPermission(string path = null);
+
+    protected abstract Task GetReadPermission(IEnumerable<string> paths = null);
+
 
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
@@ -306,12 +289,12 @@ public partial class AndroidFileService : LocalDeviceFileService
         return false;
     }
 
-    private async Task<bool> FsArtifactIsDriveAsync(string path)
+    private bool IsDrive(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
             return false;
 
-        var drives = await GetDrivesAsync();
+        var drives = GetDrives();
         var drivesPath = drives
                                     .Where(drive => String.IsNullOrWhiteSpace(drive.FullPath) is false)
                                     .Select(drive => drive.FullPath)
@@ -322,5 +305,16 @@ public partial class AndroidFileService : LocalDeviceFileService
             return true;
 
         return false;
+    }
+
+    protected override long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
+    {
+        var drives = LoadDrives();
+        var targetDrive = drives.FirstOrDefault(drive => drive.FullPath.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+        if (targetDrive is null)
+            throw new InvalidOperationException("No drive found given the current path.");
+
+        return targetDrive.Size ?? 0;
     }
 }

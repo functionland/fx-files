@@ -4,6 +4,6 @@
     {
         InternalMemory,
         ExternalMemory,
-        Blox
+        Fula
     }
 }

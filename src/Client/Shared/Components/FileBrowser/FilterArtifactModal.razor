@@ -23,5 +23,9 @@
                   ButtonStyle="FxButtonStyle.SheetMenu"
                   OnClick="() => HandleFilterItemClick(FileCategoryType.Document)"
                   RightIcon="@(CurrentFilter is FileCategoryType.Document ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
+       <FxButton Text="Apps"
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  OnClick="() => HandleFilterItemClick(FileCategoryType.App)"
+                  RightIcon="@(CurrentFilter is FileCategoryType.App ? "_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/success-mode.svg" : "")" />
     </div>
 </FxBottomSheet>

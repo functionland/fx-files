@@ -1,0 +1,54 @@
+﻿@import '../../../Styles/abstracts/_mixins.scss';
+@import '../../../Styles/abstracts/_variables.scss';
+@import '../../../Styles/abstracts/_functions.scss';
+
+.page-title {
+    font-family: $montserrat-medium;
+    font-style: normal;
+    font-weight: 600;
+    font-size: $font-size-24;
+    line-height: $line-height-36;
+    color: color(gray-content1);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 $spacing-21;
+}
+
+.settings-content {
+    padding: 16px 0;
+}
+
+.settings-wrapper {
+    padding: 21px;
+    padding-top: 10px;
+    font-family: $montserrat-medium;
+}
+
+::deep .fxbutton-menuline {
+    margin: 4px 0;
+
+    .fxbutton-righticon {
+        padding: 5px 7.5px;
+        margin-left: 0;
+    }
+
+    .fxbutton-metadata::after {
+        font-size: 14px;
+        margin-left: 8px;
+        vertical-align: middle;
+        @include Icon($chevron-right);
+    }
+}
+
+::deep .divider-thin {
+    height: 1px;
+    margin: 16px 0;
+    background-color: color(gray-bg-primary);
+}
+
+p {
+    font-size: 10px;
+    text-align: center;
+    margin-top: 16px !important;
+}

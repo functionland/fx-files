@@ -14,9 +14,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public string? MetaDataText { get; set; }
 
         [Parameter]
-        public string? Link { get; set; }
-
-        [Parameter]
         public string? Width { get; set; }
 
         [Parameter]
@@ -57,6 +54,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         [Parameter]
         public bool IsVisible { get; set; } = true;
+
+        [Parameter]
+        public bool IsEnabled { get; set; } = true;
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }

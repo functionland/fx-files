@@ -5,6 +5,13 @@ namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class BottomNavigation
 {
+    public string CurrentUrl { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+
 #if MultilingualEnabled
     protected async override Task OnAfterFirstRenderAsync()
     {

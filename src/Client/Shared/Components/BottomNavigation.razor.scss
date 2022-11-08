@@ -1,5 +1,7 @@
 ﻿@import '../Styles/abstracts/_variables.scss';
 @import '../Styles/abstracts/_functions.scss';
+@import '../Styles/abstracts/_mixins.scss';
+
 
 footer {
     bottom: 0;
@@ -23,6 +25,12 @@ footer {
     justify-content: space-around;
 }
 
+.navbarApp-item {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
 ::deep .navbarApp-link {
     display: flex;
     color: #6F767D;
@@ -32,9 +40,12 @@ footer {
     text-decoration: none;
     flex-direction: column;
     pointer-events: none;
+    transition: color 300ms linear;
+
 }
 
 ::deep .navbarApp-link.active {
+    transition: color 300ms linear;
     color: $green-dark-base;
 }
 
@@ -51,7 +62,7 @@ footer {
 }
 
 @media(hover: hover) and (pointer: fine) {
-    ::deep .navbarApp-link:hover {
-        color: $green-dark-hover;
+    ::deep .navbarApp-item:hover {
+        cursor: pointer;
     }
 }

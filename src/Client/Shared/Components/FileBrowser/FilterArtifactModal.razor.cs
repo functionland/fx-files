@@ -9,12 +9,12 @@ public partial class FilterArtifactModal
 
     public async Task<FileCategoryType?> ShowAsync()
     {
-        GoBackService.GoBackAsync = (Task () =>
+        GoBackService.OnInit((Task () =>
         {
             HandleClose();
             StateHasChanged();
             return Task.CompletedTask;
-        });
+        }), true, false);
 
         _tcs?.SetCanceled();
 

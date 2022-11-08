@@ -7,6 +7,8 @@ using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Prism.Events;
 using System.Reflection;
+using Functionland.FxFiles.Client.Shared.Services.Implementations.IdentityService;
+using Functionland.FxFiles.Client.Test.Services.Implementations;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -23,10 +25,16 @@ public static class IServiceCollectionExtensions
 
         services.AddTransient<FakeFileServicePlatformTest_CreateTypical>();
         services.AddTransient<FakeFileServicePlatformTest_CreateSimpleFileListOnRoot>();
-        services.AddSingleton<IFileService>(
+        services.AddSingleton<ILocalDeviceFileService>(
             serviceProvider => serviceProvider.GetRequiredService<FakeFileServiceFactory>().CreateTypical()
         );
         services.AddSingleton<IFileWatchService, FakeFileWatchService>();
+        services.AddSingleton<IZipPathUtilService, FakeZipPathUtilService>();
+
+        var cacheDirectory = Path.Combine(testContext.TestDir, "TestCache");
+        Directory.CreateDirectory(cacheDirectory);
+        services.AddSingleton<IFileCacheService>(new FakeFileCacheService(cacheDirectory));
+
         return services;
     }
 }

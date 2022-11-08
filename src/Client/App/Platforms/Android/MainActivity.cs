@@ -3,39 +3,53 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Widget;
-using Functionland.FxFiles.App.Platforms.Android;
+using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
+using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
-[Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+[Activity(Theme = "@style/Maui.SplashTheme", SupportsPictureInPicture = true, MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
-    protected override void OnCreate(Bundle? savedInstanceState)
-    {
-        base.OnCreate(savedInstanceState);
 
-        if (!PermissionUtils.CheckStoragePermission())
+    private IPermissionUtils permissionUtils;
+
+    protected override async void OnCreate(Bundle? savedInstanceState)
+    {
+        try
         {
-            PermissionUtils.RequestStoragePermission();
+
+            base.OnCreate(savedInstanceState);
+
+            permissionUtils = MauiApplication.Current.Services.GetRequiredService<IPermissionUtils>();
+
+            if (!await permissionUtils.CheckWriteStoragePermissionAsync())
+            {
+                await permissionUtils.RequestStoragePermission();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
         }
     }
 
-    protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
+    protected override async void OnActivityResult(int requestCode, Result resultCode, Intent? data)
     {
-        if (requestCode == PermissionUtils.StoragePermissionRequestCode)
+        try
         {
-            if (!PermissionUtils.CheckStoragePermission())
+            if (requestCode == permissionUtils.StoragePermissionRequestCode)
             {
-                PermissionUtils.GetPermissionTask?.SetResult(false);
-                Toast.MakeText(this, "Allow permission for storage access!", ToastLength.Long)?.Show();
+                await permissionUtils.OnPermissionResult(resultCode, data);
             }
-            else
-            {
-                PermissionUtils.GetPermissionTask?.SetResult(true);
-            }
-        }
 
-        base.OnActivityResult(requestCode, resultCode, data);
+            base.OnActivityResult(requestCode, resultCode, data);
+
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
 
 

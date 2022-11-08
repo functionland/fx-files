@@ -1,85 +1,117 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase;
 
-@if (_artifacts.Length > 0)
+@if (_artifacts.Count > 0)
 {
     if (_isMultiple)
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
-            <FileDetailView FileName="@_artifacts[_currentArtifactForShowNumber].Name" FileCategoryType="@_artifacts[_currentArtifactForShowNumber].FileCategory" FsArtifactType="_artifacts[_currentArtifactForShowNumber].ArtifactType">
-                <FileDetailItemFragment>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[_currentArtifactForShowNumber].OriginDevice)"></FileDetailViewItem>
-                    <div class="modal-slider">
-                        <FxLink FxLinkIconSide="FxLinkIconSide.Left" LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" IsEnabel="@(_currentArtifactForShowNumber != 0 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(false))"></FxLink>
-                        <div class="number-slider">@(_currentArtifactForShowNumber + 1) @Localizer[nameof(AppStrings.Of)] @_artifacts.Length</div>
-                        <FxLink FxLinkIconSide="FxLinkIconSide.Right" LinkText="@Localizer[nameof(AppStrings.NextSlide)]" IsEnabel="@(_currentArtifactForShowNumber < _artifacts.Length - 1 ? true : false)" OnHandelClick="(()=> ChangeArtifactSlideItem(true))"></FxLink>
-                    </div>
-                    <div class="select-action">
-                        <div class="info-selection">
-                            <div class="item-selected">
-                                <span class="item-selected-count">@_artifacts.Length</span>
-                                <span class="item-selected-text">@Localizer[nameof(AppStrings.ItemsSelected)]</span>
+            @if (_isModalOpen)
+            {
+                <FileDetailView 
+                    FileName="@_currentArtifact?.Name" 
+                    FileCategoryType="@_currentArtifact!.FileCategory" 
+                    FsArtifactType="_currentArtifact!.ArtifactType">
+                    <FileDetailItemFragment>
+                        <FileDetailViewItem 
+                            FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
+                            FileDetailFieldValue="@(_currentArtifact?.LastModifiedDateTime.Date.ToShortDateString())"/>
+                        <FileDetailViewItem 
+                            FileDetailFieldName="@(_currentArtifact?.ArtifactType == FsArtifactType.File ? Localizer[nameof(AppStrings.FileSize)] : Localizer[nameof(AppStrings.FolderSize)])"
+                            FileDetailFieldValue="@_currentArtifact?.SizeStr" />
+                        <FileDetailViewItem 
+                            FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" 
+                            FileDetailFieldValue="@(_currentArtifact?.OriginDevice)"/>
+                        <div class="modal-slider">
+                            <FxLink 
+                                FxLinkIconSide="FxLinkIconSide.Left" 
+                                LinkText="@Localizer[nameof(AppStrings.PreviousSlide)]" 
+                                IsEnabel="@(_currentArtifactForShowNumber != 0 ? true : false)" 
+                                OnHandelClick="(()=> ChangeArtifactSlideItem(false))"/>
+                            <div class="number-slider">@(_currentArtifactForShowNumber + 1) @Localizer[nameof(AppStrings.Of)] @_artifacts.Count</div>
+                            <FxLink 
+                                FxLinkIconSide="FxLinkIconSide.Right" 
+                                LinkText="@Localizer[nameof(AppStrings.NextSlide)]" 
+                                IsEnabel="@(_currentArtifactForShowNumber < _artifacts.Count - 1 ? true : false)" 
+                                OnHandelClick="(()=> ChangeArtifactSlideItem(true))"/>
+                        </div>
+                        <div class="select-action">
+                            <div class="info-selection">
+                                <div class="item-selected">
+                                    <span class="item-selected-count">@_artifacts.Count</span>
+                                    <span class="item-selected-text">@Localizer[nameof(AppStrings.ItemsSelected)]</span>
+                                </div>
+                                <div class="item-selected">
+                                    <span class="item-selected-count">@_artifactsSize</span>
+                                    <span class="item-selected-text">(@Localizer[nameof(AppStrings.Total)])</span>
+                                </div>
                             </div>
-                            <div class="item-selected">
-                                <span class="item-selected-count">@_artifactsSize</span>
-                                <span class="item-selected-text">(@Localizer[nameof(AppStrings.Total)])</span>
+
+                            <div class="right-part">
+                                <div class="icons-action move-icon @(!_isInRoot ? "" : "disabled-icon")" @onclick="Move"></div>
                             </div>
                         </div>
+                    </FileDetailItemFragment>
 
-                        <div class="right-part">
-                            <div class="icons-action move-icon" @onclick="Move"></div>
-                        </div>
-                    </div>
-                </FileDetailItemFragment>
+                    <FileDetailItemActionsFragment>
+                        <FileDetailViewBottomActionBar>
+                            <FileDetailActionBarItemFragment>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                                @if (_currentArtifact?.IsPinned == true)
+                                {
+                                    <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
+                                }
+                                else
+                                {
+                                    <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                                }
+                                <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
+                            </FileDetailActionBarItemFragment>
+                        </FileDetailViewBottomActionBar>
+                    </FileDetailItemActionsFragment>
 
-                <FileDetailItemActionsFragment>
-                    <FileDetailViewBottomActionBar>
-                        <FileDetailActionBarItemFragment>
-                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
-                            <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
-                            @if (_artifacts[_currentArtifactForShowNumber].IsPinned == true)
-                            {
-                                <FileDetailViewBottomActionItem OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
-                            }
-                            else
-                            {
-                                <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
-                            }
-                            <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
-                        </FileDetailActionBarItemFragment>
-                    </FileDetailViewBottomActionBar>
-                </FileDetailItemActionsFragment>
-
-                <FileDetailBottomActionFragment>
-                    <FxButton Text="Close" OnClick="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
-                </FileDetailBottomActionFragment>
-            </FileDetailView>
+                    <FileDetailBottomActionFragment>
+                        <FxButton Text="Close" OnClick="Close" ButtonSize="FxButtonSize.Stretch" ButtonStyle="FxButtonStyle.Outline" Height="40px"></FxButton>
+                    </FileDetailBottomActionFragment>
+                </FileDetailView>
+            }
         </FxBottomSheet>
     }
     else
     {
         <FxBottomSheet IsFullScreenMode="false" IsOpen="_isModalOpen" OnClose="Close" ShowCloseButton="false">
-            <FileDetailView FileName="@_artifacts[0].Name" IsImageFile="@(_artifacts[0].FileCategory == FileCategoryType.Image)" FilePath="@_artifacts[0].FullPath" FileCategoryType="@_artifacts[0].FileCategory" FsArtifactType="@_artifacts[0].ArtifactType">
+            <FileDetailView 
+                FileName="@_currentArtifact?.Name" 
+                IsImageFile="@(_currentArtifact?.FileCategory == FileCategoryType.Image)"
+                FilePath="@_currentArtifact?.FullPath"
+                FileService="@FileService"
+                FileCategoryType="@_currentArtifact!.FileCategory" 
+                FsArtifactType="@_currentArtifact!.ArtifactType">
                 <FileDetailItemFragment>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" FileDetailFieldValue="@(_artifacts[0].LastModifiedDateTime.Date.ToShortDateString())"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.FileSize)]" FileDetailFieldValue="@(_artifacts[0].ArtifactType == FsArtifactType.File ? _artifacts[0].SizeStr : "N/A")"></FileDetailViewItem>
-                    <FileDetailViewItem FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" FileDetailFieldValue="@(_artifacts[0].OriginDevice)"></FileDetailViewItem>
+                    <FileDetailViewItem 
+                        FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
+                        FileDetailFieldValue="@(_currentArtifact?.LastModifiedDateTime.Date.ToShortDateString())"/>
+                    <FileDetailViewItem 
+                        FileDetailFieldName="@(_currentArtifact?.ArtifactType == FsArtifactType.File ? Localizer[nameof(AppStrings.FileSize)] : Localizer[nameof(AppStrings.FolderSize)])"
+                        FileDetailFieldValue="@_currentArtifact?.SizeStr" />
+                    <FileDetailViewItem 
+                        FileDetailFieldName="@Localizer[nameof(AppStrings.Source)]" 
+                        FileDetailFieldValue="@(_currentArtifact?.OriginDevice)"/>
                 </FileDetailItemFragment>
 
                 <FileDetailItemActionsFragment>
                     <FileDetailViewBottomActionBar>
                         <FileDetailActionBarItemFragment>
-                            <FileDetailViewBottomActionItem OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
-                            <FileDetailViewBottomActionItem OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
-                            @if (_artifacts[0].IsPinned == true)
+                            <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
+                            @if (_currentArtifact?.IsPinned == true)
                             {
-                                <FileDetailViewBottomActionItem OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Unpin" ActionIcon="ActionIcon.Unpin"></FileDetailViewBottomActionItem>
                             }
                             else
                             {
-                                <FileDetailViewBottomActionItem OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
+                                <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Pin" ActionIcon="ActionIcon.Pin"></FileDetailViewBottomActionItem>
                             }
                             <FileDetailViewBottomActionItem OnClick="More" ActionIcon="ActionIcon.More"></FileDetailViewBottomActionItem>
                         </FileDetailActionBarItemFragment>

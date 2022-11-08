@@ -1,11 +1,8 @@
 ﻿using Android.Content;
 using Android.OS.Storage;
-using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
-using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
 using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
-using Microsoft.Extensions.Localization;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations.Test;
 
@@ -36,7 +33,7 @@ public partial class ExternalAndroidFileServicePlatformTest : FileServicePlatfor
             throw new UnableAccessToStorageException(StringLocalizer.GetString(AppStrings.UnableToLoadStorageManager));
         }
 
-        var externalRootPath = storageManager.StorageVolumes.Where(s => s.IsPrimary == false).Select(d => d.Directory?.Path).FirstOrDefault();
+        var externalRootPath = storageManager.StorageVolumes.Where(s => s.IsPrimary == false).Select(d => $@"/storage/{d.Uuid}").FirstOrDefault();
 
         if (externalRootPath == null)
         {

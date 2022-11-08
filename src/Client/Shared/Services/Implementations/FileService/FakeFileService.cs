@@ -1,4 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Utils;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileService
 {
@@ -32,11 +35,18 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             if (EnumerationLatency is not null)
                 await Task.Delay(EnumerationLatency.Value);
         }
-
-        public async Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+       
+        public async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            int? progressCount = null;
+            bool shouldProgress = true;
+
             foreach (var artifact in artifacts)
             {
+                if (onProgress is not null && shouldProgress && progressCount == null)
+                {
+                    progressCount =await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
                 await LatencyEnumerationAsync();
                 var newPath = Path.Combine(destination, artifact.Name);
                 if (!overwrite)
@@ -56,7 +66,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                     if (!_files.Any(c => c.FullPath == newArtifact.FullPath))
                         _files.Add(newArtifact);
                 }
+
+                if (onProgress is not null && shouldProgress)
+                {
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count(), progressCount, onProgress);
             }
+        }
         }
 
 
@@ -111,15 +126,37 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         private static FsArtifact CreateArtifact(string path, string? contentHash)
         {
             var originDevice = $"{Environment.MachineName}-{Environment.UserName}";
-            return new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, FsFileProviderType.InternalMemory)
+            var fileName = Path.GetFileName(path);
+            string pattern = @"[[a-z]*=[0-9]*[a-z]b]";
+            Match match = Regex.Match(fileName, pattern, RegexOptions.None);
+            long size = 20;
+            if (match.Success)
+            {
+                string found = match.Value;
+                //fileName = fileName.Replace(found, String.Empty);
+                size = GetArtifactSize(found);
+            }
+
+            return new FsArtifact(path, fileName, FsArtifactType.File, FsFileProviderType.InternalMemory)
             {
                 FileExtension = Path.GetExtension(path),
                 OriginDevice = originDevice,
                 ThumbnailPath = path,
                 ContentHash = contentHash,
                 LastModifiedDateTime = DateTimeOffset.Now.ToUniversalTime(),
-                Size = 20
+                Size = size
             };
+        }
+
+        private static long GetArtifactSize(string sizeStr)
+        {
+
+            sizeStr = sizeStr.TrimStart('[').TrimEnd(']').Replace("size=", "");
+            var sizeValueStr = Regex.Match(sizeStr, @"\d+").Value;
+            var sizeUnit = sizeStr.Replace(sizeValueStr, "");
+            long sizeValue = FsArtifactUtils.ConvertToByte(sizeValueStr, sizeUnit);
+            return sizeValue;
+
         }
 
         public async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
@@ -176,18 +213,30 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             return artifact;
         }
 
-        public async Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            int? progressCount = 0;
             var finalBag = new ConcurrentBag<FsArtifact>();
             var excludedPaths = new List<string>();
+
             foreach (var artifact in artifacts)
             {
+                if (onProgress is not null && progressCount == null)
+                {
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count(), progressCount, onProgress);
+                }
+
                 foreach (var file in _files)
                 {
                     if (file.FullPath.StartsWith(artifact.FullPath))
                     {
                         excludedPaths.Add(file.FullPath);
+
+                        if (onProgress is not null)
+                        {
+                            progressCount = await FsArtifactUtils.HandleProgressBarAsync(file.Name, artifacts.Count(), progressCount, onProgress);
                     }
+                }
                 }
 
             }
@@ -196,10 +245,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 if (!excludedPaths.Contains(file.FullPath))
                     finalBag.Add(file);
             }
+
             _files = finalBag;
         }
 
-        public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+        public async IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
         {
             if (!string.IsNullOrWhiteSpace(path))
                 path = path.Replace("/", "\\");
@@ -208,10 +258,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 files = files.Where(
                     f => string.Equals(Path.GetDirectoryName(f.FullPath), path, StringComparison.CurrentCultureIgnoreCase)
                     && !string.Equals(f.FullPath, path, StringComparison.CurrentCultureIgnoreCase));
-
-            if (!string.IsNullOrWhiteSpace(searchText))
-                files = files.Where(f => f.Name.Contains(searchText));
-
 
             foreach (var file in files)
             {
@@ -229,30 +275,50 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         public async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
         {
+            var fileName = Path.GetFileName(filePath);
+            string pattern = @"[[a-z]*=[0-9]*[a-z]b]";
+            Match match = Regex.Match(fileName, pattern, RegexOptions.None);
+            long size = 20;
+            if (match.Success)
+            {
+                string found = match.Value;
+                size = GetArtifactSize(found);
+            }
+
+
             await LatencyActionAsync();
-            string streamPath;
-            if (Path.GetExtension(filePath).ToLower() == ".jpg" ||
-                Path.GetExtension(filePath).ToLower() == ".png" ||
-                Path.GetExtension(filePath).ToLower() == ".jpeg"
-                )
-            {
-                streamPath = "/Files/fake-pic.jpg";
-            }
-            else
-            {
-                streamPath = "/Files/test.txt";
-            }
+            var sampleText = "Hello streamer!";
+            byte[] charArray = new byte[size];
+            byte[] byteArray = Encoding.ASCII.GetBytes(sampleText).Concat(charArray).ToArray();
 
-
-            using FileStream fs = File.Open(streamPath, FileMode.Open);
-            return fs;
+            MemoryStream stream = new(byteArray);
+            return stream;
 
         }
 
-        public async Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
+            var finalBag = new ConcurrentBag<FsArtifact>();
+            var excludedPaths = new List<string>();
+
             await CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
-            await DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
+
+            foreach (var artifact in artifacts)
+            {
+                foreach (var file in _files)
+                {
+                    if (file.FullPath.StartsWith(artifact.FullPath))
+                    {
+                        excludedPaths.Add(file.FullPath);
+                    }
+                }
+            }
+            foreach (var file in _files)
+            {
+                if (!excludedPaths.Contains(file.FullPath))
+                    finalBag.Add(file);
+            }
+            _files = finalBag;
         }
 
         public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
@@ -353,6 +419,33 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
         {
             throw new NotImplementedException();
+        }
+
+        public async IAsyncEnumerable<FsArtifact> GetSearchArtifactAsync(DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
+        {
+            if (deepSearchFilter is null)
+                throw new DomainLogicException("Search filter in empty."); // TODO: return proper exception.
+            // TODO : Implement deep search 
+            IEnumerable<FsArtifact> files = _files;
+
+            if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
+                files = files.Where(f => f.Name.Contains(deepSearchFilter.SearchText));
+
+            foreach (var file in files)
+            {
+                await LatencyEnumerationAsync();
+                yield return file;
+            }
+        }
+
+        public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetShowablePath(string artifactPath)
+        {
+            return artifactPath;
         }
     }
 }

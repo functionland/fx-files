@@ -9,12 +9,37 @@
     padding: 0 21px;
 }
 
+.search-toolbar-not-in-root {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        margin-bottom:$spacing-16;
+
+        ::deep .back-button::after {
+            font-size: 24px;
+            vertical-align: middle;
+            @include Icon($arrow-left);
+        }
+}
+
+.search-toolbar-not-in-root ::deep input.input-box {
+    flex-grow: 2;
+}
+
 .root-mode {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
 
     ::deep .search-back-button::after {
         font-size: 24px;
@@ -24,7 +49,7 @@
 
     ::deep .root-add-button {
         .fxbutton-lefticon {
-             margin-right: 0px; 
+            margin-right: 0px;
         }
     }
 }
@@ -34,8 +59,18 @@
 
 }
 
+::deep .back-button-space {
+    margin-right: $spacing-8;
+}
+
 .not-root-mode {
     width: 100%;
+
+    ::deep .search-back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($chevron-left);
+    }
 
     ::deep .fxbutton img {
         height: 24px;
@@ -69,12 +104,16 @@
                 font-size: $font-size-24;
                 line-height: $line-height-36;
                 color: color(gray-content1);
+                max-width: 220px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .pinned-icon::before {
                 margin-right: $spacing-4;
                 font-size: $icon-24;
-                @include Icon($pin, color(gray-content1), $Icons-Filled);
+                @include Icon($pin, color(gray-content1));
             }
             /*            .artifact_subtext {
                 color: color(gray-content3);
@@ -92,5 +131,72 @@
             justify-content: flex-start;
             align-items: center;
         }
+    }
+}
+
+::deep .animate-button {
+    position: relative;
+    color: red !important;
+}
+
+::deep .animate-button:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    margin-top: -60px;
+    background-color: #038082;
+    border-radius: 100%;
+    opacity: 0.6;
+    transform: scale(0);
+}
+
+::deep .animate-button:not(:active):after {
+    animation: ripple 300ms ease-in-out 1ms;
+}
+
+::deep .animate-button:after {
+    visibility: hidden;
+}
+
+::deep .animate-button:focus:after {
+    visibility: visible;
+}
+
+::deep .animate-button:hover {
+    transition: background 100ms ease-in;
+    background: $green-dark-hover !important;
+}
+
+::deep .animate-button:active {
+    transition: background 200ms ease-in;
+    background: $green-dark-pressed !important;
+}
+
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+    }
+
+    25% {
+        transform: scale(0.25);
+    }
+
+    50% {
+        transform: scale(0.5);
+    }
+
+    75% {
+        transform: scale(0.75);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
     }
 }

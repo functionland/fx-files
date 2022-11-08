@@ -9,9 +9,9 @@
     position: fixed;
     top: 0px;
     left: 0px;
-    z-index: 100;
+    z-index: 10000;
     visibility: hidden;
-    transition: all .6s ease-out .1s;
+    transition: all 0.3s linear 0.1s;
 }
 
 .sheet-wrapper-apear {
@@ -24,7 +24,7 @@
     width: 100%;
     position: absolute;
     transform: translateY(100%);
-    transition: all 500ms ease-in-out .2s;
+    transition: all 300ms linear 0.2s;
     bottom: 0px;
 }
 
@@ -89,11 +89,12 @@
 }
 
 .full-screen-sheet {
-    height: 100%;
+    height: 80%;
 
     .bottom-sheet-contents {
-        height: 100%;
-        border-radius: $border-radius-3;
+        height: 80%;
+        border-radius: $border-radius-20 $border-radius-20 $border-size-0 $border-size-0;
+        padding: $spacing-16 $spacing-21;
     }
 }
 

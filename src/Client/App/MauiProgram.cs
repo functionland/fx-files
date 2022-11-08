@@ -1,24 +1,30 @@
-﻿using Functionland.FxFiles.Client.Shared.Shared;
+﻿using CommunityToolkit.Maui.MediaElement;
+using Functionland.FxFiles.Client.Shared.Shared;
+using Functionland.FxFiles.Client.Shared.Utils;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Maui.LifecycleEvents;
 using System.Reflection;
 
 namespace Functionland.FxFiles.Client.App;
 
 public static class MauiProgram
 {
-    public static MauiAppBuilder CreateMauiAppBuilder()
+    public static MauiApp CreateMauiAppBuilder()
     {
-#if Windows
-  AppCenter.Start("7f2ed707-46a6-480d-bf29-d6f027eaed61",typeof(Analytics), typeof(Crashes));
-#else
+       
+#if RELEASE && !Mac
+       
         AppCenter.Start(
-                "ios=8b71c972-bb4b-4429-a8b7-5aae33857d1a;" +
-                "android=c6db6bea-416d-4688-9e14-ca8b30af1775;",
+            $"windowsdesktop={Configuration.AppCenterWindowsAppSecret};"+
+            $"ios={Configuration.AppCenteriOSAppSecret};" +
+            $"android={Configuration.AppCenterAndroidAppSecret};",
                typeof(Analytics), typeof(Crashes));
-#endif
+
+#endif 
+
 
 #if !BlazorHybrid
         throw new InvalidOperationException("Please switch to blazor hybrid as described in readme.md");
@@ -29,7 +35,17 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkitMediaElement()
             .Configuration.AddJsonFile(new EmbeddedFileProvider(assembly), "wwwroot.appsettings.json", optional: false, false);
+        
+        builder.ConfigureLifecycleEvents(lifecycle => {
+#if WINDOWS
+            lifecycle.AddWindows(windows => windows.OnWindowCreated((del) => {
+                del.ExtendsContentIntoTitleBar = false;
+                del.Title = "Fx Files";
+            }));
+#endif
+        });
 
         var services = builder.Services;
 
@@ -40,6 +56,8 @@ public static class MauiProgram
         services.AddClientSharedServices();
         services.AddClientAppServices();
 
-        return builder;
+        var app = builder.Build();
+
+        return app;
     }
 }

@@ -3,6 +3,7 @@
     public enum ArtifactActionType
     {
         Copy,
-        Move
+        Move,
+        Extract
     }
 }

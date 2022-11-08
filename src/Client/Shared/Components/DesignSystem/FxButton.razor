@@ -4,7 +4,7 @@
 
 @if (IsVisible)
 {
-    <a 
+    <button 
         style="
         width: @Width;
         height: @Height;
@@ -16,11 +16,11 @@
         border-radius: @BorderRadius;
         align-self: @VerticalAlignment;
         background-color: @BackgroundColor;"
-        href="@Link"
         ontouchstart
         draggable="false"
         @onclick="@OnClick"
         class="fxbutton
+        @(IsEnabled ? "" : "fully-disabled")
         @Class
         @(string.Format(" fxbutton-{0}", ButtonStyle).ToLower())
         @(string.Format(" fxbutton-{0}", ButtonSize).ToLower())">
@@ -49,5 +49,5 @@
                 }
             </div>
         </div>
-    </a>
+    </button>
 }

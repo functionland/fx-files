@@ -25,10 +25,25 @@
         }
 
         .file-card-image {
+            padding: $spacing-12 $spacing-24;
             width: 100%;
             height: 100%;
-            max-height:146px;
+            max-height: 146px;
             object-fit: contain;
+            position: absolute;
+            left: 0px;
+        }
+
+        .file-card-blur {
+            -webkit-filter: blur(2px);
+            -moz-filter: blur(2px);
+            -o-filter: blur(2px);
+            -ms-filter: blur(2px);
+            filter: blur(2px);
+            width: 100%;
+            height: 100%;
+            max-height: 146px;
+            object-fit: cover;
         }
 
         .file-card-icon {
@@ -43,11 +58,10 @@
 
         .pin-defualt-icon::before {
             font-size: $icon-20;
-            @include Icon($pin, color(gray-content1), $Icons-Filled);
+            @include Icon($pin, color(gray-content1));
             position: absolute;
             top: 10.28px;
             right: 10.28px;
-            cursor: pointer;
         }
     }
 

@@ -17,7 +17,7 @@
         <h3>@_title</h3>
 
         <FxTextInput
-            Label="Name"
+            Label="@_lable"
             @ref="_inputRef"
             Margin="40px 0 0 0"
             @bind-Text="@_inputValue"
@@ -31,7 +31,7 @@
             ButtonStyle="FxButtonStyle.Outline" />
 
         <FxButton 
-            Text="@Localizer[nameof(AppStrings.Confirm)]"
+            Text="@_doneBtnText"
             OnClick="Confirm"
             Margin="16px 0 21px 0"
             ButtonSize="FxButtonSize.Stretch"

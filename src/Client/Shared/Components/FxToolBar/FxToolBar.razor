@@ -5,22 +5,16 @@
     @if (IsInRoot)
     {
         <div class="root-mode">
-
             @if (IsInSearchMode)
             {
-                <FxButton Padding="0"
-                  Margin="0 8px 0 0"
-                  OnClick="@HandleBackClick"
-                  Class="search-back-button"
-                  BackgroundColor="transparent"
-                  ButtonStyle="FxButtonStyle.None" />
+                <FxBackButton IsEnabled="!IsInRootDestinationFolder && IsBackButtonVisible" OnClick="HandleBackClick" Class="back-button-space"></FxBackButton>
             }
 
             <FxSearchInput IsPartial="true"
                        DebounceInterval="1000"
                        OnSearch="HandleSearch"
                        OnFocus="HandleSearchFocused"
-                       @ref="_searchInputRef"/>
+                       @ref="_searchInputRef" />
 
             @if (IsInSearchMode is false)
             {
@@ -36,36 +30,43 @@
     }
     else
     {
+        if (ShouldSearchBoxShow)
+        {
+            <div class="search-toolbar-not-in-root">
+                <FxBackButton IsEnabled="!IsInRootDestinationFolder && IsBackButtonVisible" OnClick="HandleBackClick" Class="back-button-space"></FxBackButton>
+
+                <FxSearchInput IsPartial="true"
+                               DebounceInterval="1000"
+                               OnSearch="HandleSearch"
+                               OnFocus="HandleSearchFocused"
+                               @ref="_searchInputRef"/>
+            </div>
+        }
         <div class="not-root-mode">
-            <FxButton Padding="0"
-                  OnClick="@HandleBackClick"
-                  Class="back-button"
-                  Margin="0 0 16px 0"
-                  BackgroundColor="transparent"
-                  IsVisible="IsBackButtonVisible"
-                  ButtonStyle="@(IsInSelectMode? FxButtonStyle.Disabled : FxButtonStyle.None)" />
+            @if (!ShouldSearchBoxShow)
+            {
+                <FxBackButton IsEnabled="!IsInRootDestinationFolder && IsBackButtonVisible" OnClick="HandleBackClick" Class="back-button-space"></FxBackButton>
+            }
 
             <div class="action-row">
                 <div class="info-box">
                     <div class="artifact-title @(IsPinned ? "pinned-icon" : "")">
                         @Title
                     </div>
-@*                    <div class="artifact-subtext">
-                        @SubTitle
-                    </div>*@
                 </div>
                 <div class="action-box">
                     @if (!IsInRoot)
                     {
                         <FxButton Margin="0 8px"
+                          Class="animate-button"
                           OnClick="OnAddButtonClick"
-                          IsVisible="IsAddButtonVisible"
+                          IsVisible="IsInRootDestinationFolder == true ? false : IsAddButtonVisible"
                           ButtonStyle="FxButtonStyle.IconOnly"
                           LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
 
                         @if (!IsInSelectMode)
                         {
-                          <FxButton Class="overflow-button"
+                            <FxButton Class="overflow-button"
                           Padding="0 0 0 10px"
                           BackgroundColor="transparent"
                           OnClick="OnOverflowButtonClick"
@@ -79,73 +80,3 @@
     }
 
 </div>
-
-
-@*
-    <header>
-    @if (IsBackButtonVisible)
-    {
-        <FxButton
-            Padding="0"
-            OnClick="@GoBack"
-            Class="back-button"
-            Margin="21px 0 10px 0"
-            BackgroundColor="transparent"
-            ButtonStyle="FxButtonStyle.None" />
-    }
-    <div class="toolbarApp">
-
-        <div>
-            @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrWhiteSpace(Title))
-            {
-                <h1 class="title">
-                    @if (IsPinned) {<img class="title-icon" src="_content/Functionland.FxFiles.Client.Shared/images/icons/pinned-filled-black.svg"/>} @Title
-                </h1>
-            }
-
-            @if (!string.IsNullOrEmpty(SubTitle) || !string.IsNullOrWhiteSpace(SubTitle))
-            {
-                <h6 class="subtitle">@SubTitle</h6>
-            }
-        </div>
-
-        @if (IsInRoot)
-        {
-            <div class="main-toolbar">
-                <FxSearchInput IsPartial="true"/>
-
-                <FxButton
-                    Margin="0 8px"
-                    OnClick="OnAddButtonClick"
-                    ButtonStyle="FxButtonStyle.IconOnly"
-                    LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
-
-                <FxAvatar
-                    FxAvatarSizeType="FxAvatarSizeEnum.Small"
-                    FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
-            </div>
-        }
-
-        <div class="toolbar-items">
-            @if (!IsInRoot && IsAddButtonVisible)
-            {
-                <FxButton
-                    Margin="0 8px"
-                    OnClick="OnAddButtonClick"
-                    ButtonStyle="FxButtonStyle.IconOnly"
-                    LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
-            }
-
-            @if (IsOverflowButtonVisible)
-            {
-                <FxButton
-                    Padding="0 0 0 10px"
-                    BackgroundColor="transparent"
-                    OnClick="OnOverflowButtonClick"
-                    ButtonStyle="FxButtonStyle.None"
-                    LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/lightDesignSystem/options-vertical.svg" />
-            }
-        </div>
-    </div>
-</header>
-*@

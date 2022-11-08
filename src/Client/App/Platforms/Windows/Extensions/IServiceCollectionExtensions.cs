@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.Client.App.Platforms.Windows.Implementations.Test;
 using Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
+using Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -12,8 +13,17 @@ public static class IWindowsServiceCollectionExtensions
         services.AddSingleton<ILocalDeviceFileService, WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
-        services.AddSingleton<IThumbnailService, WindowsThumbnailService>();
+        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<IFulaFileService>>();
         services.AddSingleton<IFileWatchService, WindowsFileWatchService>();
+        services.AddSingleton<IFileCacheService, WindowsFileCacheService>();
+
+        services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
+        services.AddTransient<IThumbnailPlugin, WindowsVideoThumbnailPlugin>();
+        services.AddTransient<IThumbnailPlugin, WindowsPdfThumbnailPlugin>();
+        services.AddTransient<IThumbnailPlugin, WindowsAudioThumbnailPlugin>();
+
+        services.AddSingleton<IZipPathUtilService, WindowsZipPathUtilService>();
 
         return services;
     }

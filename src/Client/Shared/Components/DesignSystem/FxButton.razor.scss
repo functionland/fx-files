@@ -5,7 +5,6 @@
     width: min-content;
     color: $pure-white;
     height: $spacing-40;
-    display: grid;
     cursor: pointer;
     overflow: hidden;
     user-select: none;
@@ -22,11 +21,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 5;
 }
 
 .fxbutton-content div {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 5;
 }
 
 .fxbutton-content img {
@@ -59,13 +62,67 @@
     color: $pure-white;
     justify-content: center;
     background-color: $green-dark-base !important;
+    position: relative;
+}
+
+.fxbutton-normal:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    margin-top: -60px;
+    background-color: #038082;
+    border-radius: 100%;
+    opacity: 0.6;
+    transform: scale(0);
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+    }
+
+    25% {
+        transform: scale(0.25);
+    }
+
+    50% {
+        transform: scale(0.5);
+    }
+
+    75% {
+        transform: scale(0.75);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.fxbutton-normal:not(:active):after {
+    animation: ripple 300ms ease-in-out 1ms;
+}
+
+.fxbutton-normal:after {
+    visibility: hidden;
+}
+
+.fxbutton-normal:focus:after {
+    visibility: visible;
 }
 
 .fxbutton-normal:hover {
+    transition: background 100ms ease-in;
     background: $green-dark-hover !important;
 }
 
 .fxbutton-normal:active {
+    transition: background 200ms ease-in;
     background: $green-dark-pressed !important;
 }
 
@@ -74,10 +131,45 @@
     color: $green-dark-base !important;
     border: 1px solid $green-dark-base !important;
     background-color: transparent !important;
+    position: relative;
+
+
+    &:hover {
+        background-color: $green-dark-hover;
+        transition: background 100ms ease-in;
+    }
+}
+
+.fxbutton-outline:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    height: 120px;
+    margin-left: -60px;
+    margin-top: -60px;
+    background-color: #038082;
+    border-radius: 100%;
+    opacity: 0.6;
+    transform: scale(0);
+}
+
+.fxbutton-outline:not(:active):after {
+    animation: ripple 400ms cubic-bezier(1, -0.02, 1, 0.67);
+}
+
+.fxbutton-outline:after {
+    visibility: hidden;
+}
+
+.fxbutton-outline:focus:after {
+    visibility: visible;
 }
 
 .fxbutton-menuline {
-    width: auto;
+    width: 100%;
     margin: 4px 21px;
     height: 60px;
     color: color(gray-content1) !important;
@@ -96,7 +188,7 @@
 .fxbutton-sheetmenu {
     margin: 0;
     padding: 0;
-    width: auto;
+    width: 100%;
     height: 48px;
     border-radius: 0;
     color: color(gray-content1) !important;
@@ -107,6 +199,7 @@
     margin: 0px;
     justify-content: space-between;
     border-bottom: 1px solid color(gray-bg-secondary);
+    padding: 11px 0;
 }
 
 .fxbutton-icononly {
@@ -122,6 +215,11 @@
     background-color: color(gray-bg-secondary);
     border: none !important;
     color: color(input-disable) !important;
+    opacity: .5;
+    pointer-events: none !important;
+}
+
+.fully-disabled {
     opacity: .5;
     pointer-events: none !important;
 }

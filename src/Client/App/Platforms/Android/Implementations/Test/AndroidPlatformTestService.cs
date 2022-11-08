@@ -14,7 +14,7 @@ public partial class AndroidPlatformTestService : PlatformTestService
         return new List<IPlatformTest>()
         {
             InternalAndroidFileServicePlatformTest,
-            ExternalAndroidFileServicePlatformTest
+            ExternalAndroidFileServicePlatformTest,
         };
     }
 }

@@ -5,20 +5,29 @@
 <FxBottomSheet OnClose="CloseAsync"
                ShowCloseButton="false"
                IsFullScreenMode="false"
+               CanClose="false"
                @bind-IsOpen="_isModalOpen">
     <div class="progress-container">
-        <div class="title">@Title</div>
+        <div class="title">@_title</div>
         <div class="main-content">
-            <BitProgressIndicator BarHeight="4"
+            @if (_progressMode == ProgressMode.Progressive)
+            {
+                <BitProgressIndicator BarHeight="4"
                                   Label="@CurrentText"
-                                  PercentComplete="@(ProgressMode == ProgressMode.Infinite ? null : ProgressCurrentValue)" />
+                                  PercentComplete="@(GetPrecentComplete())" />
+            }
+            else
+            {
+                <BitProgressIndicator BarHeight="4"
+                                  Label="@CurrentText" />
+            }
             <div class="progress-dsc">
                 <p>@CurrentSubText</p>
-                <p>@(ProgressCurrentValue + "%")</p>
+                <p>@(GetPrecentComplete() + "%")</p>
             </div>
         </div>
 
-        @if (IsCancellable)
+        @if (_isCancellable)
         {
             <FxButton OnClick="CloseAsync" Text="@Localizer[nameof(AppStrings.Cancel)]"
                   ButtonStyle="FxButtonStyle.Normal"

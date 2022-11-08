@@ -7,7 +7,7 @@ public class FulaShareService : IFulaShareService
         throw new NotImplementedException();
     }
 
-    public Task<List<FulaUser>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
+    public Task<List<ArtifactPermissionInfo>> GetArtifactSharesAsync(string path, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -32,22 +32,7 @@ public class FulaShareService : IFulaShareService
         throw new NotImplementedException();
     }
 
-    public Task RevokeShareArtifactAsync(IEnumerable<string> dids, string artifactFullPath, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RevokeShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<string> artifactFullPaths, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task ShareArtifactAsync(IEnumerable<string> dids, FsArtifact artifact, CancellationToken? cancellationToken = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task ShareArtifactsAsync(IEnumerable<string> dids, IEnumerable<FsArtifact> fsArtifact, CancellationToken? cancellationToken = null)
+    public Task SetPermissionArtifactsAsync(IEnumerable<ArtifactPermissionInfo> permissionInfos, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

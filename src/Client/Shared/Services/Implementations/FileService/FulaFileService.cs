@@ -9,7 +9,7 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task CopyArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public virtual Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -29,12 +29,12 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task DeleteArtifactsAsync(FsArtifact[] artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public virtual Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public virtual IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public virtual IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -49,7 +49,7 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task MoveArtifactsAsync(FsArtifact[] artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public virtual Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -70,6 +70,21 @@ public partial class FulaFileService : IFulaFileService
     }
 
     public Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerable<FsArtifact> GetSearchArtifactAsync(DeepSearchFilter? deepSearchFilter, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress, CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string GetShowablePath(string artifactPath)
     {
         throw new NotImplementedException();
     }

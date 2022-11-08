@@ -1,222 +1,450 @@
-﻿using System;
-
-using Functionland.FxFiles.Client.Shared.Components.Common;
-using Functionland.FxFiles.Client.Shared.Models;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 
-namespace Functionland.FxFiles.Client.Shared.Components
+using System.Threading;
+
+namespace Functionland.FxFiles.Client.Shared.Components;
+
+public partial class ArtifactExplorer
 {
-    public partial class ArtifactExplorer
+    [Parameter] public FsArtifact? CurrentArtifact { get; set; }
+
+    private List<FsArtifact> _artifacts = default!;
+    [Parameter]
+    public List<FsArtifact> Artifacts
     {
-        [Parameter] public FsArtifact? CurrentArtifact { get; set; }
-        [Parameter] public IEnumerable<FsArtifact>? Artifacts { get; set; }
-        [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
-        [Parameter] public EventCallback<FsArtifact> OnArtifactsOptionsClick { get; set; } = new();
-        [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = new();
-        [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
-        [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
-        [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
-        [Parameter] public bool IsSelected { get; set; }
-        [Parameter] public EventCallback<bool> IsSelectedChanged { get; set; }
-        [Parameter] public FsArtifact[] SelectedArtifacts { get; set; } = Array.Empty<FsArtifact>();
-        [Parameter] public EventCallback<FsArtifact[]> SelectedArtifactsChanged { get; set; }
-        [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.list;
-        [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
-        [Parameter] public bool IsLoading { get; set; }
-        [Parameter] public EventCallback HandleBack { get; set; }
-
-        private System.Timers.Timer? _timer;
-
-        protected override Task OnInitAsync()
+        get => _artifacts;
+        set
         {
-            return base.OnInitAsync();
-        }
-
-        private async Task HandleArtifactOptionsClick(FsArtifact artifact)
-        {
-            await OnArtifactsOptionsClick.InvokeAsync(artifact);
-        }
-
-        protected override Task OnParamsSetAsync()
-        {
-            if (Artifacts is null)
+            if (_artifacts != value)
             {
-                Artifacts = Array.Empty<FsArtifact>();
+                _artifacts = value;
+                _isArtifactsChanged = true;
             }
-            return base.OnParamsSetAsync();
         }
+    }
 
-        private async Task HandleArtifactClick(FsArtifact artifact)
+    [Parameter] public SortTypeEnum CurrentSortType { get; set; } = SortTypeEnum.Name;
+    [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
+    [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
+    [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
+    [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
+    [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
+    [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
+    [Parameter] public List<FsArtifact> SelectedArtifacts { get; set; } = new();
+    [Parameter] public EventCallback<List<FsArtifact>> SelectedArtifactsChanged { get; set; }
+    [Parameter] public ViewModeEnum ViewMode { get; set; } = ViewModeEnum.List;
+    [Parameter] public FileCategoryType? FileCategoryFilter { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public EventCallback HandleBack { get; set; }
+    [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public bool IsInSearchMode { get; set; }
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
+    [Parameter] public bool IsInZipMode { get; set; }
+    [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
+
+    public PathProtocol Protocol =>
+        FileService switch
         {
-            await OnSelectArtifact.InvokeAsync(artifact);
+            ILocalDeviceFileService => PathProtocol.Storage,
+            IFulaFileService => PathProtocol.Fula,
+            _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+        };
+
+    public int WindowWidth { get; set; }
+
+    private System.Timers.Timer? _timer;
+
+    private FsArtifact? _longPressedArtifact;
+
+    private Virtualize<FsArtifact>? _virtualizeListRef;
+    private Virtualize<FsArtifact[]>? _virtualizeGridRef;
+
+    private int _gridRowCount = 2;
+    private int _overscanCount = 5;
+    private bool _isArtifactsChanged;
+
+    private string _resizeEventListenerId = string.Empty;
+
+    private DotNetObjectReference<ArtifactExplorer>? _objectReference;
+    (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+
+    protected override async Task OnInitAsync()
+    {
+        _objectReference = DotNetObjectReference.Create(this);
+
+        await base.OnInitAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
+            await InitWindowWidthListener();
         }
+    }
 
-        private bool IsInRoot(FsArtifact? artifact)
+    protected override async Task OnParamsSetAsync()
+    {
+        if (_isArtifactsChanged)
         {
-            return artifact is null ? true : false;
-        }
-
-        public void PointerDown()
-        {
-            _timer = new(500);
-            _timer.Enabled = true;
-            _timer.Start();
-
-            _timer.Elapsed += async (sender, e) =>
+            if (ViewMode == ViewModeEnum.List && _virtualizeListRef is not null)
             {
-                if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+                await _virtualizeListRef.RefreshDataAsync();
+                _isArtifactsChanged = false;
+            }
+
+            if (ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+            {
+                await _virtualizeGridRef.RefreshDataAsync();
+                _isArtifactsChanged = false;
+            }
+        }
+
+        await base.OnParamsSetAsync();
+    }
+
+    [JSInvokable]
+    public void UpdateWindowWidth(int windowWidth)
+    {
+        WindowWidth = windowWidth;
+        UpdateGridRowCount(WindowWidth);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void SetResizeEventListenerId(string id)
+    {
+        _resizeEventListenerId = id;
+    }
+
+    private async Task InitWindowWidthListener()
+    {
+        await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference);
+    }
+
+    private async Task HandleArtifactOptionClick(FsArtifact artifact)
+    {
+        await OnArtifactOptionClick.InvokeAsync(artifact);
+    }
+
+    private async Task HandleArtifactsOptionClick(List<FsArtifact> artifacts)
+    {
+        await OnArtifactsOptionClick.InvokeAsync(artifacts);
+    }
+
+    private async Task HandleArtifactClick(FsArtifact artifact)
+    {
+        await OnSelectArtifact.InvokeAsync(artifact);
+    }
+
+    private bool IsInRoot(FsArtifact? artifact)
+    {
+        return artifact is null;
+    }
+
+    public void PointerDown(FsArtifact artifact)
+    {
+        _longPressedArtifact = artifact;
+        _timer = new(1000);
+        _timer.Enabled = true;
+        _timer.Start();
+        _timer.Elapsed += TimerElapsed;
+    }
+
+    private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (_timer != null)
+        {
+            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+            {
+                DisposeTimer();
+                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+
+                InvokeAsync(async () =>
                 {
-                    IsSelected = false;
-                    SelectedArtifacts = Array.Empty<FsArtifact>();
-                    ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-
-                    await InvokeAsync(() =>
+                    if (_longPressedArtifact != null)
                     {
-                        ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-                        StateHasChanged();
-                    });
-                }
-
-                _timer.Enabled = false;
-                _timer.Stop();
-            };
-
-        }
-
-        public async Task PointerUp(FsArtifact artifact)
-        {
-            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
-            {
-                _timer.Stop();
-                _timer.Enabled = false;
-
-                await OnSelectArtifact.InvokeAsync(artifact);
-                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-            }
-            else
-            {
-                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                        await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+                        _longPressedArtifact.IsSelected = true;
+                        await OnSelectionChanged(_longPressedArtifact);
+                        _longPressedArtifact = null;
+                    }
+                    StateHasChanged();
+                });
             }
         }
+        DisposeTimer();
+    }
 
-        public void PointerCancel()
+    private void DisposeTimer()
+    {
+        if (_timer != null)
         {
+            _timer.Enabled = false;
             _timer.Stop();
+            _timer.Elapsed -= TimerElapsed;
+            _timer.Dispose();
         }
+    }
 
-        public async Task OnSelectionChanged(FsArtifact selectedArtifact)
+    public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
+    {
+        if (args.Button == 0)
         {
-            if (SelectedArtifacts.Any(item => item.FullPath == selectedArtifact.FullPath))
+            if (_timer != null)
             {
-                IsSelected = false;
-                SelectedArtifacts = SelectedArtifacts.Where(s => s.FullPath != selectedArtifact.FullPath).ToArray();
+                DisposeTimer();
+                if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                {
+                    await OnSelectArtifact.InvokeAsync(artifact);
+                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                }
+                else
+                {
+                    if (_longPressedArtifact != null)
+                    {
+                        await OnSelectionChanged(artifact);
+                        await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                    }
+                }
+            }
+        }
+        else if (args.Button == 2)
+        {
+            DisposeTimer();
+            if (SelectedArtifacts.Count == 0 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                await HandleArtifactOptionClick(artifact);
+            }
+            else if (SelectedArtifacts.Count == 1)
+            {
+                await HandleArtifactOptionClick(SelectedArtifacts[0]);
+            }
+            else if (SelectedArtifacts.Count > 1)
+            {
+                await HandleArtifactsOptionClick(SelectedArtifacts);
+            }
+        }
+        StateHasChanged();
+    }
+
+    public void PointerCancel()
+    {
+        DisposeTimer();
+    }
+
+    public async Task OnSelectionChanged(FsArtifact artifact)
+    {
+        DisposeTimer();
+        if (true)
+        {
+            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            {
+                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+                await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+            }
+            if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+            {
+                artifact.IsSelected = false;
+                SelectedArtifacts.Remove(artifact);
             }
             else
             {
-                IsSelected = true;
-                SelectedArtifacts = SelectedArtifacts.Append(selectedArtifact).ToArray();
+                artifact.IsSelected = true;
+                SelectedArtifacts.Add(artifact);
             }
 
             await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            await IsSelectedChanged.InvokeAsync(IsSelected);
+            StateHasChanged();
         }
+    }
 
-        public void OnCreateFolder()
-        {
-            OnAddFolderButtonClick.InvokeAsync();
-        }
+    public async Task OnGoToTopPage()
+    {
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+    }
 
-        public async Task OnGoToTopPage()
+    public string GetArtifactIcon(FsArtifact artifact)
+    {
+        if (artifact.ArtifactType == FsArtifactType.File)
         {
-            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
-        }
-
-        public async Task OnScrollCheck()
-        {
-            await JSRuntime.InvokeVoidAsync("OnScrollCheck");
-        }
-
-        public string GetArtifactIcon(FsArtifact artifact)
-        {
-            if (artifact.ArtifactType == FsArtifactType.File)
+            switch (artifact.FileCategory)
             {
-                switch (artifact.FileCategory)
-                {
-                    case FileCategoryType.Document:
-                        return "text-file-icon";
-                    case FileCategoryType.Other:
-                        return "text-file-icon";
-                    case FileCategoryType.Pdf:
-                        return "pdf-file-icon";
-                    case FileCategoryType.Image:
-                        return "photo-file-icon";
-                    case FileCategoryType.Audio:
-                        return "audio-file-icon";
-                    case FileCategoryType.Video:
-                        return "video-file-icon";
-                    case FileCategoryType.App:
-                        return "app-file-icon";
-                }
+                case FileCategoryType.Document:
+                    return "text-file-icon";
+                case FileCategoryType.Other:
+                    return "text-file-icon";
+                case FileCategoryType.Pdf:
+                    return "pdf-file-icon";
+                case FileCategoryType.Image:
+                    return "photo-file-icon";
+                case FileCategoryType.Audio:
+                    return "audio-file-icon";
+                case FileCategoryType.Video:
+                    return "video-file-icon";
+                case FileCategoryType.App:
+                    return "app-file-icon";
+                case FileCategoryType.Zip:
+                    return "zip-file-icon";
             }
-
-            return "folder-icon";
         }
 
-        public string GetArtifactSubText(FsArtifact artifact)
-        {
-            //todo: Proper subtext for artifact
-            return "Modified 09/30/22";
-        }
+        return "folder-icon";
+    }
 
-        (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+    private void HandleTouchStart(TouchEventArgs t)
+    {
+        startPoint.ReferencePoint = t.TargetTouches[0];
+        startPoint.StartTime = DateTimeOffset.Now;
+    }
 
-        private void HandleTouchStart(TouchEventArgs t)
-        {
-            startPoint.ReferencePoint = t.TargetTouches[0];
-            startPoint.StartTime = DateTimeOffset.Now;
-        }
+    private async Task HandleTouchEnd(TouchEventArgs t)
+    {
+        const double swipeThreshold = 0.3;
+        //if (startPoint.ReferencePoint == null)
+        //{
+        //    return;
+        //}
 
-        private async Task HandleTouchEnd(TouchEventArgs t)
+        var endReferencePoint = t.ChangedTouches[0];
+
+        var diffX = startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
+        var diffY = startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
+        var diffTime = DateTimeOffset.Now - startPoint.StartTime;
+        var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
+        var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
+
+        //var run = Math.Abs(diffX);
+        //var rise = Math.Abs(diffY);
+        //var ang = Math.Atan2(rise, run) * (180/Math.PI);
+        //
+        //if (ang > 10 && ang < 80)
+        //{
+        //    message = "diagonal";
+        //}
+
+        if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
+        if (Math.Abs(velocityX - velocityY) < .3) return;
+
+        if (velocityX >= swipeThreshold)
         {
-            const double swipeThreshold = 0.3;
-            if (startPoint.ReferencePoint == null)
-            {
+            if (velocityY >= swipeThreshold)
                 return;
-            }
 
-            var endReferencePoint = t.ChangedTouches[0];
+            if (diffX < 0)
+                await HandleBack.InvokeAsync();
+        }
+    }
 
-            var diffX = startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
-            var diffY = startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
-            var diffTime = DateTime.Now - startPoint.StartTime;
-            var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
-            var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
+    public void UpdateGridRowCount(int width)
+    {
+        bool shouldRefresh;
 
-            //var run = Math.Abs(diffX);
-            //var rise = Math.Abs(diffY);
-            //var ang = Math.Atan2(rise, run) * (180/Math.PI);
-            //
-            //if (ang > 10 && ang < 80)
-            //{
-            //    message = "diagonal";
-            //}
+        if (width >= 530)
+        {
+            shouldRefresh = true;
+            _gridRowCount = 3;
+        }
+        else if (width >= 350)
+        {
+            shouldRefresh = true;
+            _gridRowCount = 2;
+        }
+        else
+        {
+            shouldRefresh = true;
+            _gridRowCount = 1;
+        }
 
-            if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
-            if (Math.Abs(velocityX - velocityY) < .3) return;
+        if (shouldRefresh && ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
+        {
+            _virtualizeGridRef.RefreshDataAsync();
+        }
 
-            if (velocityX >= swipeThreshold)
+        StateHasChanged();
+    }
+
+    private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsListAsync(ItemsProviderRequest request)
+    {
+        var cancellationToken = request.CancellationToken;
+        
+        if (cancellationToken.IsCancellationRequested) 
+            return default;
+
+        var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
+        List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(300);
+            var skipCount = Math.Min(_overscanCount, request.StartIndex);
+            await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
+            await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+        });
+
+        return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
+    }
+
+    private async ValueTask<ItemsProviderResult<FsArtifact[]>> ProvideArtifactGridAsync(ItemsProviderRequest request)
+    {
+        var cancellationToken = request.CancellationToken;
+        if (cancellationToken.IsCancellationRequested) return default;
+
+        var count = request.Count * _gridRowCount;
+        var start = request.StartIndex * _gridRowCount;
+        var requestCount = Math.Min(count, Artifacts.Count - start);
+
+        List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(300);
+            var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
+            await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
+            await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+        });
+
+        var result = items.Chunk(_gridRowCount).ToList();
+
+        return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
+    }
+
+    private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
+    {
+        foreach (var item in items)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+            try
             {
-                if (velocityY >= swipeThreshold)
-                {
-                    return;
-                }
-                if (diffX < 0)
-                {
-                    await HandleBack.InvokeAsync();
-                    return;
-                }
+                if (item.ThumbnailPath is not null)
+                    continue;
+
+                item.ThumbnailPath =
+                    await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
+                        cancellationToken);
+
+                await InvokeAsync(() => { StateHasChanged(); });
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandler.Track(exception);
             }
         }
+    }
+
+    private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
+    {
+        await OnZipArtifactClick.InvokeAsync(artifact);
+    }
+
+    public void Dispose()
+    {
+        JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
+        _objectReference?.Dispose();
     }
 }

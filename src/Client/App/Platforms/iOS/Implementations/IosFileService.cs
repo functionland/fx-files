@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,23 +8,32 @@ namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations;
 
 public partial class IosFileService : LocalDeviceFileService
 {
-    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, string? searchText = null, CancellationToken? cancellationToken = null)
+    public override IAsyncEnumerable<FsArtifact> GetArtifactsAsync(string? path = null, CancellationToken? cancellationToken = null)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
             path = "./";
         }
 
-        return base.GetArtifactsAsync(path, searchText, cancellationToken);
+        return base.GetArtifactsAsync(path, cancellationToken);
     }
 
-    public override async Task<FsFileProviderType> GetFsFileProviderTypeAsync(string filePath)
+    public override FsFileProviderType GetFsFileProviderType(string filePath)
     {
         return FsFileProviderType.InternalMemory;
     }
 
-    public override Task<List<FsArtifact>> GetDrivesAsync()
+    public override List<FsArtifact> GetDrives()
     {
-        return Task.FromResult(new List<FsArtifact>());
+        return new List<FsArtifact>();
+    }
+
+    public override string GetShowablePath(string artifactPath)
+    {
+        if (artifactPath is null)
+            throw new ArtifactPathNullException(nameof(artifactPath));
+
+        //ToDo: Implement iOS version of how to shape the fullPath to be shown in UI.
+        return artifactPath;
     }
 }
