@@ -28,9 +28,11 @@ public abstract class ImageThumbnailPlatformTest<TFileService> : ArtifactThumbna
     private async Task<FsArtifact> GetFsArtifactAsync(string fullPath, string webUrl, CancellationToken? cancellationToken = null)
     {
         var client = new HttpClient();
-        using var streamRes = await client.GetStreamAsync(new Uri(webUrl));
-        var artifact = await FileService.CreateFileAsync(fullPath, streamRes, cancellationToken);
+        var response = await client.GetAsync(webUrl);
 
+        using var stream =await response.Content.ReadAsStreamAsync();
+
+        var artifact = await FileService.CreateFileAsync(fullPath, stream, cancellationToken);
         return artifact;
     }
 }
