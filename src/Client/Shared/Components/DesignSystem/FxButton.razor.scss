@@ -21,11 +21,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 5;
 }
 
 .fxbutton-content div {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 5;
 }
 
 .fxbutton-content img {
@@ -104,8 +108,6 @@
     animation: ripple 300ms ease-in-out 1ms;
 }
 
-/* fixes initial animation run, without user input, on page load.
- */
 .fxbutton-normal:after {
     visibility: hidden;
 }

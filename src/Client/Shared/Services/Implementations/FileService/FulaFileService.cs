@@ -83,4 +83,9 @@ public partial class FulaFileService : IFulaFileService
     {
         throw new NotImplementedException();
     }
+
+    public string GetShowablePath(string artifactPath)
+    {
+        throw new NotImplementedException();
+    }
 }

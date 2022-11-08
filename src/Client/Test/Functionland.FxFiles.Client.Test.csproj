@@ -8,6 +8,32 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="UnitTests\ZipService\SampleArchives\ProtectedWith123EncryptedEnabledRar.rar" />
+	  <None Remove="UnitTests\ZipService\SampleArchives\ProtectedWith123Rar.rar" />
+	  <None Remove="UnitTests\ZipService\SampleArchives\ProtectedWith123Zip.zip" />
+	  <None Remove="UnitTests\ZipService\SampleArchives\SimpleRar.rar" />
+	  <None Remove="UnitTests\ZipService\SampleArchives\SimpleZip.zip" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\ProtectedWith123EncryptedEnabledRar.rar">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\ProtectedWith123Rar.rar">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\ProtectedWith123Zip.zip">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\SimpleRar.rar">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\SimpleZip.zip">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
 		<PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />

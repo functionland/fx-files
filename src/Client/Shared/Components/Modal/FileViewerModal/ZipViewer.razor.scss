@@ -9,18 +9,6 @@
     padding: $spacing-8 $spacing-21;
     position: relative;
     z-index: 1;
-
-    ::deep .back-button::before {
-        font-size: $icon-24;
-        vertical-align: middle;
-        @include Icon($arrow-left, $pure-white);
-    }
-
-    .back-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 }
 
 .header {
@@ -141,24 +129,10 @@
             align-items: center;
             justify-content: center;
 
-            .move-icon::before {
+            .extract-btn::before {
                 cursor: pointer;
                 font-size: $icon-24;
-                @include Icon($move, $pure-white);
-            }
-
-            .vertical-option-icon::before {
-                cursor: pointer;
-                font-size: $icon-20;
-                @include Icon($options-vertical, $pure-white);
-                margin-left: $spacing-16;
-            }
-
-            .add-folder::before {
-                display: none;
-                cursor: pointer;
-                font-size: $icon-24;
-                @include Icon($create-folder, $pure-white);
+                @include Icon($extract, $pure-white);
             }
         }
     }
@@ -174,8 +148,8 @@
         height: 0;
     }
 
-    .z-index-header{
-        z-index:100;
-        position:relative;
+    .z-index-header {
+        z-index: 100;
+        position: relative;
     }
 }

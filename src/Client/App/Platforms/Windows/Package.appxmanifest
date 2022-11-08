@@ -40,13 +40,83 @@
 			</uap:VisualElements>
 			<Extensions>
 				<uap:Extension Category="windows.fileTypeAssociation">
-					<uap:FileTypeAssociation Name="fxzipviewer">
+					<uap:FileTypeAssociation Name="fxfileviewer">
 						<uap:SupportedFileTypes>
+
+							<!--ZIP-->
 							<uap:FileType ContentType="application/zip">.zip</uap:FileType>
 							<uap:FileType ContentType="application/x-rar-compressed">.rar</uap:FileType>
+
+							<!--TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.-->
+							<!--VIDEO-->
+							<!--
 							<uap:FileType ContentType="video/*">.mp4</uap:FileType>
+							<uap:FileType ContentType="video/*">.avi</uap:FileType>
+							<uap:FileType ContentType="video/*">.wmv</uap:FileType>
+							<uap:FileType ContentType="video/*">.mov</uap:FileType>
+							<uap:FileType ContentType="video/*">.mkv</uap:FileType>
+							<uap:FileType ContentType="video/*">.flv</uap:FileType>
+							<uap:FileType ContentType="video/*">.swf</uap:FileType>
+							<uap:FileType ContentType="video/*">.mpg</uap:FileType>
+							<uap:FileType ContentType="video/*">.mpeg</uap:FileType>
+							<uap:FileType ContentType="video/*">.m4v</uap:FileType>
+							<uap:FileType ContentType="video/*">.3gp</uap:FileType>
+							<uap:FileType ContentType="video/*">.3gpp</uap:FileType>
+							<uap:FileType ContentType="video/*">.3g2</uap:FileType>
+							<uap:FileType ContentType="video/*">.3gpp2</uap:FileType>
+							<uap:FileType ContentType="video/*">.webm</uap:FileType>
+							<uap:FileType ContentType="video/*">.ts</uap:FileType>
+							<uap:FileType ContentType="video/*">.mts</uap:FileType>
+							<uap:FileType ContentType="video/*">.m2ts</uap:FileType>
+							<uap:FileType ContentType="video/*">.vob</uap:FileType>
+							<uap:FileType ContentType="video/*">.ogv</uap:FileType>
+							<uap:FileType ContentType="video/*">.mxf</uap:FileType>
+							<uap:FileType ContentType="video/*">.roq</uap:FileType>
+							<uap:FileType ContentType="video/*">.nsv</uap:FileType>
+							<uap:FileType ContentType="video/*">.f4v</uap:FileType>
+							<uap:FileType ContentType="video/*">.f4p</uap:FileType>
+							<uap:FileType ContentType="video/*">.f4a</uap:FileType>
+							<uap:FileType ContentType="video/*">.f4b</uap:FileType>
+							<uap:FileType ContentType="video/*">.drc</uap:FileType>
+							<uap:FileType ContentType="video/*">.gifv</uap:FileType>
+							<uap:FileType ContentType="video/*">.mng</uap:FileType>
+							<uap:FileType ContentType="video/*">.qt</uap:FileType>
+							<uap:FileType ContentType="video/*">.yuv</uap:FileType>
+							<uap:FileType ContentType="video/*">.rm</uap:FileType>
+							<uap:FileType ContentType="video/*">.rmvb</uap:FileType>
+							<uap:FileType ContentType="video/*">.viv</uap:FileType>
+							<uap:FileType ContentType="video/*">.asf</uap:FileType>
+							<uap:FileType ContentType="video/*">.amv</uap:FileType>
+							<uap:FileType ContentType="video/*">.mp2</uap:FileType>
+							<uap:FileType ContentType="video/*">.mpe</uap:FileType>
+							<uap:FileType ContentType="video/*">.mpv</uap:FileType>
+							-->
+
+							<!--TXT-->
+							<uap:FileType ContentType="text/*">.txt</uap:FileType>
+
+							<!--IMAGE-->
+							<uap:FileType ContentType="image/*">.jpg</uap:FileType>
+							<uap:FileType ContentType="image/*">.jpeg</uap:FileType>
+							<uap:FileType ContentType="image/*">.png</uap:FileType>
+							<uap:FileType ContentType="image/*">.gif</uap:FileType>
+							<uap:FileType ContentType="image/*">.bmp</uap:FileType>
+							<uap:FileType ContentType="image/*">.tiff</uap:FileType>
+							<uap:FileType ContentType="image/*">.tif</uap:FileType>
+							<uap:FileType ContentType="image/*">.jfif</uap:FileType>
+							<uap:FileType ContentType="image/*">.exif</uap:FileType>
+							<uap:FileType ContentType="image/*">.ppm</uap:FileType>
+							<uap:FileType ContentType="image/*">.pgm</uap:FileType>
+							<uap:FileType ContentType="image/*">.pbm</uap:FileType>
+							<uap:FileType ContentType="image/*">.pnm</uap:FileType>
+							<uap:FileType ContentType="image/*">.webp</uap:FileType>
+							<uap:FileType ContentType="image/*">.heif</uap:FileType>
+							<uap:FileType ContentType="image/*">.avif</uap:FileType>
+							<uap:FileType ContentType="image/*">.ico</uap:FileType>
+							<uap:FileType ContentType="image/*">.svg</uap:FileType>
+							
 						</uap:SupportedFileTypes>
-						<uap:DisplayName>Functionlan ZipViewer</uap:DisplayName>
+						<uap:DisplayName>Functionlan FileViewer</uap:DisplayName>
 						<uap:EditFlags OpenIsSafe="true"/>
 					</uap:FileTypeAssociation>
 				</uap:Extension>

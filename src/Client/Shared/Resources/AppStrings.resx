@@ -612,6 +612,9 @@
   <data name="ShareWithApp" xml:space="preserve">
     <value>Share with app</value>
   </data>
+  <data name="SelectDestination" xml:space="preserve">
+    <value>Select destination</value>
+  </data>
   <data name="InvalidZipExtensionException" xml:space="preserve">
     <value>Zip file not supported: {0}</value>
   </data>
@@ -650,5 +653,14 @@
   </data>
   <data name="ExternalStorageName" xml:space="preserve">
     <value>External storage</value>
+  </data>
+  <data name="NotSupportedEncryptedFileException" xml:space="preserve">
+    <value>Not supported encrypted file</value>
+  </data>
+  <data name="FileNotFoundException" xml:space="preserve">
+    <value>The zip file dose not found.</value>
+  </data>
+  <data name="SettingPageAppTitle" xml:space="preserve">
+    <value>Fx Files by Functionland</value>
   </data>
 </root>

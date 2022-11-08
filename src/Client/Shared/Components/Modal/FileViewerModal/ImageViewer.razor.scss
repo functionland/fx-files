@@ -10,19 +10,6 @@
     position: relative;
     z-index: 1;
 
-
-    ::deep .back-button::before {
-        font-size: 24px;
-        vertical-align: middle;
-        @include Icon($arrow-left, $pure-white);
-    }
-
-    .back-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
     .right-side {
         display: flex;
         justify-content: center;
@@ -60,13 +47,6 @@
     max-width: 600px;
     margin: 0 auto;
     background: #212529;
-
-
-    /*.actual-size-active {
-        object-fit: contain;
-        max-width: 600px;
-        max-height: 100%;
-    }*/
 
     .actual-size-deactivate {
         max-height: 100%;
