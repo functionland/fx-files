@@ -31,14 +31,14 @@ public partial class SortArtifactModal
 
     private void HandleSortItemClick(SortTypeEnum sortType)
     {
-        _tcs!.SetResult(sortType);
+        _tcs?.SetResult(sortType);
         _tcs = null;
         _isModalOpen = false;
     }
 
     private void HandleClose()
     {
-        _tcs!.SetResult(CurrentSort);
+        _tcs?.SetResult(CurrentSort);
         _tcs = null;
         _isModalOpen = false;
     }

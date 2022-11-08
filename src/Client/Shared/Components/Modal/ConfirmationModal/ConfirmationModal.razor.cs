@@ -36,7 +36,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
             result.ResultType = ConfirmationModalResultType.Confirm;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
             _isModalOpen = false;
         }
@@ -47,7 +47,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
             result.ResultType = ConfirmationModalResultType.Cancel;
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
             _isModalOpen = false;
         }

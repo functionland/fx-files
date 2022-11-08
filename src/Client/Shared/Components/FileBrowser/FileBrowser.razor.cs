@@ -584,7 +584,10 @@ public partial class FileBrowser
             isDrive = artifact.SingleOrDefault()?.ArtifactType == FsArtifactType.Drive;
         }
 
-        var result = await _artifactDetailModalRef!.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
+        if (_artifactDetailModalRef is null)
+            return; 
+
+        var result = await _artifactDetailModalRef.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
 
         switch (result.ResultType)
@@ -1078,7 +1081,7 @@ public partial class FileBrowser
             var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
             FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
 
-            result = await _artifactOverflowModalRef!.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, fileCategoryType, IsInRoot(_currentArtifact));
+            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, fileCategoryType, IsInRoot(_currentArtifact));
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -1208,7 +1211,10 @@ public partial class FileBrowser
 
     private async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
-        var result = await _artifactSelectionModalRef!.ShowAsync(artifact, artifactActionResult);
+        if (_artifactSelectionModalRef is null)
+            return null;
+
+        var result = await _artifactSelectionModalRef.ShowAsync(artifact, artifactActionResult);
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
 
         string? destinationPath = null;
@@ -1623,9 +1629,10 @@ public partial class FileBrowser
 
     private async Task HandleFilterClick()
     {
-        if (_isArtifactExplorerLoading) return;
+        if (_isArtifactExplorerLoading || _filteredArtifactModalRef is null)
+            return;
 
-        _fileCategoryFilter = await _filteredArtifactModalRef!.ShowAsync();
+        _fileCategoryFilter = await _filteredArtifactModalRef.ShowAsync();
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         _isArtifactExplorerLoading = true;
