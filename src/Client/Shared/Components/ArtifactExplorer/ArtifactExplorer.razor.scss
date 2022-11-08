@@ -169,16 +169,13 @@
         }
 
         .thumbnail-box {
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
-            text-align: center;
             height: 42px;
             width: 42px;
+            background-color: color(gray-bg-primary);
 
             .img-box {
                 position: relative;
+                border-radius: 4px;
 
                 .thumbnail-background {
                     object-fit: cover;
@@ -191,7 +188,6 @@
                 }
 
                 .thumbnail-img {
-                    text-indent: -10000px;
                     object-fit: contain;
                     height: 42px;
                     width: 42px;

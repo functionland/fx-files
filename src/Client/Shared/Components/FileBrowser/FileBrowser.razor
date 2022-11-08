@@ -22,21 +22,23 @@
             <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
         }
 
-        @if (IsInRoot(_currentArtifact) && _isInSearch is false)
-        {
-            <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")" Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")" DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
-                <ContentTemplate>
-                    @if (_isPinBoxLoading)
-                    {
-                        <OverlayLoading LoadingType="LoadingType.Overlay" />
-                    }
-                    @if (_pins?.Count > 0)
-                    {
-                        <div class="items">
-                            @foreach (var pin in _pins)
-                            {
-                                <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                    <FileCard ArtifactType="@pin.ArtifactType"
+            @if (IsInRoot(_currentArtifact) && _isInSearch is false)
+            {
+                <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
+                      Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
+                      DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+                    <ContentTemplate>
+                        @if (_isPinBoxLoading)
+                        {
+                            <OverlayLoading LoadingType="LoadingType.Overlay" />
+                        }
+                        @if (_pins?.Count > 0)
+                        {
+                            <div class="items">
+                                @foreach (var pin in _pins)
+                                {
+                                    <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                        <FileCard ArtifactType="@pin.ArtifactType"
                                   Name="@pin.Name"
                                   Size="@pin.SizeStr"
                                   Path="@pin.FullPath"
