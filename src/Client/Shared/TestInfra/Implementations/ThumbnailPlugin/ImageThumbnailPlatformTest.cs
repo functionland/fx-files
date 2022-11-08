@@ -1,4 +1,7 @@
-﻿namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlugin;
+﻿using System.Threading;
+using System;
+
+namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlugin;
 
 public abstract class ImageThumbnailPlatformTest<TFileService> : ArtifactThumbnailPlatformTest<TFileService>
     where TFileService : IFileService
@@ -11,12 +14,23 @@ public abstract class ImageThumbnailPlatformTest<TFileService> : ArtifactThumbna
         FileService = fileService;
     }
 
-    protected override async Task<FsArtifact> CreateArtifactAsync(string testRoot, CancellationToken? cancellationToken = null)
+    protected override async Task<FsArtifact?> OnGetArtifactAsync(string testRoot, string fileNameWithoutExtension, CancellationToken? cancellationToken = null)
     {
-        using FileStream fs = File.Open(Path.Combine(GetSampleFileLocalPath(), "fake-pic.jpg"), FileMode.Open);
+        var fullPath = Path.ChangeExtension(Path.Combine(testRoot, fileNameWithoutExtension), ".jpg");
+        return await GetFsArtifactAsync(fullPath, "https://www.digikala.com/mag/wp-content/uploads/2020/08/DK-rebranding2.jpg", cancellationToken);
+    }
 
-        var createdImageArtifact = await FileService.CreateFileAsync($@"{testRoot}\1.jpg", fs);
+    protected override Task OnPluginSpecificTestAsync(string testRoot, CancellationToken? cancellationToken = null)
+    {
+        return Task.CompletedTask;
+    }
 
-        return createdImageArtifact;
+    private async Task<FsArtifact> GetFsArtifactAsync(string fullPath, string webUrl, CancellationToken? cancellationToken = null)
+    {
+        var client = new HttpClient();
+        using var streamRes = await client.GetStreamAsync(new Uri(webUrl));
+        var artifact = await FileService.CreateFileAsync(fullPath, streamRes, cancellationToken);
+
+        return artifact;
     }
 }

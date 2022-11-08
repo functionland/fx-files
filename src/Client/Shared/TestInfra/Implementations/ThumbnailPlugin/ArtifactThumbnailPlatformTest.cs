@@ -39,16 +39,17 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
 
             Assert.AreEqual(0, artifacts.Count, "new folder must be empty");
 
-            var createdArtifact = await CreateArtifactAsync(testRoot);
+            var fileNameWithoutExtension = Guid.NewGuid().ToString();
 
-            var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(createdArtifact, ThumbnailScale.Medium);
+            var generalArtifact = await GetArtifactAsync(testRoot, fileNameWithoutExtension);
+            if (generalArtifact is not null)
+            {
+                var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(generalArtifact, ThumbnailScale.Medium);
 
-            Assert.IsNotNull(thumbnailPath, "Image thumbnail created");
+                Assert.IsNotNull(thumbnailPath, "Thumbnail created");
+            }
 
-            var imageThumbnailArtifact = await FileService.GetArtifactAsync(thumbnailPath);
-
-
-            Assert.IsNotNull(imageThumbnailArtifact, "Image thumbnail artifact founded!");
+            await TestPluginAsync(testRoot);
         }
         catch (Exception ex)
         {
@@ -56,10 +57,26 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         }
     }
 
+    private async Task TestPluginAsync(string testRoot, CancellationToken? cancellationToken = null)
+    {
+        await OnPluginSpecificTestAsync(testRoot, cancellationToken);
+    }
 
-    protected static string GetSampleFileLocalPath() =>
-       Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "_content/Functionland.FxFiles.Client.Shared", "images", "Files");
-    protected abstract Task<FsArtifact> CreateArtifactAsync(string testRoot, CancellationToken? cancellationToken = null);
+
+    protected virtual Task OnPluginSpecificTestAsync(string testRoot, CancellationToken? cancellationToken = null)
+    {
+        return Task.CompletedTask;
+    }
+
+    private async Task<FsArtifact?> GetArtifactAsync(string testRoot, string fileNameWithoutExtension, CancellationToken? cancellationToken = null)
+    {
+        return await OnGetArtifactAsync(testRoot, fileNameWithoutExtension, cancellationToken);
+    }
+
+    protected virtual Task<FsArtifact?> OnGetArtifactAsync(string testRoot, string fileNameWithoutExtension, CancellationToken? cancellationToken = null)
+    {
+        return Task.FromResult<FsArtifact?>(null);
+    }
 
     protected abstract string OnGetRootPath();
 }
