@@ -4,7 +4,7 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 
 
-<div class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() || Artifacts == null ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+<div style="margin-bottom: @(IsmacOS? "38px" : "")" class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() || Artifacts == null ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (IsLoading)
     {
         <OverlayLoading LoadingType="LoadingType.Overlay" />
