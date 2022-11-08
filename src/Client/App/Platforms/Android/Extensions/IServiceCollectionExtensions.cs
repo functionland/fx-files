@@ -31,6 +31,10 @@ public static class IAndroidServiceCollectionExtensions
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
 
+        // Thumbnail Plugin Platform Tests
+        services.AddTransient<AndroidImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<AndroidImageThumbnailPluginPlatformTest<IFulaFileService>>();
+
         services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
         services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
 
