@@ -57,8 +57,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
 
             Assert.IsNotNull(thumbnailPath, $"Thumbnail created in {duration} ms");
             
-            var createdThumbnail = await FileService.GetArtifactAsync(thumbnailPath);
-            var (actualWidth, actualHeight) = GetImageWidthAndHeight(thumbnailPath);   //The variable thumbnailPath is not null due to above assertion.
+            var (actualWidth, actualHeight) = GetImageWidthAndHeight(thumbnailPath);   //The thumbnailPath variable is not null due to above assertion.
 
             Assert.AreEqual(expectedWidth, actualWidth, "Thumbnail width is as expected.");
             Assert.AreEqual(expectedHeight, actualHeight, "Thumbnail height is as expected.");
@@ -92,7 +91,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         return Task.FromResult<FsArtifact?>(null);
     }
 
-    protected abstract (int width, int height) GetImageWidthAndHeight(string imagePath);
-
     protected abstract string OnGetRootPath();
+
+    protected abstract (int width, int height) GetImageWidthAndHeight(string imagePath);
 }
