@@ -285,7 +285,7 @@ public class FakeFulaFileClient : IFulaFileClient
         var newPath = Path.Combine(directoryName, newName);
 
         if (ArtifactExists(token, newPath))
-            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCasefile));
+            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
 
         artifact.FullPath = newPath;
         artifact.Name = newName;

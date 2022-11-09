@@ -187,7 +187,7 @@
     <value>The {0} name is empty</value>
   </data>
   <data name="ArtifactAlreadyExistsException" xml:space="preserve">
-    <value>This {0} already  contains  an item  with the same name.</value>
+    <value>This folder already  contains  an item  with the same name.</value>
   </data>
   <data name="StreamFileIsNull" xml:space="preserve">
     <value>The stream file is null</value>

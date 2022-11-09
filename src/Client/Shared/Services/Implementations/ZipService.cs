@@ -101,7 +101,7 @@ public partial class ZipService : IZipService
                 Directory.Delete(newPath, true);
             }
             var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
-            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseArtifact));
+            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
         }
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
