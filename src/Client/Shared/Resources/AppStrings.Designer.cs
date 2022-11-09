@@ -106,7 +106,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} already pinned.
+        ///   Looks up a localized string similar to The {0} already pinned..
         /// </summary>
         public static string ArtifactAlreadyPinnedException {
             get {
@@ -115,7 +115,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} dose not exists exception.
+        ///   Looks up a localized string similar to The {0} dose not exists exception..
         /// </summary>
         public static string ArtifactDoseNotExistsException {
             get {
@@ -142,7 +142,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} name is empty.
+        ///   Looks up a localized string similar to The {0} name is empty..
         /// </summary>
         public static string ArtifactNameIsNull {
             get {
@@ -160,7 +160,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} path is null.
+        ///   Looks up a localized string similar to The {0} path is null..
         /// </summary>
         public static string ArtifactPathIsNull {
             get {
@@ -169,7 +169,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The artifact type is null.
+        ///   Looks up a localized string similar to The artifact type is null..
         /// </summary>
         public static string ArtifactTypeIsNull {
             get {
@@ -232,7 +232,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The user is already a member of this poolblox.
+        ///   Looks up a localized string similar to The user is already a member of this poolblox..
         /// </summary>
         public static string BloxPoolAlreadyExistsException {
             get {
@@ -241,7 +241,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Blox pool is not found.
+        ///   Looks up a localized string similar to Blox pool is not found..
         /// </summary>
         public static string BloxPoolIsNotFoundException {
             get {
@@ -538,7 +538,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can not delete drive.
+        ///   Looks up a localized string similar to You can not delete drive..
         /// </summary>
         public static string DriveRemoveFailed {
             get {
@@ -547,7 +547,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can not rename drive.
+        ///   Looks up a localized string similar to You can not rename drive..
         /// </summary>
         public static string DriveRenameFailed {
             get {
@@ -628,7 +628,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter password for the zip file.
+        ///   Looks up a localized string similar to Enter password for the zip file..
         /// </summary>
         public static string ExtractPasswordModalTitle {
             get {
@@ -1069,7 +1069,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not supported encrypted file.
+        ///   Looks up a localized string similar to Not supported encrypted file..
         /// </summary>
         public static string NotSupportedEncryptedFileException {
             get {
@@ -1159,7 +1159,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove from pinned items.
+        ///   Looks up a localized string similar to Remove from pinned items..
         /// </summary>
         public static string RemoveFromPinnedItems {
             get {
@@ -1249,7 +1249,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Root folder can not be deleted.
+        ///   Looks up a localized string similar to Root folder can not be deleted..
         /// </summary>
         public static string RootFolderDeleteException {
             get {
@@ -1258,7 +1258,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Root folder cannot be renamed.
+        ///   Looks up a localized string similar to Root folder cannot be renamed..
         /// </summary>
         public static string RootfolderRenameException {
             get {
@@ -1483,7 +1483,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Items copied.
+        ///   Looks up a localized string similar to Items copied..
         /// </summary>
         public static string TheCopyOpreationSuccessedMessage {
             get {
@@ -1501,7 +1501,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Items moved.
+        ///   Looks up a localized string similar to Items moved..
         /// </summary>
         public static string TheMoveOpreationSuccessedMessage {
             get {
