@@ -97,7 +97,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This {0} already  contains  an item  with the same name..
+        ///   Looks up a localized string similar to This folder already  contains  an item  with the same name..
         /// </summary>
         public static string ArtifactAlreadyExistsException {
             get {
@@ -1303,20 +1303,20 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fx Files by Functionland.
-        /// </summary>
-        public static string SettingPageAppTitle {
-            get {
-                return ResourceManager.GetString("SettingPageAppTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Select destination.
         /// </summary>
         public static string SelectDestination {
             get {
                 return ResourceManager.GetString("SelectDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fx Files by Functionland.
+        /// </summary>
+        public static string SettingPageAppTitle {
+            get {
+                return ResourceManager.GetString("SettingPageAppTitle", resourceCulture);
             }
         }
         
