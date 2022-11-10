@@ -18,7 +18,7 @@ public class WindowsPdfThumbnailPluginPlatformTest<TFileService> : PdfThumbnailP
 
     protected override string OnGetRootPath() => "C:\\";
 
-    protected override (int width, int height) GetImageWidthAndHeight(string pdfPath)
+    protected override (int width, int height) GetArtifactWidthAndHeight(string pdfPath)
     {
         //ToDo: Grab only the first page of pdf file from its path.
         throw new NotImplementedException();

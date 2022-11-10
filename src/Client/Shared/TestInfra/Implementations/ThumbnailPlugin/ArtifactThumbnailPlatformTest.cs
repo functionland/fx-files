@@ -45,7 +45,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
             if (generalArtifact is null)
                 throw new InvalidOperationException("Unable to get the artifact.");
 
-            var (initialWidth, initilaHeight) = GetImageWidthAndHeight(generalArtifact.FullPath);
+            var (initialWidth, initilaHeight) = GetArtifactWidthAndHeight(generalArtifact.FullPath);
             var thumbnailScaleSize = ThumbnailScale.Medium;
             var (expectedWidth, expectedHeight) = ImageUtils.ScaleImage(initialWidth, initilaHeight, thumbnailScaleSize);
 
@@ -57,7 +57,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
 
             Assert.IsNotNull(thumbnailPath, $"Thumbnail created in {duration} ms");
             
-            var (actualWidth, actualHeight) = GetImageWidthAndHeight(thumbnailPath);   //The thumbnailPath variable is not null due to above assertion.
+            var (actualWidth, actualHeight) = GetArtifactWidthAndHeight(thumbnailPath);   //The thumbnailPath variable is not null due to above assertion.
 
             Assert.AreEqual(expectedWidth, actualWidth, "Thumbnail width is as expected.");
             Assert.AreEqual(expectedHeight, actualHeight, "Thumbnail height is as expected.");
@@ -93,5 +93,5 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
 
     protected abstract string OnGetRootPath();
 
-    protected abstract (int width, int height) GetImageWidthAndHeight(string imagePath);
+    protected abstract (int width, int height) GetArtifactWidthAndHeight(string imagePath);
 }

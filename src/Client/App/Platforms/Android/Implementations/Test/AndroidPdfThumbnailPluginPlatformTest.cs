@@ -18,7 +18,7 @@ public class AndroidPdfThumbnailPluginPlatformTest<TFileService> : PdfThumbnailP
 
     protected override string OnGetRootPath() => "/storage/emulated/0/";
 
-    protected override (int width, int height) GetImageWidthAndHeight(string pdfPath)
+    protected override (int width, int height) GetArtifactWidthAndHeight(string pdfPath)
     {
         //ToDo: Grab the first page of the pdf and get its dimension.
         throw new NotImplementedException();

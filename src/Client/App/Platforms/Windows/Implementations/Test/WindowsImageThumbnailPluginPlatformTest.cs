@@ -20,7 +20,7 @@ public class WindowsImageThumbnailPluginPlatformTest<TFileService> : ImageThumbn
 
     protected override string OnGetRootPath() => "c:\\";
 
-    protected override (int width, int height) GetImageWidthAndHeight(string imagePath)
+    protected override (int width, int height) GetArtifactWidthAndHeight(string imagePath)
     {
         var image = Image.FromFile(imagePath);
         return (image.Width, image.Height);

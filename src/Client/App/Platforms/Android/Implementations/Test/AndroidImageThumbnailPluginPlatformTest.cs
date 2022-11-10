@@ -20,7 +20,7 @@ public class AndroidImageThumbnailPluginPlatformTest<TFileService> : ImageThumbn
 
     protected override string OnGetRootPath() => "/storage/emulated/0/";
 
-    protected override (int width, int height) GetImageWidthAndHeight(string imagePath)
+    protected override (int width, int height) GetArtifactWidthAndHeight(string imagePath)
     {
         var bitmap = BitmapFactory.DecodeFile(imagePath);
 
