@@ -40,7 +40,6 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         public async Task<ExtractorBottomSheetResult> ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
         {
             var result = new ExtractorBottomSheetResult();
-            _tcs?.SetCanceled();
             if (_progressModalRef is null)
             {
                 result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;

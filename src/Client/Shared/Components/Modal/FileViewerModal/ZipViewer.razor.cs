@@ -11,7 +11,6 @@ public partial class ZipViewer : IFileViewerComponent
 
     // Modals
     private InputModal? _folderNameInputModalRef;
-    private InputModal? _passwordModalRef;
     private ArtifactSelectionModal? _artifactSelectionModalRef;
     private ExtractorBottomSheet? _extractorModalRef;
 
