@@ -14,15 +14,13 @@ public partial class ZipService : IZipService
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
 
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; }
-    [AutoInject] public IZipPathUtilService ZipPathUtilService { get; set; } = default!;
-
 
     public virtual async Task<List<FsArtifact>> GetAllArtifactsAsync(
         string zipFilePath,
         string? password = null,
         CancellationToken? cancellationToken = null)
     {
-        var extension = Path.GetExtension(zipFilePath);
+        var extension = Path.GetExtension(zipFilePath).ToLower();
         try
         {
             var artifacts = extension switch
@@ -80,7 +78,7 @@ public partial class ZipService : IZipService
     {
         var duplicateCount = 0;
         var newPath = Path.Combine(destinationPath, destinationFolderName);
-        var zipFileExtension = Path.GetExtension(zipFullPath);
+        var zipFileExtension = Path.GetExtension(zipFullPath).ToLower();
 
         if (!Directory.Exists(newPath))
         {
@@ -103,7 +101,7 @@ public partial class ZipService : IZipService
                 Directory.Delete(newPath, true);
             }
             var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
-            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseArtifact));
+            throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
         }
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
@@ -233,15 +231,15 @@ public partial class ZipService : IZipService
     {
         var allEntriesCount = 0;
         var duplicateCount = 0;
-
+        var archiveType = Path.GetExtension(fullPath) == ".zip" ? ArchiveType.Zip : ArchiveType.Rar;
         using var archive = RarArchive.Open(fullPath, new ReaderOptions() { Password = password });
 
         if (artifacts is null)
         {
             var keys = archive.Entries.Select(c => c.Key).ToList();
 
-            var correctPaths = keys.Select(ZipPathUtilService.GetRarEntryPath);
-            var remainedEntries = GetRemainedEntries(correctPaths);
+            var correctPaths = keys.Select(k => k.Replace("/", Path.DirectorySeparatorChar.ToString()));
+            var remainedEntries = GetRemainedEntries(correctPaths, archiveType);
             allEntriesCount = archive.Entries.Count + remainedEntries.Count;
         }
         else
@@ -253,8 +251,8 @@ public partial class ZipService : IZipService
 
                 var keys = archive.Entries.Where(c => c.Key.StartsWith(item.FullPath)).Select(c => c.Key).ToList();
 
-                var correctPaths = keys.Select(ZipPathUtilService.GetRarEntryPath);
-                var remainedEntries = GetRemainedEntries(correctPaths);
+                var correctPaths = keys.Select(k => k.Replace("/", Path.DirectorySeparatorChar.ToString()));
+                var remainedEntries = GetRemainedEntries(correctPaths, archiveType);
                 allEntriesCount += archive.Entries.Count + remainedEntries.Count;
             }
         }
@@ -286,14 +284,15 @@ public partial class ZipService : IZipService
     {
         var allEntriesCount = 0;
         var duplicateCount = 0;
+        var archiveType = Path.GetExtension(fullPath) == ".zip" ? ArchiveType.Zip : ArchiveType.Rar;
 
         using var archive = ZipArchive.Open(fullPath, new ReaderOptions() { Password = password });
 
         if (artifacts is null)
         {
             var keys = archive.Entries.Select(c => c.Key).ToList();
-            var correctPaths = keys.Select(k=>k.Replace("/", Path.PathSeparator.ToString()));
-            var remainedEntries = GetRemainedEntries(correctPaths);
+            var correctPaths = keys.Select(k=>k.Replace("/", Path.AltDirectorySeparatorChar.ToString()));
+            var remainedEntries = GetRemainedEntries(correctPaths, archiveType);
             allEntriesCount = archive.Entries.Count + remainedEntries.Count;
         }
         else
@@ -304,8 +303,8 @@ public partial class ZipService : IZipService
                     return 0;
 
                 var keys = archive.Entries.Where(c => c.Key.StartsWith(item.FullPath)).Select(c => c.Key).ToList();
-                var correctPaths = keys.Select(ZipPathUtilService.GetZipEntryPath);
-                var remainedEntries = GetRemainedEntries(correctPaths);
+                var correctPaths = keys.Select(k => k.Replace("/", Path.AltDirectorySeparatorChar.ToString()));
+                var remainedEntries = GetRemainedEntries(correctPaths, archiveType);
                 allEntriesCount += archive.Entries.Count + remainedEntries.Count;
             }
         }
@@ -393,7 +392,7 @@ public partial class ZipService : IZipService
 
         if (itemPath is not null)
         {
-            var entryFullPath = ZipPathUtilService.GetZipEntryPath(itemPath);
+            var entryFullPath = itemPath.Replace("/", Path.AltDirectorySeparatorChar.ToString());
             MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
         }
 
@@ -466,7 +465,7 @@ public partial class ZipService : IZipService
 
         if (itemPath is not null)
         {
-            var entryFullPath = ZipPathUtilService.GetRarEntryPath(itemPath);
+            var entryFullPath = itemPath.Replace("/", Path.DirectorySeparatorChar.ToString());
             MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
         }
 
@@ -510,7 +509,7 @@ public partial class ZipService : IZipService
         }
     }
 
-    private static List<string> GetRemainedEntries(IEnumerable<string> filesPath)
+    private static List<string> GetRemainedEntries(IEnumerable<string> filesPath, ArchiveType archiveType)
     {
         var result = new List<string>();
 
@@ -519,7 +518,11 @@ public partial class ZipService : IZipService
             var path = filePath;
             while (true)
             {
-                var parentFilePath = Path.GetDirectoryName(path);
+                var parentFilePath = archiveType switch
+                {
+                    ArchiveType.Rar => Path.GetDirectoryName(path)?.Replace("/", Path.DirectorySeparatorChar.ToString()),
+                    _ => Path.GetDirectoryName(path)?.Replace("\\", Path.AltDirectorySeparatorChar.ToString())
+                };
 
                 if (string.IsNullOrWhiteSpace(parentFilePath)) break;
 
@@ -539,10 +542,10 @@ public partial class ZipService : IZipService
         var remainedEntries = GetRemainedEntries(artifacts.Select(c =>
                     archiveType switch
                     {
-                        ArchiveType.Rar => ZipPathUtilService.GetRarEntryPath(c.FullPath),
-                        _ => ZipPathUtilService.GetZipEntryPath(c.FullPath)
+                        ArchiveType.Rar => c.FullPath.Replace("/", Path.DirectorySeparatorChar.ToString()),
+                        _ => c.FullPath.Replace("/", Path.AltDirectorySeparatorChar.ToString())
                     }
-                )
+                ), archiveType
             );
 
         foreach (var remainedEntry in remainedEntries)

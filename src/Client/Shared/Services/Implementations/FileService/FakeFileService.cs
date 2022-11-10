@@ -341,7 +341,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                     var newPath = Path.Combine(directoryName, newName);
 
                     if (ArtifacExist(newPath))
-                        throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, "file"));
+                        throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
 
                     articat.FullPath = newPath;
                     articat.Name = newName;

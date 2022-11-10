@@ -10,8 +10,8 @@
             {
                 <FileDetailView 
                     FileName="@_currentArtifact?.Name" 
-                    FileCategoryType="@_currentArtifact!.FileCategory" 
-                    FsArtifactType="_currentArtifact!.ArtifactType">
+                    FileCategoryType="@_currentArtifact?.FileCategory" 
+                    FsArtifactType="_currentArtifact?.ArtifactType">
                     <FileDetailItemFragment>
                         <FileDetailViewItem 
                             FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 
@@ -86,8 +86,8 @@
                 IsImageFile="@(_currentArtifact?.FileCategory == FileCategoryType.Image)"
                 FilePath="@_currentArtifact?.FullPath"
                 FileService="@FileService"
-                FileCategoryType="@_currentArtifact!.FileCategory" 
-                FsArtifactType="@_currentArtifact!.ArtifactType">
+                FileCategoryType="@_currentArtifact?.FileCategory" 
+                FsArtifactType="@_currentArtifact?.ArtifactType">
                 <FileDetailItemFragment>
                     <FileDetailViewItem 
                         FileDetailFieldName="@Localizer[nameof(AppStrings.LastModified)]" 

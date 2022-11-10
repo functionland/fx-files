@@ -10,8 +10,6 @@ public static class IMacServiceCollectionExtensions
     public static IServiceCollection AddClientMacServices(this IServiceCollection services)
     {
         // Services being registered here can get injected in Mac.
-
-        services.AddSingleton<IZipPathUtilService, MacZipPathUtilService>();
         services.AddSingleton<IFulaFileService, FulaFileService>();
         services.AddSingleton<ILocalDeviceFileService, MacFileService>();
 
