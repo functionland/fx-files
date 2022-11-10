@@ -26,23 +26,24 @@ public static class IAndroidServiceCollectionExtensions
         }
 
         services.AddSingleton<IPlatformTestService, AndroidPlatformTestService>();
+        services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
+        services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
 
         // FileService Platform Tests
         services.AddTransient<InternalAndroidFileServicePlatformTest>();
         services.AddTransient<ExternalAndroidFileServicePlatformTest>();
-
-        // Thumbnail Plugin Platform Tests
-        services.AddTransient<AndroidImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
-        services.AddTransient<AndroidImageThumbnailPluginPlatformTest<IFulaFileService>>();
-
-        services.AddSingleton<IFileWatchService, AndroidFileWatchService>();
-        services.AddSingleton<IFileCacheService, AndroidFileCacheService>();
 
         // Thumbnail Plugins
         services.AddSingleton<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
         services.AddSingleton<IThumbnailPlugin, AndroidVideoThumbnailPlugin>();
         services.AddSingleton<IThumbnailPlugin, AndroidPdfThumbnailPlugin>();
         services.AddSingleton<IThumbnailPlugin, AndroidAudioThumbnailPlugin>();
+
+        // Thumbnail Plugin Platform Tests
+        services.AddTransient<AndroidImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<AndroidImageThumbnailPluginPlatformTest<IFulaFileService>>();
+        services.AddTransient<AndroidPdfThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<AndroidPdfThumbnailPluginPlatformTest<IFulaFileService>>();
 
         return services;
     }
