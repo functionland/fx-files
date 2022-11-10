@@ -663,4 +663,7 @@
   <data name="SettingPageAppTitle" xml:space="preserve">
     <value>Fx Files by Functionland</value>
   </data>
+  <data name="PasswordEmptyMessage" xml:space="preserve">
+    <value>Password won't be empty.</value>
+  </data>
 </root>
