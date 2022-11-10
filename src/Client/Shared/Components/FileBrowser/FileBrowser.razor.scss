@@ -5,10 +5,16 @@
 
 
 .file-browser-container {
-    //min-height: calc(100vh - 81px);
     height: 100%;
+}
+
+.file-browser-content {
     display: flex;
     flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100%;
+    width: 100%;
 }
 
 .file-browser-container ::deep div.toolbar-box {
@@ -72,6 +78,7 @@
 
 .action-bar-box {
     position: relative;
+    width: 100%;
 }
 
 .action-bar {
@@ -371,7 +378,6 @@
     margin: 0 auto;
 
     ::deep .list-container {
-        height: 100%;
         overflow: auto;
     }
 }

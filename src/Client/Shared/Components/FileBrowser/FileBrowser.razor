@@ -16,7 +16,7 @@
                IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
 
-    <section class="@(_isInSearch ? "opacity-0" : "opacity-1")">
+    <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1")">
         @if (_currentArtifact != null)
         {
             <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
@@ -126,7 +126,7 @@
                           @bind-ArtifactExplorerMode="_artifactExplorerMode" />
     </section>
 
-    <section class="search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
+    <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search @(_isFileCategoryFilterBoxOpen ? "expanded" : "")">
             <div class="filter-content">
                 <div class="filter-text">Filters</div>
