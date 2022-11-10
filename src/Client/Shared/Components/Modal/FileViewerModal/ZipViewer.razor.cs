@@ -112,6 +112,11 @@ public partial class ZipViewer : IFileViewerComponent
             var folderNameResult = await _folderNameInputModalRef.ShowAsync(createFolder, string.Empty, folderName,
                 newFolderPlaceholder, extractBtnTitle);
 
+            if (folderNameResult.ResultType == InputModalResultType.Cancel)
+            {
+                return;
+            }
+
             var destinationFolderName = folderNameResult.Result ?? folderName;
 
             var result = new ExtractorBottomSheetResult();

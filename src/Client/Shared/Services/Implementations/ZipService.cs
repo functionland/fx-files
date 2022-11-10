@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
 using Functionland.FxFiles.Client.Shared.Utils;
+
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Archives.Zip;
@@ -56,7 +57,7 @@ public partial class ZipService : IZipService
         {
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
-        catch(FileNotFoundException)
+        catch (FileNotFoundException)
         {
             throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
         }
@@ -186,7 +187,7 @@ public partial class ZipService : IZipService
     {
         var artifact = await LocalDeviceFileService.GetArtifactAsync(zipFilePath);
 
-        if(artifact is null)
+        if (artifact is null)
         {
             throw new FileNotFoundException(StringLocalizer.GetString(AppStrings.FileNotFoundException));
         }
@@ -201,7 +202,7 @@ public partial class ZipService : IZipService
         {
             var artifactType = entry.IsDirectory ? FsArtifactType.Folder : FsArtifactType.File;
             var path = entry.Key.TrimEnd('/');
-            
+
             var parentPath = Path.GetDirectoryName(path)?.Replace(Path.DirectorySeparatorChar.ToString(), "/");
 
             var entryFileName = Path.GetFileName(path);
@@ -291,7 +292,7 @@ public partial class ZipService : IZipService
         if (artifacts is null)
         {
             var keys = archive.Entries.Select(c => c.Key).ToList();
-            var correctPaths = keys.Select(k=>k.Replace("/", Path.AltDirectorySeparatorChar.ToString()));
+            var correctPaths = keys.Select(k => k.Replace("/", Path.AltDirectorySeparatorChar.ToString()));
             var remainedEntries = GetRemainedEntries(correctPaths, archiveType);
             allEntriesCount = archive.Entries.Count + remainedEntries.Count;
         }
@@ -475,7 +476,7 @@ public partial class ZipService : IZipService
 
     private static void MoveExtractedFileToFinalDestination(string destinationPath, string extractedItemPath)
     {
-        var extention = Path.GetExtension(extractedItemPath);
+        var extenstion = Path.GetExtension(extractedItemPath);
         var fileName = Path.GetFileName(extractedItemPath);
 
         if (Path.GetDirectoryName(extractedItemPath) == destinationPath)
@@ -484,7 +485,7 @@ public partial class ZipService : IZipService
         var extractedFinalPath = Path.Combine(destinationPath, extractedItemPath);
         var destinationFinalPath = Path.Combine(destinationPath, fileName);
 
-        if (string.IsNullOrWhiteSpace(extention))
+        if (string.IsNullOrWhiteSpace(extenstion))
         {
             Directory.Move(extractedFinalPath, destinationFinalPath);
         }
