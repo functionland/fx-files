@@ -187,6 +187,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 {
                     await _progressModalRef.CloseAsync();
                 }
+
+                _tcs = null;
             }
         }
 
