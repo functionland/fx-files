@@ -271,6 +271,6 @@
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
             OnBack="FileViewerBack"
-            FileViewerResult="FileViewerResult" />
+            ExtractorBottomSheetResult="ExtractorBottomSheetResult" />
 
-<Extractor @ref="extractorModalRef" ExtractResultCallback="GetExtractResult"></Extractor>
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>

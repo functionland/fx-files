@@ -4,13 +4,10 @@ using Functionland.FxFiles.Client.Shared.Utils;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
-    public partial class Extractor
+    public partial class ExtractorBottomSheet
     {
-        [Parameter] public EventCallback<FileViewerResultType> ExtractResultCallback { get; set; }
-
-        // Service
-        [AutoInject] private ZipService ZipService { get; set; } = default!;
-        [AutoInject] private IFileService FileService { get; set; } = default!;
+        [Parameter] public IFileService FileService { get; set; } = default!;
+        [AutoInject] private IZipService ZipService { get; set; } = default!;
 
         // Modals
         private InputModal? _extractorPasswordModalRef;
@@ -28,7 +25,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _progressBarCts?.Cancel();
         }
 
-        private FileViewerResultType FileViewerResult { get; set; }
+        private TaskCompletionSource<ExtractorBottomSheetResult>? _tcs;
 
         protected override Task OnInitAsync()
         {
@@ -40,18 +37,21 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             return base.OnInitAsync();
         }
 
-        public async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
+        public async Task<ExtractorBottomSheetResult> ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
         {
+            var result = new ExtractorBottomSheetResult();
+            _tcs?.SetCanceled();
             if (_progressModalRef is null)
             {
-                FileViewerResult = FileViewerResultType.Cancel;
-                await ExtractResultCallback.InvokeAsync(FileViewerResult);
-                return;
+                result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                _tcs?.SetResult(result);
+                return result;
             }
 
             try
             {
-                await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ExtractingFolder), true);
+                await _progressModalRef.ShowAsync(ProgressMode.Progressive,
+                    Localizer.GetString(AppStrings.ExtractingFolder), true);
                 _progressBarCts = new CancellationTokenSource();
 
                 async Task OnProgress(ProgressInfo progressInfo)
@@ -68,25 +68,26 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     destinationFolderPath,
                     destinationFolderName,
                     innerArtifacts,
-                     false,
-                     password,
-                     OnProgress,
-                     _progressBarCts.Token);
+                    false,
+                    password,
+                    OnProgress,
+                    _progressBarCts.Token);
 
                 await _progressModalRef.CloseAsync();
 
                 if (duplicateCount <= 0)
                 {
-                    FileViewerResult = FileViewerResultType.Cancel;
-                    await ExtractResultCallback.InvokeAsync(FileViewerResult);
-                    return;
+                    result.ExtractorResult = ExtractorBottomSheetResultType.Success;
+                    _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
+                    _tcs.SetResult(result);
+                    return await _tcs.Task;
                 }
 
                 if (_extractorConfirmationReplaceOrSkipModalRef == null)
                 {
-                    FileViewerResult = FileViewerResultType.Cancel;
-                    await ExtractResultCallback.InvokeAsync(FileViewerResult);
-                    return;
+                    result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs?.SetResult(result);
+                    return result;
                 }
 
                 var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
@@ -101,7 +102,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                 {
 
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive,
+                        Localizer.GetString(AppStrings.ReplacingFiles), true);
 
                     _progressBarCts = new CancellationTokenSource();
                     await ZipService.ExtractZippedArtifactAsync(
@@ -109,12 +111,22 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                         destinationFolderPath,
                         destinationFolderName,
                         overwriteArtifacts,
-                         true,
-                         password,
-                         OnProgress,
-                         _progressBarCts.Token);
+                        true,
+                        password,
+                        OnProgress,
+                        _progressBarCts.Token);
                 }
-                FileViewerResult = FileViewerResultType.Success;
+
+                result.ExtractorResult = ExtractorBottomSheetResultType.Success;
+                _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
+                _tcs.SetResult(result);
+                return await _tcs.Task;
+            }
+            catch (Exception exception)
+            {
+                result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                _tcs?.SetResult(result);
+                throw;
             }
             finally
             {
@@ -124,22 +136,19 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private static List<FsArtifact> GetShouldOverwriteArtifacts(List<FsArtifact> artifacts, List<FsArtifact> existArtifacts)
         {
-            List<FsArtifact> overwriteArtifacts = new();
             var pathExistArtifacts = existArtifacts.Select(a => a.FullPath);
-            foreach (var artifact in artifacts)
-            {
-                if (pathExistArtifacts.Any(p => p.StartsWith(artifact.FullPath)))
-                {
-                    overwriteArtifacts.Add(artifact);
-                }
-            }
 
-            return overwriteArtifacts;
+            return artifacts.Where(artifact => pathExistArtifacts.Any(p => p.Equals(artifact.FullPath))).ToList();
         }
 
         private void HandleBackAsync()
         {
-            FileViewerResult = FileViewerResultType.Cancel;
+            var result = new ExtractorBottomSheetResult
+            {
+                ExtractorResult = ExtractorBottomSheetResultType.Cancel
+            };
+            _tcs?.SetResult(result);
+            _tcs = null;
             _extractorPasswordModalRef?.Dispose();
         }
     }
