@@ -44,6 +44,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             {
                 result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                 _tcs?.SetResult(result);
+                ProgressBarOnCancel();
                 return result;
             }
 
@@ -62,15 +63,56 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     await InvokeAsync(StateHasChanged);
                 }
 
-                var duplicateCount = await ZipService.ExtractZippedArtifactAsync(
-                    zipFilePath,
-                    destinationFolderPath,
-                    destinationFolderName,
-                    innerArtifacts,
-                    false,
-                    password,
-                    OnProgress,
-                    _progressBarCts.Token);
+                var duplicateCount = 0;
+                try
+                {
+                    duplicateCount = await ZipService.ExtractZippedArtifactAsync(
+                        zipFilePath,
+                        destinationFolderPath,
+                        destinationFolderName,
+                        innerArtifacts,
+                        false,
+                        password,
+                        OnProgress,
+                        _progressBarCts.Token);
+                }
+                catch (InvalidPasswordException)
+                {
+                    if (_extractorPasswordModalRef == null)
+                    {
+                        result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                        _tcs?.SetResult(result);
+                        ProgressBarOnCancel();
+                        return result;
+                    }
+
+                    var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
+                    var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
+                    var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+                    var passwordResult = await _extractorPasswordModalRef.ShowAsync(extractPasswordModalTitle,
+                        string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
+                    if (passwordResult?.ResultType == InputModalResultType.Cancel)
+                    {
+                        result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                        _tcs?.SetResult(result);
+                        ProgressBarOnCancel();
+                        return result;
+                    }
+
+                    duplicateCount = await ZipService.ExtractZippedArtifactAsync(
+                        zipFilePath,
+                        destinationFolderPath,
+                        destinationFolderName,
+                        innerArtifacts,
+                        false,
+                        passwordResult?.Result ?? throw new InvalidOperationException("Password won't be empty."),
+                        OnProgress,
+                        _progressBarCts.Token);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
 
                 await _progressModalRef.CloseAsync();
 
@@ -86,6 +128,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 {
                     result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                     _tcs?.SetResult(result);
+                    ProgressBarOnCancel();
                     return result;
                 }
 
@@ -121,7 +164,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 _tcs.SetResult(result);
                 return await _tcs.Task;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                 _tcs?.SetResult(result);
