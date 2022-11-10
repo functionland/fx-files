@@ -50,7 +50,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             if (File.Exists(path))
-                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
+                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
 
             await LocalStorageCreateFile(path, stream);
 
@@ -97,7 +97,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var newPath = Path.Combine(path, folderName);
 
             if (Directory.Exists(newPath))
-                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
+                throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
 
             LocalStorageCreateDirectory(newPath);
 
@@ -276,7 +276,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var isFileExist = File.Exists(newPath);
 
                 if (isFileExist)
-                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFile));
+                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
 
                 LocalStorageRenameFile(filePath, newPath);
             });
@@ -326,7 +326,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var isExist = Directory.Exists(newPath);
 
                 if (isExist)
-                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException, lowerCaseFolder));
+                    throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
 
                 LocalStorageRenameDirectory(folderPath, newPath);
             });
