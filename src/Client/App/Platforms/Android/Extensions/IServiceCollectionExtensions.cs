@@ -44,8 +44,6 @@ public static class IAndroidServiceCollectionExtensions
         services.AddSingleton<IThumbnailPlugin, AndroidPdfThumbnailPlugin>();
         services.AddSingleton<IThumbnailPlugin, AndroidAudioThumbnailPlugin>();
 
-        services.AddSingleton<IZipPathUtilService, AndroidZipPathUtilService>();
-
         return services;
     }
 }

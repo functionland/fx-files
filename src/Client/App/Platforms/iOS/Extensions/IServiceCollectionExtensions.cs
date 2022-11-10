@@ -21,8 +21,6 @@ public static class IiOSServiceCollectionExtensions
 
         services.AddSingleton<IFileCacheService, IosFileCacheService>();
 
-        services.AddSingleton<IZipPathUtilService, IosZipPathUtilService>();
-
         return services;
     }
 }
