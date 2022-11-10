@@ -61,7 +61,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
                 var duration = sw.ElapsedMilliseconds;
 
                 Assert.IsNotNull(thumbnailPath, $"Thumbnail {thumbnailScaleSize} created in {duration} ms");
-                AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, thumbnailPath!);
+                AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, thumbnailPath!, $"Size:{generalArtifact.SizeStr}");
             }
 
             await TestPluginAsync(testRoot);
@@ -78,12 +78,12 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         }
     }
 
-    protected void AssertThumbnailWidthAndHeight(int expectedWidth, int expectedHeight, string thumbnailPath)
+    protected void AssertThumbnailWidthAndHeight(int expectedWidth, int expectedHeight, string thumbnailPath, string? additionalInformaion = null)
     {
         var (actualWidth, actualHeight) = GetArtifactWidthAndHeight(thumbnailPath);
 
-        Assert.AreEqual(expectedWidth, actualWidth, $"Thumbnail width is {actualWidth}, as expected.");
-        Assert.AreEqual(expectedHeight, actualHeight, $"Thumbnail height is {actualHeight}, as expected.");
+        Assert.AreEqual(expectedWidth, actualWidth, $"Thumbnail width is {actualWidth}, as expected. {additionalInformaion}");
+        Assert.AreEqual(expectedHeight, actualHeight, $"Thumbnail height is {actualHeight}, as expected. {additionalInformaion}");
     }
 
     private async Task TestPluginAsync(string testRoot, CancellationToken? cancellationToken = null)

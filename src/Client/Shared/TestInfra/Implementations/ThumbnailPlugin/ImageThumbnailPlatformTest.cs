@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
 using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlugin;
@@ -23,18 +24,15 @@ public abstract class ImageThumbnailPlatformTest<TFileService> : ArtifactThumbna
     protected override async Task OnPluginSpecificTestAsync(string testRoot, CancellationToken? cancellationToken = null)
     {
         var thumbnailScales = Enum.GetValues<ThumbnailScale>();
+
+        var fullPath_293_kb = Path.ChangeExtension(Path.Combine(testRoot, $"image_293_kb"), ".jpg");
+        var image_293_kb = "https://wallpaperaccess.com/full/1356284.jpg";
+        var fsArtifact_293_kb = await GetFsArtifactAsync(fullPath_293_kb, image_293_kb, cancellationToken);
+        var (initialWidth, initilaHeight) = GetArtifactWidthAndHeight(fullPath_293_kb);
+
         foreach (var thumbnailScale in thumbnailScales)
         {
-            var image_293_kb = "https://wallpaperaccess.com/full/1356284.jpg";
-
-            var fullPath_293_kb = Path.ChangeExtension(Path.Combine(testRoot, $"image_293_kb_{thumbnailScale}"), ".jpg");
-            var fsArtifact_293_kb = await GetFsArtifactAsync(fullPath_293_kb, image_293_kb, cancellationToken);
-
-            var (initialWidth, initilaHeight) = GetArtifactWidthAndHeight(fullPath_293_kb);
-
-
             var (expectedWidth, expectedHeight) = ImageUtils.ScaleImage(initialWidth, initilaHeight, thumbnailScale);
-
             var sw = new Stopwatch();
             sw.Start();
             var image_293_kb_thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(fsArtifact_293_kb, thumbnailScale, cancellationToken);
@@ -42,7 +40,7 @@ public abstract class ImageThumbnailPlatformTest<TFileService> : ArtifactThumbna
             var duration = sw.ElapsedMilliseconds;
 
             Assert.IsNotNull(image_293_kb_thumbnailPath, $"Image Thumbnail {thumbnailScale} created in {duration} ms");
-            AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, image_293_kb_thumbnailPath!);
+            AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, image_293_kb_thumbnailPath!, $"Size:{fsArtifact_293_kb.SizeStr}.");
         }
     }
 
