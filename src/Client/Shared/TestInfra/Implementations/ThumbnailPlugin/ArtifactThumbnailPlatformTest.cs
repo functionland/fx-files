@@ -60,7 +60,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
                 sw.Stop();
                 var duration = sw.ElapsedMilliseconds;
 
-                Assert.IsNotNull(thumbnailPath, $"Image Thumbnail {thumbnailScaleSize} created in {duration} ms");
+                Assert.IsNotNull(thumbnailPath, $"Thumbnail {thumbnailScaleSize} created in {duration} ms");
                 AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, thumbnailPath!);
             }
 
@@ -68,7 +68,13 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         }
         catch (Exception ex)
         {
-            throw;
+            try
+            {
+                Assert.Fail("Test failed!", ex.Message);
+            }
+            catch
+            {
+            }
         }
     }
 
