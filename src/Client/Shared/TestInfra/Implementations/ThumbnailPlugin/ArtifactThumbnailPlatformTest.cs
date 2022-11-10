@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
 using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
@@ -32,7 +33,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
                 testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "ThumbnailTestsFolder"));
             }
 
-            var testRootArtifact = await FileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
+            var testRootArtifact = await FileService.CreateFolderAsync(testsRootArtifact?.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
             var testRoot = testRootArtifact.FullPath!;
 
             var artifacts = await FileService.GetArtifactsAsync(testRoot).ToListAsync();
@@ -46,21 +47,22 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
                 throw new InvalidOperationException("Unable to get the artifact.");
 
             var (initialWidth, initilaHeight) = GetArtifactWidthAndHeight(generalArtifact.FullPath);
-            var thumbnailScaleSize = ThumbnailScale.Medium;
-            var (expectedWidth, expectedHeight) = ImageUtils.ScaleImage(initialWidth, initilaHeight, thumbnailScaleSize);
 
-            var sw = new Stopwatch();
-            sw.Start();
-            var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(generalArtifact, thumbnailScaleSize);
-            sw.Stop();
-            var duration = sw.ElapsedMilliseconds;
+            var thumbnailScaleSizes = Enum.GetValues<ThumbnailScale>();
 
-            Assert.IsNotNull(thumbnailPath, $"Thumbnail created in {duration} ms");
-            
-            var (actualWidth, actualHeight) = GetArtifactWidthAndHeight(thumbnailPath);   //The thumbnailPath variable is not null due to above assertion.
+            foreach (var thumbnailScaleSize in thumbnailScaleSizes)
+            {
+                var (expectedWidth, expectedHeight) = ImageUtils.ScaleImage(initialWidth, initilaHeight, thumbnailScaleSize);
 
-            Assert.AreEqual(expectedWidth, actualWidth, "Thumbnail width is as expected.");
-            Assert.AreEqual(expectedHeight, actualHeight, "Thumbnail height is as expected.");
+                var sw = new Stopwatch();
+                sw.Start();
+                var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(generalArtifact, thumbnailScaleSize);
+                sw.Stop();
+                var duration = sw.ElapsedMilliseconds;
+
+                Assert.IsNotNull(thumbnailPath, $"Image Thumbnail {thumbnailScaleSize} created in {duration} ms");
+                AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, thumbnailPath!);
+            }
 
             await TestPluginAsync(testRoot);
         }
@@ -68,6 +70,14 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         {
             throw;
         }
+    }
+
+    protected void AssertThumbnailWidthAndHeight(int expectedWidth, int expectedHeight, string thumbnailPath)
+    {
+        var (actualWidth, actualHeight) = GetArtifactWidthAndHeight(thumbnailPath);
+
+        Assert.AreEqual(expectedWidth, actualWidth, $"Thumbnail width is {actualWidth}, as expected.");
+        Assert.AreEqual(expectedHeight, actualHeight, $"Thumbnail height is {actualHeight}, as expected.");
     }
 
     private async Task TestPluginAsync(string testRoot, CancellationToken? cancellationToken = null)
