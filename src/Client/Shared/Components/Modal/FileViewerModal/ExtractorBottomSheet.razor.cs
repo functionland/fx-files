@@ -125,10 +125,8 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             List<FsArtifact>? innerArtifacts)
         {
             var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
-            List<FsArtifact> overwriteArtifacts = new();
             var readInnerArtifacts = await ZipService.GetAllArtifactsAsync(zipFilePath, _password, _progressBarCts?.Token);
-            overwriteArtifacts =
-                GetShouldOverwriteArtifacts(readInnerArtifacts, existedArtifacts);
+            var overwriteArtifacts = GetShouldOverwriteArtifacts(readInnerArtifacts, existedArtifacts);
             return overwriteArtifacts;
         }
 
