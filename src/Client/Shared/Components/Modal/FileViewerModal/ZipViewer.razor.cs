@@ -45,7 +45,6 @@ public partial class ZipViewer : IFileViewerComponent
             await InitialZipViewerAsync();
             StateHasChanged();
         }
-
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -152,6 +151,11 @@ public partial class ZipViewer : IFileViewerComponent
             var folderNameResult = await _folderNameInputModalRef.ShowAsync(createFolder, string.Empty, folderName,
                 newFolderPlaceholder, extractBtnTitle);
 
+            if (folderNameResult.ResultType == InputModalResultType.Cancel)
+            {
+                return;
+            }
+
             var destinationFolderName = folderNameResult.Result ?? folderName;
 
 
@@ -192,6 +196,10 @@ public partial class ZipViewer : IFileViewerComponent
                 var folderNameResult = await _folderNameInputModalRef.ShowAsync(createFolder, string.Empty, folderName,
                     newFolderPlaceholder, extractBtnTitle);
 
+                if (folderNameResult.ResultType == InputModalResultType.Cancel)
+                {
+                    return;
+                }
                 var destinationFolderName = folderNameResult.Result ?? folderName;
 
                 if (folderNameResult.Result != null && _extractorModalRef != null)
@@ -245,7 +253,7 @@ public partial class ZipViewer : IFileViewerComponent
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
             }
         }
-        else if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+        else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
             CancelSelectionMode();
         }

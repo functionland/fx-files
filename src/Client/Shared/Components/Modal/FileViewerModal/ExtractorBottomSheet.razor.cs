@@ -256,7 +256,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             {
                 ExtractorResult = ExtractorBottomSheetResultType.Cancel
             };
-            _extractorPasswordModalRef?.Dispose();
+            _tcs?.SetResult(result);
         }
     }
 }
