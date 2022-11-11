@@ -4,6 +4,7 @@
 @import '../../Styles/components/_bit-checkbox.scss';
 
 .list-container {
+    transition: height 300ms linear 3s;
     height: 100%;
     flex-grow: 2;
     overflow-y: auto;
@@ -537,6 +538,7 @@
     bottom: 95px;
     right: 15px;
     display: none;
+    z-index: 2;
 }
 
 ::deep .fxbutton-content img {
@@ -552,6 +554,7 @@
         position: fixed;
         bottom: 95px;
         right: calc(#{$a} - #{$b});
+        z-index: 2;
     }
 }
 

@@ -1114,6 +1114,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password won&apos;t be empty..
+        /// </summary>
+        public static string PasswordEmptyMessage {
+            get {
+                return ResourceManager.GetString("PasswordEmptyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to the path is null.
         /// </summary>
         public static string PathIsNull {

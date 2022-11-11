@@ -55,8 +55,7 @@
                 <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
             </section>
 
-            @if (string.IsNullOrWhiteSpace(_searchText) is false)
-            {
+            
                 <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
@@ -72,7 +71,6 @@
                           IsInSearchMode="_isInSearch"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="_artifactExplorerMode" />
-            }
 
             @if (_selectedArtifacts != null)
             {
@@ -146,33 +144,35 @@
 
             @if (IsInRoot(_currentArtifact) && _isInSearch is false)
             {
-                <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
-                      Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
-                      DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
-                    <ContentTemplate>
-                        @if (_isPinBoxLoading)
-                        {
-                            <OverlayLoading LoadingType="LoadingType.Overlay" />
-                        }
-                        @if (_pins?.Count > 0)
-                        {
-                            <div class="items">
-                                @foreach (var pin in _pins)
-                                {
-                                    <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                        <FileCard ArtifactType="@pin.ArtifactType"
-                                  Name="@pin.Name"
-                                  Size="@pin.SizeStr"
-                                  Path="@pin.FullPath"
-                                  FileService="@FileService"
-                                  FileType="@pin.FileCategory"
-                                  ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
-                                    </div>
-                                }
-                            </div>
-                        }
-                    </ContentTemplate>
-                </BitAccordion>
+                <div class="pin-artifacts">
+                    <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
+                          Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
+                          DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+                        <ContentTemplate>
+                            @if (_isPinBoxLoading)
+                            {
+                                <OverlayLoading LoadingType="LoadingType.Overlay" />
+                            }
+                            @if (_pins?.Count > 0)
+                            {
+                                <div class="items">
+                                    @foreach (var pin in _pins)
+                                    {
+                                        <div @onclick="(() => HandleSelectArtifactAsync(pin))">
+                                            <FileCard ArtifactType="@pin.ArtifactType"
+                                      Name="@pin.Name"
+                                      Size="@pin.SizeStr"
+                                      Path="@pin.FullPath"
+                                      FileService="@FileService"
+                                      FileType="@pin.FileCategory"
+                                      ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </ContentTemplate>
+                    </BitAccordion>
+                </div>
             }
 
             <div class="root-title">My device files</div>
@@ -215,22 +215,15 @@
 
                     </div>
                 </div>
+                <div class="local-search  @(!IsInRoot(_currentArtifact) ? "show-search" : "hide-search")">
+                    <FxSearchInput Placeholder="@_currentArtifact?.Name"
+                               @ref="_fxSearchInputRef"
+                               OnCancel="HandleCancelInLineSearchAsync"
+                               DebounceInterval="300"
+                               OnSearch="HandleInLineSearch"
+                               IsPartial="false" />
+                </div>
             </div>
-
-            @* else if (_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-        {
-
-        }*@
-
-            @if (!IsInRoot(_currentArtifact))
-            {
-                <FxSearchInput Placeholder="@_currentArtifact?.Name"
-                       @ref="_fxSearchInputRef"
-                       OnCancel="HandleCancelInLineSearchAsync"
-                       DebounceInterval="300"
-                       OnSearch="HandleInLineSearch"
-                       IsPartial="false" />
-            }
         </div>
         <ArtifactExplorer Artifacts="_displayedArtifacts"
                       FileService="FileService"
@@ -272,6 +265,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            OnExtract="HandleExtractArtifactAsync"
             OnBack="FileViewerBack"
-            FileViewerResult="FileViewerResult" />
+            NavigationFolderCallback="NavigateToDestination"/>
+
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>

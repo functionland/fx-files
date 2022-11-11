@@ -540,3 +540,31 @@
         font-size: 24px;
     }
 }
+
+.show-search {
+   opacity: 1;
+    height: 40px;
+    transition: opacity 300ms linear 100ms,height 200ms linear;
+}
+
+.hide-search {
+    transition: opacity 300ms linear 100ms, height 200ms linear;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.pin-artifacts {
+    transition: height 200ms linear;
+}
+
+.pin-artifacts-hide {
+    height: 0;
+    overflow: hidden;
+    transition: height 200ms linear;
+}
+
+.pin-artifacts-show {
+    height: auto;
+    transition: height 200ms linear;
+}
