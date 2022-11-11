@@ -394,6 +394,12 @@ public partial class ZipService : IZipService
         if (itemPath is not null)
         {
             var entryFullPath = itemPath.Replace("/", Path.AltDirectorySeparatorChar.ToString());
+
+            var splitEntryFullPath = entryFullPath.Split(Path.AltDirectorySeparatorChar.ToString());
+
+            if (splitEntryFullPath.Length == 1)
+                return duplicateCount;
+
             MoveExtractedFileToFinalDestination(destinationPath, entryFullPath);
         }
 
