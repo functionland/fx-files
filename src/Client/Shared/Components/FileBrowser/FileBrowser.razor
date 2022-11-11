@@ -6,7 +6,6 @@
                OnSearch="HandleSearchAsync"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearch"
-               ShouldSearchBoxShow="!_isInSearch"
                OnBackClick="HandleToolbarBackClick"
                Title="@(_currentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {_currentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"

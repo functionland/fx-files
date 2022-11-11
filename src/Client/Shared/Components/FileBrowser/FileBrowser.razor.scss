@@ -368,7 +368,7 @@
 
 .search-container {
     position: absolute;
-    top: 73px;
+    top: 70px;
     left: 0;
     bottom: 0;
     right: 0;
@@ -384,6 +384,7 @@
 
 .filter-deep-search {
     padding: $spacing-0 $spacing-21;
+    width: 100%;
 }
 
 .expanded {
