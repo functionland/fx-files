@@ -1,0 +1,16 @@
+﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
+@inherits AppComponentBase
+
+<div class="navigation-header">
+    <FxBackButton IsEnabled="true" OnClick="OnBack"></FxBackButton>
+
+    <div class="right-side">
+        <div class="@(CurrentArtifact?.IsPinned == true ? "pin-icon":"pin-icon-outline")" @onclick="@(CurrentArtifact?.IsPinned == true ? HandleUnpinAsync : HandlePinAsync)"></div>
+        <div class="more-option-icon" @onclick="HandleOptionClickAsync"></div>
+    </div>
+</div>
+
+<div class="text-container">
+    <h1 class="title">@(Path.GetFileNameWithoutExtension(CurrentArtifact?.FullPath))</h1>
+    <pre class="text">@Text</pre>
+</div>

@@ -1,12 +1,10 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations
-{
-    public class InMemoryAppStateStore
-    {
-        public ViewModeEnum ViewMode { get; private set; } = ViewModeEnum.List;
+﻿namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
-        public void SetViewMode(ViewModeEnum viewMode)
-        {
-            ViewMode = viewMode;
-        }
-    }
+public class InMemoryAppStateStore : IAppStateStore
+{
+    public ViewModeEnum ViewMode { get; set; }
+    public bool IsAvailableForTest { get; set; }
+    public FsArtifact? CurrentFulaArtifact { get; set; }
+    public FsArtifact? CurrentMyDeviceArtifact { get; set; }
+    public string CurrentPagePath { get; set; } = "/";
 }

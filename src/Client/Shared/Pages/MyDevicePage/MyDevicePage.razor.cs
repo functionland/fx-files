@@ -1,6 +1,4 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
-using System;
-using System.Net;
 
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
@@ -12,9 +10,8 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 
         [AutoInject] private ILocalDevicePinService _pinService { get; set; } = default!;
 
-        [AutoInject] private InMemoryAppStateStore _artifactState { get; set; } = default!;
-
-
+        [AutoInject] private IArtifactThumbnailService<ILocalDeviceFileService> _thumbnailService { get; set; } = default!;
+        [AutoInject] private IAppStateStore _appStateStore { get; set; } = default!;
         private string? DecodedDefaultPath
         {
             get
@@ -22,7 +19,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 var query = new Uri(NavigationManager.Uri).Query;
                 if (string.IsNullOrWhiteSpace(query)) return null;
 
-                var decodedQuery = WebUtility.UrlDecode(query);
+                var decodedQuery = System.Net.WebUtility.UrlDecode(query);
                 if (string.IsNullOrWhiteSpace(decodedQuery)) return null;
 
                 var decodedQueryParts = decodedQuery.Split('&');
@@ -40,6 +37,17 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 
                 return null;
             }
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            if (_appStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
+            {
+                _appStateStore.CurrentMyDeviceArtifact = null;
+            }
+
+            _appStateStore.CurrentPagePath = "mydevice";
         }
     }
 }

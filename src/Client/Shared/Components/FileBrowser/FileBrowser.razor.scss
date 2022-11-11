@@ -5,7 +5,8 @@
 
 
 .file-browser-container {
-    min-height: calc(100vh - 81px);
+    //min-height: calc(100vh - 81px);
+    height: 100%;
     display: flex;
     flex-flow: column nowrap;
 }
@@ -69,12 +70,16 @@
     position: relative;
 }
 
+.action-bar-box {
+    position: relative;
+}
+
 .action-bar {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-    height: 40px;
+    min-height: 40px;
     padding: 0 $spacing-21;
     background-color: color(gray-bg-primary);
     position: sticky;
@@ -135,7 +140,7 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: center;
 
         .action-btn {
             cursor: pointer;
@@ -152,7 +157,7 @@
 
         .select-all-filled::before {
             font-size: $icon-24;
-            @include Icon($selected, $green-dark-base, $Icons-Filled);
+            @include Icon($selected, $green-dark-base);
         }
 
         .list-view-btn {
@@ -183,18 +188,51 @@
             @include Icon($grid, $green-dark-base);
         }
 
-        .filter-btn {
-            margin-left: $spacing-8;
+        .filter {
+            position: relative;
 
-            &:before {
-                font-size: $icon-24;
-                @include Icon($filter, color(gray-content3));
+            .filter-btn {
+                position: relative;
+                z-index: 1;
+                background-color: var(--gray-bg-primary);
+                margin-left: $spacing-8;
+
+                &:before {
+                    font-size: $icon-24;
+                    @include Icon($filter, color(gray-content3));
+                }
             }
-        }
 
-        .filter-btn-selected::before {
-            font-size: $icon-24;
-            @include Icon($fill, $green-dark-base, $Icons-Filled);
+            .filter-btn:hover {
+
+                &:before {
+                    transition: color 200ms linear;
+                    color: $green-dark-base;
+                }
+            }
+
+            .filter-btn-selected {
+                position: absolute;
+                top: 0;
+                margin-left: 8px;
+
+                &::before {
+                    font-size: $icon-24;
+                    @include Icon($fill);
+                    color: $green-dark-base;
+                    transition: all 200ms linear;
+                }
+            }
+
+            .show-fliter-btn {
+                z-index: 2;
+                transition: all 200ms linear;
+            }
+
+            .hide-filter-btn {
+                z-index: 0;
+                transition: all 200ms linear;
+            }
         }
     }
 }
@@ -205,14 +243,19 @@
 
 .select-action {
     display: flex;
-    height: 40px;
     align-items: center;
     justify-content: space-between;
     background-color: $green-dark-base;
     padding: 0px $spacing-31 0px $spacing-21;
-    position: sticky;
-    top: 128px;
-    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    transition: opacity 300ms linear;
+    height: 0px;
+    overflow: hidden;
+    opacity: 0;
 
     .info-selection {
         display: flex;
@@ -269,6 +312,17 @@
     }
 }
 
+.show-selected-item {
+    opacity: 1;
+    height: 40px;
+}
+
+.hide-selected-item {
+    transition: opacity 300ms linear, height 0ms linear 300ms;
+    opacity: 0;
+    height: 0;
+}
+
 .select-action-search {
     top: 72px;
 }
@@ -309,9 +363,9 @@
             z-index: 2;
         }
 
-        ::deep .list-container{
-            height:100%;
-            overflow:auto;
+        ::deep .list-container {
+            height: 100%;
+            overflow: auto;
         }
     }
 }
@@ -390,7 +444,7 @@
         justify-content: flex-start;
         align-items: center;
         flex-flow: row wrap;
-        gap: $spacing-8;
+       /* gap: $spacing-8;*/
 
         div {
             background-color: color(gray-bg-secondary);
@@ -403,6 +457,7 @@
             letter-spacing: $letter-spacing-02;
             color: color(gray-content1);
             cursor: pointer;
+            margin-right: 8px;
         }
 
         .option-selected-mode {
@@ -433,9 +488,10 @@
     }
 
     .option-item {
-        min-width: 70px;
+        width: 70px;
         height: 46px;
         text-align: center;
+        white-space: nowrap;
     }
 
     .title-item {
@@ -457,10 +513,11 @@
 
     .show-location-icon {
         text-align: center;
+        margin-left: 23.5px;
 
         &::before {
             font-size: 24px;
-            @include Icon($folder,$color:color(gray-content1));
+            @include Icon($folder, $color: color(gray-content1));
         }
     }
 

@@ -1,4 +1,6 @@
-﻿
+﻿using Functionland.FxFiles.Client.App.Implementations;
+using Functionland.FxFiles.Client.Shared.Services.Implementations;
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class IServiceCollectionExtensions
@@ -10,6 +12,7 @@ public static class IServiceCollectionExtensions
         // Shared between all platforms
         string connectionString = $"DataSource={Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "FxDB.db")};";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+        services.AddSingleton<INativeNavigation, NativeNavigation>();
         services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
         services.AddSingleton<ILocalDbArtifactService, LocalDbArtifactService>();
         services.AddSingleton<ILocalDbFulaSyncItemService, LocalDbFulaSyncItemService>();

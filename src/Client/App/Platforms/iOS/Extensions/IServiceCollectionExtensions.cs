@@ -20,6 +20,7 @@ public static class IiOSServiceCollectionExtensions
         services.AddSingleton<IFileWatchService, IosFileWatchService>();
 
         services.AddSingleton<IFileCacheService, IosFileCacheService>();
+
         return services;
     }
 }

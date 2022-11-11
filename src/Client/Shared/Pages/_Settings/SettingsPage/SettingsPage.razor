@@ -6,42 +6,41 @@
 
 
 <div class="settings-content">
-    <FxToolBar IsInRoot="false"
-               IsAddButtonVisible="false"
-               IsBackButtonVisible="false"
-               IsOverflowButtonVisible="false"
-               Title="@Localizer[nameof(AppStrings.Settings)]" />
+    <div class="page-title" @onclick="HandleTitleClick">@Localizer[nameof(AppStrings.Settings)]</div>
 
     <div class="settings-wrapper">
-        <FxButton Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
+        @*<FxButton Text="@Localizer[nameof(AppStrings.FilesAndBloxHardware)]"
                   MetaDataText="1 new"
-                  ButtonStyle="FxButtonStyle.MenuLine" />
+                  ButtonStyle="FxButtonStyle.MenuLine" />*@
         <FxButton Text="@Localizer[nameof(AppStrings.Mode)]"
                   OnClick="@(() => NavigationManager.NavigateTo("settings/theme", false, true))"
                   MetaDataText="@(Localizer[nameof(AppStrings.Current)] + ": " + CurrentTheme + " " + Localizer[nameof(AppStrings.Mode).ToLower()])"
                   ButtonStyle="FxButtonStyle.MenuLine" />
-        <FxButton Text="@Localizer[nameof(AppStrings.Pools)]"
-                  ButtonStyle="FxButtonStyle.MenuLine" />
-        <FxButton Text="@Localizer[nameof(AppStrings.ImportFromApps)]"
+       @* <FxButton Text="@Localizer[nameof(AppStrings.Pools)]"
+                  ButtonStyle="FxButtonStyle.MenuLine" />*@
+        @*<FxButton Text="@Localizer[nameof(AppStrings.ImportFromApps)]"
                   ButtonStyle="FxButtonStyle.MenuLine"
-                  OnClick="@(() => NavigationManager.NavigateTo("settings/import-from-app", false, true))" />
+                  OnClick="@(() => NavigationManager.NavigateTo("settings/import-from-app", false, true))" />*@
         <FxButton Text="@Localizer[nameof(AppStrings.About)]"
                   ButtonStyle="FxButtonStyle.MenuLine" 
                   OnClick="@(() => NavigationManager.NavigateTo("settings/about", false, true))" />
 
-        <FxButton Text="@Localizer[nameof(AppStrings.TestExplorer)]"
+        @if(AppState.IsAvailableForTest) {
+            <FxButton Text="@Localizer[nameof(AppStrings.TestExplorer)]"
                   ButtonStyle="FxButtonStyle.MenuLine"
                   OnClick="@(() => NavigationManager.NavigateTo("settings/TestExplorer", false, true))" />
+        }
 
         <FxDivider FxDividerSize="FxDividerSize.Thin"
                    FxDividerMode="FxDividerMode.Solid"
                    FxDividerType="FxDividerType.Horizontal" />
 
-        <FxButton Text="@Localizer[nameof(AppStrings.LogOut)]"
+        <FxButton Text="@Localizer[nameof(AppStrings.Login)]"
                   ButtonStyle="FxButtonStyle.Normal"
-                  ButtonSize="FxButtonSize.Stretch" />
+                  ButtonSize="FxButtonSize.Stretch"
+                  OnClick="Login" />
 
-        <p>@Localizer[nameof(AppStrings.FilesAndBloxHardware)] @CurrentVersion</p>
+        <p>@Localizer[nameof(AppStrings.SettingPageAppTitle)] @CurrentVersion</p>
     </div>
 
 </div>

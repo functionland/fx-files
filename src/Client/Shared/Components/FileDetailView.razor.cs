@@ -18,10 +18,10 @@
         public string? ContentBodyClass { get; set; }
 
         [Parameter]
-        public FileCategoryType FileCategoryType { get; set; }
+        public FileCategoryType? FileCategoryType { get; set; }
 
         [Parameter]
-        public FsArtifactType FsArtifactType { get; set; }
+        public FsArtifactType? FsArtifactType { get; set; }
 
         [Parameter]
         public RenderFragment? FileDetailItemFragment { get; set; } = default!;

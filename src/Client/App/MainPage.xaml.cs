@@ -1,5 +1,4 @@
 ﻿using Functionland.FxFiles.Client.App.Extensions;
-
 using Microsoft.Extensions.FileProviders;
 
 #if WINDOWS
@@ -35,7 +34,7 @@ public partial class MainPage
             appWindow.Resize(new SizeInt32(691, 968));
 
             var titleBar = appWindow.TitleBar;
-            appWindow.Title = "FxFiles";
+            appWindow.Title = "Fx Files";
 
             if (titleBar is not null)
             {
@@ -88,7 +87,7 @@ public partial class MainPage
             }
 #endif
 
-#if IOS
+#if IOS || MACCATALYST
             handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
             handler.PlatformView.Opaque = false;
 #endif

@@ -1,11 +1,4 @@
-﻿using System.IO;
-
-using Functionland.FxFiles.Client.Shared.Models;
-using Functionland.FxFiles.Client.Shared.Services.Contracts;
-
-using Microsoft.AspNetCore.Components;
-
-namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
@@ -18,6 +11,7 @@ public partial class ArtifactSelectionModal
 
     [Parameter] public bool IsMultiple { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
+    [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
     {
@@ -47,7 +41,7 @@ public partial class ArtifactSelectionModal
         StateHasChanged();
     }
 
-    private void SelectDestionation()
+    private void SelectDestination()
     {
         try
         {
@@ -56,18 +50,18 @@ public partial class ArtifactSelectionModal
                 return;
             }
 
-            var result = new ArtifactSelectionResult();
+            var result = new ArtifactSelectionResult
+            {
+                ResultType = ArtifactSelectionResultType.Ok,
+                SelectedArtifacts = new[] { _currentArtifact }
+            };
 
-            result.ResultType = ArtifactSelectionResultType.Ok;
-            result.SelectedArtifacts = new[] { _currentArtifact };
-
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
             _isModalOpen = false;
         }
         catch (Exception)
         {
-
             throw;
         }
     }
@@ -92,7 +86,8 @@ public partial class ArtifactSelectionModal
     //TODO: Move to service and use in ArtifactExplorer
     private async Task CreateFolder()
     {
-        if (_inputModalRef is null) return;
+        if (_inputModalRef is null)
+            return;
 
         var createFolder = Localizer.GetString(AppStrings.CreateFolder);
         var newFolderPlaceholder = Localizer.GetString(AppStrings.NewFolderPlaceholder);
@@ -103,7 +98,7 @@ public partial class ArtifactSelectionModal
         {
             if (result?.ResultType == InputModalResultType.Confirm)
             {
-                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.ResultName); //ToDo: Make CreateFolderAsync nullable
+                var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.Result); //ToDo: Make CreateFolderAsync nullable
                 _artifacts.Add(newFolder);
                 StateHasChanged();
             }
@@ -112,6 +107,20 @@ public partial class ArtifactSelectionModal
         {
             ExceptionHandler?.Handle(exception);
         }
+    }
+
+    private string GetActionButtonText()
+    {
+        if (_artifactActionResult is null)
+            return string.Empty;
+
+        return _artifactActionResult.ActionType switch
+        {
+            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),
+            ArtifactActionType.Move => Localizer.GetString(AppStrings.MoveHere),
+            ArtifactActionType.Extract => Localizer.GetString(AppStrings.ExtractHere),
+            _ => throw new InvalidOperationException("Invalid action type")
+        };
     }
 
     private async Task Back()
@@ -124,17 +133,18 @@ public partial class ArtifactSelectionModal
         {
             _currentArtifact = null;
         }
-        
+
         await LoadArtifacts(_currentArtifact?.FullPath);
     }
 
     private void Close()
     {
-        var result = new ArtifactSelectionResult();
+        var result = new ArtifactSelectionResult
+        {
+            ResultType = ArtifactSelectionResultType.Cancel
+        };
 
-        result.ResultType = ArtifactSelectionResultType.Cancel;
-
-        _tcs!.SetResult(result);
+        _tcs?.SetResult(result);
         _tcs = null;
         _isModalOpen = false;
     }

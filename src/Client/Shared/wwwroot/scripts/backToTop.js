@@ -53,7 +53,46 @@ function saveScrollPosition() {
 // search input focus 
 function SearchInputFocus() {
     var searchInput = document.getElementById('searchinput');
+    var searchIcon = document.querySelector('.search-icon');
     if (typeof searchInput !== "undefined") {
         searchInput.focus();
+        searchIcon.classList.add("search-icon-active");
+        console.log(searchIcon);
     }
+}
+
+function ImagePinchZoom() {
+    let el = document.querySelector('#image-viewer');
+    new PinchZoom.default(el, {
+        draggableUnzoomed: false,
+        setOffsetsOnce: true,
+        maxZoom: 20,
+        tapZoomFactor : 3
+    });
+}
+
+function breadCrumbStyle() {
+    let breadcrumbs = document.querySelector(".fx-breadcrumbs");
+    let startEllipsis = document.querySelector(".start-ellipsis");
+    let endEllipsis = document.querySelector(".end-ellipsis");
+
+    breadcrumbs.addEventListener("scroll", () => {
+        let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
+
+        if (breadcrumbsScroll != 0) {
+            startEllipsis.style.display = "block";
+            endEllipsis.style.display = "block";
+            endEllipsis.classList.remove("color-changer");
+
+
+        } else {
+            startEllipsis.style.display = "none";
+            endEllipsis.classList.add("color-changer");
+        }
+
+        if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+            endEllipsis.classList.add("color-changer");
+            endEllipsis.style.display = "block";
+        }
+    });
 }

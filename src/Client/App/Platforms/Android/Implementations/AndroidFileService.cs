@@ -21,28 +21,28 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
 
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
     {
-        await GetPermission(path);
+        await GetWritePermission(path);
 
         return await base.CreateFileAsync(path, stream, cancellationToken);
     }
 
     public override async Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null)
     {
-        await GetPermission(files.Select(f => f.path));
+        await GetWritePermission(files.Select(f => f.path));
 
         return await base.CreateFilesAsync(files, cancellationToken);
     }
 
     public override async Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null)
     {
-        await GetPermission(path);
+        await GetWritePermission(path);
 
         return await base.CreateFolderAsync(path, folderName, cancellationToken);
     }
 
     public override async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
     {
-        await GetPermission(filePath);
+        await GetReadPermission(filePath);
 
         return await base.GetFileContentAsync(filePath, cancellationToken);
     }
@@ -70,37 +70,52 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return await base.GetArtifactAsync(path, cancellationToken);
     }
 
-    public override async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task MoveArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        string destination,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
-        await GetPermission(destination);
+        await GetReadPermission(artifacts.Select(f => f.FullPath));
+        await GetWritePermission(destination);
 
         await base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
-    public override async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        string destination,
+        bool overwrite = false,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
-        await GetPermission(destination);
+        await GetReadPermission(artifacts.Select(f => f.FullPath));
+        await GetWritePermission(destination);
 
         await base.CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
     }
 
     public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
     {
-        await GetPermission(filePath);
+        await GetWritePermission(filePath);
 
         await base.RenameFileAsync(filePath, newName, cancellationToken);
     }
 
     public override async Task RenameFolderAsync(string folderPath, string newName, CancellationToken? cancellationToken = null)
     {
-        await GetPermission(folderPath);
+        await GetWritePermission(folderPath);
 
         await base.RenameFolderAsync(folderPath, newName, cancellationToken);
     }
 
-    public override async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Action<ProgressInfo>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task DeleteArtifactsAsync(
+        IList<FsArtifact> artifacts,
+        Func<ProgressInfo, Task>? onProgress = null,
+        CancellationToken? cancellationToken = null)
     {
-        await GetPermission(artifacts.Select(f => f.FullPath));
+        await GetWritePermission(artifacts.Select(f => f.FullPath));
 
         await base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
@@ -211,9 +226,34 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             throw new UnknownFsFileProviderException(StringLocalizer.GetString(AppStrings.UnknownFsFileProviderException, filePath));
     }
 
-    protected abstract Task GetPermission(string path = null);
+    public override string GetShowablePath(string artifactPath)
+    {
+        if (artifactPath is null)
+            throw new ArtifactPathNullException(nameof(artifactPath));
 
-    protected abstract Task GetPermission(IEnumerable<string> paths = null);
+        var showablePath = string.Empty;
+        var providerType = GetFsFileProviderType(artifactPath);
+        var drives = GetDrives();
+
+        var currentDrivePath = drives.Where(d => d.ProviderType == providerType)
+                                     .Select(d => d.FullPath).FirstOrDefault();
+
+        if (currentDrivePath is null)
+            throw new Exception("No drive found!");
+
+        showablePath = artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory
+                                                                            ? StringLocalizer.GetString(AppStrings.InternalStorageName)
+                                                                            : StringLocalizer.GetString(AppStrings.ExternalStorageName));
+        return showablePath;
+    }
+    protected abstract Task GetWritePermission(string path = null);
+
+    protected abstract Task GetWritePermission(IEnumerable<string> paths = null);
+
+    protected abstract Task GetReadPermission(string path = null);
+
+    protected abstract Task GetReadPermission(IEnumerable<string> paths = null);
+
 
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
@@ -265,5 +305,16 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             return true;
 
         return false;
+    }
+
+    protected override long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)
+    {
+        var drives = LoadDrives();
+        var targetDrive = drives.FirstOrDefault(drive => drive.FullPath.Equals(drivePath, StringComparison.OrdinalIgnoreCase));
+
+        if (targetDrive is null)
+            throw new InvalidOperationException("No drive found given the current path.");
+
+        return targetDrive.Size ?? 0;
     }
 }
