@@ -137,7 +137,7 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await InvokeAsync(() => StateHasChanged());
         });
-        
+
         await base.OnInitAsync();
 
     }
@@ -586,7 +586,7 @@ public partial class FileBrowser
         }
 
         if (_artifactDetailModalRef is null)
-            return; 
+            return;
 
         var result = await _artifactDetailModalRef.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
         ChangeDeviceBackFunctionality(_artifactExplorerMode);
@@ -670,6 +670,7 @@ public partial class FileBrowser
         var innerArtifacts = extractTuple.Item2;
         var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
         var artifactPassword = extractTuple.Item4;
+        var extractResult = new ExtractorBottomSheetResult();
         if (_inputModalRef is null)
         {
             ExtractorBottomSheetResult = ExtractorBottomSheetResultType.Cancel;
@@ -692,7 +693,6 @@ public partial class FileBrowser
                 return;
             }
 
-            var extractResult = new ExtractorBottomSheetResult();
             var destinationFolderName = result?.Result ?? folderName;
             try
             {
@@ -702,7 +702,7 @@ public partial class FileBrowser
                     {
                         return;
                     }
-                    extractResult = await _extractorModalRef.ExtractZipAsync(artifact.FullPath, destinationDirectory,
+                    extractResult = await _extractorModalRef.ShowAsync(artifact.FullPath, destinationDirectory,
                         destinationFolderName,
                         artifactPassword, innerArtifacts);
                 }
@@ -728,7 +728,7 @@ public partial class FileBrowser
                     {
                         return;
                     }
-                    extractResult = await _extractorModalRef.ExtractZipAsync(artifact.FullPath, destinationDirectory,
+                    extractResult = await _extractorModalRef.ShowAsync(artifact.FullPath, destinationDirectory,
                              destinationFolderName,
                              passwordResult?.Result, innerArtifacts);
                 }
@@ -747,6 +747,7 @@ public partial class FileBrowser
         finally
         {
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
+            extractResult = null;
         }
 
     }

@@ -27,17 +27,21 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private TaskCompletionSource<ExtractorBottomSheetResult>? _tcs;
 
-        protected override Task OnInitAsync()
+        public async Task<ExtractorBottomSheetResult> ShowAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
         {
             GoBackService.OnInit((Task () =>
             {
                 HandleBackAsync();
                 return Task.CompletedTask;
             }), true, false);
-            return base.OnInitAsync();
+            _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
+
+            await ExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName, password, innerArtifacts);
+
+            return await _tcs.Task;
         }
 
-        public async Task<ExtractorBottomSheetResult> ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
+        private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
         {
             var result = new ExtractorBottomSheetResult();
 
@@ -55,6 +59,9 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                         password,
                         OnProgress,
                         _progressBarCts?.Token);
+                    result.ExtractorResult = ExtractorBottomSheetResultType.Success;
+                    _tcs?.SetResult(result);
+                    return;
                 }
                 catch (InvalidPasswordException)
                 {
@@ -62,7 +69,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     {
                         result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                         _tcs?.SetResult(result);
-                        return result;
+                        return;
                     }
 
                     var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
@@ -74,7 +81,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     {
                         result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                         _tcs?.SetResult(result);
-                        return result;
+                        return;
                     }
 
                     try
@@ -96,7 +103,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                         FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)), Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)), FxToastType.Error);
                         result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                         _tcs?.SetResult(result);
-                        return result;
+                        return;
                     }
                 }
                 catch (Exception)
@@ -107,9 +114,9 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 if (_progressModalRef is null)
                 {
                     result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                    _tcs?.SetResult(result);
                     ProgressBarOnCancel();
-                    return result;
+                    _tcs?.SetResult(result);
+                    return;
                 }
 
                 await _progressModalRef.ShowAsync(ProgressMode.Progressive,
@@ -130,17 +137,16 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 if (duplicateCount <= 0)
                 {
                     result.ExtractorResult = ExtractorBottomSheetResultType.Success;
-                    _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
-                    _tcs.SetResult(result);
-                    return await _tcs.Task;
+                    _tcs?.SetResult(result);
+                    return;
                 }
 
                 if (_extractorConfirmationReplaceOrSkipModalRef == null)
                 {
                     result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                    _tcs?.SetResult(result);
                     ProgressBarOnCancel();
-                    return result;
+                    _tcs?.SetResult(result);
+                    return;
                 }
 
                 var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
@@ -171,9 +177,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 }
 
                 result.ExtractorResult = ExtractorBottomSheetResultType.Success;
-                _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
-                _tcs.SetResult(result);
-                return await _tcs.Task;
+                _tcs?.SetResult(result);
             }
             catch (Exception)
             {
@@ -187,8 +191,6 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 {
                     await _progressModalRef.CloseAsync();
                 }
-
-                _tcs = null;
             }
         }
 
@@ -205,8 +207,6 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             {
                 ExtractorResult = ExtractorBottomSheetResultType.Cancel
             };
-            _tcs?.SetResult(result);
-            _tcs = null;
             _extractorPasswordModalRef?.Dispose();
         }
     }

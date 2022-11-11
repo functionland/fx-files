@@ -122,7 +122,7 @@ public partial class ZipViewer : IFileViewerComponent
             var result = new ExtractorBottomSheetResult();
             if (folderNameResult.Result != null && _extractorModalRef != null)
             {
-                result = await _extractorModalRef.ExtractZipAsync(CurrentArtifact.FullPath, destinationPath,
+                result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                     folderNameResult.Result,
                     password: _password, artifacts);
             }
@@ -160,7 +160,7 @@ public partial class ZipViewer : IFileViewerComponent
 
             if (_extractorModalRef != null)
             {
-                result = await _extractorModalRef.ExtractZipAsync(CurrentArtifact.FullPath, destinationPath,
+                result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                     destinationFolderName,
                     password: _password, new List<FsArtifact> { artifact });
             }
@@ -200,7 +200,7 @@ public partial class ZipViewer : IFileViewerComponent
 
                 if (folderNameResult.Result != null && _extractorModalRef != null)
                 {
-                    result = await _extractorModalRef.ExtractZipAsync(CurrentArtifact.FullPath, destinationPath,
+                    result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                         folderNameResult.Result,
                         password: _password, null);
                 }
