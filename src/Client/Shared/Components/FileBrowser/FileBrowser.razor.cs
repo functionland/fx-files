@@ -159,7 +159,7 @@ public partial class FileBrowser
         if (_isGoingBack)
         {
             _isGoingBack = false;
-            await JSRuntime.InvokeVoidAsync("getLastScrollPossition");
+            await JSRuntime.InvokeVoidAsync("getLastScrollPosition");
         }
         await base.OnAfterRenderAsync(firstRender);
     }

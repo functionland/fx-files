@@ -15,7 +15,7 @@
         font-size: $font-size-18;
         line-height: $line-height-24;
         color: color(gray-content1);
-        margin-bottom: $spacing-32;
+        padding: 16px 0;
     }
 
     .about-app-container {
@@ -24,6 +24,7 @@
         line-height: $line-height-24;
         letter-spacing: $letter-spacing-02;
         color: color(gray-content1);
+        padding: 16px 0;
 
         .part-one {
             margin-bottom: $spacing-21;

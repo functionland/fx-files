@@ -3,8 +3,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
-using System.Threading;
-
 namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class ArtifactExplorer
@@ -84,6 +82,8 @@ public partial class ArtifactExplorer
         {
             await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
             await InitWindowWidthListener();
+            await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+
         }
     }
 
@@ -371,8 +371,8 @@ public partial class ArtifactExplorer
     private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsListAsync(ItemsProviderRequest request)
     {
         var cancellationToken = request.CancellationToken;
-        
-        if (cancellationToken.IsCancellationRequested) 
+
+        if (cancellationToken.IsCancellationRequested)
             return default;
 
         var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
