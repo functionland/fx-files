@@ -22,8 +22,6 @@ public partial class ZipViewer : IFileViewerComponent
     private FsArtifact _currentInnerZipArtifact =
         new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
 
-    private string? _password = null;
-
     private List<FsArtifact> _displayedArtifacts = new();
 
     private List<FsArtifact> _selectedArtifacts = new();
@@ -80,7 +78,7 @@ public partial class ZipViewer : IFileViewerComponent
 
         var token = _cancellationTokenSource.Token;
 
-        _allZipFileEntities = await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
+        _allZipFileEntities = await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
     }
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
@@ -123,8 +121,7 @@ public partial class ZipViewer : IFileViewerComponent
             if (folderNameResult.Result != null && _extractorModalRef != null)
             {
                 result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
-                    folderNameResult.Result,
-                    password: _password, artifacts);
+                    folderNameResult.Result, artifacts);
             }
 
             if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
@@ -161,8 +158,7 @@ public partial class ZipViewer : IFileViewerComponent
             if (_extractorModalRef != null)
             {
                 result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
-                    destinationFolderName,
-                    password: _password, new List<FsArtifact> { artifact });
+                    destinationFolderName, new List<FsArtifact> { artifact });
             }
 
             if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
@@ -201,8 +197,7 @@ public partial class ZipViewer : IFileViewerComponent
                 if (folderNameResult.Result != null && _extractorModalRef != null)
                 {
                     result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
-                        folderNameResult.Result,
-                        password: _password, null);
+                        folderNameResult.Result);
                 }
 
                 if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)

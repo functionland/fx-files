@@ -694,44 +694,15 @@ public partial class FileBrowser
             }
 
             var destinationFolderName = result?.Result ?? folderName;
-            try
+
+            if (destinationDirectory != null)
             {
-                if (destinationDirectory != null)
-                {
-                    if (_extractorModalRef == null)
-                    {
-                        return;
-                    }
-                    extractResult = await _extractorModalRef.ShowAsync(artifact.FullPath, destinationDirectory,
-                        destinationFolderName,
-                        artifactPassword, innerArtifacts);
-                }
-            }
-            catch (InvalidPasswordException)
-            {
-                if (_passwordModalRef is null)
+                if (_extractorModalRef == null)
                 {
                     return;
                 }
-
-                var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
-                var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
-                var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
-                if (passwordResult?.ResultType == InputModalResultType.Cancel)
-                {
-                    return;
-                }
-
-                if (destinationDirectory != null)
-                {
-                    if (_extractorModalRef == null)
-                    {
-                        return;
-                    }
-                    extractResult = await _extractorModalRef.ShowAsync(artifact.FullPath, destinationDirectory,
-                             destinationFolderName,
-                             passwordResult?.Result, innerArtifacts);
-                }
+                extractResult = await _extractorModalRef.ShowAsync(artifact.FullPath, destinationDirectory,
+                    destinationFolderName, innerArtifacts);
             }
 
             if (destinationDirectory != null && extractResult.ExtractorResult == ExtractorBottomSheetResultType.Success)
@@ -747,7 +718,6 @@ public partial class FileBrowser
         finally
         {
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
-            extractResult = null;
         }
 
     }

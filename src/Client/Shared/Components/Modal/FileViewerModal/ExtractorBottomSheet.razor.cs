@@ -27,7 +27,11 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private TaskCompletionSource<ExtractorBottomSheetResult>? _tcs;
 
-        public async Task<ExtractorBottomSheetResult> ShowAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
+        private string? _password;
+
+        private ExtractorBottomSheetResult ExtractorBottomSheetResult { get; set; } = new();
+
+        public async Task<ExtractorBottomSheetResult> ShowAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, List<FsArtifact>? innerArtifacts = null)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -36,150 +40,74 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }), true, false);
             _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
 
-            await ExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName, password, innerArtifacts);
+            await HandleExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName, innerArtifacts);
 
             return await _tcs.Task;
         }
 
-        private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
+        private async Task HandleExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, List<FsArtifact>? innerArtifacts = null)
         {
-            var result = new ExtractorBottomSheetResult();
+
+            if (_extractorPasswordModalRef == null || _progressModalRef is null || _extractorConfirmationReplaceOrSkipModalRef == null)
+            {
+                ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                _tcs?.SetResult(ExtractorBottomSheetResult);
+                return;
+            }
+            _progressBarCts = new CancellationTokenSource();
 
             try
             {
-                var duplicateCount = 0;
+                int? duplicateCount;
                 try
                 {
-                    duplicateCount = await ZipService.ExtractZippedArtifactAsync(
-                        zipFilePath,
-                        destinationFolderPath,
-                        destinationFolderName,
-                        innerArtifacts,
-                        false,
-                        password,
-                        OnProgress,
-                        _progressBarCts?.Token);
+                    await ShowProgressModal();
+                    duplicateCount = await ExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName,
+                        _password, innerArtifacts);
                 }
-                catch (InvalidPasswordException)
+                catch (PasswordDidNotMatchedException)
                 {
-                    if (_extractorPasswordModalRef == null)
-                    {
-                        result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                        _tcs?.SetResult(result);
-                        return;
-                    }
-
-                    var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
-                    var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
-                    var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
-                    var passwordResult = await _extractorPasswordModalRef.ShowAsync(extractPasswordModalTitle,
-                        string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
-                    if (passwordResult?.ResultType == InputModalResultType.Cancel)
-                    {
-                        result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                        _tcs?.SetResult(result);
-                        return;
-                    }
-
-                    try
-                    {
-                        duplicateCount = await ZipService.ExtractZippedArtifactAsync(
-                            zipFilePath,
-                            destinationFolderPath,
-                            destinationFolderName,
-                            innerArtifacts,
-                            false,
-                            passwordResult?.Result ??
-                            throw new InvalidOperationException(
-                                Localizer.GetString(nameof(AppStrings.PasswordEmptyMessage))),
-                            OnProgress,
-                            _progressBarCts?.Token);
-                    }
-                    catch (InvalidPasswordException)
-                    {
-                        FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)), Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)), FxToastType.Error);
-                        result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                        _tcs?.SetResult(result);
-                        return;
-                    }
+                    return;
                 }
                 catch (Exception)
                 {
                     throw new DomainLogicException(Localizer.GetString(nameof(AppStrings.TheOpreationFailedMessage)));
                 }
-
-                if (_progressModalRef is null)
+                finally
                 {
-                    result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    await _progressModalRef.CloseAsync();
                     ProgressBarOnCancel();
-                    _tcs?.SetResult(result);
-                    return;
+                    _password = null;
                 }
 
-                await _progressModalRef.ShowAsync(ProgressMode.Progressive,
-                    Localizer.GetString(AppStrings.ExtractingFolder), true);
-                _progressBarCts = new CancellationTokenSource();
-
-                async Task OnProgress(ProgressInfo progressInfo)
+                switch (duplicateCount)
                 {
-                    ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
-                    ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
-                    ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                    ProgressBarMax = progressInfo.MaxValue ?? 1;
-                    await InvokeAsync(StateHasChanged);
+                    case null:
+                        return;
+                    case <= 0:
+                        ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Success;
+                        _tcs?.SetResult(ExtractorBottomSheetResult);
+                        return;
                 }
 
-                await _progressModalRef.CloseAsync();
+                var overwriteArtifacts = await GetOverwritableArtifacts(destinationFolderPath, innerArtifacts);
 
-                if (duplicateCount <= 0)
-                {
-                    result.ExtractorResult = ExtractorBottomSheetResultType.Success;
-                    _tcs?.SetResult(result);
-                    return;
-                }
-
-                if (_extractorConfirmationReplaceOrSkipModalRef == null)
-                {
-                    result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                    ProgressBarOnCancel();
-                    _tcs?.SetResult(result);
-                    return;
-                }
-
-                var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
-                List<FsArtifact> overwriteArtifacts = new();
-                if (innerArtifacts != null)
-                {
-                    overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
-                }
-
-                var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount);
+                var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount ?? throw new InvalidOperationException(Localizer.GetString(AppStrings.TheOpreationFailedMessage)));
 
                 if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                 {
-
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive,
-                        Localizer.GetString(AppStrings.ReplacingFiles), true);
-
                     _progressBarCts = new CancellationTokenSource();
-                    await ZipService.ExtractZippedArtifactAsync(
-                        zipFilePath,
-                        destinationFolderPath,
-                        destinationFolderName,
-                        overwriteArtifacts,
-                        true,
-                        password,
-                        OnProgress,
-                        _progressBarCts.Token);
+                    await ShowProgressModal();
+                    await ExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName, _password, overwriteArtifacts, true);
                 }
 
-                result.ExtractorResult = ExtractorBottomSheetResultType.Success;
-                _tcs?.SetResult(result);
+                ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Success;
+                _tcs?.SetResult(ExtractorBottomSheetResult);
             }
             catch (Exception)
             {
-                result.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                _tcs?.SetResult(result);
+                ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                _tcs?.SetResult(ExtractorBottomSheetResult);
                 throw;
             }
             finally
@@ -188,7 +116,129 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 {
                     await _progressModalRef.CloseAsync();
                 }
+                ProgressBarOnCancel();
+                _password = null;
             }
+        }
+
+        private async Task<List<FsArtifact>> GetOverwritableArtifacts(string destinationFolderPath, List<FsArtifact>? innerArtifacts)
+        {
+            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
+            List<FsArtifact> overwriteArtifacts = new();
+            if (innerArtifacts != null)
+            {
+                overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
+            }
+
+            return overwriteArtifacts;
+        }
+
+        private async Task ShowProgressModal()
+        {
+            if (_progressModalRef != null)
+            {
+                await _progressModalRef.ShowAsync(ProgressMode.Progressive,
+                    Localizer.GetString(AppStrings.ExtractingFolder), true);
+            }
+        }
+
+        private async Task<int?> ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName,
+            string? password, List<FsArtifact>? innerArtifacts, bool overwrite = false)
+        {
+            var duplicateCount = 0;
+            try
+            {
+                duplicateCount = await ZipService.ExtractZippedArtifactAsync(
+                   zipFilePath,
+                   destinationFolderPath,
+                   destinationFolderName,
+                   innerArtifacts,
+                   overwrite,
+                   password,
+                   OnProgress,
+                   _progressBarCts?.Token);
+            }
+            catch (InvalidPasswordException)
+            {
+                if (_progressModalRef != null)
+                {
+                    await _progressModalRef.CloseAsync();
+                }
+
+                ProgressBarOnCancel();
+                await GetPasswordFromInputAsync();
+                if (string.IsNullOrWhiteSpace(_password))
+                {
+                    return null;
+                }
+                try
+                {
+                    _progressBarCts = new CancellationTokenSource();
+                    await ShowProgressModal();
+                    duplicateCount = await ZipService.ExtractZippedArtifactAsync(zipFilePath, destinationFolderPath,
+                        destinationFolderName, innerArtifacts, overwrite, _password, OnProgress, _progressBarCts?.Token);
+                }
+                catch (InvalidPasswordException)
+                {
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                        Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)), FxToastType.Error);
+                    ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs?.SetResult(ExtractorBottomSheetResult);
+                    throw new PasswordDidNotMatchedException(Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)));
+                }
+                catch (Exception)
+                {
+                    throw new DomainLogicException(Localizer.GetString(nameof(AppStrings.TheOpreationFailedMessage)));
+                }
+                finally
+                {
+                    ProgressBarOnCancel();
+                    if (_progressModalRef != null)
+                    {
+                        await _progressModalRef.CloseAsync();
+                    }
+
+                    _password = null;
+                }
+            }
+            finally
+            {
+                ProgressBarOnCancel();
+                if (_progressModalRef != null)
+                {
+                    await _progressModalRef.CloseAsync();
+                }
+
+                _password = null;
+            }
+            return duplicateCount;
+        }
+
+        private async Task GetPasswordFromInputAsync()
+        {
+            var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
+            var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
+            var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+            if (_extractorPasswordModalRef != null)
+            {
+                var passwordResult = await _extractorPasswordModalRef.ShowAsync(extractPasswordModalTitle,
+                    string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
+                _password = passwordResult.Result;
+                if (passwordResult?.ResultType == InputModalResultType.Cancel || _password == null)
+                {
+                    ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs?.SetResult(ExtractorBottomSheetResult);
+                }
+            }
+        }
+
+        private async Task OnProgress(ProgressInfo progressInfo)
+        {
+            ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
+            ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
+            ProgressBarMax = progressInfo.MaxValue ?? 1;
+            await InvokeAsync(StateHasChanged);
         }
 
         private static List<FsArtifact> GetShouldOverwriteArtifacts(List<FsArtifact> artifacts, List<FsArtifact> existArtifacts)
