@@ -317,6 +317,10 @@ public partial class ZipService : IZipService
 
         foreach (var item in artifacts)
         {
+            var itemFullPath = Path.Combine(destinationPath, item.Name);
+            if (File.Exists(itemFullPath))
+                duplicateCount++;
+
             if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested)
                 return 0;
 
@@ -376,7 +380,6 @@ public partial class ZipService : IZipService
                     ExtractFullPath = true,
                     Overwrite = overwrite
                 });
-
             }
             catch (IOException ex) when (ex.Message.StartsWith("The file") && ex.Message.EndsWith("already exists."))
             {
