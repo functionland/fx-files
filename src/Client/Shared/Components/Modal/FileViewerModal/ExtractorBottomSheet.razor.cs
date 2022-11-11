@@ -90,7 +90,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                         return;
                 }
 
-                var overwriteArtifacts = await GetOverwritableArtifacts(destinationFolderPath, innerArtifacts);
+                var overwriteArtifacts = await GetOverwritableArtifacts(zipFilePath, Path.Combine(destinationFolderPath, destinationFolderName), innerArtifacts);
 
                 var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount ?? throw new InvalidOperationException(Localizer.GetString(AppStrings.TheOpreationFailedMessage)));
 
@@ -130,6 +130,17 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
             }
 
+            return overwriteArtifacts;
+        }
+
+        private async Task<List<FsArtifact>> GetOverwritableArtifacts(string zipFilePath, string destinationFolderPath,
+            List<FsArtifact>? innerArtifacts)
+        {
+            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
+            List<FsArtifact> overwriteArtifacts = new();
+            var readInnerArtifacts = await ZipService.GetAllArtifactsAsync(zipFilePath, _password, _progressBarCts?.Token);
+            overwriteArtifacts =
+                GetShouldOverwriteArtifacts(readInnerArtifacts, existedArtifacts);
             return overwriteArtifacts;
         }
 
@@ -243,10 +254,11 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private static List<FsArtifact> GetShouldOverwriteArtifacts(List<FsArtifact> artifacts, List<FsArtifact> existArtifacts)
         {
-            var pathExistArtifacts = existArtifacts.Select(a => a.FullPath);
+            var nameExistArtifacts = existArtifacts.Select(a => a.Name);
 
-            return artifacts.Where(artifact => pathExistArtifacts.Any(p => p.Equals(artifact.FullPath))).ToList();
+            return artifacts.Where(artifact => nameExistArtifacts.Any(p => p.Equals(artifact.Name))).ToList();
         }
+
 
         private void HandleBackAsync()
         {
