@@ -77,6 +77,12 @@ public partial class FileViewer
     public async Task HandleBackAsync()
     {
         IsModalOpen = false;
-        //await OnBack.InvokeAsync();
+        await OnBack.InvokeAsync();
+    }
+
+    public async Task HandleNavigateAsync(string path)
+    {
+        IsModalOpen = false;
+        await NavigationFolderCallback.InvokeAsync(path);
     }
 }
