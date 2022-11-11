@@ -1280,6 +1280,7 @@ public partial class FileBrowser
     private void HandleSearchFocused()
     {
         _isInSearch = true;
+        _displayedArtifacts.Clear();
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1289,23 +1290,19 @@ public partial class FileBrowser
         CancelSelectionMode();
         _isArtifactExplorerLoading = true;
         _searchText = text;
-        if (!string.IsNullOrWhiteSpace(text))
-        {
-            ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
-        }
-        else
+        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
+        if (string.IsNullOrWhiteSpace(SearchFilter.SearchText) && SearchFilter.ArtifactDateSearchType == null && SearchFilter.ArtifactCategorySearchType == null)
         {
             CancelSearch();
+            _isArtifactExplorerLoading = false;
+            return;
         }
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
         RefreshDisplayedArtifacts();
 
-        if (searchCancellationTokenSource is not null)
-        {
-            searchCancellationTokenSource.Cancel();
-        }
+        searchCancellationTokenSource?.Cancel();
 
         searchCancellationTokenSource = new CancellationTokenSource();
         var token = searchCancellationTokenSource.Token;
@@ -1364,41 +1361,10 @@ public partial class FileBrowser
 
     private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null, ArtifactCategorySearchType? type = null)
     {
-        if (SearchFilter == null)
-        {
-            SearchFilter = new();
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                SearchFilter.SearchText = searchText;
-            }
-            else
-            {
-                SearchFilter = null;
-                return;
-            }
-            SearchFilter.ArtifactDateSearchType = date ?? null;
-
-            SearchFilter.ArtifactCategorySearchType = type ?? null;
-
-            return;
-        }
-        else
-        {
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                SearchFilter.SearchText = searchText;
-            }
-            else
-            {
-                SearchFilter = null;
-                return;
-            }
-            SearchFilter.ArtifactDateSearchType = date ?? null;
-
-            SearchFilter.ArtifactCategorySearchType = type ?? null;
-
-            return;
-        }
+        SearchFilter ??= new DeepSearchFilter();
+        SearchFilter.SearchText = !string.IsNullOrWhiteSpace(searchText) ? searchText : string.Empty;
+        SearchFilter.ArtifactCategorySearchType = type ?? null;
+        SearchFilter.ArtifactDateSearchType = date ?? null;
     }
 
     private void HandleInLineSearch(string text)
@@ -1488,7 +1454,6 @@ public partial class FileBrowser
         }
 
         _displayedArtifacts = displayingArtifacts.ToList();
-
     }
 
     private IEnumerable<FsArtifact> ApplyInlineSearch(IEnumerable<FsArtifact> artifacts)
