@@ -59,9 +59,6 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                         password,
                         OnProgress,
                         _progressBarCts?.Token);
-                    result.ExtractorResult = ExtractorBottomSheetResultType.Success;
-                    _tcs?.SetResult(result);
-                    return;
                 }
                 catch (InvalidPasswordException)
                 {
