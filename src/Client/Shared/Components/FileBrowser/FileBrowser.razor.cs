@@ -136,7 +136,7 @@ public partial class FileBrowser
             await LoadChildrenArtifactsAsync(_currentArtifact);
             await InvokeAsync(() => StateHasChanged());
         });
-        
+
         await base.OnInitAsync();
 
     }
@@ -161,7 +161,7 @@ public partial class FileBrowser
         if (_isGoingBack)
         {
             _isGoingBack = false;
-            await JSRuntime.InvokeVoidAsync("getLastScrollPossition");
+            await JSRuntime.InvokeVoidAsync("getLastScrollPosition");
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -585,7 +585,7 @@ public partial class FileBrowser
         }
 
         if (_artifactDetailModalRef is null)
-            return; 
+            return;
 
         var result = await _artifactDetailModalRef.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
         ChangeDeviceBackFunctionality(_artifactExplorerMode);

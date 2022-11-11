@@ -1,49 +1,11 @@
-﻿function OnScrollEvent() {
+﻿let timeoutID;
+let oldScrollY = 0;
+
+function OnScrollEvent() {
     const artifactListDiv = document.querySelector('.list-container');
     artifactListDiv.scrollTop = 0;
 }
-//const artifactListDiv = document.querySelector('.list-container');
-//artifactListDiv.onscroll = function () { OnScrollCheck() };
 
-let timeoutID;
-let oldScrollY = 0;
-function OnScrollCheck() {
-    console.log("ali")
-    const artifactListDiv = document.querySelector('.list-container');
-    console.log(artifactListDiv.scrollTop);
-    if (artifactListDiv.scrollTop > 85) {
-        ShowBackToTopButton();
-        if (typeof timeoutID === "undefined") {
-            timeoutID = setTimeout(HideBackToTopButton, 3000);
-        }
-    }
-    else {
-        HideBackToTopButton();
-        if (typeof timeoutID !== "undefined") {
-            clearTimeout(timeoutID);
-            timeoutID = undefined;
-        }
-    }
-
-    artifactListDiv.addEventListener("scroll", () => {
-        const pinListDiv = document.querySelector('.pin-artifacts');
-        if (oldScrollY < artifactListDiv.scrollTop && artifactListDiv.scrollTop >= 350) {
-            /*  CheckBackToTopButtonDisplay();*/
-
-            pinListDiv.classList.add('pin-artifacts-hide');
-            pinListDiv.classList.remove('pin-artifacts-show');
-            console.log("down");
-        } else if (oldScrollY > artifactListDiv.scrollTop) {
-
-            /*  CheckBackToTopButtonDisplay();*/
-            pinListDiv.classList.add('pin-artifacts-show');
-            pinListDiv.classList.remove('pin-artifacts-hide');
-            console.log("up");
-        }
-        oldScrollY = artifactListDiv.scrollTop;
-
-    });
-}
 
 function HideBackToTopButton() {
     {
@@ -64,7 +26,7 @@ function ShowBackToTopButton() {
 // array for store scroll top value for back button
 let savePositionScroll = [];
 
-function getLastScrollPossition() {
+function getLastScrollPosition() {
     const artifactListDiv = document.querySelector('.list-container');
     let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
     artifactListDiv.scrollTop = lastScrollPosition;
@@ -93,7 +55,7 @@ function ImagePinchZoom() {
         draggableUnzoomed: false,
         setOffsetsOnce: true,
         maxZoom: 20,
-        tapZoomFactor : 3
+        tapZoomFactor: 3
     });
 }
 
@@ -120,5 +82,45 @@ function breadCrumbStyle() {
             endEllipsis.classList.add("color-changer");
             endEllipsis.style.display = "block";
         }
+    });
+}
+
+
+function OnScrollCheck() {
+    const artifactListDiv = document.querySelector('.list-container');
+
+    artifactListDiv.addEventListener("scroll", () => {
+        const pinListDiv = document.querySelector('.pin-artifacts');
+        if (typeof pinListDiv !== "undefined" && pinListDiv !== null) {
+
+            if (oldScrollY < artifactListDiv.scrollTop && artifactListDiv.scrollTop >= 350) {
+                /*  CheckBackToTopButtonDisplay();*/
+                pinListDiv.classList.add('pin-artifacts-hide');
+                pinListDiv.classList.remove('pin-artifacts-show');
+                console.log("down");
+            } else if (oldScrollY > artifactListDiv.scrollTop) {
+
+                /*  CheckBackToTopButtonDisplay();*/
+                pinListDiv.classList.add('pin-artifacts-show');
+                pinListDiv.classList.remove('pin-artifacts-hide');
+                console.log("up");
+            }
+            oldScrollY = artifactListDiv.scrollTop;
+        }
+
+        if (artifactListDiv.scrollTop > 85) {
+        ShowBackToTopButton();
+        if (typeof timeoutID === "undefined") {
+            timeoutID = setTimeout(HideBackToTopButton, 3000);
+        }
+    }
+    else {
+        HideBackToTopButton();
+        if (typeof timeoutID !== "undefined") {
+            clearTimeout(timeoutID);
+            timeoutID = undefined;
+        }
+    }
+
     });
 }
