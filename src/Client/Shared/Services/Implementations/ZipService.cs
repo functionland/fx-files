@@ -26,7 +26,7 @@ public partial class ZipService : IZipService
         {
             var artifacts = extension switch
             {
-                ".rar" => await GetRarArtifactsAsync(zipFilePath, password),
+                //".rar" => await GetRarArtifactsAsync(zipFilePath, password),
                 ".zip" => await GetZipArtifactsAsync(zipFilePath, password),
                 _ => throw new InvalidZipExtensionException(StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), extension))
             };
@@ -91,7 +91,7 @@ public partial class ZipService : IZipService
             return zipFileExtension switch
             {
                 ".zip" => await ExtractZipItemsAsync(zipFullPath, newPath, fsArtifacts, password, overwrite, onProgress, cancellationToken),
-                ".rar" => await ExtractRarItemsAsync(zipFullPath, newPath, fsArtifacts, password, overwrite, onProgress, cancellationToken),
+                //".rar" => await ExtractRarItemsAsync(zipFullPath, newPath, fsArtifacts, password, overwrite, onProgress, cancellationToken),
                 _ => throw new InvalidZipExtensionException(StringLocalizer.GetString(nameof(AppStrings.InvalidZipExtensionException), zipFileExtension)),
             };
         }
