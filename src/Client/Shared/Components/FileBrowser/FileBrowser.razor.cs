@@ -73,8 +73,6 @@ public partial class FileBrowser
     private List<FsArtifact> _selectedArtifacts = new();
     private FileCategoryType? _fileCategoryFilter;
 
-    private Tuple<FsArtifact, List<FsArtifact>?, string?, string?>? _extractTuple;
-
     private ArtifactExplorerMode _artifactExplorerModeValue;
     private ArtifactExplorerMode _artifactExplorerMode
     {
@@ -663,13 +661,8 @@ public partial class FileBrowser
         _isArtifactExplorerLoading = false;
     }
 
-    // TODO: change tuple item for real names.
-    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?, string?, string?> extractTuple)
+    public async Task HandleExtractArtifactAsync(FsArtifact zipArtifact, List<FsArtifact>? innerArtifacts = null, string? destinationDirectory = null, string? artifactPassword = null)
     {
-        var artifact = extractTuple.Item1;
-        var innerArtifacts = extractTuple.Item2;
-        var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
-        var artifactPassword = extractTuple.Item4;
         var extractResult = new ExtractorBottomSheetResult();
         if (_inputModalRef is null)
         {
@@ -677,7 +670,7 @@ public partial class FileBrowser
             return;
         }
 
-        var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
+        var folderName = Path.GetFileNameWithoutExtension(zipArtifact.Name);
         var createFolder = Localizer.GetString(AppStrings.FolderName);
         var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
         var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
@@ -701,7 +694,7 @@ public partial class FileBrowser
                 {
                     return;
                 }
-                extractResult = await _extractorModalRef.ShowAsync(artifact.FullPath, destinationDirectory,
+                extractResult = await _extractorModalRef.ShowAsync(zipArtifact.FullPath, destinationDirectory,
                     destinationFolderName, innerArtifacts);
             }
 
@@ -933,13 +926,9 @@ public partial class FileBrowser
             case ArtifactOverflowResultType.Extract:
                 if (artifact != null)
                 {
-                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(artifact, null, null, null);
+                    await HandleExtractArtifactAsync(artifact);
                 }
 
-                if (_extractTuple != null)
-                {
-                    await HandleExtractArtifactAsync(_extractTuple);
-                }
                 break;
         }
     }
@@ -987,12 +976,12 @@ public partial class FileBrowser
         {
             _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             var pinOptionResult = GetPinOptionResult(artifacts);
-            var isVisibleSahreWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
+            var isVisibleShareWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
 
             var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
             FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
 
-            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, fileCategoryType, IsInRoot(_currentArtifact));
+            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleShareWithApp, fileCategoryType, IsInRoot(_currentArtifact));
             ChangeDeviceBackFunctionality(_artifactExplorerMode);
         }
 
@@ -1036,13 +1025,7 @@ public partial class FileBrowser
                 await HandleShareFiles(artifacts);
                 break;
             case ArtifactOverflowResultType.Extract:
-
-                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(artifacts.First(), null, null, null);
-
-                if (_extractTuple != null)
-                {
-                    await HandleExtractArtifactAsync(_extractTuple);
-                }
+                await HandleExtractArtifactAsync(artifacts.First());
                 break;
             case ArtifactOverflowResultType.Cancel:
                 _artifactExplorerMode = ArtifactExplorerMode.Normal;
