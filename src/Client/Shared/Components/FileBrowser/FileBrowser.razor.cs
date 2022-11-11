@@ -91,7 +91,6 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private ExtractorBottomSheetResultType ExtractorBottomSheetResult { get; set; }
 
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -661,12 +660,11 @@ public partial class FileBrowser
         _isArtifactExplorerLoading = false;
     }
 
-    public async Task HandleExtractArtifactAsync(FsArtifact zipArtifact, List<FsArtifact>? innerArtifacts = null, string? destinationDirectory = null, string? artifactPassword = null)
+    public async Task HandleExtractArtifactAsync(FsArtifact zipArtifact, List<FsArtifact>? innerArtifacts = null, string? destinationDirectory = null)
     {
         var extractResult = new ExtractorBottomSheetResult();
         if (_inputModalRef is null)
         {
-            ExtractorBottomSheetResult = ExtractorBottomSheetResultType.Cancel;
             return;
         }
 
@@ -678,15 +676,15 @@ public partial class FileBrowser
         try
         {
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
-            //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
             if (result?.ResultType == InputModalResultType.Cancel)
             {
-                ExtractorBottomSheetResult = ExtractorBottomSheetResultType.Cancel;
                 return;
             }
 
             var destinationFolderName = result?.Result ?? folderName;
+
+            destinationDirectory ??= zipArtifact.ParentFullPath;
 
             if (destinationDirectory != null)
             {
@@ -1801,4 +1799,5 @@ public partial class FileBrowser
         }
         await OnInitAsync();
     }
+
 }

@@ -10,8 +10,8 @@ public partial class FileViewer
     [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
+    [Parameter] public EventCallback<string> NavigationFolderCallback { get; set; }
     [AutoInject] public INativeNavigation NativeNavigation { get; set; } = default!;
-    [Parameter] public ExtractorBottomSheetResultType ExtractorBottomSheetResult { get; set; }
 
     public bool IsModalOpen { get; set; } = false;
 
@@ -77,6 +77,6 @@ public partial class FileViewer
     public async Task HandleBackAsync()
     {
         IsModalOpen = false;
-        await OnBack.InvokeAsync();
+        //await OnBack.InvokeAsync();
     }
 }
