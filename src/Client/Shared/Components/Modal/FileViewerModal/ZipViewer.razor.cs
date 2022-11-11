@@ -115,10 +115,10 @@ public partial class ZipViewer : IFileViewerComponent
                 return;
             }
 
-            var destinationFolderName = folderNameResult.Result ?? folderName;
+            var destinationFolderName = string.IsNullOrWhiteSpace(folderNameResult?.Result) == false ? folderNameResult.Result : folderName;
 
             var result = new ExtractorBottomSheetResult();
-            if (folderNameResult.Result != null && _extractorModalRef != null)
+            if (folderNameResult?.Result != null && _extractorModalRef != null)
             {
                 result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                     folderNameResult.Result, artifacts);

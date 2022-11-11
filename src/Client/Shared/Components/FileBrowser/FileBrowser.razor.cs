@@ -682,7 +682,7 @@ public partial class FileBrowser
                 return;
             }
 
-            var destinationFolderName = result?.Result ?? folderName;
+            var destinationFolderName = string.IsNullOrWhiteSpace(result?.Result) == false ? result.Result : folderName;
 
             destinationDirectory ??= zipArtifact.ParentFullPath;
 
