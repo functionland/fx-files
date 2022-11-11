@@ -13,6 +13,7 @@
                 <ZipViewer CurrentArtifact="_currentArtifact"
                            FileService="FileService"
                            NavigationFolderCallback="HandleNavigateAsync"
+                           OnBack="HandleBackAsync"
                            ThumbnailService="ThumbnailService" />
             }
             else if (IsSupported<TextViewer>(_currentArtifact))
