@@ -554,10 +554,17 @@
     overflow: hidden;
 }
 
+.pin-artifacts {
+    transition: height 200ms linear;
+}
+
 .pin-artifacts-hide {
-    display: none;
+    height: 0;
+    overflow: hidden;
+    transition: height 200ms linear;
 }
 
 .pin-artifacts-show {
-    display: block;
+    height: auto;
+    transition: height 200ms linear;
 }
