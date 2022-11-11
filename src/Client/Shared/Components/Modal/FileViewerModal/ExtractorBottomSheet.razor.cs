@@ -121,18 +121,6 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }
         }
 
-        private async Task<List<FsArtifact>> GetOverwritableArtifacts(string destinationFolderPath, List<FsArtifact>? innerArtifacts)
-        {
-            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
-            List<FsArtifact> overwriteArtifacts = new();
-            if (innerArtifacts != null)
-            {
-                overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
-            }
-
-            return overwriteArtifacts;
-        }
-
         private async Task<List<FsArtifact>> GetOverwritableArtifacts(string zipFilePath, string destinationFolderPath,
             List<FsArtifact>? innerArtifacts)
         {
