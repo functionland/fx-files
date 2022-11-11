@@ -127,7 +127,7 @@ public partial class ZipViewer : IFileViewerComponent
             if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
             {
                 var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
-                await NavigationFolderCallback.InvokeAsync(destinationPath);
+                await NavigationFolderCallback.InvokeAsync(destinationResultPath);
             }
         }
     }
@@ -164,7 +164,7 @@ public partial class ZipViewer : IFileViewerComponent
             if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
             {
                 var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
-                await NavigationFolderCallback.InvokeAsync(destinationPath);
+                await NavigationFolderCallback.InvokeAsync(destinationResultPath);
             }
         }
     }
@@ -203,7 +203,7 @@ public partial class ZipViewer : IFileViewerComponent
                 if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
                 {
                     var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
-                    await NavigationFolderCallback.InvokeAsync(destinationPath);
+                    await NavigationFolderCallback.InvokeAsync(destinationResultPath);
                 }
             }
         }
