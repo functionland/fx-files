@@ -1,12 +1,17 @@
 ﻿function OnScrollEvent() {
-    document.documentElement.scrollTop = 0;
+    const artifactListDiv = document.querySelector('.list-container');
+    artifactListDiv.scrollTop = 0;
 }
-
-window.onscroll = function () { OnScrollCheck() };
+//const artifactListDiv = document.querySelector('.list-container');
+//artifactListDiv.onscroll = function () { OnScrollCheck() };
 
 let timeoutID;
+let oldScrollY = 0;
 function OnScrollCheck() {
-    if (document.documentElement.scrollTop > 85) {
+    console.log("ali")
+    const artifactListDiv = document.querySelector('.list-container');
+    console.log(artifactListDiv.scrollTop);
+    if (artifactListDiv.scrollTop > 85) {
         ShowBackToTopButton();
         if (typeof timeoutID === "undefined") {
             timeoutID = setTimeout(HideBackToTopButton, 3000);
@@ -19,6 +24,25 @@ function OnScrollCheck() {
             timeoutID = undefined;
         }
     }
+
+    artifactListDiv.addEventListener("scroll", () => {
+        const pinListDiv = document.querySelector('.pin-artifacts');
+        if (oldScrollY < artifactListDiv.scrollTop && artifactListDiv.scrollTop >= 350) {
+            /*  CheckBackToTopButtonDisplay();*/
+
+            pinListDiv.classList.add('pin-artifacts-hide');
+            pinListDiv.classList.remove('pin-artifacts-show');
+            console.log("down");
+        } else if (oldScrollY > artifactListDiv.scrollTop) {
+
+            /*  CheckBackToTopButtonDisplay();*/
+            pinListDiv.classList.add('pin-artifacts-show');
+            pinListDiv.classList.remove('pin-artifacts-hide');
+            console.log("up");
+        }
+        oldScrollY = artifactListDiv.scrollTop;
+
+    });
 }
 
 function HideBackToTopButton() {
@@ -41,13 +65,15 @@ function ShowBackToTopButton() {
 let savePositionScroll = [];
 
 function getLastScrollPossition() {
+    const artifactListDiv = document.querySelector('.list-container');
     let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
-    document.documentElement.scrollTop = lastScrollPosition;
+    artifactListDiv.scrollTop = lastScrollPosition;
     savePositionScroll.pop();
 }
 
 function saveScrollPosition() {
-    savePositionScroll.push(document.documentElement.scrollTop);
+    const artifactListDiv = document.querySelector('.list-container');
+    savePositionScroll.push(artifactListDiv.scrollTop);
 }
 
 // search input focus 

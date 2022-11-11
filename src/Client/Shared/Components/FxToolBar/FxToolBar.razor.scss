@@ -65,6 +65,7 @@
 
 .not-root-mode {
     width: 100%;
+    transition: all 300ms linear;
 
     ::deep .search-back-button::after {
         font-size: 24px;
