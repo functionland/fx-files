@@ -1,6 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Functionland.FxFiles.Client.Test.Services.Implementations;
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -144,7 +145,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
             await Assert.ThrowsExceptionAsync<FileNotFoundException>(async () =>
             {
-                var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("NOFILE.zip"));
+                await zipService.GetAllArtifactsAsync(GetSamplePath("NOFILE.zip"));
             });
         }
 
@@ -189,7 +190,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var zipService = serviceProvider.GetRequiredService<IZipService>();
 
             var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("SimpleZip.zip"));
-            var itemPath = "Folder 1/b.txt";
+            const string itemPath = "Folder 1/b.txt";
             var artifact = artifacts.Where(a => a.FullPath == itemPath).ToList();
 
             await zipService.ExtractZippedArtifactAsync(GetSamplePath("SimpleZip.zip"),
@@ -198,7 +199,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                                                         artifact);
 
             var filePath = Path.Combine(GetSampleDestinationPath(), "ExtractZipFile", Path.GetFileName(itemPath));
-            var allText = File.ReadAllText(filePath);
+            var allText = await File.ReadAllTextAsync(filePath);
 
             var checkTextInsideFile = allText.Equals("Test extract zip file\r\n");
             Assert.IsTrue(checkTextInsideFile);
@@ -295,7 +296,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
             var zipService = serviceProvider.GetRequiredService<IZipService>();
 
-            await zipService.ExtractZippedArtifactAsync(GetSamplePath("SimpleZip.zip"),GetSampleDestinationPath(),"ExtractZipFile");
+            await zipService.ExtractZippedArtifactAsync(GetSamplePath("SimpleZip.zip"), GetSampleDestinationPath(), "ExtractZipFile");
 
         }
 
@@ -342,7 +343,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                                                         GetSampleDestinationPath(),
                                                         "ZipFileWithCorrectPassword",
                                                         null,
-                                                        false, 
+                                                        false,
                                                         "123");
         }
 
@@ -364,13 +365,13 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
             var zipService = serviceProvider.GetRequiredService<IZipService>();
 
-            await zipService.ExtractZippedArtifactAsync(GetSamplePath("ProtectedWith123Rar.rar"), 
+            await zipService.ExtractZippedArtifactAsync(GetSamplePath("ProtectedWith123Rar.rar"),
                                                         GetSampleDestinationPath(),
                                                         "RarFileWithCorrectPassword",
-                                                        null, 
-                                                        false, 
+                                                        null,
+                                                        false,
                                                         "123");
-         }
+        }
 
         [TestMethod]
         public async Task ExtractInnerArtifactInZipFile_MustWork()
@@ -463,7 +464,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                                                             false,
                                                             "1855");
             });
-            
+
         }
 
         [TestMethod]
@@ -532,7 +533,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
         private string GetSamplePath(string filename)
         {
-            return Path.Combine(TestContext.DeploymentDirectory, "UnitTests", "ZipService", "SampleArchives", filename); 
+            return Path.Combine(TestContext.DeploymentDirectory, "UnitTests", "ZipService", "SampleArchives", filename);
         }
         private string GetSampleDestinationPath()
         {
