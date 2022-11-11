@@ -34,7 +34,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
         }
 
         [TestMethod]
-        public async Task OpenSimpleZipWithUppercaseExtension_MustWork()
+        public async Task OpenZipFileWithUppercaseExtension_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) =>
@@ -51,10 +51,79 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
             var zipService = serviceProvider.GetRequiredService<IZipService>();
 
-            var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("SimpleZipWithUppercaseExtension.ZIP"));
-            Assert.AreEqual(3, artifacts.Count);
+            var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("ZipFileWithUppercaseExtension.ZIP"));
+            Assert.AreEqual(9, artifacts.Count);
 
         }
+
+        [TestMethod]
+        public async Task ExtractZipFileWithUppercaseExtension_MustWork()
+        {
+            var testHost = Host.CreateDefaultBuilder()
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddClientSharedServices();
+                    services.AddClientTestServices(TestContext);
+                    services.AddTransient<ILocalDeviceFileService, GenericFileService>();
+                }
+                ).Build();
+
+
+            var serviceScope = testHost.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+
+            var zipService = serviceProvider.GetRequiredService<IZipService>();
+
+            await zipService.ExtractZippedArtifactAsync(GetSamplePath("ZipFileWithUppercaseExtension.ZIP"),
+                                                        GetSampleDestinationPath(),
+                                                        "ZipFileWithUppercaseExtension");
+        }
+
+        [Ignore]
+        public async Task OpenRarFileWithUppercaseExtension_MustWork()
+        {
+            var testHost = Host.CreateDefaultBuilder()
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddClientSharedServices();
+                    services.AddClientTestServices(TestContext);
+                    services.AddTransient<ILocalDeviceFileService, GenericFileService>();
+                }
+                ).Build();
+
+
+            var serviceScope = testHost.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+
+            var zipService = serviceProvider.GetRequiredService<IZipService>();
+
+            var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("RarFileWithUppercaseExtension.RAR"));
+            Assert.AreEqual(9, artifacts.Count);
+        }
+
+        [Ignore]
+        public async Task ExtractRarFileWithUppercaseExtension_MustWork()
+        {
+            var testHost = Host.CreateDefaultBuilder()
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddClientSharedServices();
+                    services.AddClientTestServices(TestContext);
+                    services.AddTransient<ILocalDeviceFileService, GenericFileService>();
+                }
+                ).Build();
+
+
+            var serviceScope = testHost.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+
+            var zipService = serviceProvider.GetRequiredService<IZipService>();
+            var x = GetSamplePath("RarFileWithUppercaseExtension.RAR");
+            await zipService.ExtractZippedArtifactAsync(GetSamplePath("RarFileWithUppercaseExtension.RAR"),
+                                                        GetSampleDestinationPath(),
+                                                        "RarFileWithUppercaseExtension");
+        }
+
 
         [TestMethod]
         public async Task OpenNonExistedFile_ShouldThrowFileNotFound()
@@ -101,7 +170,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             Assert.AreEqual(9, artifacts.Count);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task OpenProtectedRar_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
@@ -123,7 +192,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             Assert.AreEqual(9, artifacts.Count);
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task OpenProtectedEncryptedRar_MustThrowException()
         {
             var testHost = Host.CreateDefaultBuilder()
@@ -148,7 +217,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             });
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task OpenProtectedEncryptedRarWithCorrectPassword_MustThrowException()
         {
             var testHost = Host.CreateDefaultBuilder()
@@ -195,7 +264,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
 
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task ExtractRarFile_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
@@ -242,7 +311,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                                                         "123");
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task ExtractRarFileWithCorrectPassword_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()
@@ -395,7 +464,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             });
         }
 
-        [TestMethod]
+        [Ignore]
         public async Task ExtractInnerArtifactInRarFileWithCorrectPassword_MustWork()
         {
             var testHost = Host.CreateDefaultBuilder()

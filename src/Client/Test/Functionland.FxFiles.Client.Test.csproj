@@ -45,4 +45,13 @@
 	  <ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="UnitTests\ZipService\SampleArchives\RarFileWithUppercaseExtension.RAR">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="UnitTests\ZipService\SampleArchives\ZipFileWithUppercaseExtension.ZIP">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
