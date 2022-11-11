@@ -9,7 +9,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
     [TestClass]
     public class ZipServiceTest : TestBase
     {
-        public TestContext TestContext { get; set; }
+        public TestContext TestContext { get; set; } = default!;
 
         [TestMethod]
         public async Task OpenSimpleZip_MustWork()
@@ -169,6 +169,41 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("ProtectedWith123Zip.zip"));
             Assert.AreEqual(9, artifacts.Count);
         }
+
+        [TestMethod]
+        public async Task ContentZipFile_MustWork()
+        {
+            var testHost = Host.CreateDefaultBuilder()
+                .ConfigureServices((_, services) =>
+                {
+                    services.AddClientSharedServices();
+                    services.AddClientTestServices(TestContext);
+                    services.AddTransient<ILocalDeviceFileService, GenericFileService>();
+                }
+                ).Build();
+
+
+            var serviceScope = testHost.Services.CreateScope();
+            var serviceProvider = serviceScope.ServiceProvider;
+
+            var zipService = serviceProvider.GetRequiredService<IZipService>();
+
+            var artifacts = await zipService.GetAllArtifactsAsync(GetSamplePath("SimpleZip.zip"));
+            var itemPath = "Folder 1/b.txt";
+            var artifact = artifacts.Where(a => a.FullPath == itemPath).ToList();
+
+            await zipService.ExtractZippedArtifactAsync(GetSamplePath("SimpleZip.zip"),
+                                                        GetSampleDestinationPath(),
+                                                        "ExtractZipFile",
+                                                        artifact);
+
+            var filePath = Path.Combine(GetSampleDestinationPath(), "ExtractZipFile", Path.GetFileName(itemPath));
+            var allText = File.ReadAllText(filePath);
+
+            var checkTextInsideFile = allText.Equals("Test extract zip file\r\n");
+            Assert.IsTrue(checkTextInsideFile);
+        }
+
 
         [Ignore]
         public async Task OpenProtectedRar_MustWork()
