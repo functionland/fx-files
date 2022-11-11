@@ -166,6 +166,10 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 await GetPasswordFromInputAsync();
                 if (string.IsNullOrWhiteSpace(_password))
                 {
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                        Localizer.GetString(nameof(AppStrings.PasswordEmptyMessage)), FxToastType.Error);
+                    ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs?.SetResult(ExtractorBottomSheetResult);
                     return null;
                 }
                 try
