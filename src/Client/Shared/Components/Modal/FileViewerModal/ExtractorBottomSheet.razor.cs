@@ -65,8 +65,20 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     duplicateCount = await ExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName,
                         _password, innerArtifacts);
                 }
-                catch (PasswordDidNotMatchedException)
+                catch (PasswordDidNotMatchedException exception)
                 {
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                        exception.Message, FxToastType.Error);
+                    ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs?.SetResult(ExtractorBottomSheetResult);
+                    return;
+                }
+                catch (NotSupportedEncryptedFileException exception)
+                {
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                        exception.Message, FxToastType.Error);
+                    ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs?.SetResult(ExtractorBottomSheetResult);
                     return;
                 }
                 catch (Exception)
@@ -185,7 +197,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                         Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)), FxToastType.Error);
                     ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                     _tcs?.SetResult(ExtractorBottomSheetResult);
-                    throw new PasswordDidNotMatchedException(Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)));
+                    //throw new PasswordDidNotMatchedException(Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)));
                 }
                 catch (Exception)
                 {
