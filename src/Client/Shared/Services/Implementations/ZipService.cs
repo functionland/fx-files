@@ -134,7 +134,7 @@ public partial class ZipService : IZipService
             {
                 Directory.Delete(newPath, true);
             }
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
         {
@@ -142,6 +142,14 @@ public partial class ZipService : IZipService
         }
         catch (OverflowException ex) when (ex.Message == "Arithmetic operation resulted in an overflow.")
         {
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+        catch (NotSupportedException) 
+        {
+            if (Directory.Exists(newPath))
+            {
+                Directory.Delete(newPath, true);
+            }
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
     }
