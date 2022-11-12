@@ -163,11 +163,11 @@ public partial class FileBrowser
         }
         await base.OnAfterRenderAsync(firstRender);
     }
-    private void HandleProgressBar(string CurrentText)
+    private void HandleProgressBar(string currentText)
     {
         ProgressBarCurrentValue++;
         ProgressBarCurrentSubText = $"{ProgressBarCurrentValue} of {ProgressBarMax}";
-        ProgressBarCurrentText = CurrentText;
+        ProgressBarCurrentText = currentText;
     }
 
     private void InitialProgressBar(int maxValue)

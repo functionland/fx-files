@@ -64,7 +64,7 @@
                           OnArtifactOptionClick="HandleOptionsArtifact"
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
-                          ViewMode="ArtifactState.ViewMode"
+                          ViewMode="ViewModeEnum.List"
                           FileCategoryFilter="_fileCategoryFilter"
                           HandleBack="HandleToolbarBackClick"
                           IsLoading="_isArtifactExplorerLoading"
