@@ -144,6 +144,14 @@ public partial class ZipService : IZipService
         {
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
+        catch (NotSupportedException) 
+        {
+            if (Directory.Exists(newPath))
+            {
+                Directory.Delete(newPath, true);
+            }
+            throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
     }
 
     private async Task<List<FsArtifact>> GetRarArtifactsAsync(string zipFilePath, string? password = null)
