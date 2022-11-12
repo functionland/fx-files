@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Functionland.FxFiles.Client.Shared.Pages;
 
-namespace Functionland.FxFiles.Client.Shared.Pages
+public partial class SettingAbout
 {
-    public partial class SettingAbout
+    protected override Task OnInitAsync()
     {
-        private void HandleToolbarBack()
+        GoBackService.OnInit((Task () =>
         {
-            NavigationManager.NavigateTo("settings", false, true);
-        }
+            HandleToolbarBack();
+            StateHasChanged();
+            return Task.CompletedTask;
+        }), true, false);
+
+        return base.OnInitAsync();
+    }
+
+    private void HandleToolbarBack()
+    {
+        NavigationManager.NavigateTo("settings", false, true);
     }
 }
