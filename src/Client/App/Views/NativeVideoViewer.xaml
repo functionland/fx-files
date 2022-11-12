@@ -37,7 +37,6 @@
                 x:Name="media"
                 AutoPlay="True"
                 BackgroundColor="{StaticResource AppBackgroundColor}"
-                MediaEnded="media_MediaEnded"
                 ShowsPlaybackControls="False">
                 <media:MediaElement.GestureRecognizers>
                     <TapGestureRecognizer Tapped="media_Tapped" />
@@ -66,7 +65,7 @@
         </Frame>
         <Frame x:Name="mediaControls" VerticalOptions="EndAndExpand">
             <StackLayout
-                HeightRequest="105"
+                HeightRequest="110"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="CenterAndExpand">
                 <StackLayout BindingContext="{x:Reference media}" Orientation="Vertical">
@@ -94,15 +93,18 @@
                             Margin="21,0"
                             HorizontalOptions="StartAndExpand"
                             Text="{Binding Source={x:Reference media}, Path=Position, Converter={converters:TimeSpanToStringConverter}}"
+                            TextColor="White"
                             VerticalOptions="CenterAndExpand" />
                         <Label
                             Margin="21,0"
                             HorizontalOptions="EndAndExpand"
                             Text="{Binding Source={x:Reference media}, Path=Duration, Converter={converters:TimeSpanToStringConverter}}"
+                            TextColor="White"
                             VerticalOptions="CenterAndExpand" />
                     </StackLayout>
                 </StackLayout>
                 <StackLayout
+                    Margin="10"
                     HorizontalOptions="CenterAndExpand"
                     Orientation="Horizontal"
                     Spacing="40">
