@@ -17,42 +17,35 @@
                    OnAddButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
                    IsInSelectMode="@(_artifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
-            <section class="filter-deep-search @(_isFileCategoryFilterBoxOpen ? "expanded" : "")">
+            <section class="filter-deep-search">
                 <div class="filter-content">
-                    <div class="filter-text">Filters</div>
-                    <div class="chaveron-up-icon" @onclick="ChangeFileCategoryFilterMode"></div>
-                    <div class="chaveron-down-icon" @onclick="ChangeFileCategoryFilterMode"></div>
+                    <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
+                    <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
                 </div>
-                @if (_isFileCategoryFilterBoxOpen)
-                {
-                    <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
-                }
 
-                <div class="filters-options">
+                <div class="@(_isFileCategoryFilterBoxOpen ? "show-option" : "hide-option") filters-options">
                     <div class="time-options-container">
-                        <div class="time-title">Time</div>
+                        <div class="time-title">@Localizer[nameof(AppStrings.Time)]</div>
 
                         <div class="time-options">
-                            <div class="yesterday-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Yesterday ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Yesterday))">Yesterday</div>
-                            <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Past7Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Past7Days))">Past 7 days</div>
-                            <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Past30Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Past30Days))">Past 30 days</div>
+                            <div class="yesterday-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Yesterday ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Yesterday))">@Localizer[nameof(AppStrings.Yesterday)]</div>
+                            <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Past7Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Past7Days))">@Localizer[nameof(AppStrings.Week)]</div>
+                            <div class="past-seven-days-option @(_artifactsSearchFilterDate == ArtifactDateSearchType.Past30Days ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterDate(ArtifactDateSearchType.Past30Days))">@Localizer[nameof(AppStrings.Month)]</div>
                         </div>
                     </div>
 
                     <div class="type-options-container">
-                        <div class="type-title">Type</div>
+                        <div class="type-title">@Localizer[nameof(AppStrings.Type)]</div>
 
                         <div class="type-options">
-                            <div class="image-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Image ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Image))">Image</div>
-                            <div class="video-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Video ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Video))">Video</div>
-                            <div class="audio-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Audio ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Audio))">Audio</div>
-                            <div class="document-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Document ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Document))">Document</div>
-                            <div class="pdf-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">App</div>
+                            <div class="image-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Image ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Image))">@Localizer[nameof(AppStrings.Image)]</div>
+                            <div class="video-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Video ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Video))">@Localizer[nameof(AppStrings.Video)]</div>
+                            <div class="audio-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Audio ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Audio))">@Localizer[nameof(AppStrings.Audio)]</div>
+                            <div class="document-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Document ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Document))">@Localizer[nameof(AppStrings.Document)]</div>
+                            <div class="pdf-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">@Localizer[nameof(AppStrings.App)]</div>
                         </div>
                     </div>
                 </div>
-
-                <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
             </section>
 
             @if (string.IsNullOrWhiteSpace(_searchText) is false)

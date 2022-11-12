@@ -375,28 +375,12 @@
     padding: $spacing-0 $spacing-21;
 }
 
-.expanded {
-
-    .filter-content {
-        .chaveron-up-icon {
-            display: block;
-        }
-
-        .chaveron-down-icon {
-            display: none;
-        }
-    }
-
-    .filters-options {
-        display: block;
-    }
-}
-
 .filter-content {
     display: flex;
     justify-content: space-between;
     align-content: center;
-    margin-bottom: $spacing-16;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-bg-secondary);
     cursor: pointer;
 
     .filter-text {
@@ -408,7 +392,7 @@
     }
 
     .chaveron-up-icon {
-        display: none;
+        display: block;
 
         &:before {
             @include Icon($chevron-up, color(gray-content1));
@@ -427,8 +411,9 @@
 }
 
 .filters-options {
-    padding: $spacing-16 $spacing-0 $spacing-24;
-    display: none;
+    height: 188px;
+    border-bottom: 1px solid color(gray-bg-secondary);
+
 
     div[class$="title"] {
         font-family: $open-sans-regular;
@@ -444,7 +429,7 @@
         justify-content: flex-start;
         align-items: center;
         flex-flow: row wrap;
-       /* gap: $spacing-8;*/
+        /* gap: $spacing-8;*/
 
         div {
             background-color: color(gray-bg-secondary);
@@ -461,10 +446,28 @@
         }
 
         .option-selected-mode {
+            transition: all 200ms linear;
             background-color: $primary-color;
             color: $pure-white;
         }
     }
+}
+
+.show-option {
+    height: 100%;
+    transition: all 300ms linear 100ms, opacity 200ms linear;
+    padding: $spacing-16 $spacing-0 $spacing-24;
+    opacity: 1;
+
+}
+
+.hide-option {
+    height: 0;
+    overflow: hidden;
+    transition: all 300ms linear 100ms, opacity 200ms linear;
+    padding: 0;
+    border: none;
+    opacity: 0;
 }
 
 .time-options-container {
@@ -542,7 +545,7 @@
 }
 
 .show-search {
-   opacity: 1;
+    opacity: 1;
     height: 40px;
     transition: opacity 300ms linear 100ms,height 200ms linear;
 }
