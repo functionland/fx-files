@@ -48,8 +48,7 @@
                 </div>
             </section>
 
-            @if (string.IsNullOrWhiteSpace(_searchText) is false)
-            {
+            
                 <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
@@ -58,14 +57,13 @@
                           OnArtifactOptionClick="HandleOptionsArtifact"
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(_currentArtifact?.FullPath))"
-                          ViewMode="ArtifactState.ViewMode"
+                          ViewMode="ViewModeEnum.List"
                           FileCategoryFilter="_fileCategoryFilter"
                           HandleBack="HandleToolbarBackClick"
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="_isInSearch"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="_artifactExplorerMode" />
-            }
 
             @if (_selectedArtifacts != null)
             {
@@ -260,6 +258,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            OnExtract="HandleExtractArtifactAsync"
             OnBack="FileViewerBack"
-            FileViewerResult="FileViewerResult" />
+            NavigationFolderCallback="NavigateToDestination"/>
+
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>

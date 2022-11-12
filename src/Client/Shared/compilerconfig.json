@@ -266,5 +266,9 @@
   {
     "outputFile": "Components/Modal/FileViewerModal/TextViewer.razor.css",
     "inputFile": "Components/Modal/FileViewerModal/TextViewer.razor.scss"
+  },
+  {
+    "outputFile": "Components/Modal/FileViewerModal/ExtractorBottomSheet.razor.css",
+    "inputFile": "Components/Modal/FileViewerModal/ExtractorBottomSheet.razor.scss"
   }
 ]

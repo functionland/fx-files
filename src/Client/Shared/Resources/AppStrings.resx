@@ -696,4 +696,7 @@
   <data name="Yesterday" xml:space="preserve">
     <value>Yesterday</value>
   </data>
+  <data name="PasswordEmptyMessage" xml:space="preserve">
+    <value>Password won't be empty.</value>
+  </data>
 </root>
