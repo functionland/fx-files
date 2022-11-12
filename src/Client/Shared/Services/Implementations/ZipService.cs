@@ -134,7 +134,7 @@ public partial class ZipService : IZipService
             {
                 Directory.Delete(newPath, true);
             }
-            throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
+            throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
         {
