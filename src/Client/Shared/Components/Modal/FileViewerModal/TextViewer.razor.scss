@@ -65,5 +65,7 @@
         color: color(gray-content2);
         overflow-y: auto;
         margin-bottom: 60px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere
     }
 }
