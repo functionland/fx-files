@@ -240,27 +240,28 @@ public partial class ArtifactExplorer
     public async Task OnSelectionChanged(FsArtifact artifact)
     {
         DisposeTimer();
-        if (true)
+        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
-            {
-                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-            }
-            if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
-            {
-                artifact.IsSelected = false;
-                SelectedArtifacts.Remove(artifact);
-            }
-            else
-            {
-                artifact.IsSelected = true;
-                SelectedArtifacts.Add(artifact);
-            }
-
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            StateHasChanged();
+            await ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
         }
+        if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+        {
+            artifact.IsSelected = false;
+            SelectedArtifacts.Remove(artifact);
+        }
+        else
+        {
+            artifact.IsSelected = true;
+            SelectedArtifacts.Add(artifact);
+        }
+
+        if (SelectedArtifacts.Count == 0)
+        {
+            await ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
+        }
+
+        await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+        StateHasChanged();
     }
 
     public async Task OnGoToTopPage()
@@ -440,6 +441,12 @@ public partial class ArtifactExplorer
     private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
     {
         await OnZipArtifactClick.InvokeAsync(artifact);
+    }
+
+    private async Task ChangeArtifactExplorerMode(ArtifactExplorerMode mode)
+    {
+        ArtifactExplorerMode = mode;
+        await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
     }
 
     public void Dispose()
