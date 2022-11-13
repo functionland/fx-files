@@ -17,6 +17,7 @@ public partial class ZipViewer : IFileViewerComponent
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private ExtractorBottomSheetResult? ExtractorBottomSheetResult { get; set; }
 
 
     private FsArtifact _currentInnerZipArtifact =
@@ -30,11 +31,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     protected override Task OnInitAsync()
     {
-        GoBackService.OnInit((async Task () =>
-        {
-            await HandleBackAsync();
-            await Task.CompletedTask;
-        }), true, false);
+        SetGoBackDeviceButtonFunctionality();
         return base.OnInitAsync();
     }
 
@@ -111,22 +108,34 @@ public partial class ZipViewer : IFileViewerComponent
 
             if (folderNameResult.ResultType == InputModalResultType.Cancel)
             {
+                SetGoBackDeviceButtonFunctionality();
                 return;
             }
 
             var destinationFolderName = string.IsNullOrWhiteSpace(folderNameResult?.Result) == false ? folderNameResult.Result : folderName;
 
-            var result = new ExtractorBottomSheetResult();
             if (folderNameResult?.Result != null && _extractorModalRef != null)
             {
-                result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                     folderNameResult.Result, artifacts);
             }
 
-            if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
+            switch (ExtractorBottomSheetResult?.ExtractorResult)
             {
-                var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
-                await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                case ExtractorBottomSheetResultType.Cancel:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                case ExtractorBottomSheetResultType.Success when destinationDirectory != null:
+                    {
+                        var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
+                        await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                        break;
+                    }
+                case null:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -135,7 +144,6 @@ public partial class ZipViewer : IFileViewerComponent
     {
         var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { artifact });
         var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
-        var result = new ExtractorBottomSheetResult();
         if (CurrentArtifact != null && destinationPath != null)
         {
             if (_folderNameInputModalRef is null)
@@ -161,14 +169,26 @@ public partial class ZipViewer : IFileViewerComponent
 
             if (_extractorModalRef != null)
             {
-                result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                     destinationFolderName, new List<FsArtifact> { artifact });
             }
 
-            if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
+            switch (ExtractorBottomSheetResult?.ExtractorResult)
             {
-                var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
-                await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                case ExtractorBottomSheetResultType.Cancel:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                case ExtractorBottomSheetResultType.Success when destinationDirectory != null:
+                    {
+                        var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
+                        await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                        break;
+                    }
+                case null:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -179,7 +199,6 @@ public partial class ZipViewer : IFileViewerComponent
         {
             var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { CurrentArtifact });
             var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
-            var result = new ExtractorBottomSheetResult();
 
             if (CurrentArtifact != null && destinationPath != null)
             {
@@ -204,14 +223,26 @@ public partial class ZipViewer : IFileViewerComponent
 
                 if (folderNameResult.Result != null && _extractorModalRef != null)
                 {
-                    result = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                    ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
                         folderNameResult.Result);
                 }
 
-                if (result?.ExtractorResult == ExtractorBottomSheetResultType.Success && destinationDirectory != null)
+                switch (ExtractorBottomSheetResult?.ExtractorResult)
                 {
-                    var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
-                    await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                    case ExtractorBottomSheetResultType.Cancel:
+                        SetGoBackDeviceButtonFunctionality();
+                        return;
+                    case ExtractorBottomSheetResultType.Success when destinationDirectory != null:
+                        {
+                            var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
+                            await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                            break;
+                        }
+                    case null:
+                        SetGoBackDeviceButtonFunctionality();
+                        return;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -232,7 +263,10 @@ public partial class ZipViewer : IFileViewerComponent
         var result = await _artifactSelectionModalRef.ShowAsync(routeArtifact, actionResult);
 
         if (result.ResultType == ArtifactSelectionResultType.Cancel)
+        {
+            SetGoBackDeviceButtonFunctionality();
             return null;
+        }
 
         var destinationPath = result.SelectedArtifacts.FirstOrDefault()?.FullPath;
         return destinationPath;
@@ -293,5 +327,14 @@ public partial class ZipViewer : IFileViewerComponent
         _selectedArtifacts.Clear();
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
         ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
+    }
+
+    private void SetGoBackDeviceButtonFunctionality()
+    {
+        GoBackService.OnInit((async Task () =>
+        {
+            await HandleBackAsync();
+            await Task.CompletedTask;
+        }), true, false);
     }
 }
