@@ -614,6 +614,11 @@ public partial class FileBrowser
                 //TODO: Implement upload logic here
                 break;
             case ArtifactDetailModalResultType.Close:
+                if (_isInSearch)
+                {
+                    return;
+                }
+
                 if (artifacts.Count > 1)
                 {
                     await HandleSelectedArtifactsOptions(artifacts);
@@ -1310,7 +1315,14 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
-        _isFileCategoryFilterBoxOpen = false;
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            _isFileCategoryFilterBoxOpen = true;
+        }
+        else
+        {
+            _isFileCategoryFilterBoxOpen = false;
+        }
         _isArtifactExplorerLoading = true;
         _searchText = text;
         ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);

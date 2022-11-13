@@ -126,10 +126,10 @@
     </section>
 
     <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
-        <div class="filter-deep-search @(_isFileCategoryFilterBoxOpen || string.IsNullOrWhiteSpace(_searchText) ? "expanded" : "")">
+        <div class="filter-deep-search">
             <div class="filter-content">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
-                <div class="@(_isFileCategoryFilterBoxOpen || string.IsNullOrWhiteSpace(_searchText) ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
+                <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
             <div class="@(_isFileCategoryFilterBoxOpen ? "show-option" : "hide-option") filters-options">
                     <div class="time-options-container">
@@ -155,9 +155,7 @@
                     </div>
                 </div>
         </div>
-
-        @if (string.IsNullOrWhiteSpace(_searchText) is false)
-        {
+        
             <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
@@ -166,15 +164,13 @@
                           OnArtifactOptionClick="HandleOptionsArtifact"
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
-                          TODO:
-                          ViewMode="ArtifactState.ViewMode"
+                          ViewMode="ViewModeEnum.List"
                           FileCategoryFilter="_fileCategoryFilter"
                           HandleBack="HandleToolbarBackClick"
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="_isInSearch"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
-        }
 
         @if (_selectedArtifacts != null)
         {
