@@ -188,7 +188,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
+            var destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
@@ -208,9 +208,8 @@ public partial class FileBrowser
                 {
                     if (item.ArtifactType == FsArtifactType.File)
                     {
-                        var nameWithOutExtention = Path.GetFileNameWithoutExtension(item.FullPath);
-                        var pathWithOutExtention = Path.Combine(item.ParentFullPath, nameWithOutExtention);
-                        var newArtifactPath = string.Empty;
+                        var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(item.FullPath);
+                        var pathWithOutExtenstion = Path.Combine(item.ParentFullPath, nameWithOutExtenstion);
                         var oldArtifactPath = item.FullPath;
 
                         var copyText = " - Copy";
@@ -218,23 +217,22 @@ public partial class FileBrowser
                         while (true)
                         {
                             var counter = 1;
-                            var fullPathWithCopy = pathWithOutExtention + copyText;
+                            var fullPathWithCopy = pathWithOutExtenstion + copyText;
                             fullPathWithCopy = Path.ChangeExtension(fullPathWithCopy, item.FileExtension);
 
-                            if (!desArtifacts.Any(d => d.FullPath == fullPathWithCopy)) break;
+                            if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
 
                             counter++;
                             copyText += $" ({counter})";
                         }
 
-                        newArtifactPath = Path.ChangeExtension(pathWithOutExtention + copyText, item.FileExtension);
+                        var newArtifactPath = Path.ChangeExtension(pathWithOutExtenstion + copyText, item.FileExtension);
 
                         var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
                         await FileService.CreateFileAsync(newArtifactPath, fileStream);
                     }
                     else if (item.ArtifactType == FsArtifactType.Folder)
                     {
-                        var newArtifactPath = string.Empty;
                         var oldArtifactPath = item.FullPath;
                         var oldArtifactParentPath = item.ParentFullPath;
                         var oldArtifactName = item.Name;
@@ -246,17 +244,17 @@ public partial class FileBrowser
                             var counter = 1;
                             var fullPathWithCopy = oldArtifactPath + copyText;
 
-                            if (!desArtifacts.Any(d => d.FullPath == fullPathWithCopy)) break;
+                            if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
 
                             counter++;
                             copyText += $" ({counter})";
                         }
 
-                        newArtifactPath = oldArtifactPath + copyText;
+                        var newArtifactPath = oldArtifactPath + copyText;
                         var newArtifactName = oldArtifactName + copyText;
                         await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
-                        var oldArtifactChilds = await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
-                        await FileService.CopyArtifactsAsync(oldArtifactChilds, newArtifactPath, false);
+                        var oldArtifactChildren = await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
+                        await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath, false);
                     }
                     else
                     {
