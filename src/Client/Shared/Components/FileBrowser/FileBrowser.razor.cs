@@ -1755,17 +1755,17 @@ public partial class FileBrowser
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
     {
-        if (artifact.ArtifactType == FsArtifactType.File)
-        {
-            var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
-            CurrentArtifact = destinationArtifact;
-            await HandleSelectArtifactAsync(destinationArtifact);
-        }
-        else
-        {
-            CurrentArtifact = artifact;
-            await HandleSelectArtifactAsync(artifact);
-        }
+        //if (artifact.ArtifactType == FsArtifactType.File)
+        //{
+        var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
+        CurrentArtifact = destinationArtifact;
+        await HandleSelectArtifactAsync(destinationArtifact);
+        //}
+        //else
+        //{
+        //    CurrentArtifact = artifact;
+        //    await HandleSelectArtifactAsync(artifact);
+        //}
     }
 
     private async Task CloseFileViewer()
