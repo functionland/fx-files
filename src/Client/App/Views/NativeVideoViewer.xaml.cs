@@ -83,29 +83,36 @@ public partial class NativeVideoViewer : ContentPage
         mediaControls.IsVisible = !mediaControls.IsVisible;
     }
 
-    private void media_MediaEnded(object sender, EventArgs e)
-    {
-        _currentMediaState = MediaElementState.Stopped;
-        playButton.Source = ImageSource.FromFile("play.png");
-    }
-
     private void PausePlay_Clicked(object sender, EventArgs e)
     {
+        //Workaround
 #if !ANDROID
         _currentMediaState = media.CurrentState;
 #endif
+
         if (_currentMediaState == MediaElementState.Playing)
         {
-            media.Pause();
             playButton.Source = ImageSource.FromFile("play.png");
             _currentMediaState = MediaElementState.Paused;
+            media.Pause();
         }
         else if (_currentMediaState == MediaElementState.Paused || _currentMediaState == MediaElementState.Stopped)
         {
-            media.Play();
             playButton.Source = ImageSource.FromFile("pause.png");
             _currentMediaState = MediaElementState.Playing;
+            media.Play();
         }
+
+        //Workaround
+#if ANDROID
+        if (media.Duration.TotalSeconds <= media.Position.TotalSeconds || _currentMediaState == MediaElementState.Stopped)
+        {
+            playButton.Source = ImageSource.FromFile("pause.png");
+            _currentMediaState = MediaElementState.Playing;
+            media.Position = TimeSpan.FromSeconds(0);
+            media.Play();
+        }
+#endif
     }
 
     private void Backward_Clicked(object sender, EventArgs e)

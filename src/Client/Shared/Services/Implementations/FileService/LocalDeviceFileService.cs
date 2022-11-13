@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -200,6 +199,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (fsArtifactType == FsArtifactType.File)
             {
+                var fileInfo = new FileInfo(path);
+                fsArtifact.Size = fileInfo.Length;
                 fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
             }
             else if (fsArtifactType == FsArtifactType.Folder)
@@ -254,7 +255,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 return;
 
             if (NameHasInvalidCharacter(newName))
-            throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
+                throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
             var artifactType = GetFsArtifactType(filePath);
 
@@ -817,7 +818,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
                 allFileAndFolders = allFileAndFolders.Where(f =>
-                    FsArtifactUtils.GetSearchCategoryTypeExtentions(inLineDeepSearch.ArtifactCategorySearchType.Value)
+                    FsArtifactUtils.GetSearchCategoryTypeExtensions(inLineDeepSearch.ArtifactCategorySearchType.Value)
                                    .Contains(f.ArtifactInfo.Extension.ToLower()));
             }
 
@@ -933,7 +934,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
             }
 
-            return Task.FromResult(artifactSize);          
+            return Task.FromResult(artifactSize);
         }
 
         protected virtual long CalculateDriveSize(string drivePath, CancellationToken? cancellation = null)

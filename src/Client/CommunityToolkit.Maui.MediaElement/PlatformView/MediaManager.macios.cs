@@ -1,5 +1,6 @@
 ﻿using AVFoundation;
 using AVKit;
+using CoreFoundation;
 using CoreMedia;
 using Foundation;
 using static CommunityToolkit.Maui.MediaElement.Helpers.ObserverExtensions;
@@ -200,7 +201,7 @@ public partial class MediaManager : IDisposable
 
     static TimeSpan ConvertTime(CMTime cmTime)
     {
-        return TimeSpan.FromSeconds(Double.IsNaN(cmTime.Seconds) ? 0 : cmTime.Seconds);
+        return TimeSpan.FromSeconds(double.IsNaN(cmTime.Seconds) ? 0 : cmTime.Seconds);
     }
 
     void AddPlayedToEndObserver()
@@ -222,7 +223,7 @@ public partial class MediaManager : IDisposable
 
     void PlayedToEnd(NSNotification notification)
     {
-        if (mediaElement is null || notification.Object != playerViewController?.Player?.CurrentItem || player is null)
+        if (notification.Object != playerViewController?.Player?.CurrentItem || player is null)
         {
             return;
         }
@@ -239,7 +240,7 @@ public partial class MediaManager : IDisposable
 
             try
             {
-                //	mediaElement.Dispatcher.Dispatch(mediaElement.OnMediaEnded);
+                DispatchQueue.MainQueue.DispatchAsync(mediaElement.MediaEnded);
             }
             catch (Exception e)
             {

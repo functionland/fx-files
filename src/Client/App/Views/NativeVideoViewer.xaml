@@ -9,118 +9,129 @@
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Resources>
         <ResourceDictionary>
+            <Color x:Key="AppBackgroundColor">#212529</Color>
+            <converters:TimeSpanToDoubleConverter x:Key="TimeSpanConverter" />
+            <converters:TimeSpanToStringConverter x:Key="TimeSpanStringConverter" />
             <Style TargetType="ImageButton">
-                <Setter Property="BackgroundColor" Value="#212529" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}" />
                 <Setter Property="BorderColor" Value="Transparent" />
-                <Setter Property="CornerRadius" Value="12" />
                 <Setter Property="BorderWidth" Value="0" />
-                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="CornerRadius" Value="12" />
                 <Setter Property="HeightRequest" Value="24" />
                 <Setter Property="HorizontalOptions" Value="End" />
                 <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+                <Setter Property="WidthRequest" Value="24" />
+            </Style>
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid>
-        <media:MediaElement
-            x:Name="media"
-            AutoPlay="True"
-            MediaEnded="media_MediaEnded"
-            ShowsPlaybackControls="False">
-            <media:MediaElement.GestureRecognizers>
-                <TapGestureRecognizer Tapped="media_Tapped" />
-            </media:MediaElement.GestureRecognizers>
-        </media:MediaElement>
-        <StackLayout
+    <Grid BackgroundColor="{StaticResource AppBackgroundColor}">
+        <Frame>
+            <media:MediaElement
+                x:Name="media"
+                AutoPlay="True"
+                BackgroundColor="{StaticResource AppBackgroundColor}"
+                ShowsPlaybackControls="False">
+                <media:MediaElement.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="media_Tapped" />
+                </media:MediaElement.GestureRecognizers>
+            </media:MediaElement>
+        </Frame>
+        <Frame
             x:Name="header"
-            BackgroundColor="#212529"
-            HeightRequest="72"
-            Orientation="Horizontal"
+            Padding="21,0"
             VerticalOptions="StartAndExpand">
-            <ImageButton
-                Margin="20,0"
-                Clicked="Back_Clicked"
-                HorizontalOptions="StartAndExpand"
-                Source="back.png" />
-            <ImageButton
-                Margin="16,0"
-                Clicked="Minimize"
-                IsVisible="{OnIdiom Desktop=false,
-                                    Default=true}"
-                Source="pip.png" />
-        </StackLayout>
-        <StackLayout
-            x:Name="mediaControls"
-            BackgroundColor="#212529"
-            HeightRequest="96"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="EndAndExpand">
-            <StackLayout.Resources>
-                <ResourceDictionary>
-                    <converters:TimeSpanToDoubleConverter x:Key="TimeSpanConverter" />
-                    <converters:TimeSpanToStringConverter x:Key="TimeSpanStringConverter" />
-                </ResourceDictionary>
-            </StackLayout.Resources>
             <StackLayout
-                Margin="21,0"
-                BindingContext="{x:Reference media}"
-                HeightRequest="48"
-                Orientation="Vertical">
-                <Slider
-                    HeightRequest="35"
-                    HorizontalOptions="FillAndExpand"
-                    Maximum="{Binding Source={x:Reference media}, Path=Duration, Converter={StaticResource TimeSpanConverter}}"
-                    MaximumTrackColor="#495057"
-                    MinimumTrackColor="White"
-                    ThumbColor="White"
-                    Value="{Binding Source={x:Reference media}, Path=Position, Converter={StaticResource TimeSpanConverter}}">
-                    <Slider.Triggers>
-                        <DataTrigger
-                            Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
-                            TargetType="Slider"
-                            Value="{x:Static media:MediaElementState.Buffering}">
-                            <Setter Property="IsEnabled" Value="False" />
-                        </DataTrigger>
-                    </Slider.Triggers>
-                </Slider>
-                <StackLayout Orientation="Horizontal">
-                    <Label
-                        HorizontalOptions="StartAndExpand"
-                        Text="{Binding Source={x:Reference media}, Path=Position, Converter={converters:TimeSpanToStringConverter}}"
-                        VerticalOptions="CenterAndExpand" />
-                    <Label
-                        HorizontalOptions="EndAndExpand"
-                        Text="{Binding Source={x:Reference media}, Path=Duration, Converter={converters:TimeSpanToStringConverter}}"
-                        VerticalOptions="CenterAndExpand" />
+                HeightRequest="72"
+                Orientation="Horizontal"
+                Spacing="16"
+                VerticalOptions="CenterAndExpand">
+                <ImageButton
+                    Clicked="Back_Clicked"
+                    HorizontalOptions="StartAndExpand"
+                    Source="back.png" />
+                <ImageButton
+                    Clicked="Minimize"
+                    IsVisible="{OnIdiom Desktop=false,
+                                        Default=true}"
+                    Source="pip.png" />
+            </StackLayout>
+        </Frame>
+        <Frame x:Name="mediaControls" VerticalOptions="EndAndExpand">
+            <StackLayout
+                HeightRequest="110"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand">
+                <StackLayout BindingContext="{x:Reference media}" Orientation="Vertical">
+                    <Slider
+                        Margin="{OnPlatform Android='6,0',
+                                            Default='21,0'}"
+                        HeightRequest="35"
+                        HorizontalOptions="FillAndExpand"
+                        Maximum="{Binding Source={x:Reference media}, Path=Duration, Converter={StaticResource TimeSpanConverter}}"
+                        MaximumTrackColor="#495057"
+                        MinimumTrackColor="White"
+                        ThumbColor="White"
+                        Value="{Binding Source={x:Reference media}, Path=Position, Converter={StaticResource TimeSpanConverter}}">
+                        <Slider.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
+                                TargetType="Slider"
+                                Value="{x:Static media:MediaElementState.Buffering}">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Slider.Triggers>
+                    </Slider>
+                    <StackLayout Orientation="Horizontal">
+                        <Label
+                            Margin="21,0"
+                            HorizontalOptions="StartAndExpand"
+                            Text="{Binding Source={x:Reference media}, Path=Position, Converter={converters:TimeSpanToStringConverter}}"
+                            TextColor="White"
+                            VerticalOptions="CenterAndExpand" />
+                        <Label
+                            Margin="21,0"
+                            HorizontalOptions="EndAndExpand"
+                            Text="{Binding Source={x:Reference media}, Path=Duration, Converter={converters:TimeSpanToStringConverter}}"
+                            TextColor="White"
+                            VerticalOptions="CenterAndExpand" />
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout
+                    Margin="10"
+                    HorizontalOptions="CenterAndExpand"
+                    Orientation="Horizontal"
+                    Spacing="40">
+                    <ImageButton
+                        Clicked="Backward_Clicked"
+                        HorizontalOptions="Center"
+                        Source="backward.png" />
+                    <ImageButton
+                        x:Name="playButton"
+                        Clicked="PausePlay_Clicked"
+                        HorizontalOptions="Center"
+                        Source="pause.png">
+                        <ImageButton.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
+                                TargetType="ImageButton"
+                                Value="{x:Static media:MediaElementState.Stopped}">
+                                <Setter Property="Source" Value="play.png" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
+                    <ImageButton
+                        Clicked="Forward_Clicked"
+                        HorizontalOptions="Center"
+                        Source="forward.png" />
                 </StackLayout>
             </StackLayout>
-            <StackLayout
-                HorizontalOptions="CenterAndExpand"
-                Orientation="Horizontal"
-                Spacing="12">
-                <ImageButton
-                    Clicked="Backward_Clicked"
-                    HorizontalOptions="Center"
-                    Source="backward.png" />
-                <ImageButton
-                    x:Name="playButton"
-                    Clicked="PausePlay_Clicked"
-                    HorizontalOptions="Center"
-                    Source="pause.png">
-                    <ImageButton.Triggers>
-                        <DataTrigger
-                            Binding="{Binding Source={x:Reference media}, Path=CurrentState}"
-                            TargetType="ImageButton"
-                            Value="{x:Static media:MediaElementState.Stopped}">
-                            <Setter Property="Source" Value="play.png" />
-                        </DataTrigger>
-                    </ImageButton.Triggers>
-                </ImageButton>
-                <ImageButton
-                    Clicked="Forward_Clicked"
-                    HorizontalOptions="Center"
-                    Source="forward.png" />
-            </StackLayout>
-        </StackLayout>
+        </Frame>
     </Grid>
 </ContentPage>

@@ -22,30 +22,31 @@ public partial class FileBrowser
     private ProgressModal? _progressModalRef;
     private FxSearchInput? _fxSearchInputRef;
     private FileViewer? _fileViewerRef;
+    private ExtractorBottomSheet? _extractorModalRef;
 
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
     private string ProgressBarCurrentSubText { get; set; } = default!;
     private int ProgressBarCurrentValue { get; set; }
     private int ProgressBarMax { get; set; }
-    private CancellationTokenSource? ProgressBarCts;
+    private CancellationTokenSource? _progressBarCts;
     private void ProgressBarOnCancel()
     {
-        ProgressBarCts?.Cancel();
+        _progressBarCts?.Cancel();
     }
 
     // Search
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
-    private bool isFirstTimeInSearch = true;
+    private bool _isPrePairForFirstTimeInSearch = true;
     private string _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private ArtifactCategorySearchType? _artifactsSearchFilterType;
 
     private FsArtifact? _currentArtifactValue;
-    private FsArtifact? _currentArtifact
+    private FsArtifact? CurrentArtifact
     {
         get => _currentArtifactValue;
         set
@@ -62,7 +63,7 @@ public partial class FileBrowser
             {
                 FileWatchService.WatchArtifact(_currentArtifactValue);
             }
-            ArtifactState.CurrentMyDeviceArtifact = _currentArtifact;
+            ArtifactState.CurrentMyDeviceArtifact = CurrentArtifact;
         }
     }
 
@@ -72,18 +73,20 @@ public partial class FileBrowser
     private List<FsArtifact> _selectedArtifacts = new();
     private FileCategoryType? _fileCategoryFilter;
 
-    private Tuple<FsArtifact, List<FsArtifact>?, string?, string?>? _extractTuple;
-
     private ArtifactExplorerMode _artifactExplorerModeValue;
-    private ArtifactExplorerMode _artifactExplorerMode
+    private ArtifactExplorerMode ArtifactExplorerMode
     {
-        get { return _artifactExplorerModeValue; }
+        get => _artifactExplorerModeValue;
         set
         {
-            if (_artifactExplorerModeValue != value)
+            if (_artifactExplorerModeValue == value)
+                return;
+
+            if (_selectedArtifacts.Count == 0)
             {
-                ArtifactExplorerModeChange(value);
+                ArtifactExplorerModeChange(ArtifactExplorerMode.Normal);
             }
+            ArtifactExplorerModeChange(value);
         }
     }
 
@@ -92,7 +95,6 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private FileViewerResultType FileViewerResult { get; set; }
 
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -117,26 +119,26 @@ public partial class FileBrowser
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
             var preArtifact = ArtifactState.CurrentMyDeviceArtifact;
-            _currentArtifact = preArtifact;
+            CurrentArtifact = preArtifact;
         }
         else
         {
             var filePath = Path.GetDirectoryName(DefaultPath);
             var defaultArtifact = await FileService.GetArtifactAsync(filePath);
-            _currentArtifact = defaultArtifact;
+            CurrentArtifact = defaultArtifact;
         }
 
         _ = Task.Run(async () =>
         {
             await LoadPinsAsync();
-            await InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(StateHasChanged);
         });
         _ = Task.Run(async () =>
         {
-            await LoadChildrenArtifactsAsync(_currentArtifact);
-            await InvokeAsync(() => StateHasChanged());
+            await LoadChildrenArtifactsAsync(CurrentArtifact);
+            await InvokeAsync(StateHasChanged);
         });
-        
+
         await base.OnInitAsync();
 
     }
@@ -153,23 +155,23 @@ public partial class FileBrowser
                                HandleIntentReceiver,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
         }
-        if (_isInSearch && isFirstTimeInSearch)
+        if (_isInSearch && _isPrePairForFirstTimeInSearch)
         {
             await JSRuntime.InvokeVoidAsync("SearchInputFocus");
-            isFirstTimeInSearch = false;
+            _isPrePairForFirstTimeInSearch = false;
         }
         if (_isGoingBack)
         {
             _isGoingBack = false;
-            await JSRuntime.InvokeVoidAsync("getLastScrollPossition");
+            await JSRuntime.InvokeVoidAsync("getLastScrollPosition");
         }
         await base.OnAfterRenderAsync(firstRender);
     }
-    private void HandleProgressBar(string CurrentText)
+    private void HandleProgressBar(string currentText)
     {
         ProgressBarCurrentValue++;
         ProgressBarCurrentSubText = $"{ProgressBarCurrentValue} of {ProgressBarMax}";
-        ProgressBarCurrentText = CurrentText;
+        ProgressBarCurrentText = currentText;
     }
 
     private void InitialProgressBar(int maxValue)
@@ -191,7 +193,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
@@ -201,9 +203,9 @@ public partial class FileBrowser
                 InitialProgressBar(artifacts.Count);
                 await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles), true);
             }
-            ProgressBarCts = new CancellationTokenSource();
+            _progressBarCts = new CancellationTokenSource();
 
-            if (destinationPath == _currentArtifact?.FullPath)
+            if (destinationPath == CurrentArtifact?.FullPath)
             {
                 var desArtifacts = await FileService.GetArtifactsAsync(destinationPath).ToListAsync();
 
@@ -281,7 +283,7 @@ public partial class FileBrowser
                             ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                             ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                             await InvokeAsync(() => StateHasChanged());
-                        }, cancellationToken: ProgressBarCts.Token);
+                        }, cancellationToken: _progressBarCts.Token);
 
                 }
                 catch (CanNotOperateOnFilesException ex)
@@ -306,7 +308,7 @@ public partial class FileBrowser
 
                         if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                         {
-                            ProgressBarCts = new CancellationTokenSource();
+                            _progressBarCts = new CancellationTokenSource();
 
                             if (_progressModalRef is not null)
                             {
@@ -321,12 +323,12 @@ public partial class FileBrowser
                                         ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                                         await InvokeAsync(() => StateHasChanged());
                                     },
-                                    cancellationToken: ProgressBarCts.Token);
+                                    cancellationToken: _progressBarCts.Token);
 
                                 await _progressModalRef.CloseAsync();
                             }
                         }
-                        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+                        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
                     }
                 }
             }
@@ -335,7 +337,7 @@ public partial class FileBrowser
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             FxToast.Show(title, message, FxToastType.Success);
 
-            await NavigateToDestionation(destinationPath);
+            await NavigateToDestination(destinationPath);
         }
         catch (Exception exception)
         {
@@ -362,7 +364,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(_currentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -370,7 +372,7 @@ public partial class FileBrowser
 
             try
             {
-                ProgressBarCts = new CancellationTokenSource();
+                _progressBarCts = new CancellationTokenSource();
 
                 if (_progressModalRef is not null)
                 {
@@ -385,7 +387,7 @@ public partial class FileBrowser
                     ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                     await InvokeAsync(() => StateHasChanged());
                 },
-                    cancellationToken: ProgressBarCts.Token);
+                    cancellationToken: _progressBarCts.Token);
             }
             catch (CanNotOperateOnFilesException ex)
             {
@@ -408,11 +410,11 @@ public partial class FileBrowser
                 if (_confirmationReplaceOrSkipModalRef is not null)
                 {
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
-                    ChangeDeviceBackFunctionality(_artifactExplorerMode);
+                    ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
                     if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
-                        ProgressBarCts = new CancellationTokenSource();
+                        _progressBarCts = new CancellationTokenSource();
                         if (_progressModalRef is not null)
                         {
                             await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
@@ -426,18 +428,18 @@ public partial class FileBrowser
                             ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                             await InvokeAsync(() => StateHasChanged());
                         },
-                            cancellationToken: ProgressBarCts.Token);
+                            cancellationToken: _progressBarCts.Token);
                     }
                 }
             }
 
-            _artifactExplorerMode = ArtifactExplorerMode.Normal;
+            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
 
             var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
             FxToast.Show(title, message, FxToastType.Success);
 
-            await NavigateToDestionation(destinationPath);
+            await NavigateToDestination(destinationPath);
         }
         catch (Exception exception)
         {
@@ -528,17 +530,17 @@ public partial class FileBrowser
                 {
                     var singleArtifact = artifacts.SingleOrDefault();
                     result = await _confirmationModalRef.ShowAsync(Localizer.GetString(AppStrings.DeleteItems, singleArtifact?.Name), Localizer.GetString(AppStrings.DeleteItemDescription));
-                    ChangeDeviceBackFunctionality(_artifactExplorerMode);
+                    ChangeDeviceBackFunctionality(ArtifactExplorerMode);
                 }
                 else
                 {
                     result = await _confirmationModalRef.ShowAsync(Localizer.GetString(AppStrings.DeleteItems, artifacts.Count), Localizer.GetString(AppStrings.DeleteItemsDescription));
-                    ChangeDeviceBackFunctionality(_artifactExplorerMode);
+                    ChangeDeviceBackFunctionality(ArtifactExplorerMode);
                 }
 
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
                 {
-                    ProgressBarCts = new CancellationTokenSource();
+                    _progressBarCts = new CancellationTokenSource();
                     if (_progressModalRef is not null)
                     {
                         await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.DeletingFiles), true);
@@ -550,7 +552,7 @@ public partial class FileBrowser
                             ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                             ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                             await InvokeAsync(() => StateHasChanged());
-                        }, cancellationToken: ProgressBarCts.Token);
+                        }, cancellationToken: _progressBarCts.Token);
 
                         await _progressModalRef.CloseAsync();
                     }
@@ -567,7 +569,7 @@ public partial class FileBrowser
 
             if (_progressModalRef is not null)
             {
-                ProgressBarCts?.Cancel();
+                _progressBarCts?.Cancel();
                 await _progressModalRef.CloseAsync();
             }
             await CloseFileViewer();
@@ -585,10 +587,10 @@ public partial class FileBrowser
         }
 
         if (_artifactDetailModalRef is null)
-            return; 
+            return;
 
-        var result = await _artifactDetailModalRef.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(_currentArtifact)));
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        var result = await _artifactDetailModalRef.ShowAsync(artifact, isMultiple, (isDrive || IsInRoot(CurrentArtifact)));
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         switch (result.ResultType)
         {
@@ -633,7 +635,7 @@ public partial class FileBrowser
         var newFolderPlaceholder = Localizer.GetString(AppStrings.NewFolderPlaceholder);
 
         var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, string.Empty, newFolderPlaceholder);
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         try
         {
@@ -662,20 +664,15 @@ public partial class FileBrowser
         _isArtifactExplorerLoading = false;
     }
 
-    // TODO: change tuple item for real names.
-    public async Task HandleExtractArtifactAsync(Tuple<FsArtifact, List<FsArtifact>?, string?, string?> extractTuple)
+    public async Task HandleExtractArtifactAsync(FsArtifact zipArtifact, List<FsArtifact>? innerArtifacts = null, string? destinationDirectory = null)
     {
-        var artifact = extractTuple.Item1;
-        var innerArtifacts = extractTuple.Item2;
-        var destinationDirectory = extractTuple.Item3 ?? _currentArtifact?.FullPath;
-        var artifactPassword = extractTuple.Item4;
+        var extractResult = new ExtractorBottomSheetResult();
         if (_inputModalRef is null)
         {
-            FileViewerResult = FileViewerResultType.Cancel;
             return;
         }
 
-        var folderName = Path.GetFileNameWithoutExtension(artifact.Name);
+        var folderName = Path.GetFileNameWithoutExtension(zipArtifact.Name);
         var createFolder = Localizer.GetString(AppStrings.FolderName);
         var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
         var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
@@ -683,50 +680,31 @@ public partial class FileBrowser
         try
         {
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder, extractBtnTitle);
-            //var parentPath = artifact?.ParentFullPath ?? Directory.GetParent(artifact!.FullPath)?.FullName;
 
             if (result?.ResultType == InputModalResultType.Cancel)
             {
-                FileViewerResult = FileViewerResultType.Cancel;
                 return;
             }
 
-            var destinationFolderName = result?.Result ?? folderName;
-            try
-            {
-                if (destinationDirectory != null)
-                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
-                        artifactPassword, innerArtifacts);
-            }
-            catch (InvalidPasswordException)
-            {
-                if (_passwordModalRef is null)
-                {
-                    FileViewerResult = FileViewerResultType.Cancel;
-                    return;
-                }
+            var destinationFolderName = string.IsNullOrWhiteSpace(result?.Result) == false ? result.Result : folderName;
 
-                var extractPasswordModalTitle = Localizer.GetString(AppStrings.ExtractPasswordModalTitle);
-                var extractPasswordModalLabel = Localizer.GetString(AppStrings.Password);
-                var passwordResult = await _passwordModalRef.ShowAsync(extractPasswordModalTitle, string.Empty, string.Empty, string.Empty, extractBtnTitle, extractPasswordModalLabel);
-                if (passwordResult?.ResultType == InputModalResultType.Cancel)
-                {
-                    FileViewerResult = FileViewerResultType.Cancel;
-                    return;
-                }
-
-                if (destinationDirectory != null)
-                    await ExtractZipAsync(artifact.FullPath, destinationDirectory, destinationFolderName,
-                        passwordResult?.Result, innerArtifacts);
-            }
+            destinationDirectory ??= zipArtifact.ParentFullPath;
 
             if (destinationDirectory != null)
             {
-                var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
-                await NavigateToDestionation(destinationPath);
+                if (_extractorModalRef == null)
+                {
+                    return;
+                }
+                extractResult = await _extractorModalRef.ShowAsync(zipArtifact.FullPath, destinationDirectory,
+                    destinationFolderName, innerArtifacts);
             }
 
-            FileViewerResult = FileViewerResultType.Success;
+            if (destinationDirectory != null && extractResult.ExtractorResult == ExtractorBottomSheetResultType.Success)
+            {
+                var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
+                await NavigateToDestination(destinationPath);
+            }
         }
         catch (Exception exception)
         {
@@ -734,82 +712,10 @@ public partial class FileBrowser
         }
         finally
         {
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
+            ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
     }
-
-    private async Task ExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, string? password = null, List<FsArtifact>? innerArtifacts = null)
-    {
-        if (_progressModalRef is null) return;
-
-        try
-        {
-            await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ExtractingFolder), true);
-            ProgressBarCts = new CancellationTokenSource();
-
-            async Task OnProgress(ProgressInfo progressInfo)
-            {
-                ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
-                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
-                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                ProgressBarMax = progressInfo.MaxValue ?? 1;
-                await InvokeAsync(StateHasChanged);
-            }
-
-            var duplicateCount = await ZipService.ExtractZippedArtifactAsync(
-                zipFilePath,
-                destinationFolderPath,
-                destinationFolderName,
-                innerArtifacts,
-                 false,
-                 password,
-                 OnProgress,
-                 ProgressBarCts.Token);
-
-            await _progressModalRef.CloseAsync();
-
-            if (duplicateCount <= 0) return;
-
-            if (_confirmationReplaceOrSkipModalRef == null)
-            {
-                FileViewerResult = FileViewerResultType.Cancel;
-                return;
-            }
-
-            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
-            List<FsArtifact> overwriteArtifacts = new();
-            if (innerArtifacts != null)
-            {
-                overwriteArtifacts = GetShouldOverwriteArtifacts(innerArtifacts, existedArtifacts);
-            }
-
-            var replaceResult = await _confirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount);
-
-            if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
-            {
-
-                await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.ReplacingFiles), true);
-
-                ProgressBarCts = new CancellationTokenSource();
-                await ZipService.ExtractZippedArtifactAsync(
-                    zipFilePath,
-                    destinationFolderPath,
-                    destinationFolderName,
-                    overwriteArtifacts,
-                     true,
-                     password,
-                     OnProgress,
-                     ProgressBarCts.Token);
-            }
-        }
-        finally
-        {
-            await _progressModalRef.CloseAsync();
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
-        }
-    }
-
 
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
@@ -924,8 +830,8 @@ public partial class FileBrowser
                 if (_isInSearch)
                 {
                     CancelSearch(true);
-                    _currentArtifact = artifact;
-                    await LoadChildrenArtifactsAsync(_currentArtifact);
+                    CurrentArtifact = artifact;
+                    await LoadChildrenArtifactsAsync(CurrentArtifact);
                 }
 #endif
             }
@@ -950,12 +856,12 @@ public partial class FileBrowser
                 _isGoingBack = false;
             }
 
-            _currentArtifact = artifact;
+            CurrentArtifact = artifact;
             _displayedArtifacts = new();
 
             _ = Task.Run(async () =>
             {
-                await LoadChildrenArtifactsAsync(_currentArtifact);
+                await LoadChildrenArtifactsAsync(CurrentArtifact);
                 await InvokeAsync(() => StateHasChanged());
             });
         }
@@ -978,7 +884,7 @@ public partial class FileBrowser
             var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
             var isVisibleShareWithApp = artifact?.ArtifactType == FsArtifactType.File;
             result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isVisibleShareWithApp, artifact?.FileCategory, isDrive);
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
+            ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
         switch (result?.ResultType)
@@ -1022,24 +928,20 @@ public partial class FileBrowser
             case ArtifactOverflowResultType.Extract:
                 if (artifact != null)
                 {
-                    _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(artifact, null, null, null);
+                    await HandleExtractArtifactAsync(artifact);
                 }
 
-                if (_extractTuple != null)
-                {
-                    await HandleExtractArtifactAsync(_extractTuple);
-                }
                 break;
         }
     }
 
     public async Task ToggleSelectedAll()
     {
-        if (_artifactExplorerMode == ArtifactExplorerMode.Normal)
+        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+            ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             _selectedArtifacts = new List<FsArtifact>();
-            foreach (var artifact in _allArtifacts)
+            foreach (var artifact in _displayedArtifacts)
             {
                 artifact.IsSelected = true;
                 _selectedArtifacts.Add(artifact);
@@ -1061,7 +963,7 @@ public partial class FileBrowser
             artifact.IsSelected = false;
         }
         _selectedArtifacts.Clear();
-        _artifactExplorerMode = ArtifactExplorerMode.Normal;
+        ArtifactExplorerMode = ArtifactExplorerMode.Normal;
     }
 
     private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifacts)
@@ -1074,15 +976,15 @@ public partial class FileBrowser
         ArtifactOverflowResult? result = null;
         if (_artifactOverflowModalRef is not null)
         {
-            _artifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+            ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             var pinOptionResult = GetPinOptionResult(artifacts);
-            var isVisibleSahreWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
+            var isVisibleShareWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
 
             var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
             FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
 
-            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleSahreWithApp, fileCategoryType, IsInRoot(_currentArtifact));
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
+            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleShareWithApp, fileCategoryType, IsInRoot(CurrentArtifact));
+            ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
         switch (result?.ResultType)
@@ -1125,20 +1027,14 @@ public partial class FileBrowser
                 await HandleShareFiles(artifacts);
                 break;
             case ArtifactOverflowResultType.Extract:
-
-                _extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(artifacts.First(), null, null, null);
-
-                if (_extractTuple != null)
-                {
-                    await HandleExtractArtifactAsync(_extractTuple);
-                }
+                await HandleExtractArtifactAsync(artifacts.First());
                 break;
             case ArtifactOverflowResultType.Cancel:
-                _artifactExplorerMode = ArtifactExplorerMode.Normal;
+                ArtifactExplorerMode = ArtifactExplorerMode.Normal;
                 break;
         }
 
-        _artifactExplorerMode = ArtifactExplorerMode.Normal;
+        ArtifactExplorerMode = ArtifactExplorerMode.Normal;
     }
 
     private void ArtifactExplorerModeChange(ArtifactExplorerMode mode)
@@ -1203,19 +1099,29 @@ public partial class FileBrowser
         if (_inputModalRef is not null)
         {
             result = await _inputModalRef.ShowAsync(Localizer.GetString(AppStrings.ChangeName), Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), Name, artifactType);
-            ChangeDeviceBackFunctionality(_artifactExplorerMode);
+            ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
         return result;
     }
 
-    private async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
+    private async Task<string?> HandleSelectDestinationAsync(ArtifactActionResult artifactActionResult)
     {
         if (_artifactSelectionModalRef is null)
             return null;
 
-        var result = await _artifactSelectionModalRef.ShowAsync(artifact, artifactActionResult);
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        var sourceArtifact = CurrentArtifact;
+        if (artifactActionResult.Artifacts?.Count == 1)
+        {
+            var sourceArtifactPath = artifactActionResult.Artifacts.FirstOrDefault()?.FullPath;
+            if (sourceArtifactPath == CurrentArtifact?.FullPath)
+            {
+                sourceArtifact = await FileService.GetArtifactAsync(CurrentArtifact?.ParentFullPath);
+            }
+        }
+
+        var result = await _artifactSelectionModalRef.ShowAsync(sourceArtifact, artifactActionResult);
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         string? destinationPath = null;
 
@@ -1268,7 +1174,7 @@ public partial class FileBrowser
     {
         try
         {
-            if (artifact.ParentFullPath != _currentArtifact?.FullPath) return;
+            if (artifact.ParentFullPath != CurrentArtifact?.FullPath) return;
 
             _allArtifacts.Add(artifact);
             RefreshDisplayedArtifacts();
@@ -1284,7 +1190,7 @@ public partial class FileBrowser
     {
         try
         {
-            if (artifact.FullPath == _currentArtifact?.FullPath)
+            if (artifact.FullPath == CurrentArtifact?.FullPath)
             {
                 await HandleToolbarBackClick();
             }
@@ -1329,11 +1235,11 @@ public partial class FileBrowser
 
             FsArtifact? artifactRenamed = null;
 
-            if (_currentArtifact?.FullPath == oldFullPath)
+            if (CurrentArtifact?.FullPath == oldFullPath)
             {
-                _currentArtifact.FullPath = artifact.FullPath;
-                _currentArtifact.Name = artifact.Name;
-                await OpenFolderAsync(_currentArtifact);
+                CurrentArtifact.FullPath = artifact.FullPath;
+                CurrentArtifact.Name = artifact.Name;
+                await OpenFolderAsync(CurrentArtifact);
             }
             else
             {
@@ -1359,9 +1265,9 @@ public partial class FileBrowser
         await LoadPinsAsync();
         var artifactPath = artifacts.Select(a => a.FullPath);
 
-        if (_currentArtifact != null && artifactPath.Any(p => p == _currentArtifact.FullPath))
+        if (CurrentArtifact != null && artifactPath.Any(p => p == CurrentArtifact.FullPath))
         {
-            _currentArtifact.IsPinned = IsPinned;
+            CurrentArtifact.IsPinned = IsPinned;
         }
         else
         {
@@ -1378,16 +1284,15 @@ public partial class FileBrowser
 
     private async Task HandleCancelInLineSearchAsync()
     {
-        //_isLoading = true;
-        _artifactExplorerMode = ArtifactExplorerMode.Normal;
+        ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         _inlineSearchText = string.Empty;
-        await LoadChildrenArtifactsAsync(_currentArtifact);
-        //_isLoading = false;
+        await LoadChildrenArtifactsAsync(CurrentArtifact);
     }
 
     private void HandleSearchFocused()
     {
         _isInSearch = true;
+        _displayedArtifacts.Clear();
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
@@ -1397,23 +1302,19 @@ public partial class FileBrowser
         CancelSelectionMode();
         _isArtifactExplorerLoading = true;
         _searchText = text;
-        if (!string.IsNullOrWhiteSpace(text))
-        {
-            ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
-        }
-        else
+        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
+        if (string.IsNullOrWhiteSpace(SearchFilter.SearchText) && SearchFilter.ArtifactDateSearchType == null && SearchFilter.ArtifactCategorySearchType == null)
         {
             CancelSearch();
+            _isArtifactExplorerLoading = false;
+            return;
         }
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
         RefreshDisplayedArtifacts();
 
-        if (searchCancellationTokenSource is not null)
-        {
-            searchCancellationTokenSource.Cancel();
-        }
+        searchCancellationTokenSource?.Cancel();
 
         searchCancellationTokenSource = new CancellationTokenSource();
         var token = searchCancellationTokenSource.Token;
@@ -1472,41 +1373,10 @@ public partial class FileBrowser
 
     private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null, ArtifactCategorySearchType? type = null)
     {
-        if (SearchFilter == null)
-        {
-            SearchFilter = new();
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                SearchFilter.SearchText = searchText;
-            }
-            else
-            {
-                SearchFilter = null;
-                return;
-            }
-            SearchFilter.ArtifactDateSearchType = date ?? null;
-
-            SearchFilter.ArtifactCategorySearchType = type ?? null;
-
-            return;
-        }
-        else
-        {
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                SearchFilter.SearchText = searchText;
-            }
-            else
-            {
-                SearchFilter = null;
-                return;
-            }
-            SearchFilter.ArtifactDateSearchType = date ?? null;
-
-            SearchFilter.ArtifactCategorySearchType = type ?? null;
-
-            return;
-        }
+        SearchFilter ??= new DeepSearchFilter();
+        SearchFilter.SearchText = !string.IsNullOrWhiteSpace(searchText) ? searchText : string.Empty;
+        SearchFilter.ArtifactCategorySearchType = type ?? null;
+        SearchFilter.ArtifactDateSearchType = date ?? null;
     }
 
     private void HandleInLineSearch(string text)
@@ -1524,7 +1394,7 @@ public partial class FileBrowser
         _inlineSearchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
-        switch (_artifactExplorerMode)
+        switch (ArtifactExplorerMode)
         {
             case ArtifactExplorerMode.Normal:
                 if (_isInSearch)
@@ -1532,16 +1402,16 @@ public partial class FileBrowser
                     CancelSearch(true);
                     _ = Task.Run(async () =>
                     {
-                        await LoadChildrenArtifactsAsync(_currentArtifact);
+                        await LoadChildrenArtifactsAsync(CurrentArtifact);
                         await InvokeAsync(() => StateHasChanged());
                     });
                     return;
                 }
                 _fxSearchInputRef?.HandleClearInputText();
-                await UpdateCurrentArtifactForBackButton(_currentArtifact);
+                await UpdateCurrentArtifactForBackButton(CurrentArtifact);
                 _ = Task.Run(async () =>
                 {
-                    await LoadChildrenArtifactsAsync(_currentArtifact);
+                    await LoadChildrenArtifactsAsync(CurrentArtifact);
                     await InvokeAsync(() => StateHasChanged());
                 });
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
@@ -1549,11 +1419,11 @@ public partial class FileBrowser
                 break;
 
             case ArtifactExplorerMode.SelectArtifact:
-                _artifactExplorerMode = ArtifactExplorerMode.Normal;
+                ArtifactExplorerMode = ArtifactExplorerMode.Normal;
                 break;
 
             case ArtifactExplorerMode.SelectDestionation:
-                _artifactExplorerMode = ArtifactExplorerMode.Normal;
+                ArtifactExplorerMode = ArtifactExplorerMode.Normal;
                 break;
 
             default:
@@ -1565,11 +1435,11 @@ public partial class FileBrowser
     {
         try
         {
-            _currentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
-            _currentArtifact = null;
+            CurrentArtifact = null;
         }
     }
 
@@ -1596,7 +1466,6 @@ public partial class FileBrowser
         }
 
         _displayedArtifacts = displayingArtifacts.ToList();
-
     }
 
     private IEnumerable<FsArtifact> ApplyInlineSearch(IEnumerable<FsArtifact> artifacts)
@@ -1633,7 +1502,7 @@ public partial class FileBrowser
             return;
 
         _fileCategoryFilter = await _filteredArtifactModalRef.ShowAsync();
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         _isArtifactExplorerLoading = true;
         await Task.Run(() =>
@@ -1676,7 +1545,7 @@ public partial class FileBrowser
         if (_isArtifactExplorerLoading) return;
 
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
-        ChangeDeviceBackFunctionality(_artifactExplorerMode);
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         _isArtifactExplorerLoading = true;
         StateHasChanged();
         try
@@ -1780,14 +1649,20 @@ public partial class FileBrowser
         return overwriteArtifacts;
     }
 
-    private async Task NavigateToDestionation(string? destinationPath)
+    private async Task NavigateToDestination(string? destinationPath)
     {
         if (_isInSearch)
         {
             CancelSearch(true);
         }
-        _currentArtifact = await FileService.GetArtifactAsync(destinationPath);
-        _ = LoadChildrenArtifactsAsync(_currentArtifact);
+        if (!string.IsNullOrWhiteSpace(_inlineSearchText))
+        {
+            _fxSearchInputRef?.HandleClearInputText();
+            await HandleCancelInLineSearchAsync();
+        }
+
+        CurrentArtifact = await FileService.GetArtifactAsync(destinationPath);
+        _ = LoadChildrenArtifactsAsync(CurrentArtifact);
         _ = LoadPinsAsync();
     }
 
@@ -1803,7 +1678,7 @@ public partial class FileBrowser
         }
         else if (mode == ArtifactExplorerMode.Normal)
         {
-            if (_currentArtifact == null && _isInSearch is false)
+            if (CurrentArtifact == null && _isInSearch is false)
             {
                 GoBackService.OnInit(null, true, true);
             }
@@ -1855,13 +1730,13 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         _displayedArtifacts.Clear();
         CancelSelectionMode();
-        _isInSearch = shouldExist is false ? true : false;
-        if (shouldExist)
-        {
-            _artifactsSearchFilterType = null;
-            _artifactsSearchFilterDate = null;
-            isFirstTimeInSearch = true;
-        }
+        _isInSearch = shouldExist is false;
+        if (!shouldExist)
+            return;
+
+        _artifactsSearchFilterType = null;
+        _artifactsSearchFilterDate = null;
+        _isPrePairForFirstTimeInSearch = true;
     }
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
@@ -1869,12 +1744,12 @@ public partial class FileBrowser
         if (artifact.ArtifactType == FsArtifactType.File)
         {
             var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
-            _currentArtifact = destinationArtifact;
+            CurrentArtifact = destinationArtifact;
             await HandleSelectArtifactAsync(destinationArtifact);
         }
         else
         {
-            _currentArtifact = artifact;
+            CurrentArtifact = artifact;
             await HandleSelectArtifactAsync(artifact);
         }
     }
@@ -1893,18 +1768,19 @@ public partial class FileBrowser
             return;
 
         var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
-        _currentArtifact = artifact;
+        CurrentArtifact = artifact;
         IntentHolder.FileUrl = null;
         _ = _fileViewerRef.OpenArtifact(artifact);
     }
 
     private async Task FileViewerBack()
     {
-        if (_currentArtifact?.ParentFullPath is not null && _currentArtifact.ArtifactType == FsArtifactType.File)
+        if (CurrentArtifact?.ParentFullPath is not null && CurrentArtifact.ArtifactType == FsArtifactType.File)
         {
-            var artifact = await FileService.GetArtifactAsync(_currentArtifact.ParentFullPath);
-            _currentArtifact = artifact;
+            var artifact = await FileService.GetArtifactAsync(CurrentArtifact.ParentFullPath);
+            CurrentArtifact = artifact;
         }
         await OnInitAsync();
     }
+
 }

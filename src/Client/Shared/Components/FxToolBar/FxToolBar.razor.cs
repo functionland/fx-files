@@ -21,10 +21,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         [Parameter] public bool IsInSearchMode { get; set; }
         [Parameter] public bool IsInRootDestinationFolder { get; set; } = false;
-        [Parameter] public bool ShouldSearchBoxShow { get; set; } = false;
         [Parameter] public EventCallback<MouseEventArgs> OnBackClick { get; set; }
 
-        private FxSearchInput _searchInputRef = default!;
+        private FxSearchInput? _searchInputRef = default!;
 
         private void HandleSearchFocused()
         {
