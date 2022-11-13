@@ -161,6 +161,7 @@ public partial class ZipViewer : IFileViewerComponent
 
             if (folderNameResult.ResultType == InputModalResultType.Cancel)
             {
+                SetGoBackDeviceButtonFunctionality();
                 return;
             }
 
@@ -217,6 +218,7 @@ public partial class ZipViewer : IFileViewerComponent
 
                 if (folderNameResult.ResultType == InputModalResultType.Cancel)
                 {
+                    SetGoBackDeviceButtonFunctionality();
                     return;
                 }
                 var destinationFolderName = folderNameResult.Result ?? folderName;

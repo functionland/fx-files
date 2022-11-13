@@ -181,6 +181,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                     FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
                         Localizer.GetString(nameof(AppStrings.PasswordEmptyMessage)), FxToastType.Error);
                     ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                    _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
                     _tcs?.SetResult(ExtractorBottomSheetResult);
                     return null;
                 }
