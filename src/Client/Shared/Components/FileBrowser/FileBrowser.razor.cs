@@ -1,11 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
-using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Services.Common;
-using Functionland.FxFiles.Client.Shared.Utils;
-
-using Prism.Events;
-
-namespace Functionland.FxFiles.Client.Shared.Components;
+﻿namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class FileBrowser
 {
@@ -188,7 +181,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            var destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
+            var destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
@@ -357,7 +350,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            var destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
+            var destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -946,7 +939,7 @@ public partial class FileBrowser
         {
             ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             _selectedArtifacts = new List<FsArtifact>();
-            foreach (var artifact in _allArtifacts)
+            foreach (var artifact in _displayedArtifacts)
             {
                 artifact.IsSelected = true;
                 _selectedArtifacts.Add(artifact);
@@ -1107,12 +1100,22 @@ public partial class FileBrowser
         return result;
     }
 
-    private async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
+    private async Task<string?> HandleSelectDestinationAsync(ArtifactActionResult artifactActionResult)
     {
         if (_artifactSelectionModalRef is null)
             return null;
 
-        var result = await _artifactSelectionModalRef.ShowAsync(artifact, artifactActionResult);
+        var sourceArtifact = CurrentArtifact;
+        if (artifactActionResult.Artifacts?.Count == 1)
+        {
+            var sourceArtifactPath = artifactActionResult.Artifacts.FirstOrDefault()?.FullPath;
+            if (sourceArtifactPath == CurrentArtifact?.FullPath)
+            {
+                sourceArtifact = await FileService.GetArtifactAsync(CurrentArtifact?.ParentFullPath);
+            }
+        }
+
+        var result = await _artifactSelectionModalRef.ShowAsync(sourceArtifact, artifactActionResult);
         ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         string? destinationPath = null;
@@ -1276,11 +1279,9 @@ public partial class FileBrowser
 
     private async Task HandleCancelInLineSearchAsync()
     {
-        //_isLoading = true;
         ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         _inlineSearchText = string.Empty;
         await LoadChildrenArtifactsAsync(CurrentArtifact);
-        //_isLoading = false;
     }
 
     private void HandleSearchFocused()
@@ -1647,6 +1648,12 @@ public partial class FileBrowser
         {
             CancelSearch(true);
         }
+        if (!string.IsNullOrWhiteSpace(_inlineSearchText))
+        {
+            _fxSearchInputRef?.HandleClearInputText();
+            await HandleCancelInLineSearchAsync();
+        }
+
         CurrentArtifact = await FileService.GetArtifactAsync(destinationPath);
         _ = LoadChildrenArtifactsAsync(CurrentArtifact);
         _ = LoadPinsAsync();
