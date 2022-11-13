@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
@@ -101,6 +102,7 @@ public partial class FileBrowser
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IZipService ZipService { get; set; } = default!;
     [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
+    [AutoInject] public IFileLauncher FileLauncher { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
@@ -717,6 +719,14 @@ public partial class FileBrowser
 
     }
 
+    public async Task HandleOpenWithAppAsync(FsArtifact? artifact)
+    {
+        if (artifact == null || artifact.FullPath == null)
+            return;
+
+        await FileLauncher.OpenWithAsync(artifact.FullPath)
+    }
+
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
         var files = new List<ShareFile>();
@@ -882,8 +892,13 @@ public partial class FileBrowser
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
             var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
-            var isVisibleShareWithApp = artifact?.ArtifactType == FsArtifactType.File;
-            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isVisibleShareWithApp, artifact?.FileCategory, isDrive);
+
+            result = await _artifactOverflowModalRef!.ShowAsync
+                (false,
+                pinOptionResult,
+                isDrive,
+                artifact?.FileCategory,
+                artifact?.ArtifactType);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -903,6 +918,9 @@ public partial class FileBrowser
                 {
                     _isArtifactExplorerLoading = false;
                 }
+                break;
+            case ArtifactOverflowResultType.OpenFileWithApp:
+                await HandleOpenWithAppAsync(artifact);
                 break;
             case ArtifactOverflowResultType.Rename:
                 await HandleRenameArtifactAsync(artifact);
@@ -978,12 +996,21 @@ public partial class FileBrowser
         {
             ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             var pinOptionResult = GetPinOptionResult(artifacts);
-            var isVisibleShareWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
 
-            var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
-            FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
+            var firstArtifact = artifacts.FirstOrDefault();
+            FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifact?.FileCategory) ?
+                firstArtifact?.FileCategory :
+                null;
+            FsArtifactType? fsArtifactType = artifacts.All(a => a.ArtifactType == firstArtifact?.ArtifactType) ?
+                firstArtifact?.ArtifactType :
+                null;
 
-            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleShareWithApp, fileCategoryType, IsInRoot(CurrentArtifact));
+            result = await _artifactOverflowModalRef.ShowAsync
+                (isMultiple,
+                pinOptionResult,
+                IsInRoot(CurrentArtifact),
+                fileCategoryType,
+                fsArtifactType);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -1003,6 +1030,10 @@ public partial class FileBrowser
                 {
                     _isArtifactExplorerLoading = false;
                 }
+                break;
+            case ArtifactOverflowResultType.OpenFileWithApp when (!isMultiple):
+                var artifact = artifacts.SingleOrDefault();
+                await HandleOpenWithAppAsync(artifact);
                 break;
             case ArtifactOverflowResultType.Rename when (!isMultiple):
                 var singleArtifact = artifacts.SingleOrDefault();
