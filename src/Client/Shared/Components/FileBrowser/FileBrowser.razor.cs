@@ -193,7 +193,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
@@ -364,7 +364,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
+            string? destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -1105,12 +1105,22 @@ public partial class FileBrowser
         return result;
     }
 
-    private async Task<string?> HandleSelectDestinationAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
+    private async Task<string?> HandleSelectDestinationAsync(ArtifactActionResult artifactActionResult)
     {
         if (_artifactSelectionModalRef is null)
             return null;
 
-        var result = await _artifactSelectionModalRef.ShowAsync(artifact, artifactActionResult);
+        var sourceArtifact = CurrentArtifact;
+        if (artifactActionResult.Artifacts?.Count == 1)
+        {
+            var sourceArtifactPath = artifactActionResult.Artifacts.FirstOrDefault()?.FullPath;
+            if (sourceArtifactPath == CurrentArtifact?.FullPath)
+            {
+                sourceArtifact = await FileService.GetArtifactAsync(CurrentArtifact?.ParentFullPath);
+            }
+        }
+
+        var result = await _artifactSelectionModalRef.ShowAsync(sourceArtifact, artifactActionResult);
         ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         string? destinationPath = null;
