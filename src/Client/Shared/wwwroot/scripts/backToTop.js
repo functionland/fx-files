@@ -38,17 +38,6 @@ function saveScrollPosition() {
     savePositionScroll.push(artifactListDiv.scrollTop);
 }
 
-// search input focus 
-function SearchInputFocus() {
-    var searchInput = document.getElementById('searchinput');
-    var searchIcon = document.querySelector('.search-icon');
-    if (typeof searchInput !== "undefined") {
-        searchInput.focus();
-        searchIcon.classList.add("search-icon-active");
-        console.log(searchIcon);
-    }
-}
-
 function SearchInputUnFocus() {
         var searchInput = document.getElementById('searchinput');
         var searchIcon = document.querySelector('.search-icon');

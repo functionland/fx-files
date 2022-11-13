@@ -39,7 +39,6 @@ public partial class FileBrowser
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
-    private bool _isPrePairForFirstTimeInSearch = true;
     private string _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
@@ -149,11 +148,6 @@ public partial class FileBrowser
                            .Subscribe(
                                HandleIntentReceiver,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
-        }
-        if (_isInSearch && _isPrePairForFirstTimeInSearch)
-        {
-            await JSRuntime.InvokeVoidAsync("SearchInputFocus");
-            _isPrePairForFirstTimeInSearch = false;
         }
         if (_isGoingBack)
         {
@@ -1315,7 +1309,7 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
-        if (string.IsNullOrWhiteSpace(text) || _artifactsSearchFilterType == null || _artifactsSearchFilterDate == null)
+        if (string.IsNullOrWhiteSpace(text) && _artifactsSearchFilterType == null && _artifactsSearchFilterDate == null)
         {
             _isFileCategoryFilterBoxOpen = true;
         }
@@ -1743,20 +1737,19 @@ public partial class FileBrowser
         await HandleSearchAsync(_searchText);
     }
 
-    private void CancelSearch(bool shouldExist = false)
+    private void CancelSearch(bool shouldExistOutOfSearchMode = false)
     {
         searchCancellationTokenSource?.Cancel();
         SearchFilter = null;
         _fxSearchInputRef?.HandleClearInputText();
         _displayedArtifacts.Clear();
         CancelSelectionMode();
-        _isInSearch = shouldExist is false;
-        if (!shouldExist)
+        _isInSearch = shouldExistOutOfSearchMode is false;
+        if (!shouldExistOutOfSearchMode)
             return;
 
         _artifactsSearchFilterType = null;
         _artifactsSearchFilterDate = null;
-        _isPrePairForFirstTimeInSearch = true;
         _isFileCategoryFilterBoxOpen = true;
     }
 
