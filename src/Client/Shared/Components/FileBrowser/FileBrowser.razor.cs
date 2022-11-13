@@ -1294,6 +1294,7 @@ public partial class FileBrowser
     private async Task HandleSearchBlurredAsync()
     {
         await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
+        StateHasChanged();
     }
 
     CancellationTokenSource? searchCancellationTokenSource;
