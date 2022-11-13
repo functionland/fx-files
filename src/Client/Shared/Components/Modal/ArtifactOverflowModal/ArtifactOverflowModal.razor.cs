@@ -17,8 +17,6 @@
 
             _tcs?.SetResult(result);
             _tcs = null;
-
-            _isModalOpen = false;
         }
 
         public void Extract()

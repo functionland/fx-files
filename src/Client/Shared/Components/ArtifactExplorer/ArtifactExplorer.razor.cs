@@ -128,6 +128,11 @@ public partial class ArtifactExplorer
 
     private async Task HandleArtifactOptionClick(FsArtifact artifact)
     {
+        if (IsInSearchMode)
+        {
+            await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
+            StateHasChanged();
+        }
         await OnArtifactOptionClick.InvokeAsync(artifact);
     }
 
