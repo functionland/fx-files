@@ -128,16 +128,15 @@
     <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search @(_isFileCategoryFilterBoxOpen ? "expanded" : "")">
             <div class="filter-content">
-                <div class="filter-text">Filters</div>
-                <div class="chaveron-up-icon" @onclick="ChangeFileCategoryFilterMode"></div>
-                <div class="chaveron-down-icon" @onclick="ChangeFileCategoryFilterMode"></div>
+                <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
+                <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
             @if (_isFileCategoryFilterBoxOpen)
             {
                 <FxDivider FxDividerSize="FxDividerSize.Regular" FxDividerType="FxDividerType.Horizontal" FxDividerMode="FxDividerMode.Solid" />
             }
 
-            <div class="filters-options">
+            <div class="filters-options @(_isFileCategoryFilterBoxOpen ? "show-option" : "hide-option")">
                 <div class="time-options-container">
                     <div class="time-title">Time</div>
 
