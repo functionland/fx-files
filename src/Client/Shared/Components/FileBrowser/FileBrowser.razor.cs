@@ -941,7 +941,7 @@ public partial class FileBrowser
         {
             ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             _selectedArtifacts = new List<FsArtifact>();
-            foreach (var artifact in _allArtifacts)
+            foreach (var artifact in _displayedArtifacts)
             {
                 artifact.IsSelected = true;
                 _selectedArtifacts.Add(artifact);
