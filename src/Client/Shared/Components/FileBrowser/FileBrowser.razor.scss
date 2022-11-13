@@ -5,10 +5,16 @@
 
 
 .file-browser-container {
-    //min-height: calc(100vh - 81px);
     height: 100%;
+}
+
+.file-browser-content {
     display: flex;
     flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: calc(100% - 128px);
+    width: 100%;
 }
 
 .file-browser-container ::deep div.toolbar-box {
@@ -72,6 +78,7 @@
 
 .action-bar-box {
     position: relative;
+    width: 100%;
 }
 
 .action-bar {
@@ -339,40 +346,46 @@
 
 
 //deep search style
+.opacity-0 {
+    opacity: 0;
+}
+
+.opacity-1 {
+    opacity: 1;
+}
+
+.search-mode {
+    height: 100%;
+    opacity: 1;
+    transition: height 0ms linear, opacity 300ms linear;
+}
+
+.browsing-mode {
+    height: 0;
+    opacity: 0;
+    transition: opacity 300ms linear, height 0ms linear 400ms;
+    z-index: -1 !important;
+}
 
 .search-container {
-    position: fixed;
-    top: 0;
-    z-index: 100;
+    position: absolute;
+    top: 70px;
     left: 0;
     bottom: 0;
     right: 0;
+    z-index: 100;
+    background-color: color(app-bg);
+    max-width: 600px;
+    margin: 0 auto;
 
-    .search-container-content {
-        height: 100%;
-        margin: 0 auto;
-        max-width: 600px;
-        background-color: color(app-bg);
-
-        ::deep div.toolbar-box {
-            padding-top: $spacing-16;
-            padding-bottom: $spacing-16;
-            background-color: color(app-bg);
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-
-        ::deep .list-container {
-            height: 100%;
-            overflow: auto;
-        }
+    ::deep .list-container {
+        overflow: auto;
     }
 }
 
-
 .filter-deep-search {
     padding: $spacing-0 $spacing-21;
+    width: 100%;
 }
 
 .filter-content {
