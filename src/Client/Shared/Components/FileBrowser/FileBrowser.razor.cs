@@ -1294,6 +1294,7 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
+        _isFileCategoryFilterBoxOpen = false;
         _isArtifactExplorerLoading = true;
         _searchText = text;
         ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
@@ -1348,10 +1349,7 @@ public partial class FileBrowser
                     return;
 
                 RefreshDisplayedArtifacts();
-                await InvokeAsync(() =>
-                {
-                    StateHasChanged();
-                });
+                await InvokeAsync(StateHasChanged);
             }
             catch (Exception)
             {
@@ -1397,7 +1395,7 @@ public partial class FileBrowser
                     _ = Task.Run(async () =>
                     {
                         await LoadChildrenArtifactsAsync(CurrentArtifact);
-                        await InvokeAsync(() => StateHasChanged());
+                        await InvokeAsync(StateHasChanged);
                     });
                     return;
                 }
@@ -1406,7 +1404,7 @@ public partial class FileBrowser
                 _ = Task.Run(async () =>
                 {
                     await LoadChildrenArtifactsAsync(CurrentArtifact);
-                    await InvokeAsync(() => StateHasChanged());
+                    await InvokeAsync(StateHasChanged);
                 });
                 await JSRuntime.InvokeVoidAsync("OnScrollEvent");
                 _isGoingBack = true;
@@ -1725,6 +1723,7 @@ public partial class FileBrowser
         _artifactsSearchFilterType = null;
         _artifactsSearchFilterDate = null;
         _isPrePairForFirstTimeInSearch = true;
+        _isFileCategoryFilterBoxOpen = true;
     }
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
