@@ -63,3 +63,6 @@
         align-items: center;
     }
 }
+::deep .color-back::after {
+    color: $gray-light-bg-primary !important;
+}
