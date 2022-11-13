@@ -16,6 +16,8 @@ namespace Functionland.FxFiles.Client.Shared.Components
         [Parameter] public EventCallback OnCancel { get; set; }
         [Parameter] public bool IsEnabled { get; set; } = true;
 
+        private bool _isFocused = false;
+
         public void HandleClear()
         {
             HandleClearInputText();
@@ -29,6 +31,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private void HandleFocus()
         {
+            _isFocused = true;
             OnFocus.InvokeAsync();
         }
 

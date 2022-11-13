@@ -9,26 +9,55 @@
     padding: 8px 21px;
 }
 
-.search-toolbar-not-in-root {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: center;
-        width: 100%;
-        margin-bottom:$spacing-16;
-
-        ::deep .back-button::after {
-            font-size: 24px;
-            vertical-align: middle;
-            @include Icon($arrow-left);
-        }
-}
-
-.search-toolbar-not-in-root ::deep input.input-box {
+.toolbar-search-row ::deep input.input-box {
     flex-grow: 2;
 }
 
-.root-mode {
+.left-btn-wrapper {
+    width: 25px;
+    height: 40px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    transition: width 300ms linear;
+}
+
+.right-btn-wrapper {
+    width: 88px;
+    height: 40px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    transition: width 300ms linear;
+}
+
+.hide-element {
+    width: 0;
+    overflow: hidden;
+}
+
+.search-toolbar-not-in-root {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-bottom: $spacing-16;
+
+    ::deep .back-button::after {
+        font-size: 24px;
+        vertical-align: middle;
+        @include Icon($arrow-left);
+    }
+}
+
+    .search-toolbar-not-in-root ::deep input.input-box {
+        flex-grow: 2;
+    }
+
+.toolbar-search-row {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -47,25 +76,24 @@
         @include Icon($chevron-left);
     }
 
-    ::deep .root-add-button {
+    ::deep .right-btn-wrapper {
         .fxbutton-lefticon {
             margin-right: 0px;
         }
     }
 }
 
-.root-mode ::deep input.input-box {
-    flex-grow: 2;
+    .root-mode ::deep input.input-box {
+        flex-grow: 2;
+    }
 
-}
+    ::deep .back-button-space {
+        margin-right: $spacing-8;
+    }
 
-::deep .back-button-space {
-    margin-right: $spacing-8;
-}
-
-.not-root-mode {
+.folder-info-row {
     width: 100%;
-    transition: all 300ms linear;
+    margin-top: 16px;
 
     ::deep .search-back-button::after {
         font-size: 24px;
@@ -135,69 +163,69 @@
     }
 }
 
-::deep .animate-button {
-    position: relative;
-    color: red !important;
-}
+    ::deep .animate-button {
+        position: relative;
+        color: red !important;
+    }
 
-::deep .animate-button:after {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 120px;
-    height: 120px;
-    margin-left: -60px;
-    margin-top: -60px;
-    background-color: #038082;
-    border-radius: 100%;
-    opacity: 0.6;
-    transform: scale(0);
-}
-
-::deep .animate-button:not(:active):after {
-    animation: ripple 300ms ease-in-out 1ms;
-}
-
-::deep .animate-button:after {
-    visibility: hidden;
-}
-
-::deep .animate-button:focus:after {
-    visibility: visible;
-}
-
-::deep .animate-button:hover {
-    transition: background 100ms ease-in;
-    background: $green-dark-hover !important;
-}
-
-::deep .animate-button:active {
-    transition: background 200ms ease-in;
-    background: $green-dark-pressed !important;
-}
-
-
-@keyframes ripple {
-    0% {
+    ::deep .animate-button:after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 120px;
+        height: 120px;
+        margin-left: -60px;
+        margin-top: -60px;
+        background-color: #038082;
+        border-radius: 100%;
+        opacity: 0.6;
         transform: scale(0);
     }
 
-    25% {
-        transform: scale(0.25);
+    ::deep .animate-button:not(:active):after {
+        animation: ripple 300ms ease-in-out 1ms;
     }
 
-    50% {
-        transform: scale(0.5);
+    ::deep .animate-button:after {
+        visibility: hidden;
     }
 
-    75% {
-        transform: scale(0.75);
+    ::deep .animate-button:focus:after {
+        visibility: visible;
     }
 
-    100% {
-        opacity: 1;
-        transform: scale(1);
+    ::deep .animate-button:hover {
+        transition: background 100ms ease-in;
+        background: $green-dark-hover !important;
     }
-}
+
+    ::deep .animate-button:active {
+        transition: background 200ms ease-in;
+        background: $green-dark-pressed !important;
+    }
+
+
+    @keyframes ripple {
+        0% {
+            transform: scale(0);
+        }
+
+        25% {
+            transform: scale(0.25);
+        }
+
+        50% {
+            transform: scale(0.5);
+        }
+
+        75% {
+            transform: scale(0.75);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
