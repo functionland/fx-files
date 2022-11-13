@@ -20,10 +20,10 @@
             <section class="filter-deep-search">
                 <div class="filter-content">
                     <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
-                    <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
+                    <div class="@(_isFileCategoryFilterBoxOpen || string.IsNullOrWhiteSpace(_searchText) ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
                 </div>
 
-                <div class="@(_isFileCategoryFilterBoxOpen ? "show-option" : "hide-option") filters-options">
+                <div class="@(_isFileCategoryFilterBoxOpen || string.IsNullOrWhiteSpace(_searchText) ? "show-option" : "hide-option") filters-options">
                     <div class="time-options-container">
                         <div class="time-title">@Localizer[nameof(AppStrings.Time)]</div>
 
