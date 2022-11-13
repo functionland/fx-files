@@ -699,4 +699,7 @@
   <data name="PasswordEmptyMessage" xml:space="preserve">
     <value>Password won't be empty.</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
 </root>

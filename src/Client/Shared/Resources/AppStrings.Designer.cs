@@ -1150,6 +1150,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open with.
+        /// </summary>
+        public static string OpenWith {
+            get {
+                return ResourceManager.GetString("OpenWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {

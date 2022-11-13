@@ -3,6 +3,7 @@
     public enum ArtifactOverflowResultType
     {
         Details,
+        OpenFileWithApp,
         Rename,
         Copy,
         Pin,
