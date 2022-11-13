@@ -63,6 +63,6 @@
         align-items: center;
     }
 }
-::deep .color-back::after {
+::deep .color-back-button::after {
     color: $gray-light-bg-primary !important;
 }
