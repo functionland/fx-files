@@ -1328,29 +1328,29 @@ public partial class FileBrowser
             var buffer = new List<FsArtifact>();
             try
             {
-                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token))
+                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token).WithCancellation(token))
                 {
                     if (token.IsCancellationRequested)
                         return;
 
                     _allArtifacts.Add(item);
-                    if (sw.ElapsedMilliseconds > 1000)
-                    {
-                        if (token.IsCancellationRequested)
-                            return;
+                    if (sw.ElapsedMilliseconds <= 1000)
+                        continue;
 
-                        RefreshDisplayedArtifacts();
-                        await InvokeAsync(() =>
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    RefreshDisplayedArtifacts();
+                    await InvokeAsync(() =>
+                    {
+                        if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
                         {
-                            if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
-                            {
-                                _isArtifactExplorerLoading = false;
-                            }
-                            StateHasChanged();
-                        });
-                        sw.Restart();
-                        await Task.Yield();
-                    }
+                            _isArtifactExplorerLoading = false;
+                        }
+                        StateHasChanged();
+                    });
+                    sw.Restart();
+                    await Task.Yield();
                 }
 
                 if (token.IsCancellationRequested)
@@ -1361,14 +1361,14 @@ public partial class FileBrowser
             }
             catch (Exception)
             {
-                //ExceptionHandler.Handle(ex);
+                throw;
             }
             finally
             {
                 _isArtifactExplorerLoading = false;
             }
 
-        });
+        }, token);
     }
 
     private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null, ArtifactCategorySearchType? type = null)

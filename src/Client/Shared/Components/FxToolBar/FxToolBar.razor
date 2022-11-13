@@ -60,7 +60,7 @@
                         <FxButton Margin="0 8px"
                           Class="animate-button"
                           OnClick="OnAddButtonClick"
-                          IsVisible="IsInRootDestinationFolder == true ? false : IsAddButtonVisible"
+                          IsVisible="IsInRootDestinationFolder != true && IsAddButtonVisible"
                           ButtonStyle="FxButtonStyle.IconOnly"
                           LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
 
