@@ -20,6 +20,9 @@ public static class IMacServiceCollectionExtensions
         services.AddSingleton<IFileWatchService, MacFileWatchService>();
 
         services.AddSingleton<IFileCacheService, MacFileCacheService>();
+
+        services.AddSingleton<IFileLauncher, MacFileLauncher>();
+
         return services;
     }
 }

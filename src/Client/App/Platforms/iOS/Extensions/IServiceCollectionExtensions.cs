@@ -21,6 +21,7 @@ public static class IiOSServiceCollectionExtensions
 
         services.AddSingleton<IFileCacheService, IosFileCacheService>();
 
+        services.AddSingleton<IFileLauncher, IosFileLauncher>();
         return services;
     }
 }
