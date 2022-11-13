@@ -614,6 +614,14 @@ public partial class FileBrowser
                 //TODO: Implement upload logic here
                 break;
             case ArtifactDetailModalResultType.Close:
+                if (artifacts.Count > 1)
+                {
+                    await HandleSelectedArtifactsOptions(artifacts);
+                }
+                else
+                {
+                    await HandleOptionsArtifact(artifacts[0]);
+                }
                 break;
             default:
                 break;
