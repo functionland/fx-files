@@ -357,7 +357,7 @@ public partial class FileBrowser
                 Artifacts = artifacts
             };
 
-            string? destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
+            var destinationPath = await HandleSelectDestinationAsync(CurrentArtifact, artifactActionResult);
             if (string.IsNullOrWhiteSpace(destinationPath))
             {
                 return;
@@ -374,8 +374,8 @@ public partial class FileBrowser
 
                 await FileService.MoveArtifactsAsync(artifacts, destinationPath, false, onProgress: async (progressInfo) =>
                 {
-                    ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                    ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                    ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+                    ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
                     ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                     ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                     await InvokeAsync(StateHasChanged);
