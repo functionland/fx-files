@@ -1284,11 +1284,9 @@ public partial class FileBrowser
 
     private async Task HandleCancelInLineSearchAsync()
     {
-        //_isLoading = true;
         ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         _inlineSearchText = string.Empty;
         await LoadChildrenArtifactsAsync(CurrentArtifact);
-        //_isLoading = false;
     }
 
     private void HandleSearchFocused()
@@ -1657,6 +1655,12 @@ public partial class FileBrowser
         {
             CancelSearch(true);
         }
+        if (!string.IsNullOrWhiteSpace(_inlineSearchText))
+        {
+            _fxSearchInputRef?.HandleClearInputText();
+            await HandleCancelInLineSearchAsync();
+        }
+
         CurrentArtifact = await FileService.GetArtifactAsync(destinationPath);
         _ = LoadChildrenArtifactsAsync(CurrentArtifact);
         _ = LoadPinsAsync();
@@ -1726,7 +1730,7 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         _displayedArtifacts.Clear();
         CancelSelectionMode();
-        _isInSearch = shouldExist is false ? true : false;
+        _isInSearch = !shouldExist;
         if (shouldExist)
         {
             _artifactsSearchFilterType = null;
