@@ -39,7 +39,7 @@ public partial class FileBrowser
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
-    private bool _isFirstTimeInSearch = true;
+    private bool _isPrePairForFirstTimeInSearch = true;
     private string _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
@@ -155,10 +155,10 @@ public partial class FileBrowser
                                HandleIntentReceiver,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
         }
-        if (_isInSearch && _isFirstTimeInSearch)
+        if (_isInSearch && _isPrePairForFirstTimeInSearch)
         {
             await JSRuntime.InvokeVoidAsync("SearchInputFocus");
-            _isFirstTimeInSearch = false;
+            _isPrePairForFirstTimeInSearch = false;
         }
         if (_isGoingBack)
         {
@@ -1730,13 +1730,13 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         _displayedArtifacts.Clear();
         CancelSelectionMode();
-        _isInSearch = !shouldExist;
-        if (shouldExist)
-        {
-            _artifactsSearchFilterType = null;
-            _artifactsSearchFilterDate = null;
-            _isFirstTimeInSearch = true;
-        }
+        _isInSearch = shouldExist is false;
+        if (!shouldExist)
+            return;
+
+        _artifactsSearchFilterType = null;
+        _artifactsSearchFilterDate = null;
+        _isPrePairForFirstTimeInSearch = true;
     }
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
