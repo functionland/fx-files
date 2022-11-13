@@ -1,3 +1,10 @@
+#if ANDROID
+using Android.App;
+using Android.Graphics;
+using Android.Media;
+using Android.Util;
+#endif
+
 using CommunityToolkit.Maui.MediaElement;
 using Microsoft.AspNetCore.Components;
 
@@ -7,11 +14,18 @@ public partial class NativeVideoViewer : ContentPage
 {
     protected IExceptionHandler ExceptionHandler { get; set; } = default!;
 
-    private bool IsInPictureInPicture { get; set; }
+    private bool? _isInPictureInPicture = null;
+    public bool? IsInPictureInPicture
+    {
+        set { if (_isInPictureInPicture == null) _isInPictureInPicture = value; }
+        get { return _isInPictureInPicture; }
+    }
+
+    private EventCallback OnBack { get; set; }
 
     private MediaElementState _currentMediaState = MediaElementState.Playing;
 
-    private EventCallback OnBack { get; set; }
+    private readonly string _filePath;
 
     public NativeVideoViewer(string path, EventCallback onBack)
     {
@@ -19,7 +33,8 @@ public partial class NativeVideoViewer : ContentPage
 
         if (path is not null)
         {
-            media.Source = MediaSource.FromFile(path);
+            _filePath = path;
+            media.Source = MediaSource.FromFile(_filePath);
             playButton.Source = ImageSource.FromFile("pause.png");
             media.Play();
         }
@@ -28,13 +43,18 @@ public partial class NativeVideoViewer : ContentPage
 
     protected override void OnSizeAllocated(double width, double height)
     {
-        if (!IsInPictureInPicture)
+        if (IsInPictureInPicture == false)
         {
-            media.WidthRequest = width;
-            media.HeightRequest = height;
-        }
+            Device.StartTimer(TimeSpan.FromMilliseconds(1), () =>
+            {
+                media.WidthRequest = width;
+                media.HeightRequest = height;
 
-        base.OnSizeAllocated(width, height);
+                return false;
+            });
+
+            base.OnSizeAllocated(width, height);
+        }
     }
 
     protected override bool OnBackButtonPressed()
@@ -69,11 +89,20 @@ public partial class NativeVideoViewer : ContentPage
         mediaControls.IsVisible = false;
 
 #if ANDROID
-        var aspectRatio = new Android.Util.Rational(700, 400);
-        Android.App.PictureInPictureParams.Builder pictureInPictureParamsBuilder = new Android.App.PictureInPictureParams.Builder();
-        var piparam = pictureInPictureParamsBuilder.SetAspectRatio(aspectRatio).Build();
-        Platform.CurrentActivity.EnterPictureInPictureMode(pictureInPictureParamsBuilder.Build());
-        IsInPictureInPicture = Platform.CurrentActivity.IsInPictureInPictureMode;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.SetDataSource(_filePath);
+        Bitmap? bitmap = retriever.GetFrameAtTime(0);
+        if (bitmap != null)
+        {
+            MemoryStream stream = new MemoryStream();
+            bitmap.Compress(Bitmap.CompressFormat.Jpeg, 80, stream);
+
+            var aspectRatio = new Rational(bitmap.Width, bitmap.Height);
+            PictureInPictureParams.Builder pictureInPictureParamsBuilder = new PictureInPictureParams.Builder();
+            pictureInPictureParamsBuilder.SetAspectRatio(aspectRatio).Build();
+            Platform.CurrentActivity.EnterPictureInPictureMode(pictureInPictureParamsBuilder.Build());
+            _isInPictureInPicture = Platform.CurrentActivity.IsInPictureInPictureMode;
+        }
 #endif
     }
 
