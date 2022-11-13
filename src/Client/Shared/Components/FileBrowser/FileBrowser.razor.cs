@@ -278,11 +278,11 @@ public partial class FileBrowser
                     await FileService.CopyArtifactsAsync(artifacts, destinationPath, false,
                         onProgress: async (progressInfo) =>
                         {
-                            ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                            ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
                             ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                             ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                            await InvokeAsync(() => StateHasChanged());
+                            await InvokeAsync(StateHasChanged);
                         }, cancellationToken: _progressBarCts.Token);
 
                 }
@@ -317,11 +317,11 @@ public partial class FileBrowser
                                 await FileService.CopyArtifactsAsync(overwriteArtifacts, destinationPath, true,
                                     onProgress: async (progressInfo) =>
                                     {
-                                        ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                                        ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+                                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
                                         ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                                         ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                                        await InvokeAsync(() => StateHasChanged());
+                                        await InvokeAsync(StateHasChanged);
                                     },
                                     cancellationToken: _progressBarCts.Token);
 
@@ -385,7 +385,7 @@ public partial class FileBrowser
                     ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
                     ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                     ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                    await InvokeAsync(() => StateHasChanged());
+                    await InvokeAsync(StateHasChanged);
                 },
                     cancellationToken: _progressBarCts.Token);
             }
@@ -422,11 +422,11 @@ public partial class FileBrowser
 
                         await FileService.MoveArtifactsAsync(overwriteArtifacts, destinationPath, true, onProgress: async (progressInfo) =>
                         {
-                            ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                            ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
                             ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                             ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                            await InvokeAsync(() => StateHasChanged());
+                            await InvokeAsync(StateHasChanged);
                         },
                             cancellationToken: _progressBarCts.Token);
                     }
@@ -547,11 +547,11 @@ public partial class FileBrowser
 
                         await FileService.DeleteArtifactsAsync(artifacts, onProgress: async (progressInfo) =>
                         {
-                            ProgressBarCurrentText = progressInfo.CurrentText ?? String.Empty;
-                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? String.Empty;
+                            ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
+                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
                             ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                             ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                            await InvokeAsync(() => StateHasChanged());
+                            await InvokeAsync(StateHasChanged);
                         }, cancellationToken: _progressBarCts.Token);
 
                         await _progressModalRef.CloseAsync();
@@ -578,8 +578,8 @@ public partial class FileBrowser
 
     public async Task HandleShowDetailsArtifact(List<FsArtifact> artifact)
     {
-        bool isMultiple = artifact.Count > 1 ? true : false;
-        bool isDrive = false;
+        var isMultiple = artifact.Count > 1;
+        var isDrive = false;
 
         if (isMultiple is false)
         {
@@ -873,6 +873,10 @@ public partial class FileBrowser
 
     private async Task HandleOptionsArtifact(FsArtifact artifact)
     {
+        if (_isInSearch)
+        {
+            await HandleSearchBlurredAsync();
+        }
         ArtifactOverflowResult? result = null;
         if (_artifactOverflowModalRef is not null)
         {
@@ -1285,6 +1289,11 @@ public partial class FileBrowser
     {
         _isInSearch = true;
         _displayedArtifacts.Clear();
+    }
+
+    private async Task HandleSearchBlurredAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
     }
 
     CancellationTokenSource? searchCancellationTokenSource;

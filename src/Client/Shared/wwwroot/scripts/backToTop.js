@@ -49,6 +49,15 @@ function SearchInputFocus() {
     }
 }
 
+function SearchInputUnFocus() {
+        var searchInput = document.getElementById('searchinput');
+        var searchIcon = document.querySelector('.search-icon');
+        if (typeof searchInput !== "undefined") {
+            searchInput.blur();
+            searchIcon.classList.remove("search-icon-active");
+        }
+}
+
 function ImagePinchZoom() {
     let el = document.querySelector('#image-viewer');
     new PinchZoom.default(el, {
