@@ -8,12 +8,6 @@
     align-items: center;
     padding: 8px 21px;
 
-    ::deep .back-button::before {
-        font-size: 24px;
-        vertical-align: middle;
-        @include Icon($arrow-left, color(gray-content1));
-    }
-
     ::deep .back-button {
         display: flex;
         justify-content: center;
@@ -71,5 +65,7 @@
         color: color(gray-content2);
         overflow-y: auto;
         margin-bottom: 60px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere
     }
 }

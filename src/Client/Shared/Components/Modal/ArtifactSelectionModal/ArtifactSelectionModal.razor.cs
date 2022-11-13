@@ -56,7 +56,7 @@ public partial class ArtifactSelectionModal
                 SelectedArtifacts = new[] { _currentArtifact }
             };
 
-            _tcs!.SetResult(result);
+            _tcs?.SetResult(result);
             _tcs = null;
             _isModalOpen = false;
         }
@@ -144,7 +144,7 @@ public partial class ArtifactSelectionModal
             ResultType = ArtifactSelectionResultType.Cancel
         };
 
-        _tcs!.SetResult(result);
+        _tcs?.SetResult(result);
         _tcs = null;
         _isModalOpen = false;
     }

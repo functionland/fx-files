@@ -21,7 +21,7 @@
             <FxBreadcrumbs Artifact="_currentArtifact" FileService="FileService"></FxBreadcrumbs>
         }
 
-            @if (IsInRoot(_currentArtifact) && _isInSearch is false)
+            @if (IsInRoot(CurrentArtifact) && _isInSearch is false)
             {
                 <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
                       Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
@@ -245,7 +245,7 @@
                ProgressCurrentValue="@ProgressBarCurrentValue"
                ProgressMax="@ProgressBarMax"
                OnCancel="ProgressBarOnCancel"
-               @ref="_progressModalRef" />
+@ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
 <FileViewer @ref="_fileViewerRef"
             FileService="FileService"
@@ -253,6 +253,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            OnExtract="HandleExtractArtifactAsync"
             OnBack="FileViewerBack"
-            FileViewerResult="FileViewerResult" />
+            NavigationFolderCallback="NavigateToDestination" />
+
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>

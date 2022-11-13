@@ -169,13 +169,13 @@
     <value>FileAlreadyExistsException</value>
   </data>
   <data name="ArtifactPathIsNull" xml:space="preserve">
-    <value>The {0} path is null</value>
+    <value>The {0} path is null.</value>
   </data>
   <data name="DriveRemoveFailed" xml:space="preserve">
-    <value>You can not delete drive</value>
+    <value>You can not delete drive.</value>
   </data>
   <data name="ArtifactTypeIsNull" xml:space="preserve">
-    <value>The artifact type is null</value>
+    <value>The artifact type is null.</value>
   </data>
   <data name="UnableToLoadStorageManager" xml:space="preserve">
     <value>Can't load storge manager.</value>
@@ -184,10 +184,10 @@
     <value>the path is null</value>
   </data>
   <data name="ArtifactNameIsNull" xml:space="preserve">
-    <value>The {0} name is empty</value>
+    <value>The {0} name is empty.</value>
   </data>
   <data name="ArtifactAlreadyExistsException" xml:space="preserve">
-    <value>This {0} already  contains  an item  with the same name.</value>
+    <value>This folder already  contains  an item  with the same name.</value>
   </data>
   <data name="StreamFileIsNull" xml:space="preserve">
     <value>The stream file is null</value>
@@ -319,7 +319,7 @@
     <value>Allow permission for storage access!</value>
   </data>
   <data name="ArtifactDoseNotExistsException" xml:space="preserve">
-    <value>The {0} dose not exists exception</value>
+    <value>The {0} dose not exists exception.</value>
   </data>
   <data name="InputLabel" xml:space="preserve">
     <value>Label</value>
@@ -340,7 +340,7 @@
     <value>Type message here...</value>
   </data>
   <data name="DriveRenameFailed" xml:space="preserve">
-    <value>You can not rename drive</value>
+    <value>You can not rename drive.</value>
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
@@ -370,13 +370,13 @@
     <value>Something went wrong!</value>
   </data>
   <data name="TheCopyOpreationSuccessedMessage" xml:space="preserve">
-    <value>Items copied</value>
+    <value>Items copied.</value>
   </data>
   <data name="TheCopyOpreationSuccessedTiltle" xml:space="preserve">
     <value>Your item(s) has been copied</value>
   </data>
   <data name="TheMoveOpreationSuccessedMessage" xml:space="preserve">
-    <value>Items moved</value>
+    <value>Items moved.</value>
   </data>
   <data name="TheMoveOpreationSuccessedTiltle" xml:space="preserve">
     <value>Your item(s) has been moved</value>
@@ -385,10 +385,10 @@
     <value>The operation failed</value>
   </data>
   <data name="RootfolderRenameException" xml:space="preserve">
-    <value>Root folder cannot be renamed</value>
+    <value>Root folder cannot be renamed.</value>
   </data>
   <data name="RootFolderDeleteException" xml:space="preserve">
-    <value>Root folder can not be deleted</value>
+    <value>Root folder can not be deleted.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -490,7 +490,7 @@
     <value>Blox is not found</value>
   </data>
   <data name="BloxPoolIsNotFoundException" xml:space="preserve">
-    <value>Blox pool is not found</value>
+    <value>Blox pool is not found.</value>
   </data>
   <data name="CopyFiles" xml:space="preserve">
     <value>Copying files</value>
@@ -547,7 +547,7 @@
     <value>The artifact already dose not pinned. </value>
   </data>
   <data name="ArtifactAlreadyPinnedException" xml:space="preserve">
-    <value>The {0} already pinned</value>
+    <value>The {0} already pinned.</value>
   </data>
   <data name="System" xml:space="preserve">
     <value>System</value>
@@ -565,7 +565,7 @@
     <value>Your Login was successful To Fula</value>
   </data>
   <data name="BloxPoolAlreadyExistsException" xml:space="preserve">
-    <value>The user is already a member of this poolblox</value>
+    <value>The user is already a member of this poolblox.</value>
   </data>
   <data name="PasswordDidNotMatchedException" xml:space="preserve">
     <value>The password did not match.</value>
@@ -604,7 +604,7 @@
     <value>Move to</value>
   </data>
   <data name="RemoveFromPinnedItems" xml:space="preserve">
-    <value>Remove from pinned items</value>
+    <value>Remove from pinned items.</value>
   </data>
   <data name="SeeDetails" xml:space="preserve">
     <value>See details </value>
@@ -634,7 +634,7 @@
     <value>Password</value>
   </data>
   <data name="ExtractPasswordModalTitle" xml:space="preserve">
-    <value>Enter password for the zip file</value>
+    <value>Enter password for the zip file.</value>
   </data>
   <data name="ExtractingFolder" xml:space="preserve">
     <value>Extracting folder</value>
@@ -655,12 +655,48 @@
     <value>External storage</value>
   </data>
   <data name="NotSupportedEncryptedFileException" xml:space="preserve">
-    <value>Not supported encrypted file</value>
+    <value>Not supported encrypted file.</value>
   </data>
   <data name="FileNotFoundException" xml:space="preserve">
     <value>The zip file dose not found.</value>
   </data>
   <data name="SettingPageAppTitle" xml:space="preserve">
     <value>Fx Files by Functionland</value>
+  </data>
+  <data name="App" xml:space="preserve">
+    <value>App</value>
+  </data>
+  <data name="Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Past 30 days</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>Past 7 days</value>
+  </data>
+  <data name="Yesterday" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="PasswordEmptyMessage" xml:space="preserve">
+    <value>Password won't be empty.</value>
   </data>
 </root>

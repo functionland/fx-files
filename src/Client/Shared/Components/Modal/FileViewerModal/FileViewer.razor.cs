@@ -10,9 +10,8 @@ public partial class FileViewer
     [Parameter] public EventCallback<List<FsArtifact>> OnPin { get; set; }
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
+    [Parameter] public EventCallback<string> NavigationFolderCallback { get; set; }
     [AutoInject] public INativeNavigation NativeNavigation { get; set; } = default!;
-    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?, string?>> OnExtract { get; set; }
-    [Parameter] public FileViewerResultType FileViewerResult { get; set; }
 
     public bool IsModalOpen { get; set; } = false;
 
@@ -54,7 +53,7 @@ public partial class FileViewer
 
     public async Task NavigateToView(FsArtifact artifact)
     {
-        await NativeNavigation.NavigateToVidoeViewer(artifact.FullPath, OnBack);
+        await NativeNavigation.NavigateToVideoViewer(artifact.FullPath, OnBack);
     }
 
     private bool IsSupported<TComponent>(FsArtifact? artifact)
@@ -79,5 +78,11 @@ public partial class FileViewer
     {
         IsModalOpen = false;
         await OnBack.InvokeAsync();
+    }
+
+    public async Task HandleNavigateAsync(string path)
+    {
+        IsModalOpen = false;
+        await NavigationFolderCallback.InvokeAsync(path);
     }
 }

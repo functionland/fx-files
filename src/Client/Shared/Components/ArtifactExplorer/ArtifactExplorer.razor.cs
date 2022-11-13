@@ -3,8 +3,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
-using System.Threading;
-
 namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class ArtifactExplorer
@@ -84,6 +82,8 @@ public partial class ArtifactExplorer
         {
             await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
             await InitWindowWidthListener();
+            await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+
         }
     }
 
@@ -240,27 +240,28 @@ public partial class ArtifactExplorer
     public async Task OnSelectionChanged(FsArtifact artifact)
     {
         DisposeTimer();
-        if (true)
+        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
         {
-            if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
-            {
-                ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-                await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
-            }
-            if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
-            {
-                artifact.IsSelected = false;
-                SelectedArtifacts.Remove(artifact);
-            }
-            else
-            {
-                artifact.IsSelected = true;
-                SelectedArtifacts.Add(artifact);
-            }
-
-            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-            StateHasChanged();
+            await ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
         }
+        if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
+        {
+            artifact.IsSelected = false;
+            SelectedArtifacts.Remove(artifact);
+        }
+        else
+        {
+            artifact.IsSelected = true;
+            SelectedArtifacts.Add(artifact);
+        }
+
+        if (SelectedArtifacts.Count == 0)
+        {
+            await ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
+        }
+
+        await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+        StateHasChanged();
     }
 
     public async Task OnGoToTopPage()
@@ -371,8 +372,8 @@ public partial class ArtifactExplorer
     private async ValueTask<ItemsProviderResult<FsArtifact>> ProvideArtifactsListAsync(ItemsProviderRequest request)
     {
         var cancellationToken = request.CancellationToken;
-        
-        if (cancellationToken.IsCancellationRequested) 
+
+        if (cancellationToken.IsCancellationRequested)
             return default;
 
         var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
@@ -440,6 +441,12 @@ public partial class ArtifactExplorer
     private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
     {
         await OnZipArtifactClick.InvokeAsync(artifact);
+    }
+
+    private async Task ChangeArtifactExplorerMode(ArtifactExplorerMode mode)
+    {
+        ArtifactExplorerMode = mode;
+        await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
     }
 
     public void Dispose()

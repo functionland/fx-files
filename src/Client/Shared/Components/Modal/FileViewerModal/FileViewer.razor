@@ -10,23 +10,20 @@
             }
             else if (IsSupported<ZipViewer>(_currentArtifact))
             {
-                <ZipViewer
-                    CurrentArtifact="_currentArtifact"
-                    FileService="FileService" 
-                    OnBack="HandleBackAsync"
-                    ThumbnailService="ThumbnailService"
-                    OnExtract="OnExtract"
-                    FileViewerResult="FileViewerResult"/>
+                <ZipViewer CurrentArtifact="_currentArtifact"
+                           FileService="FileService"
+                           NavigationFolderCallback="HandleNavigateAsync"
+                           OnBack="HandleBackAsync"
+                           ThumbnailService="ThumbnailService" />
             }
             else if (IsSupported<TextViewer>(_currentArtifact))
             {
-                <TextViewer 
-                    CurrentArtifact="_currentArtifact"
-                    FileService="FileService"
-                    OnBack="HandleBackAsync"
-                    OnOptionClick="OnOptionClick"
-                    OnPin="OnPin"
-                    OnUnpin="OnUnpin"/>
+                <TextViewer CurrentArtifact="_currentArtifact"
+                            FileService="FileService"
+                            OnBack="HandleBackAsync"
+                            OnOptionClick="OnOptionClick"
+                            OnPin="OnPin"
+                            OnUnpin="OnUnpin" />
             }
         </div>
     </div>

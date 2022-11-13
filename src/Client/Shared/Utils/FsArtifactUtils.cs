@@ -175,8 +175,7 @@ public static class FsArtifactUtils
         { ".txt", FileCategoryType.Document},
 
         //Zip
-        {".zip",FileCategoryType.Zip },
-        {".rar",FileCategoryType.Zip }
+        {".zip",FileCategoryType.Zip }
     };
 
     public static FileCategoryType GetCategoryType(string fileExtension)
@@ -190,7 +189,7 @@ public static class FsArtifactUtils
         return FileCategoryType.Other;
     }
 
-    public static List<string> GetSearchCategoryTypeExtentions(ArtifactCategorySearchType searchType)
+    public static List<string> GetSearchCategoryTypeExtensions(ArtifactCategorySearchType searchType)
     {
         return searchType switch
         {

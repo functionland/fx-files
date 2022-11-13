@@ -12,7 +12,6 @@
 	  <None Remove="UnitTests\ZipService\SampleArchives\ProtectedWith123Rar.rar" />
 	  <None Remove="UnitTests\ZipService\SampleArchives\ProtectedWith123Zip.zip" />
 	  <None Remove="UnitTests\ZipService\SampleArchives\SimpleRar.rar" />
-	  <None Remove="UnitTests\ZipService\SampleArchives\SimpleZip.zip" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -28,9 +27,6 @@
 	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\SimpleRar.rar">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>
-	  <EmbeddedResource Include="UnitTests\ZipService\SampleArchives\SimpleZip.zip">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -43,6 +39,18 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="UnitTests\ZipService\SampleArchives\RarFileWithUppercaseExtension.RAR">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="UnitTests\ZipService\SampleArchives\SimpleZip.zip">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="UnitTests\ZipService\SampleArchives\ZipFileWithUppercaseExtension.ZIP">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>
