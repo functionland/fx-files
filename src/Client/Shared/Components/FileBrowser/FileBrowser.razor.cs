@@ -873,7 +873,7 @@ public partial class FileBrowser
 
     private bool IsInRoot(FsArtifact? artifact)
     {
-        return artifact is null ? true : false;
+        return artifact is null;
     }
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
@@ -881,7 +881,7 @@ public partial class FileBrowser
         _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
-            var isOpened = await _fileViewerRef?.OpenArtifact(artifact);
+            var isOpened = _fileViewerRef != null && await _fileViewerRef.OpenArtifact(artifact);
 
             if (isOpened == false)
             {
@@ -897,10 +897,13 @@ public partial class FileBrowser
                     }
                     else
                     {
-                        await Launcher.OpenAsync(new OpenFileRequest
+                        if (artifact?.FullPath != null)
                         {
-                            File = new ReadOnlyFile(artifact?.FullPath)
-                        });
+                            await Launcher.OpenAsync(new OpenFileRequest
+                            {
+                                File = new ReadOnlyFile(artifact.FullPath)
+                            });
+                        }
                     }
                 }
                 catch (UnauthorizedAccessException)
