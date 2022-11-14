@@ -1420,7 +1420,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to show in location.
+        ///   Looks up a localized string similar to Show in location.
         /// </summary>
         public static string ShowInLocation {
             get {

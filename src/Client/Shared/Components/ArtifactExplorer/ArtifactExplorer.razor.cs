@@ -128,6 +128,11 @@ public partial class ArtifactExplorer
 
     private async Task HandleArtifactOptionClick(FsArtifact artifact)
     {
+        if (IsInSearchMode)
+        {
+            await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
+            StateHasChanged();
+        }
         await OnArtifactOptionClick.InvokeAsync(artifact);
     }
 
@@ -447,6 +452,12 @@ public partial class ArtifactExplorer
     {
         ArtifactExplorerMode = mode;
         await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
+    }
+
+    private string GetIdForArtifact(string artifactName)
+    {
+        var id = artifactName.Trim().Replace(" ", string.Empty);
+        return id;
     }
 
     public void Dispose()

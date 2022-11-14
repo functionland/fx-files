@@ -126,7 +126,7 @@
     </section>
 
     <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
-        <div class="filter-deep-search @(_isFileCategoryFilterBoxOpen ? "expanded" : "")">
+        <div class="filter-deep-search">
             <div class="filter-content">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
                 <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
@@ -155,9 +155,7 @@
                     </div>
                 </div>
         </div>
-
-        @if (string.IsNullOrWhiteSpace(_searchText) is false)
-        {
+        
             <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
@@ -166,58 +164,54 @@
                           OnArtifactOptionClick="HandleOptionsArtifact"
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
-                          ViewMode="ArtifactState.ViewMode"
+                          ViewMode="ViewModeEnum.List"
                           FileCategoryFilter="_fileCategoryFilter"
                           HandleBack="HandleToolbarBackClick"
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="_isInSearch"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
-        }
 
-        @if (_selectedArtifacts != null)
+        @if (_selectedArtifacts is {Count: >= 1 })
         {
-            @if (_selectedArtifacts.Count >= 1)
-            {
-                <div class="footer-option">
-                    <div class="option-item btn-detail" @onclick="(()=>HandleShowDetailsArtifact(_selectedArtifacts))">
-                        <div class="detail-icon"></div>
-                        <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
-                    </div>
-                    @if (_selectedArtifacts?.Count == 1)
-                    {
-                        <div class="option-item" @onclick="(()=>NavigateArtifactForShowInFolder(_selectedArtifacts[0]))">
-                            <div class="show-location-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="option-item" @onclick="(()=>HandleCopyArtifactsAsync(_selectedArtifacts))">
-                            <div class="copy-btn-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
-                        </div>
-                    }
-                    <div class="option-item" @onclick="(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
-                        <div class="pin-icon"></div>
-                        <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
-                    </div>
-                    @if (_selectedArtifacts?.Count == 1)
-                    {
-                        <div class="option-item" @onclick="(()=>HandleOptionsArtifact(_selectedArtifacts[0]))">
-                            <div class="more-option-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
-                        </div>
-                    }
-                    @if (_selectedArtifacts?.Count > 1)
-                    {
-                        <div class="option-item" @onclick="(()=>HandleSelectedArtifactsOptions(_selectedArtifacts))">
-                            <div class="more-option-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
-                        </div>
-                    }
+            <div class="footer-option">
+                <div class="option-item btn-detail" @onclick="@(()=>HandleShowDetailsArtifact(_selectedArtifacts))">
+                    <div class="detail-icon"></div>
+                    <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
                 </div>
-            }
+                @if (_selectedArtifacts?.Count == 1)
+                {
+                    <div class="option-item" @onclick="@(()=>NavigateArtifactForShowInFolder(_selectedArtifacts[0]))">
+                        <div class="show-location-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="option-item" @onclick="@(()=>HandleCopyArtifactsAsync(_selectedArtifacts))">
+                        <div class="copy-btn-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
+                    </div>
+                }
+                <div class="option-item" @onclick="@(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
+                    <div class="pin-icon"></div>
+                    <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
+                </div>
+                @if (_selectedArtifacts?.Count == 1)
+                {
+                    <div class="option-item" @onclick="@(()=>HandleOptionsArtifact(_selectedArtifacts[0]))">
+                        <div class="more-option-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
+                    </div>
+                }
+                @if (_selectedArtifacts?.Count > 1)
+                {
+                    <div class="option-item" @onclick="@(()=>HandleSelectedArtifactsOptions(_selectedArtifacts))">
+                        <div class="more-option-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
+                    </div>
+                }
+            </div>
         }
     </section>
 
