@@ -804,16 +804,9 @@ public partial class FileBrowser
 
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
-        var files = new List<ShareFile>();
-        foreach (var artifact in artifacts)
-        {
-            if (artifact.ArtifactType == FsArtifactType.File)
-            {
-                files.Add(new ShareFile(artifact.FullPath));
-            }
-        }
-
-        return files;
+        return (from artifact in artifacts
+                where artifact.ArtifactType == FsArtifactType.File
+                select new ShareFile(artifact.FullPath)).ToList();
     }
 
     private async Task LoadPinsAsync()
