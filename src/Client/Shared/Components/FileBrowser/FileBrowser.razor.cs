@@ -1271,7 +1271,7 @@ public partial class FileBrowser
             }
             else if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Modify)
             {
-                _ = UpdateModefiedArtifactAsync(artifactChangeEvent.FsArtifact);
+                _ = UpdateModifiedArtifactAsync(artifactChangeEvent.FsArtifact);
             }
         }
         catch (Exception exp)
@@ -1322,18 +1322,18 @@ public partial class FileBrowser
         }
     }
 
-    private async Task UpdateModefiedArtifactAsync(FsArtifact artifact)
+    private async Task UpdateModifiedArtifactAsync(FsArtifact artifact)
     {
         try
         {
-            var modefiedArtifact = _allArtifacts.Where(a => a.FullPath == artifact.FullPath).FirstOrDefault();
-            if (modefiedArtifact == null) return;
+            var modifiedArtifact = _allArtifacts.FirstOrDefault(a => a.FullPath == artifact.FullPath);
+            if (modifiedArtifact == null) return;
 
-            modefiedArtifact.Size = artifact.Size;
-            modefiedArtifact.LastModifiedDateTime = artifact.LastModifiedDateTime;
+            modifiedArtifact.Size = artifact.Size;
+            modifiedArtifact.LastModifiedDateTime = artifact.LastModifiedDateTime;
 
             RefreshDisplayedArtifacts();
-            await InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {
@@ -1419,7 +1419,7 @@ public partial class FileBrowser
         await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
     }
 
-    CancellationTokenSource? _searchCancellationTokenSource;
+    private CancellationTokenSource? _searchCancellationTokenSource;
 
     private async Task HandleSearchAsync(string text)
     {
@@ -1457,7 +1457,6 @@ public partial class FileBrowser
 
         await Task.Run(async () =>
         {
-            var buffer = new List<FsArtifact>();
             try
             {
                 await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
@@ -1492,10 +1491,6 @@ public partial class FileBrowser
 
                 RefreshDisplayedArtifacts();
                 await InvokeAsync(StateHasChanged);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
