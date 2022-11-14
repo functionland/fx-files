@@ -1487,6 +1487,12 @@ public partial class FileBrowser
 
     private async Task UpdateCurrentArtifactForBackButton(FsArtifact? fsArtifact)
     {
+        if (string.IsNullOrWhiteSpace(fsArtifact?.ParentFullPath))
+        {
+            CurrentArtifact = null;
+            return;
+        }
+
         try
         {
             CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
