@@ -10,17 +10,18 @@ public partial class ArtifactExplorer
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
 
     private List<FsArtifact> _artifacts = default!;
+
     [Parameter]
     public List<FsArtifact> Artifacts
     {
         get => _artifacts;
         set
         {
-            if (_artifacts != value)
-            {
-                _artifacts = value;
-                _isArtifactsChanged = true;
-            }
+            if (_artifacts == value)
+                return;
+
+            _artifacts = value;
+            _isArtifactsChanged = true;
         }
     }
 
@@ -67,7 +68,7 @@ public partial class ArtifactExplorer
     private string _resizeEventListenerId = string.Empty;
 
     private DotNetObjectReference<ArtifactExplorer>? _objectReference;
-    (TouchPoint ReferencePoint, DateTimeOffset StartTime) startPoint;
+    (TouchPoint ReferencePoint, DateTimeOffset StartTime) _startPoint;
 
     protected override async Task OnInitAsync()
     {
@@ -83,7 +84,6 @@ public partial class ArtifactExplorer
             await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
             await InitWindowWidthListener();
             await JSRuntime.InvokeVoidAsync("OnScrollCheck");
-
         }
     }
 
@@ -133,6 +133,7 @@ public partial class ArtifactExplorer
             await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
             StateHasChanged();
         }
+
         await OnArtifactOptionClick.InvokeAsync(artifact);
     }
 
@@ -178,22 +179,24 @@ public partial class ArtifactExplorer
                         await OnSelectionChanged(_longPressedArtifact);
                         _longPressedArtifact = null;
                     }
+
                     StateHasChanged();
                 });
             }
         }
+
         DisposeTimer();
     }
 
     private void DisposeTimer()
     {
-        if (_timer != null)
-        {
-            _timer.Enabled = false;
-            _timer.Stop();
-            _timer.Elapsed -= TimerElapsed;
-            _timer.Dispose();
-        }
+        if (_timer == null)
+            return;
+
+        _timer.Enabled = false;
+        _timer.Stop();
+        _timer.Elapsed -= TimerElapsed;
+        _timer.Dispose();
     }
 
     public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
@@ -221,19 +224,20 @@ public partial class ArtifactExplorer
         else if (args.Button == 2)
         {
             DisposeTimer();
-            if (SelectedArtifacts.Count == 0 && ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+            switch (SelectedArtifacts.Count)
             {
-                await HandleArtifactOptionClick(artifact);
-            }
-            else if (SelectedArtifacts.Count == 1)
-            {
-                await HandleArtifactOptionClick(SelectedArtifacts[0]);
-            }
-            else if (SelectedArtifacts.Count > 1)
-            {
-                await HandleArtifactsOptionClick(SelectedArtifacts);
+                case 0 when ArtifactExplorerMode == ArtifactExplorerMode.Normal:
+                    await HandleArtifactOptionClick(artifact);
+                    break;
+                case 1:
+                    await HandleArtifactOptionClick(SelectedArtifacts[0]);
+                    break;
+                case > 1:
+                    await HandleArtifactsOptionClick(SelectedArtifacts);
+                    break;
             }
         }
+
         StateHasChanged();
     }
 
@@ -249,6 +253,7 @@ public partial class ArtifactExplorer
         {
             await ChangeArtifactExplorerMode(ArtifactExplorerMode.SelectArtifact);
         }
+
         if (SelectedArtifacts.Exists(a => a.FullPath == artifact.FullPath))
         {
             artifact.IsSelected = false;
@@ -304,34 +309,21 @@ public partial class ArtifactExplorer
 
     private void HandleTouchStart(TouchEventArgs t)
     {
-        startPoint.ReferencePoint = t.TargetTouches[0];
-        startPoint.StartTime = DateTimeOffset.Now;
+        _startPoint.ReferencePoint = t.TargetTouches[0];
+        _startPoint.StartTime = DateTimeOffset.Now;
     }
 
     private async Task HandleTouchEnd(TouchEventArgs t)
     {
         const double swipeThreshold = 0.3;
-        //if (startPoint.ReferencePoint == null)
-        //{
-        //    return;
-        //}
 
         var endReferencePoint = t.ChangedTouches[0];
 
-        var diffX = startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
-        var diffY = startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
-        var diffTime = DateTimeOffset.Now - startPoint.StartTime;
+        var diffX = _startPoint.ReferencePoint.ClientX - endReferencePoint.ClientX;
+        var diffY = _startPoint.ReferencePoint.ClientY - endReferencePoint.ClientY;
+        var diffTime = DateTimeOffset.Now - _startPoint.StartTime;
         var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
         var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
-
-        //var run = Math.Abs(diffX);
-        //var rise = Math.Abs(diffY);
-        //var ang = Math.Atan2(rise, run) * (180/Math.PI);
-        //
-        //if (ang > 10 && ang < 80)
-        //{
-        //    message = "diagonal";
-        //}
 
         if (velocityX < swipeThreshold && velocityY < swipeThreshold) return;
         if (Math.Abs(velocityX - velocityY) < .3) return;
@@ -342,7 +334,9 @@ public partial class ArtifactExplorer
                 return;
 
             if (diffX < 0)
+            {
                 await HandleBack.InvokeAsync();
+            }
         }
     }
 
@@ -382,7 +376,7 @@ public partial class ArtifactExplorer
             return default;
 
         var requestCount = Math.Min(request.Count, Artifacts.Count - request.StartIndex);
-        List<FsArtifact> items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
+        var items = Artifacts.Skip(request.StartIndex).Take(requestCount).ToList();
 
         _ = Task.Run(async () =>
         {
@@ -390,7 +384,7 @@ public partial class ArtifactExplorer
             var skipCount = Math.Min(_overscanCount, request.StartIndex);
             await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
             await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
-        });
+        }, cancellationToken);
 
         return new ItemsProviderResult<FsArtifact>(items: items, totalItemCount: Artifacts.Count);
     }
@@ -404,7 +398,7 @@ public partial class ArtifactExplorer
         var start = request.StartIndex * _gridRowCount;
         var requestCount = Math.Min(count, Artifacts.Count - start);
 
-        List<FsArtifact> items = Artifacts.Skip(start).Take(requestCount).ToList();
+        var items = Artifacts.Skip(start).Take(requestCount).ToList();
 
         _ = Task.Run(async () =>
         {
@@ -412,11 +406,12 @@ public partial class ArtifactExplorer
             var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
             await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
             await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
-        });
+        }, cancellationToken);
 
         var result = items.Chunk(_gridRowCount).ToList();
 
-        return new ItemsProviderResult<FsArtifact[]>(items: result, totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
+        return new ItemsProviderResult<FsArtifact[]>(items: result,
+            totalItemCount: (int)Math.Ceiling((decimal)Artifacts.Count / _gridRowCount));
     }
 
     private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
@@ -434,7 +429,7 @@ public partial class ArtifactExplorer
                     await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
                         cancellationToken);
 
-                await InvokeAsync(() => { StateHasChanged(); });
+                await InvokeAsync(StateHasChanged);
             }
             catch (Exception exception)
             {
