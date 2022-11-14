@@ -843,7 +843,6 @@ public partial class FileBrowser
                 GoBackService.OnInit(HandleToolbarBackClickAsync, true, false);
             }
 
-            var allFiles = FileService.GetArtifactsAsync(artifact?.FullPath);
             var artifacts = new List<FsArtifact>();
             await foreach (var item in childrenArtifacts)
             {
@@ -955,7 +954,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -969,22 +968,17 @@ public partial class FileBrowser
                 IsVisible = true,
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
-            var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
-            var isVisibleShareWithApp = artifact?.ArtifactType == FsArtifactType.File;
+            var isDrive = artifact.ArtifactType == FsArtifactType.Drive;
+            var isVisibleShareWithApp = artifact.ArtifactType == FsArtifactType.File;
             result = await _artifactOverflowModalRef!.ShowAsync(
                 false,
                 pinOptionResult,
                 isVisibleShareWithApp,
-                artifact?.FileCategory,
+                artifact.FileCategory,
                 isDrive,
                 _isInSearch);
 
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
-        }
-
-        if (artifact == null)
-        {
-            return;
         }
 
         switch (result?.ResultType)
