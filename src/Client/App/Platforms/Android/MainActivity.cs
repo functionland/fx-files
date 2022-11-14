@@ -28,7 +28,7 @@ public class MainActivity : MauiAppCompatActivity
                 await permissionUtils.RequestStoragePermission();
             }
         }
-        catch (Exception ex)
+        catch
         {
             throw;
         }
@@ -46,9 +46,9 @@ public class MainActivity : MauiAppCompatActivity
             base.OnActivityResult(requestCode, resultCode, data);
 
         }
-        catch (Exception ex)
+        catch
         {
-
+            throw;
         }
     }
 
