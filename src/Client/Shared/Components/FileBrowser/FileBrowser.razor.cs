@@ -1045,17 +1045,17 @@ public partial class FileBrowser
         }
     }
 
-    public async Task ToggleSelectedAll()
+    public void ToggleSelectedAll()
     {
-        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+        if (ArtifactExplorerMode != ArtifactExplorerMode.Normal)
+            return;
+
+        ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
+        _selectedArtifacts = new List<FsArtifact>();
+        foreach (var artifact in _displayedArtifacts)
         {
-            ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
-            _selectedArtifacts = new List<FsArtifact>();
-            foreach (var artifact in _displayedArtifacts)
-            {
-                artifact.IsSelected = true;
-                _selectedArtifacts.Add(artifact);
-            }
+            artifact.IsSelected = true;
+            _selectedArtifacts.Add(artifact);
         }
     }
 
