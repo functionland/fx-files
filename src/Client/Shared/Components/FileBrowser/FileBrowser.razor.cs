@@ -1246,7 +1246,7 @@ public partial class FileBrowser
         return destinationPath;
     }
 
-    private readonly SemaphoreSlim _semaphoreArtifactChanged = new SemaphoreSlim(1);
+    private readonly SemaphoreSlim _semaphoreArtifactChanged = new(1);
 
     private async void HandleChangedArtifacts(ArtifactChangeEvent artifactChangeEvent)
     {
@@ -1256,27 +1256,30 @@ public partial class FileBrowser
 
             if (artifactChangeEvent.FsArtifact == null) return;
 
-            if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Add)
+            switch (artifactChangeEvent.ChangeType)
             {
-                _ = UpdateAddedArtifactAsync(artifactChangeEvent.FsArtifact);
-            }
-            else if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Delete)
-            {
-                _ = UpdateRemovedArtifactAsync(artifactChangeEvent.FsArtifact);
-            }
-            else if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Rename &&
-                     artifactChangeEvent.Description != null)
-            {
-                _ = UpdateRenamedArtifactAsync(artifactChangeEvent.FsArtifact, artifactChangeEvent.Description);
-            }
-            else if (artifactChangeEvent.ChangeType == FsArtifactChangesType.Modify)
-            {
-                _ = UpdateModifiedArtifactAsync(artifactChangeEvent.FsArtifact);
+                case FsArtifactChangesType.Add:
+                    _ = UpdateAddedArtifactAsync(artifactChangeEvent.FsArtifact);
+                    break;
+                case FsArtifactChangesType.Delete:
+                    _ = UpdateRemovedArtifactAsync(artifactChangeEvent.FsArtifact);
+                    break;
+                case FsArtifactChangesType.Rename when
+                    artifactChangeEvent.Description != null:
+                    _ = UpdateRenamedArtifactAsync(artifactChangeEvent.FsArtifact, artifactChangeEvent.Description);
+                    break;
+                case FsArtifactChangesType.Modify:
+                    _ = UpdateModifiedArtifactAsync(artifactChangeEvent.FsArtifact);
+                    break;
+                case null:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
-        catch (Exception exp)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(exp);
+            ExceptionHandler.Handle(exception);
         }
         finally
         {
@@ -1292,11 +1295,11 @@ public partial class FileBrowser
 
             _allArtifacts.Add(artifact);
             RefreshDisplayedArtifacts();
-            await InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(StateHasChanged);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -1314,11 +1317,11 @@ public partial class FileBrowser
                 RefreshDisplayedArtifacts();
             }
 
-            await InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(StateHasChanged);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -1335,9 +1338,9 @@ public partial class FileBrowser
             RefreshDisplayedArtifacts();
             await InvokeAsync(StateHasChanged);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -1366,9 +1369,9 @@ public partial class FileBrowser
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(exception);
         }
     }
 
