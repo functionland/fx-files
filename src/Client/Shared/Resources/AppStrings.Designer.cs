@@ -421,7 +421,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copying files.
+        ///   Looks up a localized string similar to Copying items.
         /// </summary>
         public static string CopyFiles {
             get {
@@ -529,7 +529,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleting files.
+        ///   Looks up a localized string similar to Deleting items.
         /// </summary>
         public static string DeletingFiles {
             get {
@@ -1042,7 +1042,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Moving files.
+        ///   Looks up a localized string similar to Moving items.
         /// </summary>
         public static string MoveFileModal {
             get {
@@ -1069,7 +1069,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Moving files.
+        ///   Looks up a localized string similar to Moving items.
         /// </summary>
         public static string MovingFiles {
             get {
@@ -1276,7 +1276,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replacing files.
+        ///   Looks up a localized string similar to Replacing items.
         /// </summary>
         public static string ReplacingFiles {
             get {
