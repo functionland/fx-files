@@ -48,7 +48,7 @@ public partial class FileBrowser
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
-    private string _inlineSearchText = string.Empty;
+    private string? _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private ArtifactCategorySearchType? _artifactsSearchFilterType;
@@ -1397,6 +1397,13 @@ public partial class FileBrowser
         }
     }
 
+    private async Task HandleClearInLineSearchAsync()
+    {
+        _fxSearchInputRef?.HandleCancel();
+        _inlineSearchText = string.Empty;
+        await LoadChildrenArtifactsAsync(CurrentArtifact);
+    }
+
     private async Task HandleCancelInLineSearchAsync()
     {
         ArtifactExplorerMode = ArtifactExplorerMode.Normal;
@@ -1510,13 +1517,14 @@ public partial class FileBrowser
         SearchFilter.ArtifactDateSearchType = date ?? null;
     }
 
-    private void HandleInLineSearch(string text)
+    private void HandleInLineSearch(string? text)
     {
-        if (text != null)
-        {
-            _inlineSearchText = text;
-            RefreshDisplayedArtifacts();
-        }
+        if (text == null)
+            return;
+
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode.Normal);
+        _inlineSearchText = text;
+        RefreshDisplayedArtifacts();
     }
 
     private async Task HandleToolbarBackClickAsync()
@@ -1621,9 +1629,8 @@ public partial class FileBrowser
             {
                 if (_fileCategoryFilter == FileCategoryType.Document)
                 {
-                    return (fa.FileCategory == FileCategoryType.Document
-                            || fa.FileCategory == FileCategoryType.Pdf
-                            || fa.FileCategory == FileCategoryType.Other);
+                    return fa.FileCategory is FileCategoryType.Document or FileCategoryType.Pdf
+                        or FileCategoryType.Other;
                 }
 
                 return fa.FileCategory == _fileCategoryFilter;
@@ -1659,7 +1666,7 @@ public partial class FileBrowser
         try
         {
             var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-            _displayedArtifacts = new();
+            _displayedArtifacts = new List<FsArtifact>();
             _displayedArtifacts = sortedDisplayArtifact.ToList();
 
             // For smooth transition and time for the animation to complete
@@ -1820,7 +1827,15 @@ public partial class FileBrowser
                 {
                     GoBackService.OnInit((async Task () =>
                     {
-                        await HandleToolbarBackClickAsync();
+                        if (string.IsNullOrWhiteSpace(_inlineSearchText))
+                        {
+                            await HandleToolbarBackClickAsync();
+                        }
+                        else
+                        {
+                            await HandleClearInLineSearchAsync();
+                        }
+
                         await Task.CompletedTask;
                     }), true, false);
                 }
@@ -1848,8 +1863,6 @@ public partial class FileBrowser
     private async Task CancelSearchAsync()
     {
         ClearSearch();
-        //TODO: This might be separate for in line search
-        _fxSearchInputRef?.HandleClearInputText();
         _isInSearch = false;
         await HandleSearchUnFocused();
         StateHasChanged();
