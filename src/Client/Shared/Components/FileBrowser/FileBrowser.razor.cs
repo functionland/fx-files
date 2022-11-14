@@ -1347,8 +1347,6 @@ public partial class FileBrowser
         {
             if (string.IsNullOrWhiteSpace(oldFullPath)) return;
 
-            FsArtifact? artifactRenamed = null;
-
             if (CurrentArtifact?.FullPath == oldFullPath)
             {
                 CurrentArtifact.FullPath = artifact.FullPath;
@@ -1357,7 +1355,7 @@ public partial class FileBrowser
             }
             else
             {
-                artifactRenamed = _allArtifacts.Where(a => a.FullPath == oldFullPath).FirstOrDefault();
+                var artifactRenamed = _allArtifacts.FirstOrDefault(a => a.FullPath == oldFullPath);
                 if (artifactRenamed != null)
                 {
                     artifactRenamed.FullPath = artifact.FullPath;
