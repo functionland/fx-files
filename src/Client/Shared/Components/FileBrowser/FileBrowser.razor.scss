@@ -26,6 +26,10 @@
     z-index: 2;
 }
 
+.pin-artifacts {
+    width: 100%;
+}
+
 ::deep .bit-acd .content.expanded {
     height: 232px !important;
     overflow: unset !important;
@@ -554,6 +558,10 @@
         @include Icon($options-horizontal);
         font-size: 24px;
     }
+}
+
+.local-search {
+    width: 100%;
 }
 
 .show-search {
