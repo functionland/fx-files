@@ -234,6 +234,9 @@ public partial class FileBrowser
             }
             _progressBarCts = new CancellationTokenSource();
 
+            var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
+            var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
+
             if (destinationPath == CurrentArtifact?.FullPath)
             {
                 var desArtifacts = await FileService.GetArtifactsAsync(destinationPath).ToListAsync();
@@ -297,6 +300,8 @@ public partial class FileBrowser
 
                     HandleProgressBar(item.Name);
                 }
+
+                FxToast.Show(title, message, FxToastType.Success);
             }
             else
             {
@@ -332,6 +337,7 @@ public partial class FileBrowser
                     if (_confirmationReplaceOrSkipModalRef != null)
                     {
                         var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
+                        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
                         if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                         {
@@ -353,18 +359,21 @@ public partial class FileBrowser
                                     cancellationToken: _progressBarCts.Token);
 
                                 await _progressModalRef.CloseAsync();
+
+                                FxToast.Show(title, message, FxToastType.Success);
+                                await NavigateToDestination(destinationPath);
                             }
                         }
-                        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
                     }
+                }
+                else
+                {
+                    FxToast.Show(title, message, FxToastType.Success);
+                    await NavigateToDestination(destinationPath);
                 }
             }
 
-            var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
-            var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
-            FxToast.Show(title, message, FxToastType.Success);
-
-            await NavigateToDestination(destinationPath);
+            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
         catch (Exception exception)
         {
@@ -431,6 +440,8 @@ public partial class FileBrowser
             }
 
             var overwriteArtifacts = GetShouldOverwriteArtifacts(artifacts, existArtifacts); //TODO: we must enhance this
+            var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
+            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
 
             if (existArtifacts.Count > 0)
             {
@@ -456,17 +467,19 @@ public partial class FileBrowser
                             await InvokeAsync(StateHasChanged);
                         },
                             cancellationToken: _progressBarCts.Token);
+
+                        FxToast.Show(title, message, FxToastType.Success);
+                        await NavigateToDestination(destinationPath);
                     }
                 }
             }
+            else
+            {
+                FxToast.Show(title, message, FxToastType.Success);
+                await NavigateToDestination(destinationPath);
+            }
 
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
-
-            var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
-            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
-            FxToast.Show(title, message, FxToastType.Success);
-
-            await NavigateToDestination(destinationPath);
         }
         catch (Exception exception)
         {
