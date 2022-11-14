@@ -928,7 +928,14 @@ public partial class FileBrowser
             };
             var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
             var isVisibleShareWithApp = artifact?.ArtifactType == FsArtifactType.File;
-            result = await _artifactOverflowModalRef!.ShowAsync(false, pinOptionResult, isVisibleShareWithApp, artifact?.FileCategory, isDrive);
+            result = await _artifactOverflowModalRef!.ShowAsync(
+                false,
+                pinOptionResult,
+                isVisibleShareWithApp,
+                artifact?.FileCategory,
+                isDrive,
+                _isInSearch);
+
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -974,6 +981,9 @@ public partial class FileBrowser
                 break;
             case ArtifactOverflowResultType.Delete:
                 await HandleDeleteArtifactsAsync(new List<FsArtifact> { artifact });
+                break;
+            case ArtifactOverflowResultType.ShowInLocation:
+                await NavigateArtifactForShowInFolder(artifact);
                 break;
             case ArtifactOverflowResultType.Extract:
                 await HandleExtractArtifactAsync(artifact);
@@ -1808,18 +1818,10 @@ public partial class FileBrowser
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
     {
-        //if (artifact.ArtifactType == FsArtifactType.File)
-        //{
         var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
         CurrentArtifact = destinationArtifact;
         await HandleSelectArtifactAsync(destinationArtifact);
         ScrollArtifact = artifact;
-        //}
-        //else
-        //{
-        //    CurrentArtifact = artifact;
-        //    await HandleSelectArtifactAsync(artifact);
-        //}
     }
 
     private async Task CloseFileViewer()

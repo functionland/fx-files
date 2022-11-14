@@ -10,7 +10,8 @@
         Move,
         Delete,
         ShareWithApp,
-        Cancel,
-        Extract
+        ShowInLocation,
+        Extract,
+        Cancel
     }
 }
