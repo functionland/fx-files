@@ -48,7 +48,7 @@ public partial class FileBrowser
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
-    private string _inlineSearchText = string.Empty;
+    private string? _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private ArtifactCategorySearchType? _artifactsSearchFilterType;
@@ -1397,6 +1397,13 @@ public partial class FileBrowser
         }
     }
 
+    private async Task HandleClearInLineSearchAsync()
+    {
+        _fxSearchInputRef?.HandleCancel();
+        _inlineSearchText = string.Empty;
+        await LoadChildrenArtifactsAsync(CurrentArtifact);
+    }
+
     private async Task HandleCancelInLineSearchAsync()
     {
         ArtifactExplorerMode = ArtifactExplorerMode.Normal;
@@ -1510,13 +1517,14 @@ public partial class FileBrowser
         SearchFilter.ArtifactDateSearchType = date ?? null;
     }
 
-    private void HandleInLineSearch(string text)
+    private void HandleInLineSearch(string? text)
     {
-        if (text != null)
-        {
-            _inlineSearchText = text;
-            RefreshDisplayedArtifacts();
-        }
+        if (text == null)
+            return;
+
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode.Normal);
+        _inlineSearchText = text;
+        RefreshDisplayedArtifacts();
     }
 
     private async Task HandleToolbarBackClickAsync()
@@ -1621,9 +1629,8 @@ public partial class FileBrowser
             {
                 if (_fileCategoryFilter == FileCategoryType.Document)
                 {
-                    return (fa.FileCategory == FileCategoryType.Document
-                            || fa.FileCategory == FileCategoryType.Pdf
-                            || fa.FileCategory == FileCategoryType.Other);
+                    return fa.FileCategory is FileCategoryType.Document or FileCategoryType.Pdf
+                        or FileCategoryType.Other;
                 }
 
                 return fa.FileCategory == _fileCategoryFilter;
@@ -1659,7 +1666,7 @@ public partial class FileBrowser
         try
         {
             var sortedDisplayArtifact = SortDisplayedArtifacts(_displayedArtifacts);
-            _displayedArtifacts = new();
+            _displayedArtifacts = new List<FsArtifact>();
             _displayedArtifacts = sortedDisplayArtifact.ToList();
 
             // For smooth transition and time for the animation to complete
@@ -1700,56 +1707,27 @@ public partial class FileBrowser
 
     private IEnumerable<FsArtifact> SortDisplayedArtifacts(IEnumerable<FsArtifact> artifacts)
     {
-        IEnumerable<FsArtifact> sortedArtifactsQuery;
-        if (_currentSortType is SortTypeEnum.LastModified)
+        IEnumerable<FsArtifact> sortedArtifactsQuery = _currentSortType switch
         {
-            if (_isAscOrder)
-            {
-                sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                    .ThenBy(artifact => artifact.LastModifiedDateTime);
-            }
-            else
-            {
-                sortedArtifactsQuery = artifacts
-                    .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
-                    .ThenByDescending(artifact => artifact.LastModifiedDateTime);
-            }
-        }
-
-        else if (_currentSortType is SortTypeEnum.Size)
-        {
-            if (_isAscOrder)
-            {
-                sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                    .ThenBy(artifact => artifact.Size);
-            }
-            else
-            {
-                sortedArtifactsQuery = artifacts
-                    .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
-                    .ThenByDescending(artifact => artifact.Size);
-            }
-        }
-
-        else if (_currentSortType is SortTypeEnum.Name)
-        {
-            if (_isAscOrder)
-            {
-                sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                    .ThenBy(artifact => artifact.Name);
-            }
-            else
-            {
-                sortedArtifactsQuery = artifacts
-                    .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
-                    .ThenByDescending(artifact => artifact.Name);
-            }
-        }
-        else
-        {
-            sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                .ThenBy(artifact => artifact.Name);
-        }
+            SortTypeEnum.LastModified when _isAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.LastModified => artifacts
+                .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.Size when _isAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Size),
+            SortTypeEnum.Size => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Size),
+            SortTypeEnum.Name when _isAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name),
+            SortTypeEnum.Name => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Name),
+            _ => artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name)
+        };
 
         return sortedArtifactsQuery;
     }
@@ -1758,7 +1736,10 @@ public partial class FileBrowser
     {
         try
         {
-            await FileService.RenameFileAsync(artifact.FullPath, newName);
+            if (newName != null)
+            {
+                await FileService.RenameFileAsync(artifact.FullPath, newName);
+            }
         }
         catch (Exception exception)
         {
@@ -1770,12 +1751,15 @@ public partial class FileBrowser
     {
         try
         {
-            await FileService.RenameFolderAsync(artifact.FullPath, newName);
-            artifact.Name = newName;
+            if (newName != null)
+            {
+                await FileService.RenameFolderAsync(artifact.FullPath, newName);
+                artifact.Name = newName;
+            }
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -1843,7 +1827,15 @@ public partial class FileBrowser
                 {
                     GoBackService.OnInit((async Task () =>
                     {
-                        await HandleToolbarBackClickAsync();
+                        if (string.IsNullOrWhiteSpace(_inlineSearchText))
+                        {
+                            await HandleToolbarBackClickAsync();
+                        }
+                        else
+                        {
+                            await HandleClearInLineSearchAsync();
+                        }
+
                         await Task.CompletedTask;
                     }), true, false);
                 }
@@ -1871,8 +1863,6 @@ public partial class FileBrowser
     private async Task CancelSearchAsync()
     {
         ClearSearch();
-        //TODO: This might be separate for in line search
-        _fxSearchInputRef?.HandleClearInputText();
         _isInSearch = false;
         await HandleSearchUnFocused();
         StateHasChanged();
