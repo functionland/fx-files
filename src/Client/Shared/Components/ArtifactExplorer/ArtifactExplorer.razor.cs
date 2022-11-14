@@ -68,7 +68,7 @@ public partial class ArtifactExplorer
     private string _resizeEventListenerId = string.Empty;
 
     private DotNetObjectReference<ArtifactExplorer>? _objectReference;
-    (TouchPoint ReferencePoint, DateTimeOffset StartTime) _startPoint;
+    private (TouchPoint ReferencePoint, DateTimeOffset StartTime) _startPoint;
 
     protected override async Task OnInitAsync()
     {
@@ -344,20 +344,20 @@ public partial class ArtifactExplorer
     {
         bool shouldRefresh;
 
-        if (width >= 530)
+        switch (width)
         {
-            shouldRefresh = true;
-            _gridRowCount = 3;
-        }
-        else if (width >= 350)
-        {
-            shouldRefresh = true;
-            _gridRowCount = 2;
-        }
-        else
-        {
-            shouldRefresh = true;
-            _gridRowCount = 1;
+            case >= 530:
+                shouldRefresh = true;
+                _gridRowCount = 3;
+                break;
+            case >= 350:
+                shouldRefresh = true;
+                _gridRowCount = 2;
+                break;
+            default:
+                shouldRefresh = true;
+                _gridRowCount = 1;
+                break;
         }
 
         if (shouldRefresh && ViewMode == ViewModeEnum.Grid && _virtualizeGridRef is not null)
