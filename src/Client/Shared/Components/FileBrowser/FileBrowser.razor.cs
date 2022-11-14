@@ -1089,10 +1089,10 @@ public partial class FileBrowser
         {
             ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             var pinOptionResult = GetPinOptionResult(artifacts);
-            var isVisibleShareWithApp = !artifacts.Any(a => a.ArtifactType != FsArtifactType.File);
+            var isVisibleShareWithApp = artifacts.All(a => a.ArtifactType == FsArtifactType.File);
 
             var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
-            FileCategoryType? fileCategoryType =
+            var fileCategoryType =
                 artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
 
             result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleShareWithApp,
@@ -1145,6 +1145,12 @@ public partial class FileBrowser
                 break;
             case ArtifactOverflowResultType.Cancel:
                 break;
+            case ArtifactOverflowResultType.ShowInLocation:
+                break;
+            case null:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
