@@ -256,60 +256,74 @@ public partial class FileBrowser
 
                 foreach (var item in artifacts)
                 {
-                    if (item.ArtifactType == FsArtifactType.File)
+                    switch (item.ArtifactType)
                     {
-                        var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(item.FullPath);
-                        var pathWithOutExtenstion = Path.Combine(item.ParentFullPath, nameWithOutExtenstion);
-                        var oldArtifactPath = item.FullPath;
+                        case FsArtifactType.File:
+                            {
+                                var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(item.FullPath);
+                                if (item.ParentFullPath != null)
+                                {
+                                    var pathWithOutExtenstion = Path.Combine(item.ParentFullPath, nameWithOutExtenstion);
+                                    var oldArtifactPath = item.FullPath;
 
-                        var copyText = " - Copy";
+                                    var copyText = " - Copy";
 
-                        while (true)
-                        {
-                            var counter = 1;
-                            var fullPathWithCopy = pathWithOutExtenstion + copyText;
-                            fullPathWithCopy = Path.ChangeExtension(fullPathWithCopy, item.FileExtension);
+                                    while (true)
+                                    {
+                                        var counter = 1;
+                                        var fullPathWithCopy = pathWithOutExtenstion + copyText;
+                                        fullPathWithCopy = Path.ChangeExtension(fullPathWithCopy, item.FileExtension);
 
-                            if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
+                                        if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
 
-                            counter++;
-                            copyText += $" ({counter})";
-                        }
+                                        counter++;
+                                        copyText += $" ({counter})";
+                                    }
 
-                        var newArtifactPath =
-                            Path.ChangeExtension(pathWithOutExtenstion + copyText, item.FileExtension);
+                                    var newArtifactPath =
+                                        Path.ChangeExtension(pathWithOutExtenstion + copyText, item.FileExtension);
 
-                        var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
-                        await FileService.CreateFileAsync(newArtifactPath, fileStream);
-                    }
-                    else if (item.ArtifactType == FsArtifactType.Folder)
-                    {
-                        var oldArtifactPath = item.FullPath;
-                        var oldArtifactParentPath = item.ParentFullPath;
-                        var oldArtifactName = item.Name;
+                                    var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
+                                    await FileService.CreateFileAsync(newArtifactPath, fileStream);
+                                }
 
-                        var copyText = " - Copy";
+                                break;
+                            }
+                        case FsArtifactType.Folder:
+                            {
+                                var oldArtifactPath = item.FullPath;
+                                var oldArtifactParentPath = item.ParentFullPath;
+                                var oldArtifactName = item.Name;
 
-                        while (true)
-                        {
-                            var counter = 1;
-                            var fullPathWithCopy = oldArtifactPath + copyText;
+                                var copyText = " - Copy";
 
-                            if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
+                                while (true)
+                                {
+                                    var counter = 1;
+                                    var fullPathWithCopy = oldArtifactPath + copyText;
 
-                            counter++;
-                            copyText += $" ({counter})";
-                        }
+                                    if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
 
-                        var newArtifactPath = oldArtifactPath + copyText;
-                        var newArtifactName = oldArtifactName + copyText;
-                        await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
-                        var oldArtifactChildren = await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
-                        await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath, false);
-                    }
-                    else
-                    {
-                        // ToDo : copy drive not supported, show proper message
+                                    counter++;
+                                    copyText += $" ({counter})";
+                                }
+
+                                var newArtifactPath = oldArtifactPath + copyText;
+                                var newArtifactName = oldArtifactName + copyText;
+                                if (oldArtifactParentPath != null)
+                                {
+                                    await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
+                                }
+
+                                var oldArtifactChildren =
+                                    await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
+                                await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
+                                break;
+                            }
+                        case FsArtifactType.Drive:
+                        default:
+                            // ToDo : copy drive not supported, show proper message
+                            break;
                     }
 
                     HandleProgressBar(item.Name);
@@ -392,7 +406,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
         finally
         {
@@ -469,7 +483,7 @@ public partial class FileBrowser
                     var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
                     ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
-                    if (result?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
+                    if (result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
                         _progressBarCts = new CancellationTokenSource();
                         if (_progressModalRef is not null)
@@ -504,7 +518,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
         finally
         {
@@ -523,21 +537,27 @@ public partial class FileBrowser
             return;
         }
 
-        string? newName = result?.Result;
+        var newName = result?.Result;
 
-        if (artifact?.ArtifactType == FsArtifactType.Folder)
+        switch (artifact?.ArtifactType)
         {
-            await RenameFolderAsync(artifact, newName);
-        }
-        else if (artifact?.ArtifactType == FsArtifactType.File)
-        {
-            await RenameFileAsync(artifact, newName);
-        }
-        else if (artifact?.ArtifactType == FsArtifactType.Drive)
-        {
-            var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-            var message = Localizer.GetString(AppStrings.RootfolderRenameException);
-            FxToast.Show(title, message, FxToastType.Error);
+            case FsArtifactType.Folder:
+                await RenameFolderAsync(artifact, newName);
+                break;
+            case FsArtifactType.File:
+                await RenameFileAsync(artifact, newName);
+                break;
+            case FsArtifactType.Drive:
+                {
+                    var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                    var message = Localizer.GetString(AppStrings.RootfolderRenameException);
+                    FxToast.Show(title, message, FxToastType.Error);
+                    break;
+                }
+            case null:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -555,7 +575,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
         finally
         {
@@ -574,7 +594,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
             _isPinBoxLoading = false;
         }
     }
@@ -590,9 +610,13 @@ public partial class FileBrowser
                 if (artifacts.Count == 1)
                 {
                     var singleArtifact = artifacts.SingleOrDefault();
-                    result = await _confirmationModalRef.ShowAsync(
-                        Localizer.GetString(AppStrings.DeleteItems, singleArtifact?.Name),
-                        Localizer.GetString(AppStrings.DeleteItemDescription));
+                    if (singleArtifact?.Name != null)
+                    {
+                        result = await _confirmationModalRef.ShowAsync(
+                            Localizer.GetString(AppStrings.DeleteItems, singleArtifact.Name),
+                            Localizer.GetString(AppStrings.DeleteItemDescription));
+                    }
+
                     ChangeDeviceBackFunctionality(ArtifactExplorerMode);
                 }
                 else
@@ -627,7 +651,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
 
         finally
@@ -705,7 +729,7 @@ public partial class FileBrowser
 
                 break;
             default:
-                break;
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -766,7 +790,7 @@ public partial class FileBrowser
             var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, folderName, newFolderPlaceholder,
                 extractBtnTitle);
 
-            if (result?.ResultType == InputModalResultType.Cancel)
+            if (result.ResultType == InputModalResultType.Cancel)
             {
                 return;
             }
