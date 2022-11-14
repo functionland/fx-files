@@ -1561,9 +1561,8 @@ public partial class FileBrowser
             case ArtifactExplorerMode.SelectDestionation:
                 ArtifactExplorerMode = ArtifactExplorerMode.Normal;
                 break;
-
             default:
-                break;
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -1577,7 +1576,7 @@ public partial class FileBrowser
 
         try
         {
-            CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact?.ParentFullPath);
+            CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact.ParentFullPath);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
@@ -1739,7 +1738,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
     }
 
