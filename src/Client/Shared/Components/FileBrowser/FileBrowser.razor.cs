@@ -916,7 +916,7 @@ public partial class FileBrowser
 
                 if (_isInSearch)
                 {
-                    CancelSearchAsync();
+                    await CancelSearchAsync();
                     CurrentArtifact = artifact;
                     await LoadChildrenArtifactsAsync(CurrentArtifact);
                 }
@@ -927,7 +927,7 @@ public partial class FileBrowser
         {
             if (_isInSearch)
             {
-                CancelSearchAsync();
+                await CancelSearchAsync();
             }
 
             await OpenFolderAsync(artifact);
@@ -940,7 +940,7 @@ public partial class FileBrowser
         {
             if (_isInSearch)
             {
-                CancelSearchAsync();
+                await CancelSearchAsync();
             }
             else
             {
@@ -1530,7 +1530,7 @@ public partial class FileBrowser
             case ArtifactExplorerMode.Normal:
                 if (_isInSearch)
                 {
-                    CancelSearchAsync();
+                    await CancelSearchAsync();
                     _ = Task.Run(async () =>
                     {
                         await LoadChildrenArtifactsAsync(CurrentArtifact);
@@ -1782,24 +1782,16 @@ public partial class FileBrowser
     private static List<FsArtifact> GetShouldOverwriteArtifacts(List<FsArtifact> artifacts,
         List<FsArtifact> existArtifacts)
     {
-        List<FsArtifact> overwriteArtifacts = new();
         var pathExistArtifacts = existArtifacts.Select(a => a.FullPath);
-        foreach (var artifact in artifacts)
-        {
-            if (pathExistArtifacts.Any(p => p.StartsWith(artifact.FullPath)))
-            {
-                overwriteArtifacts.Add(artifact);
-            }
-        }
 
-        return overwriteArtifacts;
+        return artifacts.Where(artifact => pathExistArtifacts.Any(p => p.StartsWith(artifact.FullPath))).ToList();
     }
 
     private async Task NavigateToDestination(string? destinationPath)
     {
         if (_isInSearch)
         {
-            CancelSearchAsync();
+            await CancelSearchAsync();
         }
 
         if (!string.IsNullOrWhiteSpace(_inlineSearchText))
