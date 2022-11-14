@@ -699,4 +699,7 @@
   <data name="PasswordEmptyMessage" xml:space="preserve">
     <value>Password won't be empty.</value>
   </data>
+  <data name="SDCard" xml:space="preserve">
+    <value>SD card</value>
+  </data>
 </root>
