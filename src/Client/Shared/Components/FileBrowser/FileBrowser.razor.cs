@@ -1681,6 +1681,7 @@ public partial class FileBrowser
         try
         {
             await FileService.RenameFolderAsync(artifact.FullPath, newName);
+            artifact.Name = newName;
         }
         catch (Exception exception)
         {
