@@ -1770,12 +1770,15 @@ public partial class FileBrowser
     {
         try
         {
-            await FileService.RenameFolderAsync(artifact.FullPath, newName);
-            artifact.Name = newName;
+            if (newName != null)
+            {
+                await FileService.RenameFolderAsync(artifact.FullPath, newName);
+                artifact.Name = newName;
+            }
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
     }
 
