@@ -721,15 +721,15 @@ public partial class FileBrowser
 
         try
         {
-            if (result?.ResultType == InputModalResultType.Confirm)
+            if (result is { ResultType: InputModalResultType.Confirm, Result: { } })
             {
                 await FileService.CreateFolderAsync(path,
-                    result?.Result); //ToDo: Make CreateFolderAsync nullable         
-            }
+                    result.Result);
+            } //ToDo: Make CreateFolderAsync nullable         
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
     }
 
@@ -794,7 +794,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
         finally
         {
@@ -855,7 +855,7 @@ public partial class FileBrowser
         }
         catch (Exception exception)
         {
-            ExceptionHandler?.Handle(exception);
+            ExceptionHandler.Handle(exception);
         }
         finally
         {
@@ -889,24 +889,21 @@ public partial class FileBrowser
                     }
                     else
                     {
-                        if (artifact?.FullPath != null)
+                        await Launcher.OpenAsync(new OpenFileRequest
                         {
-                            await Launcher.OpenAsync(new OpenFileRequest
-                            {
-                                File = new ReadOnlyFile(artifact.FullPath)
-                            });
-                        }
+                            File = new ReadOnlyFile(artifact.FullPath)
+                        });
                     }
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    ExceptionHandler?.Handle(
+                    ExceptionHandler.Handle(
                         new DomainLogicException(
                             Localizer.GetString(nameof(AppStrings.ArtifactUnauthorizedAccessException))));
                 }
                 catch (Exception exception)
                 {
-                    ExceptionHandler?.Handle(exception);
+                    ExceptionHandler.Handle(exception);
                 }
 
                 if (_isInSearch)
