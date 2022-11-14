@@ -1700,56 +1700,27 @@ public partial class FileBrowser
 
     private IEnumerable<FsArtifact> SortDisplayedArtifacts(IEnumerable<FsArtifact> artifacts)
     {
-        IEnumerable<FsArtifact> sortedArtifactsQuery;
-        if (_currentSortType is SortTypeEnum.LastModified)
+        IEnumerable<FsArtifact> sortedArtifactsQuery = _currentSortType switch
         {
-            if (_isAscOrder)
-            {
-                sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                    .ThenBy(artifact => artifact.LastModifiedDateTime);
-            }
-            else
-            {
-                sortedArtifactsQuery = artifacts
-                    .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
-                    .ThenByDescending(artifact => artifact.LastModifiedDateTime);
-            }
-        }
-
-        else if (_currentSortType is SortTypeEnum.Size)
-        {
-            if (_isAscOrder)
-            {
-                sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                    .ThenBy(artifact => artifact.Size);
-            }
-            else
-            {
-                sortedArtifactsQuery = artifacts
-                    .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
-                    .ThenByDescending(artifact => artifact.Size);
-            }
-        }
-
-        else if (_currentSortType is SortTypeEnum.Name)
-        {
-            if (_isAscOrder)
-            {
-                sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                    .ThenBy(artifact => artifact.Name);
-            }
-            else
-            {
-                sortedArtifactsQuery = artifacts
-                    .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
-                    .ThenByDescending(artifact => artifact.Name);
-            }
-        }
-        else
-        {
-            sortedArtifactsQuery = artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
-                .ThenBy(artifact => artifact.Name);
-        }
+            SortTypeEnum.LastModified when _isAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.LastModified => artifacts
+                .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.Size when _isAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Size),
+            SortTypeEnum.Size => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Size),
+            SortTypeEnum.Name when _isAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name),
+            SortTypeEnum.Name => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Name),
+            _ => artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name)
+        };
 
         return sortedArtifactsQuery;
     }
