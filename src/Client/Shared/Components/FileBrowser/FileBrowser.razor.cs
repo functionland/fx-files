@@ -1364,7 +1364,7 @@ public partial class FileBrowser
                     artifactRenamed.Name = artifact.Name;
                     artifactRenamed.FileExtension = artifact.FileExtension;
                     RefreshDisplayedArtifacts();
-                    await InvokeAsync(() => StateHasChanged());
+                    await InvokeAsync(StateHasChanged);
                 }
             }
         }
@@ -1374,23 +1374,21 @@ public partial class FileBrowser
         }
     }
 
-    private async Task UpdatePinedArtifactsAsync(IEnumerable<FsArtifact> artifacts, bool IsPinned)
+    private async Task UpdatePinedArtifactsAsync(IEnumerable<FsArtifact> artifacts, bool isPinned)
     {
         await LoadPinsAsync();
         var artifactPath = artifacts.Select(a => a.FullPath);
 
-        if (CurrentArtifact != null && artifactPath.Any(p => p == CurrentArtifact.FullPath))
+        var pinnedArtifactPaths = artifactPath as string[] ?? artifactPath.ToArray();
+        if (CurrentArtifact != null && pinnedArtifactPaths.Any(p => p == CurrentArtifact.FullPath))
         {
-            CurrentArtifact.IsPinned = IsPinned;
+            CurrentArtifact.IsPinned = isPinned;
         }
         else
         {
-            foreach (var artifact in _allArtifacts)
+            foreach (var artifact in _allArtifacts.Where(artifact => pinnedArtifactPaths.Contains(artifact.FullPath)))
             {
-                if (artifactPath.Contains(artifact.FullPath))
-                {
-                    artifact.IsPinned = IsPinned;
-                }
+                artifact.IsPinned = isPinned;
             }
 
             RefreshDisplayedArtifacts();
