@@ -1,9 +1,13 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using System.Timers;
+
+using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
 using Prism.Events;
+
+using Timer = System.Timers.Timer;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -89,6 +93,9 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
+    private bool _shouldScrollToItem;
+    private System.Timers.Timer? _timer;
+    private Task? _loadArtifacts;
 
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -101,6 +108,7 @@ public partial class FileBrowser
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public string? DefaultPath { get; set; }
+    [Parameter] public FsArtifact? ScrollArtifact { get; set; }
 
     protected override async Task OnInitAsync()
     {
@@ -127,7 +135,7 @@ public partial class FileBrowser
             await LoadPinsAsync();
             await InvokeAsync(StateHasChanged);
         });
-        _ = Task.Run(async () =>
+        _loadArtifacts = Task.Run(async () =>
         {
             await LoadChildrenArtifactsAsync(CurrentArtifact);
             await InvokeAsync(StateHasChanged);
@@ -154,8 +162,40 @@ public partial class FileBrowser
             _isGoingBack = false;
             await JSRuntime.InvokeVoidAsync("getLastScrollPosition");
         }
+
+        if (ScrollArtifact is not null)
+        {
+            if (_timer == null)
+            {
+                _timer = new Timer(1000);
+                _timer.Enabled = true;
+                _timer.Start();
+                _timer.Elapsed += _scrollTimer_Elapsed;
+            }
+        }
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    private void _scrollTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (_timer == null)
+            return;
+
+        if (_loadArtifacts != null && _displayedArtifacts.Count <= 0 && !_loadArtifacts.IsCompletedSuccessfully)
+            return;
+
+        if (ScrollArtifact != null)
+        {
+            ScrollToArtifact(ScrollArtifact).GetAwaiter().GetResult();
+        }
+        ScrollArtifact = null;
+
+        _timer.Enabled = false;
+        _timer.Stop();
+        _timer.Dispose();
+        _timer = null;
+    }
+
     private void HandleProgressBar(string currentText)
     {
         ProgressBarCurrentValue++;
@@ -1753,6 +1793,12 @@ public partial class FileBrowser
         _isFileCategoryFilterBoxOpen = true;
     }
 
+    private async Task ScrollToArtifact(FsArtifact artifact)
+    {
+        await InvokeAsync(StateHasChanged);
+        await JSRuntime.InvokeVoidAsync("scrollToItem", artifact.Name);
+    }
+
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
     {
         //if (artifact.ArtifactType == FsArtifactType.File)
@@ -1760,6 +1806,7 @@ public partial class FileBrowser
         var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
         CurrentArtifact = destinationArtifact;
         await HandleSelectArtifactAsync(destinationArtifact);
+        ScrollArtifact = artifact;
         //}
         //else
         //{

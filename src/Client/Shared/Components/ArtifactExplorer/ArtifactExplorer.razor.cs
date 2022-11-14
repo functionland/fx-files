@@ -454,6 +454,12 @@ public partial class ArtifactExplorer
         await ArtifactExplorerModeChanged.InvokeAsync(ArtifactExplorerMode);
     }
 
+    private string GetIdForArtifact(string artifactName)
+    {
+        var id = artifactName.Trim().Replace(" ", string.Empty);
+        return id;
+    }
+
     public void Dispose()
     {
         JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
