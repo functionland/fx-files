@@ -632,7 +632,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual void LocalStorageDeleteDirectory(string path)
         {
-            Directory.Delete(path, true);
+            DirectoryUtils.HardDeleteDirectory(path);
         }
 
         protected virtual void LocalStorageMoveFile(string filePath, string newPath)
