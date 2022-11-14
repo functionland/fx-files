@@ -99,7 +99,7 @@ public partial class ZipService : IZipService
         {
             if (Directory.Exists(newPath))
             {
-                Directory.Delete(newPath, true);
+                DirectoryUtils.HardDeleteDirectory(newPath);
             }
             var lowerCaseArtifact = StringLocalizer[nameof(AppStrings.Artifact)].Value.ToLowerFirstChar();
             throw new ArtifactAlreadyExistsException(StringLocalizer.GetString(AppStrings.ArtifactAlreadyExistsException));
@@ -112,7 +112,7 @@ public partial class ZipService : IZipService
         {
             if (Directory.Exists(newPath))
             {
-                Directory.Delete(newPath, true);
+                DirectoryUtils.HardDeleteDirectory(newPath);
             }
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
@@ -124,7 +124,7 @@ public partial class ZipService : IZipService
         {
             if (Directory.Exists(newPath))
             {
-                Directory.Delete(newPath, true);
+                DirectoryUtils.HardDeleteDirectory(newPath);
             }
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
@@ -132,7 +132,7 @@ public partial class ZipService : IZipService
         {
             if (Directory.Exists(newPath))
             {
-                Directory.Delete(newPath, true);
+                DirectoryUtils.HardDeleteDirectory(newPath);
             }
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
@@ -148,7 +148,7 @@ public partial class ZipService : IZipService
         {
             if (Directory.Exists(newPath))
             {
-                Directory.Delete(newPath, true);
+                DirectoryUtils.HardDeleteDirectory(newPath);
             }
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
@@ -523,7 +523,7 @@ public partial class ZipService : IZipService
 
         if (parentFinalPath is not null)
         {
-            Directory.Delete(parentFinalPath, true);
+            DirectoryUtils.HardDeleteDirectory(parentFinalPath);
         }
     }
 
