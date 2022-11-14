@@ -949,12 +949,12 @@ public partial class FileBrowser
             }
 
             CurrentArtifact = artifact;
-            _displayedArtifacts = new();
+            _displayedArtifacts = new List<FsArtifact>();
 
             _ = Task.Run(async () =>
             {
                 await LoadChildrenArtifactsAsync(CurrentArtifact);
-                await InvokeAsync(() => StateHasChanged());
+                await InvokeAsync(StateHasChanged);
             });
         }
         catch (Exception exception)
@@ -1001,7 +1001,7 @@ public partial class FileBrowser
                 }
                 catch (Exception exception)
                 {
-                    ExceptionHandler?.Handle(exception);
+                    ExceptionHandler.Handle(exception);
                 }
                 finally
                 {
