@@ -1171,7 +1171,8 @@ public partial class FileBrowser
                 Type = PinOptionResultType.Remove
             };
         }
-        else if (artifacts.All(a => a.IsPinned == false))
+
+        if (artifacts.All(a => a.IsPinned == false))
         {
             return new PinOptionResult()
             {
@@ -1189,30 +1190,31 @@ public partial class FileBrowser
 
     private async Task<InputModalResult?> GetInputModalResult(FsArtifact? artifact)
     {
-        string artifactType = "";
+        var artifactType = "";
 
-        if (artifact?.ArtifactType == FsArtifactType.File)
+        switch (artifact?.ArtifactType)
         {
-            artifactType = Localizer.GetString(AppStrings.FileRenamePlaceholder);
-        }
-        else if (artifact?.ArtifactType == FsArtifactType.Folder)
-        {
-            artifactType = Localizer.GetString(AppStrings.FolderRenamePlaceholder);
-        }
-        else
-        {
-            return null;
+            case FsArtifactType.File:
+                artifactType = Localizer.GetString(AppStrings.FileRenamePlaceholder);
+                break;
+            case FsArtifactType.Folder:
+                artifactType = Localizer.GetString(AppStrings.FolderRenamePlaceholder);
+                break;
+            case null:
+            case FsArtifactType.Drive:
+            default:
+                return null;
         }
 
-        var Name = Path.GetFileNameWithoutExtension(artifact.Name);
+        var name = Path.GetFileNameWithoutExtension(artifact.Name);
 
         InputModalResult? result = null;
-        if (_inputModalRef is not null)
-        {
-            result = await _inputModalRef.ShowAsync(Localizer.GetString(AppStrings.ChangeName),
-                Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), Name, artifactType);
-            ChangeDeviceBackFunctionality(ArtifactExplorerMode);
-        }
+        if (_inputModalRef is null)
+            return result;
+
+        result = await _inputModalRef.ShowAsync(Localizer.GetString(AppStrings.ChangeName),
+            Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), name, artifactType);
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         return result;
     }
@@ -1237,7 +1239,7 @@ public partial class FileBrowser
 
         string? destinationPath = null;
 
-        if (result?.ResultType != ArtifactSelectionResultType.Ok)
+        if (result.ResultType != ArtifactSelectionResultType.Ok)
             return destinationPath;
 
         var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
