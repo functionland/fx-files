@@ -1787,55 +1787,52 @@ public partial class FileBrowser
 
     private void ChangeDeviceBackFunctionality(ArtifactExplorerMode mode)
     {
-        if (mode == ArtifactExplorerMode.SelectArtifact)
+        switch (mode)
         {
-            GoBackService.OnInit((Task () =>
-            {
-                CancelSelectionMode();
-                return Task.CompletedTask;
-            }), true, false);
-        }
-        else if (mode == ArtifactExplorerMode.Normal)
-        {
-            if (CurrentArtifact == null && _isInSearch is false)
-            {
+            case ArtifactExplorerMode.SelectArtifact:
+                GoBackService.OnInit((Task () =>
+                {
+                    CancelSelectionMode();
+                    return Task.CompletedTask;
+                }), true, false);
+                break;
+            case ArtifactExplorerMode.Normal when CurrentArtifact == null && _isInSearch is false:
                 GoBackService.OnInit(null, true, true);
-            }
-            else
-            {
-                if (_isInSearch)
+                break;
+            case ArtifactExplorerMode.Normal when _isInSearch:
+                GoBackService.OnInit(async Task () =>
                 {
-                    GoBackService.OnInit((async Task () =>
+                    if (string.IsNullOrWhiteSpace(_searchText))
                     {
-                        if (string.IsNullOrWhiteSpace(_searchText))
-                        {
-                            await HandleToolbarBackClickAsync();
-                        }
-                        else
-                        {
-                            ClearSearch();
-                        }
+                        await HandleToolbarBackClickAsync();
+                    }
+                    else
+                    {
+                        ClearSearch();
+                    }
 
-                        await Task.CompletedTask;
-                    }), true, false);
-                }
-                else
+                    await Task.CompletedTask;
+                }, true, false);
+                break;
+            case ArtifactExplorerMode.Normal:
+                GoBackService.OnInit(async Task () =>
                 {
-                    GoBackService.OnInit((async Task () =>
+                    if (string.IsNullOrWhiteSpace(_inlineSearchText))
                     {
-                        if (string.IsNullOrWhiteSpace(_inlineSearchText))
-                        {
-                            await HandleToolbarBackClickAsync();
-                        }
-                        else
-                        {
-                            await HandleClearInLineSearchAsync();
-                        }
+                        await HandleToolbarBackClickAsync();
+                    }
+                    else
+                    {
+                        await HandleClearInLineSearchAsync();
+                    }
 
-                        await Task.CompletedTask;
-                    }), true, false);
-                }
-            }
+                    await Task.CompletedTask;
+                }, true, false);
+                break;
+            case ArtifactExplorerMode.SelectDestionation:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
     }
 
