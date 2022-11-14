@@ -1237,11 +1237,11 @@ public partial class FileBrowser
 
         string? destinationPath = null;
 
-        if (result?.ResultType == ArtifactSelectionResultType.Ok)
-        {
-            var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
-            destinationPath = destinationFsArtifact?.FullPath;
-        }
+        if (result?.ResultType != ArtifactSelectionResultType.Ok)
+            return destinationPath;
+
+        var destinationFsArtifact = result.SelectedArtifacts.FirstOrDefault();
+        destinationPath = destinationFsArtifact?.FullPath;
 
         return destinationPath;
     }
