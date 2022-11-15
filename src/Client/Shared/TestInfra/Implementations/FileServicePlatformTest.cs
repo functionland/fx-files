@@ -25,7 +25,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                     testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "FileServiceTestsFolder"));
                 }
 
-                var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
+                var testRootArtifact = await fileService.CreateFolderAsync(testsRootArtifact?.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
                 var testRoot = testRootArtifact.FullPath!;
 
 
@@ -134,7 +134,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 folder31 = artifacts.Where(f => f.Name == "Folder 31").FirstOrDefault();
                 Assert.IsNotNull(file32, "Folder exists in source, before move.");
 
-                //Nullability of these items have already been checked in lines 136, 140, 143. No worries then.
+                //Nullability of these items have already been checked in assertions couple of lines before.
                 movingItems = new[] { file31, file32, folder31 };
 
                 await fileService.MoveArtifactsAsync(movingItems, Path.Combine(testRoot, "Folder 2"));
@@ -182,7 +182,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 await fileService.CopyArtifactsAsync(copyingItems, testRoot);
                 desArtifacts = await GetArtifactsAsync(fileService, testRoot);
-                Assert.AreEqual(6, desArtifacts.Count, "Copy files and folder. All Copyied to destination.");
+                Assert.AreEqual(6, desArtifacts.Count, "Copy files and folder. All Copied to destination.");
 
 
                 //8. Move files and folders in case of duplications. (overWrite = true)
@@ -227,15 +227,15 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 var folder21 = artifacts.Where(f => f.Name == "Folder 21").FirstOrDefault();
                 Assert.IsNotNull(folder21, "Folder exists. All set to copy.");
 
-                copyingItems = new[] { folder21 };
+                copyingItems = new[] { folder21 };  //Already null-checked in assertion above.
 
                 await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"));
 
                 desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3"));
-                Assert.AreEqual(1, desArtifacts.Count, "Copy folder with files inside. Folder copyied in destination.");
+                Assert.AreEqual(1, desArtifacts.Count, "Copy folder with files inside. Folder copied in destination.");
 
                 desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3/Folder 21"));
-                Assert.AreEqual(2, desArtifacts.Count, "Copy folder with files inside. All files copyied in sub folder");
+                Assert.AreEqual(2, desArtifacts.Count, "Copy folder with files inside. All files copied in sub folder");
 
                 await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 2/Folder 21/file313[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
                 srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2/Folder 21"));
@@ -245,11 +245,11 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 folder21 = artifacts.Where(f => f.Name == "Folder 21").FirstOrDefault();
                 Assert.IsNotNull(folder21, "Folder exists. All set to copy.");
 
-                copyingItems = new[] { folder21 };
+                copyingItems = new[] { folder21 };  //Already null-checked in assertion above.
 
                 await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), true);
                 desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3/Folder 21"));
-                Assert.AreEqual(3, desArtifacts.Count, "Copy folder with files inside. All files including duplicate one copyied in sub folder");
+                Assert.AreEqual(3, desArtifacts.Count, "Copy folder with files inside. All files including duplicate one copied in sub folder");
 
 
                 //10. Delete files and folders
