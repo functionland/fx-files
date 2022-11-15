@@ -34,9 +34,10 @@ public class AndroidAudioThumbnailPlugin : AudioThumbnailPlugin
             audioThumbnail = ThumbnailUtils.CreateAudioThumbnail(file, size, null);
             await audioThumbnail.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
         }
-        catch (Java.IO.IOException) 
+        catch (Java.IO.IOException ex) 
         {
-            throw new KnownIOException("No album art available to show as thumbnail.");
+            await outputStream.DisposeAsync().AsTask();
+            throw new KnownIOException("No album art available to show as thumbnail.", ex);
         }
 
         return outputStream;
