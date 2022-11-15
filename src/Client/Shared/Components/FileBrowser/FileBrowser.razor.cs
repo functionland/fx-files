@@ -235,6 +235,11 @@ public partial class FileBrowser
 
             if (_progressModalRef is not null)
             {
+                if(destinationPath != CurrentArtifact?.FullPath)
+                {
+                    await NavigateToDestination(destinationPath);
+                }
+
                 InitialProgressBar(artifacts.Count);
                 await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles),
                     true);
@@ -371,7 +376,6 @@ public partial class FileBrowser
                                 await _progressModalRef.CloseAsync();
 
                                 FxToast.Show(title, message, FxToastType.Success);
-                                await NavigateToDestination(destinationPath);
                             }
                         }
                     }
@@ -379,7 +383,6 @@ public partial class FileBrowser
                 else
                 {
                     FxToast.Show(title, message, FxToastType.Success);
-                    await NavigateToDestination(destinationPath);
                 }
             }
 
@@ -423,6 +426,7 @@ public partial class FileBrowser
 
                 if (_progressModalRef is not null)
                 {
+                    await NavigateToDestination(destinationPath);
                     await _progressModalRef.ShowAsync(ProgressMode.Progressive,
                         Localizer.GetString(AppStrings.MovingFiles), true);
                 }
@@ -485,14 +489,12 @@ public partial class FileBrowser
                             cancellationToken: _progressBarCts.Token);
 
                         FxToast.Show(title, message, FxToastType.Success);
-                        await NavigateToDestination(destinationPath);
                     }
                 }
             }
             else
             {
                 FxToast.Show(title, message, FxToastType.Success);
-                await NavigateToDestination(destinationPath);
             }
 
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
