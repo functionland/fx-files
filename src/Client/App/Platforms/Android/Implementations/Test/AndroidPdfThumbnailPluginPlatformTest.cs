@@ -6,13 +6,14 @@ public class AndroidPdfThumbnailPluginPlatformTest<TFileService> : PdfThumbnailP
     where TFileService : IFileService
 {
     TFileService FileService { get; set; }
+
     public AndroidPdfThumbnailPluginPlatformTest(IArtifactThumbnailService<TFileService> artifactThumbnailService, TFileService fileService)
         : base(artifactThumbnailService, fileService)
     {
         FileService = fileService;
     }
 
-    public override string Title => "AndroidPdfThumbnailPluginPlatformTest";
+    public override string Title => $"AndroidPdfThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
     public override string Description => "Test for creating pdf thumbnail on Android.";
 
