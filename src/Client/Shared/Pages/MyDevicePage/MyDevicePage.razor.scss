@@ -5,10 +5,9 @@
 .Fx-basic-page {
     transform: scaleY(0);
     transform-origin: top;
-    transition: transform 2s ease 2s;
+    transition: transform 300ms ease;
 }
 
 .fx-page-open-mode {
-    transition: transform 2s ease 2s;
     transform: scaleY(1);
 }

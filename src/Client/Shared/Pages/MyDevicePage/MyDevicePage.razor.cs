@@ -41,17 +41,25 @@ namespace Functionland.FxFiles.Client.Shared.Pages
             }
         }
         private bool test = false;
-        protected override async Task OnInitAsync()
+        protected override void OnInitialized()
         {
-            await base.OnInitAsync();
-            test = true;
-            await Task.Delay(5000);
+            base.OnInitialized();
             if (_appStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
             {
                 _appStateStore.CurrentMyDeviceArtifact = null;
             }
 
             _appStateStore.CurrentPagePath = "mydevice";
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                test = true;
+                StateHasChanged();
+            }  
+            
         }
     }
 }
