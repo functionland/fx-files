@@ -242,7 +242,8 @@ public partial class FileBrowser
                 if (_progressModalRef is not null)
                 {
                     InitialProgressBar(artifacts.Count);
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles),
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive,
+                        Localizer.GetString(AppStrings.CopyFiles),
                         true);
                 }
 
@@ -332,7 +333,8 @@ public partial class FileBrowser
                     if (_progressModalRef is not null)
                     {
                         await NavigateToAsync(destinationPath);
-                        await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles),
+                        await _progressModalRef.ShowAsync(ProgressMode.Progressive,
+                            Localizer.GetString(AppStrings.CopyFiles),
                             true);
                     }
 
@@ -1092,6 +1094,11 @@ public partial class FileBrowser
 
     private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifacts)
     {
+        if (_isInSearch)
+        {
+            await HandleSearchUnFocused();
+        }
+
         var selectedArtifactsCount = artifacts.Count;
         var isMultiple = selectedArtifactsCount > 1;
 
