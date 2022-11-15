@@ -115,15 +115,10 @@ public partial class ArtifactExplorer
         StateHasChanged();
     }
 
-    [JSInvokable]
-    public void SetResizeEventListenerId(string id)
-    {
-        _resizeEventListenerId = id;
-    }
-
     private async Task InitWindowWidthListener()
     {
-        await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference);
+        _resizeEventListenerId = Guid.NewGuid().ToString();
+        await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference, _resizeEventListenerId);
     }
 
     private async Task HandleArtifactOptionClick(FsArtifact artifact)
