@@ -1,5 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 
+using Microsoft.AspNetCore.Components.Web;
+
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
     public partial class MyDevicePage
@@ -38,10 +40,12 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 return null;
             }
         }
-
-        protected override void OnInitialized()
+        private bool test = false;
+        protected override async Task OnInitAsync()
         {
-            base.OnInitialized();
+            await base.OnInitAsync();
+            test = true;
+            await Task.Delay(5000);
             if (_appStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
             {
                 _appStateStore.CurrentMyDeviceArtifact = null;

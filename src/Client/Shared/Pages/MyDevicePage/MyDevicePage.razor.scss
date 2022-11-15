@@ -2,6 +2,13 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-accordion.scss';
 
-.mydevice-content {
+.Fx-basic-page {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 2s ease 2s;
 }
 
+.fx-page-open-mode {
+    transition: transform 2s ease 2s;
+    transform: scaleY(1);
+}

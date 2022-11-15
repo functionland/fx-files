@@ -3,8 +3,9 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
-<FileBrowser 
-    FileService="_fileService" 
-    PinService="_pinService"
-    ThumbnailService="_thumbnailService"
-    DefaultPath="@DecodedDefaultPath" />
+<div class="Fx-basic-page @(test ? "fx-page-open-mode" : "")">
+    <FileBrowser FileService="_fileService"
+                 PinService="_pinService"
+                 ThumbnailService="_thumbnailService"
+                 DefaultPath="@DecodedDefaultPath" />
+</div>
