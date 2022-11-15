@@ -60,23 +60,15 @@
     color: color(gray-content1);
     padding: $spacing-16 $spacing-21;
     background-color: color(app-bg);
-    position: sticky;
-    top: 72px;
     z-index: 2;
     opacity: 1;
-}
-
-.show-root-title {
-    opacity: 1;
     height: 56px;
-    transition: height 0ms linear, opacity 200ms linear 200ms;
 }
 
 .hide-root-title {
-    height: 0;
-    overflow: hidden;
     opacity: 0;
-    transition: opacity 200ms linear, height 0ms linear 500ms;
+    height: 0;
+    transition: opacity 500ms linear, height 0s linear 500ms;
 }
 
 .disable-pinned {

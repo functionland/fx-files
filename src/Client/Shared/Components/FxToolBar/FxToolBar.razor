@@ -29,7 +29,7 @@
                       FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
         </div>
     </div>
-    <div class="folder-info-row">
+    <div class="folder-info-row @(IsInRoot ? "folder-hide" : "folder-show")">
         <div class="action-row">
             <div class="info-box">
                 <div class="artifact-title @(IsPinned ? "pinned-icon" : "")">
