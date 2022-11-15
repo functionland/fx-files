@@ -13,8 +13,15 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    height: calc(100% - 128px);
     width: 100%;
+}
+
+.in-root-scroll-artifact {
+    height: calc(100% - 81px);
+}
+
+.not-in-root-scroll-artifact {
+    height: calc(100% - 128px);
 }
 
 .file-browser-container ::deep div.toolbar-box {
@@ -24,6 +31,10 @@
     position: sticky;
     top: 0;
     z-index: 2;
+}
+
+.pin-artifacts {
+    width: 100%;
 }
 
 ::deep .bit-acd .content.expanded {
@@ -49,9 +60,15 @@
     color: color(gray-content1);
     padding: $spacing-16 $spacing-21;
     background-color: color(app-bg);
-    position: sticky;
-    top: 72px;
     z-index: 2;
+    opacity: 1;
+    height: 56px;
+}
+
+.hide-root-title {
+    opacity: 0;
+    height: 0;
+    transition: opacity 500ms linear, height 0s linear 500ms;
 }
 
 .disable-pinned {
@@ -554,6 +571,10 @@
         @include Icon($options-horizontal);
         font-size: 24px;
     }
+}
+
+.local-search {
+    width: 100%;
 }
 
 .show-search {

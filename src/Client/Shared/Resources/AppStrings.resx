@@ -699,4 +699,7 @@
   <data name="SDCard" xml:space="preserve">
     <value>SD card</value>
   </data>
+  <data name="MyDeviceFile" xml:space="preserve">
+    <value>My Device Files</value>
+  </data>
 </root>
