@@ -123,11 +123,17 @@ function OnScrollCheck() {
     });
 }
 
-function scrollToItem(itemId) {
+async function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
     if (typeof item !== "undefined") {
-        setTimeout(scrollIntoView(item), 3000);
-        console.log(itemId);
-        console.log(item);
+        scrollToItemWithTimeout(item).then(addGrayBackground(item));
     }
+}
+
+async function scrollToItemWithTimeout(item) {
+    setTimeout(scrollIntoView(item));
+}
+
+async function addGrayBackground(item) {
+    item.classList.add('on-scroll-item-gray-background');
 }
