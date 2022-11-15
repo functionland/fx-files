@@ -249,9 +249,6 @@
   <data name="ToastDescMessage" xml:space="preserve">
     <value>A new version of the app is available for download.</value>
   </data>
-  <data name="ToastErrorMessage" xml:space="preserve">
-    <value>Your error message</value>
-  </data>
   <data name="ToastInfoMessage" xml:space="preserve">
     <value>Your info message</value>
   </data>
@@ -583,7 +580,7 @@
     <value>copy</value>
   </data>
   <data name="ShowInLocation" xml:space="preserve">
-    <value>show in location</value>
+    <value>Show in location</value>
   </data>
   <data name="Details" xml:space="preserve">
     <value>Details</value>
@@ -698,6 +695,9 @@
   </data>
   <data name="PasswordEmptyMessage" xml:space="preserve">
     <value>Password won't be empty.</value>
+  </data>
+  <data name="SDCard" xml:space="preserve">
+    <value>SD card</value>
   </data>
   <data name="MyDeviceFile" xml:space="preserve">
     <value>My Device Files</value>

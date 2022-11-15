@@ -1,11 +1,9 @@
 ﻿let windowEventListeners = {};
 
-function AddWindowWidthListener(objReference) {
+function AddWindowWidthListener(objReference, id) {
     let eventListener = () => UpdateWindowWidth(objReference);
     window.addEventListener("resize", eventListener);
     windowEventListeners[id] = eventListener;
-    var id = Math.floor(Math.random() * 100).toString();
-    objReference.invokeMethodAsync("SetResizeEventListenerId", id);
 }
 
 function RemoveWindowWidthListener(id) {

@@ -23,7 +23,8 @@ public static class PathProtocolUtils
 
     public static string InProtocol(this string address, PathProtocol protocol)
     {
-        return GetPath(protocol, address);
+        var encodedAddress = Uri.EscapeDataString(address);
+        return GetPath(protocol, encodedAddress);
     }
 
     public static PathProtocol GetPathProtocol(string protocol)

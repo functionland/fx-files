@@ -231,7 +231,6 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         if (artifactPath is null)
             throw new ArtifactPathNullException(nameof(artifactPath));
 
-        var showablePath = string.Empty;
         var providerType = GetFsFileProviderType(artifactPath);
         var drives = GetDrives();
 
@@ -241,10 +240,10 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         if (currentDrivePath is null)
             throw new Exception("No drive found!");
 
-        showablePath = artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory
-                                                                            ? StringLocalizer.GetString(AppStrings.InternalStorageName)
-                                                                            : StringLocalizer.GetString(AppStrings.ExternalStorageName));
-        return showablePath;
+        //ToDo: Replace is dangrous here. It replaces all the matching strings inside artifactPath. (Anything that matches "stoarge/emulated/0" and SD card's specific name).
+        return artifactPath.Replace(currentDrivePath, providerType == FsFileProviderType.InternalMemory
+                                                                    ? StringLocalizer.GetString(AppStrings.InternalStorageName)
+                                                                    : StringLocalizer.GetString(AppStrings.SDCard));
     }
     protected abstract Task GetWritePermission(string path = null);
 

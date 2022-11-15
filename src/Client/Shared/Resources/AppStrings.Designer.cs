@@ -1357,6 +1357,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SD card.
+        /// </summary>
+        public static string SDCard {
+            get {
+                return ResourceManager.GetString("SDCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SD card ({0}).
         /// </summary>
         public static string SDCardName {
@@ -1429,7 +1438,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to show in location.
+        ///   Looks up a localized string similar to Show in location.
         /// </summary>
         public static string ShowInLocation {
             get {
@@ -1614,15 +1623,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ToastDescMessage {
             get {
                 return ResourceManager.GetString("ToastDescMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your error message.
-        /// </summary>
-        public static string ToastErrorMessage {
-            get {
-                return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
             }
         }
         

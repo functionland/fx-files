@@ -122,3 +122,12 @@ function OnScrollCheck() {
 
     });
 }
+
+function scrollToItem(itemId) {
+    const item = document.getElementById(itemId.toString());
+    if (typeof item !== "undefined") {
+        setTimeout(scrollIntoView(item), 3000);
+        console.log(itemId);
+        console.log(item);
+    }
+}

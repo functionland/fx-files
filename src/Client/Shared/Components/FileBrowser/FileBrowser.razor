@@ -6,14 +6,15 @@
                OnSearch="HandleSearchAsync"
                OnSearchFocused="HandleSearchFocused"
                IsInSearchMode="_isInSearch"
-               OnBackClick="HandleToolbarBackClick"
+               OnBackClick="HandleToolbarBackClickAsync"
                Title="@(CurrentArtifact?.Name)"
                SubTitle="@($"{Localizer[nameof(AppStrings.Update)]}: {CurrentArtifact?.LastModifiedDateTime.Date.Date.ToShortDateString()}")"
                IsPinned="@(CurrentArtifact?.IsPinned ?? false)"
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(CurrentArtifact))"
                OnAddButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
-               IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
-
+               IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)"
+               @ref="_fxToolBarRef"/>
+               
 
     <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
         @if (CurrentArtifact != null)
@@ -25,8 +26,8 @@
         {
             <div class="pin-artifacts">
                 <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
-                          Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
-                          DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0 ? true : false)">
+                      Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
+                      DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0)">
                     <ContentTemplate>
                         @if (_isPinBoxLoading)
                         {
@@ -114,7 +115,7 @@
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                           ViewMode="ArtifactState.ViewMode"
                           FileCategoryFilter="_fileCategoryFilter"
-                          HandleBack="HandleToolbarBackClick"
+                          HandleBack="HandleToolbarBackClickAsync"
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="_isInSearch"
                           @bind-SelectedArtifacts="_selectedArtifacts"
@@ -162,55 +163,52 @@
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                           ViewMode="ViewModeEnum.List"
                           FileCategoryFilter="_fileCategoryFilter"
-                          HandleBack="HandleToolbarBackClick"
+                          HandleBack="HandleToolbarBackClickAsync"
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="_isInSearch"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
 
-        @if (_selectedArtifacts != null)
+        @if (_selectedArtifacts is {Count: >= 1 })
         {
-            @if (_selectedArtifacts.Count >= 1)
-            {
-                <div class="footer-option">
-                    <div class="option-item btn-detail" @onclick="(()=>HandleShowDetailsArtifact(_selectedArtifacts))">
-                        <div class="detail-icon"></div>
-                        <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
-                    </div>
-                    @if (_selectedArtifacts?.Count == 1)
-                    {
-                        <div class="option-item" @onclick="(()=>NavigateArtifactForShowInFolder(_selectedArtifacts[0]))">
-                            <div class="show-location-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="option-item" @onclick="(()=>HandleCopyArtifactsAsync(_selectedArtifacts))">
-                            <div class="copy-btn-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
-                        </div>
-                    }
-                    <div class="option-item" @onclick="(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
-                        <div class="pin-icon"></div>
-                        <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
-                    </div>
-                    @if (_selectedArtifacts?.Count == 1)
-                    {
-                        <div class="option-item" @onclick="(()=>HandleOptionsArtifact(_selectedArtifacts[0]))">
-                            <div class="more-option-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
-                        </div>
-                    }
-                    @if (_selectedArtifacts?.Count > 1)
-                    {
-                        <div class="option-item" @onclick="(()=>HandleSelectedArtifactsOptions(_selectedArtifacts))">
-                            <div class="more-option-icon"></div>
-                            <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
-                        </div>
-                    }
+            <div class="footer-option">
+                <div class="option-item btn-detail" @onclick="@(()=>HandleShowDetailsArtifact(_selectedArtifacts))">
+                    <div class="detail-icon"></div>
+                    <div class="title-item">@Localizer[nameof(AppStrings.Details)]</div>
                 </div>
-            }
+                @if (_selectedArtifacts?.Count == 1)
+                {
+                    <div class="option-item" @onclick="@(()=>NavigateArtifactForShowInFolder(_selectedArtifacts[0]))">
+                        <div class="show-location-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.ShowInLocation)]</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="option-item" @onclick="@(()=>HandleCopyArtifactsAsync(_selectedArtifacts))">
+                        <div class="copy-btn-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
+                    </div>
+                }
+                <div class="option-item" @onclick="@(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
+                    <div class="pin-icon"></div>
+                    <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
+                </div>
+                @if (_selectedArtifacts?.Count == 1)
+                {
+                    <div class="option-item" @onclick="@(()=>HandleOptionsArtifact(_selectedArtifacts[0]))">
+                        <div class="more-option-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
+                    </div>
+                }
+                @if (_selectedArtifacts?.Count > 1)
+                {
+                    <div class="option-item" @onclick="@(()=>HandleSelectedArtifactsOptions(_selectedArtifacts))">
+                        <div class="more-option-icon"></div>
+                        <div class="title-item">@Localizer[nameof(AppStrings.More)]</div>
+                    </div>
+                }
+            </div>
         }
     </section>
 
@@ -239,6 +237,6 @@
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
             OnBack="FileViewerBack"
-            NavigationFolderCallback="NavigateToDestination" />
+            NavigationFolderCallback="NavigateToAsync" />
 
 <ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>
