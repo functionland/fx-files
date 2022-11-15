@@ -25,7 +25,7 @@
     color: $green-light-hover;
 
     &::after {
-        color: $green-light-hover;
+        color: $green-light-hover !important;
         transition: color 100ms linear;
     }
 }

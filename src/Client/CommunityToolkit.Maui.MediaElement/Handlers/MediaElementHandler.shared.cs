@@ -2,7 +2,8 @@
 
 public partial class MediaElementHandler
 {
-	public static IPropertyMapper<MediaElement, MediaElementHandler> PropertyMapper = new PropertyMapper<MediaElement, MediaElementHandler>(ViewMapper)
+    MediaManager? mediaManager;
+    public static IPropertyMapper<MediaElement, MediaElementHandler> PropertyMapper = new PropertyMapper<MediaElement, MediaElementHandler>(ViewMapper)
 	{
 		[nameof(IMediaElement.ShowsPlaybackControls)] = MapShowsPlaybackControls,
 		[nameof(IMediaElement.Source)] = MapSource,
@@ -12,7 +13,7 @@ public partial class MediaElementHandler
 #if __ANDROID__
 		[nameof(MediaElement.IsLooping)] = MapIsLooping
 #endif
-	};
+    };
 
 	public static CommandMapper<MediaElement, MediaElementHandler> CommandMapper = new(ViewCommandMapper)
 	{

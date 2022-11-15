@@ -25,6 +25,12 @@
                   OnClick="Copy"
                   IsEnabled="!_isInRoot"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
+        <FxButton Class="move-button"
+                  Text="@Localizer[nameof(AppStrings.MoveTo)]"
+                  OnClick="Move"
+                  IsEnabled="!_isInRoot"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
+
         @if (_pinOptionResult?.IsVisible == true)
         {
             @if (_pinOptionResult?.Type == PinOptionResultType.Add)
@@ -44,19 +50,18 @@
                   ButtonStyle="FxButtonStyle.SheetMenu" />
             }
         }
-        <FxButton Class="move-button"
-                  Text="@Localizer[nameof(AppStrings.MoveTo)]"
-                  OnClick="Move"
-                  IsEnabled="!_isInRoot"
+
+        <FxButton Class="show-in-location-button"
+                  Text="@Localizer[nameof(AppStrings.ShowInLocation)]"
+                  OnClick="ShowInLocation"
+                  IsVisible="@(_isInSearch && _isMultiple is false)"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
-        @if (_isVisibleShareWithAppOption)
-        {
-            <FxButton Class="share-with-app-button"
+        <FxButton Class="share-with-app-button"
                   Text="@Localizer[nameof(AppStrings.ShareWithApp)]"
                   OnClick="ShareWithApp"
                   IsEnabled="!_isInRoot"
+                  IsVisible="_isVisibleShareWithAppOption"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
-        }
         <FxButton Class="delete-button"
                   Text="@Localizer[nameof(AppStrings.Delete)]"
                   OnClick="Delete"

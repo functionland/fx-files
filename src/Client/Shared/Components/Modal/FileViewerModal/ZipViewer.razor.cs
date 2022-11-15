@@ -7,22 +7,21 @@ public partial class ZipViewer : IFileViewerComponent
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
     [Parameter] public EventCallback OnBack { get; set; }
-    [Parameter] public EventCallback<Tuple<FsArtifact, List<FsArtifact>?, string?, string?>> OnExtract { get; set; }
-    [Parameter] public FileViewerResultType FileViewerResult { get; set; }
+    [Parameter] public EventCallback<string> NavigationFolderCallback { get; set; }
 
     // Modals
-    private InputModal? _passwordModalRef;
+    private InputModal? _folderNameInputModalRef;
     private ArtifactSelectionModal? _artifactSelectionModalRef;
+    private ExtractorBottomSheet? _extractorModalRef;
 
     private ArtifactExplorerMode ArtifactExplorerMode { get; set; } = ArtifactExplorerMode.Normal;
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
+    private ExtractorBottomSheetResult? ExtractorBottomSheetResult { get; set; }
 
 
     private FsArtifact _currentInnerZipArtifact =
         new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
-
-    private string? _password = null;
 
     private List<FsArtifact> _displayedArtifacts = new();
 
@@ -32,11 +31,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     protected override Task OnInitAsync()
     {
-        GoBackService.OnInit((async Task () =>
-        {
-            await HandleBackAsync();
-            await Task.CompletedTask;
-        }), true, false);
+        SetGoBackDeviceButtonFunctionality();
         return base.OnInitAsync();
     }
 
@@ -47,7 +42,6 @@ public partial class ZipViewer : IFileViewerComponent
             await InitialZipViewerAsync();
             StateHasChanged();
         }
-
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -80,7 +74,7 @@ public partial class ZipViewer : IFileViewerComponent
 
         var token = _cancellationTokenSource.Token;
 
-        _allZipFileEntities = await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, _password, token);
+        _allZipFileEntities = await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
     }
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
@@ -96,13 +90,52 @@ public partial class ZipViewer : IFileViewerComponent
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
     {
         var destinationPath = await GetDestinationPathAsync(artifacts);
+        var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
         if (CurrentArtifact != null && destinationPath != null)
         {
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, _selectedArtifacts, destinationPath, _password);
-            await OnExtract.InvokeAsync(extractTuple);
-            if (FileViewerResult == FileViewerResultType.Success)
+            if (_folderNameInputModalRef is null)
             {
-                await HandleBackAsync(true);
+                return;
+            }
+
+            var folderName = Path.GetFileNameWithoutExtension(CurrentArtifact.Name);
+            var createFolder = Localizer.GetString(AppStrings.FolderName);
+            var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
+            var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+
+            var folderNameResult = await _folderNameInputModalRef.ShowAsync(createFolder, string.Empty, folderName,
+                newFolderPlaceholder, extractBtnTitle);
+
+            if (folderNameResult.ResultType == InputModalResultType.Cancel)
+            {
+                SetGoBackDeviceButtonFunctionality();
+                return;
+            }
+
+            var destinationFolderName = string.IsNullOrWhiteSpace(folderNameResult?.Result) == false ? folderNameResult.Result : folderName;
+
+            if (folderNameResult?.Result != null && _extractorModalRef != null)
+            {
+                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                    folderNameResult.Result, artifacts);
+            }
+
+            switch (ExtractorBottomSheetResult?.ExtractorResult)
+            {
+                case ExtractorBottomSheetResultType.Cancel:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                case ExtractorBottomSheetResultType.Success when destinationDirectory != null:
+                    {
+                        var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
+                        await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                        break;
+                    }
+                case null:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -110,14 +143,53 @@ public partial class ZipViewer : IFileViewerComponent
     private async Task HandleExtractArtifactAsync(FsArtifact artifact)
     {
         var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { artifact });
+        var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
         if (CurrentArtifact != null && destinationPath != null)
         {
-            var singleArtifactList = new List<FsArtifact> { artifact };
-            var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, singleArtifactList, destinationPath, _password);
-            await OnExtract.InvokeAsync(extractTuple);
-            if (FileViewerResult == FileViewerResultType.Success)
+            if (_folderNameInputModalRef is null)
             {
-                await HandleBackAsync(true);
+                return;
+            }
+
+            var folderName = Path.GetFileNameWithoutExtension(CurrentArtifact.Name);
+            var createFolder = Localizer.GetString(AppStrings.FolderName);
+            var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
+            var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+
+            var folderNameResult = await _folderNameInputModalRef.ShowAsync(createFolder, string.Empty, folderName,
+                newFolderPlaceholder, extractBtnTitle);
+
+            if (folderNameResult.ResultType == InputModalResultType.Cancel)
+            {
+                SetGoBackDeviceButtonFunctionality();
+                return;
+            }
+
+            var destinationFolderName = folderNameResult.Result ?? folderName;
+
+
+            if (_extractorModalRef != null)
+            {
+                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                    destinationFolderName, new List<FsArtifact> { artifact });
+            }
+
+            switch (ExtractorBottomSheetResult?.ExtractorResult)
+            {
+                case ExtractorBottomSheetResultType.Cancel:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                case ExtractorBottomSheetResultType.Success when destinationDirectory != null:
+                    {
+                        var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
+                        await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                        break;
+                    }
+                case null:
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -127,13 +199,52 @@ public partial class ZipViewer : IFileViewerComponent
         if (CurrentArtifact != null)
         {
             var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { CurrentArtifact });
+            var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
+
             if (CurrentArtifact != null && destinationPath != null)
             {
-                var extractTuple = new Tuple<FsArtifact, List<FsArtifact>?, string?, string?>(CurrentArtifact, null, destinationPath, _password);
-                await OnExtract.InvokeAsync(extractTuple);
-                if (FileViewerResult == FileViewerResultType.Success)
+                if (_folderNameInputModalRef is null)
                 {
-                    await HandleBackAsync(true);
+                    return;
+                }
+
+                var folderName = Path.GetFileNameWithoutExtension(CurrentArtifact.Name);
+                var createFolder = Localizer.GetString(AppStrings.FolderName);
+                var newFolderPlaceholder = Localizer.GetString(AppStrings.ExtractFolderTargetNamePlaceHolder);
+                var extractBtnTitle = Localizer.GetString(AppStrings.Extract);
+
+                var folderNameResult = await _folderNameInputModalRef.ShowAsync(createFolder, string.Empty, folderName,
+                    newFolderPlaceholder, extractBtnTitle);
+
+                if (folderNameResult.ResultType == InputModalResultType.Cancel)
+                {
+                    SetGoBackDeviceButtonFunctionality();
+                    return;
+                }
+                var destinationFolderName = folderNameResult.Result ?? folderName;
+
+                if (folderNameResult.Result != null && _extractorModalRef != null)
+                {
+                    ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                        folderNameResult.Result);
+                }
+
+                switch (ExtractorBottomSheetResult?.ExtractorResult)
+                {
+                    case ExtractorBottomSheetResultType.Cancel:
+                        SetGoBackDeviceButtonFunctionality();
+                        return;
+                    case ExtractorBottomSheetResultType.Success when destinationDirectory != null:
+                        {
+                            var destinationResultPath = Path.Combine(destinationDirectory, destinationFolderName);
+                            await NavigationFolderCallback.InvokeAsync(destinationResultPath);
+                            break;
+                        }
+                    case null:
+                        SetGoBackDeviceButtonFunctionality();
+                        return;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
@@ -154,7 +265,10 @@ public partial class ZipViewer : IFileViewerComponent
         var result = await _artifactSelectionModalRef.ShowAsync(routeArtifact, actionResult);
 
         if (result.ResultType == ArtifactSelectionResultType.Cancel)
+        {
+            SetGoBackDeviceButtonFunctionality();
             return null;
+        }
 
         var destinationPath = result.SelectedArtifacts.FirstOrDefault()?.FullPath;
         return destinationPath;
@@ -175,7 +289,7 @@ public partial class ZipViewer : IFileViewerComponent
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
             }
         }
-        else if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+        else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
         {
             CancelSelectionMode();
         }
@@ -215,5 +329,14 @@ public partial class ZipViewer : IFileViewerComponent
         _selectedArtifacts.Clear();
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
         ChangeArtifactExplorerMode(ArtifactExplorerMode.Normal);
+    }
+
+    private void SetGoBackDeviceButtonFunctionality()
+    {
+        GoBackService.OnInit((async Task () =>
+        {
+            await HandleBackAsync();
+            await Task.CompletedTask;
+        }), true, false);
     }
 }

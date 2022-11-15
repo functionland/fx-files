@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 
-using static System.Net.Mime.MediaTypeNames;
-
 namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class FxToolBar
@@ -21,10 +19,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         [Parameter] public bool IsInSearchMode { get; set; }
         [Parameter] public bool IsInRootDestinationFolder { get; set; } = false;
-        [Parameter] public bool ShouldSearchBoxShow { get; set; } = false;
         [Parameter] public EventCallback<MouseEventArgs> OnBackClick { get; set; }
 
-        private FxSearchInput _searchInputRef = default!;
+        private FxSearchInput? _searchInputRef = default!;
 
         private void HandleSearchFocused()
         {
@@ -33,19 +30,18 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private async Task HandleSearch(string? text)
         {
-            await InvokeAsync(async () =>
-            {
-                await OnSearch.InvokeAsync(text);
-            });
+            await InvokeAsync(async () => { await OnSearch.InvokeAsync(text); });
         }
 
         private async Task HandleBackClick()
         {
-            if (_searchInputRef != null)
-            {
-                _searchInputRef.HandleClearInputText();
-            }
+            _searchInputRef?.HandleClearInputText();
             await OnBackClick.InvokeAsync();
+        }
+
+        public void HandleCancelSearch()
+        {
+            _searchInputRef?.HandleCancel();
         }
     }
 }

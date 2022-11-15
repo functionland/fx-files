@@ -1,5 +1,8 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+
+using Functionland.FxFiles.Client.Shared.Utils;
+
+using Timer = System.Timers.Timer;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
@@ -97,7 +100,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             }), true, false);
 
             _tcs?.SetCanceled();
-            _artifacts = artifacts;
+            _artifacts = artifacts.ToList();
             SetCurrentArtifact(0);
             _isMultiple = isMultiple;
             _isInRoot = isInRoot;
@@ -175,14 +178,16 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         private void Close()
         {
-            var result = new ArtifactDetailModalResult();
-            result.ResultType = ArtifactDetailModalResultType.Close;
+            var result = new ArtifactDetailModalResult
+            {
+                ResultType = ArtifactDetailModalResultType.Close
+            };
 
             _tcs?.SetResult(result);
             _tcs = null;
 
             _isModalOpen = false;
-            _timer = new(600);
+            _timer = new Timer(600);
             _timer.Enabled = true;
             _timer.Start();
             _timer.Elapsed += async (sender, e) => { await TimeElapsedForCloseDetailModal(sender, e); };
@@ -193,10 +198,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private async Task TimeElapsedForCloseDetailModal(object? sender, System.Timers.ElapsedEventArgs e)
         {
             _artifacts.Clear();
-            await InvokeAsync(() =>
-             {
-                 StateHasChanged();
-             });
+            await InvokeAsync(StateHasChanged);
             if (_timer != null)
             {
                 _timer.Enabled = false;

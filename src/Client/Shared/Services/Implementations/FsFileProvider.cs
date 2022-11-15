@@ -55,7 +55,7 @@ public class FsFileProvider : IFileProvider
 
     private string PreparePath(string path)
     {
-        path = WebUtility.UrlDecode(path);
+        path = Uri.UnescapeDataString(path);
         return path;
     }
 }

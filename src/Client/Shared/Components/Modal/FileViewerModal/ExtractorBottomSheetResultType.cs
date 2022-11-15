@@ -1,6 +1,6 @@
 ﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal
 {
-    public enum FileViewerResultType
+    public enum ExtractorBottomSheetResultType
     {
         Cancel,
         Success

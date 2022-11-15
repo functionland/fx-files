@@ -55,6 +55,7 @@
 ::deep .bit-acd .content.collapsed {
     height: 0px;
     opacity: 0;
+    overflow-y: hidden;
     animation-name: none;
     animation-duration: 0s;
     animation-timing-function: ease;

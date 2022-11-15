@@ -4,7 +4,7 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 
 
-<div class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() || Artifacts == null ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+<div style="margin-bottom: @(IsmacOS? "38px" : "")" class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() || Artifacts == null ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (IsLoading)
     {
         <OverlayLoading LoadingType="LoadingType.Overlay" />
@@ -14,8 +14,8 @@
         if (!IsInSearchMode)
         {
             <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
-                   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsInZipMode==false)" />
+                           Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
+                           IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsInZipMode==false)" />
         }
     }
     else
@@ -29,9 +29,10 @@
                         @foreach (var artifact in artifacts)
                         {
                             <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") grid-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                 @onpointerup="((e) => PointerUp(e,artifact))"
-                 @onpointerdown="(() =>PointerDown(artifact))"
-                 @onpointercancel="PointerCancel">
+                            @onpointerup="((e) => PointerUp(e,artifact))"
+                            @onpointerdown="(() =>PointerDown(artifact))"
+                            @onpointercancel="PointerCancel"
+                                 id="@GetIdForArtifact(artifact.Name)">
 
 
                                 <div class="check-box-position @(IsPhone ? "check-box-mobile" : string.Empty) @(ArtifactExplorerMode== ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "" )" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
@@ -70,11 +71,11 @@
                                     @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
                                     {
                                         <div class="options-btn"
-                         @onclick="() => HandleArtifactOptionClick(artifact)"
-                         @onpointerup:preventDefault="true"
-                         @onpointerup:stopPropagation="true"
-                         @onpointerdown:preventDefault="true"
-                         @onpointerdown:stopPropagation="true">
+                                        @onclick="() => HandleArtifactOptionClick(artifact)"
+                                        @onpointerup:preventDefault="true"
+                                        @onpointerup:stopPropagation="true"
+                                        @onpointerdown:preventDefault="true"
+                                        @onpointerdown:stopPropagation="true">
                                         </div>
                                     }
                                 </div>
@@ -89,9 +90,10 @@
                     @if (artifact != null)
                     {
                         <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") list-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-             @onpointerup="((e) => PointerUp(e,artifact))"
-             @onpointerdown="(() =>PointerDown(artifact))"
-             @onpointercancel="PointerCancel">
+                        @onpointerup="((e) => PointerUp(e,artifact))"
+                        @onpointerdown="(() =>PointerDown(artifact))"
+                        @onpointercancel="PointerCancel"
+                             id="@GetIdForArtifact(artifact.Name)">
 
 
                             <div class="check-box-position @(IsPhone ? "check-box-mobile" : string.Empty)" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
@@ -136,21 +138,21 @@
                                     @if (IsInZipMode is false)
                                     {
                                         <div class="options-btn"
-                     @onclick="() => HandleArtifactOptionClick(artifact)"
-                     @onpointerup:preventDefault="true"
-                     @onpointerup:stopPropagation="true"
-                     @onpointerdown:preventDefault="true"
-                     @onpointerdown:stopPropagation="true">
+                                        @onclick="() => HandleArtifactOptionClick(artifact)"
+                                        @onpointerup:preventDefault="true"
+                                        @onpointerup:stopPropagation="true"
+                                        @onpointerdown:preventDefault="true"
+                                        @onpointerdown:stopPropagation="true">
                                         </div>
                                     }
                                     else
                                     {
                                         <div class="extract-btn"
-                     @onclick="() => HandleZipArtifactClickAsync(artifact)"
-                     @onpointerup:preventDefault="true"
-                     @onpointerup:stopPropagation="true"
-                     @onpointerdown:preventDefault="true"
-                     @onpointerdown:stopPropagation="true">
+                                        @onclick="() => HandleZipArtifactClickAsync(artifact)"
+                                        @onpointerup:preventDefault="true"
+                                        @onpointerup:stopPropagation="true"
+                                        @onpointerdown:preventDefault="true"
+                                        @onpointerdown:stopPropagation="true">
                                         </div>
                                     }
                                 }
