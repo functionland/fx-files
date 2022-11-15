@@ -131,7 +131,7 @@ async function scrollToItem(itemId) {
 }
 
 async function scrollToItemWithTimeout(item) {
-    setTimeout(scrollIntoView(item));
+    setTimeout(scrollIntoView(item),3000);
 }
 
 async function addGrayBackground(item) {
