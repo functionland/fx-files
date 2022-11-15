@@ -4,7 +4,6 @@ namespace Functionland.FxFiles.Client.Shared.Components
 {
     public partial class FxSearchInput
     {
-
         private string? _inputText;
         private System.Timers.Timer? _timer;
 
@@ -18,7 +17,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
 
         private bool _isFocused = false;
 
-        public void HandleClear()
+        public void HandleCancel()
         {
             HandleClearInputText();
             OnCancel.InvokeAsync();
@@ -74,10 +73,7 @@ namespace Functionland.FxFiles.Client.Shared.Components
         private void TimerElapsed(object? sender, ElapsedEventArgs e)
         {
             StopTimer();
-            InvokeAsync(() =>
-            {
-                OnSearch.InvokeAsync(_inputText);
-            });
+            InvokeAsync(() => { OnSearch.InvokeAsync(_inputText); });
         }
     }
 }

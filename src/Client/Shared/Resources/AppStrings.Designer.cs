@@ -1348,6 +1348,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SD card.
+        /// </summary>
+        public static string SDCard {
+            get {
+                return ResourceManager.GetString("SDCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SD card ({0}).
         /// </summary>
         public static string SDCardName {
