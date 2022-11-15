@@ -22,11 +22,12 @@ public class AndroidImageThumbnailPluginPlatformTest<TFileService> : ImageThumbn
 
     protected override (int width, int height) GetArtifactWidthAndHeight(string imagePath)
     {
-        var bitmap = BitmapFactory.DecodeFile(imagePath);
+        BitmapFactory.Options options = new()
+        {
+            InJustDecodeBounds = true
+        };
+        _ = BitmapFactory.DecodeFile(imagePath, options);
 
-        if (bitmap is null)
-            throw new InvalidOperationException("Unable to create the bitmap based on given image path.");
-
-        return (bitmap.Width, bitmap.Height);
+        return (options.OutWidth, options.OutHeight);
     }
 }
