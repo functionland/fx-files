@@ -15,7 +15,7 @@
                IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? true : false)" />
 
 
-    <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1")">
+    <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
         @if (CurrentArtifact != null)
         {
             <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
@@ -54,7 +54,7 @@
             </div>
         }
 
-        <div class="root-title">My device files</div>
+        <div class="root-title @(IsInRoot(CurrentArtifact) ? "show-root-title" : "hide-root-title")">@Localizer[nameof(AppStrings.MyDeviceFile)]</div>
         <div class="action-bar-box">
             <div class="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") @(_isInSearch ? "select-action-search" : "") select-action ">
                 <div class="info-selection">

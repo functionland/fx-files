@@ -1087,6 +1087,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My Device Files.
+        /// </summary>
+        public static string MyDeviceFile {
+            get {
+                return ResourceManager.GetString("MyDeviceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {

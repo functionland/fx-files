@@ -13,8 +13,15 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    height: calc(100% - 128px);
     width: 100%;
+}
+
+.in-root-scroll-artifact {
+    height: calc(100% - 81px);
+}
+
+.not-in-root-scroll-artifact {
+    height: calc(100% - 128px);
 }
 
 .file-browser-container ::deep div.toolbar-box {
@@ -56,6 +63,20 @@
     position: sticky;
     top: 72px;
     z-index: 2;
+    opacity: 1;
+}
+
+.show-root-title {
+    opacity: 1;
+    height: 56px;
+    transition: height 0ms linear, opacity 200ms linear 200ms;
+}
+
+.hide-root-title {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 200ms linear, height 0ms linear 500ms;
 }
 
 .disable-pinned {

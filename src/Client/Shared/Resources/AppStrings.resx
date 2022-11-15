@@ -699,4 +699,7 @@
   <data name="PasswordEmptyMessage" xml:space="preserve">
     <value>Password won't be empty.</value>
   </data>
+  <data name="MyDeviceFile" xml:space="preserve">
+    <value>My Device Files</value>
+  </data>
 </root>
