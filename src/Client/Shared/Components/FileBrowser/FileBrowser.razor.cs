@@ -153,19 +153,14 @@ public partial class FileBrowser
         await base.OnInitAsync();
     }
 
+    protected override async Task OnAfterFirstRenderAsync()
+    {
+        ReceiveIntent();
+        await base.OnAfterFirstRenderAsync();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            HandleIntentReceiver();
-
-            _ = EventAggregator
-                .GetEvent<IntentReceiveEvent>()
-                .Subscribe(
-                    HandleIntentReceiver,
-                    ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
-        }
-
         if (_isGoingBack)
         {
             _isGoingBack = false;
@@ -1905,15 +1900,23 @@ public partial class FileBrowser
         }
     }
 
-    private void HandleIntentReceiver(IntentReceiveEvent? intentReceiveEvent = null)
+    private async void ReceiveIntent()
     {
-        if (IntentHolder.FileUrl is null || _fileViewerRef is null)
-            return;
+        try
+        {
+            if (IntentHolder.FileUrl is null || _fileViewerRef is null)
+                return;
 
-        var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
-        CurrentArtifact = artifact;
-        IntentHolder.FileUrl = null;
-        _ = _fileViewerRef.OpenArtifact(artifact);
+            var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
+            IntentHolder.FileUrl = null;
+            _ = await _fileViewerRef.OpenArtifact(artifact);
+
+            CurrentArtifact = artifact;
+        }
+        catch (Exception ex)
+        {
+            ExceptionHandler.Handle(ex);
+        }
     }
 
     private async Task FileViewerBack()
