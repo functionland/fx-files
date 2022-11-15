@@ -199,6 +199,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (fsArtifactType == FsArtifactType.File)
             {
+                var fileInfo = new FileInfo(path);
+                fsArtifact.Size = fileInfo.Length;
                 fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
             }
             else if (fsArtifactType == FsArtifactType.Folder)
@@ -630,7 +632,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual void LocalStorageDeleteDirectory(string path)
         {
-            Directory.Delete(path, true);
+            DirectoryUtils.HardDeleteDirectory(path);
         }
 
         protected virtual void LocalStorageMoveFile(string filePath, string newPath)

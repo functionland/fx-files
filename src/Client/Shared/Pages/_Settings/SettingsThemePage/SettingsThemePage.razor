@@ -3,11 +3,9 @@
 @namespace Functionland.FxFiles.Client.Shared.Pages
 
 <div class="fxtoolbar-wrapper">
-    <FxToolBar IsInRoot="false"
-               IsBackButtonVisible="true"
-               IsAddButtonVisible="false"
-               IsOverflowButtonVisible="false"
-               OnBackClick="HandleToolbarBack" />
+    <FxBackButton IsEnabled="true"
+                  OnClick="HandleToolbarBack"
+                  Class="back-button-space" />
 </div>
 
 <section class="theme-mode">

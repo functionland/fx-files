@@ -4,21 +4,24 @@
 
 @if (IsPartial)
 {
-    <div class="search-icon"></div>
-    <input class="input-box input-partial @(IsEnabled ? "" : "fully-disabled")" type="text" id="searchinput"
-       placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]"
-       value="@_inputText"
-       @oninput="HandleInput"
-       @onfocus="HandleFocus" />
+    <div class="deep-search">
+        <input class="input-box input-partial @(IsEnabled ? "" : "fully-disabled") @(_isFocused ? "search-icon-active" : "")"
+           type="text" id="searchinput"
+           placeholder="@Localizer[nameof(AppStrings.InputSearchParial)]"
+           value="@_inputText"
+           @oninput="HandleInput"
+        @onfocus="HandleFocus" autocomplete="off" />
+        <div class="search-icon"></div>
+    </div>
 }
 else
 {
     <div class="input-full-width">
         <div class="search-icon @(IsEnabled ? "" : "fully-disabled")"></div>
-        <input class="input-box" value="@_inputText" @oninput="HandleInput" @onfocus="HandleFocus" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth), (Placeholder?? "Folder name")]" />
+        <input class="input-box" value="@_inputText" @oninput="HandleInput" @onfocus="HandleFocus" type="text" placeholder="@Localizer[nameof(AppStrings.InputSearchFullWidth), (Placeholder?? "Folder name")]" autocomplete="off"/>
         @if (!string.IsNullOrEmpty(_inputText) || !string.IsNullOrWhiteSpace(_inputText))
         {
-            <button class="button-search-input" @onclick="HandleClear">@Localizer[nameof(AppStrings.Clear)]</button>
+            <button class="button-search-input" @onclick="HandleCancel">@Localizer[nameof(AppStrings.Clear)]</button>
         }
     </div>
 }

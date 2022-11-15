@@ -6,6 +6,7 @@
 .list-container {
     transition: height 300ms linear 3s;
     height: 100%;
+    width: 100%;
     flex-grow: 2;
     overflow-y: auto;
     overflow-x: hidden;
@@ -556,6 +557,10 @@
         right: calc(#{$a} - #{$b});
         z-index: 2;
     }
+}
+
+.check-box-position {
+    margin-right: 16px;
 }
 
 .checkbox {
