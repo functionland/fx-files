@@ -745,7 +745,7 @@ public partial class FileBrowser
 
         try
         {
-            if (result is { ResultType: InputModalResultType.Confirm, Result: { } })
+            if (result.ResultType == InputModalResultType.Confirm)
             {
                 await FileService.CreateFolderAsync(path,
                     result.Result);
@@ -828,9 +828,13 @@ public partial class FileBrowser
 
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
-        return (from artifact in artifacts
-                where artifact.ArtifactType == FsArtifactType.File
-                select new ShareFile(artifact.FullPath)).ToList();
+        var filesQuery =
+            from artifact in artifacts
+            where artifact.ArtifactType == FsArtifactType.File
+            select new ShareFile(artifact.FullPath);
+
+        var files = filesQuery.ToList();
+        return files;
     }
 
     private async Task LoadPinsAsync()
@@ -1397,16 +1401,15 @@ public partial class FileBrowser
     private async Task UpdatePinedArtifactsAsync(IEnumerable<FsArtifact> artifacts, bool isPinned)
     {
         await LoadPinsAsync();
-        var artifactPath = artifacts.Select(a => a.FullPath);
-
-        var pinnedArtifactPaths = artifactPath as string[] ?? artifactPath.ToArray();
-        if (CurrentArtifact != null && pinnedArtifactPaths.Any(p => p == CurrentArtifact.FullPath))
+        var artifactPath = artifacts.Select(a => a.FullPath).ToArray();
+        if (CurrentArtifact != null && artifactPath.Any(p => p == CurrentArtifact.FullPath))
         {
             CurrentArtifact.IsPinned = isPinned;
         }
         else
         {
-            foreach (var artifact in _allArtifacts.Where(artifact => pinnedArtifactPaths.Contains(artifact.FullPath)))
+            var pinnedArtifacts = _allArtifacts.Where(artifact => artifactPath.Contains(artifact.FullPath));
+            foreach (var artifact in pinnedArtifacts)
             {
                 artifact.IsPinned = isPinned;
             }
