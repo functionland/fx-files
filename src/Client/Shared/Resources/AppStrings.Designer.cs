@@ -1618,15 +1618,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your error message.
-        /// </summary>
-        public static string ToastErrorMessage {
-            get {
-                return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Something went wrong!.
         /// </summary>
         public static string ToastErrorTitle {
