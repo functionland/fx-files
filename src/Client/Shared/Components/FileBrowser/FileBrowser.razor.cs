@@ -233,25 +233,19 @@ public partial class FileBrowser
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
-            if (_progressModalRef is not null)
-            {
-                if(destinationPath != CurrentArtifact?.FullPath)
-                {
-                    await NavigateToDestination(destinationPath);
-                }
-
-                InitialProgressBar(artifacts.Count);
-                await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles),
-                    true);
-            }
-
-            _progressBarCts = new CancellationTokenSource();
-
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
+            _progressBarCts = new CancellationTokenSource();
 
             if (destinationPath == CurrentArtifact?.FullPath)
             {
+                if (_progressModalRef is not null)
+                {
+                    InitialProgressBar(artifacts.Count);
+                    await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles),
+                        true);
+                }
+
                 var desArtifacts = await FileService.GetArtifactsAsync(destinationPath).ToListAsync();
 
                 foreach (var item in artifacts)
@@ -321,6 +315,13 @@ public partial class FileBrowser
             {
                 try
                 {
+                    if (_progressModalRef is not null)
+                    {
+                        await NavigateToAsync(destinationPath);
+                        await _progressModalRef.ShowAsync(ProgressMode.Progressive, Localizer.GetString(AppStrings.CopyFiles),
+                            true);
+                    }
+
                     await FileService.CopyArtifactsAsync(artifacts, destinationPath, false,
                         onProgress: async (progressInfo) =>
                         {
@@ -426,7 +427,7 @@ public partial class FileBrowser
 
                 if (_progressModalRef is not null)
                 {
-                    await NavigateToDestination(destinationPath);
+                    await NavigateToAsync(destinationPath);
                     await _progressModalRef.ShowAsync(ProgressMode.Progressive,
                         Localizer.GetString(AppStrings.MovingFiles), true);
                 }
@@ -786,7 +787,7 @@ public partial class FileBrowser
             if (destinationDirectory != null && extractResult.ExtractorResult == ExtractorBottomSheetResultType.Success)
             {
                 var destinationPath = Path.Combine(destinationDirectory, destinationFolderName);
-                await NavigateToDestination(destinationPath);
+                await NavigateToAsync(destinationPath);
             }
         }
         catch (Exception exception)
@@ -1768,7 +1769,7 @@ public partial class FileBrowser
         return artifacts.Where(artifact => pathExistArtifacts.Any(p => p.StartsWith(artifact.FullPath))).ToList();
     }
 
-    private async Task NavigateToDestination(string? destinationPath)
+    private async Task NavigateToAsync(string? destinationPath)
     {
         if (_isInSearch)
         {
@@ -1783,7 +1784,6 @@ public partial class FileBrowser
 
         CurrentArtifact = await FileService.GetArtifactAsync(destinationPath);
         _ = LoadChildrenArtifactsAsync(CurrentArtifact);
-        _ = LoadPinsAsync();
     }
 
     private void ChangeDeviceBackFunctionality(ArtifactExplorerMode mode)
