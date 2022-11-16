@@ -54,6 +54,7 @@ public partial class TextViewer : IFileViewerComponent
         while (streamReader.ReadLine() is string line)
         {
             Text.AppendLine(line);
+            await JSRuntime.InvokeVoidAsync("setCodeMirrorText", Text.ToString());
             await InvokeAsync(() => StateHasChanged());
         }
     }
