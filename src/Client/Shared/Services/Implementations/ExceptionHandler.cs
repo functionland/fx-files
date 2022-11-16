@@ -41,7 +41,7 @@ public partial class ExceptionHandler : IExceptionHandler
 #if DEBUG
         var message = (exception as KnownException)?.Message ?? exception.ToString();
         Console.WriteLine(message);
-        //Debugger.Break();
+        Debugger.Break();
 #else
         Crashes.TrackError(exception);
 #endif
