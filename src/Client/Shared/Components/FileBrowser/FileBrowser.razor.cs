@@ -186,7 +186,7 @@ public partial class FileBrowser
         if (_timer == null)
             return;
 
-        if (_loadArtifacts != null && _displayedArtifacts.Count <= 0 && !_loadArtifacts.IsCompletedSuccessfully)
+        if (_loadArtifacts != null && _displayedArtifacts.Count <= 0 && _loadArtifacts.IsCompletedSuccessfully is false)
             return;
 
         if (ScrollArtifact != null)
