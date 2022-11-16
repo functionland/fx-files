@@ -2,17 +2,6 @@
 @import '../../Styles/abstracts/_variables.scss';
 @import '../../Styles/abstracts/_functions.scss';
 
-
-.folder-show {
-    opacity: 1;
-    transition: opacity 500ms linear ;
-}
-
-.folder-hide {
-    opacity: 0;
-    transition: opacity 500ms linear ;
-}
-
 .toolbar-box {
     width: 100%;
     padding: 8px 21px;
@@ -175,6 +164,16 @@
             align-items: center;
         }
     }
+}
+
+.folder-show {
+    opacity: 1;
+    transition: opacity 300ms linear;
+}
+
+.folder-hide {
+    opacity: 0;
+    transition: opacity 300ms linear;
 }
 
     ::deep .animate-button {

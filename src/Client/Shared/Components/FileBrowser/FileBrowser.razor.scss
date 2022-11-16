@@ -51,8 +51,6 @@
     }
 }
 
-
-
 .root-title {
     font-family: $montserrat-semi-bold;
     font-size: $font-size-18;
@@ -66,9 +64,15 @@
 }
 
 .hide-root-title {
-    opacity: 0;
-    height: 0;
-    transition: opacity 500ms linear, height 0s linear 500ms;
+   display:none;
+   opacity: 0;
+   height: 0;
+}
+
+.show-root-title {
+    opacity: 1;
+    height: 56px;
+    transition: opacity 300ms linear  50ms;
 }
 
 .disable-pinned {
@@ -459,7 +463,6 @@
         justify-content: flex-start;
         align-items: center;
         flex-flow: row wrap;
-        /* gap: $spacing-8;*/
 
         div {
             background-color: color(gray-bg-secondary);
@@ -590,17 +593,10 @@
     overflow: hidden;
 }
 
-.pin-artifacts {
-    transition: height 200ms linear;
-}
-
 .pin-artifacts-hide {
-    height: 0;
-    overflow: hidden;
-    transition: height 200ms linear;
+   display: none
 }
 
 .pin-artifacts-show {
-    height: auto;
-    transition: height 200ms linear;
+    display: block;
 }
