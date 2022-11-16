@@ -72,6 +72,10 @@ public abstract class ThumbnailService
                 thumbnailStream.CopyTo(fileStream);
             }
         }
+        catch
+        {
+            return false;
+        }
         finally
         {
             if (stream is not null)
