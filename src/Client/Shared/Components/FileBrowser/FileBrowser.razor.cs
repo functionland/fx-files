@@ -906,9 +906,9 @@ public partial class FileBrowser
 
     private async Task HandleSelectArtifactAsync(FsArtifact artifact)
     {
-        _fxSearchInputRef?.HandleClearInputText();
         if (artifact.ArtifactType == FsArtifactType.File)
         {
+            _fxSearchInputRef?.HandleClearInputText();
             var isOpened = _fileViewerRef != null && await _fileViewerRef.OpenArtifact(artifact);
 
             if (isOpened == false)
@@ -953,11 +953,6 @@ public partial class FileBrowser
         }
         else
         {
-            if (_isInSearch)
-            {
-                await CancelSearchAsync();
-            }
-
             await OpenFolderAsync(artifact);
         }
     }
@@ -978,6 +973,12 @@ public partial class FileBrowser
 
             CurrentArtifact = artifact;
             _displayedArtifacts = new List<FsArtifact>();
+
+            if (!string.IsNullOrWhiteSpace(_inlineSearchText))
+            {
+                _fxSearchInputRef?.HandleClearInputText();
+                _inlineSearchText = string.Empty;
+            }
 
             _ = Task.Run(async () =>
             {
