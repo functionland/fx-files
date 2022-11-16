@@ -1936,7 +1936,7 @@ public partial class FileBrowser
             if (IntentHolder.FileUrl is null || _fileViewerRef is null)
                 return;
 
-            var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
+            var artifact = await FileService.GetArtifactAsync(IntentHolder.FileUrl);
             IntentHolder.FileUrl = null;
             _ = await _fileViewerRef.OpenArtifact(artifact);
 
