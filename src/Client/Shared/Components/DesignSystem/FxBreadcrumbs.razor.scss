@@ -46,12 +46,15 @@
     line-height: $line-height-16;
     letter-spacing: $letter-spacing-02;
     color: color(gray-content2);
-    display: flex;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .file-path:not(div.file-path:first-of-type):before {
     font-size: $icon-16;
     margin-right: $spacing-6;
+    vertical-align: middle;
     @include Icon($chevron-right, color(gray-content1));
 }
 
