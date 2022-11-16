@@ -1942,9 +1942,9 @@ public partial class FileBrowser
 
             CurrentArtifact = artifact;
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(exception);
         }
     }
 
