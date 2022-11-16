@@ -11,8 +11,6 @@
     overflow-x: auto;
     overflow-y: hidden;
     margin: $spacing-0 $spacing-21 $spacing-21;
-    max-width: 558px;
-    width: 100%;
 
     span[class$="ellipsis"] {
         font-size: $font-size-12;
@@ -46,9 +44,6 @@
     line-height: $line-height-16;
     letter-spacing: $letter-spacing-02;
     color: color(gray-content2);
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .file-path:not(div.file-path:first-of-type):before {
