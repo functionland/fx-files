@@ -174,14 +174,14 @@ public partial class FileBrowser
                 _timer = new Timer(1000);
                 _timer.Enabled = true;
                 _timer.Start();
-                _timer.Elapsed += async (s, e) => await OnTimedEventScrollTimerElapsed(s, e);
+                _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
             }
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task OnTimedEventScrollTimerElapsed(object? sender, ElapsedEventArgs e)
+    private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         if (_timer == null)
             return;
@@ -191,14 +191,22 @@ public partial class FileBrowser
 
         if (ScrollArtifact != null)
         {
+            DisposeTimer();
             await ScrollToArtifact(ScrollArtifact);
         }
 
         ScrollArtifact = null;
+    }
 
-        _timer.Enabled = false;
-        _timer.Stop();
-        _timer.Dispose();
+    private void DisposeTimer()
+    {
+        if (_timer != null)
+        {
+            _timer.Enabled = false;
+            _timer.Stop();
+            _timer.Dispose();
+        }
+
         _timer = null;
     }
 
@@ -1901,7 +1909,8 @@ public partial class FileBrowser
 
     private async Task ScrollToArtifact(FsArtifact artifact)
     {
-        await JSRuntime.InvokeVoidAsync("scrollToItem", artifact.Name);
+        await InvokeAsync(StateHasChanged);
+        await JSRuntime.InvokeVoidAsync("scrollToItem", GetIdForScrollArtifact(artifact.Name));
     }
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
@@ -1948,5 +1957,11 @@ public partial class FileBrowser
         }
 
         await OnInitAsync();
+    }
+
+    private string GetIdForScrollArtifact(string artifactName)
+    {
+        var id = artifactName.Trim().Replace(" ", string.Empty);
+        return id;
     }
 }
