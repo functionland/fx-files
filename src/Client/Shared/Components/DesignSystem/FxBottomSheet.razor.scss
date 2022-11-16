@@ -92,8 +92,8 @@
     height: 80%;
 
     .bottom-sheet-contents {
-        max-height: 90%;
-        min-height: 80%;
+        max-height: 100%;
+        min-height: 90%;
         border-radius: $border-radius-20 $border-radius-20 $border-size-0 $border-size-0;
         padding: $spacing-16 $spacing-21;
     }

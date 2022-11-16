@@ -15,13 +15,12 @@
                IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)"
                @ref="_fxToolBarRef"/>
                
+    @if (CurrentArtifact != null)
+    {
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+    }
 
     <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
-        @if (CurrentArtifact != null)
-        {
-            <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
-        }
-
         @if (IsInRoot(CurrentArtifact) && _isInSearch is false)
         {
             <div class="pin-artifacts">
