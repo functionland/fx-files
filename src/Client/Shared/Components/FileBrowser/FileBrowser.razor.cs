@@ -174,14 +174,14 @@ public partial class FileBrowser
                 _timer = new Timer(1000);
                 _timer.Enabled = true;
                 _timer.Start();
-                _timer.Elapsed += _scrollTimer_Elapsed;
+                _timer.Elapsed += async (s, e) => await _scrollTimer_Elapsed(s, e);
             }
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void _scrollTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    private async Task _scrollTimer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         if (_timer == null)
             return;
@@ -191,7 +191,7 @@ public partial class FileBrowser
 
         if (ScrollArtifact != null)
         {
-            ScrollToArtifact(ScrollArtifact).GetAwaiter().GetResult();
+            await ScrollToArtifact(ScrollArtifact);
         }
 
         ScrollArtifact = null;
@@ -1901,7 +1901,6 @@ public partial class FileBrowser
 
     private async Task ScrollToArtifact(FsArtifact artifact)
     {
-        await InvokeAsync(StateHasChanged);
         await JSRuntime.InvokeVoidAsync("scrollToItem", artifact.Name);
     }
 

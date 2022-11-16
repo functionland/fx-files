@@ -127,7 +127,7 @@ function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
     if (typeof item !== "undefined") {
         let list = document.querySelector('.list-container');
-        list.scrollTop = item.scrollWidth;
+        list.scrollTop = item.offsetTop;
         addGrayBackground(item);
     }
 }
