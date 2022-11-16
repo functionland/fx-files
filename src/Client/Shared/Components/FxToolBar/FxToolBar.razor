@@ -21,7 +21,7 @@
                       Margin="0 8px"
                       Class="animate-button"
                       OnClick="OnAddButtonClick"
-                      IsVisible="IsInRootDestinationFolder == true ? false : IsAddButtonVisible"
+                      IsVisible="IsInRootDestinationFolder != true && IsAddButtonVisible"
                       ButtonStyle="IsInRoot ? FxButtonStyle.Disabled : FxButtonStyle.IconOnly"
                       LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
 
@@ -29,7 +29,7 @@
                       FxAvatarStatusType="FxAvatarStatusEnum.NoStatus" />
         </div>
     </div>
-    <div class="folder-info-row">
+    <div class="folder-info-row @(IsInRoot ? "folder-hide" : "folder-show")">
         <div class="action-row">
             <div class="info-box">
                 <div class="artifact-title @(IsPinned ? "pinned-icon" : "")">
@@ -42,7 +42,7 @@
                     <FxButton Margin="0 8px"
                         Class="animate-button"
                         OnClick="OnAddButtonClick"
-                        IsVisible="IsInRootDestinationFolder == true ? false : IsAddButtonVisible"
+                        IsVisible="IsInRootDestinationFolder != true && IsAddButtonVisible"
                         ButtonStyle="FxButtonStyle.IconOnly"
                         LeftIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/plus.svg" />
 

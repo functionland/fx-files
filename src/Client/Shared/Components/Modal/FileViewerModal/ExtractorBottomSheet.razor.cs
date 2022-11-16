@@ -67,7 +67,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 }
                 catch (PasswordDidNotMatchedException)
                 {
-                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
                         Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)), FxToastType.Error);
                     ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                     _tcs?.SetResult(ExtractorBottomSheetResult);
@@ -75,7 +75,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 }
                 catch (NotSupportedEncryptedFileException exception)
                 {
-                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
                         exception.Message, FxToastType.Error);
                     ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                     _tcs?.SetResult(ExtractorBottomSheetResult);
@@ -179,7 +179,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 switch (_password)
                 {
                     case "":
-                        FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                        FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
                             Localizer.GetString(nameof(AppStrings.PasswordEmptyMessage)), FxToastType.Error);
                         ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                         _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();

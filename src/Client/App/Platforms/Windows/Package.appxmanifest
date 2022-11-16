@@ -45,7 +45,9 @@
 
 							<!--ZIP-->
 							<uap:FileType ContentType="application/zip">.zip</uap:FileType>
-							<uap:FileType ContentType="application/x-rar-compressed">.rar</uap:FileType>
+							
+							<!--TODO: Currently we don't have viewer for zip-->
+							<!--<uap:FileType ContentType="application/x-rar-compressed">.rar</uap:FileType>-->
 
 							<!--TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.-->
 							<!--VIDEO-->

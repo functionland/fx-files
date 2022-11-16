@@ -1087,6 +1087,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My Device Files.
+        /// </summary>
+        public static string MyDeviceFile {
+            get {
+                return ResourceManager.GetString("MyDeviceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -1348,6 +1357,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SD card.
+        /// </summary>
+        public static string SDCard {
+            get {
+                return ResourceManager.GetString("SDCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SD card ({0}).
         /// </summary>
         public static string SDCardName {
@@ -1470,6 +1488,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         
@@ -1605,15 +1632,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ToastDescMessage {
             get {
                 return ResourceManager.GetString("ToastDescMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your error message.
-        /// </summary>
-        public static string ToastErrorMessage {
-            get {
-                return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
             }
         }
         

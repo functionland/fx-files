@@ -20,7 +20,9 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
     DataMimeTypes = new[] 
     {
         "application/zip", 
-        "application/x-rar-compressed", 
+
+        //TODO: Currently we don't have viewer for zip
+        //"application/x-rar-compressed", 
        
         //TODO: Currently, the video player we have does not have the ability to run the video file outside the program, and in some cases, it does not work.
         //"video/*" 

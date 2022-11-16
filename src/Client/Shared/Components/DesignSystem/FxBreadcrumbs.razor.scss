@@ -11,6 +11,7 @@
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
+    margin: $spacing-0 $spacing-21 $spacing-21;
 
     span[class$="ellipsis"] {
         font-size: $font-size-12;
