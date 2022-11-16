@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System.Diagnostics;
+using System.Timers;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
@@ -103,7 +104,7 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
-    private System.Timers.Timer? _timer;
+    private Timer? _timer;
     private Task? _loadArtifacts;
 
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
@@ -1483,7 +1484,7 @@ public partial class FileBrowser
 
         _searchCancellationTokenSource = new CancellationTokenSource();
         var token = _searchCancellationTokenSource.Token;
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
 
         await Task.Run(async () =>
         {

@@ -123,17 +123,15 @@ function OnScrollCheck() {
     });
 }
 
-async function scrollToItem(itemId) {
+function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
     if (typeof item !== "undefined") {
-        scrollToItemWithTimeout(item).then(addGrayBackground(item));
+        let list = document.querySelector('.list-container');
+        list.scrollTop = item.scrollWidth;
+        addGrayBackground(item);
     }
 }
 
-async function scrollToItemWithTimeout(item) {
-    setTimeout(scrollIntoView(item),3000);
-}
-
-async function addGrayBackground(item) {
+function addGrayBackground(item) {
     item.classList.add('on-scroll-item-gray-background');
 }
