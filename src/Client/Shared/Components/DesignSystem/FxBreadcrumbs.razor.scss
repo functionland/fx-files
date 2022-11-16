@@ -7,11 +7,12 @@
     display: flex;
     align-items: center;
     gap: $spacing-6;
-    margin: $spacing-0 $spacing-21;
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
     margin: $spacing-0 $spacing-21 $spacing-21;
+    max-width: 558px;
+    width: 100%;
 
     span[class$="ellipsis"] {
         font-size: $font-size-12;
