@@ -1087,6 +1087,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My Device Files.
+        /// </summary>
+        public static string MyDeviceFile {
+            get {
+                return ResourceManager.GetString("MyDeviceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -1479,6 +1488,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         
