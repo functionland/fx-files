@@ -120,10 +120,10 @@
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
     </section>
-
+    
     <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search">
-            <div class="filter-content @((_isSearchFinished is false && _isFileCategoryFilterBoxOpen is false) ? string.Empty : "show-expander-divider")">
+            <div class="filter-content @(_searchStatusTask is {IsCompleted: false } && _isFileCategoryFilterBoxOpen is false ? string.Empty : "show-expander-divider")">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
                 <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
@@ -150,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            @if (_isSearchFinished is false && string.IsNullOrWhiteSpace(_searchText) is false)
+            @if (_searchStatusTask is {IsCompleted: false } && string.IsNullOrWhiteSpace(_searchText) is false)
             {
                 <div>
                     <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="Search"></FxProgressBar>

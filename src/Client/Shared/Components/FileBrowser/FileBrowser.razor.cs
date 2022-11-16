@@ -104,9 +104,9 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
-    private bool _isSearchFinished;
     private Timer? _timer;
     private Task? _loadArtifactsTask;
+    private Task? _searchStatusTask;
 
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -1449,8 +1449,11 @@ public partial class FileBrowser
 
     private void HandleSearchFocused()
     {
-        _isInSearch = true;
-        _displayedArtifacts.Clear();
+        if (_isInSearch is false)
+        {
+            _isInSearch = true;
+            _displayedArtifacts.Clear();
+        }
         ChangeDeviceBackFunctionality(ArtifactExplorerMode.Normal);
     }
 
@@ -1464,7 +1467,6 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
-        _isSearchFinished = false;
         if (string.IsNullOrWhiteSpace(text) && _artifactsSearchFilterType == null && _artifactsSearchFilterDate == null)
         {
             _isFileCategoryFilterBoxOpen = true;
@@ -1482,6 +1484,8 @@ public partial class FileBrowser
         {
             _searchCancellationTokenSource?.Cancel();
             _isArtifactExplorerLoading = false;
+            _allArtifacts.Clear();
+            _displayedArtifacts.Clear();
             return;
         }
 
@@ -1496,13 +1500,14 @@ public partial class FileBrowser
         var token = _searchCancellationTokenSource.Token;
         var sw = Stopwatch.StartNew();
 
-        await Task.Run(async () =>
+        _searchStatusTask = await Task.Factory.StartNew(async () =>
           {
               try
               {
                   await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
                                      .WithCancellation(token))
                   {
+
                       if (token.IsCancellationRequested)
                           return;
 
@@ -1536,7 +1541,6 @@ public partial class FileBrowser
               finally
               {
                   _isArtifactExplorerLoading = false;
-                  _isSearchFinished = true;
               }
           }, token);
     }
