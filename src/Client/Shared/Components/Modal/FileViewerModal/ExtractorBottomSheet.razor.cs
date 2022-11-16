@@ -67,7 +67,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 }
                 catch (PasswordDidNotMatchedException)
                 {
-                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
                         Localizer.GetString(nameof(AppStrings.PasswordDidNotMatchedException)), FxToastType.Error);
                     ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                     _tcs?.SetResult(ExtractorBottomSheetResult);
@@ -75,7 +75,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
                 }
                 catch (NotSupportedEncryptedFileException exception)
                 {
-                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
+                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
                         exception.Message, FxToastType.Error);
                     ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
                     _tcs?.SetResult(ExtractorBottomSheetResult);
@@ -176,38 +176,45 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
                 ProgressBarOnCancel();
                 await GetPasswordFromInputAsync();
-                if (string.IsNullOrWhiteSpace(_password))
+                switch (_password)
                 {
-                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorMessage)),
-                        Localizer.GetString(nameof(AppStrings.PasswordEmptyMessage)), FxToastType.Error);
-                    ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
-                    _tcs?.SetResult(ExtractorBottomSheetResult);
-                    return null;
-                }
-                try
-                {
-                    _progressBarCts = new CancellationTokenSource();
-                    await ShowProgressModal();
-                    duplicateCount = await ZipService.ExtractZippedArtifactAsync(zipFilePath, destinationFolderPath,
-                        destinationFolderName, innerArtifacts, overwrite, _password, OnProgress, _progressBarCts?.Token);
-                }
-                catch (PasswordDidNotMatchedException)
-                {
-                    throw;
-                }
-                catch (Exception)
-                {
-                    throw new DomainLogicException(Localizer.GetString(nameof(AppStrings.TheOpreationFailedMessage)));
-                }
-                finally
-                {
-                    ProgressBarOnCancel();
-                    if (_progressModalRef != null)
-                    {
-                        await _progressModalRef.CloseAsync();
-                    }
+                    case "":
+                        FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
+                            Localizer.GetString(nameof(AppStrings.PasswordEmptyMessage)), FxToastType.Error);
+                        ExtractorBottomSheetResult.ExtractorResult = ExtractorBottomSheetResultType.Cancel;
+                        _tcs = new TaskCompletionSource<ExtractorBottomSheetResult>();
+                        _tcs?.SetResult(ExtractorBottomSheetResult);
+                        return null;
+                    case null:
+                        return null;
+                    default:
+                        try
+                        {
+                            _progressBarCts = new CancellationTokenSource();
+                            await ShowProgressModal();
+                            duplicateCount = await ZipService.ExtractZippedArtifactAsync(zipFilePath, destinationFolderPath,
+                                destinationFolderName, innerArtifacts, overwrite, _password, OnProgress, _progressBarCts?.Token);
+                        }
+                        catch (PasswordDidNotMatchedException)
+                        {
+                            throw;
+                        }
+                        catch (Exception)
+                        {
+                            throw new DomainLogicException(Localizer.GetString(nameof(AppStrings.TheOpreationFailedMessage)));
+                        }
+                        finally
+                        {
+                            ProgressBarOnCancel();
+                            if (_progressModalRef != null)
+                            {
+                                await _progressModalRef.CloseAsync();
+                            }
 
-                    _password = null;
+                            _password = null;
+                        }
+
+                        break;
                 }
             }
             finally

@@ -6,12 +6,13 @@
         OpenFileWithApp,
         Rename,
         Copy,
+        Move,
         Pin,
         UnPin,
-        Move,
         Delete,
         ShareWithApp,
-        Cancel,
-        Extract
+        ShowInLocation,
+        Extract,
+        Cancel
     }
 }

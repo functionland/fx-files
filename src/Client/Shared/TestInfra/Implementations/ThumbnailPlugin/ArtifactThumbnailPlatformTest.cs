@@ -1,4 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Utils;
+﻿using Functionland.FxFiles.Client.Shared.Enums;
+using Functionland.FxFiles.Client.Shared.Utils;
+using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 
@@ -31,35 +33,81 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
                 testsRootArtifact = rootArtifacts.FirstOrDefault(rootArtifact => rootArtifact.FullPath == Path.Combine(rootPath, "ThumbnailTestsFolder"));
             }
 
-            var testRootArtifact = await FileService.CreateFolderAsync(testsRootArtifact.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
+            var testRootArtifact = await FileService.CreateFolderAsync(testsRootArtifact?.FullPath!, $"TestRun-{DateTimeOffset.Now:yyyyMMddHH-mmssFFF}");
             var testRoot = testRootArtifact.FullPath!;
 
-
             var artifacts = await FileService.GetArtifactsAsync(testRoot).ToListAsync();
-
             Assert.AreEqual(0, artifacts.Count, "new folder must be empty");
 
-            var createdArtifact = await CreateArtifactAsync(testRoot);
+            var fileNameWithoutExtension = Guid.NewGuid().ToString();
 
-            var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(createdArtifact, ThumbnailScale.Medium);
+            var generalArtifact = await GetArtifactAsync(testRoot, fileNameWithoutExtension);
 
-            Assert.IsNotNull(thumbnailPath, "Image thumbnail created");
+            if (generalArtifact is null)
+                throw new InvalidOperationException("Unable to get the artifact.");
 
-            var imageThumbnailArtifact = await FileService.GetArtifactAsync(thumbnailPath);
+            var (initialWidth, initilaHeight) = GetArtifactWidthAndHeight(generalArtifact.FullPath);
 
+            var thumbnailScaleSizes = Enum.GetValues<ThumbnailScale>();
 
-            Assert.IsNotNull(imageThumbnailArtifact, "Image thumbnail artifact founded!");
+            foreach (var thumbnailScaleSize in thumbnailScaleSizes)
+            {
+                var (expectedWidth, expectedHeight) = ImageUtils.ScaleImage(initialWidth, initilaHeight, thumbnailScaleSize);
+
+                var sw = new Stopwatch();
+                sw.Start();
+                var thumbnailPath = await ArtifactThumbnailService.GetOrCreateThumbnailAsync(generalArtifact, thumbnailScaleSize);
+                sw.Stop();
+                var duration = sw.ElapsedMilliseconds;
+
+                Assert.IsNotNull(thumbnailPath, $"Thumbnail {thumbnailScaleSize} created in {duration} ms");
+                AssertThumbnailWidthAndHeight(expectedWidth, expectedHeight, thumbnailPath!, $"Size:{generalArtifact.SizeStr}");
+            }
+
+            await TestPluginAsync(testRoot);
         }
         catch (Exception ex)
         {
-            throw;
+            try
+            {
+                Assert.Fail("Test failed!", ex.Message);
+            }
+            catch
+            {
+            }
         }
     }
 
+    protected void AssertThumbnailWidthAndHeight(int expectedWidth, int expectedHeight, string thumbnailPath, string? additionalInformaion = null)
+    {
+        var (actualWidth, actualHeight) = GetArtifactWidthAndHeight(thumbnailPath);
 
-    protected static string GetSampleFileLocalPath() =>
-       Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "_content/Functionland.FxFiles.Client.Shared", "images", "Files");
-    protected abstract Task<FsArtifact> CreateArtifactAsync(string testRoot, CancellationToken? cancellationToken = null);
+        Assert.AreEqual(expectedWidth, actualWidth, $"Thumbnail width is {actualWidth}, as expected. {additionalInformaion}");
+        Assert.AreEqual(expectedHeight, actualHeight, $"Thumbnail height is {actualHeight}, as expected. {additionalInformaion}");
+    }
+
+    private async Task TestPluginAsync(string testRoot, CancellationToken? cancellationToken = null)
+    {
+        await OnPluginSpecificTestAsync(testRoot, cancellationToken);
+    }
+
+
+    protected virtual Task OnPluginSpecificTestAsync(string testRoot, CancellationToken? cancellationToken = null)
+    {
+        return Task.CompletedTask;
+    }
+
+    private async Task<FsArtifact?> GetArtifactAsync(string testRoot, string fileNameWithoutExtension, CancellationToken? cancellationToken = null)
+    {
+        return await OnGetArtifactAsync(testRoot, fileNameWithoutExtension, cancellationToken);
+    }
+
+    protected virtual Task<FsArtifact?> OnGetArtifactAsync(string testRoot, string fileNameWithoutExtension, CancellationToken? cancellationToken = null)
+    {
+        return Task.FromResult<FsArtifact?>(null);
+    }
 
     protected abstract string OnGetRootPath();
+
+    protected abstract (int width, int height) GetArtifactWidthAndHeight(string imagePath);
 }

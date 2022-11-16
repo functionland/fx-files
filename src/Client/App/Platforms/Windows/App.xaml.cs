@@ -1,6 +1,8 @@
 ﻿using Functionland.FxFiles.Client.Shared.Models;
+using Functionland.FxFiles.Client.Shared.Services.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
+using Prism.Events;
 using System.Drawing;
 using Windows.ApplicationModel.Activation;
 using Windows.UI;
@@ -45,10 +47,15 @@ public partial class App
         switch (goodArgs.Kind)
         {
             case ExtendedActivationKind.File:
-                var intentHolder = MauiWinUIApplication.Current.Services.GetRequiredService<IntentHolder>();
+                var intentHolder = Current.Services.GetRequiredService<IntentHolder>();
                 var data = goodArgs.Data as IFileActivatedEventArgs;
+                if (data == null) return;
+
                 var path = data.Files.Select(file => file.Path).FirstOrDefault();
                 intentHolder.FileUrl = path;
+
+                var eventAggregator = Current.Services.GetRequiredService<IEventAggregator>();
+                eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
                 break;
         }
     }

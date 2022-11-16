@@ -6,6 +6,7 @@
         private bool _isModalOpen;
         private bool _isMultiple;
         private bool _isInRoot;
+        private bool _isInSearch;
         private PinOptionResult? _pinOptionResult;
         private FileCategoryType? _fileCategoryType;
         private FsArtifactType? _fsArtifactType;
@@ -17,8 +18,6 @@
 
             _tcs?.SetResult(result);
             _tcs = null;
-
-            _isModalOpen = false;
         }
 
         public void Extract()
@@ -109,6 +108,17 @@
             _isModalOpen = false;
         }
 
+        public void ShowInLocation()
+        {
+            var result = new ArtifactOverflowResult();
+            result.ResultType = ArtifactOverflowResultType.ShowInLocation;
+
+            _tcs?.SetResult(result);
+            _tcs = null;
+
+            _isModalOpen = false;
+        }
+
         public void Delete()
         {
             var result = new ArtifactOverflowResult();
@@ -125,7 +135,8 @@
             PinOptionResult pinOptionResult,
             bool isInRoot,
             FileCategoryType? fileCategoryType = null,
-            FsArtifactType? fsArtifactType = null)
+            FsArtifactType? fsArtifactType = null,
+            bool isInSearch = false)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -137,9 +148,11 @@
             _tcs?.SetCanceled();
             _isInRoot = isInRoot;
             _isMultiple = isMultiple;
+            _isInSearch = isInSearch;
             _pinOptionResult = pinOptionResult;
             _fileCategoryType = fileCategoryType;
             _fsArtifactType = fsArtifactType;
+
             _isModalOpen = true;
             StateHasChanged();
 

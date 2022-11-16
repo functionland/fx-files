@@ -25,24 +25,24 @@
             <Style TargetType="Frame">
                 <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}" />
                 <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="FlowDirection" Value="LeftToRight" />
                 <Setter Property="HasShadow" Value="False" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
                 <Setter Property="Margin" Value="0" />
                 <Setter Property="Padding" Value="0" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid BackgroundColor="{StaticResource AppBackgroundColor}">
-        <Frame>
-            <media:MediaElement
-                x:Name="media"
-                AutoPlay="True"
-                BackgroundColor="{StaticResource AppBackgroundColor}"
-                ShowsPlaybackControls="False">
-                <media:MediaElement.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="media_Tapped" />
-                </media:MediaElement.GestureRecognizers>
-            </media:MediaElement>
-        </Frame>
+        <media:MediaElement
+            x:Name="media"
+            AutoPlay="True"
+            BackgroundColor="{StaticResource AppBackgroundColor}"
+            ShowsPlaybackControls="False">
+            <media:MediaElement.GestureRecognizers>
+                <TapGestureRecognizer Tapped="media_Tapped" />
+            </media:MediaElement.GestureRecognizers>
+        </media:MediaElement>
         <Frame
             x:Name="header"
             Padding="21,0"
