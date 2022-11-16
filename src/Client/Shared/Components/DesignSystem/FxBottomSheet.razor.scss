@@ -9,14 +9,19 @@
     position: fixed;
     top: 0px;
     left: 0px;
-    z-index: 10000;
-    visibility: hidden;
-    transition: all 0.3s linear 0.1s;
+    z-index: -1;
+    opacity: 0;
+    background-color: #88888880;
+    transition: opacity 0.1s linear;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .sheet-wrapper-apear {
-    background-color: #88888880;
-    visibility: visible;
+    opacity: 1;
+    z-index: 10000;
 }
 
 .bottom-sheet {
@@ -24,29 +29,28 @@
     width: 100%;
     position: absolute;
     transform: translateY(100%);
-    transition: all 300ms linear 0.2s;
+    transition: all 3s linear 2s;
     bottom: 0px;
 }
 
 .show-bottom-sheet {
-    transform: translateY(0px);
+    max-height: 600px !important;
 }
 
 .bottom-sheet-contents {
     box-sizing: border-box;
-    max-height: 100vh;
     max-width: 600px;
     width: 100%;
     padding: $spacing-0 $spacing-21;
     position: relative;
-    transform: translateY(0);
+    max-height: 0;
     overflow-y: auto;
     background-color: color(app-bg);
     border-radius: $border-radius-20 $border-radius-20 0px 0px;
-    transition: transform 0.5s, border-radius 0.5s;
+    transition: max-height 0.3s linear 0.1s;
 
     &:not(.not-selectable) {
-        transition: transform 0.5s, border-radius 0.5s, height 0.5s;
+        //transition: transform 0.5s, border-radius 0.5s, height 0.5s;
     }
 
     &.fullscreen {
@@ -85,7 +89,6 @@
             @include Icon($close);
         }
     }
-
 }
 
 .full-screen-sheet {

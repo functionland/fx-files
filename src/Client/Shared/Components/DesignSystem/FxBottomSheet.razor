@@ -3,8 +3,8 @@
 @inherits AppComponentBase;
 
 <div class="sheet-wrapper @(IsOpen ? "sheet-wrapper-apear" : "")" @onclick="(async () => await Close())">
-    <div class="bottom-sheet column items-center justify-end @(IsFullScreenMode ? "full-screen-sheet" : "") @(!IsOpen ? "" : "show-bottom-sheet")" @onclick:stopPropagation="true" @onclick:preventDefault="true">
-        <div class="bottom-sheet-contents column">
+    @*<div class="bottom-sheet column items-center justify-end @(IsFullScreenMode ? "full-screen-sheet" : "") @(!IsOpen ? "" : "show-bottom-sheet")" @onclick:stopPropagation="true" @onclick:preventDefault="true">*@
+        <div class="bottom-sheet-contents column @(!IsOpen ? "" : "show-bottom-sheet")" @onclick:stopPropagation="true" @onclick:preventDefault="true">
             @if (ShowCloseButton)
             {
                 <div class="controls">
@@ -20,5 +20,5 @@
 
             @ChildContent
         </div>
-    </div>
+    @*</div>*@
 </div>
