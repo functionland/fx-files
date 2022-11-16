@@ -126,8 +126,12 @@ function OnScrollCheck() {
 function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
     if (typeof item !== "undefined") {
-        setTimeout(scrollIntoView(item), 3000);
-        console.log(itemId);
-        console.log(item);
+        let list = document.querySelector('.list-container');
+        list.scrollTop = item.scrollWidth;
+        addGrayBackground(item);
     }
+}
+
+function addGrayBackground(item) {
+    item.classList.add('on-scroll-item-gray-background');
 }
