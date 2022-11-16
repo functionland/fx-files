@@ -174,14 +174,14 @@ public partial class FileBrowser
                 _timer = new Timer(1000);
                 _timer.Enabled = true;
                 _timer.Start();
-                _timer.Elapsed += async (s, e) => await _scrollTimer_Elapsed(s, e);
+                _timer.Elapsed += async (s, e) => await OnTimedEventScrollTimerElapsed(s, e);
             }
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task _scrollTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    private async Task OnTimedEventScrollTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         if (_timer == null)
             return;
