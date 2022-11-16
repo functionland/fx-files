@@ -123,7 +123,7 @@
 
     <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search">
-            <div class="filter-content">
+            <div class="filter-content @((_isSearchFinished is false && _isFileCategoryFilterBoxOpen is false) ? string.Empty : "show-expander-divider")">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
                 <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
@@ -149,13 +149,13 @@
                         <div class="pdf-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">@Localizer[nameof(AppStrings.App)]</div>
                     </div>
                 </div>
-                @if (_isSearchFinished is false && string.IsNullOrWhiteSpace(_searchText) is false)
-                {
-                    <div>
-                        <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="Search"></FxProgressBar>
-                    </div>
-                }
             </div>
+            @if (_isSearchFinished is false && string.IsNullOrWhiteSpace(_searchText) is false)
+            {
+                <div>
+                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="Search"></FxProgressBar>
+                </div>
+            }
         </div>
 
         <ArtifactExplorer Artifacts="_displayedArtifacts"

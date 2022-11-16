@@ -1464,6 +1464,7 @@ public partial class FileBrowser
     private async Task HandleSearchAsync(string text)
     {
         CancelSelectionMode();
+        _isSearchFinished = false;
         if (string.IsNullOrWhiteSpace(text) && _artifactsSearchFilterType == null && _artifactsSearchFilterDate == null)
         {
             _isFileCategoryFilterBoxOpen = true;
