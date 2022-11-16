@@ -58,7 +58,7 @@
         <div class="action-bar-box">
             <div class="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") @(_isInSearch ? "select-action-search" : "") select-action ">
                 <div class="info-selection">
-                    <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
+                    <div class="close-btn" @onclick="CancelSelectionMode"></div>
                     <div class="item-selected">
                         <span class="item-selected-count">@_selectedArtifacts?.Count</span>
                         <span class="item-selected-text">items selected</span>
@@ -80,7 +80,7 @@
                         @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
                     </div>
                     <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
-                    <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
+                    <div class="sort-order @(_isAscOrder ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">
                     <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
@@ -149,6 +149,12 @@
                         <div class="pdf-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">@Localizer[nameof(AppStrings.App)]</div>
                     </div>
                 </div>
+                @if (_isSearchFinished is false && string.IsNullOrWhiteSpace(_searchText) is false)
+                {
+                    <div>
+                        <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="Search"></FxProgressBar>
+                    </div>
+                }
             </div>
         </div>
 

@@ -104,8 +104,9 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
+    private bool _isSearchFinished;
     private Timer? _timer;
-    private Task? _loadArtifacts;
+    private Task? _loadArtifactsTask;
 
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -144,7 +145,7 @@ public partial class FileBrowser
             await LoadPinsAsync();
             await InvokeAsync(StateHasChanged);
         });
-        _loadArtifacts = Task.Run(async () =>
+        _loadArtifactsTask = Task.Run(async () =>
         {
             await LoadChildrenArtifactsAsync(CurrentArtifact);
             await InvokeAsync(StateHasChanged);
@@ -186,7 +187,7 @@ public partial class FileBrowser
         if (_timer == null)
             return;
 
-        if (_loadArtifacts != null && _displayedArtifacts.Count <= 0 && _loadArtifacts.IsCompletedSuccessfully is false)
+        if (_loadArtifactsTask != null && _displayedArtifacts.Count <= 0 && _loadArtifactsTask.IsCompletedSuccessfully is false)
             return;
 
         if (ScrollArtifact != null)
@@ -1495,47 +1496,48 @@ public partial class FileBrowser
         var sw = Stopwatch.StartNew();
 
         await Task.Run(async () =>
-        {
-            try
-            {
-                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
-                                   .WithCancellation(token))
-                {
-                    if (token.IsCancellationRequested)
-                        return;
+          {
+              try
+              {
+                  await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
+                                     .WithCancellation(token))
+                  {
+                      if (token.IsCancellationRequested)
+                          return;
 
-                    _allArtifacts.Add(item);
-                    if (sw.ElapsedMilliseconds <= 1000)
-                        continue;
+                      _allArtifacts.Add(item);
+                      if (sw.ElapsedMilliseconds <= 1000)
+                          continue;
 
-                    if (token.IsCancellationRequested)
-                        return;
+                      if (token.IsCancellationRequested)
+                          return;
 
-                    RefreshDisplayedArtifacts();
-                    await InvokeAsync(() =>
-                    {
-                        if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
-                        {
-                            _isArtifactExplorerLoading = false;
-                        }
+                      RefreshDisplayedArtifacts();
+                      await InvokeAsync(() =>
+                      {
+                          if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
+                          {
+                              _isArtifactExplorerLoading = false;
+                          }
 
-                        StateHasChanged();
-                    });
-                    sw.Restart();
-                    await Task.Yield();
-                }
+                          StateHasChanged();
+                      });
+                      sw.Restart();
+                      await Task.Yield();
+                  }
 
-                if (token.IsCancellationRequested)
-                    return;
+                  if (token.IsCancellationRequested)
+                      return;
 
-                RefreshDisplayedArtifacts();
-                await InvokeAsync(StateHasChanged);
-            }
-            finally
-            {
-                _isArtifactExplorerLoading = false;
-            }
-        }, token);
+                  RefreshDisplayedArtifacts();
+                  await InvokeAsync(StateHasChanged);
+              }
+              finally
+              {
+                  _isArtifactExplorerLoading = false;
+                  _isSearchFinished = true;
+              }
+          }, token);
     }
 
     private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null,
