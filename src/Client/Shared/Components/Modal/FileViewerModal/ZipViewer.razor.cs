@@ -42,6 +42,7 @@ public partial class ZipViewer : IFileViewerComponent
             await InitialZipViewerAsync();
             StateHasChanged();
         }
+
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -57,7 +58,8 @@ public partial class ZipViewer : IFileViewerComponent
         }
         catch (NotSupportedEncryptedFileException)
         {
-            FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)), Localizer.GetString(nameof(AppStrings.NotSupportedEncryptedFileException)), FxToastType.Error);
+            FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
+                Localizer.GetString(nameof(AppStrings.NotSupportedEncryptedFileException)), FxToastType.Error);
             await HandleBackAsync(true);
         }
         catch (Exception)
@@ -74,16 +76,17 @@ public partial class ZipViewer : IFileViewerComponent
 
         var token = _cancellationTokenSource.Token;
 
-        _allZipFileEntities = await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
+        _allZipFileEntities =
+            await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
     }
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
     {
         _displayedArtifacts = (
-             from innerArtifact in _allZipFileEntities
-             where innerArtifact.ParentFullPath == artifact.FullPath
-             orderby artifact.ArtifactType descending, artifact.Name ascending
-             select innerArtifact
+            from innerArtifact in _allZipFileEntities
+            where innerArtifact.ParentFullPath == artifact.FullPath
+            orderby artifact.ArtifactType descending, artifact.Name ascending
+            select innerArtifact
         ).ToList();
     }
 
@@ -112,11 +115,14 @@ public partial class ZipViewer : IFileViewerComponent
                 return;
             }
 
-            var destinationFolderName = string.IsNullOrWhiteSpace(folderNameResult?.Result) == false ? folderNameResult.Result : folderName;
+            var destinationFolderName = string.IsNullOrWhiteSpace(folderNameResult?.Result) == false
+                ? folderNameResult.Result
+                : folderName;
 
             if (folderNameResult?.Result != null && _extractorModalRef != null)
             {
-                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath,
+                    destinationPath,
                     folderNameResult.Result, artifacts);
             }
 
@@ -170,7 +176,8 @@ public partial class ZipViewer : IFileViewerComponent
 
             if (_extractorModalRef != null)
             {
-                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath,
+                    destinationPath,
                     destinationFolderName, new List<FsArtifact> { artifact });
             }
 
@@ -221,11 +228,13 @@ public partial class ZipViewer : IFileViewerComponent
                     SetGoBackDeviceButtonFunctionality();
                     return;
                 }
+
                 var destinationFolderName = folderNameResult.Result ?? folderName;
 
                 if (folderNameResult.Result != null && _extractorModalRef != null)
                 {
-                    ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath, destinationPath,
+                    ExtractorBottomSheetResult = await _extractorModalRef.ShowAsync(CurrentArtifact.FullPath,
+                        destinationPath,
                         folderNameResult.Result);
                 }
 
@@ -293,6 +302,7 @@ public partial class ZipViewer : IFileViewerComponent
         {
             CancelSelectionMode();
         }
+
         StateHasChanged();
     }
 
