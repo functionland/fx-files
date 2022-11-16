@@ -110,7 +110,6 @@ public partial class FileBrowser
     [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
-    [AutoInject] public IZipService ZipService { get; set; } = default!;
     [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
