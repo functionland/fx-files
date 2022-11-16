@@ -153,7 +153,7 @@
             @if (_searchStatusTask is {IsCompleted: false } && string.IsNullOrWhiteSpace(_searchText) is false)
             {
                 <div>
-                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="Search"></FxProgressBar>
+                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])"></FxProgressBar>
                 </div>
             }
         </div>
