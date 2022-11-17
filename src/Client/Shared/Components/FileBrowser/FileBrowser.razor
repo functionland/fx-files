@@ -83,7 +83,7 @@
                     <div class="sort-order @(_isAscOrder ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">
-                    <div class="action-btn list-view-btn @(ArtifactState.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
+                    <div class="action-btn list-view-btn @(AppStateStore.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
                     <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn select-all-btn" @onclick="ToggleSelectedAll"></div>
                     <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
@@ -112,7 +112,7 @@
                           OnArtifactOptionClick="HandleOptionsArtifact"
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
-                          ViewMode="ArtifactState.ViewMode"
+                          ViewMode="AppStateStore.ViewMode"
                           FileCategoryFilter="_fileCategoryFilter"
                           HandleBack="HandleToolbarBackClickAsync"
                           IsLoading="_isArtifactExplorerLoading"
@@ -241,7 +241,6 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            OnBack="FileViewerBack"
             NavigationFolderCallback="NavigateToAsync" />
 
 <ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>
