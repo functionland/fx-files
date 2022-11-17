@@ -7,10 +7,10 @@
     display: flex;
     align-items: center;
     gap: $spacing-6;
-    margin: $spacing-0 $spacing-21;
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
+    margin: $spacing-0 $spacing-21 $spacing-21;
 
     span[class$="ellipsis"] {
         font-size: $font-size-12;
@@ -44,12 +44,12 @@
     line-height: $line-height-16;
     letter-spacing: $letter-spacing-02;
     color: color(gray-content2);
-    display: flex;
 }
 
 .file-path:not(div.file-path:first-of-type):before {
     font-size: $icon-16;
     margin-right: $spacing-6;
+    vertical-align: middle;
     @include Icon($chevron-right, color(gray-content1));
 }
 

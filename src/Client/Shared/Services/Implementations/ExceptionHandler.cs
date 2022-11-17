@@ -1,8 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Shared;
-using Microsoft.AppCenter.Crashes;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
