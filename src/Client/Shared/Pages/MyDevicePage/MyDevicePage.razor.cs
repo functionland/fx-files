@@ -18,7 +18,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 var query = new Uri(NavigationManager.Uri).Query;
                 if (string.IsNullOrWhiteSpace(query)) return null;
 
-                var decodedQuery = System.Net.WebUtility.UrlDecode(query);
+                var decodedQuery = Uri.UnescapeDataString(query);
                 if (string.IsNullOrWhiteSpace(decodedQuery)) return null;
 
                 var decodedQueryParts = decodedQuery.Split('&');

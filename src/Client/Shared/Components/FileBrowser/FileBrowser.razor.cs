@@ -127,6 +127,7 @@ public partial class FileBrowser
                 HandleChangedArtifacts,
                 ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
+        DefaultPath ??= AppStateStore.IntentFileUrl;
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
             var preArtifact = AppStateStore.CurrentMyDeviceArtifact;
@@ -1958,23 +1959,10 @@ public partial class FileBrowser
             var artifact = FileService.GetArtifactAsync(AppStateStore.IntentFileUrl).GetAwaiter().GetResult();
             AppStateStore.IntentFileUrl = null;
             _ = await _fileViewerRef.OpenArtifact(artifact);
-
-            CurrentArtifact = artifact;
         }
         catch (Exception ex)
         {
             ExceptionHandler.Handle(ex);
         }
-    }
-
-    private async Task FileViewerBack()
-    {
-        if (CurrentArtifact?.ParentFullPath is not null && CurrentArtifact.ArtifactType == FsArtifactType.File)
-        {
-            var artifact = await FileService.GetArtifactAsync(CurrentArtifact.ParentFullPath);
-            CurrentArtifact = artifact;
-        }
-
-        await OnInitAsync();
     }
 }
