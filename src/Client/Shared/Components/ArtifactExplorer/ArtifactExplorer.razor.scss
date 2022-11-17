@@ -11,6 +11,16 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
+    transform: scaley(0);
+    transform-origin: top;
+    opacity: 0;
+    
+}
+
+.show-animation-artifact {
+    transition: transform 100ms linear, opacity 100ms linear;
+    transform: scaleY(1);
+    opacity: 1;
 }
 
 .list-title {
@@ -544,6 +554,6 @@
     display: none;
 }
 
-.overflosw-hidden {
+.overflow-hidden {
     overflow: hidden !important;
 }
