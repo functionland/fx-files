@@ -75,7 +75,7 @@ public partial class FileBrowser
                 FileWatchService.WatchArtifact(_currentArtifactValue);
             }
 
-            ArtifactState.CurrentMyDeviceArtifact = CurrentArtifact;
+            AppStateStore.CurrentMyDeviceArtifact = CurrentArtifact;
         }
     }
 
@@ -107,11 +107,9 @@ public partial class FileBrowser
     private System.Timers.Timer? _timer;
     private Task? _loadArtifacts;
 
-    [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
     [AutoInject] public IZipService ZipService { get; set; } = default!;
-    [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
     [AutoInject] public IFileLauncher FileLauncher { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
@@ -131,7 +129,7 @@ public partial class FileBrowser
 
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
-            var preArtifact = ArtifactState.CurrentMyDeviceArtifact;
+            var preArtifact = AppStateStore.CurrentMyDeviceArtifact;
             CurrentArtifact = preArtifact;
         }
         else
@@ -833,7 +831,12 @@ public partial class FileBrowser
         if (artifact == null || artifact.FullPath == null)
             return;
 
-        await FileLauncher.OpenWithAsync(artifact.FullPath);
+        AppStateStore.IntentFileUrl = artifact.FullPath;
+        var isOpen = await FileLauncher.OpenWithAsync(artifact.FullPath);
+        if (isOpen)
+        {
+            await SecureStorage.Default.SetAsync("intentFilePath", artifact.FullPath);
+        }
     }
 
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
@@ -1089,8 +1092,8 @@ public partial class FileBrowser
 
     public void ChangeViewMode()
     {
-        var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
-        ArtifactState.ViewMode = viewMode;
+        var viewMode = AppStateStore.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
+        AppStateStore.ViewMode = viewMode;
         StateHasChanged();
     }
 
@@ -1949,11 +1952,11 @@ public partial class FileBrowser
     {
         try
         {
-            if (IntentHolder.FileUrl is null || _fileViewerRef is null)
+            if (AppStateStore.IntentFileUrl is null || _fileViewerRef is null)
                 return;
 
-            var artifact = FileService.GetArtifactAsync(IntentHolder.FileUrl).GetAwaiter().GetResult();
-            IntentHolder.FileUrl = null;
+            var artifact = FileService.GetArtifactAsync(AppStateStore.IntentFileUrl).GetAwaiter().GetResult();
+            AppStateStore.IntentFileUrl = null;
             _ = await _fileViewerRef.OpenArtifact(artifact);
 
             CurrentArtifact = artifact;

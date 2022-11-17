@@ -10,7 +10,7 @@ using LaunchActivatedEventArgs = Microsoft.UI.Xaml.LaunchActivatedEventArgs;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows;
 
-public partial class App 
+public partial class App
 {
     public App()
     {
@@ -42,21 +42,37 @@ public partial class App
     {
         base.OnLaunched(args);
 
-        var goodArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
+        var appStateStore = Current.Services.GetRequiredService<IAppStateStore>();
+        var eventAggregator = Current.Services.GetRequiredService<IEventAggregator>();
 
-        switch (goodArgs.Kind)
+        try
         {
-            case ExtendedActivationKind.File:
-                var intentHolder = Current.Services.GetRequiredService<IntentHolder>();
-                var data = goodArgs.Data as IFileActivatedEventArgs;
-                if (data == null) return;
+            var goodArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
 
-                var path = data.Files.Select(file => file.Path).FirstOrDefault();
-                intentHolder.FileUrl = path;
+            switch (goodArgs.Kind)
+            {
+                case ExtendedActivationKind.File:
+                    var data = goodArgs.Data as IFileActivatedEventArgs;
+                    if (data == null) return;
 
-                var eventAggregator = Current.Services.GetRequiredService<IEventAggregator>();
-                eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
-                break;
+                    var path = data.Files.Select(file => file.Path).FirstOrDefault();
+                    appStateStore.IntentFileUrl = path;
+                    eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            var intentFilePath = SecureStorage.Default.GetAsync("intentFilePath").GetAwaiter().GetResult();
+            if (string.IsNullOrWhiteSpace(intentFilePath))
+            {
+                var exceptionHandler = Current.Services.GetRequiredService<IExceptionHandler>();
+                exceptionHandler.Track(ex);
+                return;
+            }
+
+            appStateStore.IntentFileUrl = intentFilePath;
+            eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
         }
     }
 }

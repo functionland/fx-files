@@ -11,7 +11,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
         [AutoInject] private ILocalDevicePinService _pinService { get; set; } = default!;
 
         [AutoInject] private IArtifactThumbnailService<ILocalDeviceFileService> _thumbnailService { get; set; } = default!;
-        [AutoInject] private IAppStateStore _appStateStore { get; set; } = default!;
         private string? DecodedDefaultPath
         {
             get
@@ -42,12 +41,12 @@ namespace Functionland.FxFiles.Client.Shared.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (_appStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
+            if (AppStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
             {
-                _appStateStore.CurrentMyDeviceArtifact = null;
+                AppStateStore.CurrentMyDeviceArtifact = null;
             }
 
-            _appStateStore.CurrentPagePath = "mydevice";
+            AppStateStore.CurrentPagePath = "mydevice";
         }
     }
 }

@@ -15,6 +15,7 @@ public partial class AppComponentBase : ComponentBase
     [AutoInject] protected IJSRuntime JSRuntime { get; set; } = default!;
 
     [AutoInject] protected IGoBackService GoBackService { get; set; } = default!;
+    [AutoInject] protected IAppStateStore AppStateStore { get; set; } = default!;
 
     public bool IsDesktop
     {

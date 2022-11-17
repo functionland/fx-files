@@ -1,13 +1,8 @@
-﻿using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using System.Diagnostics.Metrics;
-
-namespace Functionland.FxFiles.Client.Shared.Pages;
+﻿namespace Functionland.FxFiles.Client.Shared.Pages;
 
 public partial class SettingsPage
 {
     [AutoInject] private ThemeInterop ThemeInterop = default!;
-    [AutoInject] private IAppStateStore AppState { get; set; } = default!;
-    [AutoInject] private IAppStateStore _appStateStore { get; set; } = default!;
 
     private FxTheme DesiredTheme { get; set; }
     private string? CurrentTheme { get; set; }
@@ -18,7 +13,7 @@ public partial class SettingsPage
 
     protected override async Task OnInitAsync()
     {
-        _appStateStore.CurrentPagePath = "settings";
+        AppStateStore.CurrentPagePath = "settings";
         GoBackService.OnInit(null, true, true);
 
         DesiredTheme = await ThemeInterop.GetThemeAsync();
@@ -40,13 +35,13 @@ public partial class SettingsPage
 
     public void HandleTitleClick()
     {
-        if (_counter >= MaxCount && AppState.IsAvailableForTest) return;
+        if (_counter >= MaxCount && AppStateStore.IsAvailableForTest) return;
 
         _counter++;
 
-        if(_counter >= MaxCount)
+        if (_counter >= MaxCount)
         {
-            AppState.IsAvailableForTest = true;
+            AppStateStore.IsAvailableForTest = true;
         }
     }
 

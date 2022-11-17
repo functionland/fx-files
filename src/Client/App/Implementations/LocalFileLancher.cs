@@ -2,12 +2,14 @@
 
 public abstract class LocalFileLauncher : IFileLauncher
 {
-    public virtual async Task OpenWithAsync(string filePath)
+    public virtual async Task<bool> OpenWithAsync(string filePath)
     {
-        await Launcher.OpenAsync(new OpenFileRequest
+        var isOpen = await Launcher.OpenAsync(new OpenFileRequest
         {
             Title = "Open with",
             File = new ReadOnlyFile(filePath)
         });
+
+        return isOpen;
     }
 }
