@@ -1,9 +1,6 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Shared;
-using Microsoft.AppCenter.Crashes;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
+using Microsoft.AppCenter.Crashes;
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public partial class ExceptionHandler : IExceptionHandler
