@@ -5,15 +5,6 @@
         [Parameter] public FsArtifact? Artifact { get; set; }
         [Parameter] public IFileService? FileService { get; set; }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
-            }
-            await base.OnAfterRenderAsync(firstRender);
-        }
-
         private string[] GetBreadCrumbsPath(FsArtifact artifact)
         {
             if (FileService is null)

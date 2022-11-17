@@ -61,24 +61,29 @@ function breadCrumbStyle() {
     let breadcrumbs = document.querySelector(".fx-breadcrumbs");
     let startEllipsis = document.querySelector(".start-ellipsis");
     let endEllipsis = document.querySelector(".end-ellipsis");
+    let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
+
+    if (hasHorizontalScrollbar) {
+        startEllipsis.style.display = "block";
+        breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
+    }
 
     breadcrumbs.addEventListener("scroll", () => {
+        startEllipsis.style.display = "block";
         let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
 
         if (breadcrumbsScroll != 0) {
+            startEllipsis.classList.add("color-changer");
             startEllipsis.style.display = "block";
-            endEllipsis.style.display = "block";
-            endEllipsis.classList.remove("color-changer");
-
+            endEllipsis.classList.add("color-changer");
 
         } else {
+            startEllipsis.classList.remove("color-changer");
             startEllipsis.style.display = "none";
-            endEllipsis.classList.add("color-changer");
         }
 
         if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
-            endEllipsis.classList.add("color-changer");
-            endEllipsis.style.display = "block";
+            endEllipsis.classList.remove("color-changer");
         }
     });
 }
