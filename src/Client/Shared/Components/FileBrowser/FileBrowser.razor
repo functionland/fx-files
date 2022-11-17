@@ -15,13 +15,12 @@
                IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)"
                @ref="_fxToolBarRef"/>
                
+    @if (CurrentArtifact != null)
+    {
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+    }
 
     <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
-        @if (CurrentArtifact != null)
-        {
-            <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
-        }
-
         @if (IsInRoot(CurrentArtifact) && _isInSearch is false)
         {
             <div class="pin-artifacts">
@@ -59,7 +58,7 @@
         <div class="action-bar-box">
             <div class="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact ? "show-selected-item" : "hide-selected-item") @(_isInSearch ? "select-action-search" : "") select-action ">
                 <div class="info-selection">
-                    <div class="close-btn" @onclick="(() => CancelSelectionMode())"></div>
+                    <div class="close-btn" @onclick="CancelSelectionMode"></div>
                     <div class="item-selected">
                         <span class="item-selected-count">@_selectedArtifacts?.Count</span>
                         <span class="item-selected-text">items selected</span>
@@ -81,7 +80,7 @@
                         @Localizer[nameof(AppStrings.SortBy)] <span class="sort-type">@_currentSortType</span>
                     </div>
                     <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
-                    <div class="sort-order @(_isAscOrder is true ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
+                    <div class="sort-order @(_isAscOrder ? "asc-order" : "desc-order")" @onclick="HandleSortOrderClick"></div>
                 </div>
                 <div class="right-actions">
                     <div class="action-btn list-view-btn @(AppStateStore.ViewMode == ViewModeEnum.List ? "list-view-selected" : "grid-view-selected")" @onclick="ChangeViewMode"></div>
@@ -121,10 +120,10 @@
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
     </section>
-
+    
     <section class="file-browser-content search-container @(_isInSearch ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search">
-            <div class="filter-content">
+            <div class="filter-content @(_searchStatusTask is {IsCompleted: false } && _isFileCategoryFilterBoxOpen is false ? string.Empty : "show-expander-divider")">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
                 <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
@@ -151,6 +150,12 @@
                     </div>
                 </div>
             </div>
+            @if (_searchStatusTask is {IsCompleted: false } && string.IsNullOrWhiteSpace(_searchText) is false)
+            {
+                <div>
+                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])"></FxProgressBar>
+                </div>
+            }
         </div>
 
         <ArtifactExplorer Artifacts="_displayedArtifacts"

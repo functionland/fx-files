@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System.Diagnostics;
+using System.Timers;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
@@ -75,7 +76,7 @@ public partial class FileBrowser
                 FileWatchService.WatchArtifact(_currentArtifactValue);
             }
 
-            AppStateStore.CurrentMyDeviceArtifact = CurrentArtifact;
+            AppStateStore.CurrentMyDeviceArtifact = value;
         }
     }
 
@@ -104,12 +105,12 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
-    private System.Timers.Timer? _timer;
-    private Task? _loadArtifacts;
+    private Timer? _timer;
+    private Task? _loadArtifactsTask;
+    private Task? _searchStatusTask;
 
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
-    [AutoInject] public IZipService ZipService { get; set; } = default!;
     [AutoInject] public IFileLauncher FileLauncher { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
@@ -145,7 +146,7 @@ public partial class FileBrowser
             await LoadPinsAsync();
             await InvokeAsync(StateHasChanged);
         });
-        _loadArtifacts = Task.Run(async () =>
+        _loadArtifactsTask = Task.Run(async () =>
         {
             await LoadChildrenArtifactsAsync(CurrentArtifact);
             await InvokeAsync(StateHasChanged);
@@ -175,31 +176,39 @@ public partial class FileBrowser
                 _timer = new Timer(1000);
                 _timer.Enabled = true;
                 _timer.Start();
-                _timer.Elapsed += _scrollTimer_Elapsed;
+                _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
             }
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void _scrollTimer_Elapsed(object? sender, ElapsedEventArgs e)
+    private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         if (_timer == null)
             return;
 
-        if (_loadArtifacts != null && _displayedArtifacts.Count <= 0 && !_loadArtifacts.IsCompletedSuccessfully)
+        if (_loadArtifactsTask != null && _displayedArtifacts.Count <= 0 && _loadArtifactsTask.IsCompletedSuccessfully is false)
             return;
 
         if (ScrollArtifact != null)
         {
-            ScrollToArtifact(ScrollArtifact).GetAwaiter().GetResult();
+            DisposeTimer();
+            await ScrollToArtifact(ScrollArtifact);
         }
 
         ScrollArtifact = null;
+    }
 
-        _timer.Enabled = false;
-        _timer.Stop();
-        _timer.Dispose();
+    private void DisposeTimer()
+    {
+        if (_timer != null)
+        {
+            _timer.Enabled = false;
+            _timer.Stop();
+            _timer.Dispose();
+        }
+
         _timer = null;
     }
 
@@ -1467,8 +1476,11 @@ public partial class FileBrowser
 
     private void HandleSearchFocused()
     {
-        _isInSearch = true;
-        _displayedArtifacts.Clear();
+        if (_isInSearch is false)
+        {
+            _isInSearch = true;
+            _displayedArtifacts.Clear();
+        }
         ChangeDeviceBackFunctionality(ArtifactExplorerMode.Normal);
     }
 
@@ -1499,6 +1511,8 @@ public partial class FileBrowser
         {
             _searchCancellationTokenSource?.Cancel();
             _isArtifactExplorerLoading = false;
+            _allArtifacts.Clear();
+            _displayedArtifacts.Clear();
             return;
         }
 
@@ -1511,50 +1525,51 @@ public partial class FileBrowser
 
         _searchCancellationTokenSource = new CancellationTokenSource();
         var token = _searchCancellationTokenSource.Token;
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
 
-        await Task.Run(async () =>
-        {
-            try
-            {
-                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
-                                   .WithCancellation(token))
-                {
-                    if (token.IsCancellationRequested)
-                        return;
+        _searchStatusTask = await Task.Factory.StartNew(async () =>
+          {
+              try
+              {
+                  await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
+                                     .WithCancellation(token))
+                  {
 
-                    _allArtifacts.Add(item);
-                    if (sw.ElapsedMilliseconds <= 1000)
-                        continue;
+                      if (token.IsCancellationRequested)
+                          return;
 
-                    if (token.IsCancellationRequested)
-                        return;
+                      _allArtifacts.Add(item);
+                      if (sw.ElapsedMilliseconds <= 1000)
+                          continue;
 
-                    RefreshDisplayedArtifacts();
-                    await InvokeAsync(() =>
-                    {
-                        if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
-                        {
-                            _isArtifactExplorerLoading = false;
-                        }
+                      if (token.IsCancellationRequested)
+                          return;
 
-                        StateHasChanged();
-                    });
-                    sw.Restart();
-                    await Task.Yield();
-                }
+                      RefreshDisplayedArtifacts();
+                      await InvokeAsync(() =>
+                      {
+                          if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
+                          {
+                              _isArtifactExplorerLoading = false;
+                          }
 
-                if (token.IsCancellationRequested)
-                    return;
+                          StateHasChanged();
+                      });
+                      sw.Restart();
+                      await Task.Yield();
+                  }
 
-                RefreshDisplayedArtifacts();
-                await InvokeAsync(StateHasChanged);
-            }
-            finally
-            {
-                _isArtifactExplorerLoading = false;
-            }
-        }, token);
+                  if (token.IsCancellationRequested)
+                      return;
+
+                  RefreshDisplayedArtifacts();
+                  await InvokeAsync(StateHasChanged);
+              }
+              finally
+              {
+                  _isArtifactExplorerLoading = false;
+              }
+          }, token);
     }
 
     private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null,
@@ -1930,7 +1945,7 @@ public partial class FileBrowser
     private async Task ScrollToArtifact(FsArtifact artifact)
     {
         await InvokeAsync(StateHasChanged);
-        await JSRuntime.InvokeVoidAsync("scrollToItem", artifact.Name);
+        await JSRuntime.InvokeVoidAsync("scrollToItem", GetIdForScrollArtifact(artifact.Name));
     }
 
     private async Task NavigateArtifactForShowInFolder(FsArtifact artifact)
@@ -1960,9 +1975,15 @@ public partial class FileBrowser
             AppStateStore.IntentFileUrl = null;
             _ = await _fileViewerRef.OpenArtifact(artifact);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            ExceptionHandler.Handle(ex);
+            ExceptionHandler.Handle(exception);
         }
+    }
+
+    private string GetIdForScrollArtifact(string artifactName)
+    {
+        var id = artifactName.Trim().Replace(" ", string.Empty);
+        return id;
     }
 }

@@ -411,6 +411,10 @@ public partial class ArtifactExplorer
 
     private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
     {
+        if (IsInZipMode)
+        {
+            return;
+        }
         foreach (var item in items)
         {
             if (cancellationToken.IsCancellationRequested)
