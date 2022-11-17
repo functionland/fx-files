@@ -24,14 +24,15 @@
     line-height: $line-height-24;
 }
 
-.virtualize-container {
-    position: relative;
-}
-
 .virtualize-placeholder {
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
     position: sticky;
+    display: flex;
     width: 100%;
-    top: 30px;
+    bottom: 0;
+    top: 50%;
 }
 
 .grid-view {

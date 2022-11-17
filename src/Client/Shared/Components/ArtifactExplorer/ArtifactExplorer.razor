@@ -21,8 +21,8 @@
     }
     else
     {
-        <div class="virtualize-container">
-            @if (!IsLoading && !IsInRoot(CurrentArtifact))
+        <div>
+            @if (!IsLoading && Artifacts.Count > 50)
             {
                 <div class="virtualize-placeholder">
                     <OverlayLoading LoadingType="LoadingType.Overlay" />
