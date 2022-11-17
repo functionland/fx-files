@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 
+using Microsoft.AppCenter.Crashes;
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public partial class ExceptionHandler : IExceptionHandler

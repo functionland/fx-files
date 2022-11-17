@@ -49,6 +49,7 @@ public partial class FileBrowser
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
+    private bool _isSearchInputFocused = false;
     private string? _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
@@ -1104,11 +1105,6 @@ public partial class FileBrowser
 
     private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifacts)
     {
-        if (_isInSearch)
-        {
-            await HandleSearchUnFocused();
-        }
-
         var selectedArtifactsCount = artifacts.Count;
         var isMultiple = selectedArtifactsCount > 1;
 
@@ -1454,6 +1450,7 @@ public partial class FileBrowser
             _isInSearch = true;
             _displayedArtifacts.Clear();
         }
+        _isSearchInputFocused = true;
         ChangeDeviceBackFunctionality(ArtifactExplorerMode.Normal);
     }
 
@@ -1971,5 +1968,15 @@ public partial class FileBrowser
     {
         var id = artifactName.Trim().Replace(" ", string.Empty);
         return id;
+    }
+
+    private async Task HandleOnArtifactTouchStartAsync()
+    {
+        if (_isSearchInputFocused)
+        {
+            _isSearchInputFocused = false;
+            await HandleSearchUnFocused();
+        }
+
     }
 }
