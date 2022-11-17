@@ -419,17 +419,27 @@ public partial class ArtifactExplorer
 
     private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
     {
+        var semaphore = new SemaphoreSlim(Environment.ProcessorCount);
+
         foreach (var item in items)
         {
+            await semaphore.WaitAsync(cancellationToken);
+
             if (cancellationToken.IsCancellationRequested)
                 return;
-            
-            await LoadThumbnailAsync(item, cancellationToken);
+
+            _ = Task.Run(async ()=>
+            {
+                await LoadThumbnailAsync(item, cancellationToken);
+                semaphore.Release();
+            });
         }
     }
 
     private async Task LoadThumbnailAsync(FsArtifact item, CancellationToken cancellationToken)
     {
+
+        // ToDo: Use ValueTask
         try
         {
             if (item.ThumbnailPath is not null)
