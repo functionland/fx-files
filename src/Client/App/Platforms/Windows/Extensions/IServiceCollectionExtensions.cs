@@ -10,18 +10,25 @@ public static class IWindowsServiceCollectionExtensions
     public static IServiceCollection AddClientWindowsServices(this IServiceCollection services)
     {
         // Services being registered here can get injected in Windows.
+
         services.AddSingleton<ILocalDeviceFileService, WindowsFileService>();
         services.AddSingleton<IPlatformTestService, WindowsPlatformTestService>();
         services.AddTransient<WindowsFileServicePlatformTest>();
-        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
-        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<IFulaFileService>>();
+
         services.AddSingleton<IFileWatchService, WindowsFileWatchService>();
         services.AddSingleton<IFileCacheService, WindowsFileCacheService>();
 
+        // Thumbnail Plugins
         services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsVideoThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsPdfThumbnailPlugin>();
         services.AddTransient<IThumbnailPlugin, WindowsAudioThumbnailPlugin>();
+
+        // Thumbnail Plugin Platform Tests
+        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<WindowsImageThumbnailPluginPlatformTest<IFulaFileService>>();
+        services.AddTransient<WindowsPdfThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<WindowsPdfThumbnailPluginPlatformTest<IFulaFileService>>();
 
         return services;
     }

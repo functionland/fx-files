@@ -2,11 +2,10 @@
 @import '../../Styles/abstracts/_variables.scss';
 @import '../../Styles/abstracts/_functions.scss';
 
-
-
 .toolbar-box {
     width: 100%;
     padding: 8px 21px;
+    overflow-x: hidden;
 }
 
 .toolbar-search-row ::deep input.input-box {
@@ -20,7 +19,8 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    transition: width 300ms linear;
+    transition: width 250ms linear 100ms, opacity 250ms linear;
+    opacity: 1;
 }
 
 .right-btn-wrapper {
@@ -30,12 +30,14 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    transition: width 300ms linear;
+    transition: width 250ms linear 100ms, opacity 250ms linear;
+    opacity: 1;
 }
 
 .hide-element {
     width: 0;
     overflow: hidden;
+    opacity: 0;
 }
 
 .search-toolbar-not-in-root {
@@ -63,6 +65,7 @@
     justify-content: flex-start;
     align-items: center;
     width: 100%;
+    overflow-x: hidden;
 
     ::deep .back-button::after {
         font-size: 24px;
@@ -161,6 +164,16 @@
             align-items: center;
         }
     }
+}
+
+.folder-show {
+    opacity: 1;
+    transition: opacity 300ms linear;
+}
+
+.folder-hide {
+    opacity: 0;
+    transition: opacity 300ms linear;
 }
 
     ::deep .animate-button {

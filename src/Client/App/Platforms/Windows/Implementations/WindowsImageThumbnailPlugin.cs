@@ -23,7 +23,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations
                 if (imageStream is null)
                     throw new InvalidOperationException("No stream available for the image.");
 
-                var image = System.Drawing.Image.FromStream(imageStream);
+                var image = System.Drawing.Image.FromStream(imageStream, true, false);
                 image = CorrectRotation(image);
 
                 (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(image.Width, image.Height, thumbnailScale);

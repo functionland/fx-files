@@ -17,38 +17,38 @@ public partial class ProgressModal
     [Parameter]
     public EventCallback OnCancel { get; set; }
 
-    private string _title { get; set; } = default!;
-    private ProgressMode _progressMode { get; set; }
-    private bool _isCancellable { get; set; } = true;
+    private string Title { get; set; } = default!;
+    private ProgressMode ProgressMode { get; set; }
+    private bool IsCancellable { get; set; } = true;
     private bool _isModalOpen = false;
 
-    public async Task ShowAsync(ProgressMode progressMode, string title, bool isCanellabel)
+    public async Task ShowAsync(ProgressMode progressMode, string title, bool isCancelable)
     {
-        _progressMode = progressMode;
-        _title = title;
-        _isCancellable = isCanellabel;
+        ProgressMode = progressMode;
+        Title = title;
+        IsCancellable = isCancelable;
         _isModalOpen = true;
-        await InvokeAsync(() => StateHasChanged());
+        await InvokeAsync(StateHasChanged);
     }
 
     public async Task CloseAsync()
     {
         await OnCancel.InvokeAsync();
         _isModalOpen = false;
-        await InvokeAsync(() => StateHasChanged());
+        await InvokeAsync(StateHasChanged);
     }
 
-    private double GetPrecentComplete()
+    private double GetPercentComplete()
     {
         double result = 0;
-        if (ProgressMax != 0)
+        if (ProgressMax == 0)
+            return result;
+
+        if (ProgressCurrentValue == ProgressMax)
         {
-            if (ProgressCurrentValue == ProgressMax)
-            {
-                return 100;
-            }
-            result = (ProgressCurrentValue * 100 / ProgressMax);
+            return 100;
         }
+        result = (ProgressCurrentValue * 100 / ProgressMax);
 
         return result;
     }

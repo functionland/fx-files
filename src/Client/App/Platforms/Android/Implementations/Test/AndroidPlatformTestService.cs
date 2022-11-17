@@ -8,6 +8,10 @@ public partial class AndroidPlatformTestService : PlatformTestService
 {
     [AutoInject] InternalAndroidFileServicePlatformTest InternalAndroidFileServicePlatformTest { get; set; }
     [AutoInject] ExternalAndroidFileServicePlatformTest ExternalAndroidFileServicePlatformTest { get; set; }
+    [AutoInject] AndroidImageThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidImageThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidImageThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidImageThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidPdfThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidPdfThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidPdfThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidPdfThumbnailPluginPlatformTest { get; set; }
 
     protected override List<IPlatformTest> OnGetTests()
     {
@@ -15,6 +19,10 @@ public partial class AndroidPlatformTestService : PlatformTestService
         {
             InternalAndroidFileServicePlatformTest,
             ExternalAndroidFileServicePlatformTest,
+            LocalAndroidImageThumbnailPluginPlatformTest,
+            FulaAndroidImageThumbnailPluginPlatformTest,
+            LocalAndroidPdfThumbnailPluginPlatformTest,
+            FulaAndroidPdfThumbnailPluginPlatformTest
         };
     }
 }

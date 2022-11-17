@@ -421,7 +421,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copying files.
+        ///   Looks up a localized string similar to Copying items.
         /// </summary>
         public static string CopyFiles {
             get {
@@ -529,7 +529,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleting files.
+        ///   Looks up a localized string similar to Deleting items.
         /// </summary>
         public static string DeletingFiles {
             get {
@@ -979,6 +979,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading search result.
+        /// </summary>
+        public static string LoadingSearchResult {
+            get {
+                return ResourceManager.GetString("LoadingSearchResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {
@@ -1042,7 +1051,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Moving files.
+        ///   Looks up a localized string similar to Moving items.
         /// </summary>
         public static string MoveFileModal {
             get {
@@ -1069,7 +1078,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Moving files.
+        ///   Looks up a localized string similar to Moving items.
         /// </summary>
         public static string MovingFiles {
             get {
@@ -1083,6 +1092,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string MyDevice {
             get {
                 return ResourceManager.GetString("MyDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Device Files.
+        /// </summary>
+        public static string MyDeviceFile {
+            get {
+                return ResourceManager.GetString("MyDeviceFile", resourceCulture);
             }
         }
         
@@ -1276,7 +1294,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replacing files.
+        ///   Looks up a localized string similar to Replacing items.
         /// </summary>
         public static string ReplacingFiles {
             get {
@@ -1344,6 +1362,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string SameDestinationFolderException {
             get {
                 return ResourceManager.GetString("SameDestinationFolderException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SD card.
+        /// </summary>
+        public static string SDCard {
+            get {
+                return ResourceManager.GetString("SDCard", resourceCulture);
             }
         }
         
@@ -1420,7 +1447,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to show in location.
+        ///   Looks up a localized string similar to Show in location.
         /// </summary>
         public static string ShowInLocation {
             get {
@@ -1470,6 +1497,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string StreamFileIsNull {
             get {
                 return ResourceManager.GetString("StreamFileIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
             }
         }
         
@@ -1605,15 +1641,6 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string ToastDescMessage {
             get {
                 return ResourceManager.GetString("ToastDescMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your error message.
-        /// </summary>
-        public static string ToastErrorMessage {
-            get {
-                return ResourceManager.GetString("ToastErrorMessage", resourceCulture);
             }
         }
         
