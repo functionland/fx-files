@@ -419,6 +419,19 @@ public partial class ArtifactExplorer
 
     private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
     {
+        var parallelOptions = new ParallelOptions
+        {
+            CancellationToken = cancellationToken,
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
+
+        await Parallel.ForEachAsync(items,parallelOptions,
+            async (item, ct) =>
+            {
+                await LoadThumbnailAsync(item, ct);
+            });
+
+
         foreach (var item in items)
         {
             if (cancellationToken.IsCancellationRequested)
