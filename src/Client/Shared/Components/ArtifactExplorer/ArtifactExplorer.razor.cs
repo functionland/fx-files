@@ -401,8 +401,9 @@ public partial class ArtifactExplorer
             {
                 await Task.Delay(300, cancellationToken);
                 var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
-                await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
-                await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+                var thumbnailItems = items.Where((item => item.ThumbnailPath is null)).ToList();
+                await LoadThumbnailsAsync(thumbnailItems.Skip(skipCount).ToList(), cancellationToken);
+                await LoadThumbnailsAsync(thumbnailItems.Take(skipCount).ToList(), cancellationToken);
             }
             catch (TaskCanceledException) { }
             catch (Exception exception)
@@ -430,15 +431,6 @@ public partial class ArtifactExplorer
             {
                 await LoadThumbnailAsync(item, ct);
             });
-
-
-        foreach (var item in items)
-        {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-            
-            await LoadThumbnailAsync(item, cancellationToken);
-        }
     }
 
     private async Task LoadThumbnailAsync(FsArtifact item, CancellationToken cancellationToken)
