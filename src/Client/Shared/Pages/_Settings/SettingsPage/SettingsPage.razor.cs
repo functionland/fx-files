@@ -5,6 +5,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages;
 
 public partial class SettingsPage
 {
+    private bool _applyAnimation = false;
     [AutoInject] private ThemeInterop ThemeInterop = default!;
     [AutoInject] private IAppStateStore AppState { get; set; } = default!;
     [AutoInject] private IAppStateStore _appStateStore { get; set; } = default!;
@@ -31,6 +32,16 @@ public partial class SettingsPage
             CurrentTheme = Localizer.GetString(nameof(AppStrings.System));
 
         GetAppVersion();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _applyAnimation = true;
+            StateHasChanged();
+        }
+
     }
 
     public void Login()

@@ -1,9 +1,12 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 
+using Microsoft.AspNetCore.Components.Web;
+
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
     public partial class MyDevicePage
     {
+        private bool _applyAnimation = false;
         private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
         [AutoInject] private ILocalDeviceFileService _fileService { get; set; } = default!;
@@ -38,7 +41,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 return null;
             }
         }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -48,6 +50,16 @@ namespace Functionland.FxFiles.Client.Shared.Pages
             }
 
             _appStateStore.CurrentPagePath = "mydevice";
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _applyAnimation = true;
+                StateHasChanged();
+            }  
+            
         }
     }
 }
