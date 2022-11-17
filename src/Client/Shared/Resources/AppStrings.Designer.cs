@@ -979,6 +979,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading search result.
+        /// </summary>
+        public static string LoadingSearchResult {
+            get {
+                return ResourceManager.GetString("LoadingSearchResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {

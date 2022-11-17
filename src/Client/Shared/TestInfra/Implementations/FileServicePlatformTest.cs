@@ -7,11 +7,11 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
     public abstract partial class FileServicePlatformTest : PlatformTest
     {
         protected abstract string OnGetTestsRootPath();
+
         protected abstract IFileService OnGetFileService();
 
         protected async Task OnRunFileServiceTestAsync(IFileService fileService, string rootPath)
         {
-
             FsArtifact? testsRootArtifact = null;
             try
             {
@@ -263,6 +263,47 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(2, srcArtifacts.Count, "Delete a file and a folder. Both deleted from source.");
 
+                //11. Progress bar
+                var folder3111 = await fileService.CreateFolderAsync(testRoot, "Folder 3111");
+                var file1111 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 3111/file1111[size=5mb].txt"),
+                    GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
+                var file1121 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 3111/file1121[size=5mb].txt"),
+                    GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
+
+                var folder3112 = await fileService.CreateFolderAsync(testRoot, "Folder 3112");
+
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3111"));
+                var progressBarMax = 0;
+                await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"),false, 
+                    (progressInfo) =>
+                    {
+                        progressBarMax = progressInfo.MaxValue ?? 0;
+                        return Task.CompletedTask;
+                    });
+
+                Assert.AreEqual(progressBarMax, artifacts.Count, "Copy progress bar passed.");
+
+                var folder3113 = await fileService.CreateFolderAsync(testRoot, "Folder 3113");
+                progressBarMax = 0;
+
+                await fileService.MoveArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3113"), false,
+                    (progressInfo) =>
+                    {
+                        progressBarMax = progressInfo.MaxValue ?? 0;
+                        return Task.CompletedTask;
+                    });
+
+                Assert.AreEqual(progressBarMax, artifacts.Count, "Move progress bar passed.");
+
+                progressBarMax = 0;
+                artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3113"));
+                await fileService.DeleteArtifactsAsync(artifacts, (progressInfo) =>
+                {
+                    progressBarMax = progressInfo.MaxValue ?? 0;
+                    return Task.CompletedTask;
+                });
+
+                Assert.AreEqual(progressBarMax, artifacts.Count, "Delete progress bar passed.");              
 
                 Assert.Success("Test passed!");
             }
@@ -286,6 +327,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
             return emptyRootFolderArtifacts;
         }
+
         private Stream GetSampleFileStream(long streamSize)
         {
             var sampleText = "Hello streamer!";

@@ -125,9 +125,11 @@ function OnScrollCheck() {
 
 function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
-    if (typeof item !== "undefined") {
+    console.log(item);
+    console.log(itemId);
+    if (typeof item !== "undefined" && item !== null) {
         let list = document.querySelector('.list-container');
-        list.scrollTop = item.scrollWidth;
+        list.scrollTop = item.offsetTop;
         addGrayBackground(item);
     }
 }

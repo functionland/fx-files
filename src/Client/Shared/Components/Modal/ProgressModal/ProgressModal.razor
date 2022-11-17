@@ -8,13 +8,13 @@
                CanClose="false"
                @bind-IsOpen="_isModalOpen">
     <div class="progress-container">
-        <div class="title">@_title</div>
+        <div class="title">@Title</div>
         <div class="main-content">
-            @if (_progressMode == ProgressMode.Progressive)
+            @if (ProgressMode == ProgressMode.Progressive)
             {
                 <BitProgressIndicator BarHeight="4"
                                   Label="@CurrentText"
-                                  PercentComplete="@(GetPrecentComplete())" />
+                                  PercentComplete="@(GetPercentComplete())" />
             }
             else
             {
@@ -23,11 +23,11 @@
             }
             <div class="progress-dsc">
                 <p>@CurrentSubText</p>
-                <p>@(GetPrecentComplete() + "%")</p>
+                <p>@(GetPercentComplete() + "%")</p>
             </div>
         </div>
 
-        @if (_isCancellable)
+        @if (IsCancellable)
         {
             <FxButton OnClick="CloseAsync" Text="@Localizer[nameof(AppStrings.Cancel)]"
                   ButtonStyle="FxButtonStyle.Normal"
