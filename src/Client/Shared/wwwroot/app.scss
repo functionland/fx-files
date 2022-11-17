@@ -78,25 +78,24 @@ input[type=checkbox] {
     accent-color: $green-dark-base;
 }
 
-.fx-basic-page1 {
+/*.fx-basic-page1 {
      transform: scaley(0);
     transform-origin: top;
-    transition: transform 50ms linear;
-}
+    transition: transform 600ms linear;
+}*/
 
-.fx-basic-page2 {
+.fx-basic-page {
     height: 0;
     padding-bottom: 81px;
     overflow: hidden;
-    transition: height 30ms linear;
+    transition: height 150ms linear;
 }
 
-.fx-page-open-mode1 {
+/*.fx-page-open-mode1 {
     transform: scaleY(1);
     height: 100vh;
-}
+}*/
 
-.fx-page-open-mode2 {
-    
+.fx-page-open-mode {
     height: 100vh;
 }
