@@ -3,6 +3,9 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
 namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class ArtifactExplorer
@@ -401,8 +404,9 @@ public partial class ArtifactExplorer
             {
                 await Task.Delay(300, cancellationToken);
                 var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
-                await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
-                await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+                var thumbnailItems = items.Where(item => item.ThumbnailPath is null).ToList();
+                await LoadThumbnailsAsync(thumbnailItems.Skip(skipCount).ToList(), cancellationToken);
+                await LoadThumbnailsAsync(thumbnailItems.Take(skipCount).ToList(), cancellationToken);
             }
             catch (TaskCanceledException) { }
             catch (Exception exception)
@@ -419,27 +423,31 @@ public partial class ArtifactExplorer
 
     private async Task LoadThumbnailsAsync(List<FsArtifact> items, CancellationToken cancellationToken)
     {
-        var semaphore = new SemaphoreSlim(Environment.ProcessorCount);
-
+        var semaphore = new SemaphoreSlim(2);
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        List<Task> tasks = new();
         foreach (var item in items)
         {
+            Console.WriteLine(item.Name + items.Count);
             await semaphore.WaitAsync(cancellationToken);
 
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            _ = Task.Run(async ()=>
+            var task = Task.Run(async ()=>
             {
+                Console.WriteLine($"{stopwatch.ElapsedMilliseconds} ms - Start loading {item.Name}");
                 await LoadThumbnailAsync(item, cancellationToken);
+                Console.WriteLine($"{stopwatch.ElapsedMilliseconds} ms - End loading {item.Name}");
                 semaphore.Release();
             });
+            tasks.Add(task);
         }
+        await Task.WhenAll(tasks);
     }
 
     private async Task LoadThumbnailAsync(FsArtifact item, CancellationToken cancellationToken)
     {
-
-        // ToDo: Use ValueTask
         try
         {
             if (item.ThumbnailPath is not null)
