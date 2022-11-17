@@ -17,6 +17,9 @@ namespace Functionland.FxFiles.Client.Shared.Components
         public int ProgressMax { get; set; } = 100;
 
         [Parameter]
+        public int Height { get; set; } = 4;
+
+        [Parameter]
         public ProgressMode ProgressMode { get; set; }
 
         private double GetPercentComplete()

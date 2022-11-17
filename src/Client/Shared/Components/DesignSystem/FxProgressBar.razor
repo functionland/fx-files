@@ -6,13 +6,13 @@
     <div class="main-content">
         @if (ProgressMode == ProgressMode.Progressive)
         {
-            <BitProgressIndicator BarHeight="4"
+            <BitProgressIndicator BarHeight="@Height"
                                   Label="@CurrentText"
                                   PercentComplete="@(GetPercentComplete())" />
         }
         else
         {
-            <BitProgressIndicator BarHeight="4"
+            <BitProgressIndicator BarHeight="@Height"
                                   Label="@CurrentText" />
         }
         <div class="progress-dsc">

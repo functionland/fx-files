@@ -25,14 +25,24 @@
 }
 
 .virtualize-placeholder {
-    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
     position: sticky;
-    display: flex;
-    width: 100%;
+    max-width: 200px;
+    margin: auto;
     bottom: 0;
     top: 50%;
+}
+
+::deep .progress-container {
+    padding: 0 !important;
+}
+
+::deep .bit-pi-indeterminate-fluent .bit-pi-bar {
+    background: -webkit-repeating-linear-gradient( 145deg, color(gray-bg-secondary) 1px, color(gray-border) 2px, color(gray-bg-secondary) 11px, color(gray-border) 12px, color(gray-bg-secondary) 20px ) !important;
+    background: repeating-linear-gradient( -55deg, color(gray-bg-secondary) 1px, color(gray-border) 2px, color(gray-bg-secondary) 11px, color(gray-border) 12px, color(gray-bg-secondary) 20px ) !important;
+    -webkit-animation: MOVE-BG .8s linear 0s infinite;
+    animation: MOVE-BG .8s linear 0s infinite;
 }
 
 .grid-view {
@@ -47,7 +57,6 @@
         background-color: color(gray-bg-primary);
     }
 }
-
 
 .move-files-action {
     padding-right: $spacing-24;
@@ -382,7 +391,6 @@
         }
     }
 
-
     .options-btn::before {
         @include Icon($options-vertical);
         line-height: 27px;
@@ -558,4 +566,3 @@
 .overflosw-hidden {
     overflow: hidden !important;
 }
-
