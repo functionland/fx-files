@@ -75,6 +75,14 @@
         }
     }
 
+    ::deep .ellipsis {
+        background-color: color(gray-bg-primary);
+    }
+
+    ::deep .fx-breadcrumbs {
+        margin-left: 5px;
+    }
+
     .divider {
         padding: $spacing-0 $spacing-21;
     }
