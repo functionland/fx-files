@@ -2,17 +2,3 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-accordion.scss';
 
-.Fx-basic-page {
-   /* transform: scaley(0);
-    transform-origin: top;
-    transition: transform 150ms linear;*/
-    height: 0;
-    padding-bottom: 81px;
-    overflow: hidden;
-    transition: height 300ms linear;
-}
-
-.fx-page-open-mode {
-   /* transform: scaleY(1);*/
-    height: 100vh;
-}

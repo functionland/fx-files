@@ -6,6 +6,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
 {
     public partial class MyDevicePage
     {
+        private bool _applyAnimation = false;
         private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
         [AutoInject] private ILocalDeviceFileService _fileService { get; set; } = default!;
@@ -40,7 +41,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 return null;
             }
         }
-        private bool test = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -56,7 +56,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
         {
             if (firstRender)
             {
-                test = true;
+                _applyAnimation = true;
                 StateHasChanged();
             }  
             

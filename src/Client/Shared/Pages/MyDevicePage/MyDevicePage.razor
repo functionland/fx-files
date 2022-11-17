@@ -3,7 +3,7 @@
 @inherits AppComponentBase;
 <PageTitle>@Localizer[nameof(AppStrings.MyDevice)]</PageTitle>
 
-<div class="Fx-basic-page @(test ? "fx-page-open-mode" : "")">
+<div class="Fx-basic-page1 @(_applyAnimation ? "fx-page-open-mode1" : "")">
     <FileBrowser FileService="_fileService"
                  PinService="_pinService"
                  ThumbnailService="_thumbnailService"
