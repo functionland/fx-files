@@ -397,10 +397,18 @@ public partial class ArtifactExplorer
 
         _ = Task.Run(async () =>
         {
-            await Task.Delay(300);
-            var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
-            await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
-            await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+            try
+            {
+                await Task.Delay(300, cancellationToken);
+                var skipCount = Math.Min(_overscanCount * _gridRowCount, request.StartIndex);
+                await LoadThumbnailsAsync(items.Skip(skipCount).ToList(), cancellationToken);
+                await LoadThumbnailsAsync(items.Take(skipCount).ToList(), cancellationToken);
+            }
+            catch (TaskCanceledException) { }
+            catch (Exception exception)
+            {
+                ExceptionHandler.Track(exception);
+            }
         }, cancellationToken);
 
         var result = items.Chunk(_gridRowCount).ToList();
@@ -415,23 +423,30 @@ public partial class ArtifactExplorer
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
-            try
-            {
-                if (item.ThumbnailPath is not null)
-                    continue;
-
-                item.ThumbnailPath =
-                    await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
-                        cancellationToken);
-
-                await InvokeAsync(StateHasChanged);
-            }
-            catch (Exception exception)
-            {
-                ExceptionHandler.Track(exception);
-            }
+            
+            await LoadThumbnailAsync(item, cancellationToken);
         }
     }
+
+    private async Task LoadThumbnailAsync(FsArtifact item, CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (item.ThumbnailPath is not null)
+                return;
+
+            item.ThumbnailPath =
+                await ThumbnailService.GetOrCreateThumbnailAsync(item, ThumbnailScale.Small,
+                    cancellationToken);
+
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception exception)
+        {
+            ExceptionHandler.Track(exception);
+        }
+    }
+
 
     private async Task HandleZipArtifactClickAsync(FsArtifact artifact)
     {
