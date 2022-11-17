@@ -4,39 +4,108 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 
 
-<div style="margin-bottom: @(IsmacOS? "38px" : "")" class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+<div style="@(IsmacOS? "margin-bottom: 38px" : "")" class="list-container @(IsLoading ? "overflosw-hidden" : "") @(!Artifacts.Any() ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (IsLoading)
     {
         <OverlayLoading LoadingType="LoadingType.Overlay" />
     }
+
     @if (!Artifacts.Any() && !IsLoading)
     {
         if (!IsInSearchMode)
         {
             <EmptyListView OnAddFolderButtonClick="OnAddFolderButtonClick"
-                           Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
-                           IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsInZipMode==false)" />
+                   Title="@Localizer[nameof(AppStrings.EmptyListTitle)]"
+                   IsShowButtons="@(ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation && FileCategoryFilter == null && IsInZipMode==false)" />
         }
     }
     else
     {
-        @if (ViewMode == ViewModeEnum.Grid)
-        {
-            <Virtualize Context="artifacts" OverscanCount="@_overscanCount" ItemsProvider="@ProvideArtifactGridAsync" @ref="_virtualizeGridRef">
-                <div style="display: flex">
-                    @foreach (var artifact in artifacts)
-                    {
-                        <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") grid-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                        @onpointerup="((e) => PointerUp(e,artifact))"
-                        @onpointerdown="(() =>PointerDown(artifact))"
-                        @onpointercancel="PointerCancel"
-                             id="@GetIdForArtifact(artifact.Name)">
+        <div class="virtualize-container">
+            @if (!IsLoading && !IsInRoot(CurrentArtifact))
+            {
+                <div class="virtualize-placeholder">
+                    <OverlayLoading LoadingType="LoadingType.Overlay" />
+                </div>
+            }
+
+            @if (ViewMode == ViewModeEnum.Grid)
+            {
+                <Virtualize Context="artifacts" OverscanCount="@_overscanCount" ItemsProvider="@ProvideArtifactGridAsync" @ref="_virtualizeGridRef">
+                    <div style="display: flex">
+                        @foreach (var artifact in artifacts)
+                        {
+                            <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") grid-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+                     @onpointerup="((e) => PointerUp(e,artifact))"
+                     @onpointerdown="(() =>PointerDown(artifact))"
+                     @onpointercancel="PointerCancel"
+                     id="@GetIdForArtifact(artifact.Name)">
 
 
-                            <div class="check-box-position @(IsPhone ? "check-box-mobile" : string.Empty) @(ArtifactExplorerMode== ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "" )" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
-                                <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                                <div class="check-box-position @(IsPhone ? "check-box-mobile" : string.Empty) @(ArtifactExplorerMode== ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "" )" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
+                                    <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" Class="@(!IsPhone ? "icon-space-in-desktop" : string.Empty)" />
+                                </div>
+
+                                <div class="icon-box">
+                                    @if (artifact.ThumbnailPath != null)
+                                    {
+                                        <div class="thumbnail-box">
+                                            <div class="img-box">
+                                                <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
+                                            </div>
+                                            @if (artifact.FileCategory == FileCategoryType.Video && artifact.ThumbnailPath != null)
+                                            {
+                                                <div class="icon-play"></div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="item-icon-position @(artifact.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
+                                    }
+                                </div>
+                                <div class="footer-box">
+                                    <div class="item-content">
+                                        <div class="item-title">
+                                            @if (artifact.IsPinned == true)
+                                            {
+                                                <div class="pin-badge"></div>
+                                            }
+                                            <div class="title-text @(artifact.IsPinned == true ? "space-pinned" : "disable-space-pinned")">@artifact.Name</div>
+                                        </div>
+                                        <div class="item-sub-text"></div>
+                                    </div>
+                                    @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
+                                    {
+                                        <div class="options-btn"
+                             @onclick="() => HandleArtifactOptionClick(artifact)"
+                             @onpointerup:preventDefault="true"
+                             @onpointerup:stopPropagation="true"
+                             @onpointerdown:preventDefault="true"
+                             @onpointerdown:stopPropagation="true">
+                                        </div>
+                                    }
+                                </div>
                             </div>
+                        }
+                    </div>
+                </Virtualize>
+            }
+            else
+            {
+                <Virtualize Context="artifact" OverscanCount="_overscanCount" ItemsProvider="@ProvideArtifactsListAsync" @ref="_virtualizeListRef">
+                    <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") list-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
+                 @onpointerup="((e) => PointerUp(e,artifact))"
+                 @onpointerdown="(() =>PointerDown(artifact))"
+                 @onpointercancel="PointerCancel"
+                 id="@GetIdForArtifact(artifact.Name)">
 
+
+                        <div class="check-box-position @(IsPhone ? "check-box-mobile" : string.Empty)" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
+                            <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" />
+                        </div>
+
+                        <div class="item-box @(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "")">
                             <div class="icon-box">
                                 @if (artifact.ThumbnailPath != null)
                                 {
@@ -56,6 +125,7 @@
                                 }
                             </div>
                             <div class="footer-box">
+
                                 <div class="item-content">
                                     <div class="item-title">
                                         @if (artifact.IsPinned == true)
@@ -66,96 +136,36 @@
                                     </div>
                                     <div class="item-sub-text"></div>
                                 </div>
-                                @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
+                            </div>
+
+                            @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
+                            {
+                                @if (IsInZipMode is false)
                                 {
                                     <div class="options-btn"
-                                    @onclick="() => HandleArtifactOptionClick(artifact)"
-                                    @onpointerup:preventDefault="true"
-                                    @onpointerup:stopPropagation="true"
-                                    @onpointerdown:preventDefault="true"
-                                    @onpointerdown:stopPropagation="true">
+                         @onclick="() => HandleArtifactOptionClick(artifact)"
+                         @onpointerup:preventDefault="true"
+                         @onpointerup:stopPropagation="true"
+                         @onpointerdown:preventDefault="true"
+                         @onpointerdown:stopPropagation="true">
                                     </div>
                                 }
-                            </div>
-                        </div>
-                    }
-                </div>
-            </Virtualize>
-        }
-        else
-        {
-            <Virtualize Context="artifact" OverscanCount="_overscanCount" ItemsProvider="@ProvideArtifactsListAsync" @ref="_virtualizeListRef">
-                <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") list-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                @onpointerup="((e) => PointerUp(e,artifact))"
-                @onpointerdown="(() =>PointerDown(artifact))"
-                @onpointercancel="PointerCancel"
-                     id="@GetIdForArtifact(artifact.Name)">
-
-
-                    <div class="check-box-position @(IsPhone ? "check-box-mobile" : string.Empty)" @onpointerup:stopPropagation="true" @onpointerdown:stopPropagation="true" @onmouseup:stopPropagation="true" @oncontextmenu:stopPropagation="true" @onclick:preventDefault="true" @onclick="(() => OnSelectionChanged(artifact))">
-                        <FxCheckBox IsChecked="@(artifact.IsSelected ?? false)" />
-                    </div>
-
-                    <div class="item-box @(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact && IsPhone ? "selection-mode-style" : "")">
-                        <div class="icon-box">
-                            @if (artifact.ThumbnailPath != null)
-                            {
-                                <div class="thumbnail-box">
-                                    <div class="img-box">
-                                        <img class="thumbnail-img" src="@(artifact.ThumbnailPath.InProtocol(Protocol))">
+                                else
+                                {
+                                    <div class="extract-btn"
+                         @onclick="() => HandleZipArtifactClickAsync(artifact)"
+                         @onpointerup:preventDefault="true"
+                         @onpointerup:stopPropagation="true"
+                         @onpointerdown:preventDefault="true"
+                         @onpointerdown:stopPropagation="true">
                                     </div>
-                                    @if (artifact.FileCategory == FileCategoryType.Video && artifact.ThumbnailPath != null)
-                                    {
-                                        <div class="icon-play"></div>
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="item-icon-position @(artifact.IsSelected == true ? "selected-item-icon" : "")  @GetArtifactIcon(artifact)"></div>
+                                }
                             }
                         </div>
-                        <div class="footer-box">
-
-                            <div class="item-content">
-                                <div class="item-title">
-                                    @if (artifact.IsPinned == true)
-                                    {
-                                        <div class="pin-badge"></div>
-                                    }
-                                    <div class="title-text @(artifact.IsPinned == true ? "space-pinned" : "disable-space-pinned")">@artifact.Name</div>
-                                </div>
-                                <div class="item-sub-text"></div>
-                            </div>
-                        </div>
-
-                        @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
-                        {
-                            @if (IsInZipMode is false)
-                            {
-                                <div class="options-btn"
-                                @onclick="() => HandleArtifactOptionClick(artifact)"
-                                @onpointerup:preventDefault="true"
-                                @onpointerup:stopPropagation="true"
-                                @onpointerdown:preventDefault="true"
-                                @onpointerdown:stopPropagation="true">
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="extract-btn"
-                                @onclick="() => HandleZipArtifactClickAsync(artifact)"
-                                @onpointerup:preventDefault="true"
-                                @onpointerup:stopPropagation="true"
-                                @onpointerdown:preventDefault="true"
-                                @onpointerdown:stopPropagation="true">
-                                </div>
-                            }
-                        }
                     </div>
-                </div>
-            </Virtualize>
-        }
+                </Virtualize>
+            }
+        </div>
     }
     <div class="position-scroll-btn">
         <FxButton Width="60px"

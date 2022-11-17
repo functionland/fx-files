@@ -24,6 +24,15 @@
     line-height: $line-height-24;
 }
 
+.virtualize-container {
+    position: relative;
+}
+
+.virtualize-placeholder {
+    position: sticky;
+    width: 100%;
+    top: 30px;
+}
 
 .grid-view {
     display: grid;
@@ -58,6 +67,7 @@
 .item-container {
     cursor: pointer;
     position: relative;
+    background-color: color(app-bg);
     padding: $spacing-4 $spacing-21;
     border-radius: $border-radius-3;
 
@@ -547,3 +557,4 @@
 .overflosw-hidden {
     overflow: hidden !important;
 }
+
