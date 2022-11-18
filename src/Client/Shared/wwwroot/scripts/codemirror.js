@@ -5,6 +5,7 @@ function setCodeMirrorText(text) {
 
 var prevDiff = -1;
 var fontsize = 10;
+var lineHeight = 15;
 
 function registerOnTouchEvent() {
     var el = document.getElementsByClassName("text-container")[0];
@@ -12,6 +13,11 @@ function registerOnTouchEvent() {
     el.addEventListener("touchmove", move_handler);
     el.addEventListener("touchcancel", end_handler);
     el.addEventListener("touchend", end_handler);
+    prevDiff = -1;
+    fontsize = 10;
+    lineHeight = 15;
+    document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
+    document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
 }
 
 function unRegisterOnTouchEvent() {
@@ -36,7 +42,6 @@ function end_handler(ev) {
     prevDiff = -1;
 }
 
-
 function handle_pinch_zoom(ev) {
     if (ev.changedTouches.length === 2) {
 
@@ -48,14 +53,20 @@ function handle_pinch_zoom(ev) {
             if (curDiff > prevDiff) {
                 if (fontsize <= 30) {
                     fontsize += 1;
+                    lineHeight += 1;
                     document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
+                    document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
+
                 }
             }
             if (curDiff < prevDiff) {
                 
                 if (fontsize >= 5) {
                     fontsize -= 1;
+                    lineHeight -= 1;
                     document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
+                    document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
+
                 }
             }
         }
@@ -63,9 +74,3 @@ function handle_pinch_zoom(ev) {
         prevDiff = curDiff;
     }
 }
-
-function log(name, ev, printTargetIds) {
-    console.log(name, ev, printTargetIds);
-}
-
-
