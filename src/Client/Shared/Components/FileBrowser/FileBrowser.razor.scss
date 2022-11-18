@@ -376,7 +376,7 @@
 }
 
 .search-mode {
-    height: 100%;
+    height: calc(100% - 70px);
     opacity: 1;
     transition: height 0ms linear, opacity 300ms linear;
 }
@@ -602,4 +602,8 @@
 
 .pin-artifacts-show {
     display: block;
+}
+
+.progress-bar-wrapper {
+    padding-top: $spacing-8;
 }

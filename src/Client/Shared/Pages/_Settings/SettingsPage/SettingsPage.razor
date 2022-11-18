@@ -25,7 +25,7 @@
                   ButtonStyle="FxButtonStyle.MenuLine" 
                   OnClick="@(() => NavigationManager.NavigateTo("settings/about", false, true))" />
 
-        @if(AppState.IsAvailableForTest) {
+        @if(AppStateStore.IsAvailableForTest) {
             <FxButton Text="@Localizer[nameof(AppStrings.TestExplorer)]"
                   ButtonStyle="FxButtonStyle.MenuLine"
                   OnClick="@(() => NavigationManager.NavigateTo("settings/TestExplorer", false, true))" />

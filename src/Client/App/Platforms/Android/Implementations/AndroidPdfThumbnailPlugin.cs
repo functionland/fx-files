@@ -1,9 +1,11 @@
-﻿using Android.Graphics.Pdf;
+﻿using Android.Graphics;
+using Android.Graphics.Pdf;
 using Android.OS;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Bitmap = Android.Graphics.Bitmap;
 using Stream = System.IO.Stream;
+using Color = Android.Graphics.Color;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
@@ -28,27 +30,32 @@ public class AndroidPdfThumbnailPlugin : PdfThumbnailPlugin
             throw new InvalidOperationException("pdfFile can not be null.");
 
         PdfRenderer renderer = new(pdfFile);
-        var page = renderer.OpenPage(0);
+        var firstPage = renderer.OpenPage(0);
 
-        if (page is null)
+        if (firstPage is null)
             throw new InvalidOperationException("Page can not be null.");
 
-        //ToDo: ScaleImage needs some changes in order to get the proper size for the output image.
-        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(page.Width, page.Height, thumbnailScale);
+        (int thumbnailWidth, int thumbnailHeight) = ImageUtils.ScaleImage(firstPage.Width, firstPage.Height, thumbnailScale);
 
         //ToDo: Check Bitmap.Config nullability (although it seems nonsense at the moment).
-        Bitmap? bmp = Bitmap.CreateBitmap(imageWidth, imageHeight, Bitmap.Config.Argb8888);
+        var bitmap = Bitmap.CreateBitmap(thumbnailWidth, thumbnailHeight, Bitmap.Config.Argb8888);
 
-        if (bmp is null)
+        if (bitmap is null)
             throw new InvalidOperationException("Bitmap can not be null.");
 
-        page.Render(bmp, null, null, PdfRenderMode.ForDisplay);
+        //Make the background ready (yes, white) in case of pdf background transparency.
+        var canvas = new Canvas(bitmap);
+        canvas.DrawColor(Color.White);
+        canvas.DrawBitmap(bitmap, 0, 0, null);
 
-        page.Close();
-        renderer.Close();
+        firstPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
 
         var outputStream = new MemoryStream();
-        await bmp.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
+        await bitmap.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
+
+        firstPage.Close();
+        renderer.Close();
+
         return outputStream;
         
     }
