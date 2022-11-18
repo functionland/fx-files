@@ -471,13 +471,6 @@ public partial class ArtifactExplorer
 
     private async Task<bool?> ScrollToArtifact(FsArtifact artifact)
     {
-        //var displayArtifact = Artifacts.Find(a=>a.FullPath == artifact.FullPath);
-        //if (displayArtifact == null)
-        //{
-        //    return null;
-        //}
-
-        // 74px is size of one artifact in view
         var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
 
         var listExistResult =
