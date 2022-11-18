@@ -11,7 +11,7 @@ function HideBackToTopButton() {
     {
         var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
         scrollButton.style.display = 'none';
-        if (typeof timeoutID !== "undefined") {
+        if (typeof timeoutID != undefined) {
             clearTimeout(timeoutID);
             timeoutID = undefined;
         }
@@ -41,7 +41,7 @@ function saveScrollPosition() {
 function SearchInputUnFocus() {
     var searchInput = document.getElementById('searchinput');
     var searchIcon = document.querySelector('.search-icon');
-    if (typeof searchInput !== "undefined") {
+    if (typeof searchInput != undefined) {
         searchInput.blur();
         searchIcon.classList.remove("search-icon-active");
     }
@@ -89,7 +89,7 @@ function OnScrollCheck() {
 
     artifactListDiv.addEventListener("scroll", () => {
         const pinListDiv = document.querySelector('.pin-artifacts');
-        if (typeof pinListDiv !== "undefined" && pinListDiv !== null) {
+        if (typeof pinListDiv != undefined && pinListDiv !== null) {
 
             if (oldScrollY < artifactListDiv.scrollTop && artifactListDiv.scrollTop >= 350) {
 
@@ -110,12 +110,12 @@ function OnScrollCheck() {
         if (artifactListDiv.scrollTop > 85) {
             ShowBackToTopButton();
 
-            if (typeof timeoutID === "undefined") {
+            if (typeof timeoutID == undefined) {
                 timeoutID = setTimeout(HideBackToTopButton, 3000);
             }
         } else {
             HideBackToTopButton();
-            if (typeof timeoutID !== "undefined") {
+            if (typeof timeoutID != undefined) {
                 clearTimeout(timeoutID);
                 timeoutID = undefined;
             }
@@ -127,10 +127,14 @@ function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
     console.log(item);
     console.log(itemId);
-    if (typeof item !== "undefined" && item !== null) {
+    if (typeof item == undefined || item == null) {
+        return false;
+    }
+    else {
         let list = document.querySelector('.list-container');
         list.scrollTop = item.offsetTop;
         addGrayBackground(item);
+        return true;
     }
 }
 

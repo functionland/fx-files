@@ -1,5 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
-
+﻿using System.Timers;
+using Functionland.FxFiles.Client.Shared.Components.Common;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
@@ -44,6 +44,7 @@ public partial class ArtifactExplorer
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public bool IsInZipMode { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
+    [Parameter] public FsArtifact? ScrollArtifact { get; set; }
 
     public PathProtocol Protocol =>
         FileService switch
@@ -85,6 +86,17 @@ public partial class ArtifactExplorer
             await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
             await InitWindowWidthListener();
             await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+        }
+
+        if (ScrollArtifact is not null)
+        {
+            if (_timer == null && ScrollArtifact != null)
+            {
+                _timer = new System.Timers.Timer(1000);
+                _timer.Enabled = true;
+                _timer.Start();
+                _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
+            }
         }
     }
 
@@ -417,6 +429,7 @@ public partial class ArtifactExplorer
         {
             return;
         }
+
         foreach (var item in items)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -454,6 +467,30 @@ public partial class ArtifactExplorer
     {
         var id = artifactName.Trim().Replace(" ", string.Empty);
         return id;
+    }
+
+    private async Task<bool> ScrollToArtifact(FsArtifact artifact)
+    {
+        await InvokeAsync(StateHasChanged);
+        var listExistResult = await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name));
+        return listExistResult;
+    }
+
+    private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (ScrollArtifact == null)
+        {
+            return;
+        }
+
+        var isListExist = await ScrollToArtifact(ScrollArtifact);
+        if (_timer == null || isListExist is false)
+            return;
+
+        DisposeTimer();
+        await ScrollToArtifact(ScrollArtifact);
+
+        ScrollArtifact = null;
     }
 
     public void Dispose()
