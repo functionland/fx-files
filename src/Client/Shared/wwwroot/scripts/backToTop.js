@@ -31,11 +31,33 @@ function getLastScrollPosition() {
     let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
     artifactListDiv.scrollTop = lastScrollPosition;
     savePositionScroll.pop();
+    console.log(lastScrollPosition);
 }
 
 function saveScrollPosition() {
     const artifactListDiv = document.querySelector('.list-container');
     savePositionScroll.push(artifactListDiv.scrollTop);
+    console.log(savePositionScroll);
+}
+
+function getLastScrollPositionFileViewer() {
+    debugger
+    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
+    const artifactsDivListItem = document.querySelector('.file-viewer-container .list-container .item-container');
+
+    /*setTimeout(getLastScrollPositionFileViewer(), 1000);*/
+
+    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
+    setTimeout(() => {
+        artifactListDiv.scrollTop = lastScrollPosition;
+    }, 100);
+    savePositionScroll.pop();
+}
+
+function saveScrollPositionFileViewer() {
+    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
+    savePositionScroll.push(artifactListDiv.scrollTop);
+    console.log(savePositionScroll);
 }
 
 function SearchInputUnFocus() {
@@ -61,24 +83,60 @@ function breadCrumbStyle() {
     let breadcrumbs = document.querySelector(".fx-breadcrumbs");
     let startEllipsis = document.querySelector(".start-ellipsis");
     let endEllipsis = document.querySelector(".end-ellipsis");
+    let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
+
+    if (hasHorizontalScrollbar) {
+        startEllipsis.style.display = "block";
+        breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
+    }
 
     breadcrumbs.addEventListener("scroll", () => {
+        startEllipsis.style.display = "block";
         let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
 
         if (breadcrumbsScroll != 0) {
+            startEllipsis.classList.add("color-changer");
             startEllipsis.style.display = "block";
-            endEllipsis.style.display = "block";
-            endEllipsis.classList.remove("color-changer");
-
+            endEllipsis.classList.add("color-changer");
 
         } else {
+            startEllipsis.classList.remove("color-changer");
             startEllipsis.style.display = "none";
-            endEllipsis.classList.add("color-changer");
         }
 
         if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+            endEllipsis.classList.remove("color-changer");
+        }
+    });
+}
+
+function breadCrumbStyleSelectionModal() {
+    let breadcrumbs = document.querySelector(".sheet-wrapper .fx-breadcrumbs");
+    let startEllipsis = document.querySelector(".sheet-wrapper .start-ellipsis");
+    let endEllipsis = document.querySelector(".sheet-wrapper .end-ellipsis");
+    let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
+
+    if (hasHorizontalScrollbar) {
+        startEllipsis.style.display = "block";
+        breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
+    }
+
+    breadcrumbs.addEventListener("scroll", () => {
+        startEllipsis.style.display = "block";
+        let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
+
+        if (breadcrumbsScroll != 0) {
+            startEllipsis.classList.add("color-changer");
+            startEllipsis.style.display = "block";
             endEllipsis.classList.add("color-changer");
-            endEllipsis.style.display = "block";
+
+        } else {
+            startEllipsis.classList.remove("color-changer");
+            startEllipsis.style.display = "none";
+        }
+
+        if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+            endEllipsis.classList.remove("color-changer");
         }
     });
 }

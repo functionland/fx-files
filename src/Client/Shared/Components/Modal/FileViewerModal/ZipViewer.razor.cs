@@ -19,6 +19,7 @@ public partial class ZipViewer : IFileViewerComponent
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private ExtractorBottomSheetResult? ExtractorBottomSheetResult { get; set; }
 
+    private bool _isGoingBack;
 
     private FsArtifact _currentInnerZipArtifact =
         new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
@@ -41,6 +42,12 @@ public partial class ZipViewer : IFileViewerComponent
         {
             await InitialZipViewerAsync();
             StateHasChanged();
+        }
+
+        if (_isGoingBack)
+        {
+            _isGoingBack = false;
+            await JSRuntime.InvokeVoidAsync("getLastScrollPositionFileViewer");
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -294,6 +301,7 @@ public partial class ZipViewer : IFileViewerComponent
             }
             else
             {
+                _isGoingBack = true;    
                 _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
             }
@@ -312,11 +320,13 @@ public partial class ZipViewer : IFileViewerComponent
         return parentArtifact ?? new FsArtifact("", "", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
     }
 
-    private void HandleArtifactClick(FsArtifact artifact)
+    private async Task HandleArtifactClickAsync(FsArtifact artifact)
     {
         if (artifact.ArtifactType != FsArtifactType.Folder)
             return;
 
+        await JSRuntime.InvokeVoidAsync("saveScrollPositionFileViewer");
+        _isGoingBack = false;
         _currentInnerZipArtifact = artifact;
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
     }

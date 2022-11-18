@@ -206,6 +206,7 @@ public partial class ArtifactExplorer
                 {
                     await OnSelectArtifact.InvokeAsync(artifact);
                     await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                    await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
                 }
                 else
                 {
