@@ -7,4 +7,5 @@ public interface IAppStateStore
     public FsArtifact? CurrentFulaArtifact { get; set; }
     public FsArtifact? CurrentMyDeviceArtifact { get; set; }
     public string CurrentPagePath { get; set; }
+    public string? IntentFileUrl { get; set; }
 }

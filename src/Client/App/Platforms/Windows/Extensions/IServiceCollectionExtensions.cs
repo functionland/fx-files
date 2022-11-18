@@ -30,6 +30,8 @@ public static class IWindowsServiceCollectionExtensions
         services.AddTransient<WindowsPdfThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
         services.AddTransient<WindowsPdfThumbnailPluginPlatformTest<IFulaFileService>>();
 
+        services.AddSingleton<IFileLauncher, WindowsFileLauncher>();
+
         return services;
     }
 }

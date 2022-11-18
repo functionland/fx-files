@@ -16,6 +16,13 @@
     @include Icon($zip-file);
 }
 
+::deep .open-with-button .fxbutton-text::before {
+    font-size: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    @include Icon($external-link);
+}
+
 ::deep .rename-button .fxbutton-text::before {
     font-size: 20px;
     margin-right: 8px;

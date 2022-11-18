@@ -39,12 +39,12 @@ function saveScrollPosition() {
 }
 
 function SearchInputUnFocus() {
-        var searchInput = document.getElementById('searchinput');
-        var searchIcon = document.querySelector('.search-icon');
-        if (typeof searchInput !== "undefined") {
-            searchInput.blur();
-            searchIcon.classList.remove("search-icon-active");
-        }
+    var searchInput = document.getElementById('searchinput');
+    var searchIcon = document.querySelector('.search-icon');
+    if (typeof searchInput !== "undefined") {
+        searchInput.blur();
+        searchIcon.classList.remove("search-icon-active");
+    }
 }
 
 function ImagePinchZoom() {
@@ -92,42 +92,48 @@ function OnScrollCheck() {
         if (typeof pinListDiv !== "undefined" && pinListDiv !== null) {
 
             if (oldScrollY < artifactListDiv.scrollTop && artifactListDiv.scrollTop >= 350) {
-                /*  CheckBackToTopButtonDisplay();*/
+
                 pinListDiv.classList.add('pin-artifacts-hide');
                 pinListDiv.classList.remove('pin-artifacts-show');
                 console.log("down");
+
             } else if (oldScrollY > artifactListDiv.scrollTop) {
 
-                /*  CheckBackToTopButtonDisplay();*/
                 pinListDiv.classList.add('pin-artifacts-show');
                 pinListDiv.classList.remove('pin-artifacts-hide');
                 console.log("up");
             }
+
             oldScrollY = artifactListDiv.scrollTop;
         }
 
         if (artifactListDiv.scrollTop > 85) {
-        ShowBackToTopButton();
-        if (typeof timeoutID === "undefined") {
-            timeoutID = setTimeout(HideBackToTopButton, 3000);
-        }
-    }
-    else {
-        HideBackToTopButton();
-        if (typeof timeoutID !== "undefined") {
-            clearTimeout(timeoutID);
-            timeoutID = undefined;
-        }
-    }
+            ShowBackToTopButton();
 
+            if (typeof timeoutID === "undefined") {
+                timeoutID = setTimeout(HideBackToTopButton, 3000);
+            }
+        } else {
+            HideBackToTopButton();
+            if (typeof timeoutID !== "undefined") {
+                clearTimeout(timeoutID);
+                timeoutID = undefined;
+            }
+        }
     });
 }
 
 function scrollToItem(itemId) {
     const item = document.getElementById(itemId.toString());
-    if (typeof item !== "undefined") {
-        setTimeout(scrollIntoView(item), 3000);
-        console.log(itemId);
-        console.log(item);
+    console.log(item);
+    console.log(itemId);
+    if (typeof item !== "undefined" && item !== null) {
+        let list = document.querySelector('.list-container');
+        list.scrollTop = item.offsetTop;
+        addGrayBackground(item);
     }
+}
+
+function addGrayBackground(item) {
+    item.classList.add('on-scroll-item-gray-background');
 }

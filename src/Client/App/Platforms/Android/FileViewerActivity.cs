@@ -17,7 +17,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
     DataHost = "*",
     DataSchemes = new[] { "file", "content" },
     Categories = new[] { Intent.ActionView, Intent.CategoryDefault, Intent.CategoryBrowsable },
-    DataMimeTypes = new[] 
+    DataMimeTypes = new[]
     {
         "application/zip", 
 
@@ -37,13 +37,31 @@ public class FileViewerActivity : MainActivity
     {
         base.OnCreate(savedInstanceState);
 
-        var uri = Uri.Parse(Intent.DataString);
-        var path = GetActualPathFromFile(uri);
-        var intentHolder = MauiApplication.Current.Services.GetRequiredService<IntentHolder>();
+        var appStateStore = MauiApplication.Current.Services.GetRequiredService<IAppStateStore>();
         var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
-        intentHolder.FileUrl = path;
+
+        try
+        {
+            var uri = Uri.Parse(Intent.DataString);
+            var path = GetActualPathFromFile(uri);
+            appStateStore.IntentFileUrl = path;
+        }
+        catch (Exception exception)
+        {
+            var intentFilePath = SecureStorage.Default.GetAsync("intentFilePath").GetAwaiter().GetResult();
+            if (string.IsNullOrWhiteSpace(intentFilePath))
+            {
+                var exceptionHandler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+                exceptionHandler.Track(exception);
+                return;
+            }
+
+            appStateStore.IntentFileUrl = intentFilePath;
+        }
+
         eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
     }
+
     private string? GetActualPathFromFile(Uri uri)
     {
         bool isKitKat = Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat;
