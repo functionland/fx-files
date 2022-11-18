@@ -8,11 +8,10 @@ public partial class HomePage
 {
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
-    [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
 
     protected override async Task OnInitAsync()
     {
-        if (!string.IsNullOrWhiteSpace(IntentHolder.FileUrl))
+        if (!string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
         {
             NavigationManager.NavigateTo("mydevice", false, true);
             return;

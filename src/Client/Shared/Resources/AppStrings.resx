@@ -708,4 +708,7 @@
   <data name="LoadingSearchResult" xml:space="preserve">
     <value>Loading search result</value>
   </data>
+  <data name="OpenWith" xml:space="preserve">
+    <value>Open with</value>
+  </data>
 </root>

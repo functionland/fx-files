@@ -11,16 +11,16 @@
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    transform: scaley(0);
-    transform-origin: top;
-    opacity: 0;
+    //transform: scaley(0);
+    //transform-origin: top;
+    //opacity: 0;
     
 }
 
 .show-animation-artifact {
-    transition: transform 100ms linear, opacity 100ms linear;
-    transform: scaleY(1);
-    opacity: 1;
+   // transition: transform 100ms linear, opacity 100ms linear;
+   // transform: scaleY(1);
+   // opacity: 1;
 }
 
 .list-title {
@@ -503,6 +503,10 @@
     right: 15px;
     display: none;
     z-index: 2;
+}
+
+.position-scroll-btn-in-search {
+    bottom: 14px !important;
 }
 
 ::deep .fxbutton-content img {

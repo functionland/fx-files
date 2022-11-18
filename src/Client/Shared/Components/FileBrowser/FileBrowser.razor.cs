@@ -3,6 +3,7 @@ using System.Timers;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 
@@ -49,6 +50,7 @@ public partial class FileBrowser
     private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearch;
+    private bool _isSearchInputFocused = false;
     private string? _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
@@ -75,7 +77,7 @@ public partial class FileBrowser
                 FileWatchService.WatchArtifact(_currentArtifactValue);
             }
 
-            ArtifactState.CurrentMyDeviceArtifact = CurrentArtifact;
+            AppStateStore.CurrentMyDeviceArtifact = value;
         }
     }
 
@@ -108,10 +110,9 @@ public partial class FileBrowser
     private Task? _loadArtifactsTask;
     private Task? _searchStatusTask;
 
-    [AutoInject] public IAppStateStore ArtifactState { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
-    [AutoInject] public IntentHolder IntentHolder { get; set; } = default!;
+    [AutoInject] public IFileLauncher FileLauncher { get; set; } = default!;
     public SubscriptionToken ArtifactChangeSubscription { get; set; } = default!;
 
     [Parameter] public IPinService PinService { get; set; } = default!;
@@ -128,9 +129,10 @@ public partial class FileBrowser
                 HandleChangedArtifacts,
                 ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
+        DefaultPath ??= AppStateStore.IntentFileUrl;
         if (string.IsNullOrWhiteSpace(DefaultPath))
         {
-            var preArtifact = ArtifactState.CurrentMyDeviceArtifact;
+            var preArtifact = AppStateStore.CurrentMyDeviceArtifact;
             CurrentArtifact = preArtifact;
         }
         else
@@ -835,6 +837,19 @@ public partial class FileBrowser
         }
     }
 
+    public async Task HandleOpenWithAppAsync(FsArtifact? artifact)
+    {
+        if (artifact == null || artifact.FullPath == null)
+            return;
+
+        AppStateStore.IntentFileUrl = artifact.FullPath;
+        var isOpen = await FileLauncher.OpenWithAsync(artifact.FullPath);
+        if (isOpen)
+        {
+            await SecureStorage.Default.SetAsync("intentFilePath", artifact.FullPath);
+        }
+    }
+
     private List<ShareFile> GetShareFiles(List<FsArtifact> artifacts)
     {
         var filesQuery =
@@ -1003,16 +1018,15 @@ public partial class FileBrowser
                 IsVisible = true,
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
-            var isDrive = artifact.ArtifactType == FsArtifactType.Drive;
-            var isVisibleShareWithApp = artifact.ArtifactType == FsArtifactType.File;
-            result = await _artifactOverflowModalRef!.ShowAsync(
-                false,
-                pinOptionResult,
-                isVisibleShareWithApp,
-                artifact.FileCategory,
-                isDrive,
-                _isInSearch);
+            var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
 
+            result = await _artifactOverflowModalRef!.ShowAsync
+                (false,
+                pinOptionResult,
+                isDrive,
+                artifact?.FileCategory,
+                artifact?.ArtifactType,
+                _isInSearch);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -1033,6 +1047,9 @@ public partial class FileBrowser
                     _isArtifactExplorerLoading = false;
                 }
 
+                break;
+            case ArtifactOverflowResultType.OpenFileWithApp:
+                await HandleOpenWithAppAsync(artifact);
                 break;
             case ArtifactOverflowResultType.Rename:
                 await HandleRenameArtifactAsync(artifact);
@@ -1086,8 +1103,8 @@ public partial class FileBrowser
 
     public void ChangeViewMode()
     {
-        var viewMode = ArtifactState.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
-        ArtifactState.ViewMode = viewMode;
+        var viewMode = AppStateStore.ViewMode == ViewModeEnum.List ? ViewModeEnum.Grid : ViewModeEnum.List;
+        AppStateStore.ViewMode = viewMode;
         StateHasChanged();
     }
 
@@ -1104,11 +1121,6 @@ public partial class FileBrowser
 
     private async Task HandleSelectedArtifactsOptions(List<FsArtifact> artifacts)
     {
-        if (_isInSearch)
-        {
-            await HandleSearchUnFocused();
-        }
-
         var selectedArtifactsCount = artifacts.Count;
         var isMultiple = selectedArtifactsCount > 1;
 
@@ -1119,14 +1131,21 @@ public partial class FileBrowser
         {
             ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
             var pinOptionResult = GetPinOptionResult(artifacts);
-            var isVisibleShareWithApp = artifacts.All(a => a.ArtifactType == FsArtifactType.File);
 
-            var firstArtifactType = artifacts.FirstOrDefault()?.FileCategory;
-            var fileCategoryType =
-                artifacts.All(x => x.FileCategory == firstArtifactType) ? firstArtifactType : null;
+            var firstArtifact = artifacts.FirstOrDefault();
+            FileCategoryType? fileCategoryType = artifacts.All(x => x.FileCategory == firstArtifact?.FileCategory) ?
+                firstArtifact?.FileCategory :
+                null;
+            FsArtifactType? fsArtifactType = artifacts.All(a => a.ArtifactType == firstArtifact?.ArtifactType) ?
+                firstArtifact?.ArtifactType :
+                null;
 
-            result = await _artifactOverflowModalRef.ShowAsync(isMultiple, pinOptionResult, isVisibleShareWithApp,
-                fileCategoryType, IsInRoot(CurrentArtifact));
+            result = await _artifactOverflowModalRef.ShowAsync
+                (isMultiple,
+                pinOptionResult,
+                IsInRoot(CurrentArtifact),
+                fileCategoryType,
+                fsArtifactType);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -1147,6 +1166,10 @@ public partial class FileBrowser
                     _isArtifactExplorerLoading = false;
                 }
 
+                break;
+            case ArtifactOverflowResultType.OpenFileWithApp when (!isMultiple):
+                var artifact = artifacts.SingleOrDefault();
+                await HandleOpenWithAppAsync(artifact);
                 break;
             case ArtifactOverflowResultType.Rename when (!isMultiple):
                 var singleArtifact = artifacts.SingleOrDefault();
@@ -1454,6 +1477,7 @@ public partial class FileBrowser
             _isInSearch = true;
             _displayedArtifacts.Clear();
         }
+        _isSearchInputFocused = true;
         ChangeDeviceBackFunctionality(ArtifactExplorerMode.Normal);
     }
 
@@ -1941,14 +1965,12 @@ public partial class FileBrowser
     {
         try
         {
-            if (IntentHolder.FileUrl is null || _fileViewerRef is null)
+            if (AppStateStore.IntentFileUrl is null || _fileViewerRef is null)
                 return;
 
-            var artifact = await FileService.GetArtifactAsync(IntentHolder.FileUrl);
-            IntentHolder.FileUrl = null;
+            var artifact = FileService.GetArtifactAsync(AppStateStore.IntentFileUrl).GetAwaiter().GetResult();
+            AppStateStore.IntentFileUrl = null;
             _ = await _fileViewerRef.OpenArtifact(artifact);
-
-            CurrentArtifact = artifact;
         }
         catch (Exception exception)
         {
@@ -1956,20 +1978,19 @@ public partial class FileBrowser
         }
     }
 
-    private async Task FileViewerBack()
-    {
-        if (CurrentArtifact?.ParentFullPath is not null && CurrentArtifact.ArtifactType == FsArtifactType.File)
-        {
-            var artifact = await FileService.GetArtifactAsync(CurrentArtifact.ParentFullPath);
-            CurrentArtifact = artifact;
-        }
-
-        await OnInitAsync();
-    }
-
     private string GetIdForScrollArtifact(string artifactName)
     {
         var id = artifactName.Trim().Replace(" ", string.Empty);
         return id;
+    }
+
+    private async Task HandleOnArtifactTouchStartAsync()
+    {
+        if (_isSearchInputFocused)
+        {
+            _isSearchInputFocused = false;
+            await HandleSearchUnFocused();
+        }
+
     }
 }

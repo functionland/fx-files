@@ -29,6 +29,7 @@ public partial class ArtifactExplorer
     [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
     [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
+    [Parameter] public EventCallback IsTouchStarted { get; set; } = default!;
     [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
     [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
     [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
@@ -307,6 +308,7 @@ public partial class ArtifactExplorer
     {
         _startPoint.ReferencePoint = t.TargetTouches[0];
         _startPoint.StartTime = DateTimeOffset.Now;
+        IsTouchStarted.InvokeAsync();
     }
 
     private async Task HandleTouchEnd(TouchEventArgs t)

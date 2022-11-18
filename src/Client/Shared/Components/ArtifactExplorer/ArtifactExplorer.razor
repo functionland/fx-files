@@ -27,9 +27,9 @@
                     @foreach (var artifact in artifacts)
                     {
                         <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") grid-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                        @onpointerup="((e) => PointerUp(e,artifact))"
-                        @onpointerdown="(() =>PointerDown(artifact))"
-                        @onpointercancel="PointerCancel"
+                             @onpointerup="((e) => PointerUp(e,artifact))"
+                             @onpointerdown="(() =>PointerDown(artifact))"
+                             @onpointercancel="PointerCancel"
                              id="@GetIdForArtifact(artifact.Name)">
 
 
@@ -69,11 +69,11 @@
                                 @if ((ArtifactExplorerMode == ArtifactExplorerMode.Normal && !IsInRoot(CurrentArtifact)) || IsInSearchMode)
                                 {
                                     <div class="options-btn"
-                                    @onclick="() => HandleArtifactOptionClick(artifact)"
-                                    @onpointerup:preventDefault="true"
-                                    @onpointerup:stopPropagation="true"
-                                    @onpointerdown:preventDefault="true"
-                                    @onpointerdown:stopPropagation="true">
+                                         @onclick="() => HandleArtifactOptionClick(artifact)"
+                                         @onpointerup:preventDefault="true"
+                                         @onpointerup:stopPropagation="true"
+                                         @onpointerdown:preventDefault="true"
+                                         @onpointerdown:stopPropagation="true">
                                     </div>
                                 }
                             </div>
@@ -86,9 +86,9 @@
         {
             <Virtualize Context="artifact" OverscanCount="_overscanCount" ItemsProvider="@ProvideArtifactsListAsync" @ref="_virtualizeListRef">
                 <div class="item-container @(artifact.IsSelected == true ? "selected-item" : "") list-view-item @(artifact.IsDisabled == true ? "disable-item" : "")"
-                @onpointerup="((e) => PointerUp(e,artifact))"
-                @onpointerdown="(() =>PointerDown(artifact))"
-                @onpointercancel="PointerCancel"
+                     @onpointerup="((e) => PointerUp(e,artifact))"
+                     @onpointerdown="(() =>PointerDown(artifact))"
+                     @onpointercancel="PointerCancel"
                      id="@GetIdForArtifact(artifact.Name)">
 
 
@@ -134,21 +134,21 @@
                             @if (IsInZipMode is false)
                             {
                                 <div class="options-btn"
-                                @onclick="() => HandleArtifactOptionClick(artifact)"
-                                @onpointerup:preventDefault="true"
-                                @onpointerup:stopPropagation="true"
-                                @onpointerdown:preventDefault="true"
-                                @onpointerdown:stopPropagation="true">
+                                     @onclick="() => HandleArtifactOptionClick(artifact)"
+                                     @onpointerup:preventDefault="true"
+                                     @onpointerup:stopPropagation="true"
+                                     @onpointerdown:preventDefault="true"
+                                     @onpointerdown:stopPropagation="true">
                                 </div>
                             }
                             else
                             {
                                 <div class="extract-btn"
-                                @onclick="() => HandleZipArtifactClickAsync(artifact)"
-                                @onpointerup:preventDefault="true"
-                                @onpointerup:stopPropagation="true"
-                                @onpointerdown:preventDefault="true"
-                                @onpointerdown:stopPropagation="true">
+                                     @onclick="() => HandleZipArtifactClickAsync(artifact)"
+                                     @onpointerup:preventDefault="true"
+                                     @onpointerup:stopPropagation="true"
+                                     @onpointerdown:preventDefault="true"
+                                     @onpointerdown:stopPropagation="true">
                                 </div>
                             }
                         }
@@ -157,12 +157,12 @@
             </Virtualize>
         }
     }
-    <div class="position-scroll-btn">
-        <FxButton Width="60px"
-                  Height="60px"
-                  BorderRadius="100px"
-                  OnClick="OnGoToTopPage"
-                  ButtonStyle="FxButtonStyle.IconOnly"
-                  RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
-    </div>
+</div>
+<div class="position-scroll-btn @(IsInSearchMode ? "position-scroll-btn-in-search" : "")">
+    <FxButton Width="60px"
+              Height="60px"
+              BorderRadius="100px"
+              OnClick="OnGoToTopPage"
+              ButtonStyle="FxButtonStyle.IconOnly"
+              RightIcon="_content/Functionland.FxFiles.Client.Shared/images/icons/arrow-up.svg" />
 </div>
