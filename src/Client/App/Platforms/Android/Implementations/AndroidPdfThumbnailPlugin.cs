@@ -30,30 +30,30 @@ public class AndroidPdfThumbnailPlugin : PdfThumbnailPlugin
             throw new InvalidOperationException("pdfFile can not be null.");
 
         PdfRenderer renderer = new(pdfFile);
-        var page = renderer.OpenPage(0);
+        var firstPage = renderer.OpenPage(0);
 
-        if (page is null)
+        if (firstPage is null)
             throw new InvalidOperationException("Page can not be null.");
 
-        (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(page.Width, page.Height, thumbnailScale);
+        (int thumbnailWidth, int thumbnailHeight) = ImageUtils.ScaleImage(firstPage.Width, firstPage.Height, thumbnailScale);
 
         //ToDo: Check Bitmap.Config nullability (although it seems nonsense at the moment).
-        Bitmap? bmp = Bitmap.CreateBitmap(imageWidth, imageHeight, Bitmap.Config.Argb8888);
+        var bitmap = Bitmap.CreateBitmap(thumbnailWidth, thumbnailHeight, Bitmap.Config.Argb8888);
 
-        if (bmp is null)
+        if (bitmap is null)
             throw new InvalidOperationException("Bitmap can not be null.");
 
         //Make the background ready (yes, white) in case of pdf background transparency.
-        var canvas = new Canvas(bmp);
+        var canvas = new Canvas(bitmap);
         canvas.DrawColor(Color.White);
-        canvas.DrawBitmap(bmp, 0, 0, null);
+        canvas.DrawBitmap(bitmap, 0, 0, null);
 
-        page.Render(bmp, null, null, PdfRenderMode.ForDisplay);
+        firstPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
 
         var outputStream = new MemoryStream();
-        await bmp.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
+        await bitmap.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
 
-        page.Close();
+        firstPage.Close();
         renderer.Close();
 
         return outputStream;
