@@ -104,7 +104,6 @@ public partial class FileBrowser
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
     private Timer? _timer;
-    private Task? _loadArtifactsTask;
     private Task? _searchStatusTask;
 
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -144,7 +143,7 @@ public partial class FileBrowser
             await LoadPinsAsync();
             await InvokeAsync(StateHasChanged);
         });
-        _loadArtifactsTask = Task.Run(async () =>
+        _ = Task.Run(async () =>
         {
             await LoadChildrenArtifactsAsync(CurrentArtifact);
             await InvokeAsync(StateHasChanged);
@@ -914,13 +913,6 @@ public partial class FileBrowser
                 {
                     ExceptionHandler.Handle(exception);
                 }
-
-                if (_isInSearch)
-                {
-                    await CancelSearchAsync();
-                    CurrentArtifact = artifact;
-                    await LoadChildrenArtifactsAsync(CurrentArtifact);
-                }
 #endif
             }
         }
@@ -1493,6 +1485,7 @@ public partial class FileBrowser
                         return;
 
                     _allArtifacts.Add(item);
+
                     if (sw.ElapsedMilliseconds <= 1000)
                         continue;
 

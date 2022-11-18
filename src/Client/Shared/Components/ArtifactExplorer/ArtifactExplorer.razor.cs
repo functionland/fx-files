@@ -469,10 +469,19 @@ public partial class ArtifactExplorer
         return id;
     }
 
-    private async Task<bool> ScrollToArtifact(FsArtifact artifact)
+    private async Task<bool?> ScrollToArtifact(FsArtifact artifact)
     {
-        await InvokeAsync(StateHasChanged);
-        var listExistResult = await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name));
+        //var displayArtifact = Artifacts.Find(a=>a.FullPath == artifact.FullPath);
+        //if (displayArtifact == null)
+        //{
+        //    return null;
+        //}
+
+        // 74px is size of one artifact in view
+        var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
+
+        var listExistResult =
+            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight);
         return listExistResult;
     }
 
@@ -486,6 +495,12 @@ public partial class ArtifactExplorer
         var isListExist = await ScrollToArtifact(ScrollArtifact);
         if (_timer == null || isListExist is false)
             return;
+
+        if (isListExist == null)
+        {
+            DisposeTimer();
+            return;
+        }
 
         DisposeTimer();
         await ScrollToArtifact(ScrollArtifact);

@@ -123,16 +123,19 @@ function OnScrollCheck() {
     });
 }
 
-function scrollToItem(itemId) {
+function scrollToItem(itemId, listHeight) {
     const item = document.getElementById(itemId.toString());
     console.log(item);
     console.log(itemId);
+    console.log(listHeight);
     if (typeof item == undefined || item == null) {
+        let list = document.querySelector('.list-container');
+        if (typeof list != undefined || list != null) {
+            list.scrollTop = listHeight;
+        }
         return false;
     }
     else {
-        let list = document.querySelector('.list-container');
-        list.scrollTop = item.offsetTop;
         addGrayBackground(item);
         return true;
     }
