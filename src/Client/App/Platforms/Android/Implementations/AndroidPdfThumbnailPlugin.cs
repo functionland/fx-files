@@ -1,9 +1,11 @@
-﻿using Android.Graphics.Pdf;
+﻿using Android.Graphics;
+using Android.Graphics.Pdf;
 using Android.OS;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Bitmap = Android.Graphics.Bitmap;
 using Stream = System.IO.Stream;
+using Color = Android.Graphics.Color;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
@@ -33,7 +35,6 @@ public class AndroidPdfThumbnailPlugin : PdfThumbnailPlugin
         if (page is null)
             throw new InvalidOperationException("Page can not be null.");
 
-        //ToDo: ScaleImage needs some changes in order to get the proper size for the output image.
         (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(page.Width, page.Height, thumbnailScale);
 
         //ToDo: Check Bitmap.Config nullability (although it seems nonsense at the moment).
@@ -42,13 +43,19 @@ public class AndroidPdfThumbnailPlugin : PdfThumbnailPlugin
         if (bmp is null)
             throw new InvalidOperationException("Bitmap can not be null.");
 
+        //Make the background ready (yes, white) in case of pdf background transparency.
+        var canvas = new Canvas(bmp);
+        canvas.DrawColor(Color.White);
+        canvas.DrawBitmap(bmp, 0, 0, null);
+
         page.Render(bmp, null, null, PdfRenderMode.ForDisplay);
+
+        var outputStream = new MemoryStream();
+        await bmp.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
 
         page.Close();
         renderer.Close();
 
-        var outputStream = new MemoryStream();
-        await bmp.CompressAsync(Bitmap.CompressFormat.Jpeg, 100, outputStream);
         return outputStream;
         
     }
