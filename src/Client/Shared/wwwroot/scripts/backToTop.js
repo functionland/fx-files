@@ -116,6 +116,10 @@ function breadCrumbStyle() {
 
 function breadCrumbStyleSelectionModal() {
     let breadcrumbs = document.querySelector(".sheet-wrapper .fx-breadcrumbs");
+
+    if (!breadcrumbs)
+        return;
+
     let startEllipsis = document.querySelector(".sheet-wrapper .start-ellipsis");
     let endEllipsis = document.querySelector(".sheet-wrapper .end-ellipsis");
     let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
