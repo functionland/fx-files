@@ -15,6 +15,7 @@ public abstract class ArtifactThumbnailPlatformTest<TFileService> : PlatformTest
         ArtifactThumbnailService = artifactThumbnailService;
     }
 
+    //Attention: To run this test, you need an internet connection on your device in order to get the sample files from the internet.
     protected override async Task OnRunAsync()
     {
         var rootPath = OnGetRootPath();

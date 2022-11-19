@@ -13,6 +13,7 @@ public abstract class ImageThumbnailPlatformTest<TFileService> : ArtifactThumbna
         FileService = fileService;
     }
 
+    //This piece of code works fine but is ugly as hell, and needs some serious refactoring.
     protected override async Task OnPluginSpecificTestAsync(string testRoot, CancellationToken? cancellationToken = null)
     {
         var thumbnailScales = Enum.GetValues<ThumbnailScale>();
