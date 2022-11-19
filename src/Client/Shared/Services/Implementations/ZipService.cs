@@ -105,34 +105,27 @@ public partial class ZipService : IZipService
         }
         catch (CryptographicException ex) when (ex.Message == "Encrypted Rar archive has no password specified.")
         {
+            await DeleteExtractedZipEmptyFiles(zipFullPath, newPath);
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (CryptographicException ex) when (ex.Message == "The password did not match.")
         {
-            if (Directory.Exists(newPath))
-            {
-                DirectoryUtils.HardDeleteDirectory(newPath);
-            }
+            await DeleteExtractedZipEmptyFiles(zipFullPath, newPath);
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (InvalidFormatException ex) when (ex.Message.StartsWith("Unknown Rar Header:"))
         {
+            await DeleteExtractedZipEmptyFiles(zipFullPath, newPath);
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
         }
         catch (CryptographicException ex) when (ex.Message == "No password supplied for encrypted zip.")
         {
-            if (Directory.Exists(newPath))
-            {
-                DirectoryUtils.HardDeleteDirectory(newPath);
-            }
+            await DeleteExtractedZipEmptyFiles(zipFullPath, newPath);
             throw new InvalidPasswordException(StringLocalizer.GetString(AppStrings.InvalidPasswordException));
         }
         catch (Exception ex) when (ex.Message == "bad password")
         {
-            if (Directory.Exists(newPath))
-            {
-                DirectoryUtils.HardDeleteDirectory(newPath);
-            }
+            await DeleteExtractedZipEmptyFiles(zipFullPath, newPath);
             throw new PasswordDidNotMatchedException(StringLocalizer.GetString(AppStrings.PasswordDidNotMatchedException));
         }
         catch (FormatException ex) when (ex.Message == "malformed vint")
@@ -145,11 +138,35 @@ public partial class ZipService : IZipService
         }
         catch (NotSupportedException)
         {
-            if (Directory.Exists(newPath))
-            {
-                DirectoryUtils.HardDeleteDirectory(newPath);
-            }
             throw new NotSupportedEncryptedFileException(StringLocalizer.GetString(AppStrings.NotSupportedEncryptedFileException));
+        }
+    }
+
+    private async Task DeleteExtractedZipEmptyFiles(string zipFilePath, string destinationPath)
+    {
+        var zipFileArtifacts = (await GetAllArtifactsAsync(zipFilePath)).Where(a => a.ArtifactType == FsArtifactType.File);
+        var emptyFiles = new List<FsArtifact>();
+
+        foreach (var zipFileArtifact in zipFileArtifacts)
+        {
+            var artifactPath = Path.Combine(destinationPath, zipFileArtifact.FullPath.Replace("/", Path.DirectorySeparatorChar.ToString()));
+
+            if (File.Exists(artifactPath))
+            {
+                var artifact = await LocalDeviceFileService.GetArtifactAsync(artifactPath);
+
+                if (artifact.Size == 0) 
+                {
+                    emptyFiles.Add(artifact);
+                }
+            }
+        }
+
+        if (!emptyFiles.Any()) return;
+
+        foreach(var emptyFile in emptyFiles)
+        {
+            File.Delete(emptyFile.FullPath);
         }
     }
 

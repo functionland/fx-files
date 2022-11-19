@@ -14,6 +14,12 @@
                   IsEnabled="!_isInRoot"
                   IsVisible="_fileCategoryType == FileCategoryType.Zip && !_isMultiple"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
+        <FxButton Class="open-with-button"
+                  Text="@Localizer[nameof(AppStrings.OpenWith)]"
+                  OnClick="OpenWith"
+                  IsEnabled="!_isInRoot"
+                  IsVisible="_fsArtifactType == FsArtifactType.File && !_isMultiple"
+                  ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="rename-button"
                   Text="@Localizer[nameof(AppStrings.Rename)]"
                   OnClick="Rename"
@@ -56,12 +62,14 @@
                   OnClick="ShowInLocation"
                   IsVisible="@(_isInSearch && _isMultiple is false)"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
+
         <FxButton Class="share-with-app-button"
                   Text="@Localizer[nameof(AppStrings.ShareWithApp)]"
                   OnClick="ShareWithApp"
                   IsEnabled="!_isInRoot"
-                  IsVisible="_isVisibleShareWithAppOption"
-                  ButtonStyle="FxButtonStyle.SheetMenu" />
+                  ButtonStyle="FxButtonStyle.SheetMenu"
+                  IsVisible="_fsArtifactType == FsArtifactType.File"/>
+
         <FxButton Class="delete-button"
                   Text="@Localizer[nameof(AppStrings.Delete)]"
                   OnClick="Delete"

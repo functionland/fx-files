@@ -36,6 +36,7 @@ public partial class ArtifactSelectionModal
     }
     private async Task SelectArtifact(FsArtifact artifact)
     {
+        await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");
         _currentArtifact = artifact;
         await LoadArtifacts(artifact.FullPath);
         StateHasChanged();

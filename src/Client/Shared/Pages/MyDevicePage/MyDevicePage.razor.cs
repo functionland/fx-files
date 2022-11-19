@@ -1,9 +1,12 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
 
+using Microsoft.AspNetCore.Components.Web;
+
 namespace Functionland.FxFiles.Client.Shared.Pages
 {
     public partial class MyDevicePage
     {
+        private bool _applyAnimation = false;
         private ArtifactSelectionModal _artifactSelectionModalRef = default!;
 
         [AutoInject] private ILocalDeviceFileService _fileService { get; set; } = default!;
@@ -11,7 +14,6 @@ namespace Functionland.FxFiles.Client.Shared.Pages
         [AutoInject] private ILocalDevicePinService _pinService { get; set; } = default!;
 
         [AutoInject] private IArtifactThumbnailService<ILocalDeviceFileService> _thumbnailService { get; set; } = default!;
-        [AutoInject] private IAppStateStore _appStateStore { get; set; } = default!;
         private string? DecodedDefaultPath
         {
             get
@@ -19,7 +21,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 var query = new Uri(NavigationManager.Uri).Query;
                 if (string.IsNullOrWhiteSpace(query)) return null;
 
-                var decodedQuery = System.Net.WebUtility.UrlDecode(query);
+                var decodedQuery = Uri.UnescapeDataString(query);
                 if (string.IsNullOrWhiteSpace(decodedQuery)) return null;
 
                 var decodedQueryParts = decodedQuery.Split('&');
@@ -38,16 +40,25 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 return null;
             }
         }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (_appStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
+            if (AppStateStore.CurrentPagePath.ToLower().Equals("mydevice"))
             {
-                _appStateStore.CurrentMyDeviceArtifact = null;
+                AppStateStore.CurrentMyDeviceArtifact = null;
             }
 
-            _appStateStore.CurrentPagePath = "mydevice";
+            AppStateStore.CurrentPagePath = "mydevice";
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _applyAnimation = true;
+                StateHasChanged();
+            }  
+            
         }
     }
 }

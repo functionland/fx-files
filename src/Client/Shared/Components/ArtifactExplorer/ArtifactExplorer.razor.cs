@@ -1,5 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Common;
-
+﻿using System.Timers;
+using Functionland.FxFiles.Client.Shared.Components.Common;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
@@ -29,6 +29,7 @@ public partial class ArtifactExplorer
     [Parameter] public EventCallback<FsArtifact> OnArtifactOptionClick { get; set; } = default!;
     [Parameter] public EventCallback<List<FsArtifact>> OnArtifactsOptionClick { get; set; } = default!;
     [Parameter] public EventCallback<FsArtifact> OnSelectArtifact { get; set; } = default!;
+    [Parameter] public EventCallback IsTouchStarted { get; set; } = default!;
     [Parameter] public ArtifactExplorerMode ArtifactExplorerMode { get; set; }
     [Parameter] public EventCallback<ArtifactExplorerMode> ArtifactExplorerModeChanged { get; set; }
     [Parameter] public EventCallback OnAddFolderButtonClick { get; set; }
@@ -43,6 +44,7 @@ public partial class ArtifactExplorer
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
     [Parameter] public bool IsInZipMode { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
+    [Parameter] public FsArtifact? ScrollArtifact { get; set; }
 
     public PathProtocol Protocol =>
         FileService switch
@@ -84,6 +86,17 @@ public partial class ArtifactExplorer
             await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
             await InitWindowWidthListener();
             await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+        }
+
+        if (ScrollArtifact is not null)
+        {
+            if (_timer == null && ScrollArtifact != null)
+            {
+                _timer = new System.Timers.Timer(1000);
+                _timer.Enabled = true;
+                _timer.Start();
+                _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
+            }
         }
     }
 
@@ -204,7 +217,7 @@ public partial class ArtifactExplorer
                 if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                 {
                     await OnSelectArtifact.InvokeAsync(artifact);
-                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                    await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
                 }
                 else
                 {
@@ -306,6 +319,7 @@ public partial class ArtifactExplorer
     {
         _startPoint.ReferencePoint = t.TargetTouches[0];
         _startPoint.StartTime = DateTimeOffset.Now;
+        IsTouchStarted.InvokeAsync();
     }
 
     private async Task HandleTouchEnd(TouchEventArgs t)
@@ -415,6 +429,7 @@ public partial class ArtifactExplorer
         {
             return;
         }
+
         foreach (var item in items)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -452,6 +467,38 @@ public partial class ArtifactExplorer
     {
         var id = artifactName.Trim().Replace(" ", string.Empty);
         return id;
+    }
+
+    private async Task<bool?> ScrollToArtifact(FsArtifact artifact)
+    {
+        var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
+
+        var listExistResult =
+            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight);
+        return listExistResult;
+    }
+
+    private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (ScrollArtifact == null)
+        {
+            return;
+        }
+
+        var isListExist = await ScrollToArtifact(ScrollArtifact);
+        if (_timer == null || isListExist is false)
+            return;
+
+        if (isListExist == null)
+        {
+            DisposeTimer();
+            return;
+        }
+
+        DisposeTimer();
+        await ScrollToArtifact(ScrollArtifact);
+
+        ScrollArtifact = null;
     }
 
     public void Dispose()

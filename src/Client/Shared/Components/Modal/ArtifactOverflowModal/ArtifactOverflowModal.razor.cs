@@ -8,8 +8,8 @@
         private bool _isInRoot;
         private bool _isInSearch;
         private PinOptionResult? _pinOptionResult;
-        private bool _isVisibleShareWithAppOption;
         private FileCategoryType? _fileCategoryType;
+        private FsArtifactType? _fsArtifactType;
 
         public void Details()
         {
@@ -24,6 +24,17 @@
         {
             var result = new ArtifactOverflowResult();
             result.ResultType = ArtifactOverflowResultType.Extract;
+
+            _tcs?.SetResult(result);
+            _tcs = null;
+
+            _isModalOpen = false;
+        }
+
+        public void OpenWith()
+        {
+            var result = new ArtifactOverflowResult();
+            result.ResultType = ArtifactOverflowResultType.OpenFileWithApp;
 
             _tcs?.SetResult(result);
             _tcs = null;
@@ -119,7 +130,13 @@
             _isModalOpen = false;
         }
 
-        public async Task<ArtifactOverflowResult> ShowAsync(bool isMultiple, PinOptionResult pinOptionResult, bool isVisibleShareWithAppOption, FileCategoryType? fileCategoryType = null, bool isInRoot = false, bool isInSearch = false)
+        public async Task<ArtifactOverflowResult> ShowAsync
+            (bool isMultiple,
+            PinOptionResult pinOptionResult,
+            bool isInRoot,
+            FileCategoryType? fileCategoryType = null,
+            FsArtifactType? fsArtifactType = null,
+            bool isInSearch = false)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -134,7 +151,7 @@
             _isInSearch = isInSearch;
             _pinOptionResult = pinOptionResult;
             _fileCategoryType = fileCategoryType;
-            _isVisibleShareWithAppOption = isVisibleShareWithAppOption;
+            _fsArtifactType = fsArtifactType;
 
             _isModalOpen = true;
             StateHasChanged();

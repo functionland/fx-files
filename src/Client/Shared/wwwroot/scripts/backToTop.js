@@ -11,7 +11,7 @@ function HideBackToTopButton() {
     {
         var scrollButton = document.getElementsByClassName('position-scroll-btn')[0];
         scrollButton.style.display = 'none';
-        if (typeof timeoutID !== "undefined") {
+        if (typeof timeoutID != undefined) {
             clearTimeout(timeoutID);
             timeoutID = undefined;
         }
@@ -31,17 +31,39 @@ function getLastScrollPosition() {
     let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
     artifactListDiv.scrollTop = lastScrollPosition;
     savePositionScroll.pop();
+    console.log(lastScrollPosition);
 }
 
 function saveScrollPosition() {
     const artifactListDiv = document.querySelector('.list-container');
     savePositionScroll.push(artifactListDiv.scrollTop);
+    console.log(savePositionScroll);
+}
+
+function getLastScrollPositionFileViewer() {
+    debugger
+    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
+    const artifactsDivListItem = document.querySelector('.file-viewer-container .list-container .item-container');
+
+    /*setTimeout(getLastScrollPositionFileViewer(), 1000);*/
+
+    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
+    setTimeout(() => {
+        artifactListDiv.scrollTop = lastScrollPosition;
+    }, 100);
+    savePositionScroll.pop();
+}
+
+function saveScrollPositionFileViewer() {
+    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
+    savePositionScroll.push(artifactListDiv.scrollTop);
+    console.log(savePositionScroll);
 }
 
 function SearchInputUnFocus() {
     var searchInput = document.getElementById('searchinput');
     var searchIcon = document.querySelector('.search-icon');
-    if (typeof searchInput !== "undefined") {
+    if (typeof searchInput != undefined) {
         searchInput.blur();
         searchIcon.classList.remove("search-icon-active");
     }
@@ -61,24 +83,60 @@ function breadCrumbStyle() {
     let breadcrumbs = document.querySelector(".fx-breadcrumbs");
     let startEllipsis = document.querySelector(".start-ellipsis");
     let endEllipsis = document.querySelector(".end-ellipsis");
+    let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
+
+    if (hasHorizontalScrollbar) {
+        startEllipsis.style.display = "block";
+        breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
+    }
 
     breadcrumbs.addEventListener("scroll", () => {
+        startEllipsis.style.display = "block";
         let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
 
         if (breadcrumbsScroll != 0) {
+            startEllipsis.classList.add("color-changer");
             startEllipsis.style.display = "block";
-            endEllipsis.style.display = "block";
-            endEllipsis.classList.remove("color-changer");
-
+            endEllipsis.classList.add("color-changer");
 
         } else {
+            startEllipsis.classList.remove("color-changer");
             startEllipsis.style.display = "none";
-            endEllipsis.classList.add("color-changer");
         }
 
         if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+            endEllipsis.classList.remove("color-changer");
+        }
+    });
+}
+
+function breadCrumbStyleSelectionModal() {
+    let breadcrumbs = document.querySelector(".sheet-wrapper .fx-breadcrumbs");
+    let startEllipsis = document.querySelector(".sheet-wrapper .start-ellipsis");
+    let endEllipsis = document.querySelector(".sheet-wrapper .end-ellipsis");
+    let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
+
+    if (hasHorizontalScrollbar) {
+        startEllipsis.style.display = "block";
+        breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
+    }
+
+    breadcrumbs.addEventListener("scroll", () => {
+        startEllipsis.style.display = "block";
+        let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
+
+        if (breadcrumbsScroll != 0) {
+            startEllipsis.classList.add("color-changer");
+            startEllipsis.style.display = "block";
             endEllipsis.classList.add("color-changer");
-            endEllipsis.style.display = "block";
+
+        } else {
+            startEllipsis.classList.remove("color-changer");
+            startEllipsis.style.display = "none";
+        }
+
+        if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+            endEllipsis.classList.remove("color-changer");
         }
     });
 }
@@ -89,7 +147,7 @@ function OnScrollCheck() {
 
     artifactListDiv.addEventListener("scroll", () => {
         const pinListDiv = document.querySelector('.pin-artifacts');
-        if (typeof pinListDiv !== "undefined" && pinListDiv !== null) {
+        if (typeof pinListDiv != undefined && pinListDiv !== null) {
 
             if (oldScrollY < artifactListDiv.scrollTop && artifactListDiv.scrollTop >= 350) {
 
@@ -110,12 +168,12 @@ function OnScrollCheck() {
         if (artifactListDiv.scrollTop > 85) {
             ShowBackToTopButton();
 
-            if (typeof timeoutID === "undefined") {
+            if (typeof timeoutID === 'undefined') {
                 timeoutID = setTimeout(HideBackToTopButton, 3000);
             }
         } else {
             HideBackToTopButton();
-            if (typeof timeoutID !== "undefined") {
+            if (typeof timeoutID != undefined) {
                 clearTimeout(timeoutID);
                 timeoutID = undefined;
             }
@@ -123,14 +181,21 @@ function OnScrollCheck() {
     });
 }
 
-function scrollToItem(itemId) {
+function scrollToItem(itemId, listHeight) {
     const item = document.getElementById(itemId.toString());
     console.log(item);
     console.log(itemId);
-    if (typeof item !== "undefined" && item !== null) {
+    console.log(listHeight);
+    if (typeof item == undefined || item == null) {
         let list = document.querySelector('.list-container');
-        list.scrollTop = item.offsetTop;
+        if (typeof list != undefined || list != null) {
+            list.scrollTop = listHeight;
+        }
+        return false;
+    }
+    else {
         addGrayBackground(item);
+        return true;
     }
 }
 

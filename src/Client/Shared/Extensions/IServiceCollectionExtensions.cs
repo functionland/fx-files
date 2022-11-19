@@ -42,8 +42,6 @@ public static class IServiceCollectionExtensions
 
         services.AddSingleton<FsFileProviderDependency>();
 
-        services.AddSingleton<IntentHolder>();
-
         return services;
     }
 

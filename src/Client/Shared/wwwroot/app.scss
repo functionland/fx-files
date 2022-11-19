@@ -77,3 +77,25 @@ input[type=checkbox] {
     pointer-events: none;
     accent-color: $green-dark-base;
 }
+
+/*.fx-basic-page1 {
+     transform: scaley(0);
+    transform-origin: top;
+    transition: transform 600ms linear;
+}*/
+
+.fx-basic-page {
+    height: 0;
+    padding-bottom: 81px;
+    overflow: hidden;
+    transition: height 150ms linear;
+}
+
+/*.fx-page-open-mode1 {
+    transform: scaleY(1);
+    height: 100vh;
+}*/
+
+.fx-page-open-mode {
+    height: 100vh;
+}
