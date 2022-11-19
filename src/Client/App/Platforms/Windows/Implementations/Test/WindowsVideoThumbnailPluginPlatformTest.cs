@@ -3,20 +3,20 @@ using Image = System.Drawing.Image;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations.Test;
 
-public class WindowsImageThumbnailPluginPlatformTest<TFileService> : ImageThumbnailPlatformTest<TFileService>
+public class WindowsVideoThumbnailPluginPlatformTest<TFileService> : VideoThumbnailPlatformTest<TFileService>
     where TFileService : IFileService
 {
     TFileService FileService { get; set; }
 
-    public WindowsImageThumbnailPluginPlatformTest(IArtifactThumbnailService<TFileService> artifactThumbnailService,
+    public WindowsVideoThumbnailPluginPlatformTest(IArtifactThumbnailService<TFileService> artifactThumbnailService,
                                                    TFileService fileService) : base(artifactThumbnailService, fileService)
     {
         FileService = fileService;
     }
 
-    public override string Title => $"WindowsImageThumbnailPluginPlatformTest {typeof(TFileService).Name}";
+    public override string Title => $"WindowsVideoThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
-    public override string Description => "Test for create image thumbnail on windows";
+    public override string Description => "Test for create video thumbnail on windows";
 
     protected override string OnGetRootPath() => "c:\\";
 
