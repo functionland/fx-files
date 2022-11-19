@@ -2,20 +2,62 @@
 
 public partial class ProgressModal
 {
+    private string currentText = default!;
     [Parameter]
-    public string CurrentText { get; set; } = default!;
+    public string CurrentText
+    {
+        get => currentText;
+        set
+        {
+            if (currentText != value)
+            {
+                currentText = value;
+            }
+        }
+    }
 
+    private string currentSubText = default!;
     [Parameter]
-    public string CurrentSubText { get; set; } = default!;
+    public string CurrentSubText
+    {
+        get => currentSubText;
+        set
+        {
+            if (currentSubText != value)
+            {
+                currentSubText = value;
+            }
+        }
+    }
 
+    private double progressCurrentValue = default;
     [Parameter]
-    public double ProgressCurrentValue { get; set; } = default;
+    public double ProgressCurrentValue
+    {
+        get => progressCurrentValue;
+        set
+        {
+            if (progressCurrentValue != value)
+            {
+                progressCurrentValue = value;
+            }
+        }
+    }
 
-    [Parameter]
-    public int ProgressMax { get; set; } = 100;
+    private int progressMax;
+    [Parameter] public int ProgressMax 
+    { 
+        get => progressMax;
+        set
+        {
+            if (progressMax != value)
+            {
+                progressMax = value;
+            }
+        }
+    }
 
-    [Parameter]
-    public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
 
     private string Title { get; set; } = default!;
     private ProgressMode ProgressMode { get; set; }
