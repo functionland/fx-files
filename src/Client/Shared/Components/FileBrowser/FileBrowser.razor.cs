@@ -936,6 +936,8 @@ public partial class FileBrowser
                 _isGoingBack = false;
             }
 
+            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+
             CurrentArtifact = artifact;
             _displayedArtifacts = new List<FsArtifact>();
 
