@@ -29,6 +29,8 @@ public static class IWindowsServiceCollectionExtensions
         services.AddTransient<WindowsImageThumbnailPluginPlatformTest<IFulaFileService>>();
         services.AddTransient<WindowsPdfThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
         services.AddTransient<WindowsPdfThumbnailPluginPlatformTest<IFulaFileService>>();
+        services.AddTransient<WindowsVideoThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<WindowsVideoThumbnailPluginPlatformTest<IFulaFileService>>();
 
         services.AddSingleton<IFileLauncher, WindowsFileLauncher>();
 

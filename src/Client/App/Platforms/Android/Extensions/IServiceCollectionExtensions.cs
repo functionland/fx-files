@@ -44,6 +44,8 @@ public static class IAndroidServiceCollectionExtensions
         services.AddTransient<AndroidImageThumbnailPluginPlatformTest<IFulaFileService>>();
         services.AddTransient<AndroidPdfThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
         services.AddTransient<AndroidPdfThumbnailPluginPlatformTest<IFulaFileService>>();
+        services.AddTransient<AndroidVideoThumbnailPluginPlatformTest<ILocalDeviceFileService>>();
+        services.AddTransient<AndroidVideoThumbnailPluginPlatformTest<IFulaFileService>>();
 
         services.AddSingleton<IFileLauncher, AndroidFileLauncher>();
 
