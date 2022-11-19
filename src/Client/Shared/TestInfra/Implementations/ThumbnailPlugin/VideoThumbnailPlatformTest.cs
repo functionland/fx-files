@@ -1,5 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Enums;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlugin;
 
@@ -17,7 +16,7 @@ public abstract class VideoThumbnailPlatformTest<TFileService> : ArtifactThumbna
     {
         var thumbnailScales = Enum.GetValues<ThumbnailScale>();
 
-        //531_kb_Mp4_video
+        //374_kb_Mp4_video
         var fullPath_374_kb = Path.ChangeExtension(Path.Combine(testRoot, $"video_531_kb"), ".mp4");
         var videoUrl_374_kb = "http://techslides.com/demos/sample-videos/small.mp4";
 

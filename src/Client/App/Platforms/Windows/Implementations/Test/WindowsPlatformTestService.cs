@@ -15,6 +15,8 @@ public partial class WindowsPlatformTestService : PlatformTestService
     [AutoInject] WindowsPdfThumbnailPluginPlatformTest<IFulaFileService> FulaWindowsPdfThumbnailPluginPlatformTest { get; set; }
     [AutoInject] WindowsVideoThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalWindowsVideoThumbnailPluginPlatformTest { get; set; }
     [AutoInject] WindowsVideoThumbnailPluginPlatformTest<IFulaFileService> FulaWindowsVideoThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] WindowsAudioThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalWindowsAudioThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] WindowsAudioThumbnailPluginPlatformTest<IFulaFileService> FulaWindowsAudioThumbnailPluginPlatformTest { get; set; }
 
     protected override List<IPlatformTest> OnGetTests()
     {
@@ -26,7 +28,9 @@ public partial class WindowsPlatformTestService : PlatformTestService
             LocalWindowsPdfThumbnailPluginPlatformTest,
             FulaWindowsPdfThumbnailPluginPlatformTest,
             LocalWindowsVideoThumbnailPluginPlatformTest,
-            FulaWindowsVideoThumbnailPluginPlatformTest
+            FulaWindowsVideoThumbnailPluginPlatformTest,
+            LocalWindowsAudioThumbnailPluginPlatformTest,
+            FulaWindowsAudioThumbnailPluginPlatformTest
         };
     }  
 }

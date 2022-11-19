@@ -17,6 +17,8 @@ public partial class AndroidPlatformTestService : PlatformTestService
     [AutoInject] AndroidPdfThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidPdfThumbnailPluginPlatformTest { get; set; }
     [AutoInject] AndroidVideoThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidVideoThumbnailPluginPlatformTest { get; set; }
     [AutoInject] AndroidVideoThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidVideoThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidAudioThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidAudioThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidAudioThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidAudioThumbnailPluginPlatformTest { get; set; }
 
     protected override List<IPlatformTest> OnGetTests()
     {
@@ -29,7 +31,9 @@ public partial class AndroidPlatformTestService : PlatformTestService
             LocalAndroidPdfThumbnailPluginPlatformTest,
             FulaAndroidPdfThumbnailPluginPlatformTest,
             LocalAndroidVideoThumbnailPluginPlatformTest,
-            FulaAndroidVideoThumbnailPluginPlatformTest
+            FulaAndroidVideoThumbnailPluginPlatformTest,
+            LocalAndroidAudioThumbnailPluginPlatformTest,
+            FulaAndroidAudioThumbnailPluginPlatformTest
         };
     }
 }
