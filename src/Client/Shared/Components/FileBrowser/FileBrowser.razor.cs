@@ -220,13 +220,12 @@ public partial class FileBrowser
         ProgressBarCurrentText = currentText;
     }
 
-    private async Task InitialProgressBarAsync(int maxValue)
+    private void InitialProgressBar(int maxValue)
     {
         ProgressBarCurrentValue = 0;
         ProgressBarMax = maxValue;
         ProgressBarCurrentSubText = string.Empty;
         ProgressBarCurrentText = "Loading...";
-        await InvokeAsync(StateHasChanged);
     }
 
     public async Task HandleCopyArtifactsAsync(List<FsArtifact> artifacts)
@@ -253,7 +252,7 @@ public partial class FileBrowser
             {
                 if (_progressModalRef is not null)
                 {
-                    await InitialProgressBarAsync(artifacts.Count);
+                    InitialProgressBar(artifacts.Count);
                     await _progressModalRef.ShowAsync(ProgressMode.Progressive,
                         Localizer.GetString(AppStrings.CopyFiles),
                         true);
@@ -345,7 +344,6 @@ public partial class FileBrowser
                     if (_progressModalRef is not null)
                     {
                         await NavigateToAsync(destinationPath);
-                        await InitialProgressBarAsync(artifacts.Count);
                         await _progressModalRef.ShowAsync(ProgressMode.Progressive,
                             Localizer.GetString(AppStrings.CopyFiles),
                             true);
@@ -457,7 +455,6 @@ public partial class FileBrowser
                 if (_progressModalRef is not null)
                 {
                     await NavigateToAsync(destinationPath);
-                    await InitialProgressBarAsync(artifacts.Count);
                     await _progressModalRef.ShowAsync(ProgressMode.Progressive,
                         Localizer.GetString(AppStrings.MovingFiles), true);
                 }
