@@ -31,33 +31,11 @@ function getLastScrollPosition() {
     let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
     artifactListDiv.scrollTop = lastScrollPosition;
     savePositionScroll.pop();
-    console.log(lastScrollPosition);
 }
 
 function saveScrollPosition() {
     const artifactListDiv = document.querySelector('.list-container');
     savePositionScroll.push(artifactListDiv.scrollTop);
-    console.log(savePositionScroll);
-}
-
-function getLastScrollPositionFileViewer() {
-    debugger
-    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
-    const artifactsDivListItem = document.querySelector('.file-viewer-container .list-container .item-container');
-
-    /*setTimeout(getLastScrollPositionFileViewer(), 1000);*/
-
-    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
-    setTimeout(() => {
-        artifactListDiv.scrollTop = lastScrollPosition;
-    }, 100);
-    savePositionScroll.pop();
-}
-
-function saveScrollPositionFileViewer() {
-    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
-    savePositionScroll.push(artifactListDiv.scrollTop);
-    console.log(savePositionScroll);
 }
 
 function SearchInputUnFocus() {
