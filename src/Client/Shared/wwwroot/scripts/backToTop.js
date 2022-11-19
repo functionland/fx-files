@@ -168,7 +168,7 @@ function OnScrollCheck() {
         if (artifactListDiv.scrollTop > 85) {
             ShowBackToTopButton();
 
-            if (typeof timeoutID == undefined) {
+            if (typeof timeoutID === 'undefined') {
                 timeoutID = setTimeout(HideBackToTopButton, 3000);
             }
         } else {
