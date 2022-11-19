@@ -81,6 +81,10 @@ function ImagePinchZoom() {
 
 function breadCrumbStyle() {
     let breadcrumbs = document.querySelector(".fx-breadcrumbs");
+
+    if (!breadcrumbs)
+        return;
+
     let startEllipsis = document.querySelector(".start-ellipsis");
     let endEllipsis = document.querySelector(".end-ellipsis");
     let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
