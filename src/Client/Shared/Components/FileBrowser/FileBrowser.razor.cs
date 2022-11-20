@@ -1939,4 +1939,10 @@ public partial class FileBrowser
             await HandleSearchUnFocused();
         }
     }
+
+    private void SetSelectedArtifact(List<FsArtifact> artifacts)
+    {
+        _selectedArtifacts = artifacts;
+        _searchPinOptionResult = GetPinOptionResult(_selectedArtifacts);
+    }
 }

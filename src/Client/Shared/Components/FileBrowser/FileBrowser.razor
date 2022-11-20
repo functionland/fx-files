@@ -13,11 +13,11 @@
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(CurrentArtifact))"
                OnAddButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)"
-    @ref="_fxToolBarRef" />
+               @ref="_fxToolBarRef" />
 
     @if (CurrentArtifact != null)
     {
-        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService" />
     }
 
     <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
@@ -98,7 +98,7 @@
 
         <div class="local-search @(!IsInRoot(CurrentArtifact) ? "show-search" : "hide-search")">
             <FxSearchInput Placeholder="@CurrentArtifact?.Name"
-            @ref="_fxSearchInputRef"
+                           @ref="_fxSearchInputRef"
                            OnCancel="HandleCancelInLineSearchAsync"
                            DebounceInterval="300"
                            OnSearch="HandleInLineSearch"
@@ -120,8 +120,8 @@
                               IsLoading="_isArtifactExplorerLoading"
                               IsInSearchMode="_isInSearch"
                               ScrollArtifact="ScrollArtifact"
-            @bind-SelectedArtifacts="_selectedArtifacts"
-            @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                              @bind-SelectedArtifacts="_selectedArtifacts"
+                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
         }
     </section>
 
@@ -157,7 +157,7 @@
             @if (_searchStatusTask is { IsCompleted: false } && string.IsNullOrWhiteSpace(_searchText) is false && _isArtifactExplorerLoading is false)
             {
                 <div class="progress-bar-wrapper">
-                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])"></FxProgressBar>
+                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])" />
                 </div>
             }
         </div>
@@ -178,8 +178,8 @@
                               IsInSearchMode="_isInSearch"
                               IsTouchStarted="HandleOnArtifactTouchStartAsync"
                               SelectedArtifacts="_selectedArtifacts"
-                              SelectedArtifactsChanged="s => { _selectedArtifacts = s; _searchPinOptionResult = GetPinOptionResult(_selectedArtifacts); }"
-            @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                              SelectedArtifactsChanged="SetSelectedArtifact"
+                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
         }
         @if (_selectedArtifacts is { Count: >= 1 })
         {
@@ -202,7 +202,7 @@
                         <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
                     </div>
                 }
-                @if (_searchPinOptionResult is {IsVisible: true })
+                @if (_searchPinOptionResult is { IsVisible: true })
                 {
                     @if (_searchPinOptionResult.Type == PinOptionResultType.Add)
                     {
@@ -253,7 +253,7 @@
                ProgressCurrentValue="@ProgressBarCurrentValue"
                ProgressMax="@ProgressBarMax"
                OnCancel="ProgressBarOnCancel"
-@ref="_progressModalRef" />
+               @ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
 <FileViewer @ref="_fileViewerRef"
             FileService="FileService"
@@ -263,4 +263,4 @@
             ThumbnailService="ThumbnailService"
             NavigationFolderCallback="NavigateToAsync" />
 
-<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />
