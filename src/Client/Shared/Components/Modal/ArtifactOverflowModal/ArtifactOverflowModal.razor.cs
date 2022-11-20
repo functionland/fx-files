@@ -18,6 +18,7 @@
 
             _tcs?.SetResult(result);
             _tcs = null;
+            Close();
         }
 
         public void Extract()
@@ -28,7 +29,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void OpenWith()
@@ -39,7 +40,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Rename()
@@ -50,7 +51,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Copy()
@@ -61,7 +62,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Pin()
@@ -72,7 +73,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void UnPin()
@@ -83,7 +84,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Move()
@@ -94,7 +95,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void ShareWithApp()
@@ -105,7 +106,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void ShowInLocation()
@@ -116,7 +117,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Delete()
@@ -127,7 +128,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public async Task<ArtifactOverflowResult> ShowAsync
