@@ -1319,6 +1319,8 @@ public partial class FileBrowser
     {
         try
         {
+            _pins.RemoveAll(a => a.FullPath == artifact.FullPath);
+
             if (artifact.FullPath == CurrentArtifact?.FullPath)
             {
                 await HandleToolbarBackClickAsync();
