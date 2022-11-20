@@ -646,8 +646,8 @@ public partial class FileBrowser
         if (_artifactDetailModalRef is null)
             return;
 
-        var result =
-            await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, (isDrive || IsInRoot(CurrentArtifact)));
+        var result = await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, (isDrive || (IsInRoot(CurrentArtifact) && !_isInSearch)));
+
         ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         switch (result.ResultType)
