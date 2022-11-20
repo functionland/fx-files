@@ -173,7 +173,7 @@ public partial class ArtifactExplorer
     {
         if (_timer != null)
         {
-            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestination)
             {
                 DisposeTimer();
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
