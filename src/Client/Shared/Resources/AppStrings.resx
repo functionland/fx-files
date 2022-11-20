@@ -711,4 +711,7 @@
   <data name="OpenWith" xml:space="preserve">
     <value>Open with</value>
   </data>
+  <data name="Unpin" xml:space="preserve">
+    <value>Unpin</value>
+  </data>
 </root>

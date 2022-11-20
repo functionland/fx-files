@@ -201,10 +201,23 @@
                         <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
                     </div>
                 }
-                <div class="option-item" @onclick="@(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
-                    <div class="pin-icon"></div>
-                    <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
-                </div>
+                @if (GetPinOptionResult(_selectedArtifacts).IsVisible)
+                {
+                    @if (GetPinOptionResult(_selectedArtifacts).Type == PinOptionResultType.Add)
+                    {
+                        <div class="option-item" @onclick="@(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
+                            <div class="pin-icon"></div>
+                            <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="option-item" @onclick="@(()=>HandleUnPinArtifactsAsync(_selectedArtifacts))">
+                            <div class="unpin-icon"></div>
+                            <div class="title-item">@Localizer[nameof(AppStrings.Unpin)]</div>
+                        </div>
+                    }
+                }
                 @if (_selectedArtifacts?.Count == 1)
                 {
                     <div class="option-item" @onclick="@(()=>HandleOptionsArtifact(_selectedArtifacts[0]))">
