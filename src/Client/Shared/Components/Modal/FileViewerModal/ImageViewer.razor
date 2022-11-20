@@ -13,7 +13,7 @@
 
 
 <div class="main-image">
-    <div id="image-viewer">
-    <img src="@(CurrentArtifact?.FullPath?.InProtocol(Protocol) ?? "")" class="actual-size-deactivate" />
+    <div class="image-wrapper">
+        <img src="@(CurrentArtifact?.FullPath?.InProtocol(Protocol) ?? "")" class="image-file" id="image-viewer" />
     </div>
 </div>

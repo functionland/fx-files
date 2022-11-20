@@ -48,11 +48,21 @@
     margin: 0 auto;
     background: #212529;
 
-    .actual-size-deactivate {
+    .image-wrapper {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-file {
         max-height: 100%;
         max-width: 600px;
-        width:100%;
+        width: 100%;
         object-fit: contain;
+        user-select: none;
+        -webkit-user-drag: none;
+        transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1);
     }
 
     .pich-zoom {
@@ -63,6 +73,7 @@
         align-items: center;
     }
 }
+
 ::deep .color-back-button::after {
     color: $gray-light-bg-primary !important;
 }
