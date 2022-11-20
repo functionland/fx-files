@@ -50,6 +50,7 @@ public partial class FileBrowser
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private ArtifactCategorySearchType? _artifactsSearchFilterType;
+    private PinOptionResult? _searchPinOptionResult;
 
     private FsArtifact? _currentArtifactValue;
 
