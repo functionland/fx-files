@@ -29,7 +29,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Move()
@@ -40,7 +40,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Pin()
@@ -51,7 +51,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Unpin()
@@ -62,7 +62,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void More()
@@ -73,7 +73,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void ChangeArtifactSlideItem(bool isNext)

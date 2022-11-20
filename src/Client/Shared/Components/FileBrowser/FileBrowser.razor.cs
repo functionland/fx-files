@@ -1767,6 +1767,13 @@ public partial class FileBrowser
             {
                 await FileService.RenameFolderAsync(artifact.FullPath, newName);
                 artifact.Name = newName;
+                var path = Path.GetDirectoryName(artifact.FullPath);
+                if (path is null)
+                    return;
+
+                var newPath = Path.Combine(path, artifact.Name);
+                artifact.FullPath = newPath;
+                artifact.LocalFullPath = newPath;
             }
         }
         catch (Exception exception)
