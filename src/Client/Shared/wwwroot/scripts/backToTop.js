@@ -31,33 +31,11 @@ function getLastScrollPosition() {
     let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
     artifactListDiv.scrollTop = lastScrollPosition;
     savePositionScroll.pop();
-    console.log(lastScrollPosition);
 }
 
 function saveScrollPosition() {
     const artifactListDiv = document.querySelector('.list-container');
     savePositionScroll.push(artifactListDiv.scrollTop);
-    console.log(savePositionScroll);
-}
-
-function getLastScrollPositionFileViewer() {
-    debugger
-    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
-    const artifactsDivListItem = document.querySelector('.file-viewer-container .list-container .item-container');
-
-    /*setTimeout(getLastScrollPositionFileViewer(), 1000);*/
-
-    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
-    setTimeout(() => {
-        artifactListDiv.scrollTop = lastScrollPosition;
-    }, 100);
-    savePositionScroll.pop();
-}
-
-function saveScrollPositionFileViewer() {
-    const artifactListDiv = document.querySelector('.file-viewer-container .list-container');
-    savePositionScroll.push(artifactListDiv.scrollTop);
-    console.log(savePositionScroll);
 }
 
 function SearchInputUnFocus() {
@@ -81,6 +59,10 @@ function ImagePinchZoom() {
 
 function breadCrumbStyle() {
     let breadcrumbs = document.querySelector(".fx-breadcrumbs");
+
+    if (!breadcrumbs)
+        return;
+
     let startEllipsis = document.querySelector(".start-ellipsis");
     let endEllipsis = document.querySelector(".end-ellipsis");
     let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
@@ -112,6 +94,10 @@ function breadCrumbStyle() {
 
 function breadCrumbStyleSelectionModal() {
     let breadcrumbs = document.querySelector(".sheet-wrapper .fx-breadcrumbs");
+
+    if (!breadcrumbs)
+        return;
+
     let startEllipsis = document.querySelector(".sheet-wrapper .start-ellipsis");
     let endEllipsis = document.querySelector(".sheet-wrapper .end-ellipsis");
     let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
