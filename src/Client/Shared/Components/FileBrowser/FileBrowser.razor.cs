@@ -53,6 +53,7 @@ public partial class FileBrowser
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private ArtifactCategorySearchType? _artifactsSearchFilterType;
+    private PinOptionResult? _searchPinOptionResult;
 
     private FsArtifact? _currentArtifactValue;
 
@@ -274,7 +275,9 @@ public partial class FileBrowser
                                 var newArtifactPath = oldArtifactPath + copyText;
                                 var newArtifactName = oldArtifactName + copyText;
                                 if (oldArtifactParentPath != null)
+                                {
                                     await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
+                                }
 
                                 var oldArtifactChildren =
                                     await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
@@ -1091,9 +1094,9 @@ public partial class FileBrowser
                 : null;
 
             result = await _artifactOverflowModalRef.ShowAsync
-            (isMultiple,
+                (isMultiple,
                 pinOptionResult,
-                IsInRoot(CurrentArtifact),
+                (IsInRoot(CurrentArtifact) && !_isInSearch),
                 fileCategoryType,
                 fsArtifactType);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
@@ -1487,6 +1490,7 @@ public partial class FileBrowser
                     if (token.IsCancellationRequested)
                         return;
 
+                    item.IsPinned = await PinService.IsPinnedAsync(item);
                     _allArtifacts.Add(item);
 
                     if (sw.ElapsedMilliseconds <= 1000)
@@ -1937,5 +1941,11 @@ public partial class FileBrowser
             _isSearchInputFocused = false;
             await HandleSearchUnFocused();
         }
+    }
+
+    private void SetSelectedArtifact(List<FsArtifact> artifacts)
+    {
+        _selectedArtifacts = artifacts;
+        _searchPinOptionResult = GetPinOptionResult(_selectedArtifacts);
     }
 }

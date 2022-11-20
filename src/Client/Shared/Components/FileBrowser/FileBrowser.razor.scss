@@ -573,6 +573,11 @@
         @include Icon($pin-outline);
     }
 
+    .unpin-icon::before {
+        font-size: 24px;
+        @include Icon($pin);
+    }
+
     .more-option-icon::before {
         @include Icon($options-horizontal);
         font-size: 24px;
