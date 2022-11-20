@@ -89,9 +89,9 @@ function hammerIt(elm) {
         if (ev.type == "doubletap") {
             transform =
                 "translate3d(0, 0, 0) " +
-                "scale3d(2, 2, 1) ";
-            scale = 2;
-            last_scale = 2;
+                "scale3d(3, 3, 1) ";
+            scale = 3;
+            last_scale = 3;
             try {
                 if (window.getComputedStyle(el, null).getPropertyValue('-webkit-transform').toString() != "matrix(1, 0, 0, 1, 0, 0)") {
                     transform =
@@ -103,6 +103,8 @@ function hammerIt(elm) {
             } catch (err) {}
             el.style.webkitTransform = transform;
             transform = "";
+            last_posX = 0;
+            last_posY = 0;
         }
 
         //pan    
