@@ -1411,6 +1411,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to item(s) selected.
+        /// </summary>
+        public static string SelectionModalItemSelected {
+            get {
+                return ResourceManager.GetString("SelectionModalItemSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fx Files by Functionland.
         /// </summary>
         public static string SettingPageAppTitle {
