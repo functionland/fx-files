@@ -1249,7 +1249,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove from pinned items..
+        ///   Looks up a localized string similar to Remove from pinned items.
         /// </summary>
         public static string RemoveFromPinnedItems {
             get {
@@ -1758,6 +1758,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string UnknownFsFileProviderException {
             get {
                 return ResourceManager.GetString("UnknownFsFileProviderException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpin.
+        /// </summary>
+        public static string Unpin {
+            get {
+                return ResourceManager.GetString("Unpin", resourceCulture);
             }
         }
         
