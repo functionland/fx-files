@@ -715,6 +715,6 @@
     <value>Unpin</value>
   </data>
   <data name="SelectionModalItemSelected" xml:space="preserve">
-    <value>item(s) selected</value>
+    <value>Item(s) selected</value>
   </data>
 </root>

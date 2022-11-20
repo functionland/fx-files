@@ -1411,7 +1411,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to item(s) selected.
+        ///   Looks up a localized string similar to Item(s) selected.
         /// </summary>
         public static string SelectionModalItemSelected {
             get {
