@@ -601,7 +601,7 @@
     <value>Move to</value>
   </data>
   <data name="RemoveFromPinnedItems" xml:space="preserve">
-    <value>Remove from pinned items.</value>
+    <value>Remove from pinned items</value>
   </data>
   <data name="SeeDetails" xml:space="preserve">
     <value>See details </value>

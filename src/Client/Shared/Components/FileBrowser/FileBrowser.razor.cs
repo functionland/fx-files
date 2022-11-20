@@ -1486,6 +1486,7 @@ public partial class FileBrowser
                     if (token.IsCancellationRequested)
                         return;
 
+                    item.IsPinned = await PinService.IsPinnedAsync(item);
                     _allArtifacts.Add(item);
 
                     if (sw.ElapsedMilliseconds <= 1000)

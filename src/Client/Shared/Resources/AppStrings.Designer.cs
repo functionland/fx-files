@@ -1249,7 +1249,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove from pinned items..
+        ///   Looks up a localized string similar to Remove from pinned items.
         /// </summary>
         public static string RemoveFromPinnedItems {
             get {
