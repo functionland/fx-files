@@ -1,10 +1,9 @@
-﻿using Microsoft.JSInterop;
-using System.Reflection.Metadata;
+﻿using System.Reflection.Metadata;
 using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
-public partial class TextViewer : IFileViewerComponent, IDisposable
+public partial class TextViewer : IFileViewerComponent
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
@@ -15,15 +14,14 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
 
     private StringBuilder Text { get; set; } = new();
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("registerOnTouchEvent");
             _ = GetTextAsync();
         }
 
-        await base.OnAfterRenderAsync(firstRender);
+        base.OnAfterRender(firstRender);
     }
 
     private async Task HandlePinAsync()
@@ -56,13 +54,7 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
         while (streamReader.ReadLine() is string line)
         {
             Text.AppendLine(line);
-            await JSRuntime.InvokeVoidAsync("setCodeMirrorText", Text.ToString());
             await InvokeAsync(() => StateHasChanged());
         }
-    }
-
-    public void Dispose()
-    {
-        JSRuntime.InvokeVoidAsync("unRegisterOnTouchEvent");
     }
 }

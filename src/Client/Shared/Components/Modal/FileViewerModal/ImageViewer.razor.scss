@@ -17,18 +17,21 @@
         margin-left: auto;
 
         .pin-icon::before {
+            cursor: pointer;
             font-size: 24px;
             @include Icon($pin, $pure-white);
         }
 
         .pin-icon-outline::before {
+            cursor: pointer;
             font-size: 24px;
             @include Icon($pin-outline, $pure-white);
         }
 
         .more-option-icon::before {
-            @include Icon($options-vertical, $pure-white);
+            cursor: pointer;
             font-size: 24px;
+            @include Icon($options-vertical, $pure-white);
         }
 
         .more-option-icon {
