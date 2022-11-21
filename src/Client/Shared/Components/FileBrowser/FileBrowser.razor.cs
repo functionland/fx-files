@@ -102,6 +102,7 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
+    private bool _isInFileViewer;
     private Timer? _timer;
     private Task? _searchStatusTask;
 
@@ -881,6 +882,7 @@ public partial class FileBrowser
         {
             _fxSearchInputRef?.HandleClearInputText();
             var isOpened = _fileViewerRef != null && await _fileViewerRef.OpenArtifact(artifact);
+            _isInFileViewer = true;
 
             if (isOpened == false)
             {
@@ -976,7 +978,8 @@ public partial class FileBrowser
                 isDrive,
                 artifact?.FileCategory,
                 artifact?.ArtifactType,
-                _isInSearch);
+                _isInSearch,
+                _isInFileViewer);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -1095,7 +1098,8 @@ public partial class FileBrowser
                 pinOptionResult,
                 (IsInRoot(CurrentArtifact) && !_isInSearch),
                 fileCategoryType,
-                fsArtifactType);
+                fsArtifactType,
+                _isInFileViewer);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
