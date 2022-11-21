@@ -6,6 +6,7 @@
         private bool _isModalOpen;
         private bool _isMultiple;
         private bool _isInRoot;
+        private bool _isInFileViewer;
         private bool _isInSearch;
         private PinOptionResult? _pinOptionResult;
         private FileCategoryType? _fileCategoryType;
@@ -137,7 +138,8 @@
             bool isInRoot,
             FileCategoryType? fileCategoryType = null,
             FsArtifactType? fsArtifactType = null,
-            bool isInSearch = false)
+            bool isInSearch = false,
+            bool isInFileViewer = false)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -153,6 +155,7 @@
             _pinOptionResult = pinOptionResult;
             _fileCategoryType = fileCategoryType;
             _fsArtifactType = fsArtifactType;
+            _isInFileViewer = isInFileViewer;
 
             _isModalOpen = true;
             StateHasChanged();
