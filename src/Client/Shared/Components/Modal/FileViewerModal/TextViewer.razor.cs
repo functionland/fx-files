@@ -13,8 +13,6 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
 
-    private string Text { get; set; }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -51,8 +49,9 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
     {
         if (CurrentArtifact?.FullPath == null) return;
 
-        Text = File.ReadAllText(CurrentArtifact.FullPath, Encoding.UTF8);
-        await JSRuntime.InvokeVoidAsync("setCodeMirrorText", Text);
+        var text = File.ReadAllText(CurrentArtifact.FullPath, Encoding.UTF8);
+        
+        await JSRuntime.InvokeVoidAsync("setCodeMirrorText", text, CurrentArtifact.Name);
         await InvokeAsync(() => StateHasChanged());
     }
 

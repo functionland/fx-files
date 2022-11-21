@@ -1,11 +1,12 @@
-function setCodeMirrorText(text) {
+function setCodeMirrorText(text, fileName) {
     var element = document.getElementById("codeMirrorTextViewer");
-    CodeMirror.runMode(text, "application/text", element);
+    var mode = CodeMirror.findModeByFileName(fileName);
+    CodeMirror.runMode(text, mode.mime, element);
 }
 
 var prevDiff = -1;
-var fontsize = 10;
-var lineHeight = 15;
+var fontsize = 14;
+var lineHeight = 24;
 
 function registerOnTouchEvent() {
     var el = document.getElementsByClassName("text-container")[0];
@@ -13,8 +14,8 @@ function registerOnTouchEvent() {
     el.addEventListener("touchcancel", end_handler);
     el.addEventListener("touchend", end_handler);
     prevDiff = -1;
-    fontsize = 10;
-    lineHeight = 15;
+    fontsize = 14;
+    lineHeight = 24;
     document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
     document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
 }
@@ -48,26 +49,34 @@ function handle_pinch_zoom(ev) {
 
         if (prevDiff > 0) {
             if (curDiff > prevDiff) {
-                if (fontsize <= 30) {
-                    fontsize += 1;
-                    lineHeight += 1;
-                    document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
-                    document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
-
-                }
+                increaseFont();
             }
             if (curDiff < prevDiff) {
 
-                if (fontsize >= 5) {
-                    fontsize -= 1;
-                    lineHeight -= 1;
-                    document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
-                    document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
-
-                }
+                decreaseFont();
             }
         }
 
         prevDiff = curDiff;
+    }
+}
+
+function decreaseFont() {
+    if (fontsize >= 5) {
+        fontsize -= 1;
+        lineHeight -= 1;
+        document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
+        document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
+
+    }
+}
+
+function increaseFont() {
+    if (fontsize <= 30) {
+        fontsize += 1;
+        lineHeight += 1;
+        document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
+        document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
+
     }
 }
