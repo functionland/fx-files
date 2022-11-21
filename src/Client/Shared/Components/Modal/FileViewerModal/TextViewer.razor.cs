@@ -13,11 +13,14 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
 
+    [AutoInject] private ThemeInterop ThemeInterop = default!;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("registerOnTouchEvent");
+           var _isSystemThemeDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
+            await JSRuntime.InvokeVoidAsync("setupCodeMirror", _isSystemThemeDark);
             _ = GetTextAsync();
         }
 

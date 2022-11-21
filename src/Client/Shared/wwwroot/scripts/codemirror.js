@@ -8,7 +8,7 @@ var prevDiff = -1;
 var fontsize = 14;
 var lineHeight = 24;
 
-function registerOnTouchEvent() {
+function setupCodeMirror(isDark) {
     var el = document.getElementsByClassName("text-container")[0];
     el.addEventListener("touchmove", move_handler);
     el.addEventListener("touchcancel", end_handler);
@@ -16,8 +16,14 @@ function registerOnTouchEvent() {
     prevDiff = -1;
     fontsize = 14;
     lineHeight = 24;
-    document.getElementById("codeMirrorTextViewer").style.fontSize = fontsize + 'px';
-    document.getElementById("codeMirrorTextViewer").style.lineHeight = lineHeight + 'px';
+    var codeMirroElement = document.getElementById("codeMirrorTextViewer");
+    codeMirroElement.style.fontSize = fontsize + 'px';
+    codeMirroElement.style.lineHeight = lineHeight + 'px';
+    if (isDark) {
+        codeMirroElement.classList.remove("cm-s-default");
+        codeMirroElement.classList.add("cm-s-dracula");
+    }
+    
 }
 
 function unRegisterOnTouchEvent() {
