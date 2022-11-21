@@ -12,19 +12,22 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null)
         {
-            List<FsArtifact> ignoredList = new();
+            List<(FsArtifact artifact, Exception exception)> ignoredList = new();
 
-            await Task.Run(async () =>
-            {
-                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, ignoredList, onProgress, true, cancellationToken);
-            });
+            //await Task.Run(async () =>
+            //{
+                await CopyAllAsync(artifacts, destination, ignoredList, onShouldOverwrite, onProgress, true, cancellationToken);
+            //});
 
-            if (ignoredList.Any())
-            {
-                throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
-            }
+            //if (ignoredList.Any())
+            //{
+            //    throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
+            //}
+            return ignoredList;
         }
 
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -333,11 +336,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(
-            IList<FsArtifact> artifacts,
+        private async Task CopyAllAsync(IList<FsArtifact> artifacts,
             string destination,
-            bool overwrite = false,
-            List<FsArtifact>? ignoredList = null,
+            List<(FsArtifact artifact, Exception exception)> ignoredList,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
             Func<ProgressInfo, Task>? onProgress = null,
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
@@ -358,18 +360,41 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     var fileInfo = new FileInfo(artifact.FullPath);
                     var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
-                    if (!overwrite && destinationInfo.Exists)
+                    //if (!overwrite && destinationInfo.Exists)
+                    //{
+                    //    ignoredList.Add(artifact);
+                    //}
+
+                    var shouldCopy = true;
+
+                    // ToDo: Make exception to create message itself.
+                    if (destinationInfo.Exists)
                     {
-                        ignoredList.Add(artifact);
+                        if (onShouldOverwrite is null)
+                            shouldCopy = false;
+                        else
+                            shouldCopy = await onShouldOverwrite(artifact);
                     }
-                    else
+
+                    if (shouldCopy)
                     {
                         if (!Directory.Exists(destination))
                         {
                             LocalStorageCreateDirectory(destination);
                         }
 
-                        LocalStorageCopyFile(fileInfo.FullName, destinationInfo.FullName);
+                        try
+                        {
+                            await LocalStorageCopyFileAsync(fileInfo.FullName, destinationInfo.FullName);
+                        }
+                        catch (Exception exception)
+                        {
+                            ignoredList.Add((artifact, exception));
+                        }
+                    }
+                    else
+                    {
+                        ignoredList.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -416,8 +441,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName,
-                         overwrite, ignoredList, onProgress, false, cancellationToken);
+                    await CopyAllAsync(children, destinationInfo.FullName, ignoredList, onShouldOverwrite, onProgress, false, cancellationToken);
                 }
 
                 if (onProgress is not null && shouldProgress)
@@ -425,8 +449,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
             }
-
-            return ignoredList;
         }
 
         private async Task<List<FsArtifact>> MoveAllAsync(
@@ -468,7 +490,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                             LocalStorageCreateDirectory(destination);
                         }
 
-                        LocalStorageMoveFile(fileInfo.FullName, destinationInfo.FullName);
+                        LocalStorageMoveFileAsync(fileInfo.FullName, destinationInfo.FullName);
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -635,7 +657,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             DirectoryUtils.HardDeleteDirectory(path);
         }
 
-        protected virtual void LocalStorageMoveFile(string filePath, string newPath)
+        protected virtual async Task LocalStorageMoveFileAsync(string filePath, string newPath)
         {
             try
             {
@@ -652,16 +674,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             File.Move(filePath, newPath);
         }
 
-        protected virtual void LocalStorageCopyFile(string sourceFile, string destinationFile)
+        protected virtual async Task LocalStorageCopyFileAsync(string sourceFile, string destinationFile)
         {
-            try
-            {
-                File.Copy(sourceFile, destinationFile, true);
-            }
-            catch (IOException ex)
-            {
-                throw new KnownIOException(ex.Message, ex);
-            }
+            File.Copy(sourceFile, destinationFile, true);
+            //try
+            //{
+            //    File.Copy(sourceFile, destinationFile, true);
+            //}
+            //catch (IOException ex)
+            //{
+            //    throw new KnownIOException(ex.Message, ex);
+            //}
         }
 
         protected virtual async Task LocalStorageCreateFile(string path, Stream stream)
