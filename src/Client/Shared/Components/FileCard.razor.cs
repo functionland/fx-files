@@ -3,37 +3,32 @@
     public partial class FileCard
     {
         [Parameter]
-        public FsArtifactType ArtifactType { get; set; }
-        
-        [Parameter]
-        public FileCategoryType FileType { get; set; }
+        public FsArtifact Artifact { get; set; } = default;
 
         [Parameter]
-        public bool IsPinned { get; set; }
+        public bool IsDisabled { get; set; } = false;
 
         [Parameter]
-        public bool IsEnable { get; set; }
-
-        [Parameter]
-        public string? TagTitle { get; set; }
-
-        [Parameter]
-        public string? Name { get; set; }
-
-        [Parameter]
-        public string? FileFormat { get; set; }
-
-        [Parameter]
-        public string? ModifiedDate { get; set; }
-
-        [Parameter]
-        public string? Size { get; set; }
-
-        [Parameter]
-        public string? Path { get; set; }
+        public string? TagTitle { get; set; } = string.Empty;
 
         [Parameter]
         public IFileService? FileService { get; set; }
+
+        [Parameter] 
+        public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
+
+        public PathProtocol Protocol =>
+            FileService switch
+            {
+                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
+                IFulaFileService => PathProtocol.ThumbnailStorageMedium,
+                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
+            };
+
+        protected override async Task OnInitAsync()
+        { 
+            await GetThumbnailAsync();
+        }
 
         public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
         {
@@ -61,12 +56,23 @@
             return "folder-icon";
         }
 
-        public PathProtocol Protocol =>
-            FileService switch
+        private async Task GetThumbnailAsync()
+        {
+            try
             {
-                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
-                IFulaFileService => PathProtocol.ThumbnailStorageMedium,
-                _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
-            };
+                if (Artifact.ThumbnailPath is not null)
+                    return;
+
+                Artifact.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(Artifact, ThumbnailScale.Medium);
+                string Test = "";
+
+            }
+            catch (Exception exception)
+            {
+                ExceptionHandler.Track(exception);
+            }
+        }
+
+
     }
 }
