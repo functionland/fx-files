@@ -1908,7 +1908,7 @@ public partial class FileBrowser
     {
         var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
         CurrentArtifact = destinationArtifact;
-        await HandleSelectArtifactAsync(destinationArtifact);
+        await OpenFolderAsync(destinationArtifact);
         ScrollArtifact = artifact;
     }
 

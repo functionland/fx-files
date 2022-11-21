@@ -176,9 +176,12 @@ function scrollToItem(itemId, listHeight) {
     if (typeof list !== 'undefined' || list !== null) {
         list.scrollTop = listHeight;
         if (typeof item !== 'undefined' || item !== null) {
-            addGrayBackground(item);
-            item = null;
-            return true;
+            try {
+                addGrayBackground(item);
+                return true;
+            } catch (e) {
+                return false;
+            }
         }
         return false;
     }
