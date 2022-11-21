@@ -1475,7 +1475,10 @@ public partial class FileBrowser
         RefreshDisplayedArtifacts();
 
         _searchCancellationTokenSource?.Cancel();
-        await HandleSearchUnFocused();
+        if (IsDesktop is false)
+        {
+            await HandleSearchUnFocused();
+        }
 
         _searchCancellationTokenSource = new CancellationTokenSource();
         var token = _searchCancellationTokenSource.Token;
