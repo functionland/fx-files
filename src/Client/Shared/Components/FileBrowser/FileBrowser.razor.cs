@@ -1466,6 +1466,7 @@ public partial class FileBrowser
             _isArtifactExplorerLoading = false;
             _allArtifacts.Clear();
             _displayedArtifacts.Clear();
+            _searchStatusTask = Task.CompletedTask;
             return;
         }
         _allArtifacts.Clear();
