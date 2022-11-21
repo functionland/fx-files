@@ -104,7 +104,6 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private bool _shouldScrollToItem;
     private Timer? _timer;
     private Task? _searchStatusTask;
 

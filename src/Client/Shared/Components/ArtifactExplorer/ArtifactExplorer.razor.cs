@@ -480,14 +480,19 @@ public partial class ArtifactExplorer
 
     private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
     {
+        _timer?.Stop();
         if (ScrollArtifact == null)
         {
+            _timer?.Start();
             return;
         }
 
         var isListExist = await ScrollToArtifact(ScrollArtifact);
         if (_timer == null || isListExist is false)
+        {
+            _timer?.Start();
             return;
+        }
 
         if (isListExist == null)
         {
