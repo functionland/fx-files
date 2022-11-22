@@ -13,9 +13,6 @@ public static class IServiceCollectionExtensions
         // Services being registered here can get injected in web (blazor web assembly & blzor server)
         string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
-        services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
-        services.AddSingleton<ILocalDbArtifactService, LocalDbArtifactService>();
-        services.AddSingleton<ILocalDbFulaSyncItemService, LocalDbFulaSyncItemService>();
 
         services.AddClientSharedServices();
 

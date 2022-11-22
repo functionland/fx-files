@@ -17,9 +17,6 @@ public static class IServiceCollectionExtensions
     {
         string connectionString = $"DataSource={Path.Combine(testContext.TestDir, "FxDB.db")}";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
-        services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
-        services.AddSingleton<ILocalDbArtifactService, LocalDbArtifactService>();
-        services.AddSingleton<ILocalDbFulaSyncItemService, LocalDbFulaSyncItemService>();
 
         services.AddSingleton<IPlatformTestService, FakePlatformTestService>();
         services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();

@@ -7,13 +7,8 @@ public class FulaSyncItem
     public long Id { get; set; }
     public string FulaPath { get; set; } 
     public string LocalPath { get; set; } 
-
-    //TODO: What is it?
     public SyncStatus LastSyncStatus { get; set; }
-
+    public RunningStatus RunningStatus { get; set; }
     public FulaSyncType SyncType { get; set; }
-
-    public string UserToken { get; set; }
+    public string DId { get; set; }
 }
-
-

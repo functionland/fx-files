@@ -205,7 +205,7 @@ public class FakeFulaFileClient : IFulaFileClient
             ParentFullPath = artifact.ParentFullPath,
             ContentHash = artifact.ContentHash,
             LocalFullPath = artifact.LocalFullPath,
-            ArtifactUploadStatus = artifact.ArtifactUploadStatus
+            PersistenceStatus = artifact.PersistenceStatus
         };
     }
 

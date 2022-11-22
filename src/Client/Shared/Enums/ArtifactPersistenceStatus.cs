@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Functionland.FxFiles.Client.Shared.Enums
 {
-    public enum ArtifactUploadStatus
+    public enum ArtifactPersistenceStatus
     {
-        PendingToUpload,
-        Uploading,
-        Uploaded
+        PendingToUpload = 1,
+        Uploading = 2,
+        Done = 3,
+        PendingToDownload = 4,
+        Downloading = 5
     }
 }

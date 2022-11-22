@@ -29,6 +29,10 @@ public class FxLocalDbService : IFxLocalDbService
             needsMigrate = false;
 #endif
 
+#if Dev
+    needsMigrate = true;
+#endif
+
         if (needsMigrate)
         {
             MigrateDatabase();

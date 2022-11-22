@@ -30,7 +30,10 @@ namespace Functionland.FxFiles.Client.Shared.Models
         public DateTimeOffset LastModifiedDateTime { get; set; }
         public string? WhoMadeLastEdit { get; set; }
         public string? ThumbnailPath { get; set; }
-        public ArtifactUploadStatus ArtifactUploadStatus { get; set; }
-        public string UserToken { get; set; }
+        public ArtifactPersistenceStatus PersistenceStatus { get; set; }
+        public string DId { get; set; }
+        public bool? IsAvailableOfflineRequested { get; set; }
+        public bool? IsSharedWithMe { get; set; }
+        public bool? IsSharedByMe { get; set; }
     }
 }

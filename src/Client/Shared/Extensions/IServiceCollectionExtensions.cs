@@ -22,6 +22,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IFulaFileService, FulaFileService>();
         services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
         services.AddSingleton<IFulaPinService, FulaPinService>();
+        services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
 
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<FakeFileServiceFactory>();

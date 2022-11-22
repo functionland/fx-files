@@ -13,9 +13,6 @@ public static class IServiceCollectionExtensions
         string connectionString = $"DataSource={Path.Combine(Microsoft.Maui.Storage.FileSystem.AppDataDirectory, "FxDB.db")};";
         services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
         services.AddSingleton<INativeNavigation, NativeNavigation>();
-        services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
-        services.AddSingleton<ILocalDbArtifactService, LocalDbArtifactService>();
-        services.AddSingleton<ILocalDbFulaSyncItemService, LocalDbFulaSyncItemService>();
 
 
 #if ANDROID

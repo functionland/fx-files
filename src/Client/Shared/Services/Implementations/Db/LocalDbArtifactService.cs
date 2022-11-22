@@ -2,12 +2,15 @@
 using Dapper.Contrib.Extensions;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Extensions;
+using Functionland.FxFiles.Client.Shared.Models;
 using System.Xml.Linq;
 
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class LocalDbArtifactService : ILocalDbArtifactService
 {
+    // TODO: Check all of the input properties and the properties that will modify through the query. Like their names, types, or if that property is needed or not.
+
     IFxLocalDbService FxLocalDbService { get; set; }
 
     public LocalDbArtifactService(IFxLocalDbService fxLocalDbService)
@@ -20,7 +23,7 @@ public class LocalDbArtifactService : ILocalDbArtifactService
         using var LocalDb = FxLocalDbService.CreateConnection();
 
         var artifacts = await LocalDb.QueryAsync<FsArtifactTable>(
-            $"SELECT * FROM FsArtifactTable WHERE LocalFullPath = '{localPath}' AND UserToken = '{userToken}'");
+            $"SELECT * FROM FsArtifactTable WHERE LocalFullPath = '{localPath}' AND DId = '{userToken}'");
 
         var artifactList = new List<FsArtifact>();
 
@@ -39,8 +42,11 @@ public class LocalDbArtifactService : ILocalDbArtifactService
                 Size = artifact.Size,
                 ThumbnailPath = artifact.ThumbnailPath,
                 WhoMadeLastEdit = artifact.WhoMadeLastEdit,
-                ArtifactUploadStatus = artifact.ArtifactUploadStatus,
-                UserToken = artifact.UserToken
+                PersistenceStatus = artifact.PersistenceStatus,
+                DId = artifact.DId,
+                IsAvailableOfflineRequested = artifact.IsAvailableOfflineRequested,
+                IsSharedWithMe = artifact.IsSharedWithMe,
+                IsSharedByMe = artifact.IsSharedByMe
             });
         }
 
@@ -52,7 +58,7 @@ public class LocalDbArtifactService : ILocalDbArtifactService
         using var LocalDb = FxLocalDbService.CreateConnection();
 
         var artifact = await LocalDb.QuerySingleAsync<FsArtifactTable>(
-            $"SELECT * FROM FsArtifactTable WHERE LocalFullPath = '{localPath}' AND UserToken = '{userToken}'");
+            $"SELECT * FROM FsArtifactTable WHERE LocalFullPath = '{localPath}' AND DId = '{userToken}'");
 
         return new FsArtifact(artifact.FullPath, artifact.Name, artifact.ArtifactType, artifact.ProviderType)
         {
@@ -67,12 +73,15 @@ public class LocalDbArtifactService : ILocalDbArtifactService
             Size = artifact.Size,
             ThumbnailPath = artifact.ThumbnailPath,
             WhoMadeLastEdit = artifact.WhoMadeLastEdit,
-            ArtifactUploadStatus = artifact.ArtifactUploadStatus,
-            UserToken = artifact.UserToken
+            PersistenceStatus = artifact.PersistenceStatus,
+            DId = artifact.DId,
+            IsAvailableOfflineRequested = artifact.IsAvailableOfflineRequested,
+            IsSharedWithMe = artifact.IsSharedWithMe,
+            IsSharedByMe = artifact.IsSharedByMe
         };
     }
 
-    public async Task<FsArtifact> CreateArtifactAsync(FsArtifact fsArtifact, ArtifactUploadStatus uploadStatus, string localPath, string userToken)
+    public async Task<FsArtifact> CreateArtifactAsync(FsArtifact fsArtifact, ArtifactPersistenceStatus uploadStatus, string localPath, string userToken)
     {
         var LocalDb = FxLocalDbService.CreateConnection();
 
@@ -93,8 +102,11 @@ public class LocalDbArtifactService : ILocalDbArtifactService
             WhoMadeLastEdit = fsArtifact.WhoMadeLastEdit,
             LocalFullPath = localPath,
             LastModifiedDateTime = fsArtifact.LastModifiedDateTime,
-            ArtifactUploadStatus = uploadStatus,
-            UserToken = userToken
+            PersistenceStatus = uploadStatus,
+            DId = userToken,
+            IsAvailableOfflineRequested = fsArtifact.IsAvailableOfflineRequested,
+            IsSharedWithMe = fsArtifact.IsSharedWithMe,
+            IsSharedByMe = fsArtifact.IsSharedByMe
         };
 
         await LocalDb.InsertAsync(artifactTable);
@@ -107,7 +119,7 @@ public class LocalDbArtifactService : ILocalDbArtifactService
         using var LocalDb = FxLocalDbService.CreateConnection();
 
         await LocalDb.ExecuteAsync(
-            $"DELETE FROM FsArtifactTable WHERE LocalFullPath = '{localPath}' AND UserToken = '{userToken}'");
+            $"DELETE FROM FsArtifactTable WHERE LocalFullPath = '{localPath}' AND DId = '{userToken}'");
     }
 
     public async Task UpdateFileAsync(FsArtifact fsArtifact, string localPath, string userToken)
@@ -133,8 +145,10 @@ public class LocalDbArtifactService : ILocalDbArtifactService
                 CreateDateTime = fsArtifact.CreateDateTime,
                 LastModifiedDateTime = fsArtifact.LastModifiedDateTime,
                 WhoMadeLastEdit = fsArtifact.WhoMadeLastEdit,
-                ThumbnailPath = fsArtifact.ThumbnailPath,
-                ArtifactUploadStatus = fsArtifact.ArtifactUploadStatus
+                ArtifactUploadStatus = fsArtifact.PersistenceStatus,
+                IsAvailableOfflineRequested = fsArtifact.IsAvailableOfflineRequested,
+                IsSharedWithMe = fsArtifact.IsSharedWithMe,
+                IsSharedByMe = fsArtifact.IsSharedByMe
             });
     }
 
@@ -161,8 +175,10 @@ public class LocalDbArtifactService : ILocalDbArtifactService
             CreateDateTime = fsArtifact.CreateDateTime,
             LastModifiedDateTime = fsArtifact.LastModifiedDateTime,
             WhoMadeLastEdit = fsArtifact.WhoMadeLastEdit,
-            ThumbnailPath = fsArtifact.ThumbnailPath,
-            ArtifactUploadStatus = fsArtifact.ArtifactUploadStatus
+            ArtifactUploadStatus = fsArtifact.PersistenceStatus,
+            IsAvailableOfflineRequested = fsArtifact.IsAvailableOfflineRequested,
+            IsSharedWithMe = fsArtifact.IsSharedWithMe,
+            IsSharedByMe = fsArtifact.IsSharedByMe
         });
     }
 
@@ -182,9 +198,11 @@ OriginDevice = @OriginDevice
 CreateDateTime = @CreateDateTime
 LastModifiedDateTime = @LastModifiedDateTime
 WhoMadeLastEdit = @WhoMadeLastEdit
-ThumbnailPath = @ThumbnailPath
 ArtifactUploadStatus = @ArtifactUploadStatus
+IsAvailableOfflineRequested = @IsAvailableOfflineRequested
+IsSharedWithMe = @IsSharedWithMe
+IsSharedByMe = @IsSharedByMe
 
-WHERE FullPath = @FullPath AND UserToken = @UserToken";
+WHERE FullPath = @FullPath AND DId = @UserToken";
     }
 }

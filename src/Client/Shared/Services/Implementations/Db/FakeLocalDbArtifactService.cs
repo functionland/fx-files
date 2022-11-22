@@ -10,11 +10,12 @@ public class FakeLocalDbArtifactService : ILocalDbArtifactService
         _allArtifacts.AddRange(artifacts);
     }
 
-    public async Task<FsArtifact> CreateArtifactAsync(FsArtifact fsArtifact, ArtifactUploadStatus uploadStatus, string localPath, string userToken)
+    public async Task<FsArtifact> CreateArtifactAsync(FsArtifact fsArtifact, ArtifactPersistenceStatus uploadStatus, string localPath, string userToken)
     {
-        fsArtifact.ArtifactUploadStatus = uploadStatus;
+        // TODO: Correct the method inputs. Like userToken or uploadStatus.. (in all of the methods)
+        fsArtifact.PersistenceStatus = uploadStatus;
         fsArtifact.LocalFullPath = localPath;
-        fsArtifact.UserToken = userToken;
+        fsArtifact.DId = userToken;
 
         _allArtifacts.Add(fsArtifact);
         return fsArtifact;

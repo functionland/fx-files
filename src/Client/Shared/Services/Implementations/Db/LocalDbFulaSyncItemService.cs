@@ -11,6 +11,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class LocalDbFulaSyncItemService : ILocalDbFulaSyncItemService
 {
+    // TODO: Check all of the input properties and the properties that will modify through the query.Like their names, types, or if that property is needed or not.
+
     IFxLocalDbService FxLocalDbService { get; set; }
 
     public LocalDbFulaSyncItemService(IFxLocalDbService fxLocalDbService)
@@ -23,7 +25,7 @@ public class LocalDbFulaSyncItemService : ILocalDbFulaSyncItemService
         using var LocalDb = FxLocalDbService.CreateConnection();
 
         var fulaSyncItems = await LocalDb.QueryAsync<FulaSyncItem>(
-            $"SELECT * FROM FulaSyncItem WHERE UserToken = '{userToken}'");
+            $"SELECT * FROM FulaSyncItem WHERE DId = '{userToken}'");
 
         return fulaSyncItems.ToList();
     }
@@ -38,7 +40,8 @@ public class LocalDbFulaSyncItemService : ILocalDbFulaSyncItemService
             LastSyncStatus = fulaSyncItem.LastSyncStatus,
             LocalPath = fulaSyncItem.LocalPath,
             SyncType = fulaSyncItem.SyncType,
-            UserToken = userToken
+            DId = userToken,
+            RunningStatus = fulaSyncItem.RunningStatus
         };
 
         await LocalDb.InsertAsync(syncItem);
@@ -52,13 +55,14 @@ public class LocalDbFulaSyncItemService : ILocalDbFulaSyncItemService
 
         await localDb.ExecuteAsync(
             @$"UPDATE FulaSyncItem SET LastSyncStatus = @LastSyncStatus 
-WHERE FulaPath = @FulaPath AND UserToken = @UserToken AND LocalPath = @LocalPath",
+WHERE FulaPath = @FulaPath AND DId = @UserToken AND LocalPath = @LocalPath",
         new
         {
             FulaPath = fulaSyncItem.FulaPath,
             LocalPath = fulaSyncItem.LocalPath,
             UserToken = userToken,
-            LastSyncStatus = syncStatus
+            LastSyncStatus = syncStatus//,
+            //RunningStatus= syncStatus
         });
     }
 }

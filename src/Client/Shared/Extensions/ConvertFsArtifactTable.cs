@@ -29,8 +29,11 @@ namespace Functionland.FxFiles.Client.Shared.Extensions
                 WhoMadeLastEdit = fsArtifactTable.WhoMadeLastEdit,
                 LocalFullPath = fsArtifactTable.LocalFullPath,
                 LastModifiedDateTime = fsArtifactTable.LastModifiedDateTime,
-                ArtifactUploadStatus = fsArtifactTable.ArtifactUploadStatus,
-                UserToken = fsArtifactTable.UserToken
+                PersistenceStatus = fsArtifactTable.PersistenceStatus,
+                DId = fsArtifactTable.DId,
+                IsAvailableOfflineRequested = fsArtifactTable.IsAvailableOfflineRequested,
+                IsSharedWithMe = fsArtifactTable.IsSharedWithMe,
+                IsSharedByMe = fsArtifactTable.IsSharedByMe
             };
         }
     }

@@ -9,7 +9,7 @@ public partial class FulaSyncService : IFulaSyncService
 {
     [AutoInject] IFulaFileClient FulaFileClient { get; set; }
 
-    [AutoInject] IIdentityService IdentityService { get; set; }
+    //[AutoInject] IIdentityService IdentityService { get; set; }
 
     [AutoInject] ILocalDbArtifactService LocalDbArtifactService { get; set; }
 
@@ -18,16 +18,44 @@ public partial class FulaSyncService : IFulaSyncService
     [AutoInject] ILocalDeviceFileService LocalDeviceFileService { get; set; }
 
     static string CurrentToken { get; set; } = default!;
+    static string CurrentUser { get; set; } = default!;
+    static List<FulaSyncItem> SyncItems { get; set; } = default!;
 
     public Task EnsureInitializedAsync(CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public async Task InitAsync(CancellationToken? cancellationToken = null)
+    public async Task InitAsync(FulaUser fulaUser, CancellationToken? cancellationToken = null)
     {     
+        CurrentUser = fulaUser.DId; // ToDO: How to work with fulaUser value in the whole sync process?
+
+        SyncItems = await GetSyncItemsAsync(CurrentToken); // TODO : It might need to clear this property at some point in the progress..
+
+        if (!SyncItems.Any())
+        {
+            var fulaSyncItem = new FulaSyncItem()
+            {
+                LocalPath = GetLocalRootPath(),
+                FulaPath = FulaConvention.FulaRootPath,
+                LastSyncStatus = SyncStatus.Inprogress,
+                SyncType = FulaSyncType.FullSync,
+                DId = CurrentToken
+            };
+
+            await LocalDbFulaSyncItemService.CreateSyncItemAsync(fulaSyncItem, CurrentToken);
+            SyncItems.Add(fulaSyncItem);
+        }
+    }
+
+    public async Task StartSyncAsync(CancellationToken? cancellationToken = null)
+    {
+        // TODO: RunningStatus might need to check is some methods.
+
         while (true)
         {
+            // TODO: All of the current token properties might need to change.
+
             CurrentToken = await GetCurrentUserTokenAsync();
 
             try
@@ -38,6 +66,11 @@ public partial class FulaSyncService : IFulaSyncService
 
             await Task.Delay(TimeSpan.FromMinutes(1));
         }
+    }
+
+    public Task StopSyncAsync(CancellationToken? cancellationToken = null)
+    {
+        throw new NotImplementedException();
     }
 
     public Task SyncContentAsync(FsArtifact artifact, CancellationToken? cancellationToken = null)
@@ -52,27 +85,12 @@ public partial class FulaSyncService : IFulaSyncService
 
     public async Task<List<FsArtifact>> SyncItemsAsync(CancellationToken? cancellationToken = null)
     {
-        var syncItems = await GetSyncItemsAsync(CurrentToken);
-
-        if (!syncItems.Any())
-        {
-            var fulaSyncItem = new FulaSyncItem()
-            {
-                LocalPath = GetLocalRootPath(),
-                FulaPath = FulaConvention.FulaRootPath,
-                LastSyncStatus = SyncStatus.Inprogress,
-                SyncType = FulaSyncType.FullSync,
-                UserToken = CurrentToken
-            };
-
-            await LocalDbFulaSyncItemService.CreateSyncItemAsync(fulaSyncItem, CurrentToken);
-            syncItems.Add(fulaSyncItem);
-        }
+        //TODO: Pass and check the cancellationToken in the whole process of sync.
 
         var updatedArtifacts = new List<FsArtifact>();
         var syncedArtifactList = new List<FsArtifact>();
 
-        foreach (var item in syncItems)
+        foreach (var item in SyncItems)
         {
             await LocalDbFulaSyncItemService.UpdateSyncItemAsync(item, SyncStatus.Inprogress, CurrentToken);
             var token = await GetCurrentUserTokenAsync();
@@ -85,6 +103,7 @@ public partial class FulaSyncService : IFulaSyncService
             
             try
             {
+                // TODO: Check the ArtifactPersistenceStatus Uploading value for the sync process.
                 syncedArtifactList = await SyncAsync(item);
                 await LocalDbFulaSyncItemService.UpdateSyncItemAsync(item, SyncStatus.Success, CurrentToken);
             }
@@ -174,7 +193,7 @@ public partial class FulaSyncService : IFulaSyncService
 
             foreach (var toRemoveArtifact in toRemoveArtifacts)
             {
-                if (toRemoveArtifact.ArtifactUploadStatus == ArtifactUploadStatus.Uploaded)
+                if (toRemoveArtifact.PersistenceStatus == ArtifactPersistenceStatus.Done)
                 {
                     await RemoveArtifactAsync(toRemoveArtifact);
                     updatedArtifacts.Add(toRemoveArtifact);
@@ -193,11 +212,6 @@ public partial class FulaSyncService : IFulaSyncService
         {
             throw new InvalidOperationException($"ArtifactType not supported for sync: {fulaArtifact.ArtifactType}");
         }
-
-        // TODO: What is this? Why we should update contenthash here again?
-
-        //localArtifact.ContentHash = fulaArtifact.ContentHash;
-        // Save in Db
 
         return updatedArtifacts;
     }
@@ -226,13 +240,13 @@ public partial class FulaSyncService : IFulaSyncService
                 }
 
                 var localArtifact = 
-                    await LocalDbArtifactService.CreateArtifactAsync(fulaArtifact, ArtifactUploadStatus.Uploaded, localPath, CurrentToken);
+                    await LocalDbArtifactService.CreateArtifactAsync(fulaArtifact, ArtifactPersistenceStatus.Done, localPath, CurrentToken);
                 addedArtifacts.Add(localArtifact);
             }
             else if (fulaArtifact.ArtifactType is FsArtifactType.File)
             {
                 var localArtifact = 
-                    await LocalDbArtifactService.CreateArtifactAsync(fulaArtifact, ArtifactUploadStatus.Uploaded, localPath, CurrentToken);
+                    await LocalDbArtifactService.CreateArtifactAsync(fulaArtifact, ArtifactPersistenceStatus.Done, localPath, CurrentToken);
                 addedArtifacts.Add(localArtifact);
             }
             else
@@ -278,7 +292,7 @@ public partial class FulaSyncService : IFulaSyncService
                 {
                     var childLocalPath = GetLocalPathBasedOnFulaPath(GetLocalRootPath(), GetFulaRootPath(), fulaChild.FullPath);
                     var artifact = 
-                        await LocalDbArtifactService.CreateArtifactAsync(localChild, ArtifactUploadStatus.PendingToUpload, childLocalPath, CurrentToken);
+                        await LocalDbArtifactService.CreateArtifactAsync(localChild, ArtifactPersistenceStatus.PendingToUpload, childLocalPath, CurrentToken);
                     addedArtifacts.Add(artifact);
                 }
 
@@ -299,7 +313,7 @@ public partial class FulaSyncService : IFulaSyncService
                         // TODO : Check this localDbArtifact properties content.
                         var childLocalPath = GetLocalPathBasedOnFulaPath(GetLocalRootPath(), GetFulaRootPath(), fulaChild.FullPath);
                         var artifact = 
-                            await LocalDbArtifactService.CreateArtifactAsync(localChild, ArtifactUploadStatus.PendingToUpload, childLocalPath, CurrentToken);
+                            await LocalDbArtifactService.CreateArtifactAsync(localChild, ArtifactPersistenceStatus.PendingToUpload, childLocalPath, CurrentToken);
                         addedArtifacts.Add(artifact);
                     }
                 }
@@ -307,7 +321,7 @@ public partial class FulaSyncService : IFulaSyncService
                 {
                     var childLocalPath = GetLocalPathBasedOnFulaPath(GetLocalRootPath(), GetFulaRootPath(), fulaChild.FullPath);
                     var artifact = 
-                        await LocalDbArtifactService.CreateArtifactAsync(localChild, ArtifactUploadStatus.PendingToUpload, childLocalPath, CurrentToken);
+                        await LocalDbArtifactService.CreateArtifactAsync(localChild, ArtifactPersistenceStatus.PendingToUpload, childLocalPath, CurrentToken);
                     addedArtifacts.Add(artifact);
                 }
             }
@@ -327,7 +341,7 @@ public partial class FulaSyncService : IFulaSyncService
 
     private string GetLocalRootPath()
     {
-        return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        return FileSystem.AppDataDirectory; // todo: create a specific folder. Or implement separately for android and windows
     }
 
     private string GetFulaRootPath()

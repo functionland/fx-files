@@ -17,13 +17,15 @@ public class FakeLocalDbFulaSyncItemService : ILocalDbFulaSyncItemService
 
     public async Task<List<FulaSyncItem>> GetSyncItemsAsync(string userToken)
     {
-        var userSyncItems =_syncItems.Where(a => a.UserToken == userToken).ToList();
+        // TODO: Correct the method inputs. Like userToken .. (in all of the methods)
+        var userSyncItems =_syncItems.Where(a => a.DId == userToken).ToList();
         return userSyncItems;
     }
 
     public async Task UpdateSyncItemAsync(FulaSyncItem fulaSyncItem, SyncStatus syncStatus, string userToken)
     {
-        var update = _syncItems.FirstOrDefault(s => s.UserToken == userToken && s.FulaPath == fulaSyncItem.FulaPath && s.LocalPath == fulaSyncItem.LocalPath);
+        // TODO: Correct the method inputs. Like userToken .. (in all of the methods)
+        var update = _syncItems.FirstOrDefault(s => s.DId == userToken && s.FulaPath == fulaSyncItem.FulaPath && s.LocalPath == fulaSyncItem.LocalPath);
         _syncItems.Remove(update);
         fulaSyncItem.LastSyncStatus = syncStatus;
         _syncItems.Add(fulaSyncItem);
