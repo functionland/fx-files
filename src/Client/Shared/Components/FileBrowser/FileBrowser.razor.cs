@@ -200,6 +200,8 @@ public partial class FileBrowser
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
+            await CloseFileViewer();
+
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _progressBarCts = new CancellationTokenSource();
@@ -382,8 +384,6 @@ public partial class FileBrowser
             {
                 await _progressModalRef.CloseAsync();
             }
-
-            await CloseFileViewer();
         }
     }
 
@@ -399,10 +399,11 @@ public partial class FileBrowser
             };
 
             var destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
+
             if (string.IsNullOrWhiteSpace(destinationPath))
-            {
                 return;
-            }
+
+            await CloseFileViewer();
 
             try
             {
@@ -436,8 +437,6 @@ public partial class FileBrowser
                 {
                     await _progressModalRef.CloseAsync();
                 }
-
-                await CloseFileViewer();
             }
 
             var overwriteArtifacts =
