@@ -262,6 +262,6 @@
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
             NavigationFolderCallback="NavigateToAsync"
-            OnBack="() => {_isInFileViewer = false;}"/>
+            OnBack="HandleFileViewerBack" />
 
 <ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />

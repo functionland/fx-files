@@ -1955,4 +1955,10 @@ public partial class FileBrowser
         _selectedArtifacts = artifacts;
         _searchPinOptionResult = GetPinOptionResult(_selectedArtifacts);
     }
+
+    private void HandleFileViewerBack()
+    {
+        _isInFileViewer = false;
+        ChangeDeviceBackFunctionality(ArtifactExplorerMode);
+    }
 }
