@@ -22,6 +22,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IFulaFileService, FulaFileService>();
         services.AddSingleton<ILocalDevicePinService, LocalDevicePinService>();
         services.AddSingleton<IFulaPinService, FulaPinService>();
+        services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
 
         services.AddSingleton<IEventAggregator, EventAggregator>();
         services.AddSingleton<FakeFileServiceFactory>();
@@ -34,6 +35,11 @@ public static class IServiceCollectionExtensions
 
         services.AddTransient<IArtifactThumbnailService<ILocalDeviceFileService>, ArtifactThumbnailService<ILocalDeviceFileService>>();
         services.AddTransient<IArtifactThumbnailService<IFulaFileService>, ArtifactThumbnailService<IFulaFileService>>();
+
+
+        services.AddSingleton<FakeFulaFileClientFactory>();
+        services.AddSingleton<ILocalDbArtifactService, FakeLocalDbArtifactService>();
+        services.AddSingleton<FakeLocalDbArtifactServiceFactory>();
 
         services.AddSingleton<FsFileProviderDependency>();
 
