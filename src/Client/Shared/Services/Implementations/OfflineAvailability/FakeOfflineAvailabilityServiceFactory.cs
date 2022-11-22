@@ -113,7 +113,7 @@ public partial class FakeOfflineAvailabilityServiceFactory
         return new FsArtifact(filePath, fileName, FsArtifactType.File, FsFileProviderType.InternalMemory)
         {
             FileExtension = extension,
-            IsAvailableOffline = isAvailableOffline
+            IsAvailableOfflineRequested = isAvailableOffline
         };
     }
 
@@ -124,7 +124,7 @@ public partial class FakeOfflineAvailabilityServiceFactory
         return new FsArtifact(folderPath, folderName, FsArtifactType.Folder, FsFileProviderType.InternalMemory)
         {
             ParentFullPath = folderPath.Replace($"/{folderName}", ""),
-            IsAvailableOffline = isAvailableOffline
+            IsAvailableOfflineRequested = isAvailableOffline
         };
     }
 }

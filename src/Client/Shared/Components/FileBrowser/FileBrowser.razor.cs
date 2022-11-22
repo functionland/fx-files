@@ -111,6 +111,7 @@ public partial class FileBrowser : IDisposable
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
+    private bool _isInFileViewer;
     private Timer? _timer;
     private Task? _searchStatusTask;
 
@@ -239,6 +240,8 @@ public partial class FileBrowser : IDisposable
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
+
+            await CloseFileViewer();
 
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
@@ -454,8 +457,6 @@ public partial class FileBrowser : IDisposable
             {
                 await _progressModalRef.CloseAsync();
             }
-
-            await CloseFileViewer();
         }
     }
 
@@ -467,9 +468,9 @@ public partial class FileBrowser : IDisposable
 
             var destinationPath = await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.MoveHere), artifacts);
             if (string.IsNullOrWhiteSpace(destinationPath))
-            {
                 return;
-            }
+
+            await CloseFileViewer();
 
             try
             {
@@ -503,8 +504,6 @@ public partial class FileBrowser : IDisposable
                 {
                     await _progressModalRef.CloseAsync();
                 }
-
-                await CloseFileViewer();
             }
 
             var overwriteArtifacts =
@@ -949,6 +948,7 @@ public partial class FileBrowser : IDisposable
         {
             _fxSearchInputRef?.HandleClearInputText();
             var isOpened = _fileViewerRef != null && await _fileViewerRef.OpenArtifact(artifact);
+            _isInFileViewer = true;
 
             if (isOpened == false)
             {
@@ -1044,7 +1044,8 @@ public partial class FileBrowser : IDisposable
                 isDrive,
                 artifact?.FileCategory,
                 artifact?.ArtifactType,
-                _isInSearchMode);
+                _isInSearchMode
+                _isInFileViewer);
             RefreshDeviceBackButtonBehavior();
         }
 
@@ -1163,7 +1164,8 @@ public partial class FileBrowser : IDisposable
                 pinOptionResult,
                 (IsInRoot(CurrentArtifact) && !_isInSearchMode),
                 fileCategoryType,
-                fsArtifactType);
+                fsArtifactType,
+                _isInFileViewer);
             RefreshDeviceBackButtonBehavior();
         }
 

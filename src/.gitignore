@@ -223,6 +223,7 @@ profile.arm.json
 *.map
 *Resource.designer.cs
 /**/*.css
+!/Client/Shared/wwwroot/lib/**/*.css
 custom.aprof
 
 /Server/Api/Attachments/**/*.*

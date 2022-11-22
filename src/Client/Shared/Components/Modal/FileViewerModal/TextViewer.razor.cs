@@ -1,9 +1,10 @@
-﻿using System.Reflection.Metadata;
+﻿using Microsoft.JSInterop;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
-public partial class TextViewer : IFileViewerComponent
+public partial class TextViewer : IFileViewerComponent, IDisposable
 {
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
@@ -12,16 +13,18 @@ public partial class TextViewer : IFileViewerComponent
     [Parameter] public EventCallback<List<FsArtifact>> OnUnpin { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnOptionClick { get; set; }
 
-    private StringBuilder Text { get; set; } = new();
+    [AutoInject] private ThemeInterop ThemeInterop = default!;
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+           var _isSystemThemeDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
+            await JSRuntime.InvokeVoidAsync("setupCodeMirror", _isSystemThemeDark);
             _ = GetTextAsync();
         }
 
-        base.OnAfterRender(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task HandlePinAsync()
@@ -49,12 +52,14 @@ public partial class TextViewer : IFileViewerComponent
     {
         if (CurrentArtifact?.FullPath == null) return;
 
-        using var stream = await FileService.GetFileContentAsync(CurrentArtifact.FullPath);
-        using var streamReader = new StreamReader(stream);
-        while (streamReader.ReadLine() is string line)
-        {
-            Text.AppendLine(line);
-            await InvokeAsync(() => StateHasChanged());
-        }
+        var text = File.ReadAllText(CurrentArtifact.FullPath, Encoding.UTF8);
+        
+        await JSRuntime.InvokeVoidAsync("setCodeMirrorText", text, CurrentArtifact.Name);
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    public void Dispose()
+    {
+        JSRuntime.InvokeVoidAsync("unRegisterOnTouchEvent");
     }
 }
