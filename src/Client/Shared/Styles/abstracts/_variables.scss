@@ -33,6 +33,7 @@ $error-dark: #FA5252;
 $input-dark-disable: $gray-dark-border;
 $diable-item-dark: #212529;
 $disable-icon-item-dark: #343A40;
+$border-notifications-dark: #495057;
 //light colors
 $gray-light-content1: #343A40;
 $gray-light-content2: #495057;
@@ -48,9 +49,13 @@ $gray-light-bg-secondary: $gray-dark-content2;
 $green-light-border: #97F7CC;
 $green-light-bg: #CAFBE0;
 $warning-light: #FAB005;
+$warning-border-light: #FCC419;
 $error-light: #FA4343;
+$error-border-light: #FF6B6B; 
 $info-light: $info-dark;
+$info-border-light: #339AF0;
 $success-light: $success-dark;
+$success-border-light : #51CF66;
 $input-light-disable: $gray-dark-content3;
 $diable-item-light: #F8F9FA;
 $disable-icon-item-light: #E9ECEF;
@@ -70,7 +75,11 @@ $colors-light: (
     "gray-bg-secondary": $gray-light-bg-secondary,
     "input-disable": $input-light-disable,
     "disable-item": $diable-item-light,
-    "disable-item-icon": $disable-icon-item-light
+    "disable-item-icon": $disable-icon-item-light,
+    "error-border": $error-border-light,
+    "success-border": $success-border-light,
+    "warning-border": $warning-border-light,
+    "info-border": $info-border-light
 );
 
 $colors-dark: (
@@ -88,7 +97,11 @@ $colors-dark: (
     "gray-bg-secondary": $gray-dark-bg-secondary,
     "input-disable": $input-dark-disable,
     "disable-item": $diable-item-dark,
-    "disable-item-icon": $disable-icon-item-dark
+    "disable-item-icon": $disable-icon-item-dark,
+    "error-border": $border-notifications-dark,
+    "success-border": $border-notifications-dark,
+    "warning-border": $border-notifications-dark,
+    "info-border": $border-notifications-dark
 );
 
 

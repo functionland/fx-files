@@ -3,18 +3,18 @@ using Image = System.Drawing.Image;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations.Test;
 
-public class WindowsImageThumbnailPluginPlatformTest<TFileService> : ImageThumbnailPlatformTest<TFileService>
+public class WindowsAudioThumbnailPluginPlatformTest<TFileService> : ImageThumbnailPlatformTest<TFileService>
     where TFileService : IFileService
 {
     TFileService FileService { get; set; }
 
-    public WindowsImageThumbnailPluginPlatformTest(IArtifactThumbnailService<TFileService> artifactThumbnailService,
+    public WindowsAudioThumbnailPluginPlatformTest(IArtifactThumbnailService<TFileService> artifactThumbnailService,
                                                    TFileService fileService) : base(artifactThumbnailService, fileService)
     {
         FileService = fileService;
     }
 
-    public override string Title => $"WindowsImageThumbnailPluginPlatformTest {typeof(TFileService).Name}";
+    public override string Title => $"WindowsAudioThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
     public override string Description => "Test for create image thumbnail on windows";
 
