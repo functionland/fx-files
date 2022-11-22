@@ -53,7 +53,7 @@ public partial class FileViewer
 
     public async Task NavigateToView(FsArtifact artifact)
     {
-        await NativeNavigation.NavigateToVideoViewer(artifact.FullPath, OnBack);
+        await NativeNavigation.NavigateToVideoViewer(artifact.FullPath);
     }
 
     private bool IsSupported<TComponent>(FsArtifact? artifact)
