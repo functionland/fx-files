@@ -11,7 +11,7 @@ public partial class ImageViewer : IFileViewerComponent
 
     protected override Task OnInitAsync()
     {
-        GoBackService.OnInit(HandleBackAsync, true, false);
+        UpdateDeviceBackBehavior();
         return base.OnInitAsync();
     }
 
@@ -53,6 +53,12 @@ public partial class ImageViewer : IFileViewerComponent
     private async Task HandleOptionClickAsync()
     {
         await OnOptionClick.InvokeAsync(CurrentArtifact);
+        UpdateDeviceBackBehavior();
+    }
+
+    private void UpdateDeviceBackBehavior()
+    {
+        GoBackService.OnInit(HandleBackAsync, true, false);
     }
 
     private async Task HandleBackAsync()
@@ -60,4 +66,5 @@ public partial class ImageViewer : IFileViewerComponent
         CurrentArtifact = null;
         await OnBack.InvokeAsync();
     }
+
 }
