@@ -472,7 +472,6 @@ public partial class ArtifactExplorer
     private async Task<bool?> ScrollToArtifact(FsArtifact artifact)
     {
         var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
-
         var listExistResult =
             await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight);
         return listExistResult;
@@ -480,14 +479,19 @@ public partial class ArtifactExplorer
 
     private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
     {
-        if (ScrollArtifact == null)
+        _timer?.Stop();
+        if (ScrollArtifact == null || IsLoading)
         {
+            _timer?.Start();
             return;
         }
 
         var isListExist = await ScrollToArtifact(ScrollArtifact);
         if (_timer == null || isListExist is false)
+        {
+            _timer?.Start();
             return;
+        }
 
         if (isListExist == null)
         {

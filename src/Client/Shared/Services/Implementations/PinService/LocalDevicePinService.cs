@@ -6,7 +6,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public partial class LocalDevicePinService : ILocalDevicePinService
 {
-    [AutoInject] IFxLocalDbService FxLocalDbService { get; set; } = default!;
+    [AutoInject] ILocalDbPinService LocalDbPinService { get; set; } = default!;
     [AutoInject] ILocalDeviceFileService FileService { get; set; } = default!;
     [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
@@ -31,7 +31,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                                HandleChangedArtifacts,
                                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
-            var pinnedArtifacts = await FxLocalDbService.GetPinnedArticatInfos();
+            var pinnedArtifacts = await LocalDbPinService.GetPinnedArticatInfos();
             if (pinnedArtifacts.Count == 0) return;
 
             var pinnedArtifactPaths = pinnedArtifacts.Select(p => p.FullPath).ToList();
@@ -99,7 +99,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                 return;
             }
            
-            await FxLocalDbService.AddPinAsync(artifact);
+            await LocalDbPinService.AddPinAsync(artifact);
 
             var newPinnedArtifact = new PinnedArtifact
             {
@@ -121,7 +121,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     {
         foreach (var path in paths)
         {
-            await FxLocalDbService.RemovePinAsync(path);
+            await LocalDbPinService.RemovePinAsync(path);
             DeteteFromPinCache(path);
             UnWatchParent(new FsArtifact(path, Path.GetFileName(path), FsArtifactType.File, FsFileProviderType.InternalMemory));
         }
@@ -161,7 +161,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
     private async Task UpdatePinnedArtifactAsyn(PinnedArtifact edditedPinArtfact)
     {
         if (edditedPinArtfact.FullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
-        await FxLocalDbService.UpdatePinAsync(edditedPinArtfact);
+        await LocalDbPinService.UpdatePinAsync(edditedPinArtfact);
         DeteteFromPinCache(edditedPinArtfact.FullPath);
         PinnedPathsCache.TryAdd(edditedPinArtfact.FullPath, edditedPinArtfact);
 
@@ -191,7 +191,7 @@ public partial class LocalDevicePinService : ILocalDevicePinService
                     ContentHash = artifactChangeEvent.FsArtifact.LastModifiedDateTime.ToString()
                 };
 
-                await FxLocalDbService.UpdatePinAsync(editedArtifact, artifactChangeEvent.Description);
+                await LocalDbPinService.UpdatePinAsync(editedArtifact, artifactChangeEvent.Description);
                 DeteteFromPinCache(artifactChangeEvent.Description != null ? artifactChangeEvent.Description : editedArtifact.FullPath);
                 PinnedPathsCache.TryAdd(editedArtifact.FullPath, editedArtifact);
    
