@@ -28,55 +28,54 @@ public partial class ZipViewer : IFileViewerComponent
 
     private List<FsArtifact> _allZipFileEntities = new();
 
+    private bool _isZipViewerInLoading;
+
     protected override Task OnInitAsync()
     {
         SetGoBackDeviceButtonFunctionality();
         return base.OnInitAsync();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnAfterFirstRenderAsync()
     {
-        if (firstRender)
+        await base.OnAfterFirstRenderAsync();
+
+        _isZipViewerInLoading = true;
+        StateHasChanged();
+
+        _ = Task.Run(async () =>
         {
-            await InitialZipViewerAsync();
-            StateHasChanged();
-        }
-        
-        await base.OnAfterRenderAsync(firstRender);
+            await LoadZipArtifactsAsync();
+        });
     }
 
-    private async Task InitialZipViewerAsync()
+    private async Task LoadZipArtifactsAsync()
     {
-        if (CurrentArtifact is null)
-            return;
-
         try
         {
-            await LoadAllArtifactsAsync();
+            if (CurrentArtifact is null)
+                throw new InvalidOperationException("Current artifact can not be null.");
+
+            var token = _cancellationTokenSource.Token;
+
+            _allZipFileEntities =
+                await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
+
             DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
-        catch (NotSupportedEncryptedFileException)
+        catch (Exception ex)
         {
-            FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
-                Localizer.GetString(nameof(AppStrings.NotSupportedEncryptedFileException)), FxToastType.Error);
+            ExceptionHandler.Handle(ex);
             await HandleBackAsync(true);
         }
-        catch (Exception)
+        finally
         {
-            await HandleBackAsync(true);
-            throw;
+            await InvokeAsync(() =>
+            {
+                _isZipViewerInLoading = false;
+                StateHasChanged();
+            });
         }
-    }
-
-    private async Task LoadAllArtifactsAsync()
-    {
-        if (CurrentArtifact is null)
-            throw new InvalidOperationException("Current artifact can not be null.");
-
-        var token = _cancellationTokenSource.Token;
-
-        _allZipFileEntities =
-            await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
     }
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
@@ -284,22 +283,23 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleBackAsync(bool shouldExit = false)
     {
-        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+        switch (ArtifactExplorerMode)
         {
-            if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
-            {
+            case ArtifactExplorerMode.Normal when _currentInnerZipArtifact.FullPath == string.Empty || shouldExit:
                 _cancellationTokenSource.Cancel();
                 await OnBack.InvokeAsync();
-            }
-            else
-            {  
+                break;
+            case ArtifactExplorerMode.Normal:
                 _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
-            }
-        }
-        else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-        {
-            CancelSelectionMode();
+                break;
+            case ArtifactExplorerMode.SelectArtifact:
+                CancelSelectionMode();
+                break;
+            case ArtifactExplorerMode.SelectDestionation:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
         StateHasChanged();
@@ -315,7 +315,7 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (artifact.ArtifactType != FsArtifactType.Folder)
             return;
-        
+
         _currentInnerZipArtifact = artifact;
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
     }
