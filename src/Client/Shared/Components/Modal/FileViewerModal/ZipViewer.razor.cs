@@ -45,53 +45,37 @@ public partial class ZipViewer : IFileViewerComponent
 
         _ = Task.Run(async () =>
         {
-            await InitialZipViewerAsync();
+            await LoadZipArtifactsAsync();
         });
     }
 
-    private async Task InitialZipViewerAsync()
+    private async Task LoadZipArtifactsAsync()
     {
-        if (CurrentArtifact is null)
-            return;
-
-        await Task.Run(async () =>
+        try
         {
-            await InvokeAsync(async () =>
+            if (CurrentArtifact is null)
+                throw new InvalidOperationException("Current artifact can not be null.");
+
+            var token = _cancellationTokenSource.Token;
+
+            _allZipFileEntities =
+                await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
+
+            DisplayChildrenArtifacts(_currentInnerZipArtifact);
+        }
+        catch (Exception ex)
+        {
+            ExceptionHandler.Handle(ex);
+            await HandleBackAsync(true);
+        }
+        finally
+        {
+            await InvokeAsync(() =>
             {
-                try
-                {
-                    await LoadAllArtifactsAsync();
-                    DisplayChildrenArtifacts(_currentInnerZipArtifact);
-                }
-                catch (NotSupportedEncryptedFileException)
-                {
-                    FxToast.Show(Localizer.GetString(nameof(AppStrings.ToastErrorTitle)),
-                    Localizer.GetString(nameof(AppStrings.NotSupportedEncryptedFileException)), FxToastType.Error);
-                    await HandleBackAsync(true);
-                }
-                catch (Exception)
-                {
-                    await HandleBackAsync(true);
-                    throw;
-                }
-                finally
-                {
-                    _isZipViewerInLoading = false;
-                    StateHasChanged();
-                }
+                _isZipViewerInLoading = false;
+                StateHasChanged();
             });
-        });       
-    }
-
-    private async Task LoadAllArtifactsAsync()
-    {
-        if (CurrentArtifact is null)
-            throw new InvalidOperationException("Current artifact can not be null.");
-
-        var token = _cancellationTokenSource.Token;
-
-        _allZipFileEntities =
-            await _zipService.GetAllArtifactsAsync(CurrentArtifact.FullPath, cancellationToken: token);
+        }
     }
 
     private void DisplayChildrenArtifacts(FsArtifact artifact)
@@ -331,7 +315,7 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (artifact.ArtifactType != FsArtifactType.Folder)
             return;
-        
+
         _currentInnerZipArtifact = artifact;
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
     }
