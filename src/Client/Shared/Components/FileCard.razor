@@ -10,10 +10,10 @@
             </div>
         }
 
-        @if (Artifact.ArtifactType == FsArtifactType.File && Artifact.FileCategory == FileCategoryType.Image && !String.IsNullOrWhiteSpace(Artifact.ThumbnailPath))
+        @if (Artifact.ArtifactType == FsArtifactType.File && !String.IsNullOrWhiteSpace(Artifact.ThumbnailPath))
         {
-            <img src="@(Artifact.FullPath?.InProtocol(Protocol))" draggable="false" class="file-card-blur"/>
-            <img src="@Artifact.ThumbnailPath" draggable="false" class="file-card-image" />
+            <img src="@Artifact.ThumbnailPath.InProtocol(Protocol)" draggable="false" class="file-card-blur" />
+            <img src="@Artifact.ThumbnailPath.InProtocol(Protocol)" draggable="false" class="file-card-image" />
         }
         else
         {

@@ -20,14 +20,15 @@
         public PathProtocol Protocol =>
             FileService switch
             {
-                ILocalDeviceFileService => PathProtocol.ThumbnailStorageMedium,
-                IFulaFileService => PathProtocol.ThumbnailStorageMedium,
+                ILocalDeviceFileService => PathProtocol.Storage,
+                IFulaFileService => PathProtocol.Fula,
                 _ => throw new InvalidOperationException($"Unsupported file service: {FileService}")
             };
 
         protected override async Task OnInitAsync()
         { 
-            await GetThumbnailAsync();
+            await base.OnInitAsync();
+            _ = GetThumbnailAsync();
         }
 
         public string GetArtifactIcon(FsArtifactType artifactType, FileCategoryType fileType)
@@ -64,7 +65,6 @@
                     return;
 
                 Artifact.ThumbnailPath = await ThumbnailService.GetOrCreateThumbnailAsync(Artifact, ThumbnailScale.Medium);
-                string Test = "";
 
             }
             catch (Exception exception)
