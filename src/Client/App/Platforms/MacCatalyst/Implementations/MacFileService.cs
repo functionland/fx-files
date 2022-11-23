@@ -28,13 +28,9 @@ public partial class MacFileService : LocalDeviceFileService
        
         if (string.IsNullOrWhiteSpace(path))
         {
-            var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) ;
-
+          
             
-
-            var fsArtifacts = new[] { new FsArtifact(userPath, Path.GetFileName(userPath), FsArtifactType.Folder, FsFileProviderType.InternalMemory) { CreateDateTime = Directory.GetCreationTime(userPath), LastModifiedDateTime = Directory.GetLastWriteTime(userPath)} };
-            
-            foreach (var item in fsArtifacts.Concat(GetDrives()))
+            foreach (var item in GetDrives())
             {
                 yield return item;
             }
@@ -56,7 +52,12 @@ public partial class MacFileService : LocalDeviceFileService
 
     public override List<FsArtifact> GetDrives()
     {
+        var userPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var fsArtifacts = new FsArtifact(userPath, Path.GetFileName(userPath), FsArtifactType.Folder, FsFileProviderType.InternalMemory) { CreateDateTime = Directory.GetCreationTime(userPath), LastModifiedDateTime = Directory.GetLastWriteTime(userPath) };
+
         var allDerives = base.GetDrives();
-        return allDerives.Where(d => d.FullPath.StartsWith("/Volumes/")).ToList();
+        var result =  allDerives.Where(d => d.FullPath.StartsWith("/Volumes/")).ToList();
+        result.Add(fsArtifacts);
+        return result;
     }
 }
