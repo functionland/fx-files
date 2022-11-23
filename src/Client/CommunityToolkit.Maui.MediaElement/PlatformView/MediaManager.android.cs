@@ -23,6 +23,7 @@ public partial class MediaManager : Java.Lang.Object, IPlayer.IListener
 		playerView = new StyledPlayerView(mauiContext.Context)
 		{
 			Player = player,
+			KeepScreenOn = true,
 			UseController = false,
 			ControllerAutoShow = false,
 			LayoutParameters = new RelativeLayout.LayoutParams(Android.Views.ViewGroup.LayoutParams.MatchParent, Android.Views.ViewGroup.LayoutParams.MatchParent),
