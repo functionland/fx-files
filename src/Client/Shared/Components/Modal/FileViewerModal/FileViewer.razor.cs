@@ -65,7 +65,7 @@ public partial class FileViewer
 
     public async Task NavigateToView(FsArtifact artifact)
     {
-        await NativeNavigation.NavigateToVideoViewer(artifact.FullPath);
+        await NativeNavigation.NavigateToVideoViewer(artifact.FullPath, OnBack);
     }
 
     private bool IsVideoSupported(FsArtifact? artifact)

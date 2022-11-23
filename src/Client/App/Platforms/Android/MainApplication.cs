@@ -12,6 +12,7 @@ using Android.Runtime;
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
 [Application(
+    LargeHeap = true,
 #if DEBUG
     UsesCleartextTraffic = true
 #endif
