@@ -21,12 +21,14 @@
     }
 }
 
-.back-button:hover {
-    color: $green-light-hover;
+@media(hover: hover) and (pointer: fine) {
+    .back-button:hover {
+        color: $green-light-hover;
 
-    &::after {
-        color: $green-light-hover !important;
-        transition: color 100ms linear;
+        &::after {
+            color: $green-light-hover !important;
+            transition: color 100ms linear;
+        }
     }
 }
 
