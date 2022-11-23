@@ -72,8 +72,8 @@ public partial class NativeVideoViewer : ContentPage
     {
         try
         {
-        //    media.Stop();
-        //    media.Source = null;
+            media.Stop();
+            media.Source = null;
             await Navigation.PopAsync();
             media.Handler?.DisconnectHandler();
             await OnBack.InvokeAsync();
@@ -95,9 +95,6 @@ public partial class NativeVideoViewer : ContentPage
         Bitmap? bitmap = retriever.GetFrameAtTime(0);
         if (bitmap != null)
         {
-            MemoryStream stream = new MemoryStream();
-            bitmap.Compress(Bitmap.CompressFormat.Jpeg, 80, stream);
-
             var aspectRatio = new Rational(bitmap.Width, bitmap.Height);
             PictureInPictureParams.Builder pictureInPictureParamsBuilder = new PictureInPictureParams.Builder();
             pictureInPictureParamsBuilder.SetAspectRatio(aspectRatio).Build();
