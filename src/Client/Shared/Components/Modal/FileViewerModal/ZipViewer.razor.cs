@@ -28,6 +28,8 @@ public partial class ZipViewer : IFileViewerComponent
 
     private List<FsArtifact> _allZipFileEntities = new();
 
+    private bool _isZipViewerInLoading;
+
     protected override Task OnInitAsync()
     {
         SetGoBackDeviceButtonFunctionality();
@@ -52,6 +54,7 @@ public partial class ZipViewer : IFileViewerComponent
 
         try
         {
+            _isZipViewerInLoading = true;
             await LoadAllArtifactsAsync();
             DisplayChildrenArtifacts(_currentInnerZipArtifact);
         }
@@ -65,6 +68,10 @@ public partial class ZipViewer : IFileViewerComponent
         {
             await HandleBackAsync(true);
             throw;
+        }
+        finally
+        {
+            _isZipViewerInLoading = false;
         }
     }
 
@@ -284,22 +291,23 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleBackAsync(bool shouldExit = false)
     {
-        if (ArtifactExplorerMode == ArtifactExplorerMode.Normal)
+        switch (ArtifactExplorerMode)
         {
-            if (_currentInnerZipArtifact.FullPath == string.Empty || shouldExit)
-            {
+            case ArtifactExplorerMode.Normal when _currentInnerZipArtifact.FullPath == string.Empty || shouldExit:
                 _cancellationTokenSource.Cancel();
                 await OnBack.InvokeAsync();
-            }
-            else
-            {  
+                break;
+            case ArtifactExplorerMode.Normal:
                 _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
-            }
-        }
-        else if (ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)
-        {
-            CancelSelectionMode();
+                break;
+            case ArtifactExplorerMode.SelectArtifact:
+                CancelSelectionMode();
+                break;
+            case ArtifactExplorerMode.SelectDestionation:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
         StateHasChanged();
