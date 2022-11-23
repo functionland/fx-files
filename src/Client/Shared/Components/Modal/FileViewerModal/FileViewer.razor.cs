@@ -23,7 +23,7 @@ public partial class FileViewer
             return false;
 
         _currentArtifact = artifact;
-        if (IsSupported<VideoViewer>(_currentArtifact))
+        if (IsVideoSupported(_currentArtifact))
         {
             IsModalOpen = false;
             await NavigateToView(_currentArtifact);
@@ -39,9 +39,9 @@ public partial class FileViewer
 
     private bool CanOpen(FsArtifact artifact)
     {
-        if (IsSupported<ImageViewer>(artifact))
+        if (IsVideoSupported(artifact))
             return true;
-        if (IsSupported<VideoViewer>(artifact))
+        if (IsSupported<ImageViewer>(artifact))
             return true;
         if (IsSupported<ZipViewer>(artifact))
             return true;
@@ -56,15 +56,25 @@ public partial class FileViewer
         await NativeNavigation.NavigateToVideoViewer(artifact.FullPath, OnBack);
     }
 
+    private bool IsVideoSupported(FsArtifact? artifact)
+    {
+        if(artifact?.FileCategory == FileCategoryType.Video)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     private bool IsSupported<TComponent>(FsArtifact? artifact)
         where TComponent : IFileViewerComponent
     {
         if (artifact is null)
             return false;
 
-        if (typeof(TComponent) == typeof(ImageViewer) && artifact.FileCategory == FileCategoryType.Image)
+        if (IsVideoSupported(artifact))
             return true;
-        if (typeof(TComponent) == typeof(VideoViewer) && artifact.FileCategory == FileCategoryType.Video)
+        if (typeof(TComponent) == typeof(ImageViewer) && artifact.FileCategory == FileCategoryType.Image)
             return true;
         if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
             return true;
