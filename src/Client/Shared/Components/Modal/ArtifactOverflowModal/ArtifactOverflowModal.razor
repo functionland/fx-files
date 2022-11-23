@@ -23,7 +23,7 @@
         <FxButton Class="rename-button"
                   Text="@Localizer[nameof(AppStrings.Rename)]"
                   OnClick="Rename"
-                  IsEnabled="!_isInRoot"
+                  IsEnabled="!_isInRoot && !_isInFileViewer"
                   IsVisible="!_isMultiple"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
         <FxButton Class="copy-button"
@@ -73,7 +73,7 @@
         <FxButton Class="delete-button"
                   Text="@Localizer[nameof(AppStrings.Delete)]"
                   OnClick="Delete"
-                  IsEnabled="!_isInRoot"
+                  IsEnabled="!_isInRoot && !_isInFileViewer"
                   ButtonStyle="FxButtonStyle.SheetMenu" />
     </div>
 </FxBottomSheet>

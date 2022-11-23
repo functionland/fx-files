@@ -261,6 +261,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            NavigationFolderCallback="NavigateToAsync" />
+            NavigationFolderCallback="NavigateToAsync"
+            OnBack="() => {_isInFileViewer = false;}"/>
 
 <ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />

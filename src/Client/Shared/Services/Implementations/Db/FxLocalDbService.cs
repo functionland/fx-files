@@ -4,17 +4,19 @@ using DbUp;
 using DbUp.SQLite.Helpers;
 using Microsoft.Data.Sqlite;
 using System.Data;
+using System.Reflection;
 
-
-namespace Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
+namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public class FxLocalDbService : IFxLocalDbService
 {
     private string ConnectionString { get; set; }
+
     public FxLocalDbService(string connectionString)
     {
         ConnectionString = connectionString;
     }
+
     public async Task InitAsync()
     {
         SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
@@ -27,12 +29,17 @@ public class FxLocalDbService : IFxLocalDbService
             needsMigrate = false;
 #endif
 
+#if Dev
+    needsMigrate = true;
+#endif
+
         if (needsMigrate)
         {
             MigrateDatabase();
         }
 
     }
+
     void MigrateDatabase()
     {
         var connection = new SharedConnection(CreateConnection());
@@ -40,7 +47,7 @@ public class FxLocalDbService : IFxLocalDbService
         var upgrader =
             DeployChanges.To
                 .SQLiteDatabase(connection)
-                .WithScriptsEmbeddedInAssembly(typeof(PinnedArtifact).Assembly)
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                 .LogToNowhere()
                 .Build();
 
@@ -50,74 +57,12 @@ public class FxLocalDbService : IFxLocalDbService
             throw new InvalidOperationException(result.Error.Message, result.Error);
     }
 
-    private SqliteConnection CreateConnection()
+    public SqliteConnection CreateConnection()
     {
         return new SqliteConnection(ConnectionString);
     }
-
-    public async Task AddPinAsync(FsArtifact artifact)
-    {
-        using var LocalDb = CreateConnection();
-        var pinnedArtifact = new PinnedArtifact()
-        {
-            FullPath = artifact.FullPath,
-            ProviderType = artifact.ProviderType,
-            PinEpochTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            ContentHash = artifact.LastModifiedDateTime.ToString(),
-            ThumbnailPath = artifact.ThumbnailPath,
-            ArtifactName = artifact.Name,
-            FsArtifactType = artifact.ArtifactType
-        };
-
-        await Task.Run(() => LocalDb.Insert(pinnedArtifact));
-    }
-
-    public async Task UpdatePinAsync(PinnedArtifact pinnedArtifact, string? oldPath = null)
-    {
-        if (oldPath == null)
-        {
-            var localDb = CreateConnection();
-            await Task.Run(() => localDb.Execute(
-                $"UPDATE PinnedArtifact SET ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @FullPath ",
-                new
-                {
-                    ThumbnailPath = pinnedArtifact.ThumbnailPath,
-                    ContentHash = pinnedArtifact.ContentHash,
-                    FullPath = pinnedArtifact.FullPath
-                }));
-        }
-        else
-        {
-            var localDb = CreateConnection();
-            await Task.Run(() => localDb.Execute(
-                $"UPDATE PinnedArtifact SET FullPath =@FullPath, ThumbnailPath = @ThumbnailPath, ContentHash=@ContentHash WHERE FullPath = @OldPath ",
-                new
-                {
-                    OldPath = oldPath,
-                    ThumbnailPath = pinnedArtifact.ThumbnailPath,
-                    ContentHash = pinnedArtifact.ContentHash,
-                    FullPath = pinnedArtifact.FullPath
-                }));
-        }
-    }
-
-    public async Task RemovePinAsync(String FullPath)
-    {
-        if (string.IsNullOrEmpty(FullPath)) return;
-        using var LocalDb = CreateConnection();
-
-        await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';"));
-    }
-
-    public async Task<List<PinnedArtifact>> GetPinnedArticatInfos()
-    {
-        using var LocalDb = CreateConnection();
-
-        var list = await Task.Run(() => LocalDb.Query<PinnedArtifact>($"SELECT * FROM PinnedArtifact"));
-        return list.ToList();
-    }
-
 }
+
 public abstract class SqliteTypeHandler<T> : SqlMapper.TypeHandler<T>
 {
     // Parameters are converted by Microsoft.Data.Sqlite
