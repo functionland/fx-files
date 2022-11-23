@@ -6,7 +6,6 @@ using Android.Util;
 #endif
 
 using CommunityToolkit.Maui.MediaElement;
-using Microsoft.AspNetCore.Components;
 
 namespace Functionland.FxFiles.Client.App.Views;
 
@@ -21,13 +20,11 @@ public partial class NativeVideoViewer : ContentPage
         get { return _isInPictureInPicture; }
     }
 
-    private EventCallback OnBack { get; set; }
-
     private MediaElementState _currentMediaState = MediaElementState.Playing;
 
     private readonly string _filePath;
 
-    public NativeVideoViewer(string path, EventCallback onBack)
+    public NativeVideoViewer(string path)
     {
         InitializeComponent();
 
@@ -38,7 +35,6 @@ public partial class NativeVideoViewer : ContentPage
             playButton.Source = ImageSource.FromFile("pause.png");
             media.Play();
         }
-        OnBack = onBack;
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -76,7 +72,6 @@ public partial class NativeVideoViewer : ContentPage
             media.Source = null;
             await Navigation.PopAsync();
             media.Handler?.DisconnectHandler();
-            await OnBack.InvokeAsync();
         }
         catch (Exception ex)
         {
