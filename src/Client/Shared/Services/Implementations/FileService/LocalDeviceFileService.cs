@@ -573,7 +573,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 var providerType = GetFsFileProviderType(drive);
                 artifacts.Add(
-                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType));
+                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType)
+                    {
+                        LastModifiedDateTime = Directory.GetLastWriteTime(drive)
+                    });
             }
 
             return artifacts;
@@ -707,7 +710,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 foreach (var drive in drives)
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
