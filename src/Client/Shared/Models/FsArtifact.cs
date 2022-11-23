@@ -40,9 +40,12 @@ public class FsArtifact
     public FulaUser? Owner { get; set; }
     public ArtifactPermissionLevel ArtifactPermissionLevel { get; set; }
 
-    public bool? IsAvailableOffline { get; set; }
+    public bool? IsAvailableOfflineRequested { get; set; }
     public bool? IsSharedWithMe { get; set; }
     public bool? IsSharedByMe { get; set; }
+
+    public ArtifactPersistenceStatus PersistenceStatus { get; set; }
+    public string? DId { get; set; }
 
     // For UI
 

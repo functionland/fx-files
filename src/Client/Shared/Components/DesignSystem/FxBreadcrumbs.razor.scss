@@ -10,33 +10,33 @@
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    margin: $spacing-0 $spacing-21 $spacing-21;
+    margin: 0px 21px 21px;
 
-    span[class$="ellipsis"] {
+    .ellipsis {
         font-size: $font-size-12;
         background-color: color(app-bg);
         position: sticky;
         width: 13px;
-        display: none;
+        color: color(app-bg);
     }
 
     .start-ellipsis {
         left: 0px;
+        display: none;
     }
 
     .end-ellipsis {
-        right: 0px;
+        right: -1px;
     }
 
     .color-changer {
-        color: color(app-bg);
+        color: color(gray-content2);
     }
 
     &::-webkit-scrollbar {
         height: 4px;
     }
 }
- 
 
 .file-path {
     font-family: $open-sans-regular;

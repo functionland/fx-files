@@ -24,14 +24,16 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         {
             var file = new Java.IO.File(filePath);
 
-            var bitmap = await BitmapFactory.DecodeFileAsync(filePath);
+            BitmapFactory.Options options = new()
+            {
+                InJustDecodeBounds = true
+            };
 
-            if (bitmap is null)
-                throw new InvalidOperationException("Unable to create bitmap out of given filePath.");
+            _ = BitmapFactory.DecodeFile(filePath, options);
 
-            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(bitmap.Width, bitmap.Height, thumbnailScale);
-
+            (int imageWidth, int imageHeight) = ImageUtils.ScaleImage(options.OutWidth, options.OutHeight, thumbnailScale);
             var size = new Size(imageWidth, imageHeight);
+
             var imageThumbnail = ThumbnailUtils.CreateImageThumbnail(file, size, null);
 
             var outputStream = new MemoryStream();
@@ -41,6 +43,7 @@ public class AndroidImageThumbnailPlugin : ImageThumbnailPlugin
         }
         else  //When filePath is not provided and we're forced to work with stream (in Avatar thumbnail case).
         {
+            //ToDo: Consideration for -> DecodeStreamAsync could retrun null for some rather large (special) images.
             var bitmap = await BitmapFactory.DecodeStreamAsync(stream);
 
             if (bitmap is null)

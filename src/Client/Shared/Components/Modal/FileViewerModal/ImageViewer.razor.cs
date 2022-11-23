@@ -36,6 +36,7 @@ public partial class ImageViewer : IFileViewerComponent
     {
         if (CurrentArtifact is null) return;
 
+        CurrentArtifact.IsPinned = true;
         var pinArtifact = new List<FsArtifact> { CurrentArtifact };
         await OnPin.InvokeAsync(pinArtifact);
     }
@@ -44,6 +45,7 @@ public partial class ImageViewer : IFileViewerComponent
     {
         if (CurrentArtifact is null) return;
 
+        CurrentArtifact.IsPinned = false;
         var unPinArtifact = new List<FsArtifact> { CurrentArtifact };
         await OnUnpin.InvokeAsync(unPinArtifact);
     }

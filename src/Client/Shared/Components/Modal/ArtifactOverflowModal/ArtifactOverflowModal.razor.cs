@@ -6,6 +6,7 @@
         private bool _isModalOpen;
         private bool _isMultiple;
         private bool _isInRoot;
+        private bool _isInFileViewer;
         private bool _isInSearch;
         private PinOptionResult? _pinOptionResult;
         private FileCategoryType? _fileCategoryType;
@@ -18,6 +19,7 @@
 
             _tcs?.SetResult(result);
             _tcs = null;
+            Close();
         }
 
         public void Extract()
@@ -28,7 +30,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void OpenWith()
@@ -39,7 +41,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Rename()
@@ -50,7 +52,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Copy()
@@ -61,7 +63,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Pin()
@@ -72,7 +74,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void UnPin()
@@ -83,7 +85,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Move()
@@ -94,7 +96,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void ShareWithApp()
@@ -105,7 +107,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void ShowInLocation()
@@ -116,7 +118,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public void Delete()
@@ -127,7 +129,7 @@
             _tcs?.SetResult(result);
             _tcs = null;
 
-            _isModalOpen = false;
+            Close();
         }
 
         public async Task<ArtifactOverflowResult> ShowAsync
@@ -136,7 +138,8 @@
             bool isInRoot,
             FileCategoryType? fileCategoryType = null,
             FsArtifactType? fsArtifactType = null,
-            bool isInSearch = false)
+            bool isInSearch = false,
+            bool isInFileViewer = false)
         {
             GoBackService.OnInit((Task () =>
             {
@@ -152,6 +155,7 @@
             _pinOptionResult = pinOptionResult;
             _fileCategoryType = fileCategoryType;
             _fsArtifactType = fsArtifactType;
+            _isInFileViewer = isInFileViewer;
 
             _isModalOpen = true;
             StateHasChanged();

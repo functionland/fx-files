@@ -2,9 +2,18 @@
 
 public interface ILocalDbArtifactService
 {
-    Task<List<FsArtifact>> GetChildrenArtifactsAsync(string localPath);
+    Task<List<FsArtifact>> GetChildrenArtifactsAsync(string localPath, string userToken);
 
-    Task<FsArtifact> GetArtifactAsync(string localPath);
+    Task<FsArtifact> GetArtifactAsync(string localPath, string userToken);
 
-    //TODO: Create artifact, Remove artifact, Update file, Update folder
+    Task<FsArtifact> CreateArtifactAsync(FsArtifact fsArtifact, ArtifactPersistenceStatus uploadStatus, string localPath, string userToken);
+
+    Task RemoveArtifactAsync(string localPath, string userToken);
+
+
+    Task UpdateFileAsync(FsArtifact fsArtifact, string localPath, string userToken);
+
+    Task UpdateFolderAsync(FsArtifact fsArtifact, string localPath, string userToken);
+
+    // TODO: Task<bool> CheckIfPathExsit(string localPath);
 }

@@ -16,7 +16,7 @@ public class WindowsImageThumbnailPluginPlatformTest<TFileService> : ImageThumbn
 
     public override string Title => $"WindowsImageThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
-    public override string Description => "Test for create artifact thumbnail on windows";
+    public override string Description => "Test for create image thumbnail on windows";
 
     protected override string OnGetRootPath() => "c:\\";
 

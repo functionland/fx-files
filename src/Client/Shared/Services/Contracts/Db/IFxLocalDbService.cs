@@ -1,10 +1,9 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
+﻿using Microsoft.Data.Sqlite;
+
+namespace Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 public interface IFxLocalDbService
 {
-    Task AddPinAsync(FsArtifact artifact);
-    Task<List<PinnedArtifact>> GetPinnedArticatInfos();
+    SqliteConnection CreateConnection();
     Task InitAsync();
-    Task RemovePinAsync(string FullPath);
-    Task UpdatePinAsync(PinnedArtifact pinnedArtifact, string? oldPath = null);
 }

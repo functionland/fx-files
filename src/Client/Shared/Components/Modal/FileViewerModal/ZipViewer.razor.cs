@@ -19,7 +19,6 @@ public partial class ZipViewer : IFileViewerComponent
     private readonly CancellationTokenSource _cancellationTokenSource = new();
     private ExtractorBottomSheetResult? ExtractorBottomSheetResult { get; set; }
 
-
     private FsArtifact _currentInnerZipArtifact =
         new(string.Empty, string.Empty, FsArtifactType.Folder, FsFileProviderType.InternalMemory);
 
@@ -42,7 +41,7 @@ public partial class ZipViewer : IFileViewerComponent
             await InitialZipViewerAsync();
             StateHasChanged();
         }
-
+        
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -293,7 +292,7 @@ public partial class ZipViewer : IFileViewerComponent
                 await OnBack.InvokeAsync();
             }
             else
-            {
+            {  
                 _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
             }
@@ -316,7 +315,7 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (artifact.ArtifactType != FsArtifactType.Folder)
             return;
-
+        
         _currentInnerZipArtifact = artifact;
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
     }

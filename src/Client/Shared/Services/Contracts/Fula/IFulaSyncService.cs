@@ -2,7 +2,9 @@
 
 public interface IFulaSyncService
 {
-    Task InitAsync(CancellationToken? cancellationToken = null);
+    Task InitAsync(FulaUser fulaUser, CancellationToken? cancellationToken = null);
+    Task StartSyncAsync(CancellationToken? cancellationToken = null);
+    Task StopSyncAsync(CancellationToken? cancellationToken = null);
     Task EnsureInitializedAsync(CancellationToken? cancellationToken = null);
     Task<List<FsArtifact>> SyncItemsAsync(CancellationToken? cancellationToken = null);
     Task<List<FsArtifact>> SyncContentsAsync(CancellationToken? cancellationToken = null);
