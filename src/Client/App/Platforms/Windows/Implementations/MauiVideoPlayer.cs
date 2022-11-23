@@ -9,6 +9,8 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows
 {
     public class MauiVideoPlayer : Grid, IDisposable
     {
+        protected IExceptionHandler ExceptionHandler { get; set; } = default!;
+
         MediaPlayerElement _mediaPlayerElement;
         Video _video;
         bool _isMediaPlayerAttached;
@@ -37,46 +39,53 @@ namespace Functionland.FxFiles.Client.App.Platforms.Windows
 
         public async void UpdateSource()
         {
-            bool hasSetSource = false;
-
-            if (_video.Source is UriVideoSource)
+            try
             {
-                string uri = (_video.Source as UriVideoSource).Uri;
-                if (!string.IsNullOrWhiteSpace(uri))
+                bool hasSetSource = false;
+
+                if (_video.Source is UriVideoSource)
                 {
-                    _mediaPlayerElement.Source = MediaSource.CreateFromUri(new Uri(uri));
-                    hasSetSource = true;
+                    string uri = (_video.Source as UriVideoSource).Uri;
+                    if (!string.IsNullOrWhiteSpace(uri))
+                    {
+                        _mediaPlayerElement.Source = MediaSource.CreateFromUri(new Uri(uri));
+                        hasSetSource = true;
+                    }
+                }
+                else if (_video.Source is FileVideoSource)
+                {
+                    string filename = (_video.Source as FileVideoSource).File;
+                    if (!string.IsNullOrWhiteSpace(filename))
+                    {
+                        StorageFile storageFile = await StorageFile.GetFileFromPathAsync(filename);
+                        _mediaPlayerElement.Source = MediaSource.CreateFromStorageFile(storageFile);
+                        hasSetSource = true;
+                    }
+                }
+                else if (_video.Source is ResourceVideoSource)
+                {
+                    string path = "ms-appx:///" + (_video.Source as ResourceVideoSource).Path;
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        _mediaPlayerElement.Source = MediaSource.CreateFromUri(new Uri(path));
+                        hasSetSource = true;
+                    }
+                }
+
+                if (hasSetSource && !_isMediaPlayerAttached)
+                {
+                    _isMediaPlayerAttached = true;
+                    _mediaPlayerElement.MediaPlayer.MediaOpened += OnMediaPlayerMediaOpened;
+                }
+
+                if (hasSetSource && _video.AutoPlay)
+                {
+                    _mediaPlayerElement.AutoPlay = true;
                 }
             }
-            else if (_video.Source is FileVideoSource)
+            catch (Exception ex)
             {
-                string filename = (_video.Source as FileVideoSource).File;
-                if (!string.IsNullOrWhiteSpace(filename))
-                {
-                    StorageFile storageFile = await StorageFile.GetFileFromPathAsync(filename);
-                    _mediaPlayerElement.Source = MediaSource.CreateFromStorageFile(storageFile);                    
-                    hasSetSource = true;
-                }
-            }
-            else if (_video.Source is ResourceVideoSource)
-            {
-                string path = "ms-appx:///" + (_video.Source as ResourceVideoSource).Path;
-                if (!string.IsNullOrWhiteSpace(path))
-                {
-                    _mediaPlayerElement.Source = MediaSource.CreateFromUri(new Uri(path));
-                    hasSetSource = true;
-                }
-            }
-
-            if (hasSetSource && !_isMediaPlayerAttached)
-            {
-                _isMediaPlayerAttached = true;
-                _mediaPlayerElement.MediaPlayer.MediaOpened += OnMediaPlayerMediaOpened;
-            }
-
-            if (hasSetSource && _video.AutoPlay)
-            {
-                _mediaPlayerElement.AutoPlay = true;
+                ExceptionHandler.Handle(ex);
             }
         }
 
