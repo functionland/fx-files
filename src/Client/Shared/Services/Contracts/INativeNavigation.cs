@@ -2,6 +2,6 @@
 {
     public interface INativeNavigation
     {
-        Task NavigateToVideoViewer(string path);
+        Task NavigateToVideoViewer(string path, EventCallback onBack);
     }
 }
