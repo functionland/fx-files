@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics;
+
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
+
 using Prism.Events;
+
 using Timer = System.Timers.Timer;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
@@ -56,7 +59,7 @@ public partial class FileBrowser : IDisposable
     private string? _inlineSearchText = string.Empty;
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
-    private ArtifactCategorySearchType? _artifactsSearchFilterType;
+    private List<ArtifactCategorySearchType> _artifactsSearchFilterTypes = new();
     private PinOptionResult? _searchPinOptionResult;
 
     private FsArtifact? _currentArtifactValue;
@@ -110,7 +113,6 @@ public partial class FileBrowser : IDisposable
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private bool _shouldScrollToItem;
     private bool _isInFileViewer;
     private Timer? _timer;
     private Task? _searchStatusTask;
@@ -1545,8 +1547,7 @@ public partial class FileBrowser : IDisposable
     private async Task HandleSearchTextChangedAsync(string text)
     {
         CancelSelectionMode();
-
-        if (string.IsNullOrWhiteSpace(text) && _artifactsSearchFilterType == null && _artifactsSearchFilterDate == null)
+        if (string.IsNullOrWhiteSpace(text) && _artifactsSearchFilterTypes.Any() is false && _artifactsSearchFilterDate == null)
         {
             _isFileCategoryFilterBoxOpen = true;
         }
@@ -1557,23 +1558,27 @@ public partial class FileBrowser : IDisposable
 
         _isArtifactExplorerLoading = true;
         _searchText = text;
-        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterType);
+        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterTypes);
         if (string.IsNullOrWhiteSpace(SearchFilter?.SearchText) && SearchFilter?.ArtifactDateSearchType == null &&
-            SearchFilter?.ArtifactCategorySearchType == null)
+            (SearchFilter?.ArtifactCategorySearchTypes == null || SearchFilter?.ArtifactCategorySearchTypes.Any() is false))
         {
             _searchCancellationTokenSource?.Cancel();
             _isArtifactExplorerLoading = false;
             _allArtifacts.Clear();
             _displayedArtifacts.Clear();
+            _searchStatusTask = Task.CompletedTask;
             return;
         }
-
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
         RefreshDisplayedArtifacts();
 
         _searchCancellationTokenSource?.Cancel();
+        if (IsDesktop is false)
+        {
+            await HandleSearchUnFocused();
+        }
 
         _searchCancellationTokenSource = new CancellationTokenSource();
         var token = _searchCancellationTokenSource.Token;
@@ -1602,9 +1607,7 @@ public partial class FileBrowser : IDisposable
                     await InvokeAsync(() =>
                     {
                         if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
-                        {
                             _isArtifactExplorerLoading = false;
-                        }
 
                         StateHasChanged();
                     });
@@ -1626,11 +1629,11 @@ public partial class FileBrowser : IDisposable
     }
 
     private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null,
-        ArtifactCategorySearchType? type = null)
+        List<ArtifactCategorySearchType>? type = null)
     {
         SearchFilter ??= new DeepSearchFilter();
         SearchFilter.SearchText = !string.IsNullOrWhiteSpace(searchText) ? searchText : string.Empty;
-        SearchFilter.ArtifactCategorySearchType = type ?? null;
+        SearchFilter.ArtifactCategorySearchTypes = type ?? null;
         SearchFilter.ArtifactDateSearchType = date ?? null;
     }
 
@@ -1915,11 +1918,11 @@ public partial class FileBrowser : IDisposable
         switch (ArtifactExplorerMode)
         {
             case ArtifactExplorerMode.SelectArtifact:
-                GoBackService.OnInit((Task () =>
+                GoBackService.OnInit(Task () =>
                 {
                     CancelSelectionMode();
                     return Task.CompletedTask;
-                }), true, false);
+                }, true, false);
                 break;
 
             case ArtifactExplorerMode.Normal when CurrentArtifact == null && _isInSearchMode is false:
@@ -1977,10 +1980,18 @@ public partial class FileBrowser : IDisposable
         await HandleSearchTextChangedAsync(_searchText);
     }
 
-    private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType? type)
+    private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType type)
     {
-        _artifactsSearchFilterType = _artifactsSearchFilterType == type ? null : type;
-        await HandleSearchTextChangedAsync(_searchText);
+        var isTypeExist = _artifactsSearchFilterTypes.Contains(type);
+        if (isTypeExist)
+        {
+            _artifactsSearchFilterTypes.Remove(type);
+        }
+        else
+        {
+            _artifactsSearchFilterTypes.Add(type);
+        }
+        await HandleSearchAsync(_searchText);
     }
 
     private async Task CancelSearchAsync()
@@ -1998,7 +2009,7 @@ public partial class FileBrowser : IDisposable
         SearchFilter = null;
         _displayedArtifacts.Clear();
         _fxToolBarRef?.HandleCancelSearch();
-        _artifactsSearchFilterType = null;
+        _artifactsSearchFilterTypes.Clear();
         _artifactsSearchFilterDate = null;
         _isFileCategoryFilterBoxOpen = true;
         _searchText = string.Empty;
@@ -2010,8 +2021,8 @@ public partial class FileBrowser : IDisposable
     {
         var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
         CurrentArtifact = destinationArtifact;
-        await HandleSelectArtifactAsync(destinationArtifact);
-        ScrolledToArtifact = artifact;
+        await OpenFolderAsync(destinationArtifact);
+        ScrollArtifact = artifact;
     }
 
     private async Task CloseFileViewer()

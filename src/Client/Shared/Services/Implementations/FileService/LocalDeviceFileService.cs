@@ -823,14 +823,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-            var inLineDeepSearch = new DeepSearchFilter
+            var inLineDeepSearchFilter = new DeepSearchFilter
             {
                 SearchText = deepSearchFilter.SearchText,
-                ArtifactCategorySearchType = deepSearchFilter.ArtifactCategorySearchType,
+                ArtifactCategorySearchTypes = deepSearchFilter.ArtifactCategorySearchTypes,
                 ArtifactDateSearchType = deepSearchFilter.ArtifactDateSearchType
             };
+
             var allFileAndFolders = Directory.EnumerateFileSystemEntries(path,
-                !string.IsNullOrWhiteSpace(inLineDeepSearch.SearchText) ? $"*{inLineDeepSearch.SearchText}*" : "*",
+                !string.IsNullOrWhiteSpace(inLineDeepSearchFilter.SearchText) ? $"*{inLineDeepSearchFilter.SearchText}*" : "*",
                 new EnumerationOptions
                 {
                     IgnoreInaccessible = true,
@@ -838,24 +839,34 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     MatchCasing = MatchCasing.CaseInsensitive,
                     RecurseSubdirectories = true
                 })
-                .Select(c => new
+                .Select(fullPath => new
                 {
-                    FullPath = c,
-                    ArtifactInfo = new DirectoryInfo(c)
+                    FullPath = fullPath,
+                    ArtifactInfo = new DirectoryInfo(fullPath)
                 });
 
-            if (inLineDeepSearch.ArtifactCategorySearchType.HasValue)
+            if (inLineDeepSearchFilter.ArtifactCategorySearchTypes is not null && inLineDeepSearchFilter.ArtifactCategorySearchTypes.Any())
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
-                allFileAndFolders = allFileAndFolders.Where(f =>
-                    FsArtifactUtils.GetSearchCategoryTypeExtensions(inLineDeepSearch.ArtifactCategorySearchType.Value)
-                                   .Contains(f.ArtifactInfo.Extension.ToLower()));
+
+                List<string> categoryTypeList = new();
+
+                foreach(var type in inLineDeepSearchFilter.ArtifactCategorySearchTypes)
+                {
+                    var types = FsArtifactUtils.GetSearchCategoryTypeExtensions(type);
+
+                    types.ForEach(categoryTypeList.Add);
+                }
+
+                allFileAndFolders = allFileAndFolders.Where(f => categoryTypeList.Any() &&
+                                                            categoryTypeList.Contains(f.ArtifactInfo.Extension.ToLower()));
             }
 
-            if (inLineDeepSearch.ArtifactDateSearchType.HasValue)
+            if (inLineDeepSearchFilter.ArtifactDateSearchType.HasValue)
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
-                var dateDiff = inLineDeepSearch.ArtifactDateSearchType switch
+
+                var dateDiff = inLineDeepSearchFilter.ArtifactDateSearchType switch
                 {
                     ArtifactDateSearchType.Yesterday => 1,
                     ArtifactDateSearchType.Past7Days => 7,
@@ -905,15 +916,16 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             foreach (var drive in drives)
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
-                await foreach (var item in GetAllFileAndFoldersAsync(drive.FullPath, deepSearchFilter, cancellationToken))
+
+                await foreach (var artifact in GetAllFileAndFoldersAsync(drive.FullPath, deepSearchFilter, cancellationToken))
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    yield return item;
+
+                    yield return artifact;
                 }
             }
             yield break;
         }
-
 
         public Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress = null, CancellationToken? cancellationToken = null)
         {
