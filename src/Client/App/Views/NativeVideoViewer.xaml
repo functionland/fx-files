@@ -36,7 +36,7 @@
     <Grid BackgroundColor="{StaticResource AppBackgroundColor}">
         <media:Video
             x:Name="media"
-            AreTransportControlsEnabled="True"
+            AreTransportControlsEnabled="False"
             AutoPlay="True"
             BackgroundColor="{StaticResource AppBackgroundColor}"
             VerticalOptions="FillAndExpand">
@@ -47,7 +47,6 @@
         <Frame
             x:Name="header"
             Padding="21,0"
-            BackgroundColor="Black"
             VerticalOptions="StartAndExpand">
             <StackLayout
                 HeightRequest="72"
@@ -55,16 +54,110 @@
                 Spacing="16"
                 VerticalOptions="CenterAndExpand">
                 <ImageButton
-                    BackgroundColor="Black"
                     Clicked="Back_Clicked"
                     HorizontalOptions="StartAndExpand"
                     Source="back.png" />
                 <ImageButton
-                    BackgroundColor="Black"
                     Clicked="Minimize"
                     IsVisible="{OnIdiom Desktop=false,
                                         Default=true}"
                     Source="pip.png" />
+            </StackLayout>
+        </Frame>
+        <Frame x:Name="mediaControls" VerticalOptions="EndAndExpand">
+            <StackLayout
+                HeightRequest="110"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand">
+                <StackLayout BindingContext="{x:Reference media}" Orientation="Vertical">
+                    <!--<Slider
+                        Margin="{OnPlatform Android='6,0',
+                                            Default='21,0'}"
+                        HeightRequest="35"
+                        HorizontalOptions="FillAndExpand"
+                        Maximum="{Binding Source={x:Reference media}, Path=Duration, Converter={StaticResource TimeSpanConverter}}"
+                        MaximumTrackColor="#495057"
+                        MinimumTrackColor="White"
+                        ThumbColor="White"
+                        Value="{Binding Source={x:Reference media}, Path=Position, Converter={StaticResource TimeSpanConverter}}">
+                        <Slider.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Source={x:Reference media}, Path=Status}"
+                                TargetType="Slider"
+                                Value="{x:Static media:VideoStatus.NotReady}">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </Slider.Triggers>
+                    </Slider>-->
+                    <media:PositionSlider
+                        Grid.Row="2"
+                        Margin="10,0,10,10"
+                        Position="{Binding Position}"
+                        Duration="{Binding Duration}">
+                        <media:PositionSlider.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Status}"
+                                TargetType="media:PositionSlider"
+                                Value="{x:Static media:VideoStatus.NotReady}">
+                                <Setter Property="IsEnabled" Value="False" />
+                            </DataTrigger>
+                        </media:PositionSlider.Triggers>
+                    </media:PositionSlider>
+                    <StackLayout Orientation="Horizontal">
+                        <Label
+                            Margin="21,0"
+                            HorizontalOptions="StartAndExpand"
+                            Text="{Binding Source={x:Reference media}, Path=Position, Converter={converters:TimeSpanToStringConverter}}"
+                            TextColor="White"
+                            VerticalOptions="CenterAndExpand" />
+                        <Label
+                            Margin="21,0"
+                            HorizontalOptions="EndAndExpand"
+                            Text="{Binding Source={x:Reference media}, Path=Duration, Converter={converters:TimeSpanToStringConverter}}"
+                            TextColor="White"
+                            VerticalOptions="CenterAndExpand" />
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout
+                    Margin="10"
+                    HorizontalOptions="CenterAndExpand"
+                    Orientation="Horizontal"
+                    Spacing="40">
+                    <ImageButton
+                        Clicked="Backward_Clicked"
+                        HorizontalOptions="Center"
+                        Source="backward.png" />
+                    <ImageButton
+                        x:Name="playButton"
+                        Clicked="PausePlay_Clicked"
+                        HorizontalOptions="Center"
+                        Source="pause.png">
+                        <ImageButton.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Source={x:Reference media}, Path=Status}"
+                                TargetType="ImageButton"
+                                Value="{x:Static media:VideoStatus.NotReady}">
+                                <Setter Property="Source" Value="play.png" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding Source={x:Reference media}, Path=Status}"
+                                TargetType="ImageButton"
+                                Value="{x:Static media:VideoStatus.Paused}">
+                                <Setter Property="Source" Value="play.png" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding Source={x:Reference media}, Path=Status}"
+                                TargetType="ImageButton"
+                                Value="{x:Static media:VideoStatus.Playing}">
+                                <Setter Property="Source" Value="pause.png" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
+                    <ImageButton
+                        Clicked="Forward_Clicked"
+                        HorizontalOptions="Center"
+                        Source="forward.png" />
+                </StackLayout>
             </StackLayout>
         </Frame>
     </Grid>

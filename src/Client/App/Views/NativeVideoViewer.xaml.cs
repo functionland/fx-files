@@ -21,7 +21,7 @@ public partial class NativeVideoViewer : ContentPage
         get { return _isInPictureInPicture; }
     }
 
-    private readonly string _filePath;
+    private readonly string? _filePath;
 
     public NativeVideoViewer(string path)
     {
@@ -30,9 +30,7 @@ public partial class NativeVideoViewer : ContentPage
         if (path is not null)
         {
             _filePath = path;
-
             media.Source = VideoSource.FromFile(_filePath);
-            media.Play();
         }
     }
 
@@ -67,7 +65,6 @@ public partial class NativeVideoViewer : ContentPage
     {
         try
         {
-            media.Stop();
             await Navigation.PopAsync();
             media.Handler?.DisconnectHandler();
         }
@@ -80,6 +77,7 @@ public partial class NativeVideoViewer : ContentPage
     public void Minimize(object sender, EventArgs e)
     {
         header.IsVisible = false;
+        mediaControls.IsVisible = false;
 
 #if ANDROID
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -99,6 +97,19 @@ public partial class NativeVideoViewer : ContentPage
     private void media_Tapped(object sender, EventArgs e)
     {
         header.IsVisible = !header.IsVisible;
+        mediaControls.IsVisible = !mediaControls.IsVisible;
+    }
+
+    private void PausePlay_Clicked(object sender, EventArgs e)
+    {
+        if (media.Status == VideoStatus.Playing)
+        {
+            media.Pause();
+        }
+        else if (media.Status == VideoStatus.Paused || media.Status == VideoStatus.NotReady)
+        {
+            media.Play();
+        }
     }
 
     private void Backward_Clicked(object sender, EventArgs e)
