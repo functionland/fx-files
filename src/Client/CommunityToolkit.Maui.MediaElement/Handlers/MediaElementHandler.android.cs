@@ -80,6 +80,12 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, MauiMediaEl
 		handler.mediaManager?.Stop(position);
 	}
 
+	protected override void DisconnectHandler(MauiMediaElement platformView)
+	{
+		platformView.Dispose();
+		base.DisconnectHandler(platformView);
+	}
+
 	public void Dispose()
 	{
 		Dispose(true);

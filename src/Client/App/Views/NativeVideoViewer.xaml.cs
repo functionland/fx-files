@@ -72,9 +72,10 @@ public partial class NativeVideoViewer : ContentPage
     {
         try
         {
-            media.Stop();
-            media.Source = null;
+        //    media.Stop();
+        //    media.Source = null;
             await Navigation.PopAsync();
+            media.Handler?.DisconnectHandler();
             await OnBack.InvokeAsync();
         }
         catch (Exception ex)
