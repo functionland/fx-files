@@ -796,7 +796,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             var inLineDeepSearchFilter = new DeepSearchFilter
             {
                 SearchText = deepSearchFilter.SearchText,
-                ArtifactCategorySearchType = deepSearchFilter.ArtifactCategorySearchType,
+                ArtifactCategorySearchTypes = deepSearchFilter.ArtifactCategorySearchTypes,
                 ArtifactDateSearchType = deepSearchFilter.ArtifactDateSearchType
             };
 
@@ -815,15 +815,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ArtifactInfo = new DirectoryInfo(fullPath)
                 });
 
-            if (inLineDeepSearchFilter.ArtifactCategorySearchType is not null && inLineDeepSearchFilter.ArtifactCategorySearchType.Any())
+            if (inLineDeepSearchFilter.ArtifactCategorySearchTypes is not null && inLineDeepSearchFilter.ArtifactCategorySearchTypes.Any())
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
                 List<string> categoryTypeList = new();
 
-                foreach(var type in inLineDeepSearchFilter.ArtifactCategorySearchType)
+                foreach(var type in inLineDeepSearchFilter.ArtifactCategorySearchTypes)
                 {
-                    var types = FsArtifactUtils.GetSearchCategoryTypeExtensions(type.Value);
+                    var types = FsArtifactUtils.GetSearchCategoryTypeExtensions(type);
 
                     types.ForEach(categoryTypeList.Add);
                 }
