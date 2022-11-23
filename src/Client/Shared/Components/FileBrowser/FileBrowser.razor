@@ -17,7 +17,7 @@
 
     @if (CurrentArtifact != null)
     {
-        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService" />
+        <FxBreadcrumbs BreadcrumbsPath="_breadCrumbsPath" />
     }
 
     <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">

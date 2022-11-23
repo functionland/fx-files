@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Models;
+
+namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
@@ -8,6 +10,7 @@ public partial class ArtifactSelectionModal
     private FsArtifact? _currentArtifact;
     private ArtifactActionResult? _artifactActionResult;
     private InputModal _inputModalRef = default!;
+    private string[] _breadCrumbsPath = Array.Empty<string>();
 
     [Parameter] public bool IsMultiple { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
@@ -24,6 +27,7 @@ public partial class ArtifactSelectionModal
 
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
+        _breadCrumbsPath = FileService.GetShowablePath(_currentArtifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
         _artifactActionResult = artifactActionResult;
         await LoadArtifacts(artifact?.FullPath);
 
@@ -36,8 +40,8 @@ public partial class ArtifactSelectionModal
     }
     private async Task SelectArtifact(FsArtifact artifact)
     {
-        await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");
         _currentArtifact = artifact;
+        _breadCrumbsPath = FileService.GetShowablePath(_currentArtifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
         await LoadArtifacts(artifact.FullPath);
         StateHasChanged();
     }
@@ -129,6 +133,7 @@ public partial class ArtifactSelectionModal
         try
         {
             _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
+            _breadCrumbsPath = FileService.GetShowablePath(_currentArtifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {

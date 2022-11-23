@@ -76,6 +76,7 @@ public partial class FileBrowser
             AppStateStore.CurrentMyDeviceArtifact = value;
         }
     }
+    private string[] _breadCrumbsPath = Array.Empty<string>();
 
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _allArtifacts = new();
@@ -938,6 +939,7 @@ public partial class FileBrowser
             await JSRuntime.InvokeVoidAsync("OnScrollEvent");
 
             CurrentArtifact = artifact;
+            _breadCrumbsPath = FileService.GetShowablePath(CurrentArtifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
             _displayedArtifacts = new List<FsArtifact>();
 
             if (!string.IsNullOrWhiteSpace(_inlineSearchText))
@@ -1596,11 +1598,13 @@ public partial class FileBrowser
         try
         {
             CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact.ParentFullPath);
+            _breadCrumbsPath = FileService.GetShowablePath(CurrentArtifact.FullPath).Trim().Split("/", StringSplitOptions.RemoveEmptyEntries);
         }
         catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
         {
             CurrentArtifact = null;
         }
+        
     }
 
     private void RefreshDisplayedArtifacts(
