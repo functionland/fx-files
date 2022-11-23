@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics;
+
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
+
 using Prism.Events;
+
 using Timer = System.Timers.Timer;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
@@ -32,7 +35,7 @@ public partial class FileBrowser
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
     private string ProgressBarCurrentSubText { get; set; } = default!;
-    private int ProgressBarCurrentValue { get; set; }
+    private double ProgressBarCurrentValue { get; set; }
     private int ProgressBarMax { get; set; }
     private CancellationTokenSource? _progressBarCts;
 
@@ -101,7 +104,6 @@ public partial class FileBrowser
     private bool _isArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
-    private bool _shouldScrollToItem;
     private bool _isInFileViewer;
     private Timer? _timer;
     private Task? _searchStatusTask;
@@ -171,8 +173,9 @@ public partial class FileBrowser
 
     private void HandleProgressBar(string currentText)
     {
-        ProgressBarCurrentValue++;
-        ProgressBarCurrentSubText = $"{ProgressBarCurrentValue} of {ProgressBarMax}";
+        ProgressBarCurrentValue += 0.5;
+        var roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
+        ProgressBarCurrentSubText = $"{roundedProgressCount} of {ProgressBarMax}";
         ProgressBarCurrentText = currentText;
     }
 
@@ -424,6 +427,7 @@ public partial class FileBrowser
                         ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                         ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                         await InvokeAsync(StateHasChanged);
+                        await _progressModalRef.RefreshAsync(); 
                     },
                     cancellationToken: _progressBarCts.Token);
             }
@@ -468,6 +472,7 @@ public partial class FileBrowser
                                 ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                                 ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                                 await InvokeAsync(StateHasChanged);
+                                await _progressModalRef.RefreshAsync();
                             },
                             cancellationToken: _progressBarCts.Token);
 
@@ -645,8 +650,8 @@ public partial class FileBrowser
         if (_artifactDetailModalRef is null)
             return;
 
-        var result = await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, (isDrive || (IsInRoot(CurrentArtifact) && !_isInSearch)));
-
+        var result =
+            await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, isDrive || IsInRoot(CurrentArtifact));
         ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         switch (result.ResultType)
@@ -1466,15 +1471,19 @@ public partial class FileBrowser
             _isArtifactExplorerLoading = false;
             _allArtifacts.Clear();
             _displayedArtifacts.Clear();
+            _searchStatusTask = Task.CompletedTask;
             return;
         }
-
         _allArtifacts.Clear();
         _displayedArtifacts.Clear();
 
         RefreshDisplayedArtifacts();
 
         _searchCancellationTokenSource?.Cancel();
+        if (IsDesktop is false)
+        {
+            await HandleSearchUnFocused();
+        }
 
         _searchCancellationTokenSource = new CancellationTokenSource();
         var token = _searchCancellationTokenSource.Token;
@@ -1503,9 +1512,7 @@ public partial class FileBrowser
                     await InvokeAsync(() =>
                     {
                         if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
-                        {
                             _isArtifactExplorerLoading = false;
-                        }
 
                         StateHasChanged();
                     });
@@ -1817,11 +1824,11 @@ public partial class FileBrowser
         switch (mode)
         {
             case ArtifactExplorerMode.SelectArtifact:
-                GoBackService.OnInit((Task () =>
+                GoBackService.OnInit(Task () =>
                 {
                     CancelSelectionMode();
                     return Task.CompletedTask;
-                }), true, false);
+                }, true, false);
                 break;
             case ArtifactExplorerMode.Normal when CurrentArtifact == null && _isInSearch is false:
                 GoBackService.OnInit(null, true, true);
@@ -1915,7 +1922,7 @@ public partial class FileBrowser
     {
         var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
         CurrentArtifact = destinationArtifact;
-        await HandleSelectArtifactAsync(destinationArtifact);
+        await OpenFolderAsync(destinationArtifact);
         ScrollArtifact = artifact;
     }
 

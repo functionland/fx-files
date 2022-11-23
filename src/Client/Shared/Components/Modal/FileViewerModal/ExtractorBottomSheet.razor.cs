@@ -17,7 +17,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         // ProgressBar
         private string ProgressBarCurrentText { get; set; } = default!;
         private string ProgressBarCurrentSubText { get; set; } = default!;
-        private int ProgressBarCurrentValue { get; set; }
+        private double ProgressBarCurrentValue { get; set; }
         private int ProgressBarMax { get; set; }
         private CancellationTokenSource? _progressBarCts;
         private void ProgressBarOnCancel()

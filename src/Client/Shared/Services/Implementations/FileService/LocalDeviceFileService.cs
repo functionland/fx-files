@@ -112,11 +112,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
-            int? progressCount = null;
+            double progressCount = 0;
 
             foreach (var artifact in artifacts)
             {
-                if (onProgress is not null && progressCount == null)
+                if (onProgress is not null)
                 {
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
@@ -342,11 +342,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
         {
-            int? progressCount = null;
+            double progressCount = 0;
 
             foreach (var artifact in artifacts)
             {
-                if (onProgress is not null && shouldProgress && progressCount == null)
+                if (onProgress is not null && shouldProgress)
                 {
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
@@ -438,11 +438,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
         {
-            int? progressCount = null;
+            double progressCount = 0;
 
             foreach (var artifact in artifacts)
             {
-                if (onProgress is not null && shouldProgress && progressCount == null)
+                if (onProgress is not null && shouldProgress)
                 {
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }

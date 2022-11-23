@@ -349,7 +349,7 @@
     <value>Cancel</value>
   </data>
   <data name="MoveFileModal" xml:space="preserve">
-    <value>Moving items</value>
+    <value>Moving item(s)</value>
   </data>
   <data name="ReplaceButtonModal" xml:space="preserve">
     <value>Replace {0} item(s) </value>
@@ -490,16 +490,16 @@
     <value>Blox pool is not found.</value>
   </data>
   <data name="CopyFiles" xml:space="preserve">
-    <value>Copying items</value>
+    <value>Copying item(s)</value>
   </data>
   <data name="DeletingFiles" xml:space="preserve">
-    <value>Deleting items</value>
+    <value>Deleting item(s)</value>
   </data>
   <data name="MovingFiles" xml:space="preserve">
-    <value>Moving items</value>
+    <value>Moving item(s)</value>
   </data>
   <data name="ReplacingFiles" xml:space="preserve">
-    <value>Replacing items</value>
+    <value>Replacing item(s)</value>
   </data>
   <data name="ImportFromApps" xml:space="preserve">
     <value>Import from apps</value>

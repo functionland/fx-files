@@ -11,7 +11,6 @@
         <ResourceDictionary>
             <Color x:Key="AppBackgroundColor">#212529</Color>
             <converters:TimeSpanToDoubleConverter x:Key="TimeSpanConverter" />
-            <converters:TimeSpanToStringConverter x:Key="TimeSpanStringConverter" />
             <Style TargetType="ImageButton">
                 <Setter Property="BackgroundColor" Value="{StaticResource AppBackgroundColor}" />
                 <Setter Property="BorderColor" Value="Transparent" />
@@ -92,13 +91,13 @@
                         <Label
                             Margin="21,0"
                             HorizontalOptions="StartAndExpand"
-                            Text="{Binding Source={x:Reference media}, Path=Position, Converter={converters:TimeSpanToStringConverter}}"
+                            Text="{Binding Source={x:Reference media}, Path=Position, StringFormat='{0:hh\\:mm\\:ss}'}"
                             TextColor="White"
                             VerticalOptions="CenterAndExpand" />
                         <Label
                             Margin="21,0"
                             HorizontalOptions="EndAndExpand"
-                            Text="{Binding Source={x:Reference media}, Path=Duration, Converter={converters:TimeSpanToStringConverter}}"
+                            Text="{Binding Source={x:Reference media}, Path=Duration, StringFormat='{0:hh\\:mm\\:ss}'}"
                             TextColor="White"
                             VerticalOptions="CenterAndExpand" />
                     </StackLayout>

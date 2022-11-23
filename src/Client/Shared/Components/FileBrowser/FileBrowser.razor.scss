@@ -64,15 +64,15 @@
 }
 
 .hide-root-title {
-   display:none;
-   opacity: 0;
-   height: 0;
+    display: none;
+    opacity: 0;
+    height: 0;
 }
 
 .show-root-title {
     opacity: 1;
     height: 56px;
-    transition: opacity 300ms linear  50ms;
+    transition: opacity 300ms linear 50ms;
 }
 
 .disable-pinned {
@@ -231,11 +231,21 @@
                 }
             }
 
-            .filter-btn:hover {
+            .filter-btn:active {
 
                 &:before {
                     transition: color 200ms linear;
                     color: $green-dark-base;
+                }
+            }
+
+            @media(hover: hover) and (pointer: fine) {
+                .filter-btn:hover {
+
+                    &:before {
+                        transition: color 200ms linear;
+                        color: $green-dark-base;
+                    }
                 }
             }
 
@@ -600,7 +610,7 @@
 }
 
 .pin-artifacts-hide {
-   display: none
+    display: none
 }
 
 .pin-artifacts-show {
