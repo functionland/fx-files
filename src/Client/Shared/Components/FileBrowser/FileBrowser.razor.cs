@@ -180,7 +180,7 @@ public partial class FileBrowser : IDisposable
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    // ToDo: MehranCheck
+    // ToDo: Remove this
     [Obsolete("Use UpdateProgressAsync instead.")]
     private void HandleProgressBar(string currentText)
     {
@@ -189,15 +189,15 @@ public partial class FileBrowser : IDisposable
         ProgressBarCurrentText = currentText;
     }
 
-    // ToDo: MehranCheck
-    [Obsolete("Use UpdateProgressAsync instead.")]
-    private void InitialProgressBar(int maxValue)
-    {
-        ProgressBarCurrentValue = 0;
-        ProgressBarMax = maxValue;
-        ProgressBarCurrentSubText = string.Empty;
-        ProgressBarCurrentText = "Loading...";
-    }
+    //// ToDo: MehranCheck
+    //[Obsolete("Use UpdateProgressAsync instead.")]
+    //private void InitialProgressBar(int maxValue)
+    //{
+    //    ProgressBarCurrentValue = 0;
+    //    ProgressBarMax = maxValue;
+    //    ProgressBarCurrentSubText = string.Empty;
+    //    ProgressBarCurrentText = "Loading...";
+    //}
 
     private async Task UpdateProgressAsync(
         string? text = null,
@@ -365,67 +365,17 @@ public partial class FileBrowser : IDisposable
                     {
                         case FsArtifactType.File:
                         {
-                            var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(sourceArtifact.FullPath);
+                            
                             if (sourceArtifact.ParentFullPath != null)
                             {
-                                var pathWithOutExtenstion =
-                                    Path.Combine(sourceArtifact.ParentFullPath, nameWithOutExtenstion);
-                                var oldArtifactPath = sourceArtifact.FullPath;
-
-                                var copyText = " - Copy";
-
-                                while (true)
-                                {
-                                    var counter = 1;
-                                    var fullPathWithCopy = pathWithOutExtenstion + copyText;
-                                    fullPathWithCopy =
-                                        Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
-
-                                    if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
-
-                                    counter++;
-                                    copyText += $" ({counter})";
-                                }
-
-                                var newArtifactPath =
-                                    Path.ChangeExtension(pathWithOutExtenstion + copyText,
-                                        sourceArtifact.FileExtension);
-
-                                var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
-                                await FileService.CreateFileAsync(newArtifactPath, fileStream);
+                                await CopyFileWithCopyPostfixAsync(sourceArtifact);
                             }
 
                             break;
                         }
                         case FsArtifactType.Folder:
                         {
-                            var oldArtifactPath = sourceArtifact.FullPath;
-                            var oldArtifactParentPath = sourceArtifact.ParentFullPath;
-                            var oldArtifactName = sourceArtifact.Name;
-
-                            var copyText = " - Copy";
-
-                            while (true)
-                            {
-                                var counter = 1;
-                                var fullPathWithCopy = oldArtifactPath + copyText;
-
-                                if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
-
-                                counter++;
-                                copyText += $" ({counter})";
-                            }
-
-                            var newArtifactPath = oldArtifactPath + copyText;
-                            var newArtifactName = oldArtifactName + copyText;
-                            if (oldArtifactParentPath != null)
-                            {
-                                await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
-                            }
-
-                            var oldArtifactChildren =
-                                await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
-                            await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
+                            await CopyFolderWithCopyPostfixAsync(sourceArtifact);
                             break;
                         }
                         case FsArtifactType.Drive:
@@ -457,6 +407,90 @@ public partial class FileBrowser : IDisposable
 
             await CloseFileViewer();
         }
+    }
+
+    private async Task CopyFolderWithCopyPostfixAsync(FsArtifact sourceArtifact)
+    {
+        // C:\folder\subfolder
+        var oldArtifactPath = sourceArtifact.FullPath;
+        
+        // C:\folder
+        var oldArtifactParentPath = sourceArtifact.ParentFullPath;
+        
+        // subfolder
+        var oldArtifactName = sourceArtifact.Name;
+
+        var counter = 0;
+        string fullPathWithCopy;
+        while (true)
+        {
+            fullPathWithCopy = $"{oldArtifactPath} - Copy"
+                               + (counter>1 ? $" {counter}" : string.Empty);
+
+            var exists = (await FileService.CheckPathExistsAsync(new[] { fullPathWithCopy })).First().IsPathExist ??
+                         false;
+
+            if (!exists)
+                break;
+
+            counter++;
+        }
+
+        // C:\folder\subfolder - copy
+        var newArtifactPath = fullPathWithCopy;
+        
+        //if (oldArtifactParentPath != null)
+        //{
+            var newArtifactName = Path.GetFileName(newArtifactPath);
+            await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
+        //}
+
+        var oldArtifactChildren =
+            await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
+        await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
+    }
+
+    private async Task<string> CopyFileWithCopyPostfixAsync(FsArtifact sourceArtifact)
+    {
+        var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(sourceArtifact.FullPath);
+        // C:\folder\file1.jpg
+        var pathWithOutExtenstion =
+            Path.Combine(sourceArtifact.ParentFullPath, nameWithOutExtenstion);
+
+        var oldArtifactPath = sourceArtifact.FullPath;
+
+        var copyText = " - Copy";
+
+        while (true)
+        {
+            var counter = 1;
+
+            // C:\folder\file1 - Copy
+            var fullPathWithCopy = pathWithOutExtenstion + copyText;
+
+            // C:\folder\file1 - Copy.jpg
+            fullPathWithCopy =
+                Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
+
+            // Fix the FileService API.
+            var exists = (await FileService.CheckPathExistsAsync(new[] { fullPathWithCopy })).First().IsPathExist ?? false;
+            if (!exists)
+                break;
+
+            counter++;
+            copyText += $" ({counter})";
+        }
+
+        var newArtifactPath =
+            Path.ChangeExtension(pathWithOutExtenstion + copyText,
+                sourceArtifact.FileExtension);
+
+        // ToDo: Test
+        await FileService.CopyFileAsync(sourceArtifact, newArtifactPath);
+        //var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
+        //await FileService.CreateFileAsync(newArtifactPath, fileStream);
+
+        return newArtifactPath;
     }
 
     public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
@@ -1506,9 +1540,10 @@ public partial class FileBrowser : IDisposable
 
 
 
-    private async Task HandleSearchAsync(string text)
+    private async Task HandleSearchTextChangedAsync(string text)
     {
         CancelSelectionMode();
+
         if (string.IsNullOrWhiteSpace(text) && _artifactsSearchFilterType == null && _artifactsSearchFilterDate == null)
         {
             _isFileCategoryFilterBoxOpen = true;
@@ -1937,13 +1972,13 @@ public partial class FileBrowser : IDisposable
     private async Task ChangeArtifactsSearchFilterDate(ArtifactDateSearchType? date)
     {
         _artifactsSearchFilterDate = _artifactsSearchFilterDate == date ? null : date;
-        await HandleSearchAsync(_searchText);
+        await HandleSearchTextChangedAsync(_searchText);
     }
 
     private async Task ChangeArtifactsSearchFilterType(ArtifactCategorySearchType? type)
     {
         _artifactsSearchFilterType = _artifactsSearchFilterType == type ? null : type;
-        await HandleSearchAsync(_searchText);
+        await HandleSearchTextChangedAsync(_searchText);
     }
 
     private async Task CancelSearchAsync()

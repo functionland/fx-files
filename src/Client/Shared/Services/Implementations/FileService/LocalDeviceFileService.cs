@@ -30,6 +30,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return ignoredList;
         }
 
+        public async Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            File.Copy(artifact.FullPath, destinationFullPath);
+        }
+
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
         {
             var lowerCaseFile = StringLocalizer[nameof(AppStrings.File)].Value.ToLowerFirstChar();
@@ -358,6 +364,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
+                    
                     var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
                     //if (!overwrite && destinationInfo.Exists)
@@ -601,7 +608,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return artifacts;
         }
 
-        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths, CancellationToken? cancellationToken = null)
         {
             var fsArtifactList = new List<FsArtifactChanges>();
 

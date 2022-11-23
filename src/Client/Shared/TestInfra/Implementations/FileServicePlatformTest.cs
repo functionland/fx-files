@@ -147,7 +147,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 //5. Rename a folder which contains multiple files
                 await fileService.RenameFolderAsync(Path.Combine(testRoot, "Folder 2/Folder 31"), "Folder 21");
                 var fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/Folder 21"),
-                                                                                                      Path.Combine(testRoot, "Folder 2/Folder 31") });
+                    Path.Combine(testRoot, "Folder 2/Folder 31") });
                 var newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
                 var oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
 
@@ -162,7 +162,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 await fileService.RenameFileAsync(Path.Combine(testRoot, "Folder 2/file31[size=5mb].txt"), "file21[size=5mb]");
 
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/file21[size=5mb].txt"),
-                                                                                                  Path.Combine(testRoot, "Folder 2/file31[size=5mb].txt")});
+                    Path.Combine(testRoot, "Folder 2/file31[size=5mb].txt")});
                 newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
                 oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
 
@@ -204,7 +204,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 Assert.AreEqual(4, desArtifacts.Count, "OverWrite duplicate folder. Extra files added in duplicate folder.");
 
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 1/Folder 11/file113[size=5mb].txt"),
-                                                                                                  Path.Combine(testRoot, "Folder 1/Folder 11/file114[size=5mb].txt")});
+                    Path.Combine(testRoot, "Folder 1/Folder 11/file114[size=5mb].txt")});
 
                 var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
                 var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;

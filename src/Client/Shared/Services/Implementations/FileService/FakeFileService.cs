@@ -372,7 +372,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             }
         }
 
-        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths,
+            CancellationToken? cancellationToken = null)
         {
             var fsArtifactList = new List<FsArtifactChanges>();
 
