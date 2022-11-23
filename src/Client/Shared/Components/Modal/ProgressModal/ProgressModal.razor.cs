@@ -12,7 +12,7 @@ public partial class ProgressModal
     public double ProgressCurrentValue { get; set; } = default;
 
     [Parameter]
-    public int ProgressMax { get; set; } = 100;
+    public int ProgressMax { get; set; }
 
     [Parameter]
     public EventCallback OnCancel { get; set; }
@@ -28,6 +28,11 @@ public partial class ProgressModal
         Title = title;
         IsCancellable = isCancelable;
         _isModalOpen = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async Task RefreshAsync()
+    {
         await InvokeAsync(StateHasChanged);
     }
 
