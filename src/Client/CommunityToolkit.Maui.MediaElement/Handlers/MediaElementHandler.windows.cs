@@ -1,6 +1,7 @@
 ﻿using System;
 using CommunityToolkit.Maui.MediaElement.PlatformView;
 using Microsoft.Maui.Handlers;
+using Microsoft.UI.Xaml.Controls;
 
 namespace CommunityToolkit.Maui.MediaElement;
 
@@ -79,5 +80,11 @@ public partial class MediaElementHandler : ViewHandler<MediaElement, MauiMediaEl
 
 		var position = ((MediaPositionEventArgs)args).Position;
 		handler.mediaManager?.Stop(position);
+	}
+
+    protected override void DisconnectHandler(MauiMediaElement platformView)
+	{
+		platformView.Dispose();
+		base.DisconnectHandler(platformView);
 	}
 }
