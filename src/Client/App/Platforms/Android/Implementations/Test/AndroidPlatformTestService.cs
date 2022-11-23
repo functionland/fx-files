@@ -6,12 +6,19 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations.Test
 
 public partial class AndroidPlatformTestService : PlatformTestService
 {
+    // File Service
     [AutoInject] InternalAndroidFileServicePlatformTest InternalAndroidFileServicePlatformTest { get; set; }
     [AutoInject] ExternalAndroidFileServicePlatformTest ExternalAndroidFileServicePlatformTest { get; set; }
+
+    // Thumbnail Plugins
     [AutoInject] AndroidImageThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidImageThumbnailPluginPlatformTest { get; set; }
     [AutoInject] AndroidImageThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidImageThumbnailPluginPlatformTest { get; set; }
     [AutoInject] AndroidPdfThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidPdfThumbnailPluginPlatformTest { get; set; }
     [AutoInject] AndroidPdfThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidPdfThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidVideoThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidVideoThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidVideoThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidVideoThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidAudioThumbnailPluginPlatformTest<ILocalDeviceFileService> LocalAndroidAudioThumbnailPluginPlatformTest { get; set; }
+    [AutoInject] AndroidAudioThumbnailPluginPlatformTest<IFulaFileService> FulaAndroidAudioThumbnailPluginPlatformTest { get; set; }
 
     protected override List<IPlatformTest> OnGetTests()
     {
@@ -22,7 +29,11 @@ public partial class AndroidPlatformTestService : PlatformTestService
             LocalAndroidImageThumbnailPluginPlatformTest,
             FulaAndroidImageThumbnailPluginPlatformTest,
             LocalAndroidPdfThumbnailPluginPlatformTest,
-            FulaAndroidPdfThumbnailPluginPlatformTest
+            FulaAndroidPdfThumbnailPluginPlatformTest,
+            LocalAndroidVideoThumbnailPluginPlatformTest,
+            FulaAndroidVideoThumbnailPluginPlatformTest,
+            LocalAndroidAudioThumbnailPluginPlatformTest,
+            FulaAndroidAudioThumbnailPluginPlatformTest
         };
     }
 }

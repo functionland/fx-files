@@ -2,6 +2,8 @@
 {
     public enum SyncStatus
     {
-
+        Inprogress,
+        Success,
+        Fail
     }
 }

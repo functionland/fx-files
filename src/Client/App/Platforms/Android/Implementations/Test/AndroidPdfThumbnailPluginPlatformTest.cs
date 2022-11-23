@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlugin;
+﻿using Android.Graphics;
+using Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlugin;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations.Test;
 
@@ -19,9 +20,14 @@ public class AndroidPdfThumbnailPluginPlatformTest<TFileService> : PdfThumbnailP
 
     protected override string OnGetRootPath() => "/storage/emulated/0/";
 
-    protected override (int width, int height) GetArtifactWidthAndHeight(string pdfPath)
+    protected override (int width, int height) GetArtifactWidthAndHeight(string filePath)
     {
-        //ToDo: Grab the first page of the pdf and get its dimension.
-        throw new NotImplementedException();
+        BitmapFactory.Options options = new()
+        {
+            InJustDecodeBounds = true
+        };
+        _ = BitmapFactory.DecodeFile(filePath, options);
+
+        return (options.OutWidth, options.OutHeight);
     }
 }

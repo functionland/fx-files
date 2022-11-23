@@ -17,7 +17,7 @@
 
     @if (CurrentArtifact != null)
     {
-        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService" />
     }
 
     <section class="file-browser-content @(_isInSearch ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
@@ -120,8 +120,8 @@
                               IsLoading="_isArtifactExplorerLoading"
                               IsInSearchMode="_isInSearch"
                               ScrollArtifact="ScrollArtifact"
-            @bind-SelectedArtifacts="_selectedArtifacts"
-            @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                              @bind-SelectedArtifacts="_selectedArtifacts"
+                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
         }
     </section>
 
@@ -157,7 +157,7 @@
             @if (_searchStatusTask is { IsCompleted: false } && string.IsNullOrWhiteSpace(_searchText) is false && _isArtifactExplorerLoading is false)
             {
                 <div class="progress-bar-wrapper">
-                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])"></FxProgressBar>
+                    <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])" />
                 </div>
             }
         </div>
@@ -177,8 +177,9 @@
                               IsLoading="_isArtifactExplorerLoading"
                               IsInSearchMode="_isInSearch"
                               IsTouchStarted="HandleOnArtifactTouchStartAsync"
-            @bind-SelectedArtifacts="_selectedArtifacts"
-            @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                              SelectedArtifacts="_selectedArtifacts"
+                              SelectedArtifactsChanged="SetSelectedArtifact"
+                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
         }
         @if (_selectedArtifacts is { Count: >= 1 })
         {
@@ -201,10 +202,23 @@
                         <div class="title-item">@Localizer[nameof(AppStrings.Copy)]</div>
                     </div>
                 }
-                <div class="option-item" @onclick="@(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
-                    <div class="pin-icon"></div>
-                    <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
-                </div>
+                @if (_searchPinOptionResult is { IsVisible: true })
+                {
+                    @if (_searchPinOptionResult.Type == PinOptionResultType.Add)
+                    {
+                        <div class="option-item" @onclick="@(()=>HandlePinArtifactsAsync(_selectedArtifacts))">
+                            <div class="pin-icon"></div>
+                            <div class="title-item">@Localizer[nameof(AppStrings.Pin)]</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="option-item" @onclick="@(()=>HandleUnPinArtifactsAsync(_selectedArtifacts))">
+                            <div class="unpin-icon"></div>
+                            <div class="title-item">@Localizer[nameof(AppStrings.Unpin)]</div>
+                        </div>
+                    }
+                }
                 @if (_selectedArtifacts?.Count == 1)
                 {
                     <div class="option-item" @onclick="@(()=>HandleOptionsArtifact(_selectedArtifacts[0]))">
@@ -225,8 +239,8 @@
 
 </div>
 
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_fileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
@@ -247,6 +261,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            NavigationFolderCallback="NavigateToAsync" />
+            NavigationFolderCallback="NavigateToAsync"
+            OnBack="() => {_isInFileViewer = false;}"/>
 
-<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"></ExtractorBottomSheet>
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />

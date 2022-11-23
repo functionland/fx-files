@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Timers;
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Prism.Events;
@@ -52,6 +50,7 @@ public partial class FileBrowser
     private string _searchText = string.Empty;
     private ArtifactDateSearchType? _artifactsSearchFilterDate;
     private List<ArtifactCategorySearchType> _artifactsSearchFilterTypes = new();
+    private PinOptionResult? _searchPinOptionResult;
 
     private FsArtifact? _currentArtifactValue;
 
@@ -103,6 +102,7 @@ public partial class FileBrowser
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _shouldScrollToItem;
+    private bool _isInFileViewer;
     private Timer? _timer;
     private Task? _searchStatusTask;
 
@@ -200,6 +200,8 @@ public partial class FileBrowser
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
+            await CloseFileViewer();
+
             var title = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedTiltle);
             var message = Localizer.GetString(AppStrings.TheCopyOpreationSuccessedMessage);
             _progressBarCts = new CancellationTokenSource();
@@ -221,20 +223,48 @@ public partial class FileBrowser
                     switch (item.ArtifactType)
                     {
                         case FsArtifactType.File:
-                        {
-                            var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(item.FullPath);
-                            if (item.ParentFullPath != null)
                             {
-                                var pathWithOutExtenstion = Path.Combine(item.ParentFullPath, nameWithOutExtenstion);
+                                var nameWithOutExtenstion = Path.GetFileNameWithoutExtension(item.FullPath);
+                                if (item.ParentFullPath != null)
+                                {
+                                    var pathWithOutExtenstion = Path.Combine(item.ParentFullPath, nameWithOutExtenstion);
+                                    var oldArtifactPath = item.FullPath;
+
+                                    var copyText = " - Copy";
+
+                                    while (true)
+                                    {
+                                        var counter = 1;
+                                        var fullPathWithCopy = pathWithOutExtenstion + copyText;
+                                        fullPathWithCopy = Path.ChangeExtension(fullPathWithCopy, item.FileExtension);
+
+                                        if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
+
+                                        counter++;
+                                        copyText += $" ({counter})";
+                                    }
+
+                                    var newArtifactPath =
+                                        Path.ChangeExtension(pathWithOutExtenstion + copyText, item.FileExtension);
+
+                                    var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
+                                    await FileService.CreateFileAsync(newArtifactPath, fileStream);
+                                }
+
+                                break;
+                            }
+                        case FsArtifactType.Folder:
+                            {
                                 var oldArtifactPath = item.FullPath;
+                                var oldArtifactParentPath = item.ParentFullPath;
+                                var oldArtifactName = item.Name;
 
                                 var copyText = " - Copy";
 
                                 while (true)
                                 {
                                     var counter = 1;
-                                    var fullPathWithCopy = pathWithOutExtenstion + copyText;
-                                    fullPathWithCopy = Path.ChangeExtension(fullPathWithCopy, item.FileExtension);
+                                    var fullPathWithCopy = oldArtifactPath + copyText;
 
                                     if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
 
@@ -242,46 +272,18 @@ public partial class FileBrowser
                                     copyText += $" ({counter})";
                                 }
 
-                                var newArtifactPath =
-                                    Path.ChangeExtension(pathWithOutExtenstion + copyText, item.FileExtension);
+                                var newArtifactPath = oldArtifactPath + copyText;
+                                var newArtifactName = oldArtifactName + copyText;
+                                if (oldArtifactParentPath != null)
+                                {
+                                    await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
+                                }
 
-                                var fileStream = await FileService.GetFileContentAsync(oldArtifactPath);
-                                await FileService.CreateFileAsync(newArtifactPath, fileStream);
+                                var oldArtifactChildren =
+                                    await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
+                                await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
+                                break;
                             }
-
-                            break;
-                        }
-                        case FsArtifactType.Folder:
-                        {
-                            var oldArtifactPath = item.FullPath;
-                            var oldArtifactParentPath = item.ParentFullPath;
-                            var oldArtifactName = item.Name;
-
-                            var copyText = " - Copy";
-
-                            while (true)
-                            {
-                                var counter = 1;
-                                var fullPathWithCopy = oldArtifactPath + copyText;
-
-                                if (desArtifacts.All(d => d.FullPath != fullPathWithCopy)) break;
-
-                                counter++;
-                                copyText += $" ({counter})";
-                            }
-
-                            var newArtifactPath = oldArtifactPath + copyText;
-                            var newArtifactName = oldArtifactName + copyText;
-                            if (oldArtifactParentPath != null)
-                            {
-                                await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
-                            }
-
-                            var oldArtifactChildren =
-                                await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
-                            await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
-                            break;
-                        }
                         case FsArtifactType.Drive:
                         default:
                             // ToDo : copy drive not supported, show proper message
@@ -382,8 +384,6 @@ public partial class FileBrowser
             {
                 await _progressModalRef.CloseAsync();
             }
-
-            await CloseFileViewer();
         }
     }
 
@@ -399,10 +399,11 @@ public partial class FileBrowser
             };
 
             var destinationPath = await HandleSelectDestinationAsync(artifactActionResult);
+
             if (string.IsNullOrWhiteSpace(destinationPath))
-            {
                 return;
-            }
+
+            await CloseFileViewer();
 
             try
             {
@@ -436,8 +437,6 @@ public partial class FileBrowser
                 {
                     await _progressModalRef.CloseAsync();
                 }
-
-                await CloseFileViewer();
             }
 
             var overwriteArtifacts =
@@ -515,12 +514,12 @@ public partial class FileBrowser
                 await RenameFileAsync(artifact, newName);
                 break;
             case FsArtifactType.Drive:
-            {
-                var title = Localizer.GetString(AppStrings.ToastErrorTitle);
-                var message = Localizer.GetString(AppStrings.RootfolderRenameException);
-                FxToast.Show(title, message, FxToastType.Error);
-                break;
-            }
+                {
+                    var title = Localizer.GetString(AppStrings.ToastErrorTitle);
+                    var message = Localizer.GetString(AppStrings.RootfolderRenameException);
+                    FxToast.Show(title, message, FxToastType.Error);
+                    break;
+                }
             case null:
                 break;
             default:
@@ -646,8 +645,8 @@ public partial class FileBrowser
         if (_artifactDetailModalRef is null)
             return;
 
-        var result =
-            await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, (isDrive || IsInRoot(CurrentArtifact)));
+        var result = await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, (isDrive || (IsInRoot(CurrentArtifact) && !_isInSearch)));
+
         ChangeDeviceBackFunctionality(ArtifactExplorerMode);
 
         switch (result.ResultType)
@@ -882,6 +881,7 @@ public partial class FileBrowser
         {
             _fxSearchInputRef?.HandleClearInputText();
             var isOpened = _fileViewerRef != null && await _fileViewerRef.OpenArtifact(artifact);
+            _isInFileViewer = true;
 
             if (isOpened == false)
             {
@@ -977,7 +977,8 @@ public partial class FileBrowser
                 isDrive,
                 artifact?.FileCategory,
                 artifact?.ArtifactType,
-                _isInSearch);
+                _isInSearch,
+                _isInFileViewer);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -1092,11 +1093,12 @@ public partial class FileBrowser
                 : null;
 
             result = await _artifactOverflowModalRef.ShowAsync
-            (isMultiple,
+                (isMultiple,
                 pinOptionResult,
-                IsInRoot(CurrentArtifact),
+                (IsInRoot(CurrentArtifact) && !_isInSearch),
                 fileCategoryType,
-                fsArtifactType);
+                fsArtifactType,
+                _isInFileViewer);
             ChangeDeviceBackFunctionality(ArtifactExplorerMode);
         }
 
@@ -1319,6 +1321,8 @@ public partial class FileBrowser
     {
         try
         {
+            _pins.RemoveAll(a => a.FullPath == artifact.FullPath);
+
             if (artifact.FullPath == CurrentArtifact?.FullPath)
             {
                 await HandleToolbarBackClickAsync();
@@ -1486,6 +1490,7 @@ public partial class FileBrowser
                     if (token.IsCancellationRequested)
                         return;
 
+                    item.IsPinned = await PinService.IsPinnedAsync(item);
                     _allArtifacts.Add(item);
 
                     if (sw.ElapsedMilliseconds <= 1000)
@@ -1767,6 +1772,13 @@ public partial class FileBrowser
             {
                 await FileService.RenameFolderAsync(artifact.FullPath, newName);
                 artifact.Name = newName;
+                var path = Path.GetDirectoryName(artifact.FullPath);
+                if (path is null)
+                    return;
+
+                var newPath = Path.Combine(path, artifact.Name);
+                artifact.FullPath = newPath;
+                artifact.LocalFullPath = newPath;
             }
         }
         catch (Exception exception)
@@ -1805,7 +1817,7 @@ public partial class FileBrowser
         switch (mode)
         {
             case ArtifactExplorerMode.SelectArtifact:
-                GoBackService.OnInit((Task() =>
+                GoBackService.OnInit((Task () =>
                 {
                     CancelSelectionMode();
                     return Task.CompletedTask;
@@ -1815,7 +1827,7 @@ public partial class FileBrowser
                 GoBackService.OnInit(null, true, true);
                 break;
             case ArtifactExplorerMode.Normal when _isInSearch:
-                GoBackService.OnInit(async Task() =>
+                GoBackService.OnInit(async Task () =>
                 {
                     if (string.IsNullOrWhiteSpace(_searchText))
                     {
@@ -1830,7 +1842,7 @@ public partial class FileBrowser
                 }, true, false);
                 break;
             case ArtifactExplorerMode.Normal:
-                GoBackService.OnInit(async Task() =>
+                GoBackService.OnInit(async Task () =>
                 {
                     if (string.IsNullOrWhiteSpace(_inlineSearchText))
                     {
@@ -1939,5 +1951,11 @@ public partial class FileBrowser
             _isSearchInputFocused = false;
             await HandleSearchUnFocused();
         }
+    }
+
+    private void SetSelectedArtifact(List<FsArtifact> artifacts)
+    {
+        _selectedArtifacts = artifacts;
+        _searchPinOptionResult = GetPinOptionResult(_selectedArtifacts);
     }
 }
