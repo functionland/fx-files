@@ -35,7 +35,7 @@ public partial class FileBrowser
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
     private string ProgressBarCurrentSubText { get; set; } = default!;
-    private int ProgressBarCurrentValue { get; set; }
+    private double ProgressBarCurrentValue { get; set; }
     private int ProgressBarMax { get; set; }
     private CancellationTokenSource? _progressBarCts;
 
@@ -173,8 +173,9 @@ public partial class FileBrowser
 
     private void HandleProgressBar(string currentText)
     {
-        ProgressBarCurrentValue++;
-        ProgressBarCurrentSubText = $"{ProgressBarCurrentValue} of {ProgressBarMax}";
+        ProgressBarCurrentValue += 0.5;
+        var roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
+        ProgressBarCurrentSubText = $"{roundedProgressCount} of {ProgressBarMax}";
         ProgressBarCurrentText = currentText;
     }
 
@@ -426,6 +427,7 @@ public partial class FileBrowser
                         ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                         ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                         await InvokeAsync(StateHasChanged);
+                        await _progressModalRef.RefreshAsync(); 
                     },
                     cancellationToken: _progressBarCts.Token);
             }
@@ -470,6 +472,7 @@ public partial class FileBrowser
                                 ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
                                 ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
                                 await InvokeAsync(StateHasChanged);
+                                await _progressModalRef.RefreshAsync();
                             },
                             cancellationToken: _progressBarCts.Token);
 
