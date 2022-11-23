@@ -12,9 +12,9 @@ using Android.Runtime;
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
 [Application(
-    LargeHeap = true,
+    LargeHeap = true
 #if DEBUG
-    UsesCleartextTraffic = true
+    ,UsesCleartextTraffic = true
 #endif
 )]
 public class MainApplication : MauiApplication
