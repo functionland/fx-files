@@ -13,7 +13,7 @@
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(CurrentArtifact))"
                OnAddButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)"
-               @ref="_fxToolBarRef" />
+    @ref="_fxToolBarRef" />
 
     @if (CurrentArtifact != null)
     {
@@ -98,7 +98,7 @@
 
         <div class="local-search @(!IsInRoot(CurrentArtifact) ? "show-search" : "hide-search")">
             <FxSearchInput Placeholder="@CurrentArtifact?.Name"
-                           @ref="_fxSearchInputRef"
+            @ref="_fxSearchInputRef"
                            OnCancel="HandleCancelInLineSearchAsync"
                            DebounceInterval="300"
                            OnSearch="HandleInLineSearch"
@@ -146,11 +146,11 @@
                     <div class="type-title">@Localizer[nameof(AppStrings.Type)]</div>
 
                     <div class="type-options">
-                        <div class="image-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Image ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Image))">@Localizer[nameof(AppStrings.Image)]</div>
-                        <div class="video-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Video ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Video))">@Localizer[nameof(AppStrings.Video)]</div>
-                        <div class="audio-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Audio ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Audio))">@Localizer[nameof(AppStrings.Audio)]</div>
-                        <div class="document-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.Document ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Document))">@Localizer[nameof(AppStrings.Document)]</div>
-                        <div class="pdf-option @(_artifactsSearchFilterType == ArtifactCategorySearchType.App ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">@Localizer[nameof(AppStrings.App)]</div>
+                        <div class="image-option @(_artifactsSearchFilterTypes.Contains(ArtifactCategorySearchType.Image) ? " option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Image))">@Localizer[nameof(AppStrings.Image)]</div>
+                        <div class="video-option @(_artifactsSearchFilterTypes.Contains(ArtifactCategorySearchType.Video) ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Video))">@Localizer[nameof(AppStrings.Video)]</div>
+                        <div class="audio-option @(_artifactsSearchFilterTypes.Contains(ArtifactCategorySearchType.Audio) ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Audio))">@Localizer[nameof(AppStrings.Audio)]</div>
+                        <div class="document-option @(_artifactsSearchFilterTypes.Contains(ArtifactCategorySearchType.Document) ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.Document))">@Localizer[nameof(AppStrings.Document)]</div>
+                        <div class="pdf-option @(_artifactsSearchFilterTypes.Contains(ArtifactCategorySearchType.App) ? "option-selected-mode" : "")" @onclick="(()=>ChangeArtifactsSearchFilterType(ArtifactCategorySearchType.App))">@Localizer[nameof(AppStrings.App)]</div>
                     </div>
                 </div>
             </div>
@@ -253,7 +253,7 @@
                ProgressCurrentValue="@ProgressBarCurrentValue"
                ProgressMax="@ProgressBarMax"
                OnCancel="ProgressBarOnCancel"
-               @ref="_progressModalRef" />
+@ref="_progressModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
 <FileViewer @ref="_fileViewerRef"
             FileService="FileService"
@@ -261,6 +261,7 @@
             OnUnpin="HandleUnPinArtifactsAsync"
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
-            NavigationFolderCallback="NavigateToAsync" />
+            NavigationFolderCallback="NavigateToAsync"
+            OnBack="() => {_isInFileViewer = false;}"/>
 
 <ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />

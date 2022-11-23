@@ -16,7 +16,7 @@ public class ArtifactThumbnailService<TFileService> : ThumbnailService, IArtifac
 
     public async Task<string?> GetOrCreateThumbnailAsync(FsArtifact artifact, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null)
     {
-        if (artifact.ProviderType == FsFileProviderType.Fula && artifact.IsAvailableOffline != true) return null;
+        if (artifact.ProviderType == FsFileProviderType.Fula && artifact.IsAvailableOfflineRequested != true) return null;
 
         var uniqueName = GetUniqueName(artifact, thumbnailScale);
 
