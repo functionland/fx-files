@@ -103,17 +103,8 @@
 							<uap:FileType ContentType="image/*">.png</uap:FileType>
 							<uap:FileType ContentType="image/*">.gif</uap:FileType>
 							<uap:FileType ContentType="image/*">.bmp</uap:FileType>
-							<uap:FileType ContentType="image/*">.tiff</uap:FileType>
-							<uap:FileType ContentType="image/*">.tif</uap:FileType>
 							<uap:FileType ContentType="image/*">.jfif</uap:FileType>
-							<uap:FileType ContentType="image/*">.exif</uap:FileType>
-							<uap:FileType ContentType="image/*">.ppm</uap:FileType>
-							<uap:FileType ContentType="image/*">.pgm</uap:FileType>
-							<uap:FileType ContentType="image/*">.pbm</uap:FileType>
-							<uap:FileType ContentType="image/*">.pnm</uap:FileType>
 							<uap:FileType ContentType="image/*">.webp</uap:FileType>
-							<uap:FileType ContentType="image/*">.heif</uap:FileType>
-							<uap:FileType ContentType="image/*">.avif</uap:FileType>
 							<uap:FileType ContentType="image/*">.ico</uap:FileType>
 							<uap:FileType ContentType="image/*">.svg</uap:FileType>
 							
