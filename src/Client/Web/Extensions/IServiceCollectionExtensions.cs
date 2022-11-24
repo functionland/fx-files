@@ -1,5 +1,6 @@
 ﻿using Functionland.FxFiles.Client.Shared.Services;
-using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
+using Functionland.FxFiles.Client.Shared.Services.Implementations;
 using Functionland.FxFiles.Client.Shared.TestInfra.Contracts;
 using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 

@@ -7,6 +7,11 @@
     <link rel="preload" href="_content/Functionland.FxFiles.Client.Shared/fonts/FxL-Outline.ttf" as="font" crossorigin="anonymous">
     <link rel="preload" href="_content/Functionland.FxFiles.Client.Shared/fonts/OpenSans-Regular.ttf" as="font" crossorigin="anonymous">
     <link rel="preload" href="_content/Functionland.FxFiles.Client.Shared/fonts/Montserrat-SemiBold.ttf" as="font" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/codemirror.css" />
+    <link rel="stylesheet" href="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/theme/dracula.css" />
+    <link rel="stylesheet" href="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/tiddlywiki/tiddlywiki.css" />
+    <link rel="stylesheet" href="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/tiki/tiki.css" />
     <link rel="stylesheet" href="_content/Bit.BlazorUI/styles/bit.blazorui.min.css" />
     <link href="_content/Functionland.FxFiles.Client.Shared/Functionland.FxFiles.Client.Shared.bundle.scp.css" rel="stylesheet" />
     <link href="_content/Functionland.FxFiles.Client.Shared/app.css" rel="stylesheet" />
@@ -172,6 +177,134 @@
     <script src="_content/Functionland.FxFiles.Client.Shared/scripts/codemirror.js"></script>
     <script src="_content/Functionland.FxFiles.Client.Shared/lib/pinch-zoom/hammer.min.js"></script>
     <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/runmode-standalone.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/loadmode.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/multiplex.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/overlay.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/simple.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/meta.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/apl/apl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/asciiarmor/asciiarmor.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/asn.1/asn.1.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/asterisk/asterisk.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/brainfuck/brainfuck.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/clike/clike.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/clojure/clojure.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/cmake/cmake.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/cobol/cobol.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/coffeescript/coffeescript.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/commonlisp/commonlisp.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/crystal/crystal.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/css/css.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/cypher/cypher.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/d/d.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/dart/dart.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/diff/diff.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/django/django.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/dockerfile/dockerfile.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/dtd/dtd.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/dylan/dylan.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/ebnf/ebnf.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/ecl/ecl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/eiffel/eiffel.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/elm/elm.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/erlang/erlang.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/factor/factor.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/fcl/fcl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/forth/forth.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/fortran/fortran.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/gas/gas.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/gfm/gfm.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/gherkin/gherkin.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/go/go.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/groovy/groovy.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/haml/haml.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/handlebars/handlebars.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/haskell/haskell.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/haskell-literate/haskell-literate.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/haxe/haxe.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/htmlembedded/htmlembedded.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/http/http.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/idl/idl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/javascript/javascript.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/jinja2/jinja2.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/jsx/jsx.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/julia/julia.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/livescript/livescript.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/lua/lua.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/markdown/markdown.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/mathematica/mathematica.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/mbox/mbox.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/mirc/mirc.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/mllike/mllike.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/modelica/modelica.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/mscgen/mscgen.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/mumps/mumps.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/nginx/nginx.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/nsis/nsis.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/ntriples/ntriples.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/octave/octave.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/oz/oz.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/pascal/pascal.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/pegjs/pegjs.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/perl/perl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/php/php.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/pig/pig.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/powershell/powershell.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/properties/properties.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/protobuf/protobuf.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/pug/pug.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/puppet/puppet.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/python/python.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/q/q.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/r/r.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/rpm/rpm.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/rst/rst.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/ruby/ruby.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/rust/rust.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/sas/sas.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/sass/sass.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/scheme/scheme.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/shell/shell.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/sieve/sieve.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/slim/slim.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/smalltalk/smalltalk.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/smarty/smarty.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/solr/solr.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/soy/soy.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/sparql/sparql.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/spreadsheet/spreadsheet.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/sql/sql.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/stex/stex.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/stylus/stylus.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/swift/swift.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/tcl/tcl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/textile/textile.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/tiddlywiki/tiddlywiki.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/tiki/tiki.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/toml/toml.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/tornado/tornado.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/troff/troff.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/ttcn/ttcn.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/ttcn-cfg/ttcn-cfg.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/turtle/turtle.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/twig/twig.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/vb/vb.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/vbscript/vbscript.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/velocity/velocity.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/verilog/verilog.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/vhdl/vhdl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/vue/vue.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/wast/wast.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/webidl/webidl.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/xml/xml.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/xquery/xquery.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/yacas/yacas.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/yaml/yaml.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/yaml-frontmatter/yaml-frontmatter.js"></script>
+    <script src="_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode/z80/z80.js"></script>
+
+
     <script src="_content/Functionland.FxFiles.Client.Shared/scripts/app.js"></script>
 </body>
 

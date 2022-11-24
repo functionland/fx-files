@@ -1,7 +1,7 @@
 ﻿using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Contracts;
-using Functionland.FxFiles.Client.Shared.Services.Implementations.Db;
+using Functionland.FxFiles.Client.Shared.Services.Implementations;
 using Functionland.FxFiles.Client.Shared.TestInfra.Implementations;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,7 +31,9 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var dbService = serviceProvider.GetService<IFxLocalDbService>();
             await dbService.InitAsync();
 
-            await dbService.AddPinAsync(new FsArtifact("c:\\txt.txt", "txt", FsArtifactType.File, FsFileProviderType.InternalMemory));
+            var pinService = serviceProvider.GetService<ILocalDbPinService>();
+
+            await pinService.AddPinAsync(new FsArtifact("c:\\txt.txt", "txt", FsArtifactType.File, FsFileProviderType.InternalMemory));
             //Assert.IsNotNull(fileService);
 
         }
@@ -45,6 +47,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                    string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
 
                    services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+                   services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
                }
             ).Build();
 
@@ -54,7 +57,8 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var dbService = serviceProvider.GetService<IFxLocalDbService>();
             await dbService.InitAsync();
 
-            await dbService.RemovePinAsync("c:\\txt.txt");
+            var pinService = serviceProvider.GetService<ILocalDbPinService>();
+            await pinService.RemovePinAsync("c:\\txt.txt");
             //Assert.IsNotNull(fileService);
 
         }
@@ -68,6 +72,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                    string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
 
                    services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+                   services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
                }
             ).Build();
 
@@ -77,7 +82,8 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var dbService = serviceProvider.GetService<IFxLocalDbService>();
             await dbService.InitAsync();
 
-            await dbService.UpdatePinAsync(new PinnedArtifact
+            var pinService = serviceProvider.GetService<ILocalDbPinService>();
+            await pinService.UpdatePinAsync(new PinnedArtifact
             {
                 FullPath = "c:\\txt.txt",
                 ContentHash = DateTimeOffset.Now.AddDays(-1).ToString(),
@@ -96,6 +102,7 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
                    string connectionString = $"DataSource={Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FxDB.db")};";
 
                    services.AddSingleton<IFxLocalDbService, FxLocalDbService>(_ => new FxLocalDbService(connectionString));
+                   services.AddSingleton<ILocalDbPinService, LocalDbPinService>();
                }
             ).Build();
 
@@ -105,7 +112,8 @@ namespace Functionland.FxFiles.Client.Test.UnitTests
             var dbService = serviceProvider.GetService<IFxLocalDbService>();
             await dbService.InitAsync();
 
-            var pinnedArtifacts = await dbService.GetPinnedArticatInfos();
+            var pinService = serviceProvider.GetService<ILocalDbPinService>();
+            var pinnedArtifacts = await pinService.GetPinnedArticatInfos();
             Assert.IsNotNull(pinnedArtifacts);
 
         }
