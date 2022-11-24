@@ -1,4 +1,7 @@
-﻿[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+﻿using CommunityToolkit.Maui.MediaElement;
+using Functionland.FxFiles.Client.App.Views;
+
+[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
 namespace Functionland.FxFiles.Client.App;
 
@@ -19,5 +22,17 @@ public partial class App
     {
         base.OnStart();
         _ = Task.Run(async () => { await ServiceProvider.RunAppEvents(); });
+    }
+
+    protected override void OnSleep()
+    {
+        base.OnSleep();
+        NativeVideoViewer.Current?.TogglePlay(MediaElementState.Paused);
+    }
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+        NativeVideoViewer.Current?.TogglePlay(MediaElementState.Playing);
     }
 }
