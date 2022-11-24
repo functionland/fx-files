@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
     {
         public string? CurrentText { get; set; }
         public string? CurrentSubText { get; set; }
-        public int? CurrentValue { get; set; }
+        public double? CurrentValue { get; set; }
         public int? MaxValue { get; set; }
     }
 }

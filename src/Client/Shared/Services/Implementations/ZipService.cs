@@ -383,7 +383,7 @@ public partial class ZipService : IZipService
        Func<ProgressInfo, Task>? onProgress = null,
        CancellationToken? cancellationToken = null)
     {
-        int? progressCount = null;
+        double progressCount = 0;
         var duplicateCount = 0;
 
         if (itemPath is not null)
@@ -411,7 +411,7 @@ public partial class ZipService : IZipService
             if (cancellationToken is { IsCancellationRequested: true })
                 return 0;
 
-            if (progressCount is null && onProgress is not null)
+            if (onProgress is not null)
             {
                 progressCount = await FsArtifactUtils.HandleProgressBarAsync(keyName, allEntriesCount, progressCount, onProgress);
             }
@@ -463,7 +463,7 @@ public partial class ZipService : IZipService
        Func<ProgressInfo, Task>? onProgress = null,
        CancellationToken? cancellationToken = null)
     {
-        int? progressCount = null;
+        double progressCount = 0;
         var duplicateCount = 0;
 
         if (itemPath is not null)
@@ -491,7 +491,7 @@ public partial class ZipService : IZipService
             if (cancellationToken is { IsCancellationRequested: true })
                 return 0;
 
-            if (progressCount is null && onProgress is not null)
+            if (onProgress is not null)
             {
                 progressCount = await FsArtifactUtils.HandleProgressBarAsync(keyName, allEntriesCount, progressCount, onProgress);
             }

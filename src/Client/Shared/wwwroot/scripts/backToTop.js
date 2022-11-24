@@ -168,20 +168,22 @@ function OnScrollCheck() {
 }
 
 function scrollToItem(itemId, listHeight) {
-    const item = document.getElementById(itemId.toString());
+    let item = document.getElementById(itemId.toString());
     console.log(item);
     console.log(itemId);
     console.log(listHeight);
-    if (typeof item == undefined || item == null) {
-        let list = document.querySelector('.list-container');
-        if (typeof list != undefined || list != null) {
-            list.scrollTop = listHeight;
+    let list = document.querySelector('.list-container');
+    if (typeof list !== 'undefined' || list !== null) {
+        list.scrollTop = listHeight;
+        if (typeof item !== 'undefined' || item !== null) {
+            try {
+                addGrayBackground(item);
+                return true;
+            } catch (e) {
+                return false;
+            }
         }
         return false;
-    }
-    else {
-        addGrayBackground(item);
-        return true;
     }
 }
 

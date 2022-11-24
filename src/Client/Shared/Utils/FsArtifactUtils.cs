@@ -207,18 +207,12 @@ public static class FsArtifactUtils
         };
     }
 
-    public static async Task<int> HandleProgressBarAsync(string artifactName, int totalCount, int? progressCount, Func<ProgressInfo, Task> onProgress)
+    public static async Task<double> HandleProgressBarAsync(string artifactName, int totalCount, double progressCount, Func<ProgressInfo, Task> onProgress)
     {
-        if (progressCount is null)
-        {
-            progressCount = 0;
-        }
-        else
-        {
-            progressCount++;
-        }
+        progressCount += 0.5;
+        var roundedProgressCount = Math.Round(progressCount, MidpointRounding.AwayFromZero);
 
-        var subText = $"{progressCount} of {totalCount}";
+        var subText = $"{roundedProgressCount} of {totalCount}";
 
         await onProgress.Invoke(new ProgressInfo
         {
@@ -228,6 +222,6 @@ public static class FsArtifactUtils
             MaxValue = totalCount
         });
 
-        return progressCount.Value;
+        return progressCount;
     }
 }
