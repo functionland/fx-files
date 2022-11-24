@@ -28,7 +28,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
         //"video/*" 
        
         "text/plain",
-        "image/*"
+        "image/jpg","image/jpeg","image/png","image/gif","image/bmp","image/svg","image/webp","image/jfif","image/ico"
 
     })]
 public class FileViewerActivity : MainActivity
