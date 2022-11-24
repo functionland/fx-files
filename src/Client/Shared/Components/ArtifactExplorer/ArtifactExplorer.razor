@@ -4,7 +4,7 @@
 @using Functionland.FxFiles.Client.Shared.Utils
 
 
-<div style="margin-bottom: @(IsmacOS? "38px" : "")" class="list-container @(IsLoading ? "overflow-hidden" : "show-animation-artifact") @(!Artifacts.Any() ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+<div @ref="_artifactExplorerListRef" style="margin-bottom: @(IsmacOS? "38px" : "")" class="list-container @(IsLoading ? "overflow-hidden" : "show-animation-artifact") @(!Artifacts.Any() ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
     @if (IsLoading)
     {
         <OverlayLoading LoadingType="LoadingType.Overlay" />
