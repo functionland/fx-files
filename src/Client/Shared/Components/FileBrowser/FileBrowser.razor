@@ -240,7 +240,12 @@
 </div>
 
 <ArtifactOverflowModal @ref="_artifactOverflowModalRef" />
-<ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
+<ArtifactSelectionModal @ref="_artifactSelectionModalRef"
+                        FileService="FileService"
+                        ThumbnailService="ThumbnailService"
+                        SortType="_currentSortType"
+                        IsAscOrder="_isAscOrder"/>
+
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_inlineFileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>

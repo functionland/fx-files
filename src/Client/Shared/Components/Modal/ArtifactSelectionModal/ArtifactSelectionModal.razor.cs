@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
+namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
@@ -9,7 +11,10 @@ public partial class ArtifactSelectionModal
     private string _buttonText = string.Empty;
     private List<FsArtifact> _excludedArtifacts = new();
     private InputModal _inputModalRef = default!;
+    private FsArtifact? _scrolledToArtifact;
 
+    [Parameter] public SortTypeEnum SortType { get; set; } = SortTypeEnum.Name;
+    [Parameter] public bool IsAscOrder { get; set; }
     [Parameter] public bool IsMultiple { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
@@ -102,14 +107,47 @@ public partial class ArtifactSelectionModal
             if (result?.ResultType == InputModalResultType.Confirm)
             {
                 var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.Result); //ToDo: Make CreateFolderAsync nullable
+                _scrolledToArtifact = newFolder;
                 _artifacts.Add(newFolder);
-                StateHasChanged();
+                RefreshArtifacts();
             }
         }
         catch (Exception exception)
         {
             ExceptionHandler?.Handle(exception);
         }
+    }
+
+    private void RefreshArtifacts()
+    {
+        _artifacts = ApplySortArtifacts(_artifacts).ToList();
+    }
+
+    private IEnumerable<FsArtifact> ApplySortArtifacts(IEnumerable<FsArtifact> artifacts)
+    {
+        IEnumerable<FsArtifact> sortedArtifactsQuery = SortType switch
+        {
+            SortTypeEnum.LastModified when IsAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.LastModified => artifacts
+                .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.Size when IsAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Size),
+            SortTypeEnum.Size => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Size),
+            SortTypeEnum.Name when IsAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name),
+            SortTypeEnum.Name => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Name),
+            _ => artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name)
+        };
+
+        return sortedArtifactsQuery;
     }
 
     private string GetActionButtonText()

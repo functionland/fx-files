@@ -121,11 +121,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual async Task DeleteArtifactsAsync(IList<FsArtifact> artifacts, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
         {
-            int? progressCount = null;
+            double progressCount = 0;
 
             foreach (var artifact in artifacts)
             {
-                if (onProgress is not null && progressCount == null)
+                if (onProgress is not null)
                 {
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
@@ -350,11 +350,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
         {
-            int? progressCount = null;
+            double progressCount = 0;
 
             foreach (var artifact in artifacts)
             {
-                if (onProgress is not null && shouldProgress && progressCount == null)
+                if (onProgress is not null && shouldProgress)
                 {
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
@@ -467,11 +467,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
         {
-            int? progressCount = null;
+            double progressCount = 0;
 
             foreach (var artifact in artifacts)
             {
-                if (onProgress is not null && shouldProgress && progressCount == null)
+                if (onProgress is not null && shouldProgress)
                 {
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
@@ -602,7 +602,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 var providerType = GetFsFileProviderType(drive);
                 artifacts.Add(
-                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType));
+                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType)
+                    {
+                        LastModifiedDateTime = Directory.GetLastWriteTime(drive)
+                    });
             }
 
             return artifacts;
@@ -737,7 +740,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 foreach (var drive in drives)
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
