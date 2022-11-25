@@ -417,7 +417,7 @@ public partial class FileBrowser : IDisposable
         return newArtifactPath;
     }
 
-    public async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
+    private async Task HandleMoveArtifactsAsync(List<FsArtifact> artifacts)
     {
         try
         {
@@ -520,7 +520,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleRenameArtifactAsync(FsArtifact? artifact)
+    private async Task HandleRenameArtifactAsync(FsArtifact? artifact)
     {
         var oldPath = artifact?.FullPath;
         var result = await GetInputModalResult(artifact);
@@ -556,7 +556,7 @@ public partial class FileBrowser : IDisposable
             FileWatchService.UpdateFileWatchCatch(newPath, oldPath);
     }
 
-    public async Task HandlePinArtifactsAsync(List<FsArtifact> artifacts)
+    private async Task HandlePinArtifactsAsync(List<FsArtifact> artifacts)
     {
         try
         {
@@ -578,7 +578,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleUnPinArtifactsAsync(List<FsArtifact> artifacts)
+    private async Task HandleUnPinArtifactsAsync(List<FsArtifact> artifacts)
     {
         try
         {
@@ -594,7 +594,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleDeleteArtifactsAsync(List<FsArtifact> artifacts)
+    private async Task HandleDeleteArtifactsAsync(List<FsArtifact> artifacts)
     {
         try
         {
@@ -658,7 +658,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleShowDetailsArtifact(List<FsArtifact> artifacts)
+    private async Task HandleShowDetailsArtifact(List<FsArtifact> artifacts)
     {
         var isMultiple = artifacts.Count > 1;
         var isDrive = false;
@@ -723,7 +723,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleCreateFolder(string path)
+    private async Task HandleCreateFolder(string path)
     {
         if (_inputModalRef is null) return;
 
@@ -746,7 +746,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleShareFiles(List<FsArtifact> artifacts)
+    private async Task HandleShareFiles(List<FsArtifact> artifacts)
     {
         _isArtifactExplorerLoading = true;
         StateHasChanged();
@@ -760,7 +760,7 @@ public partial class FileBrowser : IDisposable
         _isArtifactExplorerLoading = false;
     }
 
-    public async Task HandleExtractArtifactAsync(FsArtifact zipArtifact, List<FsArtifact>? innerArtifacts = null,
+    private async Task HandleExtractArtifactAsync(FsArtifact zipArtifact, List<FsArtifact>? innerArtifacts = null,
         string? destinationDirectory = null)
     {
         var extractResult = new ExtractorBottomSheetResult();
@@ -811,7 +811,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    public async Task HandleOpenWithAppAsync(FsArtifact? artifact)
+    private async Task HandleOpenWithAppAsync(FsArtifact? artifact)
     {
         if (artifact == null || artifact.FullPath == null)
             return;
