@@ -2,9 +2,9 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using Android.Widget;
+using CommunityToolkit.Maui.MediaElement;
 using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
-using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
+using Functionland.FxFiles.Client.App.Views;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
@@ -52,6 +52,10 @@ public class MainActivity : MauiAppCompatActivity
         }
     }
 
-
+    protected override void OnStop()
+    {
+        NativeVideoViewer.Current?.TogglePlay(MediaElementState.Paused);
+        base.OnStop();
+    }
 }
 
