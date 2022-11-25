@@ -150,11 +150,6 @@ public partial class ArtifactSelectionModal
         return sortedArtifactsQuery;
     }
 
-    private string GetActionButtonText()
-    {
-        return _buttonText;
-    }
-
     private async Task Back()
     {
         try

@@ -206,7 +206,7 @@ public partial class FileBrowser : IDisposable
     private async Task UpdateProgressAsync(
         string? text = null,
         string? subText = null,
-        int? current = null,
+        double? current = null,
         int? max = null)
     {
         if (text is not null)
@@ -431,7 +431,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy = $"{oldArtifactPath} - Copy"
                                + (counter>1 ? $" {counter}" : string.Empty);
 
-            var exists = (await FileService.CheckPathExistsAsync(new[] { fullPathWithCopy })).First().IsPathExist ??
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?>{ fullPathWithCopy })).First().IsPathExist ??
                          false;
 
             if (!exists)
@@ -477,7 +477,7 @@ public partial class FileBrowser : IDisposable
                 Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
 
             // Fix the FileService API.
-            var exists = (await FileService.CheckPathExistsAsync(new[] { fullPathWithCopy })).First().IsPathExist ?? false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ?? false;
             if (!exists)
                 break;
 
@@ -1083,7 +1083,7 @@ public partial class FileBrowser : IDisposable
                 isDrive,
                 artifact?.FileCategory,
                 artifact?.ArtifactType,
-                _isInSearchMode
+                _isInSearchMode,
                 _isInFileViewer);
             RefreshDeviceBackButtonBehavior();
         }
@@ -1994,7 +1994,7 @@ public partial class FileBrowser : IDisposable
         {
             _artifactsSearchFilterTypes.Add(type);
         }
-        await HandleSearchAsync(_searchText);
+        await HandleSearchTextChangedAsync(_searchText);
     }
 
     private async Task CancelSearchAsync()
@@ -2025,7 +2025,7 @@ public partial class FileBrowser : IDisposable
         var destinationArtifact = await FileService.GetArtifactAsync(artifact.ParentFullPath);
         CurrentArtifact = destinationArtifact;
         await OpenFolderAsync(destinationArtifact);
-        ScrollArtifact = artifact;
+        ScrolledToArtifact = artifact;
     }
 
     private async Task CloseFileViewer()
