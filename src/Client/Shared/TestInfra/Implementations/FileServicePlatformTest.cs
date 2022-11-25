@@ -247,7 +247,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 copyingItems = new[] { folder21 };  //Already null-checked in assertion above.
 
-                await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), true);
+                Func<FsArtifact, Task<bool>>? onShouldOverwrite = null; //TODO: Complete this (Zahra)
+                await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), onShouldOverwrite);
                 desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3/Folder 21"));
                 Assert.AreEqual(3, desArtifacts.Count, "Copy folder with files inside. All files including duplicate one copied in sub folder");
 
@@ -274,7 +275,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3111"));
                 var progressBarMax = 0;
-                await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"),false, 
+                //TODO: test onShouldOverwrite(Zahra)
+                await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"),onShouldOverwrite, 
                     (progressInfo) =>
                     {
                         progressBarMax = progressInfo.MaxValue ?? 0;
