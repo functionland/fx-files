@@ -26,18 +26,24 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             var path = fsArtifact.ArtifactType == FsArtifactType.File ? fsArtifact.ParentFullPath : fsArtifact.FullPath;
             if (path == null) throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, "folder"));
+            AddWatcher(path);
+        }
 
+        private void AddWatcher( string? path)
+        {
             FileSystemWatcher watcher = new()
             {
                 Path = path,
 
                 NotifyFilter = NotifyFilters.Attributes |
-                                   NotifyFilters.CreationTime |
-                                   NotifyFilters.DirectoryName |
-                                   NotifyFilters.FileName |
-                                   NotifyFilters.LastWrite |
-                                   NotifyFilters.Security |
-                                   NotifyFilters.Size,
+                                               NotifyFilters.CreationTime |
+                                               NotifyFilters.DirectoryName |
+                                               NotifyFilters.FileName |
+                                               NotifyFilters.LastWrite |
+                                               NotifyFilters.Security |
+                                               NotifyFilters.DirectoryName |
+                                               NotifyFilters.FileName |
+                                               NotifyFilters.Size,
 
                 Filter = "*.*",
 
@@ -49,7 +55,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             watcher.Deleted += new FileSystemEventHandler(OnDeleted);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
 
-            WatcherDictionary.TryAdd(fsArtifact.FullPath, (watcher, 1));
+            WatcherDictionary.TryAdd(path, (watcher, 1));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
@@ -69,7 +75,16 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
             }
         }
+        public virtual void UpdateFileWatchCatch(string newPath, string oldPath)
+        {
+           if(WatcherDictionary.TryGetValue(oldPath, out var watchedDirectory))
+            {
+                watchedDirectory.Watcher.Dispose();
+                WatcherDictionary.TryRemove(oldPath, out _);
+                AddWatcher(newPath);
+            }
 
+        }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         private void OnRenamed(object sender, RenamedEventArgs e)
         {
