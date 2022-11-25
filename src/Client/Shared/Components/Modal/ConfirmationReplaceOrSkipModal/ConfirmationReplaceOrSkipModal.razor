@@ -1,21 +1,23 @@
 ﻿@namespace Functionland.FxFiles.Client.Shared.Components.Modal
 @inherits AppComponentBase;
 
-<FxBottomSheet ShowCloseButton="true" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="false" Title="@Localizer[nameof(AppStrings.ReplaceOrSkipTitleModal), _artifactsCount]">
+<FxBottomSheet ShowCloseButton="true" @bind-IsOpen="_isModalOpen" OnClose="Close" IsFullScreenMode="false" Title="@Localizer[nameof(AppStrings.ReplaceOrSkipTitleModal)]">
 
-    <div class="description-modal-sup">@Localizer[nameof(AppStrings.ReplaceOrSkipSupDescModal), _artifactsCount]</div>
+    <div class="description-modal-sup">@Localizer[nameof(AppStrings.ReplaceOrSkipSupDescModal)]</div>
+    
+    <div class="exist-file-text">@_artifact?.Name</div>
     
     <div class="description-modal-sub">@Localizer[nameof(AppStrings.ReplaceOrSkipSubDescModal)]</div>
 
     <FxButton ButtonStyle="FxButtonStyle.Outline"
-              Text="@Localizer[nameof(AppStrings.SkipButtonModal), _artifactsCount]"
+              Text="@Localizer[nameof(AppStrings.SkipButtonModal)]"
               Width="100%"
               Margin="0 0 32px 0"
               OnClick="SkipArtifact">
     </FxButton>
 
-    <FxButton ButtonStyle="FxButtonStyle.Outline"
-              Text="@Localizer[nameof(AppStrings.ReplaceButtonModal), _artifactsCount]"
+    <FxButton ButtonStyle="FxButtonStyle.Normal"
+              Text="@Localizer[nameof(AppStrings.ReplaceButtonModal)]"
               Width="100%"
               Margin="0 0 61px 0"
               OnClick="ReplaceArtifact">
