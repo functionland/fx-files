@@ -57,8 +57,8 @@
                     Source="back.png" />
                 <ImageButton
                     Clicked="Minimize"
-                    IsVisible="{OnIdiom Desktop=false,
-                                        Default=true}"
+                    IsVisible="{OnPlatform Android=true,
+                                           Default=false}"
                     Source="pip.png" />
             </StackLayout>
         </Frame>

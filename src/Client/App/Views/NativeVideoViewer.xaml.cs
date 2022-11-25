@@ -6,6 +6,7 @@ using Android.Util;
 #endif
 
 using CommunityToolkit.Maui.MediaElement;
+using Microsoft.AspNetCore.Components;
 
 namespace Functionland.FxFiles.Client.App.Views;
 
@@ -20,12 +21,13 @@ public partial class NativeVideoViewer : ContentPage
         get { return _isInPictureInPicture; }
     }
 
+    private EventCallback OnBack { get; set; }
     private MediaElementState CurrentMediaState { get; set; } = MediaElementState.Playing;
     public static NativeVideoViewer? Current { get; set; }
 
     private readonly string _filePath;
 
-    public NativeVideoViewer(string path)
+    public NativeVideoViewer(string path, EventCallback onBack)
     {
         InitializeComponent();
         Current = this;
@@ -37,6 +39,8 @@ public partial class NativeVideoViewer : ContentPage
             playButton.Source = ImageSource.FromFile("pause.png");
             media.Play();
         }
+
+        OnBack = onBack;
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -72,7 +76,10 @@ public partial class NativeVideoViewer : ContentPage
         {
             media.Stop();
             media.Source = null;
+            await OnBack.InvokeAsync();
             await Navigation.PopAsync();
+
+            //MemoryLeak Killer
             media.Handler?.DisconnectHandler();
         }
         catch (Exception ex)
@@ -107,21 +114,41 @@ public partial class NativeVideoViewer : ContentPage
         mediaControls.IsVisible = !mediaControls.IsVisible;
     }
 
+    private void Backward_Clicked(object sender, EventArgs e)
+    {
+        media.Position = TimeSpan.FromSeconds(media.Position.TotalSeconds - 15);
+    }
+
+    private void Forward_Clicked(object sender, EventArgs e)
+    {
+        media.Position = TimeSpan.FromSeconds(media.Position.TotalSeconds + 15);
+    }
+
+    private void Pause()
+    {
+        playButton.Source = ImageSource.FromFile("play.png");
+        CurrentMediaState = MediaElementState.Paused;
+        media.Pause();
+    }
+
+    private void Play()
+    {
+        playButton.Source = ImageSource.FromFile("pause.png");
+        CurrentMediaState = MediaElementState.Playing;
+        media.Play();
+    }
+
     public void TogglePlay(MediaElementState state)
     {
         CurrentMediaState = media.CurrentState = state;
 
         if (CurrentMediaState == MediaElementState.Playing)
         {
-            playButton.Source = ImageSource.FromFile("pause.png");
-            CurrentMediaState = MediaElementState.Playing;
-            media.Play();
+            Play();
         }
         else if (CurrentMediaState == MediaElementState.Paused)
         {
-            playButton.Source = ImageSource.FromFile("play.png");
-            CurrentMediaState = MediaElementState.Paused;
-            media.Pause();
+            Pause();
         }
     }
 
@@ -134,36 +161,20 @@ public partial class NativeVideoViewer : ContentPage
 
         if (CurrentMediaState == MediaElementState.Playing)
         {
-            playButton.Source = ImageSource.FromFile("play.png");
-            CurrentMediaState = MediaElementState.Paused;
-            media.Pause();
+            Pause();
         }
         else if (CurrentMediaState == MediaElementState.Paused || CurrentMediaState == MediaElementState.Stopped)
         {
-            playButton.Source = ImageSource.FromFile("pause.png");
-            CurrentMediaState = MediaElementState.Playing;
-            media.Play();
+            Play();
         }
 
         //Workaround
 #if ANDROID
         if (media.Duration.TotalSeconds <= media.Position.TotalSeconds || CurrentMediaState == MediaElementState.Stopped)
         {
-            playButton.Source = ImageSource.FromFile("pause.png");
-            CurrentMediaState = MediaElementState.Playing;
             media.Position = TimeSpan.FromSeconds(0);
-            media.Play();
+            Play();
         }
 #endif
-    }
-
-    private void Backward_Clicked(object sender, EventArgs e)
-    {
-        media.Position = TimeSpan.FromSeconds(media.Position.TotalSeconds - 15);
-    }
-
-    private void Forward_Clicked(object sender, EventArgs e)
-    {
-        media.Position = TimeSpan.FromSeconds(media.Position.TotalSeconds + 15);
     }
 }

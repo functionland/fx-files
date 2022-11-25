@@ -29,10 +29,4 @@ public partial class App
         base.OnSleep();
         NativeVideoViewer.Current?.TogglePlay(MediaElementState.Paused);
     }
-
-    protected override void OnResume()
-    {
-        base.OnResume();
-        NativeVideoViewer.Current?.TogglePlay(MediaElementState.Playing);
-    }
 }
