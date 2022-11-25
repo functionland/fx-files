@@ -502,6 +502,7 @@ public partial class FileBrowser
 
     public async Task HandleRenameArtifactAsync(FsArtifact? artifact)
     {
+        var oldPath = artifact?.FullPath;
         var result = await GetInputModalResult(artifact);
         if (result?.ResultType == InputModalResultType.Cancel)
         {
@@ -530,6 +531,9 @@ public partial class FileBrowser
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        var newPath = artifact?.FullPath;
+        if(newPath != null && oldPath != null)    
+            FileWatchService.UpdateFileWatchCatch(newPath, oldPath);
     }
 
     public async Task HandlePinArtifactsAsync(List<FsArtifact> artifacts)
