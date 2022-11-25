@@ -1,7 +1,7 @@
 ﻿@using Functionland.FxFiles.Client.Shared.Utils
 @inherits AppComponentBase;
 
-<div class="file-card-container @(true ? "favorite" : "") @(IsDisabled ? "disabled-card" : "")">
+<div class="file-card-container @(Artifact.IsPinned == true ? "favorite" : "") @(IsDisabled ? "disabled-card" : "")">
     <div class="file-card-media">
         @if (!string.IsNullOrEmpty(TagTitle) || !string.IsNullOrWhiteSpace(TagTitle))
         {
