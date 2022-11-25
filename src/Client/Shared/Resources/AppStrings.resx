@@ -352,16 +352,16 @@
     <value>Moving item(s)</value>
   </data>
   <data name="ReplaceButtonModal" xml:space="preserve">
-    <value>Replace {0} item(s) </value>
+    <value>Replace</value>
   </data>
   <data name="ReplaceOrSkipSupDescModal" xml:space="preserve">
-    <value>The destination folder already has {0} item(s) with the same name,</value>
+    <value>The destination already has a file named</value>
   </data>
   <data name="ReplaceOrSkipTitleModal" xml:space="preserve">
-    <value>Replace or skip {0} item(s)</value>
+    <value>Replace or skip file</value>
   </data>
   <data name="SkipButtonModal" xml:space="preserve">
-    <value>Skip {0} item(s)</value>
+    <value>Skip</value>
   </data>
   <data name="ToastErrorTitle" xml:space="preserve">
     <value>Something went wrong!</value>
@@ -472,7 +472,7 @@
     <value>Upload</value>
   </data>
   <data name="ReplaceOrSkipSubDescModal" xml:space="preserve">
-    <value>What do you want to do?</value>
+    <value>To continue, please choose an action</value>
   </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>

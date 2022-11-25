@@ -104,7 +104,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
                 var overwriteArtifacts = await GetOverwritableArtifacts(zipFilePath, Path.Combine(destinationFolderPath, destinationFolderName), innerArtifacts);
 
-                var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount ?? throw new InvalidOperationException(Localizer.GetString(AppStrings.TheOpreationFailedMessage)));
+                var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(overwriteArtifacts[0] ?? throw new InvalidOperationException(Localizer.GetString(AppStrings.TheOpreationFailedMessage)));
 
                 if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                 {

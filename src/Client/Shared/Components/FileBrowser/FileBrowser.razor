@@ -245,8 +245,6 @@
                         ThumbnailService="ThumbnailService"
                         SortType="_currentSortType"
                         IsAscOrder="_isAscOrder"/>
-
-<ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_inlineFileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
@@ -259,6 +257,7 @@
                ProgressMax="@ProgressBarMax"
                OnCancel="ProgressBarOnCancel"
 @ref="_progressModalRef" />
+<ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
 <FileViewer @ref="_fileViewerRef"
             FileService="FileService"

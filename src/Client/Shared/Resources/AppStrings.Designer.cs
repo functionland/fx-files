@@ -1267,7 +1267,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace {0} item(s) .
+        ///   Looks up a localized string similar to Replace.
         /// </summary>
         public static string ReplaceButtonModal {
             get {
@@ -1276,7 +1276,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to What do you want to do?.
+        ///   Looks up a localized string similar to To continue, please choose an action.
         /// </summary>
         public static string ReplaceOrSkipSubDescModal {
             get {
@@ -1285,7 +1285,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The destination folder already has {0} item(s) with the same name,.
+        ///   Looks up a localized string similar to The destination already has a file named.
         /// </summary>
         public static string ReplaceOrSkipSupDescModal {
             get {
@@ -1294,7 +1294,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace or skip {0} item(s).
+        ///   Looks up a localized string similar to Replace or skip file.
         /// </summary>
         public static string ReplaceOrSkipTitleModal {
             get {
@@ -1474,7 +1474,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skip {0} item(s).
+        ///   Looks up a localized string similar to Skip.
         /// </summary>
         public static string SkipButtonModal {
             get {

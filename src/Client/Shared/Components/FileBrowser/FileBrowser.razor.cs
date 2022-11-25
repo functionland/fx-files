@@ -270,7 +270,7 @@ public partial class FileBrowser : IDisposable
                             // Todo: Update UI not to show count
                             if (shouldOverwrite is null)
                             {
-                                var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(1);
+                                var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(artifact);
                                 //// ToDo: Modals should handle this by themselves.
                                 RefreshDeviceBackButtonBehavior();
                                 shouldOverwrite = result.ResultType ==
@@ -553,7 +553,7 @@ public partial class FileBrowser : IDisposable
             {
                 if (_confirmationReplaceOrSkipModalRef is not null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts[0]);
                     RefreshDeviceBackButtonBehavior();
 
                     if (result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)

@@ -4,9 +4,9 @@ public partial class ConfirmationReplaceOrSkipModal
 {
     private bool _isModalOpen;
     private TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>? _tcs;
-    private int _artifactsCount;
+    private FsArtifact? _artifact;
 
-    public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(int artifactsCount)
+    public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(FsArtifact? artifact)
     {
         GoBackService.OnInit((Task () =>
         {
@@ -15,7 +15,7 @@ public partial class ConfirmationReplaceOrSkipModal
             return Task.CompletedTask;
         }), true, false);
 
-        _artifactsCount = artifactsCount;
+        _artifact = artifact;
         _tcs?.SetCanceled();
 
         _isModalOpen = true;
