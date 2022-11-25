@@ -70,17 +70,17 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return await base.GetArtifactAsync(path, cancellationToken);
     }
 
-    public override async Task MoveArtifactsAsync(
+    public override async Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(
         IList<FsArtifact> artifacts,
         string destination,
-        bool overwrite = false,
+        Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
         Func<ProgressInfo, Task>? onProgress = null,
         CancellationToken? cancellationToken = null)
     {
         await GetReadPermission(artifacts.Select(f => f.FullPath));
         await GetWritePermission(destination);
 
-        await base.MoveArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
+        return await base.MoveArtifactsAsync(artifacts, destination, onShouldOverwrite, onProgress, cancellationToken);
     }
 
     public override async Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(

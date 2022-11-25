@@ -40,6 +40,7 @@ namespace Functionland.FxFiles.Client.Shared.Pages
                 return null;
             }
         }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

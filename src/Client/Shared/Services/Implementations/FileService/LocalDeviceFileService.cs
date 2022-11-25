@@ -26,8 +26,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return ignoredList;
         }
 
-        public async Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
-            Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task CopyFileAsync(FsArtifact artifact,
+            string destinationFullPath,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null)
         {
             File.Copy(artifact.FullPath, destinationFullPath);
         }

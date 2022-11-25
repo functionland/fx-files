@@ -1919,7 +1919,6 @@ public partial class FileBrowser : IDisposable
 
     public void Dispose()
     {
-        // ToDo: Check all these
         ProgressBarCts?.Dispose();
         _timer?.Dispose();
         _searchStatusTask?.Dispose();
