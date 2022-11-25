@@ -113,16 +113,26 @@ public partial class NativeVideoViewer : ContentPage
 
         if (CurrentMediaState == MediaElementState.Playing)
         {
-            playButton.Source = ImageSource.FromFile("pause.png");
-            CurrentMediaState = MediaElementState.Playing;
-            media.Play();
+            Play();
         }
         else if (CurrentMediaState == MediaElementState.Paused)
         {
-            playButton.Source = ImageSource.FromFile("play.png");
-            CurrentMediaState = MediaElementState.Paused;
-            media.Pause();
+            Pause();
         }
+    }
+
+    private void Pause()
+    {
+        playButton.Source = ImageSource.FromFile("play.png");
+        CurrentMediaState = MediaElementState.Paused;
+        media.Pause();
+    }
+
+    private void Play()
+    {
+        playButton.Source = ImageSource.FromFile("pause.png");
+        CurrentMediaState = MediaElementState.Playing;
+        media.Play();
     }
 
     private void PausePlay_Clicked(object sender, EventArgs e)
