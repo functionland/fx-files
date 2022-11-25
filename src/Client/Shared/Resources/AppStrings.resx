@@ -723,4 +723,7 @@
   <data name="CopyPostfix" xml:space="preserve">
     <value> - Copy</value>
   </data>
+  <data name="TheMoveOpreationFailedMessage" xml:space="preserve">
+    <value>Something went wrong during the move.</value>
+  </data>
 </root>

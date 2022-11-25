@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Utils;
+
 using System;
 using System.Text;
 
@@ -78,7 +79,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 await fileService.MoveArtifactsAsync(movingFiles, Path.Combine(testRoot, "Folder 2"));
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(1, artifacts.Count, "Move a file to a folder. Created on destination");
-                 
+
                 artifacts = await GetArtifactsAsync(fileService, testRoot);
                 Assert.AreEqual(2, artifacts.Count, "Move a file to a folder. Removed from source");
                 artifacts.Clear();
@@ -192,7 +193,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 var file113 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/Folder 11/file113[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
                 var file114 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/Folder 11/file114[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
 
-                await fileService.MoveArtifactsAsync(copyingItems, testRoot, true);
+                
+                //await fileService.MoveArtifactsAsync(copyingItems, testRoot, true);
 
                 srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 1"));
                 Assert.AreEqual(0, srcArtifacts.Count, "Move items, including duplicate folder. All removed from source.");
@@ -247,8 +249,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 copyingItems = new[] { folder21 };  //Already null-checked in assertion above.
 
-                Func<FsArtifact, Task<bool>>? onShouldOverwrite = null; //TODO: Complete this (Zahra)
-                await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), onShouldOverwrite);
+
+                //await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), true);
                 desArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3/Folder 21"));
                 Assert.AreEqual(3, desArtifacts.Count, "Copy folder with files inside. All files including duplicate one copied in sub folder");
 
@@ -275,25 +277,26 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3111"));
                 var progressBarMax = 0;
-                //TODO: test onShouldOverwrite(Zahra)
-                await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"),onShouldOverwrite, 
-                    (progressInfo) =>
-                    {
-                        progressBarMax = progressInfo.MaxValue ?? 0;
-                        return Task.CompletedTask;
-                    });
+
+                //await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"),true, 
+                //    (progressInfo) =>
+                //    {
+                //        progressBarMax = progressInfo.MaxValue ?? 0;
+                //        return Task.CompletedTask;
+                //    });
 
                 Assert.AreEqual(progressBarMax, artifacts.Count, "Copy progress bar passed.");
 
                 var folder3113 = await fileService.CreateFolderAsync(testRoot, "Folder 3113");
                 progressBarMax = 0;
 
-                await fileService.MoveArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3113"), false,
-                    (progressInfo) =>
-                    {
-                        progressBarMax = progressInfo.MaxValue ?? 0;
-                        return Task.CompletedTask;
-                    });
+                
+                //await fileService.MoveArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3113"), true,
+                //    (progressInfo) =>
+                //    {
+                //        progressBarMax = progressInfo.MaxValue ?? 0;
+                //        return Task.CompletedTask;
+                //    });
 
                 Assert.AreEqual(progressBarMax, artifacts.Count, "Move progress bar passed.");
 
@@ -305,7 +308,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                     return Task.CompletedTask;
                 });
 
-                Assert.AreEqual(progressBarMax, artifacts.Count, "Delete progress bar passed.");              
+                Assert.AreEqual(progressBarMax, artifacts.Count, "Delete progress bar passed.");
 
                 Assert.Success("Test passed!");
             }

@@ -50,7 +50,7 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+    public Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }

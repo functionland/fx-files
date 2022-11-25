@@ -8,10 +8,15 @@ namespace Functionland.FxFiles.Client.Shared.Services.Contracts
         Task<List<FsArtifact>> CreateFilesAsync(IEnumerable<(string path, Stream stream)> files, CancellationToken? cancellationToken = null);
         Task<FsArtifact> CreateFolderAsync(string path, string folderName, CancellationToken? cancellationToken = null);
         Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null);
-        Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null);
+        Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts,
+            string destination,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null);
         Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts,
             string destination,
-            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo,Task>? onProgress = null,
             CancellationToken? cancellationToken = null);
         Task CopyFileAsync(FsArtifact artifact, string destinationFullPath,
             Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null,

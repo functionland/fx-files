@@ -257,7 +257,6 @@ public partial class ZipViewer : IFileViewerComponent
         }
     }
 
-    //TODO: Test this (zahra)
     private async Task<string?> ShowDestinationSelectorModalAsync(List<FsArtifact> artifacts)
     {
         if (_artifactSelectionModalRef is null)

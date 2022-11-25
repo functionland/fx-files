@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -12,8 +13,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        public virtual async Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination,
-            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null,
+        public virtual async Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts,
+            string destination,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
             CancellationToken? cancellationToken = null)
         {
             List<(FsArtifact artifact, Exception exception)> ignoredList = new();
@@ -229,16 +232,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts,
+            string destination,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null)
         {
-            List<FsArtifact> ignoredList = new();
+            List<(FsArtifact artifact, Exception exception)>? ignoredList = new();
 
-            ignoredList = await MoveAllAsync(artifacts, destination, overwrite, ignoredList, onProgress, true, cancellationToken);
+            await MoveAllAsync(artifacts, destination, onShouldOverwrite, ignoredList, onProgress, true, cancellationToken);
 
-            if (ignoredList.Any())
-            {
-                throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
-            }
+            return ignoredList;
         }
 
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
@@ -362,13 +366,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                     var shouldCopy = true;
 
-                    // ToDo: Make exception to create message itself.
                     if (destinationInfo.Exists)
                     {
                         if (onShouldOverwrite is null)
+                        {
                             shouldCopy = false;
+                            ignoredList.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
+                        }
                         else
+                        {
                             shouldCopy = await onShouldOverwrite(artifact);
+                        }
                     }
 
                     if (shouldCopy)
@@ -386,10 +394,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         {
                             ignoredList.Add((artifact, exception));
                         }
-                    }
-                    else
-                    {
-                        ignoredList.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -446,11 +450,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        private async Task<List<FsArtifact>> MoveAllAsync(
+        private async Task<List<(FsArtifact artifact, Exception exception)>?> MoveAllAsync(
             IList<FsArtifact> artifacts,
             string destination,
-            bool overwrite = false,
-            List<FsArtifact>? ignoredList = null,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            List<(FsArtifact artifact, Exception exception)>? ignoredList = null,
             Func<ProgressInfo, Task>? onProgress = null,
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
@@ -474,19 +478,38 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     if (fileInfo.FullName == destinationInfo.FullName)
                         throw new SameDestinationFileException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
 
-                    if (!overwrite && destinationInfo.Exists)
+                    var shouldMove = true;
+
+                    if (destinationInfo.Exists)
                     {
-                        ignoredList.Add(artifact);
+                        if (onShouldOverwrite is null)
+                        {
+                            shouldMove = false;
+                            ignoredList?.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
+                        }
+                        else
+                        {
+                            shouldMove = await onShouldOverwrite(artifact);
+                        }
                     }
-                    else
+
+                    if (shouldMove)
                     {
                         if (!Directory.Exists(destination))
                         {
                             LocalStorageCreateDirectory(destination);
                         }
 
-                        LocalStorageMoveFileAsync(fileInfo.FullName, destinationInfo.FullName);
+                        try
+                        {
+                            await LocalStorageCopyFileAsync(fileInfo.FullName, destinationInfo.FullName);
+                        }
+                        catch (Exception exception)
+                        {
+                            ignoredList?.Add((artifact, exception));
+                        }
                     }
+
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
                 {
@@ -534,8 +557,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await MoveAllAsync(children, destinationInfo.FullName,
-                         overwrite, ignoredList, onProgress, false, cancellationToken);
+                    var childIgnoredList = await MoveAllAsync(children,
+                        destinationInfo.FullName,
+                         onShouldOverwrite,
+                         ignoredList,
+                         onProgress,
+                         false,
+                         cancellationToken);
 
                     DeleteArtifactAsync(artifact, cancellationToken);
 
@@ -657,14 +685,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         protected virtual async Task LocalStorageMoveFileAsync(string filePath, string newPath)
         {
-            try
-            {
-                File.Move(filePath, newPath, true);
-            }
-            catch (IOException ex)
-            {
-                throw new KnownIOException(ex.Message, ex);
-            }
+            File.Move(filePath, newPath, true);
         }
 
         protected virtual void LocalStorageRenameFile(string filePath, string newPath)
@@ -675,14 +696,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         protected virtual async Task LocalStorageCopyFileAsync(string sourceFile, string destinationFile)
         {
             File.Copy(sourceFile, destinationFile, true);
-            //try
-            //{
-            //    File.Copy(sourceFile, destinationFile, true);
-            //}
-            //catch (IOException ex)
-            //{
-            //    throw new KnownIOException(ex.Message, ex);
-            //}
         }
 
         protected virtual async Task LocalStorageCreateFile(string path, Stream stream)

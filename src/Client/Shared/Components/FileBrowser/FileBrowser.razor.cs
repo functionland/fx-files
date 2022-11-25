@@ -255,7 +255,7 @@ public partial class FileBrowser : IDisposable
                     onProgress: UpdateProgressAsync,
                     cancellationToken: ProgressBarCts.Token);
 
-                if (notCopiedList.Any(a => a.exception is not ArtifactAlreadyExistsException))
+                if (notCopiedList.Any())
                 {
                     var knownException = notCopiedList.Select(a => a.exception)
                                                       .OfType<KnownException>()
@@ -263,12 +263,6 @@ public partial class FileBrowser : IDisposable
 
                     throw new DomainLogicException(knownException?.Message ??
                                                    AppStrings.TheCopyOpreationFailedMessage);
-                }
-                else
-                {
-                    FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
-                                 message: AppStrings.TheCopyOpreationSuccessedMessage,
-                                 toastType: FxToastType.Success);
                 }
             }
             else
@@ -326,12 +320,12 @@ public partial class FileBrowser : IDisposable
                     subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
                     current: ProgressBarCurrentValue,
                     max: sourceArtifacts.Count);
-                }
+                }  
+            }
 
-                FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
+            FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
                              message: AppStrings.TheCopyOpreationSuccessedMessage,
                              toastType: FxToastType.Success);
-            }
 
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
@@ -421,89 +415,56 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            List<FsArtifact> existArtifacts = new();
-
             var destinationPath = await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.MoveHere), artifacts);
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
             await CloseFileViewer();
 
-            try
-            {
-                ProgressBarCts = new CancellationTokenSource();
 
-                if (_progressModalRef is not null)
+            ProgressBarCts = new CancellationTokenSource();
+
+            await NavigateToAsync(destinationPath);
+
+            await _progressModalRef!.ShowAsync(ProgressMode.Progressive,
+                Localizer.GetString(AppStrings.MovingFiles), true);
+
+            bool? shouldOverwrite = null;
+
+            var notMovedList = await FileService.MoveArtifactsAsync(artifacts,
+                destinationPath,
+                onShouldOverwrite: async (artifact) =>
                 {
-                    await NavigateToAsync(destinationPath);
-                    await _progressModalRef.ShowAsync(ProgressMode.Progressive,
-                        Localizer.GetString(AppStrings.MovingFiles), true);
-                }
-
-                await FileService.MoveArtifactsAsync(artifacts, destinationPath, false,
-                    onProgress: async (progressInfo) =>
+                    if (shouldOverwrite is null)
                     {
-                        ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
-                        ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
-                        ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                        ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                        await InvokeAsync(StateHasChanged);
-                        await _progressModalRef.RefreshAsync();
-                    },
-                    cancellationToken: ProgressBarCts.Token);
-            }
-            catch (CanNotOperateOnFilesException ex)
-            {
-                existArtifacts = ex.FsArtifacts;
-            }
-            finally
-            {
-                if (_progressModalRef is not null)
-                {
-                    await _progressModalRef.CloseAsync();
-                }
-            }
+                        var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(artifact);
 
-            var overwriteArtifacts =
-                GetShouldOverwriteArtifacts(artifacts, existArtifacts); //TODO: we must enhance this
-            var title = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedTiltle);
-            var message = Localizer.GetString(AppStrings.TheMoveOpreationSuccessedMessage);
-
-            if (existArtifacts.Count > 0)
-            {
-                if (_confirmationReplaceOrSkipModalRef is not null)
-                {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts[0]);
-
-                    if (result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
-                    {
-                        ProgressBarCts = new CancellationTokenSource();
-                        if (_progressModalRef is not null)
-                        {
-                            await _progressModalRef.ShowAsync(ProgressMode.Progressive,
-                                Localizer.GetString(AppStrings.ReplacingFiles), true);
-                        }
-
-                        await FileService.MoveArtifactsAsync(overwriteArtifacts, destinationPath, true,
-                            onProgress: async (progressInfo) =>
-                            {
-                                ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
-                                ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
-                                ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                                ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                                await InvokeAsync(StateHasChanged);
-                                await _progressModalRef.RefreshAsync();
-                            },
-                            cancellationToken: ProgressBarCts.Token);
-
-                        FxToast.Show(title, message, FxToastType.Success);
+                        shouldOverwrite = result.ResultType ==
+                                          ConfirmationReplaceOrSkipModalResultType.Replace;
                     }
-                }
-            }
-            else
+
+                    return shouldOverwrite.Value;
+                },
+                onProgress: async (progressInfo) =>
+                {
+                    await UpdateProgressAsync(progressInfo);
+                    await _progressModalRef.RefreshAsync();
+                },
+                cancellationToken: ProgressBarCts.Token);
+
+            if (notMovedList.Any())
             {
-                FxToast.Show(title, message, FxToastType.Success);
+                var knownException = notMovedList.Select(a => a.exception)
+                                                              .OfType<KnownException>()
+                                                              .FirstOrDefault();
+
+                throw new DomainLogicException(knownException?.Message ??
+                                               AppStrings.TheMoveOpreationFailedMessage);
             }
+
+            FxToast.Show(title: AppStrings.TheMoveOpreationSuccessedTiltle,
+                         message: AppStrings.TheMoveOpreationSuccessedMessage,
+                         toastType: FxToastType.Success);
 
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
@@ -513,10 +474,7 @@ public partial class FileBrowser : IDisposable
         }
         finally
         {
-            if (_progressModalRef is not null)
-            {
-                await _progressModalRef.CloseAsync();
-            }
+            await _progressModalRef!.CloseAsync();
         }
     }
 

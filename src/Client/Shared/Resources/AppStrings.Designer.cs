@@ -1636,6 +1636,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong during the move..
+        /// </summary>
+        public static string TheMoveOpreationFailedMessage {
+            get {
+                return ResourceManager.GetString("TheMoveOpreationFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Items moved..
         /// </summary>
         public static string TheMoveOpreationSuccessedMessage {
