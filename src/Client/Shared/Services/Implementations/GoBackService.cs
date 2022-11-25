@@ -6,10 +6,28 @@ public class GoBackService : IGoBackService
     public bool CanExitApp { get; set; } = false;
     public Func<Task>? GoBackAsync { get;  set; }
 
-    public void OnInit(Func<Task> goBackAsynFunc, bool canGoBack, bool canExitApp)
+    private Func<Task>? _previousGoBackFunc;
+    private bool _previousCanGoBack;
+    private bool _previousCanExitApp;
+
+    public void SetState(Func<Task>? goBackAsynFunc, bool canGoBack, bool canExitApp)
     {
+        SavePreviousState();
+
         CanExitApp = canExitApp;
         CanGoBack = canGoBack;
         GoBackAsync = goBackAsynFunc;
+    }
+
+    public void SetToPreviousState()
+    {
+        SetState(_previousGoBackFunc, _previousCanGoBack, _previousCanExitApp);
+    }
+
+    private void SavePreviousState()
+    {
+        _previousGoBackFunc = GoBackAsync;
+        _previousCanGoBack =  CanGoBack;
+        _previousCanExitApp = CanExitApp;
     }
 }

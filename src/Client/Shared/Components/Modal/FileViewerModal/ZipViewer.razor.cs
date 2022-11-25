@@ -342,7 +342,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void SetGoBackDeviceButtonFunctionality()
     {
-        GoBackService.OnInit((async Task () =>
+        GoBackService.SetState((async Task () =>
         {
             await HandleBackAsync();
             await Task.CompletedTask;

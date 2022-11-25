@@ -692,15 +692,12 @@ public partial class FileBrowser : IDisposable
                             Localizer.GetString(AppStrings.DeleteItems, singleArtifact.Name),
                             Localizer.GetString(AppStrings.DeleteItemDescription));
                     }
-
-                    RefreshDeviceBackButtonBehavior();
                 }
                 else
                 {
                     result = await _confirmationModalRef.ShowAsync(
                         Localizer.GetString(AppStrings.DeleteItems, artifacts.Count),
                         Localizer.GetString(AppStrings.DeleteItemsDescription));
-                    RefreshDeviceBackButtonBehavior();
                 }
 
                 if (result.ResultType == ConfirmationModalResultType.Confirm)
@@ -756,8 +753,6 @@ public partial class FileBrowser : IDisposable
             return;
 
         var result = await _artifactDetailModalRef.ShowAsync(artifacts, isMultiple, (isDrive || (IsInRoot(CurrentArtifact) && !_isInSearchMode)));
-
-        RefreshDeviceBackButtonBehavior();
 
         switch (result.ResultType)
         {
@@ -817,7 +812,6 @@ public partial class FileBrowser : IDisposable
         var newFolderPlaceholder = Localizer.GetString(AppStrings.NewFolderPlaceholder);
 
         var result = await _inputModalRef.ShowAsync(createFolder, string.Empty, string.Empty, newFolderPlaceholder);
-        RefreshDeviceBackButtonBehavior();
 
         try
         {
@@ -895,10 +889,6 @@ public partial class FileBrowser : IDisposable
         catch (Exception exception)
         {
             ExceptionHandler.Handle(exception);
-        }
-        finally
-        {
-            RefreshDeviceBackButtonBehavior();
         }
     }
 
@@ -1089,7 +1079,6 @@ public partial class FileBrowser : IDisposable
                 artifact?.ArtifactType,
                 _isInSearchMode,
                 _isInFileViewer);
-            RefreshDeviceBackButtonBehavior();
         }
 
         switch (result?.ResultType)
@@ -1209,7 +1198,6 @@ public partial class FileBrowser : IDisposable
                 fileCategoryType,
                 fsArtifactType,
                 _isInFileViewer);
-            RefreshDeviceBackButtonBehavior();
         }
 
         switch (result?.ResultType)
@@ -1272,7 +1260,6 @@ public partial class FileBrowser : IDisposable
 
     private void SetArtifactExplorerMode(ArtifactExplorerMode mode)
     {
-        // ToDo: test setting the mode.
         _artifactExplorerMode = mode;
         RefreshDeviceBackButtonBehavior();
 
@@ -1337,7 +1324,6 @@ public partial class FileBrowser : IDisposable
 
         result = await _inputModalRef.ShowAsync(Localizer.GetString(AppStrings.ChangeName),
             Localizer.GetString(AppStrings.Rename).ToString().ToUpper(), name, artifactType);
-        RefreshDeviceBackButtonBehavior();
 
         return result;
     }
@@ -1354,7 +1340,6 @@ public partial class FileBrowser : IDisposable
             : await FileService.GetArtifactAsync(initialArtifactPath);
 
         var result = await _artifactSelectionModalRef.ShowAsync(initialArtifact, buttonText, artifacts);
-        RefreshDeviceBackButtonBehavior();
 
         string? destinationPath = null;
 
@@ -1774,7 +1759,6 @@ public partial class FileBrowser : IDisposable
             return;
 
         _inlineFileCategoryFilter = await _filteredArtifactModalRef.ShowAsync();
-        RefreshDeviceBackButtonBehavior();
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         _isArtifactExplorerLoading = true;
         await Task.Run(() => { RefreshDisplayedArtifacts(); });
@@ -1813,7 +1797,6 @@ public partial class FileBrowser : IDisposable
         if (_isArtifactExplorerLoading) return;
 
         _currentSortType = await _sortedArtifactModalRef!.ShowAsync();
-        RefreshDeviceBackButtonBehavior();
         _isArtifactExplorerLoading = true;
         StateHasChanged();
         try
@@ -2042,20 +2025,12 @@ public partial class FileBrowser : IDisposable
 
     private async Task ApplyIntentArtifactIfNeededAsync()
     {
-        // ToDo: Check the exception removal.
-        //try
-        //{
         if (AppStateStore.IntentFileUrl is null || _fileViewerRef is null)
             return;
 
         var artifact = await FileService.GetArtifactAsync(AppStateStore.IntentFileUrl);
         AppStateStore.IntentFileUrl = null;
         await _fileViewerRef.OpenArtifact(artifact);
-        //}
-        //catch (Exception exception)
-        //{
-        //    ExceptionHandler.Handle(exception);
-        //}
     }
 
     private async Task HandleOnArtifactTouchStartAsync()

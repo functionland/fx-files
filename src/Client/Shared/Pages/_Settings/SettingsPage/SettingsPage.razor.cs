@@ -15,7 +15,7 @@ public partial class SettingsPage
     protected override async Task OnInitAsync()
     {
         AppStateStore.CurrentPagePath = "settings";
-        GoBackService.OnInit(null, true, true);
+        GoBackService.SetState(null, true, true);
 
         DesiredTheme = await ThemeInterop.GetThemeAsync();
 

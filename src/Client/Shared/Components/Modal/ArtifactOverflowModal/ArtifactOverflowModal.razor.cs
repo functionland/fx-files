@@ -141,7 +141,9 @@
             bool isInSearch = false,
             bool isInFileViewer = false)
         {
-            GoBackService.OnInit((Task () =>
+            SavePreviousDeviceBackButtonBehavior();
+
+            GoBackService.SetState((Task () =>
             {
                 Close();
                 StateHasChanged();
@@ -161,7 +163,11 @@
             StateHasChanged();
 
             _tcs = new TaskCompletionSource<ArtifactOverflowResult>();
-            return await _tcs.Task;
+            var result = await _tcs.Task;
+
+            GoBackService.ResetPreviousState();
+
+            return result;
         }
 
         private void Close()

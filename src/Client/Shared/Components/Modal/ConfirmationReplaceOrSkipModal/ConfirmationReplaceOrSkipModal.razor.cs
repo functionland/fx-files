@@ -8,7 +8,7 @@ public partial class ConfirmationReplaceOrSkipModal
 
     public async Task<ConfirmationReplaceOrSkipModalResult> ShowAsync(int artifactsCount)
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             Close();
             StateHasChanged();
@@ -22,8 +22,11 @@ public partial class ConfirmationReplaceOrSkipModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>();
+        var result = await _tcs.Task;
 
-        return await _tcs.Task;
+        GoBackService.ResetPreviousState();
+
+        return result;
     }
 
     public void SkipArtifact()

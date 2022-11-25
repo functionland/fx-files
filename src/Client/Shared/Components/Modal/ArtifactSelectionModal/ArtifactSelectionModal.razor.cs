@@ -21,7 +21,7 @@ public partial class ArtifactSelectionModal
 
     public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, string buttonText, List<FsArtifact> excludedArtifacts)
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             Close();
             StateHasChanged();
@@ -38,9 +38,13 @@ public partial class ArtifactSelectionModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
+        var result = await _tcs.Task;
 
-        return await _tcs.Task;
+        GoBackService.ResetPreviousState();
+
+        return result;
     }
+
     private async Task SelectArtifact(FsArtifact artifact)
     {
         await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");

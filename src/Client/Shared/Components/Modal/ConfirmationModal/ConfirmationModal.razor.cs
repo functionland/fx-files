@@ -10,7 +10,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task<ConfirmationModalResult> ShowAsync(string title, string description)
         {
-            GoBackService.OnInit((Task () =>
+            GoBackService.SetState((Task () =>
             {
                 Close();
                 StateHasChanged();
@@ -26,8 +26,11 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             StateHasChanged();
 
             _tcs = new TaskCompletionSource<ConfirmationModalResult>();
+            var result = await _tcs.Task;
 
-            return await _tcs.Task;
+            GoBackService.ResetPreviousState();
+
+            return result;
         }
 
         private void Confirm()
