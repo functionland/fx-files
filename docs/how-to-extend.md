@@ -11,6 +11,7 @@ Essentially, a file manager is an application which helps you to:
   - Doing actions on files:  View, Copy, Delete and ...
   - Viewing files: images, videos, documents
 
+## How to extend a File Manager
 You can extend the *Fx Files* by adding:
  - A new **File Service**: [How to add a File Service](https://github.com/functionland/fx-files/blob/main/docs/file-service-overview.md)
  - A new **Thumbnail Plugin**: [How to add a Thumbnail Plugin](https://github.com/functionland/fx-files/blob/main/docs/thumbnail-plugin-overview.md)
