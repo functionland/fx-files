@@ -717,4 +717,10 @@
   <data name="SelectionModalItemSelected" xml:space="preserve">
     <value>Item(s) selected</value>
   </data>
+  <data name="TheCopyOpreationFailedMessage" xml:space="preserve">
+    <value>Something went wrong during the copy.</value>
+  </data>
+  <data name="CopyPostfix" xml:space="preserve">
+    <value> - Copy</value>
+  </data>
 </root>

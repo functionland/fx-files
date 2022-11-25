@@ -18,15 +18,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             List<(FsArtifact artifact, Exception exception)> ignoredList = new();
 
-            //await Task.Run(async () =>
-            //{
-                await CopyAllAsync(artifacts, destination, ignoredList, onShouldOverwrite, onProgress, true, cancellationToken);
-            //});
+            await CopyAllAsync(artifacts, destination, ignoredList, onShouldOverwrite, onProgress, true, cancellationToken);
 
-            //if (ignoredList.Any())
-            //{
-            //    throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
-            //}
             return ignoredList;
         }
 
@@ -364,13 +357,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
-                    
-                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
-                    //if (!overwrite && destinationInfo.Exists)
-                    //{
-                    //    ignoredList.Add(artifact);
-                    //}
+                    var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
                     var shouldCopy = true;
 
@@ -853,7 +841,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 List<string> categoryTypeList = new();
 
-                foreach(var type in inLineDeepSearchFilter.ArtifactCategorySearchTypes)
+                foreach (var type in inLineDeepSearchFilter.ArtifactCategorySearchTypes)
                 {
                     var types = FsArtifactUtils.GetSearchCategoryTypeExtensions(type);
 

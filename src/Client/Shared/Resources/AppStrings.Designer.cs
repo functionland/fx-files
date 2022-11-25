@@ -439,6 +439,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  - Copy.
+        /// </summary>
+        public static string CopyPostfix {
+            get {
+                return ResourceManager.GetString("CopyPostfix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy to.
         /// </summary>
         public static string CopyTo {
@@ -1596,6 +1605,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string TextAreaPlaceholder {
             get {
                 return ResourceManager.GetString("TextAreaPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong during the copy..
+        /// </summary>
+        public static string TheCopyOpreationFailedMessage {
+            get {
+                return ResourceManager.GetString("TheCopyOpreationFailedMessage", resourceCulture);
             }
         }
         
