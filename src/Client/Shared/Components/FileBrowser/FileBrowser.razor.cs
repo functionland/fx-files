@@ -78,6 +78,7 @@ public partial class FileBrowser : IDisposable
             }
 
             _currentArtifactValue = value;
+
             if (_currentArtifactValue is not null)
             {
                 FileWatchService.WatchArtifact(_currentArtifactValue);
@@ -241,12 +242,10 @@ public partial class FileBrowser : IDisposable
                     destinationPath,
                     onShouldOverwrite: async (artifact) =>
                     {
-                        // Todo: Update UI not to show count
                         if (shouldOverwrite is null)
                         {
-                            var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(1);
-                            //// ToDo: Modals should handle this by themselves.
-                            RefreshDeviceBackButtonBehavior();
+                            var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(artifact);
+
                             shouldOverwrite = result.ResultType ==
                                               ConfirmationReplaceOrSkipModalResultType.Replace;
                         }
@@ -474,8 +473,7 @@ public partial class FileBrowser : IDisposable
             {
                 if (_confirmationReplaceOrSkipModalRef is not null)
                 {
-                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts.Count);
-                    RefreshDeviceBackButtonBehavior();
+                    var result = await _confirmationReplaceOrSkipModalRef.ShowAsync(existArtifacts[0]);
 
                     if (result.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                     {
@@ -554,7 +552,7 @@ public partial class FileBrowser : IDisposable
                 throw new ArgumentOutOfRangeException();
         }
         var newPath = artifact?.FullPath;
-        if(newPath != null && oldPath != null)    
+        if (newPath != null && oldPath != null)
             FileWatchService.UpdateFileWatchCatch(newPath, oldPath);
     }
 

@@ -19,7 +19,7 @@ public class GoBackService : IGoBackService
         GoBackAsync = goBackAsynFunc;
     }
 
-    public void SetToPreviousState()
+    public void ResetPreviousState()
     {
         SetState(_previousGoBackFunc, _previousCanGoBack, _previousCanExitApp);
     }

@@ -141,8 +141,6 @@
             bool isInSearch = false,
             bool isInFileViewer = false)
         {
-            SavePreviousDeviceBackButtonBehavior();
-
             GoBackService.SetState((Task () =>
             {
                 Close();
