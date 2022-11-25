@@ -38,13 +38,8 @@
                                 @foreach (var pin in _pins)
                                 {
                                     <div @onclick="(() => HandleSelectArtifactAsync(pin))">
-                                        <FileCard ArtifactType="@pin.ArtifactType"
-                                                  Name="@pin.Name"
-                                                  Size="@pin.SizeStr"
-                                                  Path="@pin.FullPath"
-                                                  FileService="@FileService"
-                                                  FileType="@pin.FileCategory"
-                                                  ModifiedDate="@pin.LastModifiedDateTime.ToString("MM/dd/yy")" />
+                                        <FileCard Artifact="@pin"
+                                              FileService="@FileService" ThumbnailService="@ThumbnailService"/>
                                     </div>
                                 }
                             </div>
