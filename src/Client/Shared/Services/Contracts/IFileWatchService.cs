@@ -4,6 +4,7 @@
     {
         void WatchArtifact(FsArtifact fsArtifact);
         void UnWatchArtifact(FsArtifact fsArtifact);
+        void UpdateFileWatchCatch(string newPath, string oldPath);
     }
 
 }
