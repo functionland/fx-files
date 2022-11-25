@@ -598,48 +598,40 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            if (_confirmationModalRef != null)
+            var result = new ConfirmationModalResult();
+
+            if (artifacts.Count == 1)
             {
-                var result = new ConfirmationModalResult();
-
-                if (artifacts.Count == 1)
+                var singleArtifact = artifacts.SingleOrDefault();
+                if (singleArtifact?.Name != null)
                 {
-                    var singleArtifact = artifacts.SingleOrDefault();
-                    if (singleArtifact?.Name != null)
-                    {
-                        result = await _confirmationModalRef.ShowAsync(
-                            Localizer.GetString(AppStrings.DeleteItems, singleArtifact.Name),
-                            Localizer.GetString(AppStrings.DeleteItemDescription));
-                    }
-                }
-                else
-                {
-                    result = await _confirmationModalRef.ShowAsync(
-                        Localizer.GetString(AppStrings.DeleteItems, artifacts.Count),
-                        Localizer.GetString(AppStrings.DeleteItemsDescription));
-                }
-
-                if (result.ResultType == ConfirmationModalResultType.Confirm)
-                {
-                    ProgressBarCts = new CancellationTokenSource();
-                    if (_progressModalRef is not null)
-                    {
-                        await _progressModalRef.ShowAsync(ProgressMode.Progressive,
-                            Localizer.GetString(AppStrings.DeletingFiles), true);
-
-                        await FileService.DeleteArtifactsAsync(artifacts, onProgress: async (progressInfo) =>
-                        {
-                            ProgressBarCurrentText = progressInfo.CurrentText ?? string.Empty;
-                            ProgressBarCurrentSubText = progressInfo.CurrentSubText ?? string.Empty;
-                            ProgressBarCurrentValue = progressInfo.CurrentValue ?? 0;
-                            ProgressBarMax = progressInfo.MaxValue ?? artifacts.Count;
-                            await InvokeAsync(StateHasChanged);
-                        }, cancellationToken: ProgressBarCts.Token);
-
-                        await _progressModalRef.CloseAsync();
-                    }
+                    result = await _confirmationModalRef!.ShowAsync(
+                        Localizer.GetString(AppStrings.DeleteItem, singleArtifact.Name),
+                        Localizer.GetString(AppStrings.DeleteItemDescription));
                 }
             }
+            else
+            {
+                result = await _confirmationModalRef!.ShowAsync(
+                    Localizer.GetString(AppStrings.DeleteItems, artifacts.Count),
+                    Localizer.GetString(AppStrings.DeleteItemsDescription));
+            }
+
+            if (result.ResultType == ConfirmationModalResultType.Confirm)
+            {
+                ProgressBarCts = new CancellationTokenSource();
+
+                await _progressModalRef!.ShowAsync(ProgressMode.Progressive,
+                    Localizer.GetString(AppStrings.DeletingFiles), true);
+
+                await FileService.DeleteArtifactsAsync(artifacts,
+                                                       onProgress: UpdateProgressAsync,
+                                                       cancellationToken: ProgressBarCts.Token);
+
+                await _progressModalRef.CloseAsync();
+
+            }
+
         }
         catch (Exception exception)
         {
@@ -648,12 +640,7 @@ public partial class FileBrowser : IDisposable
 
         finally
         {
-            if (_progressModalRef is not null)
-            {
-                ProgressBarCts?.Cancel();
-                await _progressModalRef.CloseAsync();
-            }
-
+            await _progressModalRef!.CloseAsync();
             await CloseFileViewer();
         }
     }
