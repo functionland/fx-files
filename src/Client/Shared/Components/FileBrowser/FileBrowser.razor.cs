@@ -755,7 +755,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleOpenWithAppAsync(FsArtifact? artifact)
     {
-        if (artifact == null || artifact.FullPath == null)
+        if (artifact?.FullPath == null)
             return;
 
         AppStateStore.IntentFileUrl = artifact.FullPath;
