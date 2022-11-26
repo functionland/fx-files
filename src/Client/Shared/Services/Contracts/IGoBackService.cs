@@ -7,5 +7,5 @@ public interface IGoBackService
     public bool CanExitApp { get; protected set; }
     public Func<Task>? GoBackAsync { get; protected set; }
     public void SetState(Func<Task>? goBackAsynFunc, bool canGoBack, bool canExitApp);
-    public void ResetPreviousState();
+    public void ResetToPreviousState();
 }

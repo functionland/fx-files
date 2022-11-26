@@ -27,7 +27,7 @@ public partial class SortArtifactModal
         _tcs = new TaskCompletionSource<SortTypeEnum>();
         var result = await _tcs.Task;
 
-        GoBackService.ResetPreviousState();
+        GoBackService.ResetToPreviousState();
 
         return result;
     }

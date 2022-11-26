@@ -24,7 +24,7 @@ public partial class FilterArtifactModal
         _tcs = new TaskCompletionSource<FileCategoryType?>();
         var result = await _tcs.Task;
 
-        GoBackService.ResetPreviousState();
+        GoBackService.ResetToPreviousState();
 
         return result;
     }
