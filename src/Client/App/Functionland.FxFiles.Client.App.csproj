@@ -22,6 +22,7 @@
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
 		<DefaultLanguage>en-US</DefaultLanguage>
+		<NoWarn>$(NoWarn);ClassWithoutModifierAnalyzer</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
@@ -99,5 +100,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Platforms\Android\Resources\playstore-icon.png" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
 	</ItemGroup>
 </Project>
