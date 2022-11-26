@@ -352,8 +352,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy = $"{oldArtifactPath}{AppStrings.CopyPostfix}"
                                + (counter > 1 ? $" {counter}" : string.Empty);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ??
-                         false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false;
 
             if (!exists)
                 break;
@@ -391,7 +390,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy =
                 Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ?? false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false ;
             if (!exists)
                 break;
 

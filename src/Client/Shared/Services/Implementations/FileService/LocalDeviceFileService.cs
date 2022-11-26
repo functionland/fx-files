@@ -630,9 +630,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return artifacts;
         }
 
-        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths, CancellationToken? cancellationToken = null)
         {
-            var fsArtifactList = new List<FsArtifactChanges>();
+            var fsArtifactList = new List<(string Path, bool IsExist)>();
 
             foreach (var path in paths)
             {
@@ -642,35 +642,25 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var artifactIsFile = File.Exists(path);
                 var artifactIsDirectory = Directory.Exists(path);
 
-                var fsArtifact = new FsArtifactChanges()
-                {
-                    ArtifactFullPath = path,
-                };
+                var isExist = false;
+
 
                 if (artifactIsFile)
                 {
-                    fsArtifact.IsPathExist = true;
+                    isExist = true;
                 }
                 else if (artifactIsDirectory)
                 {
-                    fsArtifact.IsPathExist = true;
+                    isExist = true;
                 }
                 else
                 {
-                    fsArtifact.IsPathExist = false;
-                    fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+                    isExist = false;
                 }
 
-                if (artifactIsFile)
-                {
-                    fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
-                }
-                else if (artifactIsDirectory)
-                {
-                    fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-                }
+              
 
-                fsArtifactList.Add(fsArtifact);
+                fsArtifactList.Add((path,isExist));
             }
 
             return fsArtifactList;
