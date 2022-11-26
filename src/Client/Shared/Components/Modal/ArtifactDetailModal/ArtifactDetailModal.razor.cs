@@ -92,7 +92,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
         public async Task<ArtifactDetailModalResult> ShowAsync(List<FsArtifact> artifacts, bool isMultiple = false, bool isInRoot = false)
         {
-            GoBackService.OnInit((Task () =>
+            GoBackService.SetState((Task () =>
             {
                 Close();
                 StateHasChanged();
@@ -112,7 +112,11 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _ = UpdateArtifactSizesAsync();
 
             _tcs = new TaskCompletionSource<ArtifactDetailModalResult>();
-            return await _tcs.Task;
+            var result = await _tcs.Task;
+
+            GoBackService.ResetPreviousState();
+
+            return result;
         }
 
         private async Task UpdateArtifactSizesAsync()

@@ -1,7 +1,7 @@
 ﻿@using Functionland.FxFiles.Client.Shared.Utils
 @inherits AppComponentBase;
 
-<div class="file-card-container @(IsPinned ? "favorite" : "") @(IsEnable ? "disabled-card" : "")">
+<div class="file-card-container @(Artifact.IsPinned == true ? "favorite" : "") @(IsDisabled ? "disabled-card" : "")">
     <div class="file-card-media">
         @if (!string.IsNullOrEmpty(TagTitle) || !string.IsNullOrWhiteSpace(TagTitle))
         {
@@ -10,28 +10,28 @@
             </div>
         }
 
-        @if (ArtifactType == FsArtifactType.File && FileType == FileCategoryType.Image)
+        @if (Artifact.ArtifactType == FsArtifactType.File && !String.IsNullOrWhiteSpace(Artifact.ThumbnailPath))
         {
-            <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-blur"/> 
-            <img src="@(Path?.InProtocol(Protocol))" draggable="false" class="file-card-image" />
+            <img src="@Artifact.ThumbnailPath.InProtocol(Protocol)" draggable="false" class="file-card-blur" />
+            <img src="@Artifact.ThumbnailPath.InProtocol(Protocol)" draggable="false" class="file-card-image" />
         }
         else
         {
-            <div class="file-card-icon @GetArtifactIcon(ArtifactType, FileType)"></div>
+            <div class="file-card-icon @GetArtifactIcon(Artifact.ArtifactType, Artifact.FileCategory)"></div>
         }
 
         <div class="pin-defualt-icon"></div>
     </div>
     <div class="file-card-content">
         <div class="card-file-name">
-            <div class="file-icon @GetArtifactIcon(ArtifactType, FileType)"></div>
+            <div class="file-icon @GetArtifactIcon(Artifact.ArtifactType, Artifact.FileCategory)"></div>
 
             <div class="file-name-container">
-                <span class="file-name">@Name</span>
+                <span class="file-name">@Artifact.Name</span>
             </div>
         </div>
-        <div class="file-info @(ArtifactType != FsArtifactType.File ? "visibility-hidden": "")">
-            <div class="modified-date">@ModifiedDate</div> | <span class="file-size">@Size</span>
+        <div class="file-info @(Artifact.ArtifactType != FsArtifactType.File ? "visibility-hidden": "")">
+            <div class="modified-date">@Artifact.LastModifiedDateTime.ToString("MM/dd/yy")</div> | <span class="file-size">@Artifact.SizeStr</span>
         </div>
     </div>
 </div>

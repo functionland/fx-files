@@ -4,7 +4,7 @@ public partial class SettingAbout
 {
     protected override Task OnInitAsync()
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             HandleToolbarBack();
             StateHasChanged();

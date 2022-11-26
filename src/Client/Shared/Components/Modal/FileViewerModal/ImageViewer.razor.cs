@@ -11,7 +11,7 @@ public partial class ImageViewer : IFileViewerComponent
 
     protected override Task OnInitAsync()
     {
-        GoBackService.OnInit(HandleBackAsync, true, false);
+        GoBackService.SetState(HandleBackAsync, true, false);
         return base.OnInitAsync();
     }
 

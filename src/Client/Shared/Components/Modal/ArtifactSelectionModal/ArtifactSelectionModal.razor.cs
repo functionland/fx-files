@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+
+namespace Functionland.FxFiles.Client.Shared.Components.Modal;
 
 public partial class ArtifactSelectionModal
 {
@@ -6,16 +8,20 @@ public partial class ArtifactSelectionModal
     private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
     private List<FsArtifact> _artifacts = new();
     private FsArtifact? _currentArtifact;
-    private ArtifactActionResult? _artifactActionResult;
+    private string _buttonText = string.Empty;
+    private List<FsArtifact> _excludedArtifacts = new();
     private InputModal _inputModalRef = default!;
+    private FsArtifact? _scrolledToArtifact;
 
+    [Parameter] public SortTypeEnum SortType { get; set; } = SortTypeEnum.Name;
+    [Parameter] public bool IsAscOrder { get; set; }
     [Parameter] public bool IsMultiple { get; set; }
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
 
-    public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
+    public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, string buttonText, List<FsArtifact> excludedArtifacts)
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             Close();
             StateHasChanged();
@@ -24,16 +30,21 @@ public partial class ArtifactSelectionModal
 
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
-        _artifactActionResult = artifactActionResult;
+        _buttonText = buttonText;
+        _excludedArtifacts = excludedArtifacts;
         await LoadArtifacts(artifact?.FullPath);
 
         _isModalOpen = true;
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
+        var result = await _tcs.Task;
 
-        return await _tcs.Task;
+        GoBackService.ResetPreviousState();
+
+        return result;
     }
+
     private async Task SelectArtifact(FsArtifact artifact)
     {
         await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");
@@ -71,7 +82,7 @@ public partial class ArtifactSelectionModal
     {
         _artifacts = new List<FsArtifact>();
         var artifacts = FileService.GetArtifactsAsync(path);
-        var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
+        var artifactPaths = _excludedArtifacts.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
         {
@@ -100,8 +111,9 @@ public partial class ArtifactSelectionModal
             if (result?.ResultType == InputModalResultType.Confirm)
             {
                 var newFolder = await FileService.CreateFolderAsync(_currentArtifact.FullPath, result?.Result); //ToDo: Make CreateFolderAsync nullable
+                _scrolledToArtifact = newFolder;
                 _artifacts.Add(newFolder);
-                StateHasChanged();
+                RefreshArtifacts();
             }
         }
         catch (Exception exception)
@@ -110,18 +122,36 @@ public partial class ArtifactSelectionModal
         }
     }
 
-    private string GetActionButtonText()
+    private void RefreshArtifacts()
     {
-        if (_artifactActionResult is null)
-            return string.Empty;
+        _artifacts = ApplySortArtifacts(_artifacts).ToList();
+    }
 
-        return _artifactActionResult.ActionType switch
+    private IEnumerable<FsArtifact> ApplySortArtifacts(IEnumerable<FsArtifact> artifacts)
+    {
+        IEnumerable<FsArtifact> sortedArtifactsQuery = SortType switch
         {
-            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),
-            ArtifactActionType.Move => Localizer.GetString(AppStrings.MoveHere),
-            ArtifactActionType.Extract => Localizer.GetString(AppStrings.ExtractHere),
-            _ => throw new InvalidOperationException("Invalid action type")
+            SortTypeEnum.LastModified when IsAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.LastModified => artifacts
+                .OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.LastModifiedDateTime),
+            SortTypeEnum.Size when IsAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Size),
+            SortTypeEnum.Size => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Size),
+            SortTypeEnum.Name when IsAscOrder => artifacts
+                .OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name),
+            SortTypeEnum.Name => artifacts.OrderByDescending(artifact => artifact.ArtifactType == FsArtifactType.Folder)
+                .ThenByDescending(artifact => artifact.Name),
+            _ => artifacts.OrderBy(artifact => artifact.ArtifactType != FsArtifactType.Folder)
+                .ThenBy(artifact => artifact.Name)
         };
+
+        return sortedArtifactsQuery;
     }
 
     private async Task Back()

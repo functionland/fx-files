@@ -8,7 +8,7 @@ public partial class SettingsThemePage
 
     protected override Task OnInitAsync()
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             HandleToolbarBack();
             StateHasChanged();

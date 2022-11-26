@@ -9,7 +9,7 @@ public partial class FilterArtifactModal
 
     public async Task<FileCategoryType?> ShowAsync()
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             HandleClose();
             StateHasChanged();
@@ -22,8 +22,11 @@ public partial class FilterArtifactModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<FileCategoryType?>();
+        var result = await _tcs.Task;
 
-        return await _tcs.Task;
+        GoBackService.ResetPreviousState();
+
+        return result;
     }
 
     private void HandleFilterItemClick(FileCategoryType? fileCategoryType)
