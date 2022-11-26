@@ -24,7 +24,8 @@ public partial class FileViewer
         ".jpg",".jpeg",".png",".gif",".bmp",".svg",".webp",".jfif",".ico"
     };
 
-    private static readonly Regex[] regex = {
+    private static readonly Regex[] regex = 
+    {
         new Regex("extensions\\.conf",RegexOptions.CultureInvariant| RegexOptions.Compiled),
         new Regex("CMakeLists\\.txt",RegexOptions.CultureInvariant| RegexOptions.Compiled),
         new Regex("Dockerfile",RegexOptions.CultureInvariant| RegexOptions.Compiled),
@@ -33,11 +34,14 @@ public partial class FileViewer
         new Regex("PKGBUILD",RegexOptions.CultureInvariant| RegexOptions.Compiled),
         new Regex("Jenkinsfile",RegexOptions.CultureInvariant| RegexOptions.Compiled),
         new Regex("(BUCK|BUILD)",RegexOptions.CultureInvariant| RegexOptions.Compiled)
-};
+    };
+
     public async Task<bool> OpenArtifact(FsArtifact artifact)
     {
         if (!CanOpen(artifact))
             return false;
+
+        GoBackService.SetState(HandleBackAsync, true, false);
 
         _currentArtifact = artifact;
         if (IsVideoSupported(_currentArtifact))
@@ -103,6 +107,7 @@ public partial class FileViewer
 
     public async Task HandleBackAsync()
     {
+        GoBackService.ResetToPreviousState();
         IsModalOpen = false;
         await OnBack.InvokeAsync();
     }

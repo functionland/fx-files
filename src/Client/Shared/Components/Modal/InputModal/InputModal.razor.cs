@@ -40,7 +40,7 @@ public partial class InputModal
         _tcs = new TaskCompletionSource<InputModalResult>();
         var result = await _tcs.Task;
 
-        GoBackService.ResetPreviousState();
+        GoBackService.ResetToPreviousState();
 
         return result;
     }

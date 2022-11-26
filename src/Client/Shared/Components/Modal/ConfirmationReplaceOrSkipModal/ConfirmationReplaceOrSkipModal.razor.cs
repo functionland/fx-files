@@ -24,7 +24,7 @@ public partial class ConfirmationReplaceOrSkipModal
         _tcs = new TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>();
         var result = await _tcs.Task;
 
-        GoBackService.ResetPreviousState();
+        GoBackService.ResetToPreviousState();
 
         return result;
     }
