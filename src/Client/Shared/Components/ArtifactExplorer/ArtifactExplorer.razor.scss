@@ -3,24 +3,33 @@
 @import '../../Styles/abstracts/_functions.scss';
 @import '../../Styles/components/_bit-checkbox.scss';
 
-.list-container {
-    transition: height 300ms linear 3s;
+.artifact-box {
     height: 100%;
     width: 100%;
     flex-grow: 2;
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
+}
+
+.list-container {
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
     //transform: scaley(0);
     //transform-origin: top;
     //opacity: 0;
-    
 }
 
 .show-animation-artifact {
-   // transition: transform 100ms linear, opacity 100ms linear;
-   // transform: scaleY(1);
-   // opacity: 1;
+    height: 100%;
+    transition: all 300ms linear;
+    overflow-y: auto;
+    overflow-x: hidden;
+    // transition: transform 100ms linear, opacity 100ms linear;
+    // transform: scaleY(1);
+    // opacity: 1;
 }
 
 .list-title {
