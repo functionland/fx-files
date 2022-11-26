@@ -1,4 +1,6 @@
-﻿using Functionland.FxFiles.Client.App.Implementations;
+﻿using System.Diagnostics;
+
+using Functionland.FxFiles.Client.App.Implementations;
 using windows = Windows;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations;
@@ -14,5 +16,16 @@ public class WindowsFileLauncher : LocalFileLauncher
         };
         var isOpen = await windows.System.Launcher.LaunchUriAsync(uri, options);
         return isOpen;
+    }
+
+    public override async Task OpenFileAsync(string filePath)
+    {
+        new Process
+        {
+            StartInfo = new ProcessStartInfo(filePath)
+            {
+                UseShellExecute = true
+            }
+        }.Start();
     }
 }
