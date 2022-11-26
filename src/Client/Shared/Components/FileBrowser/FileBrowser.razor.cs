@@ -52,7 +52,7 @@ public partial class FileBrowser : IDisposable
     private CancellationTokenSource? _progressBarCts;
 
     // Search
-    private DeepSearchFilter? SearchFilter { get; set; }
+    //private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearchMode;
     private bool _isSearchInputFocused = false;
@@ -1409,11 +1409,12 @@ public partial class FileBrowser : IDisposable
             _isFileCategoryFilterBoxOpen = false;
         }
 
+        // ToDo: Why using this?
         _isArtifactExplorerLoading = true;
         _searchText = text;
-        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterTypes);
-        if (string.IsNullOrWhiteSpace(SearchFilter?.SearchText) && SearchFilter?.ArtifactDateSearchType == null &&
-            (SearchFilter?.ArtifactCategorySearchTypes == null || SearchFilter?.ArtifactCategorySearchTypes.Any() is false))
+        var searchFilter = GetSearchFilter();
+        if (string.IsNullOrWhiteSpace(searchFilter.SearchText) && searchFilter.ArtifactDateSearchType == null &&
+            (searchFilter.ArtifactCategorySearchTypes == null || searchFilter.ArtifactCategorySearchTypes.Any() is false))
         {
             _searchCancellationTokenSource?.Cancel();
             _isArtifactExplorerLoading = false;
@@ -1441,7 +1442,8 @@ public partial class FileBrowser : IDisposable
         {
             try
             {
-                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
+                var searchFilter = GetSearchFilter();
+                await foreach (var item in FileService.GetSearchArtifactAsync(searchFilter, token)
                                    .WithCancellation(token))
                 {
                     if (token.IsCancellationRequested)
@@ -1481,13 +1483,14 @@ public partial class FileBrowser : IDisposable
         }, token);
     }
 
-    private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null,
-        List<ArtifactCategorySearchType>? type = null)
+    private DeepSearchFilter GetSearchFilter()
     {
-        SearchFilter ??= new DeepSearchFilter();
-        SearchFilter.SearchText = !string.IsNullOrWhiteSpace(searchText) ? searchText : string.Empty;
-        SearchFilter.ArtifactCategorySearchTypes = type ?? null;
-        SearchFilter.ArtifactDateSearchType = date ?? null;
+        return new DeepSearchFilter()
+        {
+            SearchText = !string.IsNullOrWhiteSpace(_searchText) ? _searchText : string.Empty,
+            ArtifactCategorySearchTypes = _artifactsSearchFilterTypes ?? null,
+            ArtifactDateSearchType = _artifactsSearchFilterDate ?? null
+        };
     }
 
     private void HandleInLineSearch(string? text)
@@ -1857,7 +1860,6 @@ public partial class FileBrowser : IDisposable
     {
         CancelSelectionMode();
         _searchCancellationTokenSource?.Cancel();
-        SearchFilter = null;
         _displayedArtifacts.Clear();
         _fxToolBarRef?.HandleCancelSearch();
         _artifactsSearchFilterTypes.Clear();

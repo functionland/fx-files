@@ -1,7 +1,7 @@
 ﻿
 namespace Functionland.FxFiles.Client.Shared.Models;
 
-public class DeepSearchFilter
+public struct DeepSearchFilter
 {
     public List<ArtifactCategorySearchType>? ArtifactCategorySearchTypes { get; set; }
     public ArtifactDateSearchType? ArtifactDateSearchType { get; set; }
