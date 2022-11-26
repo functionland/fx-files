@@ -4,7 +4,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public partial class FulaFileService : IFulaFileService
 {
-    public virtual Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths,
+    public virtual Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths,
         CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();

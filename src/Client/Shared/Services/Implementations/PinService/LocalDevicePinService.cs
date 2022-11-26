@@ -39,46 +39,19 @@ public partial class LocalDevicePinService : ILocalDevicePinService
 
             foreach (var changedPinnedArtifact in existPins)
             {
-                if (changedPinnedArtifact.ArtifactFullPath == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
+                if (changedPinnedArtifact.Path == null) throw new ArtifactPathNullException(StringLocalizer[nameof(AppStrings.PathIsNull)]);
 
-                if (changedPinnedArtifact.FsArtifactChangesType == FsArtifactChangesType.Delete)
+                if (changedPinnedArtifact.IsExist == false)
                 {
-                    await SetArtifactsUnPinAsync(new string[] { changedPinnedArtifact.ArtifactFullPath });
+                    await SetArtifactsUnPinAsync(new string[] { changedPinnedArtifact.Path });
                 }
-                else if (changedPinnedArtifact.IsPathExist == true)
+                else if (changedPinnedArtifact.IsExist == true)
                 {
                     var pinnedArticat = pinnedArtifacts
-                        .Where(p => string.Equals(p.FullPath, changedPinnedArtifact.ArtifactFullPath, StringComparison.CurrentCultureIgnoreCase))
+                        .Where(p => string.Equals(p.FullPath, changedPinnedArtifact.Path, StringComparison.CurrentCultureIgnoreCase))
                         .FirstOrDefault();
+                    PinnedPathsCache.TryAdd(pinnedArticat.FullPath, pinnedArticat);
 
-                    if (pinnedArticat != null && pinnedArticat.ProviderType != FsFileProviderType.Fula && DateTimeOffset.TryParse(pinnedArticat.ContentHash, out var LastModyDatetime))
-                    {
-                        if (changedPinnedArtifact.LastModifiedDateTime > LastModyDatetime)
-                        {
-                            var artifact = await GetPinnedFsArtifact(pinnedArticat);
-
-                            var edditedPinArtfact = new PinnedArtifact
-                            {
-                                ArtifactName = pinnedArticat.ArtifactName,
-                                FsArtifactType = pinnedArticat.FsArtifactType,
-                                FullPath = changedPinnedArtifact.ArtifactFullPath,
-                                ContentHash = changedPinnedArtifact.LastModifiedDateTime.ToString(),
-                                PinEpochTime = pinnedArticat.PinEpochTime,
-                                ProviderType = pinnedArticat.ProviderType,
-                                ThumbnailPath = artifact.ThumbnailPath
-                            };
-                            await UpdatePinnedArtifactAsyn(edditedPinArtfact);
-                        }
-                        else
-                        {
-                            PinnedPathsCache.TryAdd(pinnedArticat.FullPath, pinnedArticat);
-                        }
-
-                    }
-                    else
-                    {
-                        PinnedPathsCache.TryAdd(pinnedArticat.FullPath, pinnedArticat);
-                    }
                     WatchParnetFolder(await GetPinnedFsArtifact(pinnedArticat));
                 }
             }

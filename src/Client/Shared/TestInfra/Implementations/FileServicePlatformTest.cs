@@ -149,8 +149,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 await fileService.RenameFolderAsync(Path.Combine(testRoot, "Folder 2/Folder 31"), "Folder 21");
                 var fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/Folder 21"),
                     Path.Combine(testRoot, "Folder 2/Folder 31") });
-                var newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
-                var oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
+                var newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist ;
+                var oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist ;
 
                 var isRenamed = newFsArtifactExists && !oldFsArtifactExists;
                 Assert.AreEqual<bool>(true, isRenamed, "Rename a folder with contaning files.");
@@ -164,8 +164,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/file21[size=5mb].txt"),
                     Path.Combine(testRoot, "Folder 2/file31[size=5mb].txt")});
-                newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
-                oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
+                newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist;
+                oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist ;
 
                 isRenamed = newFsArtifactExists && !oldFsArtifactExists;
                 Assert.AreEqual<bool>(true, isRenamed, "Rename a file");
@@ -208,8 +208,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 1/Folder 11/file113[size=5mb].txt"),
                     Path.Combine(testRoot, "Folder 1/Folder 11/file114[size=5mb].txt")});
 
-                var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0)?.IsPathExist ?? false;
-                var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1)?.IsPathExist ?? false;
+                var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist ;
+                var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist ;
 
                 var isAllFileRemoved = !isFile113Exists && !isFile114Exists;
                 Assert.AreEqual<bool>(true, isAllFileRemoved, "Move duplicate items. All removed from dulicate source sub directory.");
