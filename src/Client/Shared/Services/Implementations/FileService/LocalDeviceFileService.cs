@@ -505,7 +505,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                         try
                         {
-                            await LocalStorageCopyFileAsync(fileInfo.FullName, destinationInfo.FullName);
+                            await LocalStorageMoveFileAsync(fileInfo.FullName, destinationInfo.FullName);
                         }
                         catch (Exception exception)
                         {
