@@ -14,13 +14,16 @@ The Fx Files v0.6 is now available on Android and Windows stores. iOS and macOS 
 <a href="https://apps.microsoft.com/store/detail/fx-files/9NXL9KB8FBQQ?hl=en-us&gl=us"><img style="height:50px" src="https://github.com/functionland/fx-files/blob/main/docs/images/badge-windows-store.svg"/></a>
 
 
-# Understanding the code
-To understand the architecture of the code and underlying services check this document: [Understanding the code](https://github.com/functionland/fx-files/blob/main/docs/README.md).
-Here is an overview of its structure:
+# Technical Documentation
+ Here are the documentation for different parts of the code:
  - [Technology Overview](https://github.com/functionland/fx-files/blob/main/docs/technology-overview.md)
  - [Understanding Services](https://github.com/functionland/fx-files/blob/main/docs/class-diagram-overview.md)
- - [FulaClient Overview](https://github.com/functionland/fx-files/blob/main/docs/fula-client-overview.md)
+ - [How to Extend Fx Files](https://github.com/functionland/fx-files/blob/main/docs/how-to-extend.md):
+   - [Extending Thumbnails:](https://github.com/functionland/fx-files/blob/main/docs/thumbnail-plugin-overview.md) How to add thumbnail support for new file types.
+   - [Extending File Services:](https://github.com/functionland/fx-files/blob/main/docs/file-service-overview.md) How to add support for new file providers like Azure and IBM clouds.
+- [How to setup development environment](https://github.com/functionland/fx-files/blob/main/docs/setup-development-environment.md)
+ - [`FulaClient` Overview](https://github.com/functionland/fx-files/blob/main/docs/fula-client-overview.md)
 
 # Contribution
-If you want to contribute to this project this is how you can setup your environment and start development.
-[TODO]
+If you want to contribute to this project this is how you can setup your environment and start development: 
+[How to setup development environment](https://github.com/functionland/fx-files/blob/main/docs/setup-development-environment.md)
