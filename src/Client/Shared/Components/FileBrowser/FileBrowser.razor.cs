@@ -137,9 +137,6 @@ public partial class FileBrowser : IDisposable
                 HandleChangedArtifacts,
                 ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
-        // ToDo: Can we pass it in a proper way. (P2)
-        InitialPath ??= AppStateStore.IntentFileUrl;
-
         if (string.IsNullOrWhiteSpace(InitialPath))
         {
             var preArtifact = AppStateStore.CurrentMyDeviceArtifact;

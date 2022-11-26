@@ -13,7 +13,8 @@ public partial class HomePage
     {
         if (!string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
         {
-            NavigationManager.NavigateTo("mydevice", false, true);
+            var encodedArtifactPath = Uri.EscapeDataString(AppStateStore.IntentFileUrl);
+            NavigationManager.NavigateTo($"mydevice?encodedArtifactPath={encodedArtifactPath}", false, true);
             return;
         }
         _ = EventAggregator
@@ -33,6 +34,10 @@ public partial class HomePage
 
     private void HandleIntentReceiver(IntentReceiveEvent obj)
     {
-        NavigationManager.NavigateTo("mydevice", false, true);
+        if (string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
+            return;
+
+        var encodedArtifactPath = Uri.EscapeDataString(AppStateStore.IntentFileUrl);
+        NavigationManager.NavigateTo($"mydevice?encodedArtifactPath={encodedArtifactPath}", false, true);
     }
 }
