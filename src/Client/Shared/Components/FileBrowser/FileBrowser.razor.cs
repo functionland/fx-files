@@ -849,20 +849,7 @@ public partial class FileBrowser : IDisposable
 #if BlazorHybrid
                 try
                 {
-                    if (DeviceInfo.Current.Platform == DevicePlatform.iOS ||
-                        DeviceInfo.Current.Platform == DevicePlatform.macOS ||
-                        DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst)
-                    {
-                        var uri = new Uri($"file://{artifact.FullPath}");
-                        await Launcher.OpenAsync(uri);
-                    }
-                    else
-                    {
-                        await Launcher.OpenAsync(new OpenFileRequest
-                        {
-                            File = new ReadOnlyFile(artifact.FullPath)
-                        });
-                    }
+                   await FileLauncher.OpenFileAsync(artifact.FullPath);
                 }
                 catch (UnauthorizedAccessException)
                 {
