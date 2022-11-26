@@ -96,6 +96,14 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return await base.CopyArtifactsAsync(artifacts, destination, onShouldOverwrite, onProgress, cancellationToken);
     }
 
+    public override async Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+    {
+        await GetReadPermission(artifact.FullPath);
+        await GetWritePermission(destinationFullPath);
+
+        await base.CopyFileAsync(artifact, destinationFullPath, onShouldOverwrite, onProgress, cancellationToken);
+    }
+
     public override async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
     {
         await GetWritePermission(filePath);
