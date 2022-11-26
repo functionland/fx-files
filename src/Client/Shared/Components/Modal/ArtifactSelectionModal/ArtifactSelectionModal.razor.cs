@@ -8,7 +8,8 @@ public partial class ArtifactSelectionModal
     private TaskCompletionSource<ArtifactSelectionResult>? _tcs;
     private List<FsArtifact> _artifacts = new();
     private FsArtifact? _currentArtifact;
-    private ArtifactActionResult? _artifactActionResult;
+    private string _buttonText = string.Empty;
+    private List<FsArtifact> _excludedArtifacts = new();
     private InputModal _inputModalRef = default!;
     private FsArtifact? _scrolledToArtifact;
 
@@ -18,9 +19,9 @@ public partial class ArtifactSelectionModal
     [Parameter] public IFileService FileService { get; set; } = default!;
     [Parameter] public IArtifactThumbnailService<IFileService> ThumbnailService { get; set; } = default!;
 
-    public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, ArtifactActionResult artifactActionResult)
+    public async Task<ArtifactSelectionResult> ShowAsync(FsArtifact? artifact, string buttonText, List<FsArtifact> excludedArtifacts)
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             Close();
             StateHasChanged();
@@ -29,16 +30,21 @@ public partial class ArtifactSelectionModal
 
         _tcs?.SetCanceled();
         _currentArtifact = artifact;
-        _artifactActionResult = artifactActionResult;
+        _buttonText = buttonText;
+        _excludedArtifacts = excludedArtifacts;
         await LoadArtifacts(artifact?.FullPath);
 
         _isModalOpen = true;
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
+        var result = await _tcs.Task;
 
-        return await _tcs.Task;
+        GoBackService.ResetPreviousState();
+
+        return result;
     }
+
     private async Task SelectArtifact(FsArtifact artifact)
     {
         await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");
@@ -76,7 +82,7 @@ public partial class ArtifactSelectionModal
     {
         _artifacts = new List<FsArtifact>();
         var artifacts = FileService.GetArtifactsAsync(path);
-        var artifactPaths = _artifactActionResult?.Artifacts?.Select(a => a.FullPath);
+        var artifactPaths = _excludedArtifacts.Select(a => a.FullPath);
 
         await foreach (var item in artifacts)
         {
@@ -146,20 +152,6 @@ public partial class ArtifactSelectionModal
         };
 
         return sortedArtifactsQuery;
-    }
-
-    private string GetActionButtonText()
-    {
-        if (_artifactActionResult is null)
-            return string.Empty;
-
-        return _artifactActionResult.ActionType switch
-        {
-            ArtifactActionType.Copy => Localizer.GetString(AppStrings.CopyHere),
-            ArtifactActionType.Move => Localizer.GetString(AppStrings.MoveHere),
-            ArtifactActionType.Extract => Localizer.GetString(AppStrings.ExtractHere),
-            _ => throw new InvalidOperationException("Invalid action type")
-        };
     }
 
     private async Task Back()

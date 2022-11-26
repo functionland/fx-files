@@ -90,7 +90,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleExtractArtifactsAsync(List<FsArtifact> artifacts)
     {
-        var destinationPath = await GetDestinationPathAsync(artifacts);
+        var destinationPath = await ShowDestinationSelectorModalAsync(artifacts);
         var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
         if (CurrentArtifact != null && destinationPath != null)
         {
@@ -146,7 +146,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     private async Task HandleExtractArtifactAsync(FsArtifact artifact)
     {
-        var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { artifact });
+        var destinationPath = await ShowDestinationSelectorModalAsync(new List<FsArtifact> { artifact });
         var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
         if (CurrentArtifact != null && destinationPath != null)
         {
@@ -203,7 +203,7 @@ public partial class ZipViewer : IFileViewerComponent
     {
         if (CurrentArtifact != null)
         {
-            var destinationPath = await GetDestinationPathAsync(new List<FsArtifact> { CurrentArtifact });
+            var destinationPath = await ShowDestinationSelectorModalAsync(new List<FsArtifact> { CurrentArtifact });
             var destinationDirectory = destinationPath ?? CurrentArtifact?.FullPath;
 
             if (CurrentArtifact != null && destinationPath != null)
@@ -257,20 +257,19 @@ public partial class ZipViewer : IFileViewerComponent
         }
     }
 
-    private async Task<string?> GetDestinationPathAsync(List<FsArtifact> artifacts)
+    private async Task<string?> ShowDestinationSelectorModalAsync(List<FsArtifact> artifacts)
     {
         if (_artifactSelectionModalRef is null)
             return null;
 
-        ArtifactActionResult actionResult = new()
-        {
-            ActionType = ArtifactActionType.Extract,
-            Artifacts = artifacts
-        };
+        var initialArtifactPath = CurrentArtifact?.ParentFullPath;
 
-        var routeArtifact = await FileService.GetArtifactAsync(CurrentArtifact?.ParentFullPath);
-        var result = await _artifactSelectionModalRef.ShowAsync(routeArtifact, actionResult);
+        var initialArtifact = string.IsNullOrWhiteSpace(initialArtifactPath)
+            ? null
+            : await FileService.GetArtifactAsync(initialArtifactPath);
 
+        var result = await _artifactSelectionModalRef.ShowAsync(initialArtifact, AppStrings.ExtractHere, artifacts);
+        
         if (result.ResultType == ArtifactSelectionResultType.Cancel)
         {
             SetGoBackDeviceButtonFunctionality();
@@ -296,7 +295,7 @@ public partial class ZipViewer : IFileViewerComponent
             case ArtifactExplorerMode.SelectArtifact:
                 CancelSelectionMode();
                 break;
-            case ArtifactExplorerMode.SelectDestionation:
+            case ArtifactExplorerMode.SelectDestination:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -342,7 +341,7 @@ public partial class ZipViewer : IFileViewerComponent
 
     private void SetGoBackDeviceButtonFunctionality()
     {
-        GoBackService.OnInit((async Task () =>
+        GoBackService.SetState((async Task () =>
         {
             await HandleBackAsync();
             await Task.CompletedTask;

@@ -439,6 +439,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  - Copy.
+        /// </summary>
+        public static string CopyPostfix {
+            get {
+                return ResourceManager.GetString("CopyPostfix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy to.
         /// </summary>
         public static string CopyTo {
@@ -1267,7 +1276,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace {0} item(s) .
+        ///   Looks up a localized string similar to Replace.
         /// </summary>
         public static string ReplaceButtonModal {
             get {
@@ -1276,7 +1285,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to What do you want to do?.
+        ///   Looks up a localized string similar to To continue, please choose an action.
         /// </summary>
         public static string ReplaceOrSkipSubDescModal {
             get {
@@ -1285,7 +1294,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The destination folder already has {0} item(s) with the same name,.
+        ///   Looks up a localized string similar to The destination already has a file named.
         /// </summary>
         public static string ReplaceOrSkipSupDescModal {
             get {
@@ -1294,7 +1303,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace or skip {0} item(s).
+        ///   Looks up a localized string similar to Replace or skip file.
         /// </summary>
         public static string ReplaceOrSkipTitleModal {
             get {
@@ -1474,7 +1483,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Skip {0} item(s).
+        ///   Looks up a localized string similar to Skip.
         /// </summary>
         public static string SkipButtonModal {
             get {
@@ -1600,6 +1609,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong during the copy..
+        /// </summary>
+        public static string TheCopyOpreationFailedMessage {
+            get {
+                return ResourceManager.GetString("TheCopyOpreationFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Items copied..
         /// </summary>
         public static string TheCopyOpreationSuccessedMessage {
@@ -1614,6 +1632,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         public static string TheCopyOpreationSuccessedTiltle {
             get {
                 return ResourceManager.GetString("TheCopyOpreationSuccessedTiltle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong during the move..
+        /// </summary>
+        public static string TheMoveOpreationFailedMessage {
+            get {
+                return ResourceManager.GetString("TheMoveOpreationFailedMessage", resourceCulture);
             }
         }
         

@@ -4,6 +4,6 @@
     {
         Normal,
         SelectArtifact,
-        SelectDestionation
+        SelectDestination
     }
 }

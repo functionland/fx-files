@@ -28,12 +28,12 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private TaskCompletionSource<ExtractorBottomSheetResult>? _tcs;
 
         private string? _password;
-
+        
         private ExtractorBottomSheetResult ExtractorBottomSheetResult { get; set; } = new();
 
         public async Task<ExtractorBottomSheetResult> ShowAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, List<FsArtifact>? innerArtifacts = null)
         {
-            GoBackService.OnInit((Task () =>
+            GoBackService.SetState((Task () =>
             {
                 HandleBackAsync();
                 return Task.CompletedTask;
@@ -42,7 +42,11 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
             await HandleExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName, innerArtifacts);
 
-            return await _tcs.Task;
+            var result = await _tcs.Task;
+
+            GoBackService.ResetPreviousState();
+
+            return result;
         }
 
         private async Task HandleExtractZipAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, List<FsArtifact>? innerArtifacts = null)
@@ -104,7 +108,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
                 var overwriteArtifacts = await GetOverwritableArtifacts(zipFilePath, Path.Combine(destinationFolderPath, destinationFolderName), innerArtifacts);
 
-                var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(duplicateCount ?? throw new InvalidOperationException(Localizer.GetString(AppStrings.TheOpreationFailedMessage)));
+                var replaceResult = await _extractorConfirmationReplaceOrSkipModalRef.ShowAsync(overwriteArtifacts[0] ?? throw new InvalidOperationException(Localizer.GetString(AppStrings.TheOpreationFailedMessage)));
 
                 if (replaceResult?.ResultType == ConfirmationReplaceOrSkipModalResultType.Replace)
                 {

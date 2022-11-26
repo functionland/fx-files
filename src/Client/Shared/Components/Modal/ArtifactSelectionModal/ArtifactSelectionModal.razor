@@ -12,7 +12,7 @@
         <div class="select-destination-container">
             <div class="select-destination-info">
                 <div class="item-selected">
-                    <span class="selected-items-count">@_artifactActionResult?.Artifacts?.Count</span>
+                    <span class="selected-items-count">@_excludedArtifacts?.Count</span>
                     <span class="selected-items-text">@Localizer[nameof(AppStrings.SelectionModalItemSelected)]</span>
                 </div>
 
@@ -44,18 +44,18 @@
             <ArtifactExplorer Artifacts="_artifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
-                          ArtifactExplorerMode="ArtifactExplorerMode.SelectDestionation"
+                          ArtifactExplorerMode="ArtifactExplorerMode.SelectDestination"
                           CurrentArtifact="_currentArtifact"
                           OnSelectArtifact="SelectArtifact"
                           OnAddFolderButtonClick="CreateFolder"
                           ScrollArtifact="_scrolledToArtifact"/>
         }
     </div>
-
+    
     <div class="button-container">
         <FxButton Width="100%"
                   Height="60px"
-                  Text="@(GetActionButtonText())"
+                  Text="@(_buttonText)"
                   OnClick="SelectDestination"
                   ButtonStyle="FxButtonStyle.Normal" />
     </div>

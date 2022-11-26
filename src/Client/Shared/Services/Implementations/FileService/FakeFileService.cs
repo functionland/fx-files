@@ -372,7 +372,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             }
         }
 
-        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths,
+            CancellationToken? cancellationToken = null)
         {
             var fsArtifactList = new List<FsArtifactChanges>();
 
@@ -446,6 +447,21 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         public string GetShowablePath(string artifactPath)
         {
             return artifactPath;
+        }
+
+        public Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

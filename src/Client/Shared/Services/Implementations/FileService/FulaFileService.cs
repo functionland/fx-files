@@ -4,12 +4,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
 public partial class FulaFileService : IFulaFileService
 {
-    public virtual Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+    public virtual Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths,
+        CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+    public Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -49,7 +50,7 @@ public partial class FulaFileService : IFulaFileService
         throw new NotImplementedException();
     }
 
-    public virtual Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+    public Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
@@ -85,6 +86,11 @@ public partial class FulaFileService : IFulaFileService
     }
 
     public string GetShowablePath(string artifactPath)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         throw new NotImplementedException();
     }
