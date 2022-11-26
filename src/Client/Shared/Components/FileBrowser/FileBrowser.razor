@@ -122,7 +122,7 @@
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search">
-            <div class="filter-content @(_searchStatusTask is { IsCompleted: false } && _isFileCategoryFilterBoxOpen is false ? string.Empty : "show-expander-divider")">
+            <div class="filter-content @(_searchTask is { IsCompleted: false } && _isFileCategoryFilterBoxOpen is false ? string.Empty : "show-expander-divider")">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
                 <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
@@ -149,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            @if (_searchStatusTask is { IsCompleted: false } && _isArtifactExplorerLoading is false)
+            @if (_searchTask is { IsCompleted: false } && _isArtifactExplorerLoading is false)
             {
                 <div class="progress-bar-wrapper">
                     <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])" />
