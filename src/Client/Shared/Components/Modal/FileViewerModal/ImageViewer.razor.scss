@@ -3,34 +3,39 @@
 @import '../../../Styles/abstracts/_functions.scss';
 
 .navigation-header {
-    display: flex;
     justify-content: center;
     align-items: center;
     padding: 8px 21px;
-    position: relative;
+    position: fixed;
+    display: flex;
     z-index: 1;
+    right: 0;
+    left: 0;
 
     .right-side {
-        display: flex;
         justify-content: center;
         align-items: center;
         margin-left: auto;
+        display: flex;
 
         .pin-icon::before {
             cursor: pointer;
             font-size: 24px;
+            text-shadow: rgb(52, 58, 64) 0px 0px 3px;
             @include Icon($pin, $pure-white);
         }
 
         .pin-icon-outline::before {
             cursor: pointer;
             font-size: 24px;
+            text-shadow: rgb(52, 58, 64) 0px 0px 3px;
             @include Icon($pin-outline, $pure-white);
         }
 
         .more-option-icon::before {
             cursor: pointer;
             font-size: 24px;
+            text-shadow: rgb(52, 58, 64) 0px 0px 3px;
             @include Icon($options-vertical, $pure-white);
         }
 
@@ -41,31 +46,41 @@
 }
 
 .main-image {
-    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    top: 0;
-    text-align: center;
-    max-width: 600px;
     margin: 0 auto;
-    background: #212529;
+    position: fixed;
+    text-align: center;
+    background: $main-dark;
 
-    .actual-size-deactivate {
+    .image-wrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-file {
+        width: 100%;
         max-height: 100%;
-        max-width: 600px;
-        width:100%;
+        user-select: none;
         object-fit: contain;
+        -webkit-user-drag: none;
+        transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1);
     }
 
     .pich-zoom {
         width: 100%;
         height: 100%;
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
     }
 }
+
 ::deep .color-back-button::after {
+    text-shadow: rgb(52, 58, 64) 0px 0px 3px;
     color: $gray-light-bg-primary !important;
 }
