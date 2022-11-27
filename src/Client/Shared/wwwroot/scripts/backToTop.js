@@ -47,6 +47,14 @@ function SearchInputUnFocus() {
     }
 }
 
+function InlineSearchInputUnFocus() {
+    var InlinesearchInput = document.getElementById('inline-search-input');
+    
+    if (typeof InlinesearchInput != undefined) {
+        InlinesearchInput.blur();    
+    }
+}
+
 function ImagePinchZoom() {
     let el = document.querySelector('#image-viewer');
     new PinchZoom.default(el, {
