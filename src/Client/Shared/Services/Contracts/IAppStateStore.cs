@@ -2,10 +2,11 @@
 
 public interface IAppStateStore
 {
-    public ViewModeEnum ViewMode { get; set; }
-    public bool IsAvailableForTest { get; set; }
-    public FsArtifact? CurrentFulaArtifact { get; set; }
-    public FsArtifact? CurrentMyDeviceArtifact { get; set; }
-    public string CurrentPagePath { get; set; }
-    public string? IntentFileUrl { get; set; }
+    ViewModeEnum ViewMode { get; set; }
+    FileCategoryType? CurrentFileCategoryFilter { get; set; }
+    bool IsAvailableForTest { get; set; }
+    FsArtifact? CurrentFulaArtifact { get; set; }
+    FsArtifact? CurrentMyDeviceArtifact { get; set; }
+    string CurrentPagePath { get; set; }
+    string? IntentFileUrl { get; set; }
 }
