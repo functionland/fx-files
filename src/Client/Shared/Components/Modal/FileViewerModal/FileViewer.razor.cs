@@ -41,8 +41,6 @@ public partial class FileViewer
         if (!CanOpen(artifact))
             return false;
 
-        GoBackService.SetState(HandleBackAsync, true, false);
-
         _currentArtifact = artifact;
         if (IsVideoSupported(_currentArtifact))
         {
@@ -52,6 +50,7 @@ public partial class FileViewer
         else
         {
             IsModalOpen = true;
+            GoBackService.SetState(HandleBackAsync, true, false);
         }
 
         await InvokeAsync(StateHasChanged);
