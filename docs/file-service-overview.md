@@ -23,13 +23,9 @@ As an example you can see how we added support for working with local files by i
 It would be something like:
 
 ```csharp
-public partial class LocalDeviceFileService : ILocalDeviceFileService
+public partial class AzureStorageFileService : IFileService
 {
-    [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
-
-    public abstract FsFileProviderType GetFsFileProviderType(string filePath);
-
-    public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+    public override async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
     {
         List<FsArtifact> ignoredList = new();
 
