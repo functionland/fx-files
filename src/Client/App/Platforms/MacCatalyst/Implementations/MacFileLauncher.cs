@@ -10,4 +10,10 @@ public class MacFileLauncher : LocalFileLauncher
         var isOpen = await Launcher.OpenAsync(uri);
         return isOpen;
     }
+
+    public override async Task OpenFileAsync(string filePath)
+    {
+        var uri = new Uri($"file://{filePath}");
+        await Launcher.OpenAsync(uri);
+    }
 }

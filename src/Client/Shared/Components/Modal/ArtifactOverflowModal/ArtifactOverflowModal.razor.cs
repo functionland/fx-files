@@ -163,7 +163,7 @@
             _tcs = new TaskCompletionSource<ArtifactOverflowResult>();
             var result = await _tcs.Task;
 
-            GoBackService.ResetPreviousState();
+            GoBackService.ResetToPreviousState();
 
             return result;
         }

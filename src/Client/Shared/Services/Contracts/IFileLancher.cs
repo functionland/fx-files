@@ -2,5 +2,6 @@
 
 public interface IFileLauncher
 {
-    public Task<bool> OpenWithAsync(string filePath);
+     Task<bool> OpenWithAsync(string filePath);
+     Task OpenFileAsync(string filePath);
 }

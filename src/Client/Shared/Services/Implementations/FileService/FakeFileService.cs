@@ -372,10 +372,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             }
         }
 
-        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths,
+        public async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths,
             CancellationToken? cancellationToken = null)
         {
-            var fsArtifactList = new List<FsArtifactChanges>();
+            var fsArtifactList = new List<(string Path, bool IsExist)>();
 
             foreach (var currentPath in paths)
             {
@@ -385,27 +385,20 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
                 var artifactIsExist = ArtifacExist(path);
 
-                var fsArtifact = new FsArtifactChanges()
-                {
-                    ArtifactFullPath = path,
-                };
+                var isExist = false;
 
                 if (artifactIsExist)
                 {
-                    fsArtifact.IsPathExist = true;
+                    isExist = true;
                 }
                 else
                 {
-                    fsArtifact.IsPathExist = false;
-                    fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+                    isExist = false;
+                  
                 }
 
-                if (artifactIsExist)
-                {
-                    fsArtifact.LastModifiedDateTime = DateTimeOffset.Now;
-                }
 
-                fsArtifactList.Add(fsArtifact);
+                fsArtifactList.Add((path, isExist));
             }
 
             return fsArtifactList;

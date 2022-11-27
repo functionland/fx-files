@@ -114,7 +114,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _tcs = new TaskCompletionSource<ArtifactDetailModalResult>();
             var result = await _tcs.Task;
 
-            GoBackService.ResetPreviousState();
+            GoBackService.ResetToPreviousState();
 
             return result;
         }

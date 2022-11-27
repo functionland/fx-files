@@ -40,7 +40,7 @@ public partial class ArtifactSelectionModal
         _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
         var result = await _tcs.Task;
 
-        GoBackService.ResetPreviousState();
+        GoBackService.ResetToPreviousState();
 
         return result;
     }

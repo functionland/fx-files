@@ -353,8 +353,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy = $"{oldArtifactPath}{AppStrings.CopyPostfix}"
                                + (counter > 1 ? $" {counter}" : string.Empty);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ??
-                         false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false;
 
             if (!exists)
                 break;
@@ -392,7 +391,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy =
                 Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ?? false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false ;
             if (!exists)
                 break;
 
@@ -756,7 +755,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleOpenWithAppAsync(FsArtifact? artifact)
     {
-        if (artifact == null || artifact.FullPath == null)
+        if (artifact?.FullPath == null)
             return;
 
         AppStateStore.IntentFileUrl = artifact.FullPath;
@@ -850,20 +849,7 @@ public partial class FileBrowser : IDisposable
 #if BlazorHybrid
                 try
                 {
-                    if (DeviceInfo.Current.Platform == DevicePlatform.iOS ||
-                        DeviceInfo.Current.Platform == DevicePlatform.macOS ||
-                        DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst)
-                    {
-                        var uri = new Uri($"file://{artifact.FullPath}");
-                        await Launcher.OpenAsync(uri);
-                    }
-                    else
-                    {
-                        await Launcher.OpenAsync(new OpenFileRequest
-                        {
-                            File = new ReadOnlyFile(artifact.FullPath)
-                        });
-                    }
+                   await FileLauncher.OpenFileAsync(artifact.FullPath);
                 }
                 catch (UnauthorizedAccessException)
                 {
