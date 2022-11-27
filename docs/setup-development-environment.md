@@ -20,7 +20,7 @@ You can enable it by this command too (after you've enabled the hardware in BIOS
     - .NET desktop development
 - .NET SDK 6.0.400: You can install it by 
 ```cmd
-winget install Microsoft.DotNet.SDK.6 --version 6.0.400
+winget install Microsoft.DotNet.SDK.6 --version 6.0.403
 ```
 
 - Make sure Nuget is configured.

@@ -128,7 +128,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         await base.DeleteArtifactsAsync(artifacts, onProgress, cancellationToken);
     }
 
-    public override async Task<List<FsArtifactChanges>> CheckPathExistsAsync(IEnumerable<string?> paths,
+    public override async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths,
         CancellationToken? cancellationToken = null)
     {
         return await base.CheckPathExistsAsync(paths, cancellationToken);

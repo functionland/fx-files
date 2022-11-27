@@ -353,8 +353,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy = $"{oldArtifactPath}{AppStrings.CopyPostfix}"
                                + (counter > 1 ? $" {counter}" : string.Empty);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ??
-                         false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false;
 
             if (!exists)
                 break;
@@ -392,7 +391,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy =
                 Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy })).First().IsPathExist ?? false;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false ;
             if (!exists)
                 break;
 
@@ -756,7 +755,7 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleOpenWithAppAsync(FsArtifact? artifact)
     {
-        if (artifact == null || artifact.FullPath == null)
+        if (artifact?.FullPath == null)
             return;
 
         AppStateStore.IntentFileUrl = artifact.FullPath;
@@ -850,20 +849,7 @@ public partial class FileBrowser : IDisposable
 #if BlazorHybrid
                 try
                 {
-                    if (DeviceInfo.Current.Platform == DevicePlatform.iOS ||
-                        DeviceInfo.Current.Platform == DevicePlatform.macOS ||
-                        DeviceInfo.Current.Platform == DevicePlatform.MacCatalyst)
-                    {
-                        var uri = new Uri($"file://{artifact.FullPath}");
-                        await Launcher.OpenAsync(uri);
-                    }
-                    else
-                    {
-                        await Launcher.OpenAsync(new OpenFileRequest
-                        {
-                            File = new ReadOnlyFile(artifact.FullPath)
-                        });
-                    }
+                   await FileLauncher.OpenFileAsync(artifact.FullPath);
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -1438,50 +1424,54 @@ public partial class FileBrowser : IDisposable
             var isSearchComplete = false;
             _ = Task.Run(async () =>
             {
-                var sw = Stopwatch.StartNew();
-
-                while (bufferedArtifacts.Count > 0 || isSearchComplete is false)
+                try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(1), token);
+                    var sw = Stopwatch.StartNew();
 
-                    if (bufferedArtifacts.Count == 0)
-                        continue;
-
-                    _searchResultArtifacts.AddRange(bufferedArtifacts);
-                    _searchResultArtifacts = _searchResultArtifacts.ToList();
-                    bufferedArtifacts.Clear();
-
-                    if (_searchResultArtifacts.Count > 0 && _isSearchArtifactExplorerLoading)
+                    while (bufferedArtifacts.Count > 0 || isSearchComplete is false)
                     {
-                        _isSearchArtifactExplorerLoading = false;
+                        await Task.Delay(TimeSpan.FromSeconds(1), token);
+
+                        if (bufferedArtifacts.Count == 0)
+                            continue;
+
+                        _searchResultArtifacts.AddRange(bufferedArtifacts);
+                        _searchResultArtifacts = _searchResultArtifacts.ToList();
+                        bufferedArtifacts.Clear();
+
+                        if (_searchResultArtifacts.Count > 0 && _isSearchArtifactExplorerLoading)
+                        {
+                            _isSearchArtifactExplorerLoading = false;
+                        }
+
+                        await InvokeAsync(StateHasChanged);
+
+                        sw.Restart();
                     }
-
-                    await InvokeAsync(StateHasChanged);
-
-                    sw.Restart();
+                }
+                catch (Exception exception) when (exception is not TaskCanceledException)
+                {
+                    ExceptionHandler.Handle(exception);
+                }
+                finally
+                {
+                    _isSearchArtifactExplorerLoading = false;
                 }
             }, token);
 
-            try
+            await foreach (var item in FileService.GetSearchArtifactAsync(searchFilter, token)
+                               .WithCancellation(token))
             {
-                await foreach (var item in FileService.GetSearchArtifactAsync(searchFilter, token)
-                                   .WithCancellation(token))
-                {
-                    if (token.IsCancellationRequested)
-                        return;
+                if (token.IsCancellationRequested)
+                    return;
 
-                    item.IsPinned = await PinService.IsPinnedAsync(item);
-                    bufferedArtifacts.Add(item);
+                item.IsPinned = await PinService.IsPinnedAsync(item);
+                bufferedArtifacts.Add(item);
 
-                    await Task.Yield();
-                }
-
-                isSearchComplete = true;
+                await Task.Yield();
             }
-            finally
-            {
-                _isSearchArtifactExplorerLoading = false;
-            }
+
+            isSearchComplete = true;
         }, token);
     }
 
@@ -1507,7 +1497,6 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleToolbarBackClickAsync()
     {
-        _searchText = string.Empty;
         _inlineSearchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
@@ -1517,15 +1506,9 @@ public partial class FileBrowser : IDisposable
                 if (_isInSearchMode)
                 {
                     await CancelSearchAsync();
-                    _ = Task.Run(async () =>
-                    {
-                        await LoadChildrenArtifactsAsync(CurrentArtifact);
-                        await InvokeAsync(StateHasChanged);
-                    });
                     return;
                 }
 
-                _fxSearchInputRef?.HandleClearInputText();
                 await UpdateCurrentArtifactForBackButton(CurrentArtifact);
                 _ = Task.Run(async () =>
                 {
@@ -1556,14 +1539,7 @@ public partial class FileBrowser : IDisposable
             return;
         }
 
-        try
-        {
-            CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact.ParentFullPath);
-        }
-        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
-        {
-            CurrentArtifact = null;
-        }
+        CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact.ParentFullPath);
     }
 
     private void RefreshDisplayedArtifacts(

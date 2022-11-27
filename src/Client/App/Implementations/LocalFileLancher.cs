@@ -1,4 +1,9 @@
-﻿namespace Functionland.FxFiles.Client.App.Implementations;
+﻿using Functionland.FxFiles.Client.Shared.Models;
+using System.Diagnostics;
+
+using Microsoft.Maui.Controls.PlatformConfiguration;
+
+namespace Functionland.FxFiles.Client.App.Implementations;
 
 public abstract class LocalFileLauncher : IFileLauncher
 {
@@ -12,4 +17,6 @@ public abstract class LocalFileLauncher : IFileLauncher
 
         return isOpen;
     }
+
+    public abstract Task OpenFileAsync(string filePath);
 }

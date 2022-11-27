@@ -44,7 +44,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
             var result = await _tcs.Task;
 
-            GoBackService.ResetPreviousState();
+            GoBackService.ResetToPreviousState();
 
             return result;
         }
