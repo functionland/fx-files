@@ -13,7 +13,7 @@
                OnOverflowButtonClick="@(()=>HandleOptionsArtifact(CurrentArtifact))"
                OnAddButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                IsInSelectMode="@(ArtifactExplorerMode == ArtifactExplorerMode.SelectArtifact)"
-    @ref="_fxToolBarRef" />
+               @ref="_fxToolBarRef" />
 
     @if (CurrentArtifact != null)
     {
@@ -25,8 +25,8 @@
         {
             <div class="pin-artifacts">
                 <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
-                              Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
-                              DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0)">
+                          Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
+                          DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0)">
                     <ContentTemplate>
                         @if (_isPinBoxLoading)
                         {
@@ -39,7 +39,7 @@
                                 {
                                     <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                         <FileCard Artifact="@pin"
-                                              FileService="@FileService" ThumbnailService="@ThumbnailService"/>
+                                      FileService="@FileService" ThumbnailService="@ThumbnailService" />
                                     </div>
                                 }
                             </div>
@@ -93,28 +93,28 @@
 
         <div class="local-search @(!IsInRoot(CurrentArtifact) ? "show-search" : "hide-search")">
             <FxSearchInput Placeholder="@CurrentArtifact?.Name"
-            @ref="_fxSearchInputRef"
+                           @ref="_fxSearchInputRef"
                            OnCancel="HandleCancelInLineSearchAsync"
                            DebounceInterval="300"
                            OnSearch="HandleInLineSearch"
                            IsPartial="false" />
         </div>
-            <ArtifactExplorer Artifacts="_displayedArtifacts"
-                              FileService="FileService"
-                              ThumbnailService="ThumbnailService"
-                              CurrentArtifact="CurrentArtifact"
-                              OnSelectArtifact="HandleSelectArtifactAsync"
-                              OnArtifactOptionClick="HandleOptionsArtifact"
-                              OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
-                              OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
-                              ViewMode="AppStateStore.ViewMode"
-                              FileCategoryFilter="_inlineFileCategoryFilter"
-                              HandleBack="HandleToolbarBackClickAsync"
-                              IsLoading="_isArtifactExplorerLoading"
-                              IsInSearchMode="_isInSearchMode"
-                              ScrollArtifact="ScrolledToArtifact"
-                              @bind-SelectedArtifacts="_selectedArtifacts"
-                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+        <ArtifactExplorer Artifacts="_displayedArtifacts"
+                          FileService="FileService"
+                          ThumbnailService="ThumbnailService"
+                          CurrentArtifact="CurrentArtifact"
+                          OnSelectArtifact="HandleSelectArtifactAsync"
+                          OnArtifactOptionClick="HandleOptionsArtifact"
+                          OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
+                          OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
+                          ViewMode="AppStateStore.ViewMode"
+                          FileCategoryFilter="_inlineFileCategoryFilter"
+                          HandleBack="HandleToolbarBackClickAsync"
+                          IsLoading="_isArtifactExplorerLoading"
+                          IsInSearchMode="false"
+                          ScrollArtifact="ScrolledToArtifact"
+                          @bind-SelectedArtifacts="_selectedArtifacts"
+                          @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
     </section>
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">
@@ -146,7 +146,7 @@
                     </div>
                 </div>
             </div>
-            @if (_searchTask is { IsCompleted: false } && _isArtifactExplorerLoading is false)
+            @if (_searchTask is { IsCompleted: false } && _isSearchArtifactExplorerLoading is false)
             {
                 <div class="progress-bar-wrapper">
                     <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])" />
@@ -156,22 +156,19 @@
         @if (_isInSearchMode)
         {
             <ArtifactExplorer Artifacts="_searchResultArtifacts"
-                              FileService="FileService"
-                              ThumbnailService="ThumbnailService"
-                              CurrentArtifact="CurrentArtifact"
-                              OnSelectArtifact="HandleSelectArtifactAsync"
-                              OnArtifactOptionClick="HandleOptionsArtifact"
-                              OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
-                              OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
-                              ViewMode="ViewModeEnum.List"
-                              FileCategoryFilter="_inlineFileCategoryFilter"
-                              HandleBack="HandleToolbarBackClickAsync"
-                              IsLoading="_isSearchArtifactExplorerLoading"
-                              IsInSearchMode="true"
-                              IsTouchStarted="HandleOnArtifactTouchStartAsync"
-                              SelectedArtifacts="_selectedArtifacts"
-                              SelectedArtifactsChanged="SetSelectedArtifact"
-                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                          FileService="FileService"
+                          ThumbnailService="ThumbnailService"
+                          OnSelectArtifact="HandleSelectArtifactAsync"
+                          OnArtifactOptionClick="HandleOptionsArtifact"
+                          OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
+                          ViewMode="ViewModeEnum.List"
+                          HandleBack="HandleToolbarBackClickAsync"
+                          IsLoading="_isSearchArtifactExplorerLoading"
+                          IsInSearchMode="true"
+                          IsTouchStarted="HandleOnArtifactTouchStartAsync"
+                          SelectedArtifacts="_selectedArtifacts"
+                          SelectedArtifactsChanged="SetSelectedArtifact"
+                          @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
         }
         @if (_selectedArtifacts is { Count: >= 1 })
         {
@@ -236,7 +233,7 @@
                         FileService="FileService"
                         ThumbnailService="ThumbnailService"
                         SortType="_currentSortType"
-                        IsAscOrder="_isAscOrder"/>
+                        IsAscOrder="_isAscOrder" />
 <FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_inlineFileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
@@ -248,7 +245,7 @@
                ProgressCurrentValue="@ProgressBarCurrentValue"
                ProgressMax="@ProgressBarMax"
                OnCancel="ProgressBarOnCancel"
-@ref="_progressModalRef" />
+               @ref="_progressModalRef" />
 <ConfirmationReplaceOrSkipModal @ref="_confirmationReplaceOrSkipModalRef" />
 <ArtifactDetailModal @ref="_artifactDetailModalRef" FileService="FileService" />
 <FileViewer @ref="_fileViewerRef"
@@ -258,6 +255,6 @@
             OnOptionClick="HandleOptionsArtifact"
             ThumbnailService="ThumbnailService"
             NavigationFolderCallback="NavigateToAsync"
-            OnBack="() => {_isInFileViewer = false;}"/>
+            OnBack="() => {_isInFileViewer = false;}" />
 
 <ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />
