@@ -62,7 +62,6 @@ public partial class FileBrowser : IDisposable
     private PinOptionResult? _searchPinOptionResult;
 
     private FsArtifact? _currentArtifactValue;
-
     private FsArtifact? CurrentArtifact
     {
         get => _currentArtifactValue;
@@ -92,7 +91,20 @@ public partial class FileBrowser : IDisposable
     private List<FsArtifact> _searchResultArtifacts = new();
     private List<FsArtifact> _displayedArtifacts = new();
     private List<FsArtifact> _selectedArtifacts = new();
+
     private FileCategoryType? _inlineFileCategoryFilter;
+    private FileCategoryType? InlineFileCategoryFilter
+    {
+        get => _inlineFileCategoryFilter;
+        set
+        {
+            if (_inlineFileCategoryFilter == value)
+                return;
+
+            _inlineFileCategoryFilter = value;
+            AppStateStore.CurrentFileCategoryFilter = value;
+        }
+    }
 
     private ArtifactExplorerMode _artifactExplorerMode;
 
@@ -136,7 +148,8 @@ public partial class FileBrowser : IDisposable
             .GetEvent<ArtifactChangeEvent>()
             .Subscribe(
                 HandleChangedArtifacts,
-                ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+                ThreadOption.BackgroundThread,
+                keepSubscriberReferenceAlive: true);
 
         if (string.IsNullOrWhiteSpace(InitialPath))
         {
@@ -149,6 +162,8 @@ public partial class FileBrowser : IDisposable
             var defaultArtifact = await FileService.GetArtifactAsync(filePath);
             CurrentArtifact = defaultArtifact;
         }
+
+        InlineFileCategoryFilter = AppStateStore.CurrentFileCategoryFilter;
 
         _ = Task.Run(async () =>
         {
@@ -1576,17 +1591,17 @@ public partial class FileBrowser : IDisposable
 
     private IEnumerable<FsArtifact> ApplyFilters(IEnumerable<FsArtifact> artifacts)
     {
-        return _inlineFileCategoryFilter is null
+        return InlineFileCategoryFilter is null
             ? artifacts
             : artifacts.Where(fa =>
             {
-                if (_inlineFileCategoryFilter == FileCategoryType.Document)
+                if (InlineFileCategoryFilter == FileCategoryType.Document)
                 {
                     return fa.FileCategory is FileCategoryType.Document or FileCategoryType.Pdf
                         or FileCategoryType.Other;
                 }
 
-                return fa.FileCategory == _inlineFileCategoryFilter;
+                return fa.FileCategory == InlineFileCategoryFilter;
             });
     }
 
@@ -1600,7 +1615,7 @@ public partial class FileBrowser : IDisposable
         if (_isArtifactExplorerLoading || _filteredArtifactModalRef is null)
             return;
 
-        _inlineFileCategoryFilter = await _filteredArtifactModalRef.ShowAsync();
+        InlineFileCategoryFilter = await _filteredArtifactModalRef.ShowAsync();
         await JSRuntime.InvokeVoidAsync("OnScrollEvent");
         _isArtifactExplorerLoading = true;
         await Task.Run(() => { RefreshDisplayedArtifacts(); });

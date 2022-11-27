@@ -84,7 +84,7 @@
                     <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn filter">
                         <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
-                        <div class="filter-btn-selected @(_inlineFileCategoryFilter != null ? "show-fliter-btn" : "hide-filter-btn")" @onclick="HandleFilterClick"></div>
+                        <div class="filter-btn-selected @(InlineFileCategoryFilter != null ? "show-fliter-btn" : "hide-filter-btn")" @onclick="HandleFilterClick"></div>
                     </div>
 
                 </div>
@@ -108,7 +108,7 @@
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                           ViewMode="AppStateStore.ViewMode"
-                          FileCategoryFilter="_inlineFileCategoryFilter"
+                          FileCategoryFilter="InlineFileCategoryFilter"
                           HandleBack="HandleToolbarBackClickAsync"
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="false"
@@ -234,7 +234,7 @@
                         ThumbnailService="ThumbnailService"
                         SortType="_currentSortType"
                         IsAscOrder="_isAscOrder" />
-<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_inlineFileCategoryFilter" />
+<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="InlineFileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
 <InputModal @ref="_passwordModalRef" />
