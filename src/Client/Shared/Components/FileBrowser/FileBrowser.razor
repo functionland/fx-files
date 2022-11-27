@@ -93,12 +93,14 @@
 
         <div class="local-search @(!IsInRoot(CurrentArtifact) ? "show-search" : "hide-search")">
             <FxSearchInput Placeholder="@CurrentArtifact?.Name"
-            @ref="_fxSearchInputRef"
+                           @ref="_fxSearchInputRef"
                            OnCancel="HandleCancelInLineSearchAsync"
                            DebounceInterval="300"
                            OnSearch="HandleInLineSearch"
                            IsPartial="false" />
         </div>
+        @if (_isInSearchMode is false)
+        {
             <ArtifactExplorer Artifacts="_displayedArtifacts"
                               FileService="FileService"
                               ThumbnailService="ThumbnailService"
@@ -106,7 +108,7 @@
                               OnSelectArtifact="HandleSelectArtifactAsync"
                               OnArtifactOptionClick="HandleOptionsArtifact"
                               OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
-                              OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
+                              OnAddFolderButtonClick="@(() => HandleCreateFolder(CurrentArtifact?.FullPath))"
                               ViewMode="AppStateStore.ViewMode"
                               FileCategoryFilter="_inlineFileCategoryFilter"
                               HandleBack="HandleToolbarBackClickAsync"
@@ -114,7 +116,8 @@
                               IsInSearchMode="_isInSearchMode"
                               ScrollArtifact="ScrolledToArtifact"
                               @bind-SelectedArtifacts="_selectedArtifacts"
-                              @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                              @bind-ArtifactExplorerMode="ArtifactExplorerMode"/>
+        }
     </section>
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">

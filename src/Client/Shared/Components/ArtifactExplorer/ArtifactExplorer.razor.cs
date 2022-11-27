@@ -1,5 +1,7 @@
 ﻿using System.Timers;
+
 using Functionland.FxFiles.Client.Shared.Components.Common;
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
@@ -209,41 +211,46 @@ public partial class ArtifactExplorer
 
     public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
     {
-        if (args.Button == 0)
+        switch (args.Button)
         {
-            if (_timer != null)
-            {
-                DisposeTimer();
-                if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+            case 0:
                 {
-                    await OnSelectArtifact.InvokeAsync(artifact);
-                    await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
-                }
-                else
-                {
-                    if (_longPressedArtifact != null)
+                    if (_timer != null)
                     {
-                        await OnSelectionChanged(artifact);
-                        await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                        DisposeTimer();
+                        if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                        {
+                            await OnSelectArtifact.InvokeAsync(artifact);
+                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
+                        }
+                        else
+                        {
+                            if (_longPressedArtifact != null)
+                            {
+                                await OnSelectionChanged(artifact);
+                                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                            }
+                        }
                     }
+
+                    break;
                 }
-            }
-        }
-        else if (args.Button == 2)
-        {
-            DisposeTimer();
-            switch (SelectedArtifacts.Count)
-            {
-                case 0 when ArtifactExplorerMode == ArtifactExplorerMode.Normal:
-                    await HandleArtifactOptionClick(artifact);
-                    break;
-                case 1:
-                    await HandleArtifactOptionClick(SelectedArtifacts[0]);
-                    break;
-                case > 1:
-                    await HandleArtifactsOptionClick(SelectedArtifacts);
-                    break;
-            }
+            case 2:
+                DisposeTimer();
+                switch (SelectedArtifacts.Count)
+                {
+                    case 0 when ArtifactExplorerMode == ArtifactExplorerMode.Normal:
+                        await HandleArtifactOptionClick(artifact);
+                        break;
+                    case 1:
+                        await HandleArtifactOptionClick(SelectedArtifacts[0]);
+                        break;
+                    case > 1:
+                        await HandleArtifactsOptionClick(SelectedArtifacts);
+                        break;
+                }
+
+                break;
         }
 
         StateHasChanged();

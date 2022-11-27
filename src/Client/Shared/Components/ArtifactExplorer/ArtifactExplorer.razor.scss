@@ -17,9 +17,7 @@
     overflow: hidden;
     width: 100%;
     position: relative;
-    //transform: scaley(0);
-    //transform-origin: top;
-    //opacity: 0;
+    scroll-behavior:smooth;
 }
 
 .show-animation-artifact {
