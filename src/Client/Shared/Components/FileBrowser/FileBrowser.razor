@@ -39,7 +39,7 @@
                                 {
                                     <div @onclick="(() => HandleSelectArtifactAsync(pin))">
                                         <FileCard Artifact="@pin"
-                                              FileService="@FileService" ThumbnailService="@ThumbnailService"/>
+                                      FileService="@FileService" ThumbnailService="@ThumbnailService" />
                                     </div>
                                 }
                             </div>
@@ -84,7 +84,7 @@
                     <span class="specter">@Localizer[nameof(AppStrings.Specter)]</span>
                     <div class="action-btn filter">
                         <div class="action-btn filter-btn" @onclick="HandleFilterClick"></div>
-                        <div class="filter-btn-selected @(_inlineFileCategoryFilter != null ? "show-fliter-btn" : "hide-filter-btn")" @onclick="HandleFilterClick"></div>
+                        <div class="filter-btn-selected @(InlineFileCategoryFilter != null ? "show-fliter-btn" : "hide-filter-btn")" @onclick="HandleFilterClick"></div>
                     </div>
 
                 </div>
@@ -99,9 +99,7 @@
                            OnSearch="HandleInLineSearch"
                            IsPartial="false" />
         </div>
-        @if (_isInSearchMode is false)
-        {
-            <ArtifactExplorer Artifacts="_displayedArtifacts"
+        <ArtifactExplorer Artifacts="_displayedArtifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
                           CurrentArtifact="CurrentArtifact"
@@ -110,20 +108,18 @@
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
                           OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                           ViewMode="AppStateStore.ViewMode"
-                          FileCategoryFilter="_inlineFileCategoryFilter"
+                          FileCategoryFilter="InlineFileCategoryFilter"
                           HandleBack="HandleToolbarBackClickAsync"
-                          IsTouchStarted="HandleOnArtifactTouchStartAsync"
                           IsLoading="_isArtifactExplorerLoading"
-                          IsInSearchMode="_isInSearchMode"
+                          IsInSearchMode="false"
                           ScrollArtifact="ScrolledToArtifact"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
-        }
     </section>
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">
         <div class="filter-deep-search">
-            <div class="filter-content @(_searchStatusTask is { IsCompleted: false } && _isFileCategoryFilterBoxOpen is false ? string.Empty : "show-expander-divider")">
+            <div class="filter-content @(_searchTask is { IsCompleted: false } && _isFileCategoryFilterBoxOpen is false ? string.Empty : "show-expander-divider")">
                 <div class="filter-text">@Localizer[nameof(AppStrings.Filters)]</div>
                 <div class="@(_isFileCategoryFilterBoxOpen ? "chaveron-up-icon" : "chaveron-down-icon")" @onclick="ChangeFileCategoryFilterMode"></div>
             </div>
@@ -150,7 +146,7 @@
                     </div>
                 </div>
             </div>
-            @if (_searchStatusTask is { IsCompleted: false } && _isArtifactExplorerLoading is false)
+            @if (_searchTask is { IsCompleted: false } && _isSearchArtifactExplorerLoading is false)
             {
                 <div class="progress-bar-wrapper">
                     <FxProgressBar ProgressMode="ProgressMode.Infinite" CurrentText="@(Localizer[nameof(AppStrings.LoadingSearchResult)])" />
@@ -159,19 +155,16 @@
         </div>
         @if (_isInSearchMode)
         {
-            <ArtifactExplorer Artifacts="_displayedArtifacts"
+            <ArtifactExplorer Artifacts="_searchResultArtifacts"
                           FileService="FileService"
                           ThumbnailService="ThumbnailService"
-                          CurrentArtifact="CurrentArtifact"
                           OnSelectArtifact="HandleSelectArtifactAsync"
                           OnArtifactOptionClick="HandleOptionsArtifact"
                           OnArtifactsOptionClick="HandleSelectedArtifactsOptions"
-                          OnAddFolderButtonClick="@(()=>HandleCreateFolder(CurrentArtifact?.FullPath))"
                           ViewMode="ViewModeEnum.List"
-                          FileCategoryFilter="_inlineFileCategoryFilter"
                           HandleBack="HandleToolbarBackClickAsync"
-                          IsLoading="_isArtifactExplorerLoading"
-                          IsInSearchMode="_isInSearchMode"
+                          IsLoading="_isSearchArtifactExplorerLoading"
+                          IsInSearchMode="true"
                           IsTouchStarted="HandleOnArtifactTouchStartAsync"
                           SelectedArtifacts="_selectedArtifacts"
                           SelectedArtifactsChanged="SetSelectedArtifact"
@@ -241,7 +234,7 @@
                         ThumbnailService="ThumbnailService"
                         SortType="_currentSortType"
                         IsAscOrder="_isAscOrder" />
-<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="_inlineFileCategoryFilter" />
+<FilterArtifactModal @ref="_filteredArtifactModalRef" CurrentFilter="InlineFileCategoryFilter" />
 <SortArtifactModal @ref="_sortedArtifactModalRef" CurrentSort="_currentSortType"></SortArtifactModal>
 <InputModal @ref="_inputModalRef" />
 <InputModal @ref="_passwordModalRef" />

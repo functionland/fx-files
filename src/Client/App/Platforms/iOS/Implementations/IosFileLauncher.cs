@@ -1,5 +1,4 @@
 ﻿using Functionland.FxFiles.Client.App.Implementations;
-using Functionland.FxFiles.Client.Shared.Models;
 
 namespace Functionland.FxFiles.Client.App.Platforms.iOS.Implementations;
 

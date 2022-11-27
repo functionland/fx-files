@@ -817,17 +817,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (deepSearchFilter is null)
                 throw new InvalidOperationException("The search filter is empty.");
 
-            if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-            var inLineDeepSearchFilter = new DeepSearchFilter
-            {
-                SearchText = deepSearchFilter.SearchText,
-                ArtifactCategorySearchTypes = deepSearchFilter.ArtifactCategorySearchTypes,
-                ArtifactDateSearchType = deepSearchFilter.ArtifactDateSearchType
-            };
+            if (cancellationToken?.IsCancellationRequested == true) 
+                yield break;
 
             var allFileAndFolders = Directory.EnumerateFileSystemEntries(path,
-                !string.IsNullOrWhiteSpace(inLineDeepSearchFilter.SearchText) ? $"*{inLineDeepSearchFilter.SearchText}*" : "*",
+                !string.IsNullOrWhiteSpace(deepSearchFilter.Value.SearchText) ? $"*{deepSearchFilter.Value.SearchText}*" : "*",
                 new EnumerationOptions
                 {
                     IgnoreInaccessible = true,
@@ -841,13 +835,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ArtifactInfo = new DirectoryInfo(fullPath)
                 });
 
-            if (inLineDeepSearchFilter.ArtifactCategorySearchTypes is not null && inLineDeepSearchFilter.ArtifactCategorySearchTypes.Any())
+            if (deepSearchFilter.Value.ArtifactCategorySearchTypes is not null && deepSearchFilter.Value.ArtifactCategorySearchTypes.Any())
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
                 List<string> categoryTypeList = new();
 
-                foreach (var type in inLineDeepSearchFilter.ArtifactCategorySearchTypes)
+                foreach (var type in deepSearchFilter.Value.ArtifactCategorySearchTypes)
                 {
                     var types = FsArtifactUtils.GetSearchCategoryTypeExtensions(type);
 
@@ -858,11 +852,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                                                             categoryTypeList.Contains(f.ArtifactInfo.Extension.ToLower()));
             }
 
-            if (inLineDeepSearchFilter.ArtifactDateSearchType.HasValue)
+            if (deepSearchFilter.Value.ArtifactDateSearchType.HasValue)
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-                var dateDiff = inLineDeepSearchFilter.ArtifactDateSearchType switch
+                var dateDiff = deepSearchFilter.Value.ArtifactDateSearchType switch
                 {
                     ArtifactDateSearchType.Yesterday => 1,
                     ArtifactDateSearchType.Past7Days => 7,
