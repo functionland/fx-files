@@ -99,8 +99,8 @@
                            OnSearch="HandleInLineSearch"
                            IsPartial="false" />
         </div>
-        @if (_isInSearchMode is false)
-        {
+        @*@if (_isInSearchMode is false)
+        {*@
             <ArtifactExplorer Artifacts="_displayedArtifacts"
                               FileService="FileService"
                               ThumbnailService="ThumbnailService"
@@ -117,7 +117,7 @@
                               ScrollArtifact="ScrolledToArtifact"
                               @bind-SelectedArtifacts="_selectedArtifacts"
                               @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
-        }
+        @*}*@
     </section>
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">
@@ -158,7 +158,7 @@
         </div>
         @if (_isInSearchMode)
         {
-            <ArtifactExplorer Artifacts="_displayedArtifacts"
+            <ArtifactExplorer Artifacts="_searchResultArtifacts"
                               FileService="FileService"
                               ThumbnailService="ThumbnailService"
                               CurrentArtifact="CurrentArtifact"
@@ -169,8 +169,8 @@
                               ViewMode="ViewModeEnum.List"
                               FileCategoryFilter="_inlineFileCategoryFilter"
                               HandleBack="HandleToolbarBackClickAsync"
-                              IsLoading="_isArtifactExplorerLoading"
-                              IsInSearchMode="_isInSearchMode"
+                              IsLoading="_isSearchArtifactExplorerLoading"
+                              IsInSearchMode="true"
                               IsTouchStarted="HandleOnArtifactTouchStartAsync"
                               SelectedArtifacts="_selectedArtifacts"
                               SelectedArtifactsChanged="SetSelectedArtifact"

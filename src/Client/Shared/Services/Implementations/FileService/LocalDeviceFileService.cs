@@ -827,14 +827,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (deepSearchFilter is null)
                 throw new InvalidOperationException("The search filter is empty.");
 
-            if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-            //var inLineDeepSearchFilter = new DeepSearchFilter
-            //{
-            //    SearchText = deepSearchFilter.SearchText,
-            //    ArtifactCategorySearchTypes = deepSearchFilter.ArtifactCategorySearchTypes,
-            //    ArtifactDateSearchType = deepSearchFilter.ArtifactDateSearchType
-            //};
+            if (cancellationToken?.IsCancellationRequested == true) 
+                yield break;
 
             var allFileAndFolders = Directory.EnumerateFileSystemEntries(path,
                 !string.IsNullOrWhiteSpace(deepSearchFilter.Value.SearchText) ? $"*{deepSearchFilter.Value.SearchText}*" : "*",
