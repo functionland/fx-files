@@ -52,7 +52,6 @@ public partial class FileBrowser : IDisposable
     private CancellationTokenSource? _progressBarCts;
 
     // Search
-    //private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearchMode;
     private bool _isSearchInputFocused = false;
@@ -319,7 +318,7 @@ public partial class FileBrowser : IDisposable
                     subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
                     current: ProgressBarCurrentValue,
                     max: sourceArtifacts.Count);
-                }  
+                }
             }
 
             FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
@@ -1385,7 +1384,7 @@ public partial class FileBrowser : IDisposable
         if (_isInSearchMode is false)
         {
             _isInSearchMode = true;
-            _displayedArtifacts.Clear();
+            _searchResultArtifacts.Clear();
         }
 
         _isSearchInputFocused = true;
@@ -1411,13 +1410,10 @@ public partial class FileBrowser : IDisposable
             _isFileCategoryFilterBoxOpen = false;
         }
 
-        // ToDo: Why using this?
         _isSearchArtifactExplorerLoading = true;
         _searchText = text;
         var searchFilter = GetSearchFilter();
 
-        //_allArtifacts.Clear();
-        //_displayedArtifacts.Clear();
         _searchResultArtifacts.Clear();
         _searchCancellationTokenSource?.Cancel();
 
@@ -1427,9 +1423,6 @@ public partial class FileBrowser : IDisposable
             _searchTask = Task.CompletedTask;
             return;
         }
-
-        // ToDo: Check
-        //RefreshDisplayedArtifacts();
 
         if (IsDesktop is false)
         {
@@ -1442,16 +1435,21 @@ public partial class FileBrowser : IDisposable
         _searchTask = await Task.Factory.StartNew(async () =>
         {
             var bufferedArtifacts = new List<FsArtifact>();
-            var updaterTask = Task.Run(async () =>
+            var isSearchComplete = false;
+            _ = Task.Run(async () =>
             {
                 var sw = Stopwatch.StartNew();
 
-                while (true)
+                while (bufferedArtifacts.Count > 0 || isSearchComplete is false)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(1), token);
-                    var toAdd = bufferedArtifacts;
-                    bufferedArtifacts = new List<FsArtifact>();
-                    _searchResultArtifacts.AddRange(toAdd);
+
+                    if (bufferedArtifacts.Count == 0)
+                        continue;
+
+                    _searchResultArtifacts.AddRange(bufferedArtifacts);
+                    _searchResultArtifacts = _searchResultArtifacts.ToList();
+                    bufferedArtifacts.Clear();
 
                     if (_searchResultArtifacts.Count > 0 && _isSearchArtifactExplorerLoading)
                     {
@@ -1459,7 +1457,6 @@ public partial class FileBrowser : IDisposable
                     }
 
                     await InvokeAsync(StateHasChanged);
-
 
                     sw.Restart();
                 }
@@ -1478,6 +1475,8 @@ public partial class FileBrowser : IDisposable
 
                     await Task.Yield();
                 }
+
+                isSearchComplete = true;
             }
             finally
             {
@@ -1863,7 +1862,7 @@ public partial class FileBrowser : IDisposable
     {
         CancelSelectionMode();
         _searchCancellationTokenSource?.Cancel();
-        _displayedArtifacts.Clear();
+        _searchResultArtifacts.Clear();
         _fxToolBarRef?.HandleCancelSearch();
         _artifactsSearchFilterTypes.Clear();
         _artifactsSearchFilterDate = null;
