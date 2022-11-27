@@ -205,6 +205,7 @@ public partial class ArtifactExplorer
         _timer.Stop();
         _timer.Elapsed -= TimerElapsed;
         _timer.Dispose();
+        _timer = null;
     }
 
     public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)

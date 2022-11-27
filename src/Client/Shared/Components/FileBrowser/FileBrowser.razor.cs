@@ -52,7 +52,6 @@ public partial class FileBrowser : IDisposable
     private CancellationTokenSource? _progressBarCts;
 
     // Search
-    private DeepSearchFilter? SearchFilter { get; set; }
     private bool _isFileCategoryFilterBoxOpen = true;
     private bool _isInSearchMode;
     private bool _isSearchInputFocused = false;
@@ -90,6 +89,7 @@ public partial class FileBrowser : IDisposable
 
     private List<FsArtifact> _pins = new();
     private List<FsArtifact> _allArtifacts = new();
+    private List<FsArtifact> _searchResultArtifacts = new();
     private List<FsArtifact> _displayedArtifacts = new();
     private List<FsArtifact> _selectedArtifacts = new();
     private FileCategoryType? _inlineFileCategoryFilter;
@@ -112,11 +112,12 @@ public partial class FileBrowser : IDisposable
     private SortTypeEnum _currentSortType = SortTypeEnum.Name;
     private bool _isAscOrder = true;
     private bool _isArtifactExplorerLoading = false;
+    private bool _isSearchArtifactExplorerLoading = false;
     private bool _isPinBoxLoading = true;
     private bool _isGoingBack;
     private bool _isInFileViewer;
     private Timer? _timer;
-    private Task? _searchStatusTask;
+    private Task? _searchTask;
 
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
     [AutoInject] public IFileWatchService FileWatchService { get; set; } = default!;
@@ -317,7 +318,7 @@ public partial class FileBrowser : IDisposable
                     subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
                     current: ProgressBarCurrentValue,
                     max: sourceArtifacts.Count);
-                }  
+                }
             }
 
             FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
@@ -1369,14 +1370,14 @@ public partial class FileBrowser : IDisposable
         if (_isInSearchMode is false)
         {
             _isInSearchMode = true;
-            _displayedArtifacts.Clear();
+            _searchResultArtifacts.Clear();
         }
 
         _isSearchInputFocused = true;
         RefreshDeviceBackButtonBehavior();
     }
 
-    private async Task HandleSearchUnFocused()
+    private async Task UnFocuseSearchInputAsync()
     {
         await JSRuntime.InvokeVoidAsync("SearchInputUnFocus");
     }
@@ -1395,85 +1396,93 @@ public partial class FileBrowser : IDisposable
             _isFileCategoryFilterBoxOpen = false;
         }
 
-        _isArtifactExplorerLoading = true;
+        _isSearchArtifactExplorerLoading = true;
         _searchText = text;
-        ApplySearchFilter(text, _artifactsSearchFilterDate, _artifactsSearchFilterTypes);
-        if (string.IsNullOrWhiteSpace(SearchFilter?.SearchText) && SearchFilter?.ArtifactDateSearchType == null &&
-            (SearchFilter?.ArtifactCategorySearchTypes == null || SearchFilter?.ArtifactCategorySearchTypes.Any() is false))
+        var searchFilter = GetSearchFilter();
+
+        _searchResultArtifacts.Clear();
+        _searchCancellationTokenSource?.Cancel();
+
+        if (searchFilter.IsEmpty())
         {
-            _searchCancellationTokenSource?.Cancel();
-            _isArtifactExplorerLoading = false;
-            _allArtifacts.Clear();
-            _displayedArtifacts.Clear();
-            _searchStatusTask = Task.CompletedTask;
+            _isSearchArtifactExplorerLoading = false;
+            _searchTask = Task.CompletedTask;
             return;
         }
-        _allArtifacts.Clear();
-        _displayedArtifacts.Clear();
 
-        RefreshDisplayedArtifacts();
-
-        _searchCancellationTokenSource?.Cancel();
         if (IsDesktop is false)
         {
-            await HandleSearchUnFocused();
+            await UnFocuseSearchInputAsync();
         }
 
         _searchCancellationTokenSource = new CancellationTokenSource();
         var token = _searchCancellationTokenSource.Token;
-        var sw = Stopwatch.StartNew();
 
-        _searchStatusTask = await Task.Factory.StartNew(async () =>
+        _searchTask = await Task.Factory.StartNew(async () =>
         {
-            try
+            var bufferedArtifacts = new List<FsArtifact>();
+            var isSearchComplete = false;
+            _ = Task.Run(async () =>
             {
-                await foreach (var item in FileService.GetSearchArtifactAsync(SearchFilter, token)
-                                   .WithCancellation(token))
+                try
                 {
-                    if (token.IsCancellationRequested)
-                        return;
+                    var sw = Stopwatch.StartNew();
 
-                    item.IsPinned = await PinService.IsPinnedAsync(item);
-                    _allArtifacts.Add(item);
-
-                    if (sw.ElapsedMilliseconds <= 1000)
-                        continue;
-
-                    if (token.IsCancellationRequested)
-                        return;
-
-                    RefreshDisplayedArtifacts();
-                    await InvokeAsync(() =>
+                    while (bufferedArtifacts.Count > 0 || isSearchComplete is false)
                     {
-                        if (_displayedArtifacts.Count > 0 && _isArtifactExplorerLoading)
-                            _isArtifactExplorerLoading = false;
+                        await Task.Delay(TimeSpan.FromSeconds(1), token);
 
-                        StateHasChanged();
-                    });
-                    sw.Restart();
-                    await Task.Yield();
+                        if (bufferedArtifacts.Count == 0)
+                            continue;
+
+                        _searchResultArtifacts.AddRange(bufferedArtifacts);
+                        _searchResultArtifacts = _searchResultArtifacts.ToList();
+                        bufferedArtifacts.Clear();
+
+                        if (_searchResultArtifacts.Count > 0 && _isSearchArtifactExplorerLoading)
+                        {
+                            _isSearchArtifactExplorerLoading = false;
+                        }
+
+                        await InvokeAsync(StateHasChanged);
+
+                        sw.Restart();
+                    }
                 }
+                catch (Exception exception) when (exception is not TaskCanceledException)
+                {
+                    ExceptionHandler.Handle(exception);
+                }
+                finally
+                {
+                    _isSearchArtifactExplorerLoading = false;
+                }
+            }, token);
 
+            await foreach (var item in FileService.GetSearchArtifactAsync(searchFilter, token)
+                               .WithCancellation(token))
+            {
                 if (token.IsCancellationRequested)
                     return;
 
-                RefreshDisplayedArtifacts();
-                await InvokeAsync(StateHasChanged);
+                item.IsPinned = await PinService.IsPinnedAsync(item);
+                bufferedArtifacts.Add(item);
+
+                await Task.Yield();
             }
-            finally
-            {
-                _isArtifactExplorerLoading = false;
-            }
+
+            isSearchComplete = true;
         }, token);
     }
 
-    private void ApplySearchFilter(string searchText, ArtifactDateSearchType? date = null,
-        List<ArtifactCategorySearchType>? type = null)
+    private DeepSearchFilter GetSearchFilter()
     {
-        SearchFilter ??= new DeepSearchFilter();
-        SearchFilter.SearchText = !string.IsNullOrWhiteSpace(searchText) ? searchText : string.Empty;
-        SearchFilter.ArtifactCategorySearchTypes = type ?? null;
-        SearchFilter.ArtifactDateSearchType = date ?? null;
+        return new DeepSearchFilter()
+        {
+            SearchText = !string.IsNullOrWhiteSpace(_searchText) ? _searchText : string.Empty,
+            ArtifactCategorySearchTypes = _artifactsSearchFilterTypes ?? null,
+            ArtifactDateSearchType = _artifactsSearchFilterDate ?? null
+        };
     }
 
     private void HandleInLineSearch(string? text)
@@ -1488,7 +1497,6 @@ public partial class FileBrowser : IDisposable
 
     private async Task HandleToolbarBackClickAsync()
     {
-        _searchText = string.Empty;
         _inlineSearchText = string.Empty;
         _fxSearchInputRef?.HandleClearInputText();
 
@@ -1498,15 +1506,9 @@ public partial class FileBrowser : IDisposable
                 if (_isInSearchMode)
                 {
                     await CancelSearchAsync();
-                    _ = Task.Run(async () =>
-                    {
-                        await LoadChildrenArtifactsAsync(CurrentArtifact);
-                        await InvokeAsync(StateHasChanged);
-                    });
                     return;
                 }
 
-                _fxSearchInputRef?.HandleClearInputText();
                 await UpdateCurrentArtifactForBackButton(CurrentArtifact);
                 _ = Task.Run(async () =>
                 {
@@ -1537,14 +1539,7 @@ public partial class FileBrowser : IDisposable
             return;
         }
 
-        try
-        {
-            CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact.ParentFullPath);
-        }
-        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
-        {
-            CurrentArtifact = null;
-        }
+        CurrentArtifact = await FileService.GetArtifactAsync(fsArtifact.ParentFullPath);
     }
 
     private void RefreshDisplayedArtifacts(
@@ -1835,7 +1830,7 @@ public partial class FileBrowser : IDisposable
     {
         ClearSearch();
         _isInSearchMode = false;
-        await HandleSearchUnFocused();
+        await UnFocuseSearchInputAsync();
         StateHasChanged();
     }
 
@@ -1843,8 +1838,7 @@ public partial class FileBrowser : IDisposable
     {
         CancelSelectionMode();
         _searchCancellationTokenSource?.Cancel();
-        SearchFilter = null;
-        _displayedArtifacts.Clear();
+        _searchResultArtifacts.Clear();
         _fxToolBarRef?.HandleCancelSearch();
         _artifactsSearchFilterTypes.Clear();
         _artifactsSearchFilterDate = null;
@@ -1885,7 +1879,7 @@ public partial class FileBrowser : IDisposable
         if (_isSearchInputFocused)
         {
             _isSearchInputFocused = false;
-            await HandleSearchUnFocused();
+            await UnFocuseSearchInputAsync();
         }
     }
 
@@ -1904,7 +1898,7 @@ public partial class FileBrowser : IDisposable
     {
         ProgressBarCts?.Dispose();
         _timer?.Dispose();
-        _searchStatusTask?.Dispose();
+        _searchTask?.Dispose();
         _semaphoreArtifactChanged.Dispose();
         _searchCancellationTokenSource?.Dispose();
         ArtifactChangeSubscription.Dispose();

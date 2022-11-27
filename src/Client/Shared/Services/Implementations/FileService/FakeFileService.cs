@@ -422,8 +422,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             // TODO : Implement deep search 
             IEnumerable<FsArtifact> files = _files;
 
-            if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
-                files = files.Where(f => f.Name.Contains(deepSearchFilter.SearchText));
+            if (!string.IsNullOrWhiteSpace(deepSearchFilter.Value.SearchText))
+                files = files.Where(f => f.Name.Contains(deepSearchFilter.Value.SearchText));
 
             foreach (var file in files)
             {
