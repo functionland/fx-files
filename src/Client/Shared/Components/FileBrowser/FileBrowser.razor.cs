@@ -1896,6 +1896,7 @@ public partial class FileBrowser : IDisposable
             _isSearchInputFocused = false;
             await UnFocuseSearchInputAsync();
         }
+        await JSRuntime.InvokeVoidAsync("InlineSearchInputUnFocus");
     }
 
     private void SetSelectedArtifact(List<FsArtifact> artifacts)
