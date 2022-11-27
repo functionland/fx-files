@@ -66,11 +66,13 @@ public partial class ArtifactExplorer
     private int _gridRowCount = 2;
     private int _overscanCount = 5;
     private bool _isArtifactsChanged;
+    private bool _isInScrollArtifactAction;
 
     private string _resizeEventListenerId = string.Empty;
 
     private DotNetObjectReference<ArtifactExplorer>? _objectReference;
     private (TouchPoint ReferencePoint, DateTimeOffset StartTime) _startPoint;
+    private ElementReference? _artifactExplorerListRef;
 
     protected override async Task OnInitAsync()
     {
@@ -88,15 +90,13 @@ public partial class ArtifactExplorer
             await JSRuntime.InvokeVoidAsync("OnScrollCheck");
         }
 
-        if (ScrollArtifact is not null)
+        if (ScrollArtifact is not null && _isInScrollArtifactAction is false)
         {
-            if (_timer == null && ScrollArtifact != null)
-            {
-                _timer = new System.Timers.Timer(1000);
-                _timer.Enabled = true;
-                _timer.Start();
-                _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
-            }
+            _isInScrollArtifactAction = true;
+            _timer = new System.Timers.Timer(1000);
+            _timer.Enabled = true;
+            _timer.Start();
+            _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
         }
     }
 
@@ -173,7 +173,7 @@ public partial class ArtifactExplorer
     {
         if (_timer != null)
         {
-            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestionation)
+            if (_timer.Enabled && ArtifactExplorerMode != ArtifactExplorerMode.SelectDestination)
             {
                 DisposeTimer();
                 ArtifactExplorerMode = ArtifactExplorerMode.SelectArtifact;
@@ -205,6 +205,7 @@ public partial class ArtifactExplorer
         _timer.Stop();
         _timer.Elapsed -= TimerElapsed;
         _timer.Dispose();
+        _timer = null;
     }
 
     public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
@@ -469,11 +470,11 @@ public partial class ArtifactExplorer
         return id;
     }
 
-    private async Task<bool?> ScrollToArtifact(FsArtifact artifact)
+    private async Task<bool> ScrollToArtifact(FsArtifact artifact)
     {
         var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
         var listExistResult =
-            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight);
+            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight, _artifactExplorerListRef);
         return listExistResult;
     }
 
@@ -493,16 +494,11 @@ public partial class ArtifactExplorer
             return;
         }
 
-        if (isListExist == null)
-        {
-            DisposeTimer();
-            return;
-        }
-
         DisposeTimer();
         await ScrollToArtifact(ScrollArtifact);
 
         ScrollArtifact = null;
+        _isInScrollArtifactAction = false;
     }
 
     public void Dispose()

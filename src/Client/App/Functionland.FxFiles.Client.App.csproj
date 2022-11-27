@@ -22,6 +22,7 @@
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
 		<DefaultLanguage>en-US</DefaultLanguage>
+		<NoWarn>$(NoWarn);ClassWithoutModifierAnalyzer</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
@@ -71,25 +72,6 @@
 		<Using Include="Microsoft.AspNetCore.Components.WebView.Maui" />
 	</ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
-    <Compile Remove="**\**\*.Android.cs" />
-    <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-ios')) != true AND $(TargetFramework.StartsWith('net6.0-maccatalyst')) != true">
-    <Compile Remove="**\**\*.MaciOS.cs" />
-    <None Include="**\**\*.MaciOS.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows')) != true ">
-    <Compile Remove="**\*.Windows.cs" />
-    <None Include="**\*.Windows.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.220902.1-preview1" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Bit.BlazorUI" Version="4.3.1" />
 		<PackageReference Include="Bit.CodeAnalyzers" Version="4.3.1">
@@ -105,6 +87,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CommunityToolkit.Maui.MediaElement\CommunityToolkit.Maui.MediaElement.csproj" />
 		<ProjectReference Include="..\Shared\Functionland.FxFiles.Client.Shared.csproj" />
 	</ItemGroup>
 
@@ -117,5 +100,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Platforms\Android\Resources\playstore-icon.png" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221116.1" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.1" />
 	</ItemGroup>
 </Project>

@@ -5,8 +5,8 @@ using Android.Media;
 using Android.Util;
 #endif
 
-using Functionland.FxFiles.Client.App.Controls;
-using VideoSource = Functionland.FxFiles.Client.App.Controls.VideoSource;
+using CommunityToolkit.Maui.MediaElement;
+using Microsoft.AspNetCore.Components;
 
 namespace Functionland.FxFiles.Client.App.Views;
 
@@ -21,19 +21,26 @@ public partial class NativeVideoViewer : ContentPage
         get { return _isInPictureInPicture; }
     }
 
+    private EventCallback OnBack { get; set; }
+    private MediaElementState CurrentMediaState { get; set; } = MediaElementState.Playing;
+    public static NativeVideoViewer? Current { get; set; }
+
     private readonly string _filePath;
 
-    public NativeVideoViewer(string path)
+    public NativeVideoViewer(string path, EventCallback onBack)
     {
         InitializeComponent();
+        Current = this;
 
         if (path is not null)
         {
             _filePath = path;
-
-            media.Source = VideoSource.FromFile(_filePath);
+            media.Source = MediaSource.FromFile(_filePath);
+            playButton.Source = ImageSource.FromFile("pause.png");
             media.Play();
         }
+
+        OnBack = onBack;
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -68,7 +75,11 @@ public partial class NativeVideoViewer : ContentPage
         try
         {
             media.Stop();
+            media.Source = null;
+            await OnBack.InvokeAsync();
             await Navigation.PopAsync();
+
+            //MemoryLeak Killer
             media.Handler?.DisconnectHandler();
         }
         catch (Exception ex)
@@ -80,6 +91,7 @@ public partial class NativeVideoViewer : ContentPage
     public void Minimize(object sender, EventArgs e)
     {
         header.IsVisible = false;
+        mediaControls.IsVisible = false;
 
 #if ANDROID
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -99,6 +111,7 @@ public partial class NativeVideoViewer : ContentPage
     private void media_Tapped(object sender, EventArgs e)
     {
         header.IsVisible = !header.IsVisible;
+        mediaControls.IsVisible = !mediaControls.IsVisible;
     }
 
     private void Backward_Clicked(object sender, EventArgs e)
@@ -109,5 +122,59 @@ public partial class NativeVideoViewer : ContentPage
     private void Forward_Clicked(object sender, EventArgs e)
     {
         media.Position = TimeSpan.FromSeconds(media.Position.TotalSeconds + 15);
+    }
+
+    private void Pause()
+    {
+        playButton.Source = ImageSource.FromFile("play.png");
+        CurrentMediaState = MediaElementState.Paused;
+        media.Pause();
+    }
+
+    private void Play()
+    {
+        playButton.Source = ImageSource.FromFile("pause.png");
+        CurrentMediaState = MediaElementState.Playing;
+        media.Play();
+    }
+
+    public void TogglePlay(MediaElementState state)
+    {
+        CurrentMediaState = media.CurrentState = state;
+
+        if (CurrentMediaState == MediaElementState.Playing)
+        {
+            Play();
+        }
+        else if (CurrentMediaState == MediaElementState.Paused)
+        {
+            Pause();
+        }
+    }
+
+    private void PausePlay_Clicked(object sender, EventArgs e)
+    {
+        //Workaround
+#if !ANDROID
+        CurrentMediaState = media.CurrentState;
+#endif
+
+        if (CurrentMediaState == MediaElementState.Playing)
+        {
+            Pause();
+        }
+        else if (CurrentMediaState == MediaElementState.Paused || CurrentMediaState == MediaElementState.Stopped)
+        {
+            Play();
+        }
+
+        //Workaround
+#if ANDROID
+        if (media.Duration.TotalSeconds <= media.Position.TotalSeconds || CurrentMediaState == MediaElementState.Stopped)
+        {
+            media.Position = TimeSpan.FromSeconds(0);
+            Play();
+        }
+#endif
     }
 }

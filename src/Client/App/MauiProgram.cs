@@ -1,5 +1,4 @@
-﻿using Functionland.FxFiles.Client.App.Controls;
-using Functionland.FxFiles.Client.App.Handlers;
+﻿using CommunityToolkit.Maui.MediaElement;
 using Functionland.FxFiles.Client.Shared.Shared;
 using Functionland.FxFiles.Client.Shared.Utils;
 using Microsoft.AppCenter;
@@ -15,7 +14,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiAppBuilder()
     {
-
+       
 #if RELEASE && !Mac
        
         AppCenter.Start(
@@ -23,7 +22,8 @@ public static class MauiProgram
             $"ios={Configuration.AppCenteriOSAppSecret};" +
             $"android={Configuration.AppCenterAndroidAppSecret};",
                typeof(Analytics), typeof(Crashes));
-#endif
+
+#endif 
 
 
 #if !BlazorHybrid
@@ -35,15 +35,10 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkitMediaElement()
             .Configuration.AddJsonFile(new EmbeddedFileProvider(assembly), "wwwroot.appsettings.json", optional: false, false);
-
-        builder.ConfigureMauiHandlers(handlers =>
-        {
-            handlers.AddHandler(typeof(Video), typeof(VideoHandler));
-        });
-
-        builder.ConfigureLifecycleEvents(lifecycle =>
-        {
+        
+        builder.ConfigureLifecycleEvents(lifecycle => {
 #if WINDOWS
             lifecycle.AddWindows(windows => windows.OnWindowCreated((del) => {
                 del.ExtendsContentIntoTitleBar = false;
@@ -59,7 +54,6 @@ public static class MauiProgram
         services.AddBlazorWebViewDeveloperTools();
 #endif
         services.AddClientSharedServices();
-
         services.AddClientAppServices();
 
         var app = builder.Build();

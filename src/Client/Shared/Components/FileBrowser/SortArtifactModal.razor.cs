@@ -12,7 +12,7 @@ public partial class SortArtifactModal
 
     public async Task<SortTypeEnum> ShowAsync()
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             HandleClose();
             StateHasChanged();
@@ -25,8 +25,11 @@ public partial class SortArtifactModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<SortTypeEnum>();
+        var result = await _tcs.Task;
 
-        return await _tcs.Task;
+        GoBackService.ResetToPreviousState();
+
+        return result;
     }
 
     private void HandleSortItemClick(SortTypeEnum sortType)

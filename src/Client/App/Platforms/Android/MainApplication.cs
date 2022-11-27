@@ -8,12 +8,14 @@ using Android.Runtime;
 [assembly: UsesPermission(Android.Manifest.Permission.ManageExternalStorage)]
 [assembly: UsesPermission(Android.Manifest.Permission.MediaContentControl)]
 [assembly: UsesPermission(Android.Manifest.Permission.ManageDocuments)]
+[assembly: UsesPermission(Android.Manifest.Permission.RequestInstallPackages)]
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
 [Application(
+    LargeHeap = true
 #if DEBUG
-    UsesCleartextTraffic = true
+    ,UsesCleartextTraffic = true
 #endif
 )]
 public class MainApplication : MauiApplication

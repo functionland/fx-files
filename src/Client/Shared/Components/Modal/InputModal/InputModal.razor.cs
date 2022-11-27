@@ -14,7 +14,7 @@ public partial class InputModal
 
     public async Task<InputModalResult> ShowAsync(string tilte, string headTitle, string inputValue, string placeholder, string? doneBtnText = null, string? lable = null)
     {
-        GoBackService.OnInit((Task () =>
+        GoBackService.SetState((Task () =>
         {
             Close();
             StateHasChanged();
@@ -38,7 +38,11 @@ public partial class InputModal
         timer.Start();
 
         _tcs = new TaskCompletionSource<InputModalResult>();
-        return await _tcs.Task;
+        var result = await _tcs.Task;
+
+        GoBackService.ResetToPreviousState();
+
+        return result;
     }
 
     private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)

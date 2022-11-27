@@ -245,12 +245,8 @@ function OnScrollCheck() {
     });
 }
 
-function scrollToItem(itemId, listHeight) {
+function scrollToItem(itemId, listHeight,list) {
     let item = document.getElementById(itemId.toString());
-    console.log(item);
-    console.log(itemId);
-    console.log(listHeight);
-    let list = document.querySelector('.list-container');
     if (typeof list !== 'undefined' || list !== null) {
         list.scrollTop = listHeight;
         if (typeof item !== 'undefined' || item !== null) {

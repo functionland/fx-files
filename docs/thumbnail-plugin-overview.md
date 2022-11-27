@@ -1,9 +1,9 @@
 # Thumbnail System Overview
 
 ## What is a Thumbnail?
-When using FxFiles app, you see that some files has thumbnails. For example pictures are of those files that you will see a thumbnail for each one in the list and grid mode.
+While exploring files on *Fx Files*, you see some files with thumbnails and some not. For example pictures have a thumbnail in both list and grid mode.
 
-But which file will show like a thumbnail and which one is not, this is the question we will explain in this document.
+But which file types supports showing a thumbnail and which one is not? This is the question we will explain in this document.
 
 ## Thumbnail Plugin
 Essentialy, for a file type (like *.jpg* or *.pdf*), you need to have a **Thumbnail Plugin** so it can be convertible it to a thumbnail picture.
@@ -32,7 +32,7 @@ public class ImageThumbnailPlugin : IThumbnailPlugin
 }
 ```
 
-Then we should write the thumbnail creation logic. To create a thumbnail, the pluggin accepts whether a *stream* or a *filename* as input. Normally your plugin should support both, but in some cases, some plugins can not work with streams. They just work with a file stored on disk. For this kind of plugins you should indicate this restriction by implementing `IsJustFilePathSupported`:
+Then we should write the thumbnail creation logic. To create a thumbnail, the pluggin accepts both *stream* and *filename* as input. Normally your plugin should support both, but in some cases, some plugins can not work with streams. They just work if there is a file stored on disk as input. For this kind of plugins you should indicate this restriction by implementing `IsJustFilePathSupported` like this:
 
 ```csharp
 public class ImageThumbnailPlugin : IThumbnailPlugin
@@ -72,7 +72,7 @@ services.AddTransient<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
 services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
 ```
 
-Congratulations! All done. You have added a new plugin to FxFiles now. Form now on, the appliation supports thubmails for images.
+Congratulations! All done. You have added a new plugin to *Fx Files* now. Form now on, the appliation supports thubmails for images.
 
 You can design the hierarchy of plugins to utilize as much as code sharing you want.
 

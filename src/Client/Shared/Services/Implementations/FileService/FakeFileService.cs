@@ -372,9 +372,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             }
         }
 
-        public async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        public async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths,
+            CancellationToken? cancellationToken = null)
         {
-            var fsArtifactList = new List<FsArtifactChanges>();
+            var fsArtifactList = new List<(string Path, bool IsExist)>();
 
             foreach (var currentPath in paths)
             {
@@ -384,27 +385,20 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
                 var artifactIsExist = ArtifacExist(path);
 
-                var fsArtifact = new FsArtifactChanges()
-                {
-                    ArtifactFullPath = path,
-                };
+                var isExist = false;
 
                 if (artifactIsExist)
                 {
-                    fsArtifact.IsPathExist = true;
+                    isExist = true;
                 }
                 else
                 {
-                    fsArtifact.IsPathExist = false;
-                    fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+                    isExist = false;
+                  
                 }
 
-                if (artifactIsExist)
-                {
-                    fsArtifact.LastModifiedDateTime = DateTimeOffset.Now;
-                }
 
-                fsArtifactList.Add(fsArtifact);
+                fsArtifactList.Add((path, isExist));
             }
 
             return fsArtifactList;
@@ -428,8 +422,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             // TODO : Implement deep search 
             IEnumerable<FsArtifact> files = _files;
 
-            if (!string.IsNullOrWhiteSpace(deepSearchFilter?.SearchText))
-                files = files.Where(f => f.Name.Contains(deepSearchFilter.SearchText));
+            if (!string.IsNullOrWhiteSpace(deepSearchFilter.Value.SearchText))
+                files = files.Where(f => f.Name.Contains(deepSearchFilter.Value.SearchText));
 
             foreach (var file in files)
             {
@@ -446,6 +440,21 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
         public string GetShowablePath(string artifactPath)
         {
             return artifactPath;
+        }
+
+        public Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

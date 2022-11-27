@@ -194,25 +194,16 @@ public partial class Android10FileService : AndroidFileService
 
     }
 
-    protected override void LocalStorageMoveFile(string filePath, string newPath)
+    protected override async Task LocalStorageMoveFileAsync(string filePath, string newPath)
     {
-        LocalStorageCopyFile(filePath, newPath);
+        await LocalStorageCopyFileAsync(filePath, newPath);
         LocalStorageDeleteFile(filePath);
     }
 
-    protected override async void LocalStorageCopyFile(string sourceFile, string destinationFile)
+    protected override async Task LocalStorageCopyFileAsync(string sourceFile, string destinationFile)
     {
-        try
-        {
-            using var inStream = System.IO.File.OpenRead(sourceFile);
-            await LocalStorageCreateFile(destinationFile, inStream);
-        }
-        catch (Exception ex)
-        {
-            ExceptionHandler.Handle(ex);
-            throw;
-        }
-        
+        await using var inStream = System.IO.File.OpenRead(sourceFile);
+        await LocalStorageCreateFile(destinationFile, inStream);
     }
 
     private void Delete(string path)

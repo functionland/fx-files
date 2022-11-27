@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Extensions;
@@ -12,19 +13,26 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
-        public virtual async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts,
+            string destination,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null)
         {
-            List<FsArtifact> ignoredList = new();
+            List<(FsArtifact artifact, Exception exception)> ignoredList = new();
 
-            await Task.Run(async () =>
-            {
-                ignoredList = await CopyAllAsync(artifacts, destination, overwrite, ignoredList, onProgress, true, cancellationToken);
-            });
+            await CopyAllAsync(artifacts, destination, ignoredList, onShouldOverwrite, onProgress, true, cancellationToken);
 
-            if (ignoredList.Any())
-            {
-                throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
-            }
+            return ignoredList;
+        }
+
+        public virtual async Task CopyFileAsync(FsArtifact artifact,
+            string destinationFullPath,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null)
+        {
+            File.Copy(artifact.FullPath, destinationFullPath);
         }
 
         public virtual async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -227,16 +235,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return streamReader.BaseStream;
         }
 
-        public virtual async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts,
+            string destination,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            Func<ProgressInfo, Task>? onProgress = null,
+            CancellationToken? cancellationToken = null)
         {
-            List<FsArtifact> ignoredList = new();
+            List<(FsArtifact artifact, Exception exception)>? ignoredList = new();
 
-            ignoredList = await MoveAllAsync(artifacts, destination, overwrite, ignoredList, onProgress, true, cancellationToken);
+            await MoveAllAsync(artifacts, destination, onShouldOverwrite, ignoredList, onProgress, true, cancellationToken);
 
-            if (ignoredList.Any())
-            {
-                throw new CanNotOperateOnFilesException(StringLocalizer[nameof(AppStrings.CanNotOperateOnFilesException)], ignoredList);
-            }
+            return ignoredList;
         }
 
         public virtual async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
@@ -333,11 +342,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             });
         }
 
-        private async Task<List<FsArtifact>> CopyAllAsync(
-            IList<FsArtifact> artifacts,
+        private async Task CopyAllAsync(IList<FsArtifact> artifacts,
             string destination,
-            bool overwrite = false,
-            List<FsArtifact>? ignoredList = null,
+            List<(FsArtifact artifact, Exception exception)> ignoredList,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
             Func<ProgressInfo, Task>? onProgress = null,
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
@@ -356,20 +364,39 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifact.ArtifactType == FsArtifactType.File)
                 {
                     var fileInfo = new FileInfo(artifact.FullPath);
+
                     var destinationInfo = new FileInfo(Path.Combine(destination, Path.GetFileName(artifact.FullPath)));
 
-                    if (!overwrite && destinationInfo.Exists)
+                    var shouldCopy = true;
+
+                    if (destinationInfo.Exists)
                     {
-                        ignoredList.Add(artifact);
+                        if (onShouldOverwrite is null)
+                        {
+                            shouldCopy = false;
+                            ignoredList.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
+                        }
+                        else
+                        {
+                            shouldCopy = await onShouldOverwrite(artifact);
+                        }
                     }
-                    else
+
+                    if (shouldCopy)
                     {
                         if (!Directory.Exists(destination))
                         {
                             LocalStorageCreateDirectory(destination);
                         }
 
-                        LocalStorageCopyFile(fileInfo.FullName, destinationInfo.FullName);
+                        try
+                        {
+                            await LocalStorageCopyFileAsync(fileInfo.FullName, destinationInfo.FullName);
+                        }
+                        catch (Exception exception)
+                        {
+                            ignoredList.Add((artifact, exception));
+                        }
                     }
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
@@ -416,8 +443,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await CopyAllAsync(children, destinationInfo.FullName,
-                         overwrite, ignoredList, onProgress, false, cancellationToken);
+                    await CopyAllAsync(children, destinationInfo.FullName, ignoredList, onShouldOverwrite, onProgress, false, cancellationToken);
                 }
 
                 if (onProgress is not null && shouldProgress)
@@ -425,15 +451,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
                 }
             }
-
-            return ignoredList;
         }
 
-        private async Task<List<FsArtifact>> MoveAllAsync(
+        private async Task<List<(FsArtifact artifact, Exception exception)>?> MoveAllAsync(
             IList<FsArtifact> artifacts,
             string destination,
-            bool overwrite = false,
-            List<FsArtifact>? ignoredList = null,
+            Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+            List<(FsArtifact artifact, Exception exception)>? ignoredList = null,
             Func<ProgressInfo, Task>? onProgress = null,
             bool shouldProgress = true,
             CancellationToken? cancellationToken = null)
@@ -457,19 +481,38 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     if (fileInfo.FullName == destinationInfo.FullName)
                         throw new SameDestinationFileException(StringLocalizer.GetString(AppStrings.SameDestinationFileException));
 
-                    if (!overwrite && destinationInfo.Exists)
+                    var shouldMove = true;
+
+                    if (destinationInfo.Exists)
                     {
-                        ignoredList.Add(artifact);
+                        if (onShouldOverwrite is null)
+                        {
+                            shouldMove = false;
+                            ignoredList?.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
+                        }
+                        else
+                        {
+                            shouldMove = await onShouldOverwrite(artifact);
+                        }
                     }
-                    else
+
+                    if (shouldMove)
                     {
                         if (!Directory.Exists(destination))
                         {
                             LocalStorageCreateDirectory(destination);
                         }
 
-                        LocalStorageMoveFile(fileInfo.FullName, destinationInfo.FullName);
+                        try
+                        {
+                            await LocalStorageMoveFileAsync(fileInfo.FullName, destinationInfo.FullName);
+                        }
+                        catch (Exception exception)
+                        {
+                            ignoredList?.Add((artifact, exception));
+                        }
                     }
+
                 }
                 else if (artifact.ArtifactType == FsArtifactType.Folder)
                 {
@@ -517,8 +560,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                         });
                     }
 
-                    var childIgnoredList = await MoveAllAsync(children, destinationInfo.FullName,
-                         overwrite, ignoredList, onProgress, false, cancellationToken);
+                    var childIgnoredList = await MoveAllAsync(children,
+                        destinationInfo.FullName,
+                         onShouldOverwrite,
+                         ignoredList,
+                         onProgress,
+                         false,
+                         cancellationToken);
 
                     DeleteArtifactAsync(artifact, cancellationToken);
 
@@ -573,15 +621,18 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 var providerType = GetFsFileProviderType(drive);
                 artifacts.Add(
-                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType));
+                    new FsArtifact(drive, driveName, FsArtifactType.Drive, providerType)
+                    {
+                        LastModifiedDateTime = Directory.GetLastWriteTime(drive)
+                    });
             }
 
             return artifacts;
         }
 
-        public virtual async Task<List<FsArtifactChanges>> CheckPathExistsAsync(List<string?> paths, CancellationToken? cancellationToken = null)
+        public virtual async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths, CancellationToken? cancellationToken = null)
         {
-            var fsArtifactList = new List<FsArtifactChanges>();
+            var fsArtifactList = new List<(string Path, bool IsExist)>();
 
             foreach (var path in paths)
             {
@@ -591,35 +642,25 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var artifactIsFile = File.Exists(path);
                 var artifactIsDirectory = Directory.Exists(path);
 
-                var fsArtifact = new FsArtifactChanges()
-                {
-                    ArtifactFullPath = path,
-                };
+                var isExist = false;
+
 
                 if (artifactIsFile)
                 {
-                    fsArtifact.IsPathExist = true;
+                    isExist = true;
                 }
                 else if (artifactIsDirectory)
                 {
-                    fsArtifact.IsPathExist = true;
+                    isExist = true;
                 }
                 else
                 {
-                    fsArtifact.IsPathExist = false;
-                    fsArtifact.FsArtifactChangesType = FsArtifactChangesType.Delete;
+                    isExist = false;
                 }
 
-                if (artifactIsFile)
-                {
-                    fsArtifact.LastModifiedDateTime = File.GetLastWriteTime(path);
-                }
-                else if (artifactIsDirectory)
-                {
-                    fsArtifact.LastModifiedDateTime = Directory.GetLastWriteTime(path);
-                }
+              
 
-                fsArtifactList.Add(fsArtifact);
+                fsArtifactList.Add((path,isExist));
             }
 
             return fsArtifactList;
@@ -635,16 +676,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             DirectoryUtils.HardDeleteDirectory(path);
         }
 
-        protected virtual void LocalStorageMoveFile(string filePath, string newPath)
+        protected virtual async Task LocalStorageMoveFileAsync(string filePath, string newPath)
         {
-            try
-            {
-                File.Move(filePath, newPath, true);
-            }
-            catch (IOException ex)
-            {
-                throw new KnownIOException(ex.Message, ex);
-            }
+            File.Move(filePath, newPath, true);
         }
 
         protected virtual void LocalStorageRenameFile(string filePath, string newPath)
@@ -652,16 +686,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             File.Move(filePath, newPath);
         }
 
-        protected virtual void LocalStorageCopyFile(string sourceFile, string destinationFile)
+        protected virtual async Task LocalStorageCopyFileAsync(string sourceFile, string destinationFile)
         {
-            try
-            {
-                File.Copy(sourceFile, destinationFile, true);
-            }
-            catch (IOException ex)
-            {
-                throw new KnownIOException(ex.Message, ex);
-            }
+            File.Copy(sourceFile, destinationFile, true);
         }
 
         protected virtual async Task LocalStorageCreateFile(string path, Stream stream)
@@ -707,7 +734,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 foreach (var drive in drives)
                 {
                     if (cancellationToken?.IsCancellationRequested == true) yield break;
-                    drive.LastModifiedDateTime = Directory.GetLastWriteTime(drive.FullPath);
                     yield return drive;
                 }
                 yield break;
@@ -791,17 +817,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (deepSearchFilter is null)
                 throw new InvalidOperationException("The search filter is empty.");
 
-            if (cancellationToken?.IsCancellationRequested == true) yield break;
-
-            var inLineDeepSearchFilter = new DeepSearchFilter
-            {
-                SearchText = deepSearchFilter.SearchText,
-                ArtifactCategorySearchTypes = deepSearchFilter.ArtifactCategorySearchTypes,
-                ArtifactDateSearchType = deepSearchFilter.ArtifactDateSearchType
-            };
+            if (cancellationToken?.IsCancellationRequested == true) 
+                yield break;
 
             var allFileAndFolders = Directory.EnumerateFileSystemEntries(path,
-                !string.IsNullOrWhiteSpace(inLineDeepSearchFilter.SearchText) ? $"*{inLineDeepSearchFilter.SearchText}*" : "*",
+                !string.IsNullOrWhiteSpace(deepSearchFilter.Value.SearchText) ? $"*{deepSearchFilter.Value.SearchText}*" : "*",
                 new EnumerationOptions
                 {
                     IgnoreInaccessible = true,
@@ -815,13 +835,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ArtifactInfo = new DirectoryInfo(fullPath)
                 });
 
-            if (inLineDeepSearchFilter.ArtifactCategorySearchTypes is not null && inLineDeepSearchFilter.ArtifactCategorySearchTypes.Any())
+            if (deepSearchFilter.Value.ArtifactCategorySearchTypes is not null && deepSearchFilter.Value.ArtifactCategorySearchTypes.Any())
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
                 List<string> categoryTypeList = new();
 
-                foreach(var type in inLineDeepSearchFilter.ArtifactCategorySearchTypes)
+                foreach (var type in deepSearchFilter.Value.ArtifactCategorySearchTypes)
                 {
                     var types = FsArtifactUtils.GetSearchCategoryTypeExtensions(type);
 
@@ -832,11 +852,11 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                                                             categoryTypeList.Contains(f.ArtifactInfo.Extension.ToLower()));
             }
 
-            if (inLineDeepSearchFilter.ArtifactDateSearchType.HasValue)
+            if (deepSearchFilter.Value.ArtifactDateSearchType.HasValue)
             {
                 if (cancellationToken?.IsCancellationRequested == true) yield break;
 
-                var dateDiff = inLineDeepSearchFilter.ArtifactDateSearchType switch
+                var dateDiff = deepSearchFilter.Value.ArtifactDateSearchType switch
                 {
                     ArtifactDateSearchType.Yesterday => 1,
                     ArtifactDateSearchType.Past7Days => 7,
