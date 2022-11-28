@@ -9,7 +9,7 @@
 </div>
 
 <section class="theme-mode">
-    <div class="mode-content">@Localizer[nameof(AppStrings.Mode)]</div>
+    <div class="mode-content">@Localizer[nameof(AppStrings.Appearance)]</div>
 
     <div class="select-theme-mode">
         <div class="light-mode-part" @onclick="() => { CurrentTheme = FxTheme.Light; ChangeThemeAsync(); }">
@@ -29,7 +29,7 @@
             <FxRadioButton Id="system" Checked="@(CurrentTheme == FxTheme.System)" />
         </div>
         <div class="system-theme-info">
-            <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)]  <span class="mode-text">@Localizer[nameof(AppStrings.Mode)]</span></div>
+            <div class="system-theme-option">@Localizer[nameof(AppStrings.AutomaticContent)]  <span class="mode-text">@Localizer[nameof(AppStrings.Appearance)]</span></div>
             <div class="system-theme-desc">@Localizer[nameof(AppStrings.SystemThemeDescription)]</div>
         </div>
     </div>

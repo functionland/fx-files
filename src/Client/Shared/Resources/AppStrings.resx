@@ -517,7 +517,7 @@
     <value>Light</value>
   </data>
   <data name="SystemThemeDescription" xml:space="preserve">
-    <value>Use system light/dark mode setting.</value>
+    <value>Use system light/dark appearance setting.</value>
   </data>
   <data name="GoogleDrive" xml:space="preserve">
     <value>Google Drive</value>
@@ -725,5 +725,8 @@
   </data>
   <data name="TheMoveOpreationFailedMessage" xml:space="preserve">
     <value>Something went wrong during the move.</value>
+  </data>
+  <data name="Appearance" xml:space="preserve">
+    <value>Appearance</value>
   </data>
 </root>
