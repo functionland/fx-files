@@ -2,8 +2,8 @@
 
 @inherits AppComponentBase;
 
-<div class="fx-breadcrumbs">
-    <span class="ellipsis start-ellipsis">...</span>
+<div class="@Source-fx-breadcrumbs fx-breadcrumbs">
+    <span class="ellipsis start-ellipsis @Source-start-ellipsis">...</span>
 
     @if (BreadcrumbsPath != null)
     {
@@ -13,5 +13,5 @@
         }
     }
 
-    <span class="ellipsis end-ellipsis">...</span>
+    <span class="ellipsis end-ellipsis @Source-end-ellipsis">...</span>
 </div>
