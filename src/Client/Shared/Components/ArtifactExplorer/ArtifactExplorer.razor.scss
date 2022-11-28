@@ -292,8 +292,7 @@
     .check-box-position {
         position: absolute;
         z-index: 1;
-        top: 9px;
-        left: 9px;
+        margin: 4px;
     }
 
     .check-box-mobile {
@@ -316,6 +315,7 @@
         height: 86px;
         width: 161px;
         position: relative;
+        border-radius: 4px;
 
         .item-icon-position {
             font-size: $icon-56;
