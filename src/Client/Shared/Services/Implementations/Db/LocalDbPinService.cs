@@ -68,9 +68,23 @@ public class LocalDbPinService : ILocalDbPinService
     public async Task RemovePinAsync(String FullPath)
     {
         if (string.IsNullOrEmpty(FullPath)) return;
+
         using var LocalDb = FxLocalDbService.CreateConnection();
 
-        await Task.Run(() => LocalDb.Execute($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';"));
+        try
+        {
+            await LocalDb.ExecuteAsync($"DELETE FROM PinnedArtifact WHERE FullPath = '{FullPath}';");
+        }
+        catch (Exception)
+        {
+            var artifacts = await GetPinnedArticatInfos();
+            var selectedArtifacts = artifacts.Where(c => c.FullPath == FullPath).ToList();
+
+            foreach (var artifact in selectedArtifacts)
+            {
+                await LocalDb.DeleteAsync(artifact);
+            }
+        }
     }
 
     public async Task<List<PinnedArtifact>> GetPinnedArticatInfos()
