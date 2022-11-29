@@ -85,17 +85,18 @@ public partial class ArtifactExplorer
         await base.OnInitAsync();
     }
 
+    protected override async Task OnAfterFirstRenderAsync()
+    {
+        await base.OnAfterFirstRenderAsync();
+        await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _dotnetObjectReference);
+        await InitWindowWidthListener();
+        await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+        await JSRuntime.InvokeVoidAsync("createScrollStopListener", _artifactExplorerListRef, _dotnetObjectReference);
+    }
+   
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _dotnetObjectReference);
-            await InitWindowWidthListener();
-            await JSRuntime.InvokeVoidAsync("OnScrollCheck");
-            await JSRuntime.InvokeVoidAsync("createScrollStopListener", _artifactExplorerListRef,
-                _dotnetObjectReference);
-        }
-
+        await base.OnAfterRenderAsync(firstRender);
 
         if (ScrollArtifact is not null && _isInScrollArtifactAction is false)
         {
@@ -232,27 +233,27 @@ public partial class ArtifactExplorer
         switch (args.Button)
         {
             case 0:
-            {
-                if (_timer != null)
                 {
-                    DisposeTimer();
-                    if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                    if (_timer != null)
                     {
-                        await OnSelectArtifact.InvokeAsync(artifact);
-                        await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
-                    }
-                    else
-                    {
-                        if (_longPressedArtifact != null)
+                        DisposeTimer();
+                        if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                         {
-                            await OnSelectionChanged(artifact);
-                            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                            await OnSelectArtifact.InvokeAsync(artifact);
+                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
+                        }
+                        else
+                        {
+                            if (_longPressedArtifact != null)
+                            {
+                                await OnSelectionChanged(artifact);
+                                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                            }
                         }
                     }
-                }
 
-                break;
-            }
+                    break;
+                }
             case 2:
                 DisposeTimer();
                 switch (SelectedArtifacts.Count)
