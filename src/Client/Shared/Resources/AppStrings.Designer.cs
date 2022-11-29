@@ -88,6 +88,15 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Appearance.
+        /// </summary>
+        public static string Appearance {
+            get {
+                return ResourceManager.GetString("Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Artifact.
         /// </summary>
         public static string Artifact {
@@ -1474,7 +1483,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show in location.
+        ///   Looks up a localized string similar to Show location.
         /// </summary>
         public static string ShowInLocation {
             get {
@@ -1564,7 +1573,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use system light/dark mode setting..
+        ///   Looks up a localized string similar to Use system light/dark appearance setting..
         /// </summary>
         public static string SystemThemeDescription {
             get {

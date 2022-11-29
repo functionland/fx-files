@@ -53,7 +53,7 @@
                 <FileDetailItemActionsFragment>
                     <FileDetailViewBottomActionBar>
                         <FileDetailActionBarItemFragment>
-                            <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
+                            <FileDetailViewBottomActionItem IsEnabled="false" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
                             <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
                             @if (_currentArtifact?.IsPinned == true)
                             {
@@ -99,7 +99,7 @@ else
             <FileDetailItemActionsFragment>
                 <FileDetailViewBottomActionBar>
                     <FileDetailActionBarItemFragment>
-                        <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
+                        <FileDetailViewBottomActionItem IsEnabled="false" OnClick="Download" ActionIcon="ActionIcon.Upload"></FileDetailViewBottomActionItem>
                         <FileDetailViewBottomActionItem IsEnabled="!_isInRoot" OnClick="Move" ActionIcon="ActionIcon.Move"></FileDetailViewBottomActionItem>
                         @if (_currentArtifact?.IsPinned == true)
                         {

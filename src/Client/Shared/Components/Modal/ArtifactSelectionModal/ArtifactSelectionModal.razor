@@ -48,10 +48,11 @@
                           CurrentArtifact="_currentArtifact"
                           OnSelectArtifact="SelectArtifact"
                           OnAddFolderButtonClick="CreateFolder"
-                          ScrollArtifact="_scrolledToArtifact"/>
+                          ScrollArtifact="_scrolledToArtifact"
+                          OnScrollToArtifactCompleted="(()=>_scrolledToArtifact=null)" />
         }
     </div>
-    
+
     <div class="button-container">
         <FxButton Width="100%"
                   Height="60px"

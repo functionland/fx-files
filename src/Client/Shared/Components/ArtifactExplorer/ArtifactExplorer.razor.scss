@@ -17,9 +17,7 @@
     overflow: hidden;
     width: 100%;
     position: relative;
-    //transform: scaley(0);
-    //transform-origin: top;
-    //opacity: 0;
+    scroll-behavior:smooth;
 }
 
 .show-animation-artifact {
@@ -292,8 +290,7 @@
     .check-box-position {
         position: absolute;
         z-index: 1;
-        top: 9px;
-        left: 9px;
+        margin: 4px;
     }
 
     .check-box-mobile {
@@ -316,6 +313,7 @@
         height: 86px;
         width: 161px;
         position: relative;
+        border-radius: 4px;
 
         .item-icon-position {
             font-size: $icon-56;
