@@ -339,8 +339,6 @@ public partial class FileBrowser : IDisposable
             FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
                              message: AppStrings.TheCopyOpreationSuccessedMessage,
                              toastType: FxToastType.Success);
-
-            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
         catch (Exception exception)
         {
@@ -350,6 +348,7 @@ public partial class FileBrowser : IDisposable
         {
 
             await _progressModalRef!.CloseAsync();
+            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
     }
 
@@ -476,9 +475,7 @@ public partial class FileBrowser : IDisposable
 
             FxToast.Show(title: AppStrings.TheMoveOpreationSuccessedTiltle,
                          message: AppStrings.TheMoveOpreationSuccessedMessage,
-                         toastType: FxToastType.Success);
-
-            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
+                         toastType: FxToastType.Success);           
         }
         catch (Exception exception)
         {
@@ -487,6 +484,7 @@ public partial class FileBrowser : IDisposable
         finally
         {
             await _progressModalRef!.CloseAsync();
+            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
     }
 
@@ -612,6 +610,7 @@ public partial class FileBrowser : IDisposable
         {
             await _progressModalRef!.CloseAsync();
             await CloseFileViewer();
+            ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
     }
 
