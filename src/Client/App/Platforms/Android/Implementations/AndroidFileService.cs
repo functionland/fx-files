@@ -215,6 +215,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         }
         else
         {
+            ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
             throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
         }
     }

@@ -12,6 +12,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
     public abstract partial class LocalDeviceFileService : ILocalDeviceFileService
     {
         [AutoInject] public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
+        [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
 
         public abstract FsFileProviderType GetFsFileProviderType(string filePath);
 
@@ -622,7 +623,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     return FsArtifactType.Folder;
 
                 else
+                {
+                    ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
                     throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
+                }
             }
             catch (IOException ex)
             {
