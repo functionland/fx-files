@@ -215,6 +215,7 @@ function breadCrumbStyleSelectionModal() {
 
 
 function OnScrollCheck() {
+    //TODO
     const artifactListDiv = document.querySelector('.list-container');
 
     artifactListDiv.addEventListener("scroll", () => {
@@ -253,7 +254,7 @@ function OnScrollCheck() {
     });
 }
 
-function scrollToItem(itemId, listHeight,list) {
+function scrollToItem(itemId, listHeight, list) {
     let item = document.getElementById(itemId.toString());
     if (typeof list !== 'undefined' || list !== null) {
         list.scrollTop = listHeight;
@@ -271,4 +272,23 @@ function scrollToItem(itemId, listHeight,list) {
 
 function addGrayBackground(item) {
     item.classList.add('on-scroll-item-gray-background');
+}
+
+let _artifactExplorerScrollListener = null;
+function createScrollStopListener(element, dotnetObject) {
+    let timeoutId = null;
+    _artifactExplorerScrollListener = function () {
+        dotnetObject.invokeMethodAsync('SetScrolling', true);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            dotnetObject.invokeMethodAsync('SetScrolling', false);
+        }, 200);
+    };
+    element.addEventListener('scroll', _artifactExplorerScrollListener);
+}
+
+function removeScrollStopListener() {
+    element.removeEventListener('scroll', _artifactExplorerScrollListener);
 }
