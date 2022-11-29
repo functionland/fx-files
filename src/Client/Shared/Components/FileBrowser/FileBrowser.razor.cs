@@ -1596,7 +1596,9 @@ public partial class FileBrowser : IDisposable
             {
                 if (InlineFileCategoryFilter == FileCategoryType.Document)
                 {
-                    return fa.FileCategory is FileCategoryType.Document or FileCategoryType.Pdf
+                    return fa.FileCategory is FileCategoryType.Document
+                        or FileCategoryType.Pdf
+                        or FileCategoryType.Zip
                         or FileCategoryType.Other;
                 }
 
