@@ -238,6 +238,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 throw new UnauthorizedException(ex.Message, ex);
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, new Exception($"An error occurred on: '{path}'", ex));
+            }
         }
 
         public virtual async Task<Stream> GetFileContentAsync(string filePath, CancellationToken? cancellationToken = null)
