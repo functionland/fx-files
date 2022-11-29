@@ -69,16 +69,17 @@ public partial class ArtifactExplorer
     private int _overscanCount = 5;
     private bool _isArtifactsChanged;
     private bool _isInScrollArtifactAction;
+    private bool _isScrolling;
 
     private string _resizeEventListenerId = string.Empty;
 
-    private DotNetObjectReference<ArtifactExplorer>? _objectReference;
+    private DotNetObjectReference<ArtifactExplorer>? _dotnetObjectReference;
     private (TouchPoint ReferencePoint, DateTimeOffset StartTime) _startPoint;
     private ElementReference? _artifactExplorerListRef;
 
     protected override async Task OnInitAsync()
     {
-        _objectReference = DotNetObjectReference.Create(this);
+        _dotnetObjectReference = DotNetObjectReference.Create(this);
 
         await base.OnInitAsync();
     }
@@ -87,10 +88,13 @@ public partial class ArtifactExplorer
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _objectReference);
+            await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _dotnetObjectReference);
             await InitWindowWidthListener();
             await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+            await JSRuntime.InvokeVoidAsync("createScrollStopListener", _artifactExplorerListRef,
+                _dotnetObjectReference);
         }
+
 
         if (ScrollArtifact is not null && _isInScrollArtifactAction is false)
         {
@@ -100,6 +104,12 @@ public partial class ArtifactExplorer
             _timer.Start();
             _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
         }
+    }
+
+    [JSInvokable]
+    public void SetScrolling(bool state)
+    {
+        _isScrolling = state;
     }
 
     protected override async Task OnParamsSetAsync()
@@ -133,7 +143,7 @@ public partial class ArtifactExplorer
     private async Task InitWindowWidthListener()
     {
         _resizeEventListenerId = Guid.NewGuid().ToString();
-        await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _objectReference, _resizeEventListenerId);
+        await JSRuntime.InvokeVoidAsync("AddWindowWidthListener", _dotnetObjectReference, _resizeEventListenerId);
     }
 
     private async Task HandleArtifactOptionClick(FsArtifact artifact)
@@ -164,6 +174,9 @@ public partial class ArtifactExplorer
 
     public void PointerDown(FsArtifact artifact)
     {
+        if (_isScrolling)
+            return;
+
         _longPressedArtifact = artifact;
         _timer = new(1000);
         _timer.Enabled = true;
@@ -212,30 +225,33 @@ public partial class ArtifactExplorer
 
     public async Task PointerUp(MouseEventArgs args, FsArtifact artifact)
     {
+        if (_isScrolling)
+            return;
+
         switch (args.Button)
         {
             case 0:
+            {
+                if (_timer != null)
                 {
-                    if (_timer != null)
+                    DisposeTimer();
+                    if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                     {
-                        DisposeTimer();
-                        if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                        await OnSelectArtifact.InvokeAsync(artifact);
+                        await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
+                    }
+                    else
+                    {
+                        if (_longPressedArtifact != null)
                         {
-                            await OnSelectArtifact.InvokeAsync(artifact);
-                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
-                        }
-                        else
-                        {
-                            if (_longPressedArtifact != null)
-                            {
-                                await OnSelectionChanged(artifact);
-                                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-                            }
+                            await OnSelectionChanged(artifact);
+                            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
                         }
                     }
-
-                    break;
                 }
+
+                break;
+            }
             case 2:
                 DisposeTimer();
                 switch (SelectedArtifacts.Count)
@@ -511,6 +527,7 @@ public partial class ArtifactExplorer
     public void Dispose()
     {
         JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
-        _objectReference?.Dispose();
+        JSRuntime.InvokeVoidAsync("removeScrollStopListener");
+        _dotnetObjectReference?.Dispose();
     }
 }
