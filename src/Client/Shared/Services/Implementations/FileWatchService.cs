@@ -18,6 +18,9 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
         public virtual void WatchArtifact(FsArtifact fsArtifact)
         {
+            if (fsArtifact?.FullPath is null)
+                return;
+
             if (WatcherDictionary.TryGetValue(fsArtifact.FullPath, out var watchedArtifact))
             {
                 WatcherDictionary[fsArtifact.FullPath] = (watchedArtifact.Watcher, watchedArtifact.WatchCount += 1);
