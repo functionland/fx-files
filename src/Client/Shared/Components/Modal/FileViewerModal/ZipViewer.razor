@@ -54,16 +54,17 @@
 <ArtifactExplorer Artifacts="_displayedArtifacts"
                   FileService="FileService"
                   CurrentArtifact="CurrentArtifact"
-                  OnSelectArtifact="HandleArtifactClick"
+                  OnSelectArtifact="HandleArtifactClickAsync"
                   HandleBack="()=>HandleBackAsync()"
                   IsInZipMode="true"
                   OnZipArtifactClick="HandleExtractArtifactAsync"
                   IsInSearchMode="false"
                   IsLoading="_isZipViewerInLoading"
-                  @bind-SelectedArtifacts="_selectedArtifacts"
-                  @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+@bind-SelectedArtifacts="_selectedArtifacts"
+@bind-ArtifactExplorerMode="ArtifactExplorerMode"
+@ref="_artifactExplorerRef" />
 
 
 <ArtifactSelectionModal @ref="_artifactSelectionModalRef" FileService="FileService" ThumbnailService="ThumbnailService" />
 <InputModal @ref="_folderNameInputModalRef" />
-<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService"/>
+<ExtractorBottomSheet @ref="_extractorModalRef" FileService="FileService" />

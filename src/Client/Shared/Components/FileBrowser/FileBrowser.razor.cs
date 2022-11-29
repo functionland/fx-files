@@ -191,7 +191,7 @@ public partial class FileBrowser : IDisposable
         if (_isGoingBack)
         {
             _isGoingBack = false;
-            await JSRuntime.InvokeVoidAsync("getLastScrollPosition");
+            await JSRuntime.InvokeVoidAsync("getLastScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -894,11 +894,11 @@ public partial class FileBrowser : IDisposable
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("saveScrollPosition");
+                await JSRuntime.InvokeVoidAsync("saveScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
                 _isGoingBack = false;
             }
 
-            await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+            await JSRuntime.InvokeVoidAsync("OnScrollEvent", _artifactExplorerRef?.ArtifactExplorerListRef);
 
             CurrentArtifact = artifact;
             _displayedArtifacts = new List<FsArtifact>();
@@ -1215,6 +1215,7 @@ public partial class FileBrowser : IDisposable
     }
 
     private readonly SemaphoreSlim _semaphoreArtifactChanged = new(1);
+    private ArtifactExplorer? _artifactExplorerRef;
 
     private async void HandleChangedArtifacts(ArtifactChangeEvent artifactChangeEvent)
     {
@@ -1529,7 +1530,7 @@ public partial class FileBrowser : IDisposable
                     await LoadChildrenArtifactsAsync(CurrentArtifact);
                     await InvokeAsync(StateHasChanged);
                 });
-                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent", _artifactExplorerRef?.ArtifactExplorerListRef);
                 _isGoingBack = true;
                 break;
 
@@ -1617,7 +1618,7 @@ public partial class FileBrowser : IDisposable
             return;
 
         InlineFileCategoryFilter = await _filteredArtifactModalRef.ShowAsync();
-        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent", _artifactExplorerRef?.ArtifactExplorerListRef);
         _isArtifactExplorerLoading = true;
         await Task.Run(() => { RefreshDisplayedArtifacts(); });
         _isArtifactExplorerLoading = false;

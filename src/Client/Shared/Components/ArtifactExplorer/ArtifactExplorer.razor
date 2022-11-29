@@ -8,7 +8,7 @@
     {
         <OverlayLoading LoadingType="LoadingType.Overlay" />
     }
-    <div @ref="_artifactExplorerListRef" class="list-container @(IsLoading ? "overflow-hidden" : "show-animation-artifact") @(!Artifacts.Any() ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
+    <div @ref="ArtifactExplorerListRef" class="list-container @(IsLoading ? "overflow-hidden" : "show-animation-artifact") @(!Artifacts.Any() ? string.Empty : "list-view")" @ontouchstart="HandleTouchStart" @ontouchend="HandleTouchEnd" @onkeypress:preventDefault="true">
 
         @if (!Artifacts.Any() && !IsLoading)
         {
