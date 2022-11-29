@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 
 using Functionland.FxFiles.Client.Shared.Components.Modal;
+using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Extensions;
 using Functionland.FxFiles.Client.Shared.Utils;
 
@@ -190,7 +191,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        public virtual async Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
+        public virtual Task<FsArtifact> GetArtifactAsync(string? path, CancellationToken? cancellationToken = null)
         {
             try
             {
@@ -200,7 +201,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var fsArtifactType = GetFsArtifactType(path);
 
                 var providerType = GetFsFileProviderType(path);
-                var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType.Value, providerType)
+                var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType, providerType)
                 {
                     //ToDo: FileExtension should be exclusive to artifacts of type File, not here which is filled for all type.
                     FileExtension = Path.GetExtension(path),
@@ -224,7 +225,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     fsArtifact = drives.FirstOrDefault(drives => drives.FullPath == path)!;
                 }
 
-                return fsArtifact;
+                return Task.FromResult(fsArtifact);
             }
             catch (IOException ex)
             {
@@ -289,8 +290,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             if (NameHasInvalidCharacter(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
 
-            var artifactType = GetFsArtifactType(filePath);
-
             if (string.IsNullOrWhiteSpace(newName))
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
 
@@ -332,11 +331,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             if (NameHasInvalidCharacter(newName))
                 throw new ArtifactInvalidNameException(StringLocalizer.GetString(AppStrings.ArtifactNameHasInvalidCharsException));
-
-            var artifactType = GetFsArtifactType(folderPath);
-
-            if (artifactType is null)
-                throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
 
             if (string.IsNullOrWhiteSpace(newName))
                 throw new ArtifactNameNullException(StringLocalizer.GetString(AppStrings.ArtifactNameIsNullException));
@@ -604,29 +598,24 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             return ignoredList;
         }
 
-        public virtual FsArtifactType? GetFsArtifactType(string path)
+        public virtual FsArtifactType GetFsArtifactType(string path)
         {
             try
             {
                 var artifactIsFile = File.Exists(path);
                 if (artifactIsFile)
-                {
                     return FsArtifactType.File;
-                }
 
                 var drives = GetDrives();
                 if (drives.Any(drive => drive.FullPath == path))
-                {
                     return FsArtifactType.Drive;
-                }
 
                 var artifactIsDirectory = Directory.Exists(path);
                 if (artifactIsDirectory)
-                {
                     return FsArtifactType.Folder;
-                }
 
-                return null;
+                else
+                    throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
             }
             catch (IOException ex)
             {
@@ -856,9 +845,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
             var fsArtifactType = GetFsArtifactType(path);
 
-            if (fsArtifactType is null)
-                throw new ArtifactDoseNotExistsException(StringLocalizer.GetString(AppStrings.ArtifactDoseNotExistsException, fsArtifactType?.ToString() ?? lowerCaseArtifact));
-
             if (fsArtifactType is FsArtifactType.Folder or FsArtifactType.Drive)
             {
                 string[] files = Array.Empty<string>();
@@ -993,7 +979,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var providerType = GetFsFileProviderType(artifact.FullPath);
                 var artifactType = GetFsArtifactType(artifact.FullPath);
 
-                yield return new FsArtifact(artifact.FullPath, artifact.ArtifactInfo.Name, artifactType.Value, providerType)
+                yield return new FsArtifact(artifact.FullPath, artifact.ArtifactInfo.Name, artifactType, providerType)
                 {
                     ParentFullPath = artifact.ArtifactInfo?.Parent?.FullName,
                     LastModifiedDateTime = artifact.ArtifactInfo?.LastWriteTime ?? default,
@@ -1071,16 +1057,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                     onProgress?.Invoke(artifactSize);
                 }
-                else if (artifactType == FsArtifactType.File)
+                else
                 {
                     var file = new FileInfo(path);
                     artifactSize = file.Length;
 
                     onProgress?.Invoke(artifactSize);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Unknown artifact type to calculate size: {artifactType}");
                 }
 
                 return Task.FromResult(artifactSize);

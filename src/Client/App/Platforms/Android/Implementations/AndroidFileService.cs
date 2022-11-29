@@ -197,7 +197,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return drives;
     }
 
-    public override FsArtifactType? GetFsArtifactType(string path)
+    public override FsArtifactType GetFsArtifactType(string path)
     {
         var isDrive = IsDrive(path);
 
@@ -215,7 +215,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         }
         else
         {
-            return null;
+            throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
         }
     }
 
