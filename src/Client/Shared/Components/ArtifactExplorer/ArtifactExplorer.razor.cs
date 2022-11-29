@@ -1,5 +1,7 @@
 ﻿using System.Timers;
+
 using Functionland.FxFiles.Client.Shared.Components.Common;
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
@@ -45,6 +47,7 @@ public partial class ArtifactExplorer
     [Parameter] public bool IsInZipMode { get; set; }
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
     [Parameter] public FsArtifact? ScrollArtifact { get; set; }
+    [Parameter] public EventCallback OnScrollToArtifactCompleted { get; set; }
 
     public PathProtocol Protocol =>
         FileService switch
@@ -499,6 +502,7 @@ public partial class ArtifactExplorer
 
         ScrollArtifact = null;
         _isInScrollArtifactAction = false;
+        await InvokeAsync(OnScrollToArtifactCompleted.InvokeAsync);
     }
 
     public void Dispose()

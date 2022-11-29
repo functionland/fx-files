@@ -114,6 +114,7 @@
                           IsLoading="_isArtifactExplorerLoading"
                           IsInSearchMode="false"
                           ScrollArtifact="ScrolledToArtifact"
+                          OnScrollToArtifactCompleted="(()=>ScrolledToArtifact=null)"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
     </section>
