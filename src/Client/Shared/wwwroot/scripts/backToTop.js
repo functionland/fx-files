@@ -179,38 +179,40 @@ function breadCrumbStyle() {
 }
 
 function breadCrumbStyleSelectionModal() {
-    let breadcrumbs = document.querySelector(".sheet-wrapper .fx-breadcrumbs");
+    setTimeout(function () {
+        let breadcrumbs = document.querySelector(".sheet-wrapper .fx-breadcrumbs");
 
-    if (!breadcrumbs)
-        return;
+        if (!breadcrumbs)
+            return;
 
-    let startEllipsis = document.querySelector(".sheet-wrapper .start-ellipsis");
-    let endEllipsis = document.querySelector(".sheet-wrapper .end-ellipsis");
-    let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
+        let startEllipsis = document.querySelector(".sheet-wrapper .start-ellipsis");
+        let endEllipsis = document.querySelector(".sheet-wrapper .end-ellipsis");
+        let hasHorizontalScrollbar = breadcrumbs.scrollWidth > breadcrumbs.clientWidth;
 
-    if (hasHorizontalScrollbar) {
-        startEllipsis.style.display = "block";
-        breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
-    }
-
-    breadcrumbs.addEventListener("scroll", () => {
-        startEllipsis.style.display = "block";
-        let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
-
-        if (breadcrumbsScroll != 0) {
-            startEllipsis.classList.add("color-changer");
+        if (hasHorizontalScrollbar) {
             startEllipsis.style.display = "block";
-            endEllipsis.classList.add("color-changer");
-
-        } else {
-            startEllipsis.classList.remove("color-changer");
-            startEllipsis.style.display = "none";
+            breadcrumbs.scrollLeft = breadcrumbs.scrollWidth + breadcrumbs.scrollLeft;
         }
 
-        if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
-            endEllipsis.classList.remove("color-changer");
-        }
-    });
+        breadcrumbs.addEventListener("scroll", () => {
+            startEllipsis.style.display = "block";
+            let breadcrumbsScroll = breadcrumbs.scrollLeft.toFixed();
+
+            if (breadcrumbsScroll != 0) {
+                startEllipsis.classList.add("color-changer");
+                startEllipsis.style.display = "block";
+                endEllipsis.classList.add("color-changer");
+
+            } else {
+                startEllipsis.classList.remove("color-changer");
+                startEllipsis.style.display = "none";
+            }
+
+            if (breadcrumbs.offsetWidth + breadcrumbs.scrollLeft >= breadcrumbs.scrollWidth - 1) {
+                endEllipsis.classList.remove("color-changer");
+            }
+        });
+    }, 10)
 }
 
 
