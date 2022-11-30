@@ -40,9 +40,16 @@ public class FileViewerActivity : MainActivity
         var appStateStore = MauiApplication.Current.Services.GetRequiredService<IAppStateStore>();
         var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
 
+        if (string.IsNullOrWhiteSpace(Intent?.DataString))
+            return;
+
+        var uri = Uri.Parse(Intent.DataString);
+
+        if (uri is null)
+            return;
+
         try
         {
-            var uri = Uri.Parse(Intent.DataString);
             var path = GetActualPathFromFile(uri);
             appStateStore.IntentFileUrl = path;
         }
@@ -52,7 +59,15 @@ public class FileViewerActivity : MainActivity
             if (string.IsNullOrWhiteSpace(intentFilePath))
             {
                 var exceptionHandler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
-                exceptionHandler.Track(exception);
+                bool isKitKat = Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat;
+                string? docId = DocumentsContract.GetDocumentId(uri);
+                exceptionHandler.Track(exception, new Dictionary<string, string>
+                {
+                    {"intent_data_string", Intent?.DataString ?? "EMPTY" },
+                    {"intent_action", Intent?.Action ?? "EMPTY" },
+                    {"is_kitkat", isKitKat.ToString() ??"EMPTY" },
+                    {"doc_id", docId ?? "EMPTY" }
+                });
                 return;
             }
 
