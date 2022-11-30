@@ -181,7 +181,7 @@
     <value>Can't load storge manager.</value>
   </data>
   <data name="PathIsNull" xml:space="preserve">
-    <value>the path is null</value>
+    <value>The path is null</value>
   </data>
   <data name="ArtifactNameIsNull" xml:space="preserve">
     <value>The {0} name is empty.</value>
@@ -728,5 +728,8 @@
   </data>
   <data name="Appearance" xml:space="preserve">
     <value>Appearance</value>
+  </data>
+  <data name="PathNotFound" xml:space="preserve">
+    <value>'{0}' is not found.</value>
   </data>
 </root>

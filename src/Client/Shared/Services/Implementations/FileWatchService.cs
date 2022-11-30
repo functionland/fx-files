@@ -65,8 +65,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 WatcherDictionary.TryAdd(path, (watcher, 1));
             }
-            catch
+            catch (Exception ex)
             {
+                if (ex is not KnownException)
+                {
+                    ExceptionHandler.Track(ex);
+                }
             }
         }
 
@@ -81,8 +85,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
                 else
                 {
-                    var (Watcher, WatchCount) = WatcherDictionary[fsArtifact.FullPath];
-                    WatcherDictionary[fsArtifact.FullPath] = (Watcher, WatchCount -= 1);
+                    var currentArtifactWatch = WatcherDictionary[fsArtifact.FullPath];
+                    WatcherDictionary[fsArtifact.FullPath] = (currentArtifactWatch.Watcher, currentArtifactWatch.WatchCount -= 1);
                 }
             }
         }
@@ -96,6 +100,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
         }
+
         private async void OnRenamed(object sender, RenamedEventArgs e)
         {
             try
@@ -112,27 +117,59 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
             catch (Exception ex)
             {
-                ExceptionHandler.Handle(ex);
+                if (ex is not KnownException)
+                {
+                    ExceptionHandler.Track(ex);
+                }
             }
         }
 
-        private async void OnChanged(object source, FileSystemEventArgs e)
+
+        private void OnChanged(object source, FileSystemEventArgs e)
         {
             try
             {
-                if (e?.FullPath is null) return;
-                var artifact = await FileService.GetArtifactAsync(e.FullPath);
+                if (e is null) return;
+
+                var isFileExist = File.Exists(e.FullPath);
+                DateTimeOffset lastModifiedDateTime;
+                FsArtifactType artifactType;
+                var name = Path.GetFileName(e.FullPath);
+                long size = 0;
+
+                if (isFileExist)
+                {
+                    artifactType = FsArtifactType.File;
+                    lastModifiedDateTime = File.GetLastWriteTime(e.FullPath);
+                    var fileInfo = new FileInfo(e.FullPath);
+                    size = fileInfo.Length;
+                }
+                else
+                {
+                    artifactType = FsArtifactType.Folder;
+                    lastModifiedDateTime = Directory.GetLastWriteTime(e.FullPath);
+                }
+
                 EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
                 {
                     ChangeType = FsArtifactChangesType.Modify,
-                    FsArtifact = artifact
+                    FsArtifact = new FsArtifact(e.FullPath, name, artifactType, FsFileProviderType.InternalMemory)
+                    {
+                        LastModifiedDateTime = lastModifiedDateTime,
+                        ParentFullPath = Path.GetDirectoryName(e.FullPath),
+                        Size = size
+                    }
                 });
             }
             catch (Exception ex)
             {
-                ExceptionHandler.Handle(ex);
+                if (ex is not KnownException)
+                {
+                    ExceptionHandler.Track(ex);
+                }
             }
         }
+
 
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
@@ -140,22 +177,22 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 if (e is null) return;
 
-                var extention = Path.GetExtension(e.FullPath);
-                var artifactType = !string.IsNullOrWhiteSpace(extention) ? FsArtifactType.File : FsArtifactType.Folder;
-
-                var artifact = new FsArtifact(e.FullPath, e.Name ?? Path.GetFileName(e.FullPath), artifactType, FsFileProviderType.InternalMemory);
+                var name = Path.GetFileName(e.FullPath);
 
                 EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
                 {
                     ChangeType = FsArtifactChangesType.Delete,
-                    FsArtifact = artifact
+                    FsArtifact = new FsArtifact(e.FullPath, name, FsArtifactType.File, FsFileProviderType.InternalMemory)
                 });
-
             }
             catch (Exception ex)
             {
-                ExceptionHandler.Handle(ex);
+                if (ex is not KnownException)
+                {
+                    ExceptionHandler.Track(ex);
+                }
             }
+
         }
 
         private async void OnAdded(object sender, FileSystemEventArgs e)
@@ -171,11 +208,13 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                     ChangeType = FsArtifactChangesType.Add,
                     FsArtifact = artifact
                 });
-
             }
             catch (Exception ex)
             {
-                ExceptionHandler.Handle(ex);
+                if (ex is not KnownException)
+                {
+                    ExceptionHandler.Track(ex);
+                }
             }
         }
     }
