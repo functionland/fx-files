@@ -8,9 +8,9 @@ namespace Functionland.FxFiles.Client.Test.Services.Implementations;
 
 public partial class GenericFileService : LocalDeviceFileService, ILocalDeviceFileService
 {
-    public GenericFileService(IStringLocalizer<AppStrings> stringLocalizer, IExceptionHandler exceptionHandler) : base(exceptionHandler, stringLocalizer)
+    public GenericFileService(IStringLocalizer<AppStrings> stringLocalizer) : base(stringLocalizer)
     {
-
+        
     }
 
     public override FsFileProviderType GetFsFileProviderType(string filePath)
