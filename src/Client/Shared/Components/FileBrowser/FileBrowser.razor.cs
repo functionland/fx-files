@@ -363,35 +363,50 @@ public partial class FileBrowser : IDisposable
 
     private async Task CopyFolderWithCopyPostfixAsync(FsArtifact sourceArtifact)
     {
-        var oldArtifactPath = sourceArtifact.FullPath;
-
-        var oldArtifactParentPath = sourceArtifact.ParentFullPath;
-
-        var oldArtifactName = sourceArtifact.Name;
-
-        var counter = 0;
-        string fullPathWithCopy;
-        while (true)
+        try
         {
-            fullPathWithCopy = $"{oldArtifactPath}{AppStrings.CopyPostfix}"
-                               + (counter > 1 ? $" {counter}" : string.Empty);
+            var oldArtifactPath = sourceArtifact.FullPath;
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false;
+            var oldArtifactParentPath = sourceArtifact.ParentFullPath;
 
-            if (!exists)
-                break;
+            var oldArtifactName = sourceArtifact.Name;
 
-            counter++;
+            var counter = 0;
+            string fullPathWithCopy;
+            while (true)
+            {
+                fullPathWithCopy = $"{oldArtifactPath}{AppStrings.CopyPostfix}"
+                                   + (counter > 1 ? $" {counter}" : string.Empty);
+
+                var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false;
+
+                if (!exists)
+                    break;
+
+                counter++;
+            }
+
+            var newArtifactPath = fullPathWithCopy;
+
+            var newArtifactName = Path.GetFileName(newArtifactPath);
+            await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
+
+            var oldArtifactChildren =
+                await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
+            await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
         }
-
-        var newArtifactPath = fullPathWithCopy;
-
-        var newArtifactName = Path.GetFileName(newArtifactPath);
-        await FileService.CreateFolderAsync(oldArtifactParentPath, newArtifactName);
-
-        var oldArtifactChildren =
-            await FileService.GetArtifactsAsync(oldArtifactPath).ToListAsync();
-        await FileService.CopyArtifactsAsync(oldArtifactChildren, newArtifactPath);
+        catch (IOException ex)
+        {
+            ExceptionHandler.Handle(new KnownIOException(ex.Message, ex));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ExceptionHandler.Handle(new UnauthorizedException(ex.Message, ex));
+        }
+        catch (Exception exception)
+        {
+            ExceptionHandler.Handle(exception);
+        }
     }
 
     private async Task<string> CopyFileWithCopyPostfixAsync(FsArtifact sourceArtifact)
@@ -851,6 +866,14 @@ public partial class FileBrowser : IDisposable
 
             _allArtifacts = artifacts;
             RefreshDisplayedArtifacts();
+        }
+        catch (IOException ex)
+        {
+            ExceptionHandler.Handle(new KnownIOException(ex.Message, ex));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ExceptionHandler.Handle(new UnauthorizedException(ex.Message, ex));
         }
         catch (Exception exception)
         {
