@@ -91,9 +91,9 @@ public partial class ArtifactExplorer
         await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _dotnetObjectReference);
         await InitWindowWidthListener();
         await JSRuntime.InvokeVoidAsync("OnScrollCheck", ArtifactExplorerListRef);
-        await JSRuntime.InvokeVoidAsync("createScrollStopListener", _artifactExplorerListRef, _dotnetObjectReference);
+        await JSRuntime.InvokeVoidAsync("createScrollStopListener", ArtifactExplorerListRef, _dotnetObjectReference);
     }
-   
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
@@ -233,27 +233,27 @@ public partial class ArtifactExplorer
         switch (args.Button)
         {
             case 0:
+            {
+                if (_timer != null)
                 {
-                    if (_timer != null)
+                    DisposeTimer();
+                    if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                     {
-                        DisposeTimer();
-                        if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                        await OnSelectArtifact.InvokeAsync(artifact);
+                        await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
+                    }
+                    else
+                    {
+                        if (_longPressedArtifact != null)
                         {
-                            await OnSelectArtifact.InvokeAsync(artifact);
-                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
-                        }
-                        else
-                        {
-                            if (_longPressedArtifact != null)
-                            {
-                                await OnSelectionChanged(artifact);
-                                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
-                            }
+                            await OnSelectionChanged(artifact);
+                            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
                         }
                     }
-
-                    break;
                 }
+
+                break;
+            }
             case 2:
                 DisposeTimer();
                 switch (SelectedArtifacts.Count)
