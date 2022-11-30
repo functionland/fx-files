@@ -11,7 +11,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
     {
         [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
         [AutoInject] public ILocalDeviceFileService FileService { get; set; } = default!;
-        [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
 
         private readonly ConcurrentDictionary<string, (FileSystemWatcher Watcher, int WatchCount)> WatcherDictionary = new();
         public IStringLocalizer<AppStrings> StringLocalizer { get; set; } = default!;
@@ -70,6 +69,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public virtual void UnWatchArtifact(FsArtifact fsArtifact)
         {
             if (WatcherDictionary.TryGetValue(fsArtifact.FullPath, out var watcher))
@@ -81,8 +81,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 }
                 else
                 {
-                    var (Watcher, WatchCount) = WatcherDictionary[fsArtifact.FullPath];
-                    WatcherDictionary[fsArtifact.FullPath] = (Watcher, WatchCount -= 1);
+                    var currentArtifactWatch = WatcherDictionary[fsArtifact.FullPath];
+                    WatcherDictionary[fsArtifact.FullPath] = (currentArtifactWatch.Watcher, currentArtifactWatch.WatchCount -= 1);
                 }
             }
         }
@@ -96,84 +96,84 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
 
         }
-        private async void OnRenamed(object sender, RenamedEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        private void OnRenamed(object sender, RenamedEventArgs e)
         {
-            try
-            {
-                var fsArtifactChangesType = FsArtifactChangesType.Rename;
-                var artifact = await FileService.GetArtifactAsync(e.FullPath);
+            var fsArtifactChangesType = FsArtifactChangesType.Rename;
+            var artifact = FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
 
-                EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
-                {
-                    ChangeType = fsArtifactChangesType,
-                    FsArtifact = artifact,
-                    Description = e.OldFullPath
-                });
-            }
-            catch (Exception ex)
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
-                ExceptionHandler.Handle(ex);
-            }
+                ChangeType = fsArtifactChangesType,
+                FsArtifact = artifact,
+                Description = e.OldFullPath
+            });
         }
 
-        private async void OnChanged(object source, FileSystemEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        private void OnChanged(object source, FileSystemEventArgs e)
         {
-            try
+            if (e is null) return;
+
+            var isFileExist = File.Exists(e.FullPath);
+            DateTimeOffset lastModifiedDateTime;
+            FsArtifactType artifactType;
+            var name = Path.GetFileName(e.FullPath);
+            long size = 0;
+
+            if (isFileExist)
             {
-                if (e?.FullPath is null) return;
-                var artifact = await FileService.GetArtifactAsync(e.FullPath);
-                EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
+                artifactType = FsArtifactType.File;
+                lastModifiedDateTime = File.GetLastWriteTime(e.FullPath);
+                var fileInfo = new FileInfo(e.FullPath);
+                size = fileInfo.Length;
+            }
+            else
+            {
+                artifactType = FsArtifactType.Folder;
+                lastModifiedDateTime = Directory.GetLastWriteTime(e.FullPath);
+            }
+
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
+            {
+                ChangeType = FsArtifactChangesType.Modify,
+                FsArtifact = new FsArtifact(e.FullPath, name, artifactType, FsFileProviderType.InternalMemory)
                 {
-                    ChangeType = FsArtifactChangesType.Modify,
-                    FsArtifact = artifact
-                });
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.Handle(ex);
-            }
+                    LastModifiedDateTime = lastModifiedDateTime,
+                    ParentFullPath = Path.GetDirectoryName(e.FullPath),
+                    Size = size
+                }
+            });
         }
 
-        private async void OnDeleted(object source, FileSystemEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            try
+            if (e is null) return;
+
+            var name = Path.GetFileName(e.FullPath);
+
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
-                if (e is null) return;
+                ChangeType = FsArtifactChangesType.Delete,
+                FsArtifact = new FsArtifact(e.FullPath, name, FsArtifactType.File, FsFileProviderType.InternalMemory)
+            });
 
-                var artifact = await FileService.GetArtifactAsync(e.FullPath);
 
-                EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
-                {
-                    ChangeType = FsArtifactChangesType.Delete,
-                    FsArtifact = artifactType
-                });
-
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.Handle(ex);
-            }
         }
 
-        private async void OnAdded(object sender, FileSystemEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
+        private void OnAdded(object sender, FileSystemEventArgs e)
         {
-            try
+            if (e is null) return;
+
+            var artifact = FileService.GetArtifactAsync(e.FullPath).GetAwaiter().GetResult();
+
+            EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
             {
-                if (e is null) return;
-
-                var artifact = await FileService.GetArtifactAsync(e.FullPath);
-
-                EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
-                {
-                    ChangeType = FsArtifactChangesType.Add,
-                    FsArtifact = artifact
-                });
-
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler.Handle(ex);
-            }
+                ChangeType = FsArtifactChangesType.Add,
+                FsArtifact = artifact
+            });
         }
     }
 }
