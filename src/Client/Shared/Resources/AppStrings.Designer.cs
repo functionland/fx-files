@@ -1222,11 +1222,20 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to the path is null.
+        ///   Looks up a localized string similar to The path is null.
         /// </summary>
         public static string PathIsNull {
             get {
                 return ResourceManager.GetString("PathIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not found..
+        /// </summary>
+        public static string PathNotFound {
+            get {
+                return ResourceManager.GetString("PathNotFound", resourceCulture);
             }
         }
         

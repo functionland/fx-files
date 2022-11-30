@@ -3,7 +3,7 @@
 
 @if (IsModalOpen == true && _currentArtifact is not null)
 {
-    <div class="file-viewer-container">
+    <div class="file-viewer-container" style="@(IsmacOS ? "padding-top:50px" : "")">
         <div class="main-content">
             @if (IsSupported<ImageViewer>(_currentArtifact))
             {

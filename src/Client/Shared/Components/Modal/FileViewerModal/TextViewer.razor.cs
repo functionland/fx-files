@@ -15,6 +15,8 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
 
     [AutoInject] private ThemeInterop ThemeInterop = default!;
 
+    public bool IsLoading { get; set; } = true;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -53,8 +55,8 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
         if (CurrentArtifact?.FullPath == null) return;
 
         var text = File.ReadAllText(CurrentArtifact.FullPath, Encoding.UTF8);
-        
         await JSRuntime.InvokeVoidAsync("setCodeMirrorText", text, CurrentArtifact.Name);
+        IsLoading = false;
         await InvokeAsync(() => StateHasChanged());
     }
 

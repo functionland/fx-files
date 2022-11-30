@@ -341,6 +341,14 @@ public partial class FileBrowser : IDisposable
                              message: AppStrings.TheCopyOpreationSuccessedMessage,
                              toastType: FxToastType.Success);
         }
+        catch (IOException ex)
+        {
+            ExceptionHandler.Handle(new KnownIOException(ex.Message, ex));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ExceptionHandler.Handle(new UnauthorizedException(ex.Message, ex));
+        }
         catch (Exception exception)
         {
             ExceptionHandler.Handle(exception);
@@ -406,7 +414,7 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy =
                 Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false ;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false;
             if (!exists)
                 break;
 
@@ -477,6 +485,14 @@ public partial class FileBrowser : IDisposable
             FxToast.Show(title: AppStrings.TheMoveOpreationSuccessedTiltle,
                          message: AppStrings.TheMoveOpreationSuccessedMessage,
                          toastType: FxToastType.Success);           
+        }
+        catch (IOException ex)
+        {
+            ExceptionHandler.Handle(new KnownIOException(ex.Message, ex));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ExceptionHandler.Handle(new UnauthorizedException(ex.Message, ex));
         }
         catch (Exception exception)
         {
@@ -864,7 +880,7 @@ public partial class FileBrowser : IDisposable
 #if BlazorHybrid
                 try
                 {
-                   await FileLauncher.OpenFileAsync(artifact.FullPath);
+                    await FileLauncher.OpenFileAsync(artifact.FullPath);
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -1474,16 +1490,27 @@ public partial class FileBrowser : IDisposable
                 }
             }, token);
 
-            await foreach (var item in FileService.GetSearchArtifactAsync(searchFilter, token)
-                               .WithCancellation(token))
+            try
             {
-                if (token.IsCancellationRequested)
-                    return;
+                await foreach (var item in FileService.GetSearchArtifactAsync(searchFilter, token)
+                                       .WithCancellation(token))
+                {
+                    if (token.IsCancellationRequested)
+                        return;
 
-                item.IsPinned = await PinService.IsPinnedAsync(item);
-                bufferedArtifacts.Add(item);
+                    item.IsPinned = await PinService.IsPinnedAsync(item);
+                    bufferedArtifacts.Add(item);
 
-                await Task.Yield();
+                    await Task.Yield();
+                }
+            }
+            catch (IOException ex)
+            {
+                ExceptionHandler.Handle(new KnownIOException(ex.Message, ex));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ExceptionHandler.Handle(new UnauthorizedException(ex.Message, ex));
             }
 
             isSearchComplete = true;
