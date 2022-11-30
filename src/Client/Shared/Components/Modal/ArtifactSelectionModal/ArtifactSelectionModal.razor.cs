@@ -80,18 +80,33 @@ public partial class ArtifactSelectionModal
 
     private async Task LoadArtifacts(string? path)
     {
-        _artifacts = new List<FsArtifact>();
-        var artifacts = FileService.GetArtifactsAsync(path);
-        var artifactPaths = _excludedArtifacts.Select(a => a.FullPath);
-
-        await foreach (var item in artifacts)
+        try
         {
-            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
-            {
-                item.IsDisabled = true;
-            }
+            _artifacts = new List<FsArtifact>();
+            var artifacts = FileService.GetArtifactsAsync(path);
+            var artifactPaths = _excludedArtifacts.Select(a => a.FullPath);
 
-            _artifacts.Add(item);
+            await foreach (var item in artifacts)
+            {
+                if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
+                {
+                    item.IsDisabled = true;
+                }
+
+                _artifacts.Add(item);
+            }
+        }
+        catch (IOException ex)
+        {
+            ExceptionHandler.Handle(new KnownIOException(ex.Message, ex));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ExceptionHandler.Handle(new UnauthorizedException(ex.Message, ex));
+        }
+        catch (Exception exception)
+        {
+            ExceptionHandler.Handle(exception);
         }
     }
 

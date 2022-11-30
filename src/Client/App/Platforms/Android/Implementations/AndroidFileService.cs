@@ -16,7 +16,6 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 public abstract partial class AndroidFileService : LocalDeviceFileService
 {
     [AutoInject] public IPermissionUtils PermissionUtils { get; set; } = default!;
-    [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
     private List<FsArtifact>? _allDrives = null;
 
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
