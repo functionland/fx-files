@@ -28,7 +28,7 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private TaskCompletionSource<ExtractorBottomSheetResult>? _tcs;
 
         private string? _password;
-        
+
         private ExtractorBottomSheetResult ExtractorBottomSheetResult { get; set; } = new();
 
         public async Task<ExtractorBottomSheetResult> ShowAsync(string zipFilePath, string destinationFolderPath, string destinationFolderName, List<FsArtifact>? innerArtifacts = null)
@@ -140,9 +140,21 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
         private async Task<List<FsArtifact>> GetOverwritableArtifacts(string zipFilePath, string destinationFolderPath,
             List<FsArtifact>? innerArtifacts)
         {
-            var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
-            var readInnerArtifacts = await ZipService.GetAllArtifactsAsync(zipFilePath, _password, _progressBarCts?.Token);
-            var overwriteArtifacts = GetShouldOverwriteArtifacts(readInnerArtifacts, existedArtifacts);
+            var overwriteArtifacts = new List<FsArtifact>();
+            try
+            {
+                var existedArtifacts = await FileService.GetArtifactsAsync(destinationFolderPath).ToListAsync();
+                var readInnerArtifacts = await ZipService.GetAllArtifactsAsync(zipFilePath, _password, _progressBarCts?.Token);
+                overwriteArtifacts = GetShouldOverwriteArtifacts(readInnerArtifacts, existedArtifacts);
+            }
+            catch (IOException ex)
+            {
+                throw new KnownIOException(ex.Message, ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedException(ex.Message, ex);
+            }
             return overwriteArtifacts;
         }
 
