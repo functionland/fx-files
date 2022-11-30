@@ -134,18 +134,21 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             }
         }
 
-        private async void OnDeleted(object source, FileSystemEventArgs e)
+        private void OnDeleted(object source, FileSystemEventArgs e)
         {
             try
             {
                 if (e is null) return;
 
-                var artifact = await FileService.GetArtifactAsync(e.FullPath);
+                var extention = Path.GetExtension(e.FullPath);
+                var artifactType = !string.IsNullOrWhiteSpace(extention) ? FsArtifactType.File : FsArtifactType.Folder;
+
+                var artifact = new FsArtifact(e.FullPath, e.Name ?? Path.GetFileName(e.FullPath), artifactType, FsFileProviderType.InternalMemory);
 
                 EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
                 {
                     ChangeType = FsArtifactChangesType.Delete,
-                    FsArtifact = artifactType
+                    FsArtifact = artifact
                 });
 
             }

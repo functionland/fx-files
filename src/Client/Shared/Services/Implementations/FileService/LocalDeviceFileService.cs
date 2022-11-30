@@ -231,6 +231,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 return Task.FromResult(fsArtifact);
             }
+            catch(FileNotFoundException ex)
+            {
+                throw new DomainLogicException(ex.Message, ex);
+            }
             catch (IOException ex)
             {
                 throw new KnownIOException(ex.Message, ex);
@@ -610,23 +614,21 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             try
             {
-                var artifactIsFile = File.Exists(path);
-                if (artifactIsFile)
-                    return FsArtifactType.File;
-
                 var drives = GetDrives();
                 if (drives.Any(drive => drive.FullPath == path))
                     return FsArtifactType.Drive;
 
-                var artifactIsDirectory = Directory.Exists(path);
-                if (artifactIsDirectory)
+                FileAttributes attr = File.GetAttributes(path);
+
+                if (attr.HasFlag(FileAttributes.Directory))
                     return FsArtifactType.Folder;
 
                 else
-                {
-                    ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
-                    throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
-                }
+                    return FsArtifactType.File;
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new DomainLogicException(ex.Message, ex);
             }
             catch (IOException ex)
             {
