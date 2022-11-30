@@ -42,18 +42,38 @@ public class FxLocalDbService : IFxLocalDbService
 
     void MigrateDatabase()
     {
-        var connection = new SharedConnection(CreateConnection());
+        var tryCount = 0;
+        DbUp.Engine.DatabaseUpgradeResult? result = null;
 
-        var upgrader =
-            DeployChanges.To
-                .SQLiteDatabase(connection)
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-                .LogToNowhere()
-                .Build();
+        while (true)
+        {
+            tryCount++;
+            try
+            {
+                var connection = new SharedConnection(CreateConnection());
 
-        var result = upgrader.PerformUpgrade();
+                var upgrader =
+                    DeployChanges.To
+                        .SQLiteDatabase(connection)
+                        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                        .LogToNowhere()
+                        .Build();
 
-        if (result.Successful is false)
+                result = upgrader.PerformUpgrade();
+            }
+            catch (Exception)
+            {
+                if (tryCount > 5)
+                {
+                    throw;
+                }
+            }
+
+            if (result?.Successful == true || tryCount > 5)
+                break;
+        }
+
+        if (result?.Successful == false)
             throw new InvalidOperationException(result.Error.Message, result.Error);
     }
 

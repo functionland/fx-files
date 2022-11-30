@@ -26,7 +26,7 @@
             <div class="pin-artifacts">
                 <BitAccordion Class="@(_pins?.Count == 0 && !_isPinBoxLoading ? "pin-empty-style" : "")"
                           Title="@(_pins?.Count == 0 && !_isPinBoxLoading ? "Pinned (empty)" : "Pinned")"
-                          DefaultIsExpanded="@(_isPinBoxLoading || _pins?.Count > 0)">
+                          DefaultIsExpanded="@(_pins?.Count > 0)">
                     <ContentTemplate>
                         @if (_isPinBoxLoading)
                         {
@@ -117,7 +117,8 @@
                           OnScrollToArtifactCompleted="(()=>ScrolledToArtifact=null)"
                           Breadcrumbs="_breadcrumbsRef?.BreadcrumbsRef"
                           @bind-SelectedArtifacts="_selectedArtifacts"
-                          @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                          @bind-ArtifactExplorerMode="ArtifactExplorerMode"
+                          @ref="_artifactExplorerRef"/>
     </section>
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">

@@ -36,12 +36,17 @@
     width: 100%;
 }
 
+.input-full-width {
+    border-radius: 0;
+    margin: 0;
+}
+
 .fully-disabled {
     opacity: .5;
     pointer-events: none !important;
 }
 
-.input-full-width {
+.inline-search {
     width: 100%;
     display: flex;
     align-items: center;
@@ -53,6 +58,8 @@
     .button-search-input {
         background-color: color(gray-bg-secondary);
         cursor: pointer;
+        margin: 0;
+        border-radius: 0;
         font-style: normal;
         padding: 0 $spacing-8;
         height: $font-size-40;

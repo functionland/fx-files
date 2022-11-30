@@ -16,7 +16,6 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 public abstract partial class AndroidFileService : LocalDeviceFileService
 {
     [AutoInject] public IPermissionUtils PermissionUtils { get; set; } = default!;
-    [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
     private List<FsArtifact>? _allDrives = null;
 
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -197,25 +196,37 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return drives;
     }
 
-    public override FsArtifactType? GetFsArtifactType(string path)
+    public override FsArtifactType GetFsArtifactType(string path)
     {
-        var isDrive = IsDrive(path);
+        try
+        {
+            var isDrive = IsDrive(path);
 
-        if (isDrive)
-        {
-            return FsArtifactType.Drive;
+            if (isDrive)
+            {
+                return FsArtifactType.Drive;
+            }
+            else if (Directory.Exists(path))
+            {
+                return FsArtifactType.Folder;
+            }
+            else if (File.Exists(path))
+            {
+                return FsArtifactType.File;
+            }
+            else
+            {
+                ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
+                throw new DomainLogicException(StringLocalizer.GetString(nameof(AppStrings.PathNotFound), path));
+            }
         }
-        else if (Directory.Exists(path))
+        catch (IOException ex)
         {
-            return FsArtifactType.Folder;
+            throw new KnownIOException(ex.Message, ex);
         }
-        else if (File.Exists(path))
+        catch (UnauthorizedAccessException ex)
         {
-            return FsArtifactType.File;
-        }
-        else
-        {
-            return null;
+            throw new UnauthorizedException(ex.Message, ex);
         }
     }
 

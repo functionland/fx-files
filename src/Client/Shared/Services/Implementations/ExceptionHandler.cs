@@ -7,7 +7,7 @@ public partial class ExceptionHandler : IExceptionHandler
 {
     [AutoInject] IStringLocalizer<AppStrings> _localizer = default!;
 
-    public void Handle(Exception exception, IDictionary<string, object?>? parameters = null)
+    public void Handle(Exception exception, IDictionary<string, string>? parameters = null)
     {
 #if DEBUG
         var title = _localizer.GetString(AppStrings.ToastErrorTitle);
@@ -26,7 +26,7 @@ public partial class ExceptionHandler : IExceptionHandler
         {
             if (DeviceInfo.Current.Platform != DevicePlatform.macOS && DeviceInfo.Current.Platform != DevicePlatform.MacCatalyst)
             {
-                Crashes.TrackError(exception);
+                Crashes.TrackError(exception, parameters);
             }
 
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
@@ -37,14 +37,14 @@ public partial class ExceptionHandler : IExceptionHandler
 
     }
 
-    public void Track(Exception exception, IDictionary<string, object?>? parameters = null)
+    public void Track(Exception exception, IDictionary<string, string>? parameters = null)
     {
 #if DEBUG
         var message = (exception as KnownException)?.Message ?? exception.ToString();
         Console.WriteLine(message);
         Debugger.Break();
 #else
-        Crashes.TrackError(exception);
+        Crashes.TrackError(exception, parameters);
 #endif
     }
 }
