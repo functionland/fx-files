@@ -76,7 +76,7 @@ public partial class ArtifactExplorer
 
     private DotNetObjectReference<ArtifactExplorer>? _dotnetObjectReference;
     private (TouchPoint ReferencePoint, DateTimeOffset StartTime) _startPoint;
-    private ElementReference? _artifactExplorerListRef;
+    public ElementReference? ArtifactExplorerListRef;
 
     protected override async Task OnInitAsync()
     {
@@ -90,7 +90,7 @@ public partial class ArtifactExplorer
         await base.OnAfterFirstRenderAsync();
         await JSRuntime.InvokeVoidAsync("UpdateWindowWidth", _dotnetObjectReference);
         await InitWindowWidthListener();
-        await JSRuntime.InvokeVoidAsync("OnScrollCheck");
+        await JSRuntime.InvokeVoidAsync("OnScrollCheck", ArtifactExplorerListRef);
         await JSRuntime.InvokeVoidAsync("createScrollStopListener", _artifactExplorerListRef, _dotnetObjectReference);
     }
    
@@ -310,7 +310,7 @@ public partial class ArtifactExplorer
 
     public async Task OnGoToTopPage()
     {
-        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent", ArtifactExplorerListRef);
     }
 
     public string GetArtifactIcon(FsArtifact artifact)
@@ -499,7 +499,8 @@ public partial class ArtifactExplorer
     {
         var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
         var listExistResult =
-            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight, _artifactExplorerListRef);
+            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight,
+                ArtifactExplorerListRef);
         return listExistResult;
     }
 
