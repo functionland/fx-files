@@ -12,5 +12,11 @@
 
 <div class="text-container">
     <h1 class="title">@(Path.GetFileNameWithoutExtension(CurrentArtifact?.FullPath))</h1>
-    <pre class="CodeMirror text cm-s-default" id="codeMirrorTextViewer"></pre>
+    <pre class="CodeMirror text cm-s-default" style="@(IsLoading ? "display: none" : "")" id="codeMirrorTextViewer"></pre>
+    <div class="artifact-box @(IsLoading ? "overflow-hidden" : "")">
+        @if (IsLoading)
+        {
+            <OverlayLoading LoadingType="LoadingType.Overlay" />
+        }
+    </div>
 </div>
