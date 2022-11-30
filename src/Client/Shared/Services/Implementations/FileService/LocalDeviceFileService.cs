@@ -622,11 +622,8 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifactIsDirectory)
                     return FsArtifactType.Folder;
 
-                else
-                {
-                    ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
-                    throw new ArtifactTypeNullException(StringLocalizer[nameof(AppStrings.ArtifactTypeIsNull)]);
-                }
+                ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
+                throw new DomainLogicException(StringLocalizer.GetString(nameof(AppStrings.PathNotFound), path));
             }
             catch (IOException ex)
             {
