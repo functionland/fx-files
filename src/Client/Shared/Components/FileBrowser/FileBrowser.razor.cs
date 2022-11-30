@@ -249,35 +249,38 @@ public partial class FileBrowser : IDisposable
                     Localizer.GetString(AppStrings.CopyFiles),
                     true);
 
-                bool? shouldOverwrite = null;
-
-                var notCopiedList = await FileService.CopyArtifactsAsync(
-                    sourceArtifacts,
-                    destinationPath,
-                    onShouldOverwrite: async (artifact) =>
-                    {
-                        if (shouldOverwrite is null)
-                        {
-                            var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(artifact);
-
-                            shouldOverwrite = result.ResultType ==
-                                              ConfirmationReplaceOrSkipModalResultType.Replace;
-                        }
-
-                        return shouldOverwrite.Value;
-                    },
-                    onProgress: UpdateProgressAsync,
-                    cancellationToken: ProgressBarCts.Token);
-
-                if (notCopiedList.Any())
+                await Task.Run(async () =>
                 {
-                    var knownException = notCopiedList.Select(a => a.exception)
-                                                      .OfType<KnownException>()
-                                                      .FirstOrDefault();
+                    bool? shouldOverwrite = null;
 
-                    throw new DomainLogicException(knownException?.Message ??
-                                                   AppStrings.TheCopyOpreationFailedMessage);
-                }
+                    var notCopiedList = await FileService.CopyArtifactsAsync(
+                        sourceArtifacts,
+                        destinationPath,
+                        onShouldOverwrite: async (artifact) =>
+                        {
+                            if (shouldOverwrite is null)
+                            {
+                                var result = await _confirmationReplaceOrSkipModalRef!.ShowAsync(artifact);
+
+                                shouldOverwrite = result.ResultType ==
+                                                  ConfirmationReplaceOrSkipModalResultType.Replace;
+                            }
+
+                            return shouldOverwrite.Value;
+                        },
+                        onProgress: UpdateProgressAsync,
+                        cancellationToken: ProgressBarCts.Token);
+
+                    if (notCopiedList.Any())
+                    {
+                        var knownException = notCopiedList.Select(a => a.exception)
+                                                          .OfType<KnownException>()
+                                                          .FirstOrDefault();
+
+                        throw new DomainLogicException(knownException?.Message ??
+                                                       AppStrings.TheCopyOpreationFailedMessage);
+                    }
+                });
             }
             else
             {
@@ -292,49 +295,52 @@ public partial class FileBrowser : IDisposable
                     title: Localizer.GetString(AppStrings.CopyFiles),
                     isCancelable: true);
 
-                foreach (var sourceArtifact in sourceArtifacts)
+                await Task.Run(async () => 
                 {
-                    ProgressBarCurrentValue += 0.5;
-                    var roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
-
-                    await UpdateProgressAsync(
-                    text: sourceArtifact.Name,
-                    subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
-                    current: ProgressBarCurrentValue,
-                    max: sourceArtifacts.Count);
-
-                    switch (sourceArtifact.ArtifactType)
+                    foreach (var sourceArtifact in sourceArtifacts)
                     {
-                        case FsArtifactType.File:
-                            {
+                        ProgressBarCurrentValue += 0.5;
+                        var roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
 
-                                if (sourceArtifact.ParentFullPath != null)
+                        await UpdateProgressAsync(
+                        text: sourceArtifact.Name,
+                        subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
+                        current: ProgressBarCurrentValue,
+                        max: sourceArtifacts.Count);
+
+                        switch (sourceArtifact.ArtifactType)
+                        {
+                            case FsArtifactType.File:
                                 {
-                                    await CopyFileWithCopyPostfixAsync(sourceArtifact);
+
+                                    if (sourceArtifact.ParentFullPath != null)
+                                    {
+                                        await CopyFileWithCopyPostfixAsync(sourceArtifact);
+                                    }
+
+                                    break;
                                 }
+                            case FsArtifactType.Folder:
+                                {
+                                    await CopyFolderWithCopyPostfixAsync(sourceArtifact);
+                                    break;
+                                }
+                            case FsArtifactType.Drive:
+                            default:
+                                // ToDo : copy drive not supported, show proper message
+                                break;
+                        }
 
-                                break;
-                            }
-                        case FsArtifactType.Folder:
-                            {
-                                await CopyFolderWithCopyPostfixAsync(sourceArtifact);
-                                break;
-                            }
-                        case FsArtifactType.Drive:
-                        default:
-                            // ToDo : copy drive not supported, show proper message
-                            break;
+                        ProgressBarCurrentValue += 0.5;
+                        roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
+
+                        await UpdateProgressAsync(
+                        text: sourceArtifact.Name,
+                        subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
+                        current: ProgressBarCurrentValue,
+                        max: sourceArtifacts.Count);
                     }
-
-                    ProgressBarCurrentValue += 0.5;
-                    roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
-
-                    await UpdateProgressAsync(
-                    text: sourceArtifact.Name,
-                    subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
-                    current: ProgressBarCurrentValue,
-                    max: sourceArtifacts.Count);
-                }
+                });
             }
 
             FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
@@ -464,9 +470,10 @@ public partial class FileBrowser : IDisposable
             await _progressModalRef!.ShowAsync(ProgressMode.Progressive,
                 Localizer.GetString(AppStrings.MovingFiles), true);
 
-            bool? shouldOverwrite = null;
-
-            var notMovedList = await FileService.MoveArtifactsAsync(artifacts,
+            await Task.Run(async () =>
+            {
+                bool? shouldOverwrite = null;
+                var notMovedList = await FileService.MoveArtifactsAsync(artifacts,
                 destinationPath,
                 onShouldOverwrite: async (artifact) =>
                 {
@@ -483,23 +490,24 @@ public partial class FileBrowser : IDisposable
                 onProgress: async (progressInfo) =>
                 {
                     await UpdateProgressAsync(progressInfo);
-                    await _progressModalRef.RefreshAsync();
                 },
                 cancellationToken: ProgressBarCts.Token);
 
-            if (notMovedList.Any())
-            {
-                var knownException = notMovedList.Select(a => a.exception)
-                                                              .OfType<KnownException>()
-                                                              .FirstOrDefault();
+                if (notMovedList.Any())
+                {
+                    var knownException = notMovedList.Select(a => a.exception)
+                                                                  .OfType<KnownException>()
+                                                                  .FirstOrDefault();
 
-                throw new DomainLogicException(knownException?.Message ??
-                                               AppStrings.TheMoveOpreationFailedMessage);
-            }
+                    throw new DomainLogicException(knownException?.Message ??
+                                                   AppStrings.TheMoveOpreationFailedMessage);
+                }
+
+            });
 
             FxToast.Show(title: AppStrings.TheMoveOpreationSuccessedTiltle,
                          message: AppStrings.TheMoveOpreationSuccessedMessage,
-                         toastType: FxToastType.Success);           
+                         toastType: FxToastType.Success);
         }
         catch (IOException ex)
         {
@@ -624,20 +632,20 @@ public partial class FileBrowser : IDisposable
                 await _progressModalRef!.ShowAsync(ProgressMode.Progressive,
                     Localizer.GetString(AppStrings.DeletingFiles), true);
 
-                await FileService.DeleteArtifactsAsync(artifacts,
-                                                       onProgress: UpdateProgressAsync,
-                                                       cancellationToken: ProgressBarCts.Token);
+                await Task.Run(async () => 
+                {
+                    await FileService.DeleteArtifactsAsync(artifacts,
+                                                           onProgress: UpdateProgressAsync,
+                                                           cancellationToken: ProgressBarCts.Token);
+                });
 
                 await _progressModalRef.CloseAsync();
-
             }
-
         }
         catch (Exception exception)
         {
             ExceptionHandler.Handle(exception);
         }
-
         finally
         {
             await _progressModalRef!.CloseAsync();
