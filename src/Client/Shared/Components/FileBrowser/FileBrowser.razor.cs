@@ -31,6 +31,7 @@ public partial class FileBrowser : IDisposable
     private ExtractorBottomSheet? _extractorModalRef;
     private FxSearchInput? _searchInputRef;
     private FxToolBar? _fxToolBarRef;
+    private ArtifactExplorer? _artifactExplorerRef;
 
     // ProgressBar
     private string ProgressBarCurrentText { get; set; } = default!;
@@ -1215,7 +1216,6 @@ public partial class FileBrowser : IDisposable
     }
 
     private readonly SemaphoreSlim _semaphoreArtifactChanged = new(1);
-    private ArtifactExplorer? _artifactExplorerRef;
 
     private async void HandleChangedArtifacts(ArtifactChangeEvent artifactChangeEvent)
     {
