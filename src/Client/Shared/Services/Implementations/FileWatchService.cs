@@ -145,7 +145,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 EventAggregator.GetEvent<ArtifactChangeEvent>().Publish(new ArtifactChangeEvent()
                 {
                     ChangeType = FsArtifactChangesType.Delete,
-                    FsArtifact = artifactType
+                    FsArtifact = artifact
                 });
 
             }
