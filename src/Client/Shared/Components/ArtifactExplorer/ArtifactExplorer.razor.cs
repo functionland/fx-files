@@ -48,6 +48,7 @@ public partial class ArtifactExplorer
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
     [Parameter] public FsArtifact? ScrollArtifact { get; set; }
     [Parameter] public EventCallback OnScrollToArtifactCompleted { get; set; }
+    [Parameter] public ElementReference? Breadcrumbs { get; set; }
 
     public PathProtocol Protocol =>
         FileService switch
@@ -239,7 +240,10 @@ public partial class ArtifactExplorer
                     if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                     {
                         await OnSelectArtifact.InvokeAsync(artifact);
-                        await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
+                        if (Breadcrumbs is null)
+                            return;
+
+                        await JSRuntime.InvokeVoidAsync("breadCrumbStyle", Breadcrumbs);
                     }
                     else
                     {
@@ -498,7 +502,8 @@ public partial class ArtifactExplorer
     {
         var listHeight = Artifacts.FindIndex(a => a.FullPath == artifact.FullPath) * 74;
         var listExistResult =
-            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight, _artifactExplorerListRef);
+            await JSRuntime.InvokeAsync<bool>("scrollToItem", GetIdForArtifact(artifact.Name), listHeight,
+                _artifactExplorerListRef);
         return listExistResult;
     }
 

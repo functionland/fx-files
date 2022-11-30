@@ -12,6 +12,7 @@ public partial class ArtifactSelectionModal
     private List<FsArtifact> _excludedArtifacts = new();
     private InputModal _inputModalRef = default!;
     private FsArtifact? _scrolledToArtifact;
+    private FxBreadcrumbs? _breadcrumbsRef;
 
     [Parameter] public SortTypeEnum SortType { get; set; } = SortTypeEnum.Name;
     [Parameter] public bool IsAscOrder { get; set; }
@@ -47,7 +48,10 @@ public partial class ArtifactSelectionModal
 
     private async Task SelectArtifact(FsArtifact artifact)
     {
-        await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");
+        if (_breadcrumbsRef is null)
+            return;
+
+        await JSRuntime.InvokeVoidAsync("breadCrumbStyle", _breadcrumbsRef.BreadcrumbsRef);
         _currentArtifact = artifact;
         await LoadArtifacts(artifact.FullPath);
         StateHasChanged();
@@ -86,7 +90,8 @@ public partial class ArtifactSelectionModal
 
         await foreach (var item in artifacts)
         {
-            if (item.ArtifactType == FsArtifactType.File || (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
+            if (item.ArtifactType == FsArtifactType.File ||
+                (artifactPaths != null && artifactPaths.Contains(item.FullPath)))
             {
                 item.IsDisabled = true;
             }

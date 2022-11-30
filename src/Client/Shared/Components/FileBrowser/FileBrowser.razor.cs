@@ -26,6 +26,7 @@ public partial class FileBrowser : IDisposable
     private ProgressModal? _progressModalRef;
 
 
+    private FxBreadcrumbs? _breadcrumbsRef;
     private FxSearchInput? _fxSearchInputRef;
     private FileViewer? _fileViewerRef;
     private ExtractorBottomSheet? _extractorModalRef;
@@ -231,7 +232,8 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            var destinationPath = await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.CopyHere), sourceArtifacts);
+            var destinationPath =
+                await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.CopyHere), sourceArtifacts);
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
@@ -271,8 +273,8 @@ public partial class FileBrowser : IDisposable
                 if (notCopiedList.Any())
                 {
                     var knownException = notCopiedList.Select(a => a.exception)
-                                                      .OfType<KnownException>()
-                                                      .FirstOrDefault();
+                        .OfType<KnownException>()
+                        .FirstOrDefault();
 
                     throw new DomainLogicException(knownException?.Message ??
                                                    AppStrings.TheCopyOpreationFailedMessage);
@@ -297,28 +299,27 @@ public partial class FileBrowser : IDisposable
                     var roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
 
                     await UpdateProgressAsync(
-                    text: sourceArtifact.Name,
-                    subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
-                    current: ProgressBarCurrentValue,
-                    max: sourceArtifacts.Count);
+                        text: sourceArtifact.Name,
+                        subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
+                        current: ProgressBarCurrentValue,
+                        max: sourceArtifacts.Count);
 
                     switch (sourceArtifact.ArtifactType)
                     {
                         case FsArtifactType.File:
+                        {
+                            if (sourceArtifact.ParentFullPath != null)
                             {
-
-                                if (sourceArtifact.ParentFullPath != null)
-                                {
-                                    await CopyFileWithCopyPostfixAsync(sourceArtifact);
-                                }
-
-                                break;
+                                await CopyFileWithCopyPostfixAsync(sourceArtifact);
                             }
+
+                            break;
+                        }
                         case FsArtifactType.Folder:
-                            {
-                                await CopyFolderWithCopyPostfixAsync(sourceArtifact);
-                                break;
-                            }
+                        {
+                            await CopyFolderWithCopyPostfixAsync(sourceArtifact);
+                            break;
+                        }
                         case FsArtifactType.Drive:
                         default:
                             // ToDo : copy drive not supported, show proper message
@@ -329,16 +330,16 @@ public partial class FileBrowser : IDisposable
                     roundedProgressCount = Math.Round(ProgressBarCurrentValue, MidpointRounding.AwayFromZero);
 
                     await UpdateProgressAsync(
-                    text: sourceArtifact.Name,
-                    subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
-                    current: ProgressBarCurrentValue,
-                    max: sourceArtifacts.Count);
+                        text: sourceArtifact.Name,
+                        subText: $"{roundedProgressCount} of {sourceArtifacts.Count}",
+                        current: ProgressBarCurrentValue,
+                        max: sourceArtifacts.Count);
                 }
             }
 
             FxToast.Show(title: AppStrings.TheCopyOpreationSuccessedTiltle,
-                             message: AppStrings.TheCopyOpreationSuccessedMessage,
-                             toastType: FxToastType.Success);
+                message: AppStrings.TheCopyOpreationSuccessedMessage,
+                toastType: FxToastType.Success);
 
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
@@ -348,7 +349,6 @@ public partial class FileBrowser : IDisposable
         }
         finally
         {
-
             await _progressModalRef!.CloseAsync();
         }
     }
@@ -406,7 +406,8 @@ public partial class FileBrowser : IDisposable
             fullPathWithCopy =
                 Path.ChangeExtension(fullPathWithCopy, sourceArtifact.FileExtension);
 
-            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First().IsExist ?? false ;
+            var exists = (await FileService.CheckPathExistsAsync(new List<string?> { fullPathWithCopy }))?.First()
+                .IsExist ?? false;
             if (!exists)
                 break;
 
@@ -427,7 +428,8 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            var destinationPath = await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.MoveHere), artifacts);
+            var destinationPath =
+                await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.MoveHere), artifacts);
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 
@@ -467,16 +469,16 @@ public partial class FileBrowser : IDisposable
             if (notMovedList.Any())
             {
                 var knownException = notMovedList.Select(a => a.exception)
-                                                              .OfType<KnownException>()
-                                                              .FirstOrDefault();
+                    .OfType<KnownException>()
+                    .FirstOrDefault();
 
                 throw new DomainLogicException(knownException?.Message ??
                                                AppStrings.TheMoveOpreationFailedMessage);
             }
 
             FxToast.Show(title: AppStrings.TheMoveOpreationSuccessedTiltle,
-                         message: AppStrings.TheMoveOpreationSuccessedMessage,
-                         toastType: FxToastType.Success);
+                message: AppStrings.TheMoveOpreationSuccessedMessage,
+                toastType: FxToastType.Success);
 
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
@@ -864,7 +866,7 @@ public partial class FileBrowser : IDisposable
 #if BlazorHybrid
                 try
                 {
-                   await FileLauncher.OpenFileAsync(artifact.FullPath);
+                    await FileLauncher.OpenFileAsync(artifact.FullPath);
                 }
                 catch (UnauthorizedAccessException)
                 {
