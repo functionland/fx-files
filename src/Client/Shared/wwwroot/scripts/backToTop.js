@@ -93,7 +93,7 @@ function breadCrumbStyle(source) {
                 endEllipsis.classList.remove("color-changer");
             }
         });
-    }, 100)
+    }, 10)
 }
 
 function breadCrumbStyleSelectionModal(source) {
