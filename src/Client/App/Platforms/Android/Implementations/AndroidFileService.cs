@@ -16,7 +16,6 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 public abstract partial class AndroidFileService : LocalDeviceFileService
 {
     [AutoInject] public IPermissionUtils PermissionUtils { get; set; } = default!;
-    [AutoInject] public IExceptionHandler ExceptionHandler { get; set; } = default!;
     private List<FsArtifact>? _allDrives = null;
 
     public override async Task<FsArtifact> CreateFileAsync(string path, Stream stream, CancellationToken? cancellationToken = null)
@@ -197,25 +196,34 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         return drives;
     }
 
-    public override FsArtifactType? GetFsArtifactType(string path)
+    public override FsArtifactType GetFsArtifactType(string path)
     {
-        var isDrive = IsDrive(path);
+        try
+        {
+            var isDrive = IsDrive(path);
 
-        if (isDrive)
-        {
-            return FsArtifactType.Drive;
+            if (isDrive)
+                return FsArtifactType.Drive;
+
+            FileAttributes attr = File.GetAttributes(path);
+
+            if (attr.HasFlag(FileAttributes.Directory))
+                return FsArtifactType.Folder;
+
+            else
+                return FsArtifactType.File;
         }
-        else if (Directory.Exists(path))
+        catch (FileNotFoundException ex)
         {
-            return FsArtifactType.Folder;
+            throw new DomainLogicException(ex.Message, ex);
         }
-        else if (File.Exists(path))
+        catch (IOException ex)
         {
-            return FsArtifactType.File;
+            throw new KnownIOException(ex.Message, ex);
         }
-        else
+        catch (UnauthorizedAccessException ex)
         {
-            return null;
+            throw new UnauthorizedException(ex.Message, ex);
         }
     }
 
