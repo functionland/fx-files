@@ -1,4 +1,5 @@
 ﻿using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
@@ -25,7 +26,16 @@ public partial class SortArtifactModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<SortTypeEnum>();
-        var result = await _tcs.Task;
+        SortTypeEnum result;
+
+        try
+        {
+            result = await _tcs.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            result = SortTypeEnum.Name;
+        }
 
         GoBackService.ResetToPreviousState();
 
