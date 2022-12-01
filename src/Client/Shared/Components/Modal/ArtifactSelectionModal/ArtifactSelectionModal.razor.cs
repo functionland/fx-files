@@ -171,13 +171,13 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        try
-        {
-            _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
-        }
-        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
+        if (_currentArtifact?.ParentFullPath is null)
         {
             _currentArtifact = null;
+        }
+        else
+        {
+            _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
         }
 
         await LoadArtifacts(_currentArtifact?.FullPath);
