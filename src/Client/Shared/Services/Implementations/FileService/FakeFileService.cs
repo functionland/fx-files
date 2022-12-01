@@ -36,45 +36,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 await Task.Delay(EnumerationLatency.Value);
         }
 
-        public async Task CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
-        {
-            double progressCount = 0;
-            bool shouldProgress = true;
-
-            foreach (var artifact in artifacts)
-            {
-                if (onProgress is not null && shouldProgress)
-                {
-                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count(), progressCount, onProgress);
-                }
-                await LatencyEnumerationAsync();
-                var newPath = Path.Combine(destination, artifact.Name);
-                if (!overwrite)
-                    CheckIfArtifactExist(newPath);
-
-                var details = _files.Where(f => f.FullPath.StartsWith(artifact.FullPath));
-                foreach (var detail in details)
-                {
-                    var detailPath = detail.FullPath.Replace(artifact.FullPath, newPath);
-                    var newArtifact = new FsArtifact(detailPath, detail.Name, artifact.ArtifactType, artifact.ProviderType)
-                    {
-                        Size = artifact.Size,
-                        LastModifiedDateTime = artifact.LastModifiedDateTime
-                    };
-                    //if (overwrite)
-                    //    await DeleteArtifactsAsync(new[] { newArtifact }, cancellationToken);
-                    if (!_files.Any(c => c.FullPath == newArtifact.FullPath))
-                        _files.Add(newArtifact);
-                }
-
-                if (onProgress is not null && shouldProgress)
-                {
-                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count(), progressCount, onProgress);
-                }
-            }
-        }
-
-
         private void CheckIfArtifactExist(string newPath)
         {
             if (ArtifacExist(newPath))
@@ -86,6 +47,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
             return _files.Any(f => comparer.Compare(f.FullPath, newPath) == 0);
         }
+
         private bool CheckIfNameHasInvalidChars(string name)
         {
             var invalidChars = Path.GetInvalidFileNameChars();
@@ -296,31 +258,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
 
         }
 
-        public async Task MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, bool overwrite = false, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
-        {
-            var finalBag = new ConcurrentBag<FsArtifact>();
-            var excludedPaths = new List<string>();
-
-            await CopyArtifactsAsync(artifacts, destination, overwrite, onProgress, cancellationToken);
-
-            foreach (var artifact in artifacts)
-            {
-                foreach (var file in _files)
-                {
-                    if (file.FullPath.StartsWith(artifact.FullPath))
-                    {
-                        excludedPaths.Add(file.FullPath);
-                    }
-                }
-            }
-            foreach (var file in _files)
-            {
-                if (!excludedPaths.Contains(file.FullPath))
-                    finalBag.Add(file);
-            }
-            _files = finalBag;
-        }
-
         public async Task RenameFileAsync(string filePath, string newName, CancellationToken? cancellationToken = null)
         {
             filePath = filePath.Replace("/", "\\");
@@ -372,8 +309,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             }
         }
 
-        public async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths,
-            CancellationToken? cancellationToken = null)
+        public async Task<List<(string Path, bool IsExist)>> CheckPathExistsAsync(IEnumerable<string?> paths, CancellationToken? cancellationToken = null)
         {
             var fsArtifactList = new List<(string Path, bool IsExist)>();
 
@@ -442,19 +378,171 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
             return artifactPath;
         }
 
-        public Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts,
+                                                                                               string destination,
+                                                                                               Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+                                                                                               Func<ProgressInfo, Task>? onProgress = null,
+                                                                                               CancellationToken? cancellationToken = null)
+        {
+            List<(FsArtifact artifact, Exception exception)> ignoredList = new();
+
+            await CopyAllAsync(artifacts, destination, ignoredList, onShouldOverwrite, onProgress, true, cancellationToken);
+
+            return ignoredList;
+        }
+
+        public Task CopyFileAsync(FsArtifact artifact,
+                                  string destinationFullPath,
+                                  Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+                                  Func<ProgressInfo, Task>? onProgress = null,
+                                  CancellationToken? cancellationToken = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task CopyFileAsync(FsArtifact artifact, string destinationFullPath, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        public async Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts,
+                                                                                               string destination,
+                                                                                               Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+                                                                                               Func<ProgressInfo, Task>? onProgress = null,
+                                                                                               CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
+            List<(FsArtifact artifact, Exception exception)> ignoredList = new();
+            var finalBag = new ConcurrentBag<FsArtifact>();
+            var excludedPaths = new List<string>();
+            List<FsArtifact> shouldBeRemoved = new();
+
+            await CopyAllAsync(artifacts, destination, ignoredList, onShouldOverwrite, onProgress, true, cancellationToken);
+
+            var pureArtifacts = ignoredList.Select(i => i.artifact).ToList();
+            shouldBeRemoved = artifacts.Except(pureArtifacts).ToList();
+
+            foreach (var artifact in shouldBeRemoved)
+            {
+                foreach (var file in _files)
+                {
+                    if (file.FullPath.StartsWith(artifact.FullPath))
+                    {
+                        excludedPaths.Add(file.FullPath);
+                    }
+                }
+            }
+            foreach (var file in _files)
+            {
+                if (!excludedPaths.Contains(file.FullPath))
+                    finalBag.Add(file);
+            }
+            _files = finalBag;
+
+            return ignoredList;
+        }
+        private async Task CopyAllAsync(IList<FsArtifact> artifacts,
+           string destination,
+           List<(FsArtifact artifact, Exception exception)> ignoredList,
+           Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
+           Func<ProgressInfo, Task>? onProgress = null,
+           bool shouldProgress = true,
+           CancellationToken? cancellationToken = null)
+        {
+            double progressCount = 0;
+
+            foreach (var artifact in artifacts)
+            {
+                if (onProgress is not null && shouldProgress)
+                {
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
+                }
+
+                if (cancellationToken?.IsCancellationRequested == true) break;
+
+                if (artifact.ArtifactType == FsArtifactType.File)
+                {
+                    await CopyFile(destination, ignoredList, onShouldOverwrite, cancellationToken, artifact);
+                }
+                else if (artifact.ArtifactType == FsArtifactType.Folder)
+                {
+                    CopyFolder(destination, artifact);
+
+                    var newPath = Path.Combine(destination, artifact.Name);
+
+                    var details = _files.Where(f => f.FullPath.StartsWith(artifact.FullPath) && f.FullPath != artifact.FullPath);
+                    foreach (var detail in details)
+                    {
+                        if (detail.ArtifactType == FsArtifactType.File)
+                        {
+                            await CopyFile(newPath, ignoredList, onShouldOverwrite, cancellationToken, detail);
+                        }
+                        else
+                        {
+                            CopyFolder(newPath, artifact);
+                        }
+                    }
+
+                }
+
+                if (onProgress is not null && shouldProgress)
+                {
+                    progressCount = await FsArtifactUtils.HandleProgressBarAsync(artifact.Name, artifacts.Count, progressCount, onProgress);
+                }
+            }
         }
 
-        public Task<List<(FsArtifact artifact, Exception exception)>> MoveArtifactsAsync(IList<FsArtifact> artifacts, string destination, Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null, CancellationToken? cancellationToken = null)
+        private void CopyFolder(string destination, FsArtifact artifact)
         {
-            throw new NotImplementedException();
+
+            var newPath = Path.Combine(destination, Path.GetFileName(artifact.FullPath));
+
+            if (!_files.Any(c => c.FullPath == newPath))
+            {
+                var newArtifact = new FsArtifact(newPath, artifact.Name, artifact.ArtifactType, artifact.ProviderType)
+                {
+                    LastModifiedDateTime = artifact.LastModifiedDateTime
+                };
+                _files.Add(newArtifact);
+            }
+        }
+
+        private async Task CopyFile(string destination,
+                                    List<(FsArtifact artifact, Exception exception)> ignoredList,
+                                    Func<FsArtifact, Task<bool>>? onShouldOverwrite,
+                                    CancellationToken? cancellationToken,
+                                    FsArtifact artifact)
+        {
+            var newPath = Path.Combine(destination, artifact.Name);
+
+            var destinationInfo = await CheckPathExistsAsync(new List<string>() { newPath }, cancellationToken);
+            var shouldCopy = true;
+
+            if (destinationInfo.First().IsExist)
+            {
+                if (onShouldOverwrite is null)
+                {
+                    shouldCopy = false;
+                    ignoredList.Add((artifact, new ArtifactAlreadyExistsException(artifact, AppStrings.ArtifactAlreadyExistsException)));
+                }
+                else
+                {
+                    shouldCopy = await onShouldOverwrite(artifact);
+                }
+            }
+
+            if (shouldCopy)
+            {
+
+                try
+                {
+                    var newArtifact = new FsArtifact(newPath, artifact.Name, artifact.ArtifactType, artifact.ProviderType)
+                    {
+                        Size = artifact.Size,
+                        LastModifiedDateTime = artifact.LastModifiedDateTime
+                    };
+                    if (!_files.Any(c => c.FullPath == newArtifact.FullPath))
+                        _files.Add(newArtifact);
+                }
+                catch (Exception exception)
+                {
+                    ignoredList.Add((artifact, exception));
+                }
+            }
         }
     }
 }
