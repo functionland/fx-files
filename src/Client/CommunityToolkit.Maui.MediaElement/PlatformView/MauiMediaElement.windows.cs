@@ -9,7 +9,7 @@ namespace CommunityToolkit.Maui.MediaElement.PlatformView;
 
 public class MauiMediaElement : Grid
 {
-    private MediaPlayerElement _mediaPlayerElement;
+    private MediaPlayerElement? _mediaPlayerElement;
     public MauiMediaElement(MediaPlayerElement mediaPlayerElement)
     {
         _mediaPlayerElement = mediaPlayerElement;
@@ -18,7 +18,7 @@ public class MauiMediaElement : Grid
 
     public void Dispose()
     {
-        _mediaPlayerElement.MediaPlayer.Dispose();
+        _mediaPlayerElement?.MediaPlayer?.Dispose();
         _mediaPlayerElement = null;
     }
 }
