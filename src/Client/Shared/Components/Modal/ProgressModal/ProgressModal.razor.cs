@@ -31,11 +31,6 @@ public partial class ProgressModal
         await InvokeAsync(StateHasChanged);
     }
 
-    public async Task RefreshAsync()
-    {
-        await InvokeAsync(StateHasChanged);
-    }
-
     public async Task CloseAsync()
     {
         await OnCancel.InvokeAsync();

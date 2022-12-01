@@ -5,6 +5,8 @@
         [Parameter] public FsArtifact? Artifact { get; set; }
         [Parameter] public IFileService? FileService { get; set; }
 
+        public ElementReference? BreadcrumbsRef;
+
         private string[] GetBreadCrumbsPath(FsArtifact artifact)
         {
             if (FileService is null)

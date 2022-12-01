@@ -17,7 +17,7 @@
 
     @if (CurrentArtifact != null)
     {
-        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService" />
+        <FxBreadcrumbs @ref="_breadcrumbsRef" Artifact="CurrentArtifact" FileService="FileService" />
     }
 
     <section class="file-browser-content @(_isInSearchMode ? "opacity-0" : "opacity-1") @(IsInRoot(CurrentArtifact) ? "in-root-scroll-artifact" : "not-in-root-scroll-artifact")">
@@ -115,6 +115,7 @@
                           IsInSearchMode="false"
                           ScrollArtifact="ScrolledToArtifact"
                           OnScrollToArtifactCompleted="(()=>ScrolledToArtifact=null)"
+                          Breadcrumbs="_breadcrumbsRef?.BreadcrumbsRef"
                           @bind-SelectedArtifacts="_selectedArtifacts"
                           @bind-ArtifactExplorerMode="ArtifactExplorerMode"
                           @ref="_artifactExplorerRef"/>
