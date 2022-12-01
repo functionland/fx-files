@@ -19,7 +19,7 @@ public partial class ConfirmationReplaceOrSkipModal
         _tcs?.SetCanceled();
 
         _isModalOpen = true;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
 
         _tcs = new TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>();
        
