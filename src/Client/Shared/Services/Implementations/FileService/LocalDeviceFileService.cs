@@ -204,7 +204,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var providerType = GetFsFileProviderType(path);
                 var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType, providerType)
                 {
-                    //ToDo: FileExtension should be exclusive to artifacts of type File, not here which is filled for all type.
+                    //ToDo: Filling FileExtension field should be exclusive to artifacts of type File, therefore here is not the right place for it.
                     FileExtension = Path.GetExtension(path),
                     ParentFullPath = Directory.GetParent(path)?.FullName
                 };
