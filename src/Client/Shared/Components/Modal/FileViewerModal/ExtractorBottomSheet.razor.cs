@@ -42,7 +42,19 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
 
             await HandleExtractZipAsync(zipFilePath, destinationFolderPath, destinationFolderName, innerArtifacts);
 
-            var result = await _tcs.Task;
+            ExtractorBottomSheetResult result;
+
+            try
+            {
+                result = await _tcs.Task;
+            }
+            catch (TaskCanceledException)
+            {
+                result = new ExtractorBottomSheetResult
+                {
+                    ExtractorResult = ExtractorBottomSheetResultType.Cancel
+                };
+            }
 
             GoBackService.ResetToPreviousState();
 

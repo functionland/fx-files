@@ -1,4 +1,6 @@
-﻿namespace Functionland.FxFiles.Client.Shared.Components;
+﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+
+namespace Functionland.FxFiles.Client.Shared.Components;
 
 public partial class FilterArtifactModal
 {
@@ -22,7 +24,16 @@ public partial class FilterArtifactModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<FileCategoryType?>();
-        var result = await _tcs.Task;
+        FileCategoryType? result;
+
+        try
+        {
+            result = await _tcs.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            result = null;
+        }
 
         GoBackService.ResetToPreviousState();
 

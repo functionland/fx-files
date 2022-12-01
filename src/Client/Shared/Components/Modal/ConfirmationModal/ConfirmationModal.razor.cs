@@ -26,7 +26,20 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             StateHasChanged();
 
             _tcs = new TaskCompletionSource<ConfirmationModalResult>();
-            var result = await _tcs.Task;
+
+            ConfirmationModalResult result;
+
+            try
+            {
+                result = await _tcs.Task;
+            }
+            catch (TaskCanceledException)
+            {
+                result = new ConfirmationModalResult
+                {
+                    ResultType = ConfirmationModalResultType.Cancel
+                };
+            }
 
             GoBackService.ResetToPreviousState();
 

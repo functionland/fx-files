@@ -39,7 +39,18 @@ public partial class ArtifactSelectionModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
-        var result = await _tcs.Task;
+        ArtifactSelectionResult result;
+        try
+        {
+            result = await _tcs.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            result = new ArtifactSelectionResult
+            {
+                ResultType = ArtifactSelectionResultType.Cancel
+            };
+        }
 
         GoBackService.ResetToPreviousState();
 
@@ -59,27 +70,22 @@ public partial class ArtifactSelectionModal
 
     private void SelectDestination()
     {
-        try
-        {
-            if (_currentArtifact is null)
-            {
-                return;
-            }
 
-            var result = new ArtifactSelectionResult
-            {
-                ResultType = ArtifactSelectionResultType.Ok,
-                SelectedArtifacts = new[] { _currentArtifact }
-            };
-
-            _tcs?.SetResult(result);
-            _tcs = null;
-            _isModalOpen = false;
-        }
-        catch (Exception)
+        if (_currentArtifact is null)
         {
-            throw;
+            return;
         }
+
+        var result = new ArtifactSelectionResult
+        {
+            ResultType = ArtifactSelectionResultType.Ok,
+            SelectedArtifacts = new[] { _currentArtifact }
+        };
+
+        _tcs?.SetResult(result);
+        _tcs = null;
+        _isModalOpen = false;
+
     }
 
     private async Task LoadArtifacts(string? path)

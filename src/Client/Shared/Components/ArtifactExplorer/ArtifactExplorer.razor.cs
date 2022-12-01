@@ -531,8 +531,8 @@ public partial class ArtifactExplorer : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        await JSRuntime.InvokeVoidAsync("removeScrollStopListener", ArtifactExplorerListRef);
         await JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
-        await JSRuntime.InvokeVoidAsync("removeScrollStopListener");
         _dotnetObjectReference?.Dispose();
     }
 }

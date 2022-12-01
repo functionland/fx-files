@@ -165,7 +165,20 @@
             StateHasChanged();
 
             _tcs = new TaskCompletionSource<ArtifactOverflowResult>();
-            var result = await _tcs.Task;
+
+            ArtifactOverflowResult result;
+
+            try
+            {
+                result = await _tcs.Task;
+            }
+            catch (TaskCanceledException)
+            {
+                result = new ArtifactOverflowResult
+                {
+                    ResultType = ArtifactOverflowResultType.Cancel
+                };
+            }
 
             GoBackService.ResetToPreviousState();
 
