@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-
+using System.IO;
 using Microsoft.AppCenter.Crashes;
 namespace Functionland.FxFiles.Client.Shared.Services.Implementations;
 
@@ -16,7 +16,7 @@ public partial class ExceptionHandler : IExceptionHandler
         Console.WriteLine(message);
         Debugger.Break();
 #else
-        if (exception is KnownException knownException)
+        if (exception is KnownException or FileNotFoundException or IOException)
         {
             var title = _localizer.GetString(AppStrings.ToastErrorTitle);
             var message = exception.Message;
@@ -42,9 +42,12 @@ public partial class ExceptionHandler : IExceptionHandler
 #if DEBUG
         var message = (exception as KnownException)?.Message ?? exception.ToString();
         Console.WriteLine(message);
-        Debugger.Break();
+        Debug.WriteLine(message);
 #else
-        Crashes.TrackError(exception, parameters);
+        if (DeviceInfo.Current.Platform != DevicePlatform.macOS && DeviceInfo.Current.Platform != DevicePlatform.MacCatalyst)
+        {
+            Crashes.TrackError(exception, parameters);
+        }
 #endif
     }
 }

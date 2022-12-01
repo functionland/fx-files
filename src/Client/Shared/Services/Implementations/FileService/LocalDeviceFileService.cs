@@ -204,7 +204,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 var providerType = GetFsFileProviderType(path);
                 var fsArtifact = new FsArtifact(path, Path.GetFileName(path), fsArtifactType, providerType)
                 {
-                    //ToDo: FileExtension should be exclusive to artifacts of type File, not here which is filled for all type.
+                    //ToDo: Filling FileExtension field should be exclusive to artifacts of type File, therefore here is not the right place for it.
                     FileExtension = Path.GetExtension(path),
                     ParentFullPath = Directory.GetParent(path)?.FullName
                 };
@@ -239,9 +239,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 throw new UnauthorizedException(ex.Message, ex);
             }
+            catch (KnownException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, new Exception($"An error occurred on: '{path}'", ex));
+                ExceptionHandler.Track(ex,new Dictionary<string, string>
+                {
+                    {"path", path ?? "EMPTY" }
+                });
+                throw;
             }
         }
 
@@ -622,7 +630,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifactIsDirectory)
                     return FsArtifactType.Folder;
 
-                ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
+                ExceptionHandler.Track(new DomainLogicException($"File type is not valid. path: '{path}'"));
                 throw new DomainLogicException(StringLocalizer.GetString(nameof(AppStrings.PathNotFound), path));
             }
             catch (IOException ex)
