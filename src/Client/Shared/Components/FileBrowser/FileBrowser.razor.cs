@@ -904,7 +904,7 @@ public partial class FileBrowser : IDisposable
         {
             _fxSearchInputRef?.HandleClearInputText();
             var isOpened = _fileViewerRef != null && await _fileViewerRef.OpenArtifact(artifact);
-            _isInFileViewer = true;
+            _isInFileViewer = isOpened;
 
             if (isOpened == false)
             {
@@ -980,6 +980,7 @@ public partial class FileBrowser : IDisposable
                 Type = artifact.IsPinned == true ? PinOptionResultType.Remove : PinOptionResultType.Add
             };
             var isDrive = artifact?.ArtifactType == FsArtifactType.Drive;
+            var isInMainFolder = CurrentArtifact?.FullPath == artifact?.FullPath;
 
             result = await _artifactOverflowModalRef!.ShowAsync
             (false,
@@ -988,7 +989,8 @@ public partial class FileBrowser : IDisposable
                 artifact?.FileCategory,
                 artifact?.ArtifactType,
                 _isInSearchMode,
-                _isInFileViewer);
+                _isInFileViewer,
+                isInMainFolder);
         }
 
         switch (result?.ResultType)

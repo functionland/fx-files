@@ -239,9 +239,17 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 throw new UnauthorizedException(ex.Message, ex);
             }
+            catch (KnownException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, new Exception($"An error occurred on: '{path}'", ex));
+                ExceptionHandler.Track(ex,new Dictionary<string, string>
+                {
+                    {"path", path ?? "EMPTY" }
+                });
+                throw;
             }
         }
 
@@ -622,7 +630,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
                 if (artifactIsDirectory)
                     return FsArtifactType.Folder;
 
-                ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
+                ExceptionHandler.Track(new DomainLogicException($"File type is not valid. path: '{path}'"));
                 throw new DomainLogicException(StringLocalizer.GetString(nameof(AppStrings.PathNotFound), path));
             }
             catch (IOException ex)

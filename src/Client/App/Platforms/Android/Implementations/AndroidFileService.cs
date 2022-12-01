@@ -216,7 +216,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             }
             else
             {
-                ExceptionHandler.Track(new InvalidOperationException($"File type is not valid. path: '{path}'"));
+                ExceptionHandler.Track(new DomainLogicException($"File type is not valid. path: '{path}'"));
                 throw new DomainLogicException(StringLocalizer.GetString(nameof(AppStrings.PathNotFound), path));
             }
         }

@@ -8,6 +8,7 @@
         private bool _isInRoot;
         private bool _isInFileViewer;
         private bool _isInSearch;
+        private bool _isInMainFolder;
         private PinOptionResult? _pinOptionResult;
         private FileCategoryType? _fileCategoryType;
         private FsArtifactType? _fsArtifactType;
@@ -19,7 +20,7 @@
 
             _tcs?.SetResult(result);
             _tcs = null;
-            Close();
+            //Close();
         }
 
         public void Extract()
@@ -139,7 +140,8 @@
             FileCategoryType? fileCategoryType = null,
             FsArtifactType? fsArtifactType = null,
             bool isInSearch = false,
-            bool isInFileViewer = false)
+            bool isInFileViewer = false,
+            bool isInMainFolder = false)
         {
             GoBackService.SetState((Task () =>
             {
@@ -156,6 +158,8 @@
             _fileCategoryType = fileCategoryType;
             _fsArtifactType = fsArtifactType;
             _isInFileViewer = isInFileViewer;
+            _isInMainFolder = isInMainFolder;
+
 
             _isModalOpen = true;
             StateHasChanged();

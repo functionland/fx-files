@@ -28,9 +28,10 @@ public class MainActivity : MauiAppCompatActivity
                 await permissionUtils.RequestStoragePermission();
             }
         }
-        catch
+        catch(Exception ex)
         {
-            throw;
+            var exceptionHandler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+            exceptionHandler.Track(ex);
         }
     }
 
@@ -46,9 +47,10 @@ public class MainActivity : MauiAppCompatActivity
             base.OnActivityResult(requestCode, resultCode, data);
 
         }
-        catch
+        catch (Exception ex)
         {
-            throw;
+            var exceptionHandler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+            exceptionHandler.Track(ex);
         }
     }
 
