@@ -116,7 +116,8 @@
                           ScrollArtifact="ScrolledToArtifact"
                           OnScrollToArtifactCompleted="(()=>ScrolledToArtifact=null)"
                           @bind-SelectedArtifacts="_selectedArtifacts"
-                          @bind-ArtifactExplorerMode="ArtifactExplorerMode" />
+                          @bind-ArtifactExplorerMode="ArtifactExplorerMode"
+                          @ref="_artifactExplorerRef"/>
     </section>
 
     <section class="file-browser-content search-container @(_isInSearchMode ? "search-mode" : "browsing-mode")">

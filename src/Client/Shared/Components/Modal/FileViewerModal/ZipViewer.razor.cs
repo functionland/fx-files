@@ -29,6 +29,8 @@ public partial class ZipViewer : IFileViewerComponent
     private List<FsArtifact> _allZipFileEntities = new();
 
     private bool _isZipViewerInLoading;
+    private bool _isGoingBack;
+    private ArtifactExplorer? _artifactExplorerRef;
 
     protected override Task OnInitAsync()
     {
@@ -47,6 +49,17 @@ public partial class ZipViewer : IFileViewerComponent
         {
             await LoadZipArtifactsAsync();
         });
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isGoingBack)
+        {
+            _isGoingBack = false;
+            await JSRuntime.InvokeVoidAsync("getLastScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task LoadZipArtifactsAsync()
@@ -291,6 +304,8 @@ public partial class ZipViewer : IFileViewerComponent
             case ArtifactExplorerMode.Normal:
                 _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
                 DisplayChildrenArtifacts(_currentInnerZipArtifact);
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent", _artifactExplorerRef?.ArtifactExplorerListRef);
+                _isGoingBack = true;
                 break;
             case ArtifactExplorerMode.SelectArtifact:
                 CancelSelectionMode();
@@ -310,11 +325,13 @@ public partial class ZipViewer : IFileViewerComponent
         return parentArtifact ?? new FsArtifact("", "", FsArtifactType.Folder, FsFileProviderType.InternalMemory);
     }
 
-    private void HandleArtifactClick(FsArtifact artifact)
+    private async Task HandleArtifactClickAsync(FsArtifact artifact)
     {
         if (artifact.ArtifactType != FsArtifactType.Folder)
             return;
 
+        await JSRuntime.InvokeVoidAsync("saveScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
+        _isGoingBack = false;
         _currentInnerZipArtifact = artifact;
         DisplayChildrenArtifacts(_currentInnerZipArtifact);
     }
