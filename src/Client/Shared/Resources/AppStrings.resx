@@ -517,7 +517,7 @@
     <value>Light</value>
   </data>
   <data name="SystemThemeDescription" xml:space="preserve">
-    <value>Use system light/dark appearance setting.</value>
+    <value>Use system light/dark mode setting.</value>
   </data>
   <data name="GoogleDrive" xml:space="preserve">
     <value>Google Drive</value>
