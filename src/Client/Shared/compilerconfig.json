@@ -8,10 +8,6 @@
     "inputFile": "Shared/AppErrorBoundary.razor.scss"
   },
   {
-    "outputFile": "Shared/MessageBox.razor.css",
-    "inputFile": "Shared/MessageBox.razor.scss"
-  },
-  {
     "outputFile": "Components/Header.razor.css",
     "inputFile": "Components/Header.razor.scss"
   },
