@@ -26,6 +26,7 @@ public partial class FileBrowser : IDisposable
     private ProgressModal? _progressModalRef;
 
 
+    private FxBreadcrumbs? _breadcrumbsRef;
     private FxSearchInput? _fxSearchInputRef;
     private FileViewer? _fileViewerRef;
     private ExtractorBottomSheet? _extractorModalRef;
@@ -232,7 +233,8 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            var destinationPath = await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.CopyHere), sourceArtifacts);
+            var destinationPath =
+                await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.CopyHere), sourceArtifacts);
 
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
@@ -361,7 +363,6 @@ public partial class FileBrowser : IDisposable
         }
         finally
         {
-
             await _progressModalRef!.CloseAsync();
             ArtifactExplorerMode = ArtifactExplorerMode.Normal;
         }
@@ -456,7 +457,8 @@ public partial class FileBrowser : IDisposable
     {
         try
         {
-            var destinationPath = await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.MoveHere), artifacts);
+            var destinationPath =
+                await ShowDestinationSelectorModalAsync(Localizer.GetString(AppStrings.MoveHere), artifacts);
             if (string.IsNullOrWhiteSpace(destinationPath))
                 return;
 

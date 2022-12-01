@@ -48,6 +48,7 @@ public partial class ArtifactExplorer : IAsyncDisposable
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
     [Parameter] public FsArtifact? ScrollArtifact { get; set; }
     [Parameter] public EventCallback OnScrollToArtifactCompleted { get; set; }
+    [Parameter] public ElementReference? Breadcrumbs { get; set; }
 
     public PathProtocol Protocol =>
         FileService switch
