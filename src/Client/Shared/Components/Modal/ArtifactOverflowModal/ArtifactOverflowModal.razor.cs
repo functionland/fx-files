@@ -20,7 +20,7 @@
 
             _tcs?.SetResult(result);
             _tcs = null;
-            Close();
+            //Close();
         }
 
         public void Extract()
