@@ -112,7 +112,20 @@ namespace Functionland.FxFiles.Client.Shared.Components.Modal
             _ = UpdateArtifactSizesAsync();
 
             _tcs = new TaskCompletionSource<ArtifactDetailModalResult>();
-            var result = await _tcs.Task;
+
+            ArtifactDetailModalResult result;
+
+            try
+            {
+                result = await _tcs.Task;
+            }
+            catch (TaskCanceledException)
+            {
+                result = new ArtifactDetailModalResult
+                {
+                    ResultType = ArtifactDetailModalResultType.Close
+                };
+            }
 
             GoBackService.ResetToPreviousState();
 

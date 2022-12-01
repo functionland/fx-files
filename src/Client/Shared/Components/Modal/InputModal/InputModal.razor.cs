@@ -38,7 +38,20 @@ public partial class InputModal
         timer.Start();
 
         _tcs = new TaskCompletionSource<InputModalResult>();
-        var result = await _tcs.Task;
+
+        InputModalResult result;
+
+        try
+        {
+            result = await _tcs.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            result = new InputModalResult
+            {
+                ResultType = InputModalResultType.Cancel
+            };
+        }
 
         GoBackService.ResetToPreviousState();
 

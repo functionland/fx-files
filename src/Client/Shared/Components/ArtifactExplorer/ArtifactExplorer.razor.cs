@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
 
-public partial class ArtifactExplorer
+public partial class ArtifactExplorer : IAsyncDisposable
 {
     [Parameter] public FsArtifact? CurrentArtifact { get; set; }
 
@@ -48,6 +48,7 @@ public partial class ArtifactExplorer
     [Parameter] public EventCallback<FsArtifact> OnZipArtifactClick { get; set; }
     [Parameter] public FsArtifact? ScrollArtifact { get; set; }
     [Parameter] public EventCallback OnScrollToArtifactCompleted { get; set; }
+    [Parameter] public ElementReference? Breadcrumbs { get; set; }
 
     public PathProtocol Protocol =>
         FileService switch
@@ -233,27 +234,27 @@ public partial class ArtifactExplorer
         switch (args.Button)
         {
             case 0:
-            {
-                if (_timer != null)
                 {
-                    DisposeTimer();
-                    if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
+                    if (_timer != null)
                     {
-                        await OnSelectArtifact.InvokeAsync(artifact);
-                        await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
-                    }
-                    else
-                    {
-                        if (_longPressedArtifact != null)
+                        DisposeTimer();
+                        if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                         {
-                            await OnSelectionChanged(artifact);
-                            await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                            await OnSelectArtifact.InvokeAsync(artifact);
+                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle", Breadcrumbs);
+                        }
+                        else
+                        {
+                            if (_longPressedArtifact != null)
+                            {
+                                await OnSelectionChanged(artifact);
+                                await SelectedArtifactsChanged.InvokeAsync(SelectedArtifacts);
+                            }
                         }
                     }
-                }
 
-                break;
-            }
+                    break;
+                }
             case 2:
                 DisposeTimer();
                 switch (SelectedArtifacts.Count)
@@ -528,10 +529,10 @@ public partial class ArtifactExplorer
         await InvokeAsync(OnScrollToArtifactCompleted.InvokeAsync);
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
-        JSRuntime.InvokeVoidAsync("removeScrollStopListener");
+        await JSRuntime.InvokeVoidAsync("removeScrollStopListener", ArtifactExplorerListRef);
+        await JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
         _dotnetObjectReference?.Dispose();
     }
 }

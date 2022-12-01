@@ -12,6 +12,7 @@ public partial class ArtifactSelectionModal
     private List<FsArtifact> _excludedArtifacts = new();
     private InputModal _inputModalRef = default!;
     private FsArtifact? _scrolledToArtifact;
+    private FxBreadcrumbs? _breadcrumbsRef;
 
     [Parameter] public SortTypeEnum SortType { get; set; } = SortTypeEnum.Name;
     [Parameter] public bool IsAscOrder { get; set; }
@@ -38,7 +39,18 @@ public partial class ArtifactSelectionModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ArtifactSelectionResult>();
-        var result = await _tcs.Task;
+        ArtifactSelectionResult result;
+        try
+        {
+            result = await _tcs.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            result = new ArtifactSelectionResult
+            {
+                ResultType = ArtifactSelectionResultType.Cancel
+            };
+        }
 
         GoBackService.ResetToPreviousState();
 
@@ -47,7 +59,10 @@ public partial class ArtifactSelectionModal
 
     private async Task SelectArtifact(FsArtifact artifact)
     {
-        await JSRuntime.InvokeVoidAsync("breadCrumbStyleSelectionModal");
+        if (_breadcrumbsRef is null)
+            return;
+
+        await JSRuntime.InvokeVoidAsync("breadCrumbStyle", _breadcrumbsRef.BreadcrumbsRef);
         _currentArtifact = artifact;
         await LoadArtifacts(artifact.FullPath);
         StateHasChanged();
@@ -55,27 +70,22 @@ public partial class ArtifactSelectionModal
 
     private void SelectDestination()
     {
-        try
-        {
-            if (_currentArtifact is null)
-            {
-                return;
-            }
 
-            var result = new ArtifactSelectionResult
-            {
-                ResultType = ArtifactSelectionResultType.Ok,
-                SelectedArtifacts = new[] { _currentArtifact }
-            };
-
-            _tcs?.SetResult(result);
-            _tcs = null;
-            _isModalOpen = false;
-        }
-        catch (Exception)
+        if (_currentArtifact is null)
         {
-            throw;
+            return;
         }
+
+        var result = new ArtifactSelectionResult
+        {
+            ResultType = ArtifactSelectionResultType.Ok,
+            SelectedArtifacts = new[] { _currentArtifact }
+        };
+
+        _tcs?.SetResult(result);
+        _tcs = null;
+        _isModalOpen = false;
+
     }
 
     private async Task LoadArtifacts(string? path)
@@ -171,13 +181,13 @@ public partial class ArtifactSelectionModal
 
     private async Task Back()
     {
-        try
-        {
-            _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
-        }
-        catch (DomainLogicException ex) when (ex is ArtifactPathNullException)
+        if (_currentArtifact?.ParentFullPath is null)
         {
             _currentArtifact = null;
+        }
+        else
+        {
+            _currentArtifact = await FileService.GetArtifactAsync(_currentArtifact?.ParentFullPath);
         }
 
         await LoadArtifacts(_currentArtifact?.FullPath);

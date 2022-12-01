@@ -22,7 +22,20 @@ public partial class ConfirmationReplaceOrSkipModal
         StateHasChanged();
 
         _tcs = new TaskCompletionSource<ConfirmationReplaceOrSkipModalResult>();
-        var result = await _tcs.Task;
+       
+        ConfirmationReplaceOrSkipModalResult result;
+
+        try
+        {
+            result = await _tcs.Task;
+        }
+        catch (TaskCanceledException)
+        {
+            result = new ConfirmationReplaceOrSkipModalResult
+            {
+                ResultType = ConfirmationReplaceOrSkipModalResultType.Skip
+            };
+        }
 
         GoBackService.ResetToPreviousState();
 
