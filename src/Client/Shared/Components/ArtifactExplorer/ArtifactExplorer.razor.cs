@@ -241,7 +241,7 @@ public partial class ArtifactExplorer : IAsyncDisposable
                         if (ArtifactExplorerMode != ArtifactExplorerMode.SelectArtifact)
                         {
                             await OnSelectArtifact.InvokeAsync(artifact);
-                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle");
+                            await JSRuntime.InvokeVoidAsync("breadCrumbStyle", Breadcrumbs);
                         }
                         else
                         {
