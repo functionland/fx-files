@@ -142,7 +142,6 @@ function ImagePinchZoom() {
 function breadCrumbStyle(element) {
     setTimeout(function () {
         let breadcrumbs = element;
-        console.log(breadcrumbs);
         if (!breadcrumbs)
             return;
 
@@ -235,6 +234,7 @@ function addGrayBackground(item) {
 }
 
 let _artifactExplorerScrollListener = null;
+
 function createScrollStopListener(element, dotnetObject) {
     let timeoutId = null;
     _artifactExplorerScrollListener = function () {
@@ -249,6 +249,8 @@ function createScrollStopListener(element, dotnetObject) {
     element.addEventListener('scroll', _artifactExplorerScrollListener);
 }
 
-function removeScrollStopListener() {
-    element.removeEventListener('scroll', _artifactExplorerScrollListener);
+function removeScrollStopListener(element) {
+    if (element) {
+        element.removeEventListener('scroll', _artifactExplorerScrollListener);
+    }
 }
