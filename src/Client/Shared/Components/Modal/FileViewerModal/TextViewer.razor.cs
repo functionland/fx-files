@@ -21,7 +21,14 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
     {
         if (firstRender)
         {
-           var _isSystemThemeDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
+            await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/runmode-standalone.js");
+            await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/loadmode.js");
+            await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/multiplex.js");
+            await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/overlay.js");
+            await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/simple.js");
+            await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode.js");
+
+            var _isSystemThemeDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
             await JSRuntime.InvokeVoidAsync("setupCodeMirror", _isSystemThemeDark);
             _ = GetTextAsync();
         }
