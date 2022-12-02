@@ -656,7 +656,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    private async Task HandleShowDetailsArtifact(List<FsArtifact> artifacts)
+    private async Task HandleShowDetailsArtifact(List<FsArtifact> artifacts , bool shouldSkipOverflowAfterClose=false)
     {
         var isMultiple = artifacts.Count > 1;
         var isDrive = false;
@@ -701,11 +701,10 @@ public partial class FileBrowser : IDisposable
                 //TODO: Implement upload logic here
                 break;
             case ArtifactDetailModalResultType.Close:
-                if (_isInSearchMode)
+                if (shouldSkipOverflowAfterClose)
                 {
                     return;
                 }
-
                 if (artifacts.Count > 1)
                 {
                     await HandleSelectedArtifactsOptions(artifacts);
@@ -714,7 +713,6 @@ public partial class FileBrowser : IDisposable
                 {
                     await HandleOptionsArtifact(artifacts[0]);
                 }
-
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
