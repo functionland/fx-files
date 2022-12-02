@@ -25,13 +25,25 @@ function ShowBackToTopButton() {
 }
 
 function getLastScrollPosition(element) {
-    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
-    element.scrollTop = lastScrollPosition;
-    savePositionScroll.pop();
+    try {
+        let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
+        element.scrollTop = lastScrollPosition;
+        savePositionScroll.pop();
+        return true;
+    } catch (e) {
+        return false;
+    }
 }
 
 function setArtifactListTopScrollValue(element, scrollTopValue) {
-    element.scrollTop = Number(scrollTopValue);
+    try {
+        if (typeof element !== 'undefined' || element !== null) {
+            element.scrollTop = Number(scrollTopValue);
+            return true;
+        }
+    } catch (e) {
+        return false;
+    }
 }
 
 function saveScrollPosition(element) {
