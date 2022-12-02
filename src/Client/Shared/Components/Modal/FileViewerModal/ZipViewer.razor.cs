@@ -282,7 +282,7 @@ public partial class ZipViewer : IFileViewerComponent
             : await FileService.GetArtifactAsync(initialArtifactPath);
 
         var result = await _artifactSelectionModalRef.ShowAsync(initialArtifact, AppStrings.ExtractHere, artifacts);
-        
+
         if (result.ResultType == ArtifactSelectionResultType.Cancel)
         {
             SetGoBackDeviceButtonFunctionality();
@@ -299,7 +299,7 @@ public partial class ZipViewer : IFileViewerComponent
         {
             case ArtifactExplorerMode.Normal when _currentInnerZipArtifact.FullPath == string.Empty || shouldExit:
                 _cancellationTokenSource.Cancel();
-                await OnBack.InvokeAsync();
+                await InvokeAsync(OnBack.InvokeAsync);
                 break;
             case ArtifactExplorerMode.Normal:
                 _currentInnerZipArtifact = GetParent(_currentInnerZipArtifact);
@@ -315,8 +315,7 @@ public partial class ZipViewer : IFileViewerComponent
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
     private FsArtifact GetParent(FsArtifact artifact)

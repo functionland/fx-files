@@ -108,7 +108,7 @@ public partial class FileViewer
     {
         GoBackService.ResetToPreviousState();
         IsModalOpen = false;
-        await OnBack.InvokeAsync();
+        await InvokeAsync(OnBack.InvokeAsync);
     }
 
     public async Task HandleNavigateAsync(string path)
