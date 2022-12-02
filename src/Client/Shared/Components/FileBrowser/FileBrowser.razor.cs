@@ -199,7 +199,7 @@ public partial class FileBrowser : IDisposable
 
         if (AppStateStore.ArtifactListScrollTopValue != null)
         {
-            await JSRuntime.InvokeVoidAsync("setArtifactListScrollTop", _artifactExplorerRef?.ArtifactExplorerListRef, AppStateStore.ArtifactListScrollTopValue);
+            await JSRuntime.InvokeVoidAsync("setArtifactListTopScrollValue", _artifactExplorerRef?.ArtifactExplorerListRef, AppStateStore.ArtifactListScrollTopValue);
             AppStateStore.ArtifactListScrollTopValue = null;
             await JSRuntime.InvokeVoidAsync("clearScrollTopValue");
         }

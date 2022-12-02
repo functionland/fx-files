@@ -30,7 +30,7 @@ function getLastScrollPosition(element) {
     savePositionScroll.pop();
 }
 
-function setArtifactListScrollTop(element, scrollTopValue) {
+function setArtifactListTopScrollValue(element, scrollTopValue) {
     element.scrollTop = Number(scrollTopValue);
 }
 
