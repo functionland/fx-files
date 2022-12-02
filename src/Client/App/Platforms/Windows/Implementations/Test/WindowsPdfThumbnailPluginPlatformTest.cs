@@ -16,7 +16,7 @@ public class WindowsPdfThumbnailPluginPlatformTest<TFileService> : PdfThumbnailP
 
     public override string Title => $"WindowsPdfThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
-    public override string Description => "Test for create pdf thumbnail on windows";
+    public override string Description => "Test for creating pdf thumbnail on windows";
 
     protected override string OnGetRootPath() => "C:\\";
 
