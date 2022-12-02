@@ -31,7 +31,6 @@ function getLastScrollPosition(element) {
 }
 
 function setArtifactListScrollTop(element, scrollTopValue) {
-    console.log(scrollTopValue);
     element.scrollTop = Number(scrollTopValue);
 }
 
@@ -265,7 +264,6 @@ function getArtifactListTopScroll(element) {
     if (element && scrollTopValue == null) {
         scrollTopValue = element.scrollTop;
     }
-    console.log(scrollTopValue.toString());
     return scrollTopValue.toString();
 }
 
