@@ -9,4 +9,5 @@ public interface IAppStateStore
     FsArtifact? CurrentMyDeviceArtifact { get; set; }
     string CurrentPagePath { get; set; }
     string? IntentFileUrl { get; set; }
+    string? ArtifactListScrollTopValue { get; set; }
 }
