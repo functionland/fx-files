@@ -190,13 +190,19 @@ public partial class FileBrowser : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
         if (_isGoingBack)
         {
             _isGoingBack = false;
             await JSRuntime.InvokeVoidAsync("getLastScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
         }
 
-        await base.OnAfterRenderAsync(firstRender);
+        if (AppStateStore.ArtifactListScrollTopValue != null)
+        {
+            await JSRuntime.InvokeVoidAsync("setArtifactListScrollTop", _artifactExplorerRef?.ArtifactExplorerListRef, AppStateStore.ArtifactListScrollTopValue);
+            AppStateStore.ArtifactListScrollTopValue = null;
+            await JSRuntime.InvokeVoidAsync("clearScrollTopValue");
+        }
     }
 
     private async Task UpdateProgressAsync(

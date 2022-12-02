@@ -9,4 +9,5 @@ public class InMemoryAppStateStore : IAppStateStore
     public FsArtifact? CurrentMyDeviceArtifact { get; set; }
     public string CurrentPagePath { get; set; } = "/";
     public string? IntentFileUrl { get; set; }
+    public string? ArtifactListScrollTopValue { get; set; }
 }

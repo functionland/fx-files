@@ -30,6 +30,11 @@ function getLastScrollPosition(element) {
     savePositionScroll.pop();
 }
 
+function setArtifactListScrollTop(element, scrollTopValue) {
+    console.log(scrollTopValue);
+    element.scrollTop = Number(scrollTopValue);
+}
+
 function saveScrollPosition(element) {
     savePositionScroll.push(element.scrollTop);
 }
@@ -252,5 +257,20 @@ function createScrollStopListener(element, dotnetObject) {
 function removeScrollStopListener(element) {
     if (element) {
         element.removeEventListener('scroll', _artifactExplorerScrollListener);
+    }
+}
+
+let scrollTopValue = null;
+function getArtifactListTopScroll(element) {
+    if (element && scrollTopValue == null) {
+        scrollTopValue = element.scrollTop;
+    }
+    console.log(scrollTopValue.toString());
+    return scrollTopValue.toString();
+}
+
+function clearScrollTopValue() {
+    if (scrollTopValue) {
+        scrollTopValue = null;
     }
 }
