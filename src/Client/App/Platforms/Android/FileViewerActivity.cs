@@ -73,6 +73,7 @@ public class FileViewerActivity : MainActivity
             }
 
             appStateStore.IntentFileUrl = intentFilePath;
+            SecureStorage.Default.Remove("intentFilePath");
         }
 
         eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());

@@ -10,6 +10,7 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 
 public class AndroidAudioThumbnailPlugin : AudioThumbnailPlugin
 {
+    private static List<string> notSupportExtentions => new() { ".m4a" };
     public override bool IsJustFilePathSupported => true;
     protected override async Task<Stream> OnCreateThumbnailAsync(
         Stream? inputAudioStream,
@@ -41,5 +42,15 @@ public class AndroidAudioThumbnailPlugin : AudioThumbnailPlugin
         }
 
         return outputStream;
+    }
+
+    public override bool IsSupported(string extension)
+    {
+        if (!base.IsSupported(extension))
+        {
+            return false;
+        }
+
+        return !notSupportExtentions.Contains(extension);
     }
 }

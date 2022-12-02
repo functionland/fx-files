@@ -1,6 +1,4 @@
-﻿using Functionland.FxFiles.Client.Shared.Components;
-using Functionland.FxFiles.Client.Shared.Components.Modal;
-using Functionland.FxFiles.Client.Shared.Services.Common;
+﻿using Functionland.FxFiles.Client.Shared.Services.Common;
 using Prism.Events;
 
 namespace Functionland.FxFiles.Client.Shared.Pages;
@@ -10,6 +8,7 @@ public partial class HomePage
     [AutoInject] public ILocalDeviceFileService LocalDeviceFileService { get; set; } = default!;
     [AutoInject] public IEventAggregator EventAggregator { get; set; } = default!;
 
+    private static object ApplyIntentArtifactLock { get; set; } = new();
     protected override async Task OnInitAsync()
     {
         _ = EventAggregator
@@ -19,7 +18,10 @@ public partial class HomePage
                     ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
 
         if (!string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
+        {
+            ApplyIntentArtifactIfNeeded(null);
             return;
+        }
 
         await base.OnInitAsync();
 
@@ -30,12 +32,15 @@ public partial class HomePage
     }
 
 
-    private void ApplyIntentArtifactIfNeeded(IntentReceiveEvent obj)
+    private void ApplyIntentArtifactIfNeeded(IntentReceiveEvent? obj)
     {
-        if (string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
-            return;
+        lock (ApplyIntentArtifactLock)
+        {
+            if (string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
+                return;
 
-        var encodedArtifactPath = Uri.EscapeDataString(AppStateStore.IntentFileUrl);
-        NavigationManager.NavigateTo($"mydevice?encodedArtifactPath={encodedArtifactPath}", false, true);
+            var encodedArtifactPath = Uri.EscapeDataString(AppStateStore.IntentFileUrl);
+            NavigationManager.NavigateTo($"mydevice?encodedArtifactPath={encodedArtifactPath}", false, true);
+        }
     }
 }
