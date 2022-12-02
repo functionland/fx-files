@@ -72,6 +72,7 @@ public partial class App
             }
 
             appStateStore.IntentFileUrl = intentFilePath;
+            SecureStorage.Default.Remove("intentFilePath");
             eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
         }
     }

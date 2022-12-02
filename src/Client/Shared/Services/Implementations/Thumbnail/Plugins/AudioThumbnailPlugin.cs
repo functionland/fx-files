@@ -13,7 +13,7 @@ public abstract class AudioThumbnailPlugin : IThumbnailPlugin
 
     protected abstract Task<Stream> OnCreateThumbnailAsync(Stream? stream, string? filePath, ThumbnailScale thumbnailScale, CancellationToken? cancellationToken = null);
 
-    public bool IsSupported(string extension)
+    public virtual bool IsSupported(string extension)
     {
         return FsArtifactUtils.FileExtentionsType
                         .Where(e => e.Value == FileCategoryType.Audio)
