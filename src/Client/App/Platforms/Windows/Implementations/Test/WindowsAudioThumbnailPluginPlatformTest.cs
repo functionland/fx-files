@@ -3,7 +3,7 @@ using Image = System.Drawing.Image;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Windows.Implementations.Test;
 
-public class WindowsAudioThumbnailPluginPlatformTest<TFileService> : ImageThumbnailPlatformTest<TFileService>
+public class WindowsAudioThumbnailPluginPlatformTest<TFileService> : AudioThumbnailPlatformTest<TFileService>
     where TFileService : IFileService
 {
     TFileService FileService { get; set; }
@@ -16,7 +16,7 @@ public class WindowsAudioThumbnailPluginPlatformTest<TFileService> : ImageThumbn
 
     public override string Title => $"WindowsAudioThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
-    public override string Description => "Test for create image thumbnail on windows";
+    public override string Description => "Test for creating audio thumbnail on windows";
 
     protected override string OnGetRootPath() => "c:\\";
 

@@ -16,7 +16,7 @@ public class WindowsVideoThumbnailPluginPlatformTest<TFileService> : VideoThumbn
 
     public override string Title => $"WindowsVideoThumbnailPluginPlatformTest {typeof(TFileService).Name}";
 
-    public override string Description => "Test for create video thumbnail on windows";
+    public override string Description => "Test for creating video thumbnail on windows";
 
     protected override string OnGetRootPath() => "c:\\";
 

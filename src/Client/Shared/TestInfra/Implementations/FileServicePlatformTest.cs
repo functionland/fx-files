@@ -47,26 +47,26 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
 
                 //Expecting exceptions
-                //await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
-                //{
-                //    await fileService.CreateFolderAsync(testRoot, "Folder 1");
-                //}, "The folder already exists exception");
+                await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
+                {
+                    await fileService.CreateFolderAsync(testRoot, "Folder 1");
+                }, "The folder already exists exception");
 
-                //await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
-                //{
-                //    await fileService.CreateFileAsync(Path.Combine(testRoot, "file1[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
-                //}, "The file already exists exception");
+                await Assert.ShouldThrowAsync<ArtifactAlreadyExistsException>(async () =>
+                {
+                    await fileService.CreateFileAsync(Path.Combine(testRoot, "file1[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
+                }, "The file already exists exception");
 
 
-                //await Assert.ShouldThrowAsync<ArtifactNameNullException>(async () =>
-                //{
-                //    await fileService.CreateFolderAsync(testRoot, "");
-                //}, "The folder name is null");
+                await Assert.ShouldThrowAsync<ArtifactNameNullException>(async () =>
+                {
+                    await fileService.CreateFolderAsync(testRoot, "");
+                }, "The folder name is null");
 
-                //await Assert.ShouldThrowAsync<ArtifactNameNullException>(async () =>
-                //{
-                //    await fileService.CreateFileAsync(Path.Combine(testRoot, ".txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
-                //}, "The file name is null");
+                await Assert.ShouldThrowAsync<ArtifactNameNullException>(async () =>
+                {
+                    await fileService.CreateFileAsync(Path.Combine(testRoot, ".txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
+                }, "The file name is null");
 
 
                 //1. move a file
@@ -149,8 +149,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 await fileService.RenameFolderAsync(Path.Combine(testRoot, "Folder 2/Folder 31"), "Folder 21");
                 var fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/Folder 21"),
                     Path.Combine(testRoot, "Folder 2/Folder 31") });
-                var newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist ;
-                var oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist ;
+                var newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist;
+                var oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist;
 
                 var isRenamed = newFsArtifactExists && !oldFsArtifactExists;
                 Assert.AreEqual<bool>(true, isRenamed, "Rename a folder with contaning files.");
@@ -165,7 +165,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 2/file21[size=5mb].txt"),
                     Path.Combine(testRoot, "Folder 2/file31[size=5mb].txt")});
                 newFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist;
-                oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist ;
+                oldFsArtifactExists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist;
 
                 isRenamed = newFsArtifactExists && !oldFsArtifactExists;
                 Assert.AreEqual<bool>(true, isRenamed, "Rename a file");
@@ -193,11 +193,12 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 var file113 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/Folder 11/file113[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
                 var file114 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 1/Folder 11/file114[size=5mb].txt"), GetSampleFileStream(FsArtifactUtils.ConvertToByte("5", "mb")));
 
-                
-                await fileService.MoveArtifactsAsync(copyingItems, testRoot, async (artifact) => 
-                                                                                        { await Task.CompletedTask; 
-                                                                                          return true; 
-                                                                                        });
+                await fileService.MoveArtifactsAsync(copyingItems, testRoot, 
+                    async (artifact) =>
+                    {
+                        await Task.CompletedTask;
+                        return true;
+                    });
 
                 srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 1"));
                 Assert.AreEqual(0, srcArtifacts.Count, "Move items, including duplicate folder. All removed from source.");
@@ -211,8 +212,8 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 fsArtifactsChanges = await fileService.CheckPathExistsAsync(new List<string?>() { Path.Combine(testRoot, "Folder 1/Folder 11/file113[size=5mb].txt"),
                     Path.Combine(testRoot, "Folder 1/Folder 11/file114[size=5mb].txt")});
 
-                var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist ;
-                var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist ;
+                var isFile113Exists = fsArtifactsChanges.ElementAtOrDefault(0).IsExist;
+                var isFile114Exists = fsArtifactsChanges.ElementAtOrDefault(1).IsExist;
 
                 var isAllFileRemoved = !isFile113Exists && !isFile114Exists;
                 Assert.AreEqual<bool>(true, isAllFileRemoved, "Move duplicate items. All removed from dulicate source sub directory.");
@@ -252,7 +253,6 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
 
                 copyingItems = new[] { folder21 };  //Already null-checked in assertion above.
 
-
                 await fileService.CopyArtifactsAsync(copyingItems, Path.Combine(testRoot, "Folder 3"), async (artifact) =>
                 {
                     await Task.CompletedTask;
@@ -273,6 +273,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 srcArtifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 2"));
                 Assert.AreEqual(2, srcArtifacts.Count, "Delete a file and a folder. Both deleted from source.");
 
+
                 //11. Progress bar
                 var folder3111 = await fileService.CreateFolderAsync(testRoot, "Folder 3111");
                 var file1111 = await fileService.CreateFileAsync(Path.Combine(testRoot, "Folder 3111/file1111[size=5mb].txt"),
@@ -285,7 +286,7 @@ namespace Functionland.FxFiles.Client.Shared.TestInfra.Implementations
                 artifacts = await GetArtifactsAsync(fileService, Path.Combine(testRoot, "Folder 3111"));
                 var progressBarMax = 0;
 
-                await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"), 
+                await fileService.CopyArtifactsAsync(artifacts, Path.Combine(testRoot, "Folder 3112"),
                     async (artifact) =>
                     {
                         await Task.CompletedTask;

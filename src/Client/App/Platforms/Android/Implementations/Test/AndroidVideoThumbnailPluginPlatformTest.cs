@@ -3,7 +3,7 @@ using Functionland.FxFiles.Client.Shared.TestInfra.Implementations.ThumbnailPlug
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations.Test;
 
-public class AndroidVideoThumbnailPluginPlatformTest<TFileService> : ImageThumbnailPlatformTest<TFileService>
+public class AndroidVideoThumbnailPluginPlatformTest<TFileService> : VideoThumbnailPlatformTest<TFileService>
     where TFileService : IFileService
 {
     TFileService FileService { get; set; }
