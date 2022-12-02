@@ -1,4 +1,5 @@
-﻿using Functionland.FxFiles.Client.Shared.Components.Modal;
+﻿using Functionland.FxFiles.Client.Shared.Components;
+using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Prism.Events;
 
@@ -11,17 +12,14 @@ public partial class HomePage
 
     protected override async Task OnInitAsync()
     {
-        if (!string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
-        {
-            var encodedArtifactPath = Uri.EscapeDataString(AppStateStore.IntentFileUrl);
-            NavigationManager.NavigateTo($"mydevice?encodedArtifactPath={encodedArtifactPath}", false, true);
-            return;
-        }
         _ = EventAggregator
-                  .GetEvent<IntentReceiveEvent>()
-                  .Subscribe(
-                      HandleIntentReceiver,
-                      ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+                .GetEvent<IntentReceiveEvent>()
+                .Subscribe(
+                    ApplyIntentArtifactIfNeeded,
+                    ThreadOption.BackgroundThread, keepSubscriberReferenceAlive: true);
+
+        if (!string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
+            return;
 
         await base.OnInitAsync();
 
@@ -32,7 +30,7 @@ public partial class HomePage
     }
 
 
-    private void HandleIntentReceiver(IntentReceiveEvent obj)
+    private void ApplyIntentArtifactIfNeeded(IntentReceiveEvent obj)
     {
         if (string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
             return;
