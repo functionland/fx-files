@@ -1,6 +1,7 @@
 ﻿using System.Timers;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
@@ -531,6 +532,7 @@ public partial class ArtifactExplorer : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        AppStateStore.ArtifactListScrollTopValue = await JSRuntime.InvokeAsync<string?>("getArtifactListTopScroll", ArtifactExplorerListRef);
         await JSRuntime.InvokeVoidAsync("removeScrollStopListener", ArtifactExplorerListRef);
         await JSRuntime.InvokeVoidAsync("RemoveWindowWidthListener", _resizeEventListenerId);
         _dotnetObjectReference?.Dispose();

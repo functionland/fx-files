@@ -25,9 +25,25 @@ function ShowBackToTopButton() {
 }
 
 function getLastScrollPosition(element) {
-    let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
-    element.scrollTop = lastScrollPosition;
-    savePositionScroll.pop();
+    try {
+        let lastScrollPosition = savePositionScroll[savePositionScroll.length - 1];
+        element.scrollTop = lastScrollPosition;
+        savePositionScroll.pop();
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function setArtifactListTopScrollValue(element, scrollTopValue) {
+    try {
+        if (typeof element !== 'undefined' || element !== null) {
+            element.scrollTop = Number(scrollTopValue);
+            return true;
+        }
+    } catch (e) {
+        return false;
+    }
 }
 
 function saveScrollPosition(element) {
@@ -185,13 +201,11 @@ function OnScrollCheck(element) {
 
                 pinListDiv.classList.add('pin-artifacts-hide');
                 pinListDiv.classList.remove('pin-artifacts-show');
-                console.log("down");
 
             } else if (oldScrollY > element.scrollTop) {
 
                 pinListDiv.classList.add('pin-artifacts-show');
                 pinListDiv.classList.remove('pin-artifacts-hide');
-                console.log("up");
             }
 
             oldScrollY = element.scrollTop;
@@ -253,4 +267,16 @@ function removeScrollStopListener(element) {
     if (element) {
         element.removeEventListener('scroll', _artifactExplorerScrollListener);
     }
+}
+
+let scrollTopValue = null;
+function getArtifactListTopScroll(element) {
+    if (element && scrollTopValue == null) {
+        scrollTopValue = element.scrollTop;
+    }
+    return scrollTopValue.toString();
+}
+
+function clearScrollTopValue() {
+        scrollTopValue = null;
 }

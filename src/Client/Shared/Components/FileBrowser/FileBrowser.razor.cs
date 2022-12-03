@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Timers;
 
 using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
@@ -190,13 +191,62 @@ public partial class FileBrowser : IDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if ((_isGoingBack || AppStateStore.ArtifactListScrollTopValue != null) && _timer == null)
+        {
+            _timer = new System.Timers.Timer(500);
+            _timer.Enabled = true;
+            _timer.Start();
+            _timer.Elapsed += async (s, e) => await ScrollTimerElapsed(s, e);
+        }
+    }
+
+    private async Task ScrollTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        _timer?.Stop();
+        if (_isArtifactExplorerLoading)
+        {
+            _timer?.Start();
+            return;
+        }
+        _timer?.Stop();
         if (_isGoingBack)
         {
+            var result = await JSRuntime.InvokeAsync<bool>("getLastScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
+            if (!result)
+            {
+                _timer?.Start();
+                return;
+            }
+
             _isGoingBack = false;
-            await JSRuntime.InvokeVoidAsync("getLastScrollPosition", _artifactExplorerRef?.ArtifactExplorerListRef);
         }
 
-        await base.OnAfterRenderAsync(firstRender);
+        if (AppStateStore.ArtifactListScrollTopValue != null)
+        {
+            var result = await JSRuntime.InvokeAsync<bool>("setArtifactListTopScrollValue", _artifactExplorerRef?.ArtifactExplorerListRef, AppStateStore.ArtifactListScrollTopValue);
+            if (!result)
+            {
+                _timer?.Start();
+                return;
+            }
+            AppStateStore.ArtifactListScrollTopValue = null;
+            await JSRuntime.InvokeVoidAsync("clearScrollTopValue");
+        }
+
+        DisposeTimer();
+    }
+
+    private void DisposeTimer()
+    {
+        if (_timer == null)
+            return;
+
+        _timer.Enabled = false;
+        _timer.Stop();
+        _timer.Dispose();
+        _timer = null;
     }
 
     private async Task UpdateProgressAsync(
@@ -297,7 +347,7 @@ public partial class FileBrowser : IDisposable
                     title: Localizer.GetString(AppStrings.CopyFiles),
                     isCancelable: true);
 
-                await Task.Run(async () => 
+                await Task.Run(async () =>
                 {
                     foreach (var sourceArtifact in sourceArtifacts)
                     {
@@ -634,7 +684,7 @@ public partial class FileBrowser : IDisposable
                 await _progressModalRef!.ShowAsync(ProgressMode.Progressive,
                     Localizer.GetString(AppStrings.DeletingFiles), true);
 
-                await Task.Run(async () => 
+                await Task.Run(async () =>
                 {
                     await FileService.DeleteArtifactsAsync(artifacts,
                                                            onProgress: UpdateProgressAsync,
@@ -656,7 +706,7 @@ public partial class FileBrowser : IDisposable
         }
     }
 
-    private async Task HandleShowDetailsArtifact(List<FsArtifact> artifacts)
+    private async Task HandleShowDetailsArtifact(List<FsArtifact> artifacts, bool shouldSkipOverflowAfterClose = false)
     {
         var isMultiple = artifacts.Count > 1;
         var isDrive = false;
@@ -701,11 +751,10 @@ public partial class FileBrowser : IDisposable
                 //TODO: Implement upload logic here
                 break;
             case ArtifactDetailModalResultType.Close:
-                if (_isInSearchMode)
+                if (shouldSkipOverflowAfterClose)
                 {
                     return;
                 }
-
                 if (artifacts.Count > 1)
                 {
                     await HandleSelectedArtifactsOptions(artifacts);
@@ -714,7 +763,6 @@ public partial class FileBrowser : IDisposable
                 {
                     await HandleOptionsArtifact(artifacts[0]);
                 }
-
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
