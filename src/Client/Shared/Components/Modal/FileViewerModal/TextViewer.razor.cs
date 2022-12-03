@@ -17,6 +17,8 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
 
     public bool IsLoading { get; set; } = true;
 
+    public bool IsTxt { get; set; } = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -30,7 +32,12 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
 
             var _isSystemThemeDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
             await JSRuntime.InvokeVoidAsync("setupCodeMirror", _isSystemThemeDark);
-            _ = GetTextAsync();
+
+            if (!string.IsNullOrWhiteSpace(CurrentArtifact?.FullPath))
+            {
+                IsTxt = string.Compare(Path.GetExtension(CurrentArtifact?.FullPath!), ".txt", StringComparison.InvariantCultureIgnoreCase) == 0;
+                _ = GetTextAsync();
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);
