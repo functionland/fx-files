@@ -19,6 +19,8 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
 
     public bool IsTxt { get; set; } = false;
 
+    public bool IsDark { get; set; } = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -30,8 +32,8 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
             await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/simple.js");
             await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode.js");
 
-            var _isSystemThemeDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
-            await JSRuntime.InvokeVoidAsync("setupCodeMirror", _isSystemThemeDark);
+            IsDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
+            await JSRuntime.InvokeVoidAsync("setupCodeMirror");
 
             if (!string.IsNullOrWhiteSpace(CurrentArtifact?.FullPath))
             {
