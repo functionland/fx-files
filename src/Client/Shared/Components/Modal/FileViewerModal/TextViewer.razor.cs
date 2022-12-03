@@ -61,10 +61,18 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
     {
         if (CurrentArtifact?.FullPath == null) return;
 
-        var text = File.ReadAllText(CurrentArtifact.FullPath, Encoding.UTF8);
-        await JSRuntime.InvokeVoidAsync("setCodeMirrorText", text, CurrentArtifact.Name);
+        var stream = await FileService.GetFileContentAsync(CurrentArtifact.FullPath);
+        if (stream is null)
+            return;
+
+        using (var sr = new StreamReader(stream))
+        {
+            var text = await sr.ReadToEndAsync();
+            await JSRuntime.InvokeVoidAsync("setCodeMirrorText", text, CurrentArtifact.Name);
+        }
+       
         IsLoading = false;
-        await InvokeAsync(() => StateHasChanged());
+        await InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()

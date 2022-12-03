@@ -1,13 +1,10 @@
-﻿using System.Diagnostics;
-using System.Timers;
-
-using Functionland.FxFiles.Client.Shared.Components.Common;
+﻿using Functionland.FxFiles.Client.Shared.Components.Common;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Functionland.FxFiles.Client.Shared.Utils;
-
 using Prism.Events;
-
+using System.Diagnostics;
+using System.Timers;
 using Timer = System.Timers.Timer;
 
 namespace Functionland.FxFiles.Client.Shared.Components;
@@ -1996,7 +1993,25 @@ public partial class FileBrowser : IDisposable
         if (AppStateStore.IntentFileUrl is null || _fileViewerRef is null)
             return;
 
-        var artifact = await FileService.GetArtifactAsync(AppStateStore.IntentFileUrl);
+        var uri = new Uri(AppStateStore.IntentFileUrl);
+        FsFileProviderType fsFileProviderType = FsFileProviderType.InternalMemory;
+        if (uri.Authority == "com.android.externalstorage.documents")
+        {
+            fsFileProviderType = FsFileProviderType.ExternalMemory;
+        }
+
+        var artifact = new FsArtifact(AppStateStore.IntentFileUrl, Path.GetFileName(AppStateStore.IntentFileUrl), FsArtifactType.File, fsFileProviderType)
+        {
+            FileExtension = Path.GetExtension(AppStateStore.IntentFileUrl),
+            ParentFullPath = Directory.GetParent(AppStateStore.IntentFileUrl)?.FullName
+        };
+
+        await Task.Run(async () =>
+        {
+            await LoadChildrenArtifactsAsync(CurrentArtifact);
+            await InvokeAsync(StateHasChanged);
+        });
+
         AppStateStore.IntentFileUrl = null;
         await _fileViewerRef.OpenArtifact(artifact);
     }

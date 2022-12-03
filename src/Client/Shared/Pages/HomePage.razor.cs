@@ -39,8 +39,7 @@ public partial class HomePage
             if (string.IsNullOrWhiteSpace(AppStateStore.IntentFileUrl))
                 return;
 
-            var encodedArtifactPath = Uri.EscapeDataString(AppStateStore.IntentFileUrl);
-            NavigationManager.NavigateTo($"mydevice?encodedArtifactPath={encodedArtifactPath}", false, true);
+            NavigationManager.NavigateTo($"mydevice", false, true);
         }
     }
 }

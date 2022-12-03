@@ -261,9 +261,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
 
                 if (string.IsNullOrWhiteSpace(filePath))
                     throw new ArtifactPathNullException(StringLocalizer.GetString(AppStrings.ArtifactPathIsNull, lowerCaseFile));
-
-                var streamReader = new StreamReader(filePath);
-                return streamReader.BaseStream;
+                return LocalStorageGetContent(filePath);
             }
             catch (IOException ex)
             {
@@ -725,6 +723,12 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
             {
                 throw new UnauthorizedException(ex.Message, ex);
             }
+        }
+
+        protected virtual Stream LocalStorageGetContent(string filePath)
+        {
+            var streamReader = new StreamReader(filePath);
+            return streamReader.BaseStream;
         }
 
         protected virtual void LocalStorageDeleteFile(string path)

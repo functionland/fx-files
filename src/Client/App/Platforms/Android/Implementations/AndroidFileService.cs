@@ -2,7 +2,6 @@
 using Android.OS.Storage;
 
 using Functionland.FxFiles.Client.App.Platforms.Android.Contracts;
-using Functionland.FxFiles.Client.App.Platforms.Android.PermissionsUtility;
 using Functionland.FxFiles.Client.Shared.Components.Modal;
 using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
@@ -273,7 +272,14 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
 
     protected abstract Task GetReadPermission(IEnumerable<string> paths = null);
 
+    protected override Stream LocalStorageGetContent(string filePath)
+    {
+        var uri = android.Net.Uri.Parse(filePath);
+        if (uri?.Scheme is null || android.App.Application.Context?.ContentResolver is null)
+            return base.LocalStorageGetContent(filePath);
 
+        return android.App.Application.Context.ContentResolver.OpenInputStream(uri);
+    }
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
         var internalDrive = drives?.FirstOrDefault(d => d.ProviderType == FsFileProviderType.InternalMemory);
