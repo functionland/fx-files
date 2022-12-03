@@ -17,7 +17,7 @@ public partial class SettingsPage
         AppStateStore.CurrentPagePath = "settings";
         GoBackService.SetState(Task ()=>
         {
-             Test();
+             UpdateBackButtonDeviceBehavior();
              return Task.CompletedTask;
         }, true, false);
 
@@ -33,7 +33,7 @@ public partial class SettingsPage
         GetAppVersion();
     }
 
-    private void Test()
+    private void UpdateBackButtonDeviceBehavior()
     {
         NavigationManager.NavigateTo("mydevice", false, true);
     }
