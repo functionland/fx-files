@@ -278,7 +278,5 @@ function getArtifactListTopScroll(element) {
 }
 
 function clearScrollTopValue() {
-    if (scrollTopValue) {
         scrollTopValue = null;
-    }
 }
