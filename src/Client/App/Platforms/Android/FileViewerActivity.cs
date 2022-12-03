@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
 using Functionland.FxFiles.Client.Shared.Services.Common;
 using Prism.Events;
 
@@ -31,6 +32,8 @@ public class FileViewerActivity : MainActivity
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
+
+        LocalAndroidTxtLogger.Log($"Intent DataString: {Intent?.DataString}");
 
         var appStateStore = MauiApplication.Current.Services.GetRequiredService<IAppStateStore>();
         var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
