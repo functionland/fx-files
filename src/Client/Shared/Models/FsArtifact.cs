@@ -59,4 +59,7 @@ public class FsArtifact
         return $"{Name} -> {FullPath}";
     }
     public bool? IsSelected { get; set; }
+    public string? IntentType { get; set; }
+    public bool CanShowBreadcrumb { get; set; } = true;
+
 }

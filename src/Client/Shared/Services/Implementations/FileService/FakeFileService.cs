@@ -544,5 +544,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations.FileServic
                 }
             }
         }
+
+        public string GetFileName(string path)
+        {
+            return Path.GetFileName(path);
+        }
     }
 }

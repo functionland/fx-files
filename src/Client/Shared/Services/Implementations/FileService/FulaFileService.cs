@@ -94,4 +94,9 @@ public partial class FulaFileService : IFulaFileService
     {
         throw new NotImplementedException();
     }
+
+    public string GetFileName(string path)
+    {
+        throw new NotImplementedException();
+    }
 }

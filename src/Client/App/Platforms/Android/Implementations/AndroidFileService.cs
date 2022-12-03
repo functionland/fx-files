@@ -7,7 +7,6 @@ using Functionland.FxFiles.Client.Shared.Enums;
 using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Resources;
-
 using android = Android;
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android.Implementations;
@@ -278,7 +277,7 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
         if (uri?.Scheme is null || android.App.Application.Context?.ContentResolver is null)
             return base.LocalStorageGetContent(filePath);
 
-        return android.App.Application.Context.ContentResolver.OpenInputStream(uri);
+        return android.App.Application.Context.ContentResolver!.OpenInputStream(uri);
     }
     private static bool IsFsFileProviderInternal(string filePath, List<FsArtifact> drives)
     {
@@ -341,5 +340,20 @@ public abstract partial class AndroidFileService : LocalDeviceFileService
             throw new InvalidOperationException("No drive found given the current path.");
 
         return targetDrive.Size ?? 0;
+    }
+
+    public override string GetFileName(string path)
+    {
+        var uri = android.Net.Uri.Parse(path);
+        if (uri?.Scheme is null || android.App.Application.Context?.ContentResolver is null)
+            return base.GetFileName(path);
+
+        using var cursor = android.App.Application.Context?.ContentResolver.Query(uri, new[] { android.Provider.MediaStore.IMediaColumns.DisplayName }, null, null);
+        if (cursor == null) return string.Empty;
+
+        cursor.MoveToFirst();
+        var fileName = cursor.GetString(0);
+
+        return fileName ?? string.Empty;
     }
 }

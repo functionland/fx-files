@@ -23,7 +23,10 @@
 
 <div class="action-header">
     <div class="list-header @(ArtifactExplorerMode == ArtifactExplorerMode.Normal ? "z-index-header" : "")">
-        <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+       @if (CurrentArtifact?.CanShowBreadcrumb ==  true)
+        {
+            <FxBreadcrumbs Artifact="CurrentArtifact" FileService="FileService"></FxBreadcrumbs>
+        }
         @if (_displayedArtifacts.Count > 0)
         {
             <div class="action-btn select-all-btn" @onclick="HandleSelectAllArtifact"></div>

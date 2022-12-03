@@ -16,7 +16,7 @@ namespace Functionland.FxFiles.Client.Shared.Services.Contracts
         Task<List<(FsArtifact artifact, Exception exception)>> CopyArtifactsAsync(IList<FsArtifact> artifacts,
             string destination,
             Func<FsArtifact, Task<bool>>? onShouldOverwrite = null,
-            Func<ProgressInfo,Task>? onProgress = null,
+            Func<ProgressInfo, Task>? onProgress = null,
             CancellationToken? cancellationToken = null);
         Task CopyFileAsync(FsArtifact artifact, string destinationFullPath,
             Func<FsArtifact, Task<bool>>? onShouldOverwrite = null, Func<ProgressInfo, Task>? onProgress = null,
@@ -33,5 +33,6 @@ namespace Functionland.FxFiles.Client.Shared.Services.Contracts
         Task<List<FsArtifactActivity>> GetArtifactActivityHistoryAsync(string path, long? page = null, long? pageSize = null, CancellationToken? cancellationToken = null);
         Task<long> GetArtifactSizeAsync(string path, Action<long>? onProgress = null, CancellationToken? cancellationToken = null);
         string GetShowablePath(string artifactPath);
+        string GetFileName(string path);
     }
 }

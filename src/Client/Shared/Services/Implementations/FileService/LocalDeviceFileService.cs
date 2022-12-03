@@ -1128,5 +1128,10 @@ namespace Functionland.FxFiles.Client.Shared.Services.Implementations
         {
             return artifactPath;
         }
+
+        public virtual string GetFileName(string path)
+        {
+            return Path.GetFileName(path);
+        }
     }
 }

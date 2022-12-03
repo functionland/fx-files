@@ -24,7 +24,7 @@ public partial class FileViewer
         ".jpg",".jpeg",".png",".gif",".bmp",".svg",".webp",".jfif",".ico"
     };
 
-    private static readonly Regex[] regex = 
+    private static readonly Regex[] regex =
     {
         new Regex("extensions\\.conf",RegexOptions.CultureInvariant| RegexOptions.Compiled),
         new Regex("CMakeLists\\.txt",RegexOptions.CultureInvariant| RegexOptions.Compiled),
@@ -94,11 +94,24 @@ public partial class FileViewer
 
         if (IsVideoSupported(artifact))
             return true;
-        if (typeof(TComponent) == typeof(ImageViewer) && imageViewerSupportTypes.Contains(artifact.FileExtension))
+        if (typeof(TComponent) == typeof(ImageViewer) &&
+            (
+                imageViewerSupportTypes.Contains(artifact.FileExtension) ||
+                (artifact.IntentType is not null && artifact.IntentType.ToLower().StartsWith("image"))
+            ))
             return true;
-        if (typeof(TComponent) == typeof(ZipViewer) && artifact.FileCategory == FileCategoryType.Zip)
+
+        if (typeof(TComponent) == typeof(ZipViewer) &&
+            artifact.FileCategory == FileCategoryType.Zip)
             return true;
-        if (typeof(TComponent) == typeof(TextViewer) && (textViewerSupportTypes.Contains(artifact.FileExtension) || regex.Any(r => r.IsMatch(artifact.Name))))
+
+        if (typeof(TComponent) == typeof(TextViewer) &&
+                (
+                    textViewerSupportTypes.Contains(artifact.FileExtension) ||
+                    regex.Any(r => r.IsMatch(artifact.Name)) ||
+                    (artifact.IntentType is not null && artifact.IntentType.ToLower().Contains("text"))
+                )
+            )
             return true;
 
         return false;

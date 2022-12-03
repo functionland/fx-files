@@ -2000,10 +2000,13 @@ public partial class FileBrowser : IDisposable
             fsFileProviderType = FsFileProviderType.ExternalMemory;
         }
 
-        var artifact = new FsArtifact(AppStateStore.IntentFileUrl, Path.GetFileName(AppStateStore.IntentFileUrl), FsArtifactType.File, fsFileProviderType)
+        var fileName = FileService.GetFileName(AppStateStore.IntentFileUrl);
+
+        var artifact = new FsArtifact(AppStateStore.IntentFileUrl, fileName, FsArtifactType.File, fsFileProviderType)
         {
             FileExtension = Path.GetExtension(AppStateStore.IntentFileUrl),
-            ParentFullPath = Directory.GetParent(AppStateStore.IntentFileUrl)?.FullName
+            IntentType = AppStateStore.IntentType,
+            CanShowBreadcrumb = AppStateStore.IntentType != "application/zip",
         };
 
         await Task.Run(async () =>
@@ -2013,6 +2016,7 @@ public partial class FileBrowser : IDisposable
         });
 
         AppStateStore.IntentFileUrl = null;
+        AppStateStore.IntentType = null;
         await _fileViewerRef.OpenArtifact(artifact);
     }
 
