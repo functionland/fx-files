@@ -15,7 +15,11 @@ public partial class SettingsPage
     protected override async Task OnInitAsync()
     {
         AppStateStore.CurrentPagePath = "settings";
-        GoBackService.SetState(null, true, true);
+        GoBackService.SetState(Task ()=>
+        {
+             Test();
+             return Task.CompletedTask;
+        }, true, false);
 
         DesiredTheme = await ThemeInterop.GetThemeAsync();
 
@@ -27,6 +31,11 @@ public partial class SettingsPage
             CurrentTheme = Localizer.GetString(nameof(AppStrings.System));
 
         GetAppVersion();
+    }
+
+    private void Test()
+    {
+        NavigationManager.NavigateTo("mydevice", false, true);
     }
 
     protected override void OnAfterRender(bool firstRender)
