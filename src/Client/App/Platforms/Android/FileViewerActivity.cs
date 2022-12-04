@@ -4,8 +4,10 @@ using Android.Content.PM;
 using Android.Database;
 using Android.OS;
 using Android.Provider;
+using Functionland.FxFiles.Client.Shared.Exceptions;
 using Functionland.FxFiles.Client.Shared.Models;
 using Functionland.FxFiles.Client.Shared.Services.Common;
+using Functionland.FxFiles.Client.Shared.Services.Contracts;
 using Prism.Events;
 using android = Android;
 using Uri = Android.Net.Uri;
@@ -34,49 +36,146 @@ namespace Functionland.FxFiles.Client.App.Platforms.Android;
     })]
 public class FileViewerActivity : MainActivity
 {
-    protected override void OnCreate(Bundle? savedInstanceState)
+    protected override async void OnCreate(Bundle? savedInstanceState)
     {
-        base.OnCreate(savedInstanceState);
-
-        var appStateStore = MauiApplication.Current.Services.GetRequiredService<IAppStateStore>();
-        var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
-
-        if (string.IsNullOrWhiteSpace(Intent?.DataString))
-            return;
-
-        var uri = Uri.Parse(Intent.DataString);
-
-        if (uri is null)
-            return;
-
         try
         {
-            var path = GetActualPathFromFile(uri);
-            appStateStore.IntentFileUrl = path;
-        }
-        catch (Exception exception)
-        {
-            var intentFilePath = SecureStorage.Default.GetAsync("intentFilePath").GetAwaiter().GetResult();
-            if (string.IsNullOrWhiteSpace(intentFilePath))
+            base.OnCreate(savedInstanceState);
+
+            var appStateStore = MauiApplication.Current.Services.GetRequiredService<IAppStateStore>();
+            var eventAggregator = MauiApplication.Current.Services.GetRequiredService<IEventAggregator>();
+
+            if (string.IsNullOrWhiteSpace(Intent?.DataString))
+                return;
+
+            var uri = Uri.Parse(Intent.DataString);
+
+            if (uri is null)
+                return;
+
+            try
             {
-                var exceptionHandler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
-                bool isKitKat = Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat;
-                string? docId = DocumentsContract.GetDocumentId(uri);
-                exceptionHandler.Track(exception, new Dictionary<string, string>
+                var path = GetActualPathFromFile(uri);
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    var destinationPath = android.OS.Environment.GetExternalStoragePublicDirectory(android.OS.Environment.DirectoryDownloads)?.AbsolutePath;
+
+                    if (string.IsNullOrWhiteSpace(destinationPath))
+                    {
+                        var exceptionHnadler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+                        exceptionHnadler.Track(new Exception("Download path is null"), new Dictionary<string, string>
+                        {
+                            {"Intent_DataString",Intent?.DataString ?? "EMPTY" },
+                            {"Intent_Type",Intent?.Type ?? "EMPTY" }
+                        });
+                        return;
+                    }
+
+                    var localDeviceFileService = MauiApplication.Current.Services.GetRequiredService<ILocalDeviceFileService>();
+
+                    using var stream = ContentResolver?.OpenInputStream(uri);
+                    if (stream is null)
+                    {
+                        var exceptionHnadler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+                        exceptionHnadler.Track(new Exception("Intent stream is null"), new Dictionary<string, string>
+                        {
+                            {"Intent_DataString",Intent?.DataString ?? "EMPTY" },
+                            {"Intent_Type",Intent?.Type ?? "EMPTY" }
+                        });
+                        return;
+                    }
+
+                    using var cursor = ContentResolver?.Query(uri, new[] { MediaStore.IMediaColumns.DisplayName }, null, null);
+                    cursor?.MoveToFirst();
+                    var fileName = cursor?.GetString(0);
+
+                    if (string.IsNullOrWhiteSpace(fileName))
+                    {
+                        var exceptionHnadler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+                        exceptionHnadler.Track(new Exception("Intent file name is null"), new Dictionary<string, string>
+                        {
+                            {"Intent_DataString",Intent?.DataString ?? "EMPTY" },
+                            {"Intent_Type",Intent?.Type ?? "EMPTY" }
+                        });
+                        return;
+                    }
+
+                    if (!Directory.Exists(destinationPath))
+                    {
+                        Directory.CreateDirectory(destinationPath);
+                    }
+
+                    while (true)
+                    {
+                        try
+                        {
+                            var finalDestinationName = Path.Combine(destinationPath, fileName);
+                            var result = await localDeviceFileService.CreateFileAsync(finalDestinationName, stream);
+
+                            if (result is null)
+                            {
+                                var exceptionHnadler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+                                exceptionHnadler.Track(new Exception("Intent downloaded artifact is null"), new Dictionary<string, string>
+                                {
+                                    {"Intent_DataString",Intent?.DataString ?? "EMPTY" },
+                                    {"Intent_Type",Intent?.Type ?? "EMPTY" }
+                                });
+                                return;
+                            }
+
+                            path = result.FullPath;
+                        }
+                        catch (ArtifactAlreadyExistsException)
+                        {
+                            var newFileName = $"{Path.GetFileNameWithoutExtension(fileName)} - copy";
+                            var extention = Path.GetExtension(fileName);
+                            fileName = Path.ChangeExtension(newFileName, extention);
+                            continue;
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+
+                        break;
+                    }
+                }
+                appStateStore.IntentFileUrl = path;
+            }
+            catch (Exception exception)
+            {
+                var intentFilePath = SecureStorage.Default.GetAsync("intentFilePath").GetAwaiter().GetResult();
+                if (string.IsNullOrWhiteSpace(intentFilePath))
+                {
+                    var exceptionHandler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+                    bool isKitKat = Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat;
+                    string? docId = DocumentsContract.GetDocumentId(uri);
+                    exceptionHandler.Track(exception, new Dictionary<string, string>
                 {
                     {"intent_data_string", Intent?.DataString ?? "EMPTY" },
                     {"intent_action", Intent?.Action ?? "EMPTY" },
                     {"is_kitkat", isKitKat.ToString() ??"EMPTY" },
                     {"doc_id", docId ?? "EMPTY" }
                 });
-                return;
+                    return;
+                }
+
+                appStateStore.IntentFileUrl = intentFilePath;
+                SecureStorage.Default.Remove("intentFilePath");
             }
 
-            appStateStore.IntentFileUrl = intentFilePath;
-            SecureStorage.Default.Remove("intentFilePath");
+            eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
         }
+        catch (Exception ex)
+        {
+            var exceptionHnadler = MauiApplication.Current.Services.GetRequiredService<IExceptionHandler>();
+            exceptionHnadler.Track(ex, new Dictionary<string, string>
+            {
+                {"Intent_DataString",Intent?.DataString??"EMPTY" },
+                {"Intent_Type",Intent?.Type??"EMPTY" }
+            });
 
-        eventAggregator.GetEvent<IntentReceiveEvent>().Publish(new IntentReceiveEvent());
+        }
     }
 
     private string? GetActualPathFromFile(Uri uri)
@@ -108,8 +207,6 @@ public class FileViewerActivity : MainActivity
 
                 Uri? contentUri = ContentUris.WithAppendedId(
                                Uri.Parse("content://downloads/public_downloads")!, long.Parse(id));
-
-                //System.Diagnostics.Debug.WriteLine(contentUri.ToString());
 
                 return GetDataColumn(this, contentUri, null, null);
             }
@@ -180,8 +277,11 @@ public class FileViewerActivity : MainActivity
             cursor = context.ContentResolver?.Query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.MoveToFirst())
             {
-                int index = cursor.GetColumnIndexOrThrow(column);
-                return cursor.GetString(index);
+                int index = cursor.GetColumnIndex(column);
+                if (index != -1)
+                {
+                    return cursor.GetString(index);
+                }
             }
         }
         finally
