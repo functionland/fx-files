@@ -32,7 +32,15 @@ public partial class TextViewer : IFileViewerComponent, IDisposable
             await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/addon/mode/simple.js");
             await JSRuntime.InvokeVoidAsync("import", "./_content/Functionland.FxFiles.Client.Shared/lib/code-mirror/mode.js");
 
-            IsDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
+            if (await ThemeInterop.GetThemeAsync() is FxTheme.System)
+            {
+                IsDark = await ThemeInterop.GetSystemThemeAsync() is FxTheme.Dark;
+            }
+            else
+            {
+                IsDark = await ThemeInterop.GetThemeAsync() is FxTheme.Dark;
+            }
+
             await JSRuntime.InvokeVoidAsync("setupCodeMirror");
 
             if (!string.IsNullOrWhiteSpace(CurrentArtifact?.FullPath))
