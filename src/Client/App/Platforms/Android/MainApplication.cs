@@ -8,7 +8,7 @@ using Android.Runtime;
 [assembly: UsesPermission(Android.Manifest.Permission.ManageExternalStorage)]
 [assembly: UsesPermission(Android.Manifest.Permission.MediaContentControl)]
 [assembly: UsesPermission(Android.Manifest.Permission.ManageDocuments)]
-//[assembly: UsesPermission(Android.Manifest.Permission.RequestInstallPackages)]
+[assembly: UsesPermission(Android.Manifest.Permission.RequestInstallPackages)]
 
 namespace Functionland.FxFiles.Client.App.Platforms.Android;
 
