@@ -5,12 +5,6 @@
 # About Fx Files
 Want to own your files, literally? This is something won't happen ever on traditional cloud services. But from now on, it definitely happens at a glance with "Fx Files". It is a file manager which stores everything on FULA blockchain network of Bloxes.
 
-## A Brief Demo on YouTube
-Here on YouTube you can watch a 2 minutes demo showing the app features and how beautiful it is!
-[![Fx Files In 2 Minutes](https://img.youtube.com/vi/cdifshBgIcU/0.jpg)](https://www.youtube.com/watch?v=cdifshBgIcU)
-
-<img height="300px" src="https://user-images.githubusercontent.com/17250443/189410320-8536a82e-7abf-4b53-bab2-1f6b8d79d65a.gif" />
-
 # How to install from stores
 The Fx Files v0.6 is now available on Android and Windows stores. iOS and macOS will be released soon.
 
@@ -31,3 +25,11 @@ The Fx Files v0.6 is now available on Android and Windows stores. iOS and macOS 
 # Contribution
 If you want to contribute to this project this is how you can setup your environment and start development: 
 [How to setup development environment](https://github.com/functionland/fx-files/blob/main/docs/setup-development-environment.md)
+
+# Demos
+## A Brief Demo on YouTube
+Here on YouTube you can watch a 2 minutes demo showing the app features and how beautiful it is!
+[![Fx Files In 2 Minutes](https://img.youtube.com/vi/cdifshBgIcU/0.jpg)](https://www.youtube.com/watch?v=cdifshBgIcU)
+
+## Screenshots
+<img height="300px" src="https://user-images.githubusercontent.com/17250443/189410320-8536a82e-7abf-4b53-bab2-1f6b8d79d65a.gif" />
