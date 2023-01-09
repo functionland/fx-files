@@ -1,5 +1,5 @@
 # Extensiblity Overview
-*Fx Files* is designed in a very extensible way. In this documentation you will learn about the extensiblity points and how can you extend them.
+*FxFiles* is designed in a very extensible way. In this documentation you will learn about the extensiblity points and how can you extend them.
 
 ## What is a File Manager
 Essentially, a file manager is an application which helps you to:
@@ -12,7 +12,7 @@ Essentially, a file manager is an application which helps you to:
   - Viewing files: images, videos, documents
 
 ## How to extend a File Manager
-You can extend the *Fx Files* by adding:
+You can extend the *FxFiles* by adding:
  - A new **File Service**: [How to add a File Service](https://github.com/functionland/fx-files/blob/main/docs/file-service-overview.md)
  - A new **Thumbnail Plugin**: [How to add a Thumbnail Plugin](https://github.com/functionland/fx-files/blob/main/docs/thumbnail-plugin-overview.md)
  - A new **File Viewer**: [How to add a File Viewer](https://github.com/functionland/fx-files/blob/main/docs/file-viewer-overview.md)

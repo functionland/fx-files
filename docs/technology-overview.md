@@ -1,9 +1,9 @@
 # Technology Architecture
 
-This document describes the technologies used in Fx Files App.
+This document describes the technologies used in FxFiles App.
 
 ## Technology Requirements
-Fx Files is going to be published for all prominent platforms: *Windows*, *Android*, *iOS* and *Mac*.
+FxFiles is going to be published for all prominent platforms: *Windows*, *Android*, *iOS* and *Mac*.
 To support all these platforms we have decided to use a cross-platform development options.
 
 Another fact to mention is the UX designs for all platforms are the same. So there are not different designs for Android, iOS or Windows.

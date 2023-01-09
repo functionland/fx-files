@@ -42,7 +42,7 @@ public static class MauiProgram
 #if WINDOWS
             lifecycle.AddWindows(windows => windows.OnWindowCreated((del) => {
                 del.ExtendsContentIntoTitleBar = false;
-                del.Title = "Fx Files";
+                del.Title = "FxFiles";
             }));
 #endif
         });

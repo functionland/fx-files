@@ -1,7 +1,7 @@
 # Thumbnail System Overview
 
 ## What is a Thumbnail?
-While exploring files on *Fx Files*, you see some files with thumbnails and some not. For example pictures have a thumbnail in both list and grid mode.
+While exploring files on *FxFiles*, you see some files with thumbnails and some not. For example pictures have a thumbnail in both list and grid mode.
 
 But which file types supports showing a thumbnail and which one is not? This is the question we will explain in this document.
 
@@ -72,7 +72,7 @@ services.AddTransient<IThumbnailPlugin, AndroidImageThumbnailPlugin>();
 services.AddTransient<IThumbnailPlugin, WindowsImageThumbnailPlugin>();
 ```
 
-Congratulations! All done. You have added a new plugin to *Fx Files* now. Form now on, the appliation supports thubmails for images.
+Congratulations! All done. You have added a new plugin to *FxFiles* now. Form now on, the appliation supports thubmails for images.
 
 You can design the hierarchy of plugins to utilize as much as code sharing you want.
 
