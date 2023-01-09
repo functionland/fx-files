@@ -835,7 +835,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fx Files.
+        ///   Looks up a localized string similar to FxFiles.
         /// </summary>
         public static string FxFiles {
             get {
@@ -1447,7 +1447,7 @@ namespace Functionland.FxFiles.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fx Files by Functionland.
+        ///   Looks up a localized string similar to FxFiles by Functionland.
         /// </summary>
         public static string SettingPageAppTitle {
             get {

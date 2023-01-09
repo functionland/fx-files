@@ -643,7 +643,7 @@
     <value>This feature will come in near future</value>
   </data>
   <data name="FxFiles" xml:space="preserve">
-    <value>Fx Files</value>
+    <value>FxFiles</value>
   </data>
   <data name="FolderSize" xml:space="preserve">
     <value>Folder size</value>
@@ -658,7 +658,7 @@
     <value>The zip file dose not found.</value>
   </data>
   <data name="SettingPageAppTitle" xml:space="preserve">
-    <value>Fx Files by Functionland</value>
+    <value>FxFiles by Functionland</value>
   </data>
   <data name="App" xml:space="preserve">
     <value>App</value>
