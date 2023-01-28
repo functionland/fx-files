@@ -1,5 +1,5 @@
 ## What is a File Service?
-In *Fx Files*, you work with files. But which files? The interesting fact is that *Fx Files* is designed in a way so it can work with any source of files. One  source of files (and the first came in mind of course) is the files in the local storage of device. But it is not limited to this. You can easily add support for other sources like Azure Storage, Google, IBM, FTP or any other source of files you can imagine.
+In *FxFiles*, you work with files. But which files? The interesting fact is that *FxFiles* is designed in a way so it can work with any source of files. One  source of files (and the first came in mind of course) is the files in the local storage of device. But it is not limited to this. You can easily add support for other sources like Azure Storage, Google, IBM, FTP or any other source of files you can imagine.
 
 To add support for a new source, you need only to write a `FileService` for it. For example if you want the app to support working with fiels on **Azure Blob Storage** you need to write a class named `AzureBlobStorageFileService` which implements `IFileService` interface like this:
 

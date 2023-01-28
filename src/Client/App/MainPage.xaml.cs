@@ -34,7 +34,7 @@ public partial class MainPage
             appWindow.Resize(new SizeInt32(691, 968));
 
             var titleBar = appWindow.TitleBar;
-            appWindow.Title = "Fx Files";
+            appWindow.Title = "FxFiles";
 
             if (titleBar is not null)
             {
