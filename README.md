@@ -3,7 +3,7 @@
 [![Build Status](https://dev.azure.com/Functionland/FxLand/_apis/build/status/File%20Manager%20Android?branchName=main)](https://dev.azure.com/Functionland/FxLand/_build/latest?definitionId=1&branchName=main)
 
 # About FxFiles
-Want to own your files, literally? This is something won't happen ever on traditional cloud services. But from now on, it definitely happens at a glance with "FxFiles". It is a file manager which stores everything on FULA blockchain network of Bloxes.
+Want to own your files, literally? This is something will not happen ever on traditional cloud services. But from now on, it definitely happens at a glance with "FxFiles". It is a file manager which stores everything on FULA blockchain network of Bloxes.
 
 # How to install from stores
 The FxFiles v0.6 is now available on Android and Windows stores. iOS and macOS will be released soon.
